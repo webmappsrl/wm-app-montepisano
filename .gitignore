@@ -2,8 +2,6 @@ index.html
 npm-debug.log
 instances/*
 platforms
-bare/resources/android
-bare/resources/ios
 bare/res
 bare/.idea
 node_modules
