@@ -16,14 +16,18 @@ yargs.usage('Usage: $0 <command> [options]')
     .example('$0 create -i webmapp_demo_app -u http://api.webmapp.it/be/starter.cbe.webmapp.it', 'Create the istance of Webmapp')
     .command('update', 'update the istance of Webmapp')
     .example('$0 update -i webmapp_demo_app -u http://api.webmapp.it/be/starter.cbe.webmapp.it', 'update the istance of Webmapp')
+    .command('set', 'set config.js in bare/index.html')
     .alias('i', 'instance')
     .nargs('i', 1)
     .describe('i', 'Instance Name to create')
-    .demandOption(['instance'])
+    //.demandOption(['instance'])
     .alias('u', 'url')
     .nargs('u', 1)
     .describe('u', 'Url from get the config')
-    .demandOption(['url'])
+    //.demandOption(['url'])
+    .alias('c', 'config')
+    .nargs('c', 1)
+    .describe('c', 'file used for config')
     
     .epilog('(c) Webmapp 2017');
 
@@ -130,6 +134,22 @@ gulp.task( 'update', function(){
     }
 });
 
+gulp.task('set', function(){
+    
+    var newConfUrl = 'config/config.js'; 
+
+    if( argv.config){
+        newConfUrl = argv.config
+    } 
+
+    gulp.src(['bare/www/.index.html'])
+        .pipe(replace(/\$CONFIG/g, newConfUrl))
+        .pipe(rename('index.html'))
+        .pipe(gulp.dest('bare/www/'));
+
+    
+});
+
 gulp.task( 'edit-config-xml', ['create'], function(){
     gulp.updateConfigXML(config_xml);
 });
@@ -140,6 +160,10 @@ gulp.task('generate-resources', function(callback){
     sh.cd(dir);
     sh.exec('ionic cordova resources', function(){
     });
+});
+
+gulp.task( 'update-bare', function(){
+
 });
 
 gulp.task('build', ['create', 'update']);

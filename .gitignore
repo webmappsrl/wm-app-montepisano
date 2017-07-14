@@ -1,4 +1,5 @@
 index.html
+npm-debug.log
 instances/*
 platforms
 bare/resources/android
