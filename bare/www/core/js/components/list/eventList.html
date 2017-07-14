@@ -1,0 +1,66 @@
+<ion-view 
+    ng-controller="ListController as vm" 
+    class="events-view"
+    cache-view="false">
+    <ion-nav-title>
+        <span>
+            Eventi
+        </span>
+    </ion-nav-title>
+    <ion-nav-buttons side="left">
+        <button 
+            class="no-animate button button-icon icon ion-navicon"
+            menu-toggle="left"></button>
+    </ion-nav-buttons>
+
+    <ion-content style="background: {{vm.colors.global.background}}">
+        <div 
+            class="list">
+            <a 
+                class="item"
+                ng-if="vm.eventsList"
+                ng-click="vm.goTo('detailevent/' + item.id)"
+                ng-repeat="item in vm.eventsList">
+                <span 
+                    ng-init="startDate = vm.renderDate(item.field_date.value); endDate = vm.renderDate(item.field_date.value2)"
+                    class="list-event-date">
+                    <span 
+                        class="list-event-start-date"
+                        ng-if="startDate">
+                        {{startDate}}
+                    </span>
+                    <span 
+                        class="list-event-end-date"
+                        ng-if="endDate && startDate !== endDate">
+                        {{vm.renderDate(item.field_date.value2)}}
+                    </span>
+                </span>
+                <span class="list-infos list-event-infos">
+                    <span class="list-info-title list-event-title">{{item.title}}</span>
+                    <span 
+                        class="list-info-subtitle list-event-subtitle"
+                        ng-if="item.field_subtitle">
+                        {{item.field_subtitle}}
+                    </span>
+                </span>
+            </a>
+
+            <!-- <a
+                class="item"
+                ng-if="vm.eventsList"
+                ng-click="vm.goTo('detailevent/' + item.id)"
+                ng-repeat="item in vm.eventsList">
+                <span class="list-event-date">
+                    <span class="list-event-start-date">
+                        15.09
+                    </span>
+                </span>
+                <span class="list-infos list-event-infos">
+                    <span class="list-info-title list-event-title">{{item.title}}</span>
+                    <span class="list-info-subtitle list-event-subtitle">Via Nazionale 144 25052 Piancogno, BS</span>
+                </span>
+
+            </a> -->
+        </div>
+    </ion-content>
+</ion-view>

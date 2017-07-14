@@ -1,0 +1,48 @@
+<ion-view 
+    cache-view="false" 
+    ng-controller="ListController as vm">
+    
+    <ion-nav-title>
+        <span
+            ng-style="{
+                color: vm.colors.mainBar.overwrite ? vm.colors.mainBar.color : vm.color
+            }">
+            {{vm.viewTitle}}
+        </span>
+    </ion-nav-title>
+    
+    <ion-nav-buttons 
+        side="left" 
+        class="no-animate">
+        <button 
+            class="no-animate button button-icon icon ion-navicon" 
+            menu-toggle="left"></button>
+    </ion-nav-buttons>
+
+    <ion-content
+        style="background: {{vm.colors.global.background}}">
+
+        <div
+            class="is-sub-group"
+            ng-style="{
+                color: vm.color
+            }">
+            <div 
+                class="list">
+                <a 
+                    class="item item-icon-left"
+                    ng-style="{
+                        color: item.color
+                    }"
+                    ng-if="vm.subGroupMenu"
+                    ng-click="vm.goTo(item.type)"
+                    ng-repeat="item in vm.subGroupMenu">
+                    <i class="icon {{item.icon}}"></i>
+                    {{item.label}}
+                </a>
+            </div>
+        </div>
+    
+    </ion-content>
+</ion-view>
+

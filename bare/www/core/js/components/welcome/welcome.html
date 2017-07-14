@@ -1,0 +1,90 @@
+<ion-view
+    ng-controller="WelcomeController as vm">
+    <ion-nav-title class="welcome-nav">
+        <!-- TODO: convert in button  -->
+        <a 
+            class="nav-link login-link"
+            ng-show="!$root.isLoggedIn"
+            ng-click="vm.openLoginOrRegistration()">
+            Login
+        </a>
+        <a 
+            class="nav-link register-link"
+            ng-show="!$root.isLoggedIn"
+            ng-click="vm.openLoginOrRegistration(true)">
+            Registrati
+        </a>
+    </ion-nav-title>
+    <div class="list card welcome-list">
+        <!--<a class="item-offerte-card" href=""><i class="icon wm-icon-vc-tempolibero"></i> Offerte<br> CARD</a>-->
+
+        <!-- TODO: add class in item for managing submenu or subtitle - has-submenu has-subtile -->
+        <a
+            class="item"
+            ng-click="vm.goTo(item.url)"
+            ng-style="{
+                color: item.color || '#605846'
+            }"
+            ng-repeat="item in vm.menuItems.top">
+            <span class="card-item-title">
+                {{item.label}}
+            </span>
+            <div class="card-item-submenu">
+
+                <span 
+                    ng-click="vm.goToSubLayer('layer/Accoglienza', $event)"
+                    class="submenu-item item-ospitality">
+                    <i class="icon wm-icon-lodging"></i> 
+                    <span class="submenu-item-label">Accoglienza</span>
+                </span>
+                <span 
+                    ng-click="vm.goToSubLayer('layer/Mangiare_e_bere', $event)"
+                    class="submenu-item item-eat">
+                    <i class="icon wm-icon-restaurant"></i>
+                    <span class="submenu-item-label"> Mangiare e bere</span>
+                </span>
+                <!-- <span 
+                    ng-click="vm.goToSubLayer('layer/Servizi_per_il_turista', $event)"
+                    class="submenu-item item-services">
+                    <i class="icon wm-icon-vc-servizi"></i> 
+                    <span class="submenu-item-label">Servizi per il turista</span>
+                </span> -->
+                <!-- <span 
+                    ng-click="vm.goToSubLayer('layer/Prodotti_tipici', $event)"
+                    class="submenu-item item-products">
+                    <i class="icon wm-icon-vc-prodotti"></i> 
+                    <span class="submenu-item-label">Prodotti tipici</span>
+                </span> -->
+                <span 
+                    ng-click="vm.goToSubLayer('layer/Siti_di_interesse', $event)"
+                    class="submenu-item item-interesse">
+                    <i class="icon wm-icon-siti-interesse"></i> 
+                    <span class="submenu-item-label">Siti di interesse</span>
+                </span>
+                <span 
+                    ng-click="vm.goToSubLayer('layer/Tempo_libero', $event)"
+                    class="submenu-item item-spare-time">
+                    <i class="icon wm-icon-vc-tempolibero"></i> 
+                    <span class="submenu-item-label">Tempo libero</span>
+                </span>
+                <span 
+                    ng-click="vm.goToSubLayer('layer/Terme_e_spa', $event)"
+                    class="submenu-item item-spa">
+                    <i class="icon wm-icon-vc-terme"></i> 
+                    <span class="submenu-item-label">Terme e spa</span>
+                </span>
+                <span 
+                    class="submenu-item item-show-more">
+                    <i class="icon wm-icon-ios7-arrow-forward"></i> 
+                        vedi tutti
+                </span>
+            </div>
+
+            <div 
+                class="card-item-subtitle"
+                ng-if="item.description">{{item.description}}</div>
+        </a>
+        <!-- Element to use in mobile/small devices, maybe cut some content and add it -->
+        <!--<button class="item discover-more mobile-visible"><span class="card-item-title">Scopri di più <i class="icon ion-ios-arrow-thin-right"></i></span></button>-->
+    </div>
+</ion-view>

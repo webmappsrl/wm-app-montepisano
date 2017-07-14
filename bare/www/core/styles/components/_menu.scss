@@ -1,0 +1,108 @@
+/*
+ * MENU
+ *
+ * Styles for menus
+ */
+
+/* ------------------------------------ *\
+   #MENU
+\* ------------------------------------ */
+
+/* Container */
+
+.bar.bar-positive .title {
+  color: inherit !important;
+}
+
+.hide-left-button .bar-header .buttons-left {
+  display: none;
+}
+
+/* TODO: try not to style .item */
+a.item {
+  background: inherit;
+  //color: $color-green;
+  font-size: 22px;
+}
+
+.item {
+  background: inherit; //$color-light-green
+  border-color: $color-menu-border;
+  border-right: none;
+  border-left: none;
+  //color: $color-green;
+  font-size: 22px;
+
+  &.back-item {
+    // background: $color-green;
+    // color: #fff;
+    text-transform: uppercase;
+    font-weight: $font-weight-bold;
+    z-index: 300;
+
+    &:hover,
+    &:focus {
+      // background: darken($color-green, 10%);
+    }
+  }
+
+  &.item-icon-heart {
+    color: $color-dark-red;
+    //#b52125;
+  }
+
+  .menu & {
+    background: transparent;
+    color: $color-green;
+    font-weight: $font-weight-bold;
+  }
+}
+
+
+/* ------------------------------------ *\
+   #ADVANCED MENU
+\* ------------------------------------ */
+
+.advanced-menu-content  {
+  background: inherit;
+  top: 0 !important;
+
+  .item {
+    padding: 20px;
+    border: none;
+    font-size: 30px;
+    color: $color-brown;
+    margin: 0;
+
+    &::before {
+      content: '';
+      height: 1px;
+      background: $color-menu-border;
+      position: absolute;
+      left: 20px;
+      right: 0;
+      bottom: 0;
+
+    }
+
+    &:first-child {
+      border-top: none;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+    /* Temporary */
+   /* &:nth-of-type(1) {
+      color: $color-green;
+    }
+
+    &:nth-of-type(2) {
+      color: $color-red-01;
+    }
+
+    &:nth-of-type(3) {
+      color: $color-orange;
+    }*/
+  }
+}

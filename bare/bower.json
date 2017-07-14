@@ -1,0 +1,11 @@
+{
+  "name": "Mappalo",
+  "private": "true",
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.1.0"
+  },
+  "dependencies": {
+    "clipboard": "1.5.5",
+    "jquery": "2.1.4"
+  }
+}

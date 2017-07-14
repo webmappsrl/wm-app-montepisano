@@ -1,0 +1,42 @@
+//
+// WEBMAPP
+//
+// Sass styles import for whole project
+//
+
+// ------------------------------------ //
+// #GENERIC
+// ------------------------------------ //
+@import "generic/color-scheme";
+@import "generic/variables";
+@import "generic/mixins";
+
+// ------------------------------------ //
+// #GLOBALS
+// ------------------------------------ //
+
+@import "global/typography";
+@import "global/base";
+@import "global/buttons";
+@import "global/forms";
+@import "global/tables";
+@import "global/layout";
+
+
+// ------------------------------------ //
+// #COMPONENTS
+// ------------------------------------ //
+
+@import "components/details";
+@import "components/login";
+@import "components/main";
+@import "components/map";
+@import "components/menu";
+@import "components/lists";
+@import "components/modals";
+@import "components/offline";
+@import "components/search";
+@import "components/welcome";
+@import "components/card";
+@import "components/settings";
+@import "components/packages";

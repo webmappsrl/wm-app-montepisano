@@ -1,0 +1,48 @@
+<ion-modal-view class="modal-download">
+    <ion-header-bar class="bar-stable">
+        <!-- <h1 class="title title-center">
+            <span class="title-inner-header">
+                SCARICA LA MAPPA
+            </span>
+        </h1> -->
+    </ion-header-bar>
+    
+    <ion-content class="download-page" style="background: transparent;">
+        <div class="static-content offline-content">
+            
+            <p class="offline-text offline-download">
+                Download della mappa in corso
+            </p>
+            <div
+                style="border-top: 16px solid {{COLORS.global.buttonsBackground}};"
+                class="loader">
+            </div>
+            <!-- TODO: use proper class -->
+            <p
+                class="offline-text offline-install">
+                {{vm.downloadProgress}}%
+            </p>
+            <!-- <p
+                class="offline-text offline-install"
+                ng-if="!vm.unzipInProgress">
+                Installazione della mappa in corso (l'operazione può richiedere alcuni minuti) ...
+            </p> -->
+
+            <!-- <button
+                class="button button-block button-reset"
+                ng-click="vm.abortDownload()">
+                <span>Annulla</span>
+            </button> -->
+        </div>
+        </div>
+    </ion-content>
+    
+    <!-- TODO: make it visible -->
+    <!-- <div class="bottom-buttons">
+        <button
+            class="button button-small"
+            ng-click="hide()">
+            chiudi
+        </button>
+    </div> -->
+</ion-modal-view>

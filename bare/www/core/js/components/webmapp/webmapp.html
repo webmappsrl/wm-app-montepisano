@@ -1,0 +1,36 @@
+<ion-view 
+    class="events-view"
+    cache-view="false" 
+    ng-controller="WebmappController as vm">
+    <ion-nav-title>
+        <span>
+            {{vm.currentPage.label}}
+        </span>
+    </ion-nav-title>
+    <ion-nav-buttons side="left">
+        <button 
+            class="no-animate button button-icon icon ion-navicon"
+            menu-toggle="left"></button>
+    </ion-nav-buttons>
+
+    <ion-content style="color: black; background: white">
+        <ion-item 
+            class="item item-icon-left back-item"
+            style="background: {{COLORS.subnav.background}}; color: {{COLORS.subnav.color}}"
+            ng-if="vm.isAPageChild"
+            ng-click="vm.goBackToCategory(vm.mainCategory.label)">
+            <i class="icon ion-ios-arrow-left"></i>
+            {{vm.mainCategory.label}}
+        </ion-item>
+        <br>
+        <div 
+            class="static-content card-content" 
+            style="text-align: left">
+            <img src="/core/images/webmapp.png" alt="Webmapp Logo" width="100%">
+            <br>
+            Realizziamo mappe ed applicazioni web e mobile per il turismo natura e le attività outdoor. <br>
+            Per maggiori informazioni, visitate il nostro sito web: <a href="" ng-click="vm.openInExternalBrowser('http://webmapp.it')">webmapp.it</a>
+        </div>
+    </ion-content>
+</ion-view>
+

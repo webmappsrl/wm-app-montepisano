@@ -1,0 +1,47 @@
+/* FONT FACE */
+
+/*
+@font-face {
+    font-family: 'alegreya';
+    src: url('../fonts/alegreya/alegreyasans-bold-webfont.woff2') format('woff2'), url('../fonts/alegreya/alegreyasans-bold-webfont.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'alegreya';
+    src: url('../fonts/alegreya/alegreyasans-bolditalic-webfont.woff2') format('woff2'), url('../fonts/alegreya/alegreyasans-bolditalic-webfont.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'alegreya';
+    src: url('../fonts/alegreya/alegreyasans-medium-webfont.woff2') format('woff2'), url('../fonts/alegreya/alegreyasans-medium-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'alegreya';
+    src: url('../fonts/alegreya/alegreyasans-mediumitalic-webfont.woff2') format('woff2'), url('../fonts/alegreya/alegreyasans-mediumitalic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+}
+*/
+
+/* TODO: is it used? */
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('../fonts/font-awesome/fontawesome-webfont.eot?v=4.6.2&1468998095');
+    src: url('../fonts/font-awesome/fontawesome-webfont.eot?v=4.6.2&1468998095#iefix') format("embedded-opentype"), url(../fonts/font-awesome/fontawesome-webfont.woff2?v=4.6.2&1468998095) format("woff2"), url(../fonts/font-awesome/fontawesome-webfont.woff?v=4.6.2&1468998095) format("woff"), url(../fonts/font-awesome/fontawesome-webfont.ttf?v=4.6.2&1468998095) format("truetype"), url(../fonts/font-awesome/fontawesome-webfont.svg?v=4.6.2&1468998095#fontawesomeregular) format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Abel';
+    src: url('../fonts/Abel/Abel-Regular.woff2') format('woff2'), url('../fonts/Abel/Abel-Regular.woff') format('woff'), url('../fonts/Abel/Abel-Regular.ttf') format('truetype'), url('../fonts/Abel/Abel-Regular.otf') format('otf'), url('../fonts/Abel/Abel-Regular.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}

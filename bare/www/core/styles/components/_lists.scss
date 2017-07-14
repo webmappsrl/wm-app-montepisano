@@ -1,0 +1,223 @@
+/**
+ * LISTS
+ *
+ * Style for lists
+ */
+
+/* ------------------------------------ *\
+   #GENERAL
+\* ------------------------------------ */
+
+/* Element */
+
+.coupons-list {
+  padding: 10px !important;
+  cursor: pointer;
+}
+
+.round-list {
+  div.list {
+    padding-left: 8px;
+  }
+}
+
+.list {
+
+  .item {
+    color: inherit;
+
+    &.activated {
+      // ...
+    }
+
+    &.item-content-preview {
+      height: 54px;
+      .icon {
+        opacity: 0.5;font-size: 25px;
+      }
+
+      .item-content-placeholder {
+        display: inline-block;
+        width: 90%;
+        height: 15px;
+        opacity: 0.5;
+        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#4a6e23+0,7db9e8+100&1+0,0+100 */
+        background: -moz-linear-gradient(left, rgba(74,110,35,1) 0%, rgba(125,185,232,0) 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(left, rgba(74,110,35,1) 0%,rgba(125,185,232,0) 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to right, rgba(74,110,35,1) 0%,rgba(125,185,232,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4a6e23', endColorstr='#007db9e8',GradientType=1 ); /* IE6-9 */
+      }
+
+      &.activated {
+        //border-color: darken($color-light-green, 5%);
+        background: $color-light-green;
+      }
+    }
+
+    &.has-subtitle {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+  }
+
+  .advanced-menu-content &,
+  .modal-filters & {
+    .item {
+      &.activated {
+        border-color:transparent;
+        background: transparent;
+      }
+    }
+  }
+
+  &.welcome-list {
+    .item {
+      &.activated {
+        background: transparent;
+      }
+    }
+  }
+
+  .modal-filter & {
+    .item {
+      &.activated {
+        background: transparent;
+      }
+    }
+  }
+}
+
+/* Divider element */
+
+.is-divider {
+  padding-left: 16px; /* Just remove item-icon-left class from element if not necessary */
+  // border-color: darken($color-light-green, 5%);
+  // background: darken($color-light-green, 5%);
+  text-transform: uppercase;
+  font-weight: $font-weight-bold;
+
+  &[ng-click]:hover {
+    cursor: text;
+  }
+
+  &.activated {
+    // border-color: darken($color-light-green, 5%);
+    // background: darken($color-light-green, 5%);
+  }
+}
+
+/* Events list */
+
+.events-view {
+  .item {
+    color: $color-dark-red;
+  }
+}
+
+.list-event-date,
+.list-event-infos,
+.list-infos {
+  display: inline-block;
+  [class^="list-event"],
+  [class^="list-info"]
+  {
+    display: block;
+  }
+}
+
+.list-info-title,
+.list-info-subtitle {
+  display: block;
+}
+
+.list-event-date {
+  padding-right: 18px;
+  vertical-align: top;
+  font-size: 20px;
+}
+
+.list-infos {
+  width: 100%;
+
+  &.list-event-infos {
+    width: 80%;
+  }
+}
+
+.list-event-start-date {
+  padding-bottom: 5px;
+}
+
+.list-info-title {
+  padding-bottom: 3px;
+  font-size: 22px;
+  @include text-ellipsis;
+}
+
+.list-info-subtitle {
+  font-size: 14px;
+}
+
+/* List filter*/
+
+.filter-input-wrapper {
+  position: relative;
+
+  .icon {
+    display: inline-block;
+    width: 45px;
+    height: 40px;
+    position: absolute;
+    line-height: 45px;
+    top: 0;
+    right: 0;
+
+    &::before {
+      font-size: 25px;
+      color: $color-light-02;
+    }
+  }
+}
+
+.filter-input[type="search"] {
+  width: 100%;
+  height: 45px;
+  padding: 0 10px;
+}
+
+.filter-input {
+  @include placeholder {
+    font-style: italic;
+    // font-family: $main-font-family;
+    font-size: 18px;
+  }
+}
+
+/* Show more list elements */
+.arrow-show-more {
+  height: 35px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 20;
+  text-align: center;
+  color: $color-brown;
+  @include box-shadow(0 -4px 14px -4px rgba(18, 16, 11, 0.5));
+
+  .icon {
+    &::before {
+      font-size: 35px;
+    }
+  }
+}
+
+/* ------------------------------------ *\
+   #MEDIA QUERIES
+\* ------------------------------------ */
+
+@media only screen and (min-width: 1025px) {
+  .arrow-show-more {
+    display: none;
+  }
+}

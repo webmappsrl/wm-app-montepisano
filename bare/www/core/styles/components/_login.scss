@@ -1,0 +1,446 @@
+/*
+ * LOGIN
+ *
+ * Styles for login page
+ */
+
+
+/* ------------------------------------ *\
+   #LOGIN & CARD
+\* ------------------------------------ */
+
+.login-page {
+  background: $color-login-bg;
+  input {
+    padding-right: 0 !important;
+  }
+}
+
+.login-header {
+  background: #fff;
+  background-size: 48px 41px;
+  color: $color-brown;
+  font-weight: 700;
+  padding: 12px;
+  font-size: 1.1em;
+  text-align: center;
+  @include box-shadow(0 0 1px transparentize($color-box-shadow,0.5));
+
+  .icon {
+    color: $color-red-heart;
+  }
+}
+
+/* Login form - here or in form? */
+
+.info-confirm-button {
+  width: 50% !important;
+  left: 25%; 
+
+  &.disabled {
+    color: $color-light-02 !important;
+  }
+}
+
+.login-form,
+.registration-form {
+  max-width: 80%;
+  margin: 0 auto;
+
+  &.card-form {
+    color: transparentize($color-light-02,0.3);
+    .choice-container {
+      border-bottom: 1.5px solid transparentize($color-light-02,0.3) !important;
+    }
+
+    .item {
+      // padding: 0.2em 0 0.2em 0;
+      
+      input {
+        text-align: left;
+      }
+
+      .choice-label {
+
+        font-size: 20px;
+      }
+
+      .radio-container {
+
+        .item {
+          display: block;
+          padding: 0;
+        }
+        
+        .item-content {
+          font-size: 20px;
+          background-color: #F8FAF3 !important;
+        }
+      }
+    }
+  }
+
+  .item {
+    padding: 7px 0;
+    border: 0 !important;
+    background: transparent !important;
+
+    .input-date {
+      color: $color-light-02;
+    }
+
+    input {
+      height: 65px;
+      padding: 0;
+      border-bottom: 1px solid transparentize($color-light-02,0.3);
+      // font-family: $main-font-family !important;
+      font-size: 20px;
+      background: none !important;
+      line-height: 2.2em;
+      text-align: center;
+      // text-transform: lowercase;
+
+      @include placeholder {
+        color: transparentize($color-brown,0.4);
+      }
+    }
+  }
+
+  .privacy {
+    width: 100%;
+    margin: 15px auto;
+    text-align: center;
+
+    .input-privacy {
+      height: 20px;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+  }
+}
+
+.login-form {
+  .item .input-label {
+    display: none;
+  }
+}
+
+.registration-form {
+  .list {
+    margin-bottom: 15px;
+
+    .item {
+      padding: 5px 0;
+      position: relative;
+
+      input {
+        height: 60px;
+      }
+    }
+  }
+
+}
+
+.registration-terms {
+  label {
+    display: inline-block;
+    width: 72%;
+    font-size: 11px;
+  }
+}
+
+.item-floating-label {
+  .input-label {
+    &,
+    &.has-input {
+      //position: absolute;
+      //top: initial;
+      //bottom: 0;
+      //text-align: left;
+      //color: #E78C1A;
+      //font-size: 1em;
+      display: none;
+    }
+  }
+}
+
+.skip-link {
+  text-align: right;
+  padding: 8px 0 !important;
+  font-size: 14px;
+  text-transform: lowercase;
+  font-style: italic;
+
+  a {
+    color: $color-brown;
+  }
+
+  .icon {
+    margin-left: 5px;
+    font-size: 20px;
+    vertical-align: middle;
+  }
+}
+
+.sign-in-button {
+  max-width: 80%;
+  margin: 20px auto;
+  font-weight: $font-weight-bold;
+
+  .item {
+    color: $color-white;
+  }
+}
+
+.card-block {
+  margin-bottom: 10px;
+  padding: 15px 0;
+  background: rgba(255,255,255,0.3);
+}
+
+.go-to-login {
+  margin-top: 15px;
+  margin-bottom: 4px;
+
+  a {
+    padding: 20px;
+  }
+}
+
+/* SOCIAL - TO MODIFY */
+
+.social-login-title-container {
+  width: 80%;
+  margin: 10px auto;
+  position: relative;
+  text-align: center;
+
+  &:before {
+    content: '';
+    display: block;
+    height: 1px;
+    background: $color-light-02;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    z-index: 2;
+  }
+}
+
+.social-login-title {
+  display: inline-block;
+  padding: 10px;
+  background: $color-login-bg;
+  position: relative;
+  font-size: 18px;
+  z-index: 10;
+}
+
+
+/*
+    Note: It is best to use a less version of this file ( see http://css2less.cc
+    For the media queries use @screen-sm-min instead of 768px.
+    For .omb_spanOr use @body-bg instead of white.
+*/
+
+.omb_login {
+  width: 80%;
+  margin: 10px auto;
+  .omb_loginOr {
+    position: relative;
+    font-size: 1.5em;
+    color: #aaa;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+
+    .omb_hrOr {
+      background-color: #cdcdcd;
+      height: 1px;
+      margin-top: 0px !important;
+      margin-bottom: 0px !important;
+    }
+
+    .omb_spanOr {
+      display: block;
+      position: absolute;
+      left: 50%;
+      top: -0.6em;
+      margin-left: -1.5em;
+      background-color: white;
+      width: 3em;
+      text-align: center;
+    }
+
+    .omb_loginForm {
+      .input-group.i {
+        width: 2em;
+      }
+
+      .help-block {
+        color: red;
+      }
+    }
+  }
+
+  button {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: $color-light-02;
+    font-family: $main-font-family !important;
+    font-size: 0.7em;
+
+    .icon {
+      display: block;
+    }
+  }
+}
+
+.omb_authTitle {
+  text-align: center;
+  line-height: 300%;
+}
+
+.omb_socialButtons {
+  width: 100%;
+  margin: 0;
+
+  button {
+    border-radius: 3px;
+  }
+
+  .social-block {
+    display: inline-block;
+    width: 31%;
+    margin-left: 1%;
+
+
+    span {
+      font-size: 15px;
+      text-transform: lowercase;
+    }
+
+    .icon {
+      font-size: 40px;
+    }
+  }
+
+  a {
+    opacity: 0.9;
+
+    &:hover {
+      color: $color-white;
+      opacity: 1;
+    }
+  }
+
+  .omb_btn-facebook {
+    .icon {
+      color: $color-facebook;
+    }
+  }
+
+  .omb_btn-twitter {
+    .icon {
+      color: $color-twitter;
+    }
+  }
+
+  .omb_btn-google {
+    .icon {
+      color: $color-google;
+    }
+  }
+}
+
+/* Sign-in button */
+.sign-in-button {
+  @include box-shadow(none);
+}
+
+/* Login footer */
+.app-logo-container,
+.skip-login {
+  display: inline-block;
+  width: 100%;
+  height: 117px;
+  text-align: center;
+  position: relative;
+}
+
+.app-logo {
+  display: inline-block;
+  width: 117px;
+  height: 64px;
+  margin-left: -(117px/2);
+  @include vertical-centering;
+  left: 50%;
+
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.skip-login {
+  .icon {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    font-size: 40px;
+  }
+
+  a {
+    display: inline-block;
+    border-left: 1px solid $color-light-02;
+    color: $color-light-02;
+    font-size: 20px;
+    @include vertical-centering;
+    right: 0;
+    left: 0;
+  }
+
+  //&::before {
+  //  content:'';
+  //  display: block;
+  //  width: 19px;
+  //  height: 115px;
+  //  background: transparent url('../images/shadow.png') left top no-repeat;
+  //  @include image-2x('../images/shadow@2x.png', 19px, 115px);
+  //  position: absolute;
+  //  left: -19px;
+  //  bottom: 0;
+  //}
+}
+
+/* ------------------------------------ *\
+   #MEDIA QUERIES
+\* ------------------------------------ */
+
+@media screen and (max-width: 320px) {
+  .social-login-title {
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 481px) {
+  .login-form,
+  .registration-form {
+
+    .item {
+      padding: 1em 0;
+
+
+      input {
+        height: 2.2em;
+
+      }
+    }
+  }
+}

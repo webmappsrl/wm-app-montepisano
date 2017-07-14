@@ -1,0 +1,69 @@
+<!-- TODO: add class itinerario-details for itinerario ?-->
+<ion-view
+    cache-view="false"
+    ng-controller="DetailRouteController as vm" class="layer-details"
+    ng-style="{
+        'background': vm.colors.details.background,
+        'color': vm.colors.details.color
+    }"
+>
+
+    <ion-nav-title>
+        <span
+            class="title-inner">
+
+            <span
+                class="title-right"
+                ng-bind-html="vm.title">
+
+            </span>
+        </span>
+    </ion-nav-title>
+    <ion-nav-buttons side="left" class="no-animate">
+        <button
+            class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left"
+            ng-click="vm.goBack()">
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content style="background: {{vm.colors.global.background}}">
+        <div class="details-container">
+            <div
+                class="details-content"
+                ng-class="{
+                    'details-columns': vm.featureImage,
+                    'details-row': !vm.featureImage
+                }">
+                <!--    one columns layout -->
+                <div class="details-rows">
+                    <div class="details-route">
+                        <span class="code"><strong>Codice</strong>: {{vm.codeRoute}} </span>
+                        <span class="difficulty"><strong>Difficoltà</strong>:
+                        <i  class="fa"
+                            aria-hidden="true"
+                            ng-repeat="n in [].constructor(5) track by $index"
+                            ng-class="{ 'fa-star' : vm.difficulty > $index, 'fa-star-o': vm.difficulty <= $index}"
+                        ></i></span>
+                    </div>
+
+                    <div
+                        class="details-image-route">
+                        <img
+                            ng-if="!vm.isAreaDetail"
+                            ng-click="vm.openImageModal()"
+                            ng-src="{{vm.featureImage}}">
+                        <img
+                            ng-if="vm.isAreaDetail"
+                            style="max-height: 125px; margin-left: 20%;"
+                            ng-src="{{vm.featureImage}}">
+                    </div>
+
+                    <div
+                        class="details-description details-rows"
+                        ng-bind-html="vm.description">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

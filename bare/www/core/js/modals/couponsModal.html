@@ -1,0 +1,23 @@
+<ion-modal-view class="modal-mappalo modal-details">
+    <a class="modal-close" ng-click="vm.hide()">
+        <i class="icon wm-icon-android-close"></i>
+    </a>
+    <ion-content style="background: {{COLORS.global.background}}">
+        <div class="modal-content">
+            <span class="modal-title">Offerte</span>
+            <div 
+                class="modal-inner-content modal-two-columns coupons-list" 
+                ng-repeat="item in parent.relatedCoupons">
+                <div class="modal-content-title">
+                    {{item.title}}
+                </div>
+                <div class="modal-column-left modal-image-container">
+                    <img class="modal-image" ng-src="{{item.field_image}}">
+                </div>
+                <div class="modal-column-right">
+                    <p ng-bind-html="item.body"></p>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

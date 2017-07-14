@@ -1,0 +1,58 @@
+<ion-modal-view class="modal-mappalo modal-details modal-details-gallery"> <!--  -->
+    <a class="modal-close" ng-click="vm.hide()">
+        <i class="icon wm-icon-android-close"></i>
+    </a>
+    <ion-content 
+        class="modal-image-content">
+        <div 
+            class="modal-content"
+            ng-if="!parent.hasGallery">
+            <div class="modal-inner-content">
+                <div class="modal-full-content modal-image-container">
+                    <img class="modal-image" ng-src="{{parent.feature.image}}">
+                </div>
+            </div>
+        </div>
+        <div class="modal-image-element"
+            ng-if="parent.hasGallery">
+            
+            <ion-slide-box>
+                <ion-slide ng-repeat="image in parent.imageGallery">
+                    <div style="">
+                        <!-- <img
+                            style="margin:auto;display:block"
+                            ng-src="{{image}}"> -->
+
+                        <ion-scroll zooming="true"
+                            direction="xy" 
+                            delegate-handle="zoom-pane" 
+                            class="zoom-pane" 
+                            min-zoom="1" 
+                            scrollbar-x="false" 
+                            scrollbar-y="false" 
+                            overflow-scroll="false">
+                        <img ng-src="{{image}}" >
+                    </ion-scroll>
+                    </div>
+                </ion-slide>
+            </ion-slide-box>
+        </div>
+    </ion-content>
+    <div class="modal-full-content modal-image-container modal-image-gallery">
+        <span
+            class="button-arrow arrow-left"
+            ng-click="vm.prevImage()"
+            ng-if="parent.showLeft()">
+            <i class="icon wm-icon-chevron-left"></i>
+        </span>
+        <span
+            class="button-arrow arrow-right"
+            ng-click="vm.nextImage()"
+            ng-if="parent.showRight()">
+            <i class="icon wm-icon-chevron-right"></i>
+        </span>
+    </div>
+<!--    <span class="modal-image-loader">
+        <i class="icon wm-icon-loop"></i>
+    </span>-->
+</ion-modal-view>

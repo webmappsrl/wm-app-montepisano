@@ -1,0 +1,95 @@
+/**
+ * BASE
+ *
+ * Basic style for tag and general classes
+ */
+
+body.fontsloaded { 
+  font-family: $main-font-family !important;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  // font-family: $main-font-family;
+  color: $color-brown;
+  font-size: 16px; /* To change with fluid typography*/
+  -webkit-font-smoothing: antialiased; /* Fix for webkit rendering */
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  font-variant-ligatures: common-ligatures;
+}
+
+/* Settng basic font size for fluid typography*/
+/*
+html {
+  font-size: calc(1em + 1vw) !important;
+}
+*/
+
+html {
+  @include box-sizing(border-box);
+  html { font-size: calc(1em + 1vh); }
+}
+
+*, *:before, *:after {
+  @include box-sizing(inherit);
+}
+
+html, body, .ionic-body {
+  height: 100%;
+  font-family: $main-font-family!important;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+label {
+  line-height: 1.2;
+}
+
+a {
+  text-decoration: none;
+}
+
+p, a {
+  font-family: $main-font-family;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $main-font-family;
+}
+
+h1, h2, h3, h4 {
+  font-size: 16px !important;
+}
+
+.title-center {
+  text-align: center!important;
+}
+
+// *:focus, textarea:focus, input:focus, button:focus, a, a:hover, a:active, a:focus {
+//     outline: none;
+// }
+button{
+  font-family: $main-font-family;
+}
+
+.button:hover{
+  color: inherit;
+}
+
+@media screen and (min-width: 320px) {
+  html {
+    font-size: 2vh;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  html {
+    font-size: 1.5em;
+  }
+}

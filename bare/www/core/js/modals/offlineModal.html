@@ -1,0 +1,101 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-stable">
+        <a
+           class="modal-close-header"
+           ng-if="!downloadInProgress && !unzipInProgress" 
+           ng-click="hide()">
+           <i class="icon wm-icon-android-close"></i>
+       </a>
+        <h1 class="title">
+            <span class="title-inner-header">
+                MAPPA OFFLINE
+            </span>
+        </h1>
+    </ion-header-bar>
+
+    <ion-content class="offline-page" style="">
+        <div class="static-content offline-content">
+
+            <!-- <div class="offline-image">
+                <img src="/core/images/logo-big.png">
+            </div> -->
+
+            <div class="static-description offline-description">
+                <h2 class="offline-desc-title"
+                    ng-if="!canBeEnabled && !downloadInProgress && !unzipInProgress">Scarica la mappa</h2>
+                <p class="offline-desc-text"
+                   ng-if="!active && canBeEnabled">Abilita la funzione di navigazione offline</p>
+                <p class="offline-desc-text"
+                   ng-if="active && canBeEnabled">Disabilita la funzione di navigazione offline</p>
+
+                <p ng-if="!canBeEnabled && !downloadInProgress && !unzipInProgress">
+                    La mappa offline occupa circa 250 MB di spazio, è consigliabile effettuare il download con una rete Wi-Fi (l'installazione può richiedere alcuni minuti)
+                </p>
+            </div>
+
+            <div style="color: black;" ng-if="downloadInProgress">
+                <p class="offline-text offline-download">
+                    Download della mappa in corso
+                </p>
+                <div
+                    style="border-top: 16px solid {{COLORS.global.buttonsBackground}};"
+                    class="loader">
+                </div>
+                <!-- TODO: use proper class -->
+                <p
+                    class="offline-text offline-install">
+                    {{downloadProgress}}%
+                </p>
+            </div>
+            <button
+                style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                class="button-download button button-block"
+                ng-if="!canBeEnabled && !downloadInProgress && !unzipInProgress"
+                ng-click="downloadMap()">
+                <span>
+                    <i class="icon wm-icon-ios7-download-outline"></i> Download
+                </span>
+            </button>
+
+            <!-- TODO: add classes for button -->
+            <button
+                style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                class="button-download button button-block"
+                ng-click="toggleMode()"
+                ng-if="canBeEnabled">
+                <span ng-if="active">Disabilita modalità offline</span>
+                <span ng-if="!active">Abilita modalità offline</span>
+            </button>
+
+            <!-- TODO:replace with style -->
+            <br/>
+            
+            <div ng-if="!downloadInProgress && !unzipInProgress && canBeEnabled">
+                <span>
+                    Premi il tasto Reset per cancellare l'attuale versione della mappa e 
+                    procedere successivamente al download della nuova versione
+                </span>
+
+                <br/>
+                <br/>
+
+                <!-- TODO: add classes for button -->
+                <button 
+                    class="button button-block button-reset"
+                    ng-click="reset()"
+                    ng-if="!downloadInProgress && !unzipInProgress && canBeEnabled">
+                    <span>Reset</span>
+                </button>
+            </div>
+        </div>
+    </ion-content>
+
+    <!-- TODO: make it visible -->
+    <!-- <div class="bottom-buttons">
+        <button 
+            class="button button-small" 
+            ng-click="hide()">
+            chiudi
+        </button>
+    </div> -->
+</ion-modal-view>

@@ -1,0 +1,135 @@
+<ion-view
+    ng-class="{
+        'welcome-page': vm.isWelcomePage,
+        'map-page': vm.isMapPage,
+        'hide-map': vm.hideMap,
+        'map-search': vm.isMapModeInSearch,
+        'desktop-half-map': !vm.mapView && !vm.isSearchPage,
+        'desktop-full-map': vm.mapView,
+        'has-howtoreach': vm.detail && detailCoordinates && !vm.hideHowToReach,
+        'has-shadow': vm.hasShadow
+    }"
+    ng-controller="MainController as vm">
+
+    <ion-content
+        class="content-pane"
+        delegate-handle="mainScroll">
+
+        <ion-nav-view
+            name="inception-top"></ion-nav-view>
+
+    </ion-content>
+
+    <a
+        href=""
+        class="details-shadow"
+        ng-class="{'extend-shadow': vm.extendShadow}"
+        ng-if="vm.hasShadow">
+    </a>
+    <a
+        href=""
+        class="details-howtoreach"
+        style="background: {{vm.colors.details.buttons}}"
+        ng-click="vm.openExternalMap()"
+        ng-if="vm.detail && detailCoordinates && !vm.hideHowToReach">
+        <i class="icon ion-map"></i> Come raggiungerci
+    </a>
+
+    <!-- TODO: add bottom element check from config -->
+    <div ui-view="inception-bottom"></div>
+
+    <ion-footer-bar
+        align-title="left"
+        class="bar-assertive"
+        data-tap-disabled="true"
+        ng-class="{
+            'when-welcome': vm.isWelcomePage
+        }">
+
+        <!-- Map expand -->
+        <a
+            href=""
+            class="btn-expand map-expand map-expand-right"
+            ng-click="vm.goToMap()"
+            ng-show="!vm.isSearchPage && !vm.hideExpander"
+            ng-if="!vm.isWelcomePage">
+            <i class="icon ion-arrow-expand"></i>
+        </a>
+        <a
+            href=""
+            class="btn-expand map-expand"
+            ng-click="vm.goToMap()"
+            ng-if="vm.isWelcomePage">
+            <i class="icon ion-arrow-expand"></i>
+        </a>
+
+        <!-- Map shrink -->
+        <a
+            href=""
+            class="btn-expand map-expand map-shrink map-expand-right"
+            ng-click="vm.toggleMap()"
+            ng-show="!vm.isSearchPage && !vm.hideExpander"
+            ng-if="!vm.isWelcomePage">
+            <i class="icon wm-icon-arrow-shrink"></i>
+        </a>
+
+        <i 
+            class="icon wm-icon-pinpoint map-center"
+            ng-if="!vm.hideDeactiveCentralPointer || vm.followActive"
+            ng-style="{
+                'color': vm.followActive ? vm.colors.global.centralPointerActive : '#8A8677'
+            }"></i>
+
+        <div
+            id="map"
+            class="advanced-layout advanced-map"></div>
+
+        <div 
+            class="locate-custom-control"
+            ng-if="vm.showLocate">
+            <div class="leaflet-control-locate leaflet-bar leaflet-control">
+                <a 
+                    class="leaflet-bar-part leaflet-bar-part-single" 
+                    href="" 
+                    title="Show me where I am"
+                    ng-click="vm.centerOnMe()">
+                    <!-- ng-class="{
+                            'wm-icon-mappalo': vm.isRotating,
+                            'wm-icon-android-locate': !vm.isRotating && !vm.canFollow,
+                            'wm-icon-android-locate-full': !vm.isRotating && vm.canFollow,
+                            'fa-spin': vm.locateLoading
+                    }" -->
+                    <span 
+                        class="icon"
+                        ng-class="{
+                            'wm-icon-android-locate-full': !vm.followActive,
+                            'fa-spin': vm.locateLoading && !vm.followActive
+                        }"
+                        style="-webkit-transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg); transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg)">
+                        <img
+                            style="margin: 5px" 
+                            src="core/images/compass.svg"
+                            ng-if="vm.followActive && !vm.isRotating">
+                        <img
+                            style="margin: 5px" 
+                            src="core/images/compass_.svg"
+                            ng-if="vm.followActive && vm.isRotating">
+                        </span>
+                </a>
+            </div>
+        </div>
+
+        <div 
+            class="coords-block"
+            ng-if="vm.centerCoords">
+            <span>
+                {{vm.centerCoords.lat}}, {{vm.centerCoords.lng}} 
+                
+                <!-- TODO: implement share -->
+                <!-- <button class="coords-share-button">
+                    <i class="icon wm-icon-forward"></i>
+                </button> -->
+            </span>
+        </div>
+    </ion-footer-bar>
+</ion-view>

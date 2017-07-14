@@ -1,0 +1,374 @@
+<!-- TODO: add class itinerario-details for itinerario ?-->
+<ion-view
+    cache-view="false"
+    ng-controller="DetailController as vm" class="layer-details"
+    ng-style="{
+        'background': vm.colors.details.background,
+        'color': vm.colors.details.color
+    }"
+    ng-class="{
+        'event-details': vm.isEventDetail
+    }">
+
+    <ion-nav-title>
+        <span
+            class="title-inner"
+            ng-class="{
+                'has-date': vm.isEventDetail
+            }">
+          <span
+              class="title-left event-title-date"
+              ng-if="vm.isEventDetail">
+                 <span
+                     class="event-title-start"
+                     ng-if="vm.feature.field_date.value">
+                     {{vm.renderDate(vm.feature.field_date.value)}}
+                 </span>
+                 <span
+                     class="event-title-end"
+                     ng-if="vm.feature.field_date.value2">
+                     {{vm.renderDate(vm.feature.field_date.value2)}}
+                 </span>
+            </span>
+
+            <span
+                class="title-right event-title"
+                ng-click="vm.openTextModal()" ng-bind-html="vm.mainTitle">
+
+            </span>
+        </span>
+    </ion-nav-title>
+    <ion-nav-buttons side="left" class="no-animate">
+        <button
+            class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left"
+            ng-if="!vm.hideBack"
+            ng-click="vm.goBack()">
+        </button>
+        <!-- <button
+            class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left"
+            ng-if="vm.hideBack"
+            ng-click="vm.toggleMap()">
+        </button> -->
+    </ion-nav-buttons>
+
+    <ion-content class="has-show-more"
+                 style="background: {{vm.colors.global.background}}">
+        <div class="details-container">
+            <!-- TODO: for single back to category element add details-subnav-single - for two elements add details-subnav-rows -->
+            <div
+                class="details-subnav details-subnav-single"
+                ng-style="{
+                    'color': vm.colors.subnav.color,
+                    'background': vm.colors.subnav.background
+                }"
+                ng-if="!vm.isEventDetail && !vm.isAreaDetail && vm.isParentInMenu">
+                <ul class="details-subnav__list">
+                    <li class="subnav-list__element">
+                        <a href="" ng-click="vm.goBackToCategory(vm.mainCategory)">
+                            <!-- <i class="icon ion-ios-arrow-left"></i> --> {{vm.mainCategory}}
+                        </a>
+                    </li>
+                </ul>
+                    <!-- Hidden for event detail or in case there's only one element -->
+                    <!-- <li class="subnav-list__element"><a href=""><i class="icon ion-ios-arrow-left"></i>  Prodotti tipici</a></li> -->
+            </div>
+            <!-- TODO: for single back to category element add details-contact-single - for two elements add details-contact-rows -->
+            <div
+                class="details-contacts details-contact-rows"
+                ng-if="vm.feature.email || vm.feature.phone">
+                <ul
+                    class="details-contacts__list">
+                    <li
+                        class="contacts-list__element"
+                        ng-if="vm.feature.phone">
+                        <a
+                            href=""
+                            style="cursor: default"
+                            ng-if="!vm.availablePhoneNumber">
+                            <i class="icon ion-ios-telephone-outline"></i> {{vm.feature.phone}}
+                        </a>
+                        <a
+                            href="tel://{{vm.availablePhoneNumber}}"
+                            ng-click="vm.chiama(vm.feature.phone)"
+                            style="cursor: default"
+                            ng-if="vm.availablePhoneNumber">
+                            <i class="icon ion-ios-telephone-outline"></i> {{vm.feature.phone}}
+                        </a>
+                    </li>
+                    <!-- Hidden for event detail -->
+                    <li
+                        class="contacts-list__element"
+                        ng-if="vm.feature.email">
+                        <a href="mailto:{{vm.feature.email}}?subject=informazioni">
+                            <i class="icon ion-ios-email-outline"></i> Contattaci
+                        </a>
+                    </li>
+                </ul>
+                <div
+                    class="contacts-list__element"
+                    style="width: 100%"
+                    ng-if="vm.feature.address">
+                    <a href="geo:{{vm.coordinates}}"
+                       style="cursor: default"
+                       ng-click="vm.openExternalMap()">
+                        <i class="icon ion-location"></i> {{vm.feature.address}}
+                    </a>
+                </div>
+            </div>
+
+            <!-- details-columns -->
+            <!-- TODO: for one-column layout use details-rows class  - then for only image, table or text just put them in details-left -->
+            <!-- TODO: for two-column layout use details-columns class-->
+            <div
+                class="details-content"
+                ng-class="{
+                    'details-columns': vm.feature.image,
+                    'details-row': !vm.feature.image
+                }">
+                <!--    one columns layout -->
+                <div
+                  class="details-rows"
+                  ng-if="vm.feature.image">
+                    <div class="details-image">
+                        <!-- <a
+                            class="btn-expand image-expand"
+                            href=""
+                            ng-click="vm.openImageModal()">
+                            <i class="icon ion-arrow-expand"></i>
+                        </a> -->
+                        <img
+                          ng-if="!vm.isAreaDetail"
+                          ng-click="vm.openImageModal()"
+                          ng-src="{{vm.feature.image}}">
+                        <img
+                          ng-if="vm.isAreaDetail"
+                          style="max-height: 125px; margin-left: 20%;"
+                          ng-src="{{vm.feature.image}}">
+                    </div>
+
+                    <ul
+                      class="details-related">
+                        <li
+                          class="details-related-element related-itinerari"
+                          ng-if="vm.relatedItinerary.length > 0"
+                          ng-click="vm.openItineraryRelatedFeatures()">
+                            <a href="">
+                                {{vm.relatedItinerary.length}} itinerar{{vm.relatedItinerary.length === 1 ? 'o': 'i'}} collegat{{vm.relatedItinerary.length === 1 ? 'o': 'i'}}
+                                <i class="icon wm-icon-ios7-arrow-thin-right"></i>
+                            </a>
+                        </li>
+                        <li
+                          class="details-related-element related-events"
+                          ng-if="vm.relatedEvents.length > 0"
+                          ng-click="vm.openRelatedEvents()">
+                            <a href="">
+                                {{vm.relatedEvents.length}} event{{vm.relatedEvents.length === 1 ? 'o': 'i'}} collegat{{vm.relatedEvents.length === 1 ? 'o': 'i'}}
+                                <i class="icon wm-icon-ios7-arrow-thin-right"></i>
+                            </a>
+                        </li>
+                        <li
+                          class="details-related-element related-offer"
+                          ng-click="vm.openCouponsModal()"
+                          ng-if="vm.relatedCoupons.length > 0">
+                            <a href="">
+                                <i class="icon wm-icon-lodging"></i>
+                                {{vm.relatedCoupons.length}} offert{{vm.relatedCoupons.length === 1 ? 'a': 'e'}}
+                                <i class="icon wm-icon-ios7-arrow-thin-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul
+                      ng-if="vm.relatedPlaces.length > 0"
+                      class="details-related">
+                        <li
+                          class="details-related-element related-place"
+                          ng-click="vm.openRelatedPlaces()">
+                            <a href="">
+                                {{vm.relatedPlaces.length}} luog{{vm.relatedPlaces.length === 1 ? 'o': 'hi'}} collegat{{vm.relatedPlaces.length === 1 ? 'o': 'i'}}
+                                <i class="icon wm-icon-ios7-arrow-thin-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div
+                    class="details-description details-rows"
+                    ng-if="!vm.onlyTable && !vm.avoidModal">
+
+                    <div
+                        class="opening-hours"
+                        ng-if="vm.featureDetails.opening_hours">
+                        <i class="icon ion-clock"></i>
+                        <span class="label">Orari di Apertura</span>
+                        {{vm.featureDetails.opening_hours}}
+                    </div>
+
+                    <p
+                        ng-bind-html="vm.mainDescription.html || vm.feature.title"
+                        ng-click="vm.openTextModal()"></p>
+
+                    <div class="details-expander">
+                        <a
+                            href=""
+                            class="details-read-more"
+                            ng-if="vm.mainDescription.more"
+                            ng-click="vm.openTextModal()">
+                            leggi tutto <i class="icon ion-ios-arrow-thin-right"></i>
+                        </a>
+
+                        <a
+                            href=""
+                            class="details-read-more"
+                            ng-if="vm.hasTable && !vm.onlyTable"
+                            ng-click="vm.openTableModal()">
+                            dettagli <i class="icon ion-ios-arrow-thin-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div
+                    class="details-description details-rows"
+                    ng-if="vm.avoidModal">
+                    <div
+                        class="opening-hours"
+                        ng-if="vm.featureDetails.opening_hours">
+                        <i class="icon ion-clock"></i>
+                        <span class="label">Orari di Apertura: </span>
+                        {{vm.featureDetails.opening_hours}}
+                    </div>
+                    <p
+                        ng-bind-html="vm.feature.description || vm.feature.title"></p>
+
+                    <div class="details-expander">
+
+                        <a
+                            href=""
+                            class="details-read-more"
+                            ng-if="vm.hasTable && !vm.onlyTable"
+                            ng-click="vm.openTableModal()">
+                            dettagli <i class="icon ion-ios-arrow-thin-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div ng-if="vm.onlyTable">
+                    <table class="table-details">
+                        <tr
+                            ng-repeat="(key, value) in vm.detailTable"
+                            ng-if="vm.featureDetails[key] && vm.featureDetails[key] !== ''">
+                            <th class="table-row-header">
+                              {{value}}
+                            </th>
+                            <td class="table-row-desc">
+                              {{vm.featureDetails[key]}}
+                            </td>
+                        </tr>
+                    </table>
+
+                    <br />
+                    <br />
+
+                    <!-- <div style="width: 100%; text-align: center;">
+                        <a
+                            href=""
+                            download
+                            ng-click="vm.openInExternalBrowser('http://api.webmapp.it/elba/media/Legenda_Elba.pdf')">Scarica la legenda dei simboli</a>
+                    </div> -->
+                </div>
+
+                <div ng-if="!vm.feature.image">
+                    <ul
+                        class="details-related">
+                        <li
+                            class="details-related-element related-itinerari"
+                            ng-if="vm.relatedItinerary.length > 0"
+                            ng-click="vm.openItineraryRelatedFeatures()">
+                            <a href="">
+                                {{vm.relatedItinerary.length}} itinerar{{vm.relatedItinerary.length === 1 ? 'o': 'i'}} collegat{{vm.relatedItinerary.length === 1 ? 'o': 'i'}}
+                                <i class="icon wm-icon-ios7-arrow-thin-right"></i>
+                            </a>
+                        </li>
+                        <li
+                            class="details-related-element related-events"
+                            ng-if="vm.relatedEvents.length > 0"
+                            ng-click="vm.openRelatedEvents()">
+                            <a href="">
+                                {{vm.relatedEvents.length}} event{{vm.relatedEvents.length === 1 ? 'o': 'i'}} collegat{{vm.relatedEvents.length === 1 ? 'o': 'i'}}
+                                <i class="icon wm-icon-ios7-arrow-thin-right"></i>
+                            </a>
+                        </li>
+                        <li
+                            class="details-related-element related-offer"
+                            ng-click="vm.openCouponsModal()"
+                            ng-if="vm.relatedCoupons.length > 0">
+                            <a href="">
+                                <i class="icon wm-icon-lodging"></i>
+                                {{vm.relatedCoupons.length}} offert{{vm.relatedCoupons.length === 1 ? 'a': 'e'}}
+                                <i class="icon wm-icon-ios7-arrow-thin-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul
+                        ng-if="vm.relatedPlaces.length > 0"
+                        class="details-related">
+                        <li
+                            class="details-related-element related-place"
+                            ng-click="vm.openRelatedPlaces()">
+                            <a href="">
+                                {{vm.relatedPlaces.length}} luog{{vm.relatedPlaces.length === 1 ? 'o': 'hi'}} collegat{{vm.relatedPlaces.length === 1 ? 'o': 'i'}}
+                                <i class="icon wm-icon-ios7-arrow-thin-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="details-expander">
+                <a
+                    href=""
+                    class="details-read-more"
+                    ng-repeat="(key, value) in vm.additionalLinks"
+                    ng-click="vm.openLink(value)">
+                    {{key}}
+                </a>
+            </div>
+
+            <!-- part for ITINERARI -->
+            <div
+                class="itinerario-details-tappe"
+                ng-if="vm.stages">
+                <h2 class="itinerario-tappe-title">TAPPE</h2>
+
+                <ul class="list itinerario-tappe-list">
+                    <li
+                        class="item item-icon-left itinerario-tappa-item"
+                        ng-repeat="item in vm.stages"
+                        ng-click="vm.openRelatedPOI(item)">
+                        <i class="icon wm-icon-flag"></i>
+                        <span class="tappa-name">{{item.title}}</span>
+                        <span
+                            ng-if="item.pois.length > 0"
+                            class="tappa-poi">
+                            <em>{{item.pois.length}}</em> punt{{item.pois.length === 1? 'o' : 'i'}} di interesse
+                        </span>
+                        <i
+                            class="icon icon-arrow wm-icon-ios7-arrow-forward"
+                            ng-if="item.pois.length > 0"></i>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </ion-content>
+    <div
+      class="arrow-show-more"
+      style="background: {{vm.colors.global.background}}"
+      ng-click="vm.toggleList()">
+        <i
+          class="icon"
+          ng-class="{
+               'wm-icon-ios7-arrow-down': !vm.isListExpanded,
+               'wm-icon-ios7-arrow-up': vm.isListExpanded
+            }">
+        </i>
+    </div>
+</ion-view>

@@ -1,0 +1,22 @@
+t<ion-modal-view class="modal-mappalo modal-tappa-poi">
+    <a 
+        class="modal-close"
+        ng-click="vm.hide()">
+        <i class="icon wm-icon-android-close"></i>
+    </a>
+    <ion-content style="background: {{COLORS.global.background}}">
+        <div class="modal-content">
+            <span class="modal-title">{{vm.featureTitle}}</span>
+
+            <ul class="list tappa-poi-list">
+                <li 
+                  class="item item-icon-left poi-list-item"
+                  ng-click="vm.openFeature(item)"
+                  ng-repeat="item in vm.featureList | orderObjectByName">
+                    <i class="icon {{item.parent.icon}}"></i>
+                    {{item.properties.name}}
+                </li>
+            </ul>
+        </div>
+    </ion-content>
+</ion-modal-view>

@@ -1,0 +1,598 @@
+/*
+ * MAP
+ *
+ * Styles for map element and components
+ */
+
+/* ------------------------------------ *\
+   #MAP
+\* ------------------------------------ */
+
+#map {
+  height: 100%;
+  width: 100%;
+  background-color: white;
+}
+
+.map-center {
+    pointer-events: none;
+}
+
+.locate-custom-control {
+  position: absolute;
+  bottom: 24px;
+  left: 6px;
+  a {
+    cursor: pointer;
+  }
+}
+
+/* ------------------------------------ *\
+   #MAP ICONS
+\* ------------------------------------ */
+
+/* MarkersCluster style */
+
+.marker-cluster {
+  border: 3px solid transparentize($color-box-shadow,0.4);
+  border-radius: 50%;
+  background: transparent;
+  @include box-sizing(border-box);
+  div {
+    margin-left:0;
+    margin-top: 0;
+    border-radius: 50%;
+    // font-family: $main-font-family;
+    font-size: 20px;
+    color: $color-white !important;
+  }
+
+}
+
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  div {
+    background-color: transparentize($color-brown,0.2) !important;
+  }
+
+}
+
+.marker-cluster-small {
+  width: 40px !important;
+  height: 40px !important;
+  div {
+    width: 34px !important;
+    height: 34px !important;
+    line-height: 32px !important;
+  }
+}
+
+.marker-cluster-medium {
+  width: 55px !important;
+  height: 55px !important;
+  div {
+    width: 49px !important;
+    height: 49px !important;
+    line-height: 47px !important;
+  }
+}
+
+.marker-cluster-large {
+
+  width: 65px !important;
+  height: 65px !important;
+  div {
+    width: 59px !important;
+    height: 59px !important;
+    line-height: 57px !important;
+  }
+}
+
+.leaflet-clickable {
+  cursor: pointer;
+}
+
+.force-hide {
+  display: none !important;
+}
+
+.advanced-layout {
+  a.leaflet-control-layers-toggle {
+    display: none;
+  }
+}
+
+/* Vector markers */
+.leaflet-map-pane {
+  .vector-marker {
+    margin-left: -18px!important;
+    margin-top: -43px!important;
+    svg {
+      //width: 50px !important;
+      //height: 70px !important;
+    }
+
+    &.vector-marker-shadow {
+      &::before {
+        right: 40px;
+        bottom: -14px;
+      }
+    }
+
+    path {
+      stroke: $color-white;
+      stroke-width: 2px;
+      // fill: $color-orange;
+    }
+
+    .wm.icon {
+      //width: 50px !important;
+    }
+  }
+
+}
+
+/* Marker icons */
+
+.wm.icon {
+  z-index: 10000000000;
+  //font-size: 25px;
+  text-align: center;
+}
+
+/* Map center element */
+
+.icon.map-center {
+  display: none;
+  margin-top: -24px;
+  margin-left: -24px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 401;
+  font-size: 48px;
+  color: transparentize($color-brown, 0.3);
+
+  .map-page & {
+    display: none;
+  }
+}
+
+/* ------------------------------------ *\
+   #MAP BUTTONS
+\* ------------------------------------ */
+
+.leaflet-bar {
+  @include box-shadow(none !important);
+  border-radius: 0 !important;
+  border: none!important;
+  a {
+    &,
+    &:hover {
+      display: block;
+      width: 45px !important;
+      height: 45px !important;
+      margin-bottom: 9px;
+      background-color: transparentize($color-brown,0.3);
+      border: none!important;
+      border-bottom: none!important;
+      border-radius: 50%;
+      line-height: 43px!important;
+      text-align: center!important;
+      text-decoration: none;
+      color: transparentize($color-brown,0.3);
+      vertical-align: middle!important;
+      outline: none !important;
+      @include box-shadow(none !important);
+
+      &:first-child,
+      &:last-child {
+        border-top-left-radius: 50%;
+        border-top-right-radius: 50%;
+        border-bottom-left-radius: 50%;
+        border-bottom-right-radius: 50%;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    &.leaflet-disabled {
+      background: $color-blue-grey;
+      color: transparent;
+      opacity: 0.5;
+    }
+
+
+    &:hover,
+    &:focus {
+      background-color: $color-brown;
+
+      &::before {
+        color: $color-white;
+      }
+    }
+  }
+
+  .leaflet-control-zoom-in,
+  .leaflet-control-zoom-out {
+    //display: table;
+    font-family: 'webmapp' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    position: relative;
+    color: transparent;
+
+    &::after {
+      display: inline-block;
+      content: '';
+      height: 100%;
+      vertical-align: middle;
+    }
+
+    &::before {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      margin-top: -22px;
+      margin-left: -23px;
+      font-size: 27px;
+      //margin-left: -1px;
+      border-radius: 50%;
+      color: $color-white;
+      vertical-align: middle;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+    }
+  }
+
+  .leaflet-control-zoom-out {
+    &::before {
+      content: "\f208";
+    }
+  }
+
+  .leaflet-control-zoom-in {
+    &::before {
+      content: "\f217";
+    }
+  }
+}
+
+.leaflet-bottom {
+  .leaflet-control {
+    margin-bottom: 20px;
+  }
+}
+
+.leaflet-top {
+  .leaflet-control-locate {
+    display:none !important;
+  }
+}
+
+
+.leaflet-shadow-pane {
+  z-index: 0!important;
+}
+
+.leaflet-control-locate {
+  a,
+  a:hover {
+    margin: 0;
+    padding: 0!important;
+
+    span {
+      display: inline-block;
+      width: 45px;
+      height: 45px;
+      font-family: 'webmapp' !important;
+      speak: none;
+      border-radius: 50%;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      line-height: 45px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      color: $color-white;
+      
+      &::before {
+        display: none;
+      }
+
+      &.wm-icon-mappalo::after {
+        content: "\e911";
+        display: inline-block;
+        width: 45px;
+        height: 45px;
+        font-size: 27px;
+      }
+      &.wm-icon-android-locate-full::after {
+        content: "\e920";
+        display: inline-block;
+        width: 45px;
+        height: 45px;
+        font-size: 27px;
+      }
+      &.wm-icon-android-locate::after {
+        content: "\e921";
+        display: inline-block;
+        width: 45px;
+        height: 45px;
+        font-size: 27px;
+      }
+
+      &.fa-spinner {
+        font-family: 'webmapp' !important;
+
+        &::after {
+        }
+      }
+    }
+  }
+}
+
+/* Coordinates block */
+
+.coords-block {
+  margin: 0 auto;
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 24px;
+  z-index: 400;
+  font-size: 20px;
+  text-align: center;
+  span {
+    display: inline-block;
+    height: 36px;
+    padding: 0 14px;
+    padding-bottom: 7px;
+    background: transparentize($color-brown, .2);
+    line-height: 36px;
+  }
+
+  .coords-share-button {
+    width: 32px;
+    min-height: 20px;
+    margin-right: -12px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: $color-white;
+  }
+
+  .icon {
+    vertical-align: middle;
+  }
+}
+
+.leaflet-bar,
+.coords-block {
+  display: none;
+
+  .map-page &,
+  .map-search & {
+    display: block;
+  }
+}
+
+
+.leaflet-control-attribution {
+  display: none;
+}
+
+/* ------------------------------------ *\
+   #MAP POPOVER
+\* ------------------------------------ */
+
+.leaflet-container {
+  a.leaflet-popup-close-button {
+    display: none;
+  }
+}
+
+// TODO: find a way to set popup bg via js ?! 
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: rgba(96,88,70,.8);
+  color: white;
+  @include box-shadow(0 0 3px transparentize($color-box-shadow, 0.25));
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 2px;
+  .popup-title,
+  .popup-description {
+    margin: 0;
+    padding: 0;
+    color: inherit;
+    // font-family: $main-font-family;
+    line-height: 1;
+  }
+
+  .popup-title {
+    margin-bottom: 5px;
+    font-size: 23px;
+  }
+
+  .popup-description {
+    font-size: 15px;
+  }
+}
+
+.leaflet-popup-content {
+  width: auto !important;
+  min-width: 271px;
+  padding-right: 30px;
+  position: relative;
+  cursor: pointer;
+  p {
+    margin: 18px 26px;
+  }
+}
+
+button.popup-button {
+  display: inline-block;
+  padding: 25px;
+  background: transparent;
+  border: none;
+  position: absolute;
+  right: -25px;
+  top: 50%;
+  color: #A2A2A2;
+  @include vertical-centering;
+
+  .icon {
+    &::before {
+      font-size: 30px;
+      vertical-align: middle;
+    }
+  }
+}
+
+button.popup-close {
+  display: inline-block;
+  padding: 25px;
+  background: transparent;
+  border: none;
+  position: absolute;
+  left: -36px;
+  color: $color-gray;
+  @include vertical-centering;
+  top: 0;
+
+  .icon {
+    &::before {
+      font-size: 20px;
+      vertical-align: middle;
+    }
+  }
+}
+
+/* ------------------------------------ *\
+   #IMAGE SLIDER
+\* ------------------------------------ */
+
+/* Prevent scrolling in image slider */
+.modal-details-gallery {
+  .scroll-view.scroll-xy {
+    max-width: 100%;
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+}
+
+/* Image in slider */
+.image-in-gallery {
+  margin: 0 auto;
+}
+
+/* Slider loader */
+
+@-ms-keyframes spin {
+  from { -ms-transform: rotate(0deg); }
+  to { -ms-transform: rotate(360deg); }
+}
+@-moz-keyframes spin {
+  from { -moz-transform: rotate(0deg); }
+  to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  from { -webkit-transform: rotate(0deg); }
+  to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+  from {
+    transform:rotate(0deg);
+  }
+  to {
+    transform:rotate(360deg);
+  }
+}
+
+.modal-image-loader {
+  width: 46px;
+  height: 46px;
+  margin-top: -12px;
+  margin-left: -23px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: -10;
+  color: $color-white;
+  font-size: 45px;
+  line-height: 46px;
+  -webkit-animation: spin 0.95s infinite linear;
+  -o-animation: spin 0.95s infinite linear;
+  animation: spin 0.95s infinite linear;
+}
+
+/* Remove slider pager */
+.slider-pager {
+  display: none;
+}
+
+// TODO: add check js side
+.when-welcome {
+  .leaflet-overlay-pane {
+    display: none;
+  }
+  .leaflet-marker-icon, .vector-marker {
+    display: none;
+  }
+}
+
+.is-a-poi {
+  path {
+    // fill: #605846 !important;
+  }
+  .vector-marker {
+    cursor: default !important;
+  }
+}
+
+.leaflet-tile-container canvas {
+  // opacity: 0.2 !important;
+  opacity: 0 !important;
+}
+
+
+/* ------------------------------------ *\
+   #MEDIA QUERIES
+\* ------------------------------------ */
+
+@media only screen and (min-width: 1025px) {
+  .leaflet-bar,
+  .coords-block {
+    display: block;
+
+    .welcome-page & {
+      display: none;
+    }
+  }
+
+  .icon.map-center {
+    .desktop-half-map & {
+      display: block;
+    }
+
+    .welcome-page &,
+    .welcome-page.desktop-half-map & {
+      display: none;
+    }
+  }
+}

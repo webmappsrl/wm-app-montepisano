@@ -1,0 +1,427 @@
+/*
+ * MODALS
+ *
+ * Styles for modals
+ */
+
+/* ------------------------------------ *\
+   #MAPPALO MODAL
+\* ------------------------------------ */
+
+.modal {
+  background: inherit !important;
+
+  .bar.bar-stable{
+    background-image: inherit;
+  }
+}
+
+//TODO: MODAL BACKGROUND OVERLAY - SET BG AND OPACITY HERE VIA JS - opacity changes on responsive - remove div backdrop?
+.modal-backdrop-bg {
+  background: rgba(0,0,0,1);
+
+  .active & {
+    opacity: 0.9;
+  }
+}
+
+/* Modal for details, filters etc...*/
+.modal-mappalo {
+  width: auto;
+  //min-height: 400px;
+  padding: 10px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  //Just for example - TODO remove
+  color: $color-dark-brown;
+
+  &.modal-details-gallery {
+    //background: transparentize($color-box-shadow,0.2);
+    background: transparent;
+  }
+}
+
+.title-inner-header {
+  color: $color-white;
+}
+
+.modal-close-header {
+  color: $color-white;
+  padding: 7px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.modal-close {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  padding: 7px;
+  background: $color-brown;
+  background: rgba(0,0,0,0.2);
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 20;
+  font-size: 25px;
+  text-align: center;
+  color: $color-white;
+}
+
+.modal-content {
+  padding: 15px;
+}
+
+.modal-title {
+  display: block;
+  width: 80%;
+  font-size: 16px;
+  font-weight: $font-weight-bold;
+  color: $color-light-02;
+}
+
+.modal-footer {
+  height: 35px;
+  background: $color-white;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  line-height: 35px;
+}
+
+.modal-footer-title {
+  font-weight: $font-weight-bold;
+  color: $color-dark-red;
+
+  .icon {
+    margin-left: 5px;
+    vertical-align: middle;
+  }
+}
+
+/* Filters modal */
+
+.modal-filters {
+  .list {
+    padding: 10px;
+  }
+
+  .item {
+    padding: 1.5vh 0; //10px?
+    border-right: none;
+    border-left: none;
+    color: $color-brown;
+
+    &:first-child {
+      border-top: none;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+    &.is-selected {
+      // color: #BF410E;
+    }
+  }
+}
+
+/* Details modal */
+.modal-details {
+  .modal-title {
+    font-size: 22px;
+    color: $color-dark-red;
+    font-family: $title-font-family;
+  }
+
+  &.modal-details-gallery {
+    .modal-title {
+      display: none;
+    }
+  }
+}
+
+.modal-inner-content {
+  padding: 20px 0;
+  border-bottom: 1px solid $color-light-02;
+
+  .modal-details-gallery &,
+  .modal-details-table & {
+    border-bottom: none;
+  }
+}
+
+.modal-content {
+  .coupons-list {
+    cursor: default;
+  }
+}
+
+.modal-column-right {
+  p h3, p h4 {
+    font-size: 14px;
+    color: $color-brown;
+  }
+  a {
+    color: $color-brown;
+  }
+}
+
+.modal-content-title {
+  margin: 10px 0;
+  font-size: 18px;
+  font-family: $title-font-family;
+  line-height: 1.2;
+
+  .modal-details-gallery & {
+    display: none
+  }
+}
+
+.modal-column-left,
+.modal-column-right {
+  font-size: 14px;
+}
+
+.modal-two-columns {
+  .modal-column-left,
+  .modal-column-right {
+    display: inline-block;
+    width: 49%;
+  }
+}
+
+.modal-column-left {
+  padding-top: 7px;
+  padding-right: 7px;
+}
+
+.modal-column-right {
+  padding-left: 7px;
+}
+
+.modal-full-content {
+  margin: 10px 0;
+}
+
+.modal-image-container {
+  vertical-align: top;
+
+  img {
+    display: inline-block;
+  }
+}
+
+.modal-image-gallery {
+  height: 100%;
+}
+
+.scroll-canvas {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.modal-image-gallery {
+  .slider {
+    height: 100%;
+  }
+}
+
+.image-in-gallery {
+    width: 90%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center, center;
+}
+
+
+.modal-details-gallery {
+  .modal-image-element {
+    //position: absolute;
+    right: 0;
+    left: 0;
+    text-align: center;
+    @include vertical-centering;
+
+    img {
+
+      //width: auto;
+      //max-width: initial;
+      //height: 100%;
+      //max-height: 100%;
+    }
+  }
+  .modal-image-container {
+
+    .button-arrow {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      margin-top: -20px;
+      border: none;
+      background: transparent;
+      position: absolute;
+      top: 50%;
+      text-align: center;
+      color: #ffffff;
+      z-index: 10;
+      //text-shadow: 0 0 20px rgba(0,0,0,1);
+
+      .icon {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background: rgba(255,255,255,0.8);
+        border-radius: 50%;
+        line-height: 40px;
+
+        font-size: 20px;
+        color: #000000;
+        text-align: center;
+
+        &::before {
+          display: inline-block;
+          width: 40px;
+          height: 40px;
+          line-height: 40px;
+        }
+      }
+
+    }
+
+    .arrow-right {
+      right: 0;
+    }
+
+    .arrow-left {
+      left: 0;
+    }
+  }
+}
+
+.slider-slides {
+  @include clearfix;
+}
+
+.modal-image-content {
+  .scroll {
+    height: 100%;
+  }
+
+  .modal-content {
+    @include vertical-centering;
+  }
+}
+
+/* Tappa POIs */
+
+.modal-tappa-poi {
+  .tappa-poi-list {
+    margin-top: 10px;
+    .poi-list-item, .event-list-item {
+      cursor: pointer;
+      font-size: 18px;
+      &.item-icon-left {
+        padding-left: 30px;
+
+        .icon {
+          left: -5px;
+        }
+      }
+
+      &:first-child {
+        border-top: none;
+      }
+
+      .icon {
+        &::before {
+          font-size: 15px;
+        }
+      }
+    }
+    .event-list-item {
+      color: $color-dark-red;
+    }
+  }
+}
+
+/* MODAL DOWNLOAD */
+ion-modal-view.modal-download {
+  position: relative;
+  height: 100vh;
+
+  .download-page.has-header {
+    position: absolute;
+    background: transparent;
+    top: 50%!important;
+    height: 20em;
+    margin-top: -8em;
+  }
+
+}
+/* LOADER in MODAL DONWLOAD*/
+
+.loader {
+  border: 16px solid $color-login-bg;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  margin: 30px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
+@media (min-width: 1025px) {
+  .modal {
+    &.modal-details-gallery {
+      width: 800px;
+      margin-left: -400px;
+    }
+  }
+}
+
+@media (min-width: 680px) {
+  .modal {
+    width: 400px;
+    left: 50%;
+    margin-left: -200px;
+    min-height: 500px;
+    top: 10%;
+
+    &.modal-details-gallery {
+      width: 600px;
+      margin-left: -300px;
+    }
+  }
+}
+
+//and (orientation: landscape)
+
+
+@media (min-width: 480px) and (orientation: landscape) {
+  .modal {
+    min-height: initial;
+    top: 0;
+    //width: 400px;
+
+    &.modal-details-gallery {
+      width: 400px;
+      margin: 0 auto;
+      //margin-left: -200px;
+      left: 0;
+
+    }
+  }
+}

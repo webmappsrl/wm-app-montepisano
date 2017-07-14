@@ -1,0 +1,24 @@
+<ion-view 
+    cache-view="false" 
+    ng-controller="MapController as vm">
+    <ion-nav-title>
+        <span>
+            {{ vm.mapTitle }}
+        </span>
+    </ion-nav-title>
+    <ion-nav-buttons side="left">
+        <button 
+            class="no-animate button button-icon icon ion-navicon"
+            menu-toggle="left"></button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button 
+            class="no-animate button button-icon {{vm.filterIcon}}"
+            ng-if="vm.showFilers"
+            ng-click="vm.openFilters()"></button>
+    </ion-nav-buttons>
+
+    <ion-content>
+        <!-- Extra in map view -->
+    </ion-content>
+</ion-view>

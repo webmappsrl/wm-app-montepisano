@@ -1,0 +1,542 @@
+/**
+ * DETAILS PAGE
+ *
+ * Style for details page
+ */
+
+/* ------------------------------------ *\
+   #GENERAL
+\* ------------------------------------ */
+
+.details-subnav__list {
+  //padding: 5px;
+  margin-top: -1px;
+  font-size: 14px;
+}
+
+.details-contacts__list {
+  //padding: 6px;
+  //background: $color-light-01;
+}
+
+.subnav-list__element,
+.contacts-list__element {
+  display: inline-block;
+  width: 49%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  text-transform: uppercase;
+
+  a {
+    display: inline-block;
+    width: 100%;
+    height: 40px;
+    padding: 0 15px;
+    text-decoration: none;
+    line-height: 40px;
+    vertical-align: top;
+    
+    .icon{
+      margin-right: 5px;
+      font-size: 25px;
+      vertical-align: middle;
+    }
+  }
+}
+
+.subnav-list__element {
+  a {
+    color: inherit;
+    font-weight: $font-weight-bold;
+    text-decoration: underline;
+
+    &:hover,
+    &:focus {
+      color: $color-white;
+      // background:  $color-light-02;
+    }
+  }
+
+  .details-subnav-single & {
+    width: 100%;
+  }
+
+  .details-subnav-rows & {
+    a {
+      @include text-ellipsis;
+    }
+  }
+}
+
+.contacts-list__element {
+  a {
+    color: $color-brown;
+  }
+
+  .details-contact-single & {
+    width: 100%;
+  }
+
+  .details-contact-rows & {
+    a {
+      @include text-ellipsis;
+    }
+  }
+}
+
+.details-container {
+  //position: relative;
+}
+
+.details-content {
+  height: 100%;
+  padding: 2%;
+  background: inherit;
+  position: relative;
+  color: inherit;
+
+  @include clearfix;
+}
+
+.details-howtoreach {
+  display: none;
+  height: 45px;
+  position: fixed;
+  right: 0;
+  bottom: calc((100% - 43px) - 60%);
+  left: 0;
+  z-index: 100;
+  line-height: 45px;
+  font-size: 20px;
+  text-decoration: none;
+  text-align: center;
+  text-transform: lowercase;
+  color: $color-white;
+  // @include box-shadow(inset 0 2px 14px rgba(0,0,0,0.2));
+  @include box-shadow(0 -4px 14px -4px rgba(18, 16, 11, 0.5));
+
+  .icon{
+    margin-right: 5px;
+    font-size: 25px;
+    vertical-align: middle;
+  }
+
+  .has-howtoreach & {
+    display: block;
+  }
+}
+
+.details-shadow {
+  display: none;
+  height: 45px;
+  position: fixed;
+  right: 0;
+  bottom: calc((100% - 88px) - 60%);
+  left: 0;
+  z-index: 100;
+  line-height: 45px;
+  font-size: 20px;
+  text-decoration: none;
+  text-align: center;
+  text-transform: lowercase;
+  pointer-events: none;
+  color: $color-white;
+  @include box-shadow(0 -4px 14px -4px rgba(18, 16, 11, 0.5));
+
+  &.extend-shadow {
+    bottom: -45px;
+  }
+
+  .has-shadow & {
+    display: block;
+  }
+}
+
+/* For two-columns layout */
+
+.details-left,
+.details-right {
+  padding: 2%;
+}
+
+.details-columns {
+  .details-left {
+    width: 53%;
+    float: left;
+  }
+
+  .details-right {
+    width: 45%;
+    float: left;
+  }
+}
+
+
+.details-image {
+  padding: 5px;
+  position: relative;
+
+  img{
+    border: 2px solid #f2f5e8;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+.details-related-element {
+  border-bottom: 1px solid $color-light-02;
+  text-align: right;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  a {
+    display: block;
+    padding: 0.75em 0;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: $font-weight-bold;
+
+    .icon {
+      margin-left: 3px;
+      font-size: 18px;
+      vertical-align: middle;
+    }
+  }
+
+  &.related-itinerari {
+    a {
+      color: $color-dark-red;
+    }
+  }
+
+  &.related-place {
+    a {
+      color: $color-green;
+    }
+  }
+
+  &.related-events {
+    a {
+      color: $color-orange;
+    }
+  }
+
+  &.related-offer {
+    a {
+      color: $color-red-02;
+    }
+  }
+}
+
+/* For no columns layout*/
+
+.details-rows {
+  .details-left {
+    border-bottom: 1px solid $color-light-02;
+  }
+
+  .details-related-element {
+    display: inline-block;
+    width: 49%;
+    border-bottom: none;
+    text-align: center;
+  }
+
+  .details-right {
+    .details-image {
+      display: none;
+    }
+  }
+
+  .related-offer {
+    //width: 100%;
+  }
+}
+
+.details-description {
+  padding: 10px;
+
+  .opening-hours{
+    padding: 10px 0;
+
+    .icon{
+      margin-right: 5px;
+      font-size: 20px;
+      vertical-align: text-top;
+    }
+
+    .label {
+      text-transform: uppercase;
+    }
+  }
+
+  p {
+    margin: 0 0 6px 0;
+    padding: 0;
+    text-align: justify;
+    line-height: 1.3;
+    font-size: 16px;
+  }
+
+  p.link-more {
+    display: none;
+  }
+}
+
+.details-expander {
+  width: 100%;
+  background: inherit;
+  color: inherit;
+}
+
+.details-read-more {
+  display: block;
+  height: 30px;
+  margin-top: 10px;
+  color: inherit;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: $font-weight-bold;
+  font-size: 16px;
+  line-height: 30px;
+  .icon {
+    font-size: 18px;
+    margin-left: 3px;
+
+    &::before {
+      font-size: 30px;
+      vertical-align: middle;
+    }
+  }
+}
+
+.image-expand {
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
+  margin-left: -22px;
+  line-height: 42px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  .icon {
+    font-size: 28px;
+  }
+}
+
+/* Details table */
+
+.table-details {
+  width: 100%;
+  font-size: 14px;
+  line-height: 1.2;
+
+  th,td {
+    padding: 10px;
+    border-bottom: 1px solid $color-light-01;
+    text-align: left;
+  }
+
+  &.horrible-table {
+
+
+    td {
+      display: block;
+      padding: 3px;
+      border-bottom: none;
+
+      &.it {
+        font-weight: $font-weight-bold;
+        font-size: 20px;
+      }
+
+      &.en {
+        font-style: italic;
+      }
+
+
+    }
+
+    tr {
+      &:nth-child(2n+2) {
+        td {
+          padding-bottom: 15px;
+        }
+
+      }
+    }
+  }
+}
+
+.table-row-header {
+  font-weight: $font-weight-bold;
+}
+
+.table-row-desc {
+
+}
+
+/* Itinerari details */
+
+.itinerario-details-tappe {
+  //border-top: 1px solid $color-menu-border;
+  clear: both;
+}
+
+.itinerario-tappe-title {
+  display: inline-block;
+  width: 100%;
+  font-family: $title-font-family;
+  margin: 0;
+  padding: 8px;
+  color: $color-brown;
+  background: $color-light-01;
+  font-size: 18px;
+  text-align: center;
+}
+
+.itinerario-tappe-list {
+
+}
+.itinerario-details-tappe {
+  .itinerario-tappa-item {
+    position: relative;
+    display: block;
+    padding-right: 34px;
+    cursor: pointer;
+    color: $color-brown;
+
+    .icon {
+      color: $color-green;
+    }
+
+    .icon-arrow {
+      position: absolute;
+      right: 5px;
+      left: auto;
+    }
+
+    &:first-child {
+      border-top: none;
+    }
+  }
+}
+
+.tappa-name,
+.tappa-poi {
+  display: block;
+}
+
+.tappa-name {
+  text-transform: uppercase;
+  font-size: 18px;
+  @include text-ellipsis;
+}
+
+.tappa-poi {
+  font-size: 16px;
+
+  em {
+    font-weight: $font-weight-bold;
+    color: $color-green;
+  }
+}
+
+
+/* DETAILS ROUTE */
+
+.details-image-route {
+  padding: 10px;
+  position: relative;
+
+  img{
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+.details-route-rows {
+  max-width: 768px;
+  margin: 0 auto;
+}
+
+.details-route {
+  padding: 0 10px;
+}
+
+.details-route span{
+  text-transform: uppercase;
+}
+
+.details-route span.difficulty {
+  float: right;
+}
+
+
+/* ------------------------------------ *\
+   #MEDIA QUERIES
+\* ------------------------------------ */
+
+/* TODO: use mixin? */
+@media only screen and (max-height: 567px) and (max-width: 768px) {
+  .details-description p {
+    font-size: 2rem;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .has-howtoreach .scroll-content {
+    margin-bottom: 45px;
+  }
+
+  .details-rows {
+    .details-related-element {
+      width: 32%;
+      text-align: center;
+    }
+  }
+}
+
+@media only screen and (min-width: 1025px) {
+  .has-howtoreach .scroll-content {
+    margin-bottom: 45px;
+  }
+
+  .details-howtoreach {
+    .desktop-half-map &,
+    .desktop-full-map & {
+      position: absolute;
+      right: 50%;
+      bottom: -1px;
+      left: 0;
+    }
+
+    .desktop-full-map & {
+      z-index: 1;
+    }
+  }
+
+  .details-shadow {
+    .desktop-half-map &,
+    .desktop-full-map & {
+      position: absolute;
+      right: 50%;
+      bottom: -45px;
+      left: 0;
+    }
+
+    &.extend-shadow {
+      right: 0;
+    }
+
+    .desktop-full-map & {
+      z-index: 1;
+    }
+  }
+
+}

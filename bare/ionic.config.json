@@ -1,0 +1,9 @@
+{
+  "documentRoot": "",
+  "name": "mappalo",
+  "app_id": "cf0d8507",
+  "type": "ionic1",
+  "watchPatterns": [
+    "scss/**/*"
+  ]
+}

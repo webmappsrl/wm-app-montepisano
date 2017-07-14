@@ -1,0 +1,39 @@
+<ion-modal-view class="modal-mappalo modal-details modal-details-table">
+    <a class="modal-close" ng-click="vm.hide()">
+        <i class="icon wm-icon-android-close"></i>
+    </a>
+    <ion-content style="background: {{COLORS.global.background}}">
+        <div class="modal-content">
+            <span 
+                class="modal-title" 
+                style="color: {{COLORS.details.color}}">
+                Dettagli
+            </span>
+            <div class="modal-inner-content">
+                <div class="modal-full-content">
+                    <table class="table-details horrible-table">
+                        <tr 
+                            ng-repeat="(key, value) in parent.detailTable"
+                            ng-if="parent.featureDetails[key] && parent.featureDetails[key] !== ''">
+                            <td class="table-row-desc {{value}}">
+                              {{parent.featureDetails[key]}}
+                            </td>
+                        </tr>
+                    </table>
+
+                    <br />
+                    <br />
+
+                    <!-- <div style="width: 100%; text-align: center;">
+                        <a 
+                            href="" 
+                            download
+                            ng-click="parent.openInExternalBrowser('http://api.webmapp.it/elba/media/Legenda_Elba.pdf')">
+                            Scarica la legenda completa in formato PDF
+                        </a>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

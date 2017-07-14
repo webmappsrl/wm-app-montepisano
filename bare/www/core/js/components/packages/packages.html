@@ -1,0 +1,117 @@
+<ion-view
+    ng-controller="PackagesController as vm"
+    cache-view="false"
+    class="events-view">
+    <ion-nav-title>
+        <!-- TODO: responsive font-size  -->
+        <span style="font-size: 64%;">
+            {{vm.pageConf.title}}
+        </span>
+    </ion-nav-title>
+
+    <ion-nav-buttons side="left">
+        <button
+            class="no-animate button button-icon icon ion-navicon"
+            menu-toggle="left"></button>
+    </ion-nav-buttons>
+
+    <ion-content
+        style="color: {{COLORS.global.color}}; background: {{COLORS.global.background}}">
+        <ion-refresher on-refresh="vm.doRefresh(event)">
+            <ion-refresher-content
+                pullingIcon="arrow-dropdown"
+                pullingText="Pull to refresh"
+                refreshingSpinner="circles"
+                refreshingText="Refreshing...">
+            </ion-refresher-content>
+        </ion-refresher>
+        <div
+            class="static-content card-content"
+            ng-if="!vm.isLoggedIn">
+        </div>
+
+        <div
+            class="static-content card-content">
+            <!-- <div
+                ng-if="!vm.isLoggedIn"
+                ng-click="vm.openLoginOrRegistration()">
+                <button style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}}; margin-top: 150px!important"
+                        class="button-download button button-block">
+                    Accedi
+                </button>
+            </div> -->
+            <div
+                class="modal-inner-content modal-two-columns coupons-list"
+                ng-if="vm.isLoggedIn"
+                ng-repeat="item in vm.packages">
+                <div
+                    class="packages-title"
+                    ng-bind-html="item.title.rendered">
+                </div>
+                <div class="details-image">
+                    <img class="modal-image" ng-src="{{item.n7webmap_route_media_gallery[0].sizes.medium_large}}">
+                </div>
+                <div class="details-description" ng-bind-html="item.excerpt.rendered">
+                </div>
+
+                <div>
+                    <button
+                        style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                        class="button-download button button-block button-half"
+                        ng-if="vm.userDownloadedPackages[item.id]"
+                        ng-click="vm.openPackage(item)">
+                        Apri
+                    </button>
+                    <button
+                        style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                        class="button-download button button-block button-half"
+                        ng-if="vm.userDownloadedPackages[item.id]"
+                        ng-click="vm.removePack(item)">
+                        Rimuovi
+                    </button>
+                    <button
+                        style="background: {{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                        class="button-download button button-block button-half"
+                        ng-if="(vm.userPackagesId[item.id] || item.wm_route_public) && !vm.userDownloadedPackages[item.id]"
+                        ng-click="vm.downloadPack(item)">
+                        Scarica
+                    </button>
+                    <button
+                        style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                        class="button-block button button-download button-half"
+                        ng-if="!item.wm_route_public && !vm.userDownloadedPackages[item.id] && !vm.userPackagesId[item.id]"
+                        ng-disabled="vm.userPackagesIdRquested[item.id]"
+                        ng-click="vm.requestPack(item)">
+                        <!-- TODO: pulsante con scritto "Richiesta effettuata" senza che vada su due righe -->
+                        {{ !vm.userPackagesIdRquested[item.id] ? 'Richiedi' : 'Richiesto'}}
+                    </button>
+                    <button
+                        style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                        class="button-block button button-half"
+                        ng-click="vm.openDetailsRoute(item.id);">
+                        Dettagli
+                    </button>
+                </div>
+
+            </div>
+
+            <br><br>
+
+            <!-- TODO: font? -->
+            <div
+                class="card-text card-opportunities"
+                ng-if="vm.isLoggedIn">
+                <h2 class="card-text-title">ESCI DAL TUO ACCOUNT</h2>
+                <!-- <p>Una card, tante iniziative e sorprese esclusive solo per gli esploratori della Valle dei Segni</p> -->
+            </div>
+
+            <button
+                style="background: {{COLORS.global.buttonsBackground}}"
+                class="login-button button button-block"
+                ng-if="vm.isLoggedIn"
+                ng-click="vm.logout()">
+                LOGOUT
+            </button>
+        </div>
+    </ion-content>
+</ion-view>

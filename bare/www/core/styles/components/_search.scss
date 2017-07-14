@@ -1,0 +1,112 @@
+/**
+ * SEARCH PAGE
+ *
+ * Style for search page
+ */
+
+/* ------------------------------------ *\
+   #GENERAL
+\* ------------------------------------ */
+
+.item-search-filter {
+  padding: 4px;
+  position: relative;
+  z-index: 300;
+  border: none;
+}
+
+.item-search-form {
+  padding: 3px;
+  padding-top: 2px;
+  padding-bottom: 5px;
+  position: relative;
+  z-index: 300;
+  border: none;
+}
+
+.search-select-box,
+.search-input-box {
+  width: 100%;
+
+  input {
+    width: 100%;
+  }
+
+  button:hover {
+    // background-color: #F3F6EA;
+    border: 1px solid #918F75;
+    color: #918F75;
+  }
+}
+
+/*.select-category-left,
+.select-category-right {
+  display: inline-block;
+  width: 50%;
+  vertical-align: middle;
+}*/
+
+.select-category-right {
+  text-align: right;
+}
+
+.label-select-search,
+.label-select-name{
+  display: block;
+}
+
+.label-select-search, .label-select-others {
+  font-size: 15px;
+  color: inherit;
+}
+
+.label-select-others {
+    //display: block;
+  text-transform: lowercase;
+}
+
+.label-select-name {
+  font-size: 16px;
+  font-weight: $font-weight-bold;
+  text-transform: uppercase;
+}
+
+.search-input-box {
+  padding: 5px;
+  background: $color-white;
+  border: 1px solid $color-light-02;
+  position: relative;
+
+  .search-input {
+    padding: 5px;
+  }
+
+  .button {
+    width: 35px;
+    height: 35px;
+    background: transparent;
+    overflow: hidden;
+    position: absolute;
+    right: 5px;
+
+    &::before {
+      margin-top: 0;
+      padding: 5px;
+      font-size: 30px;
+    }
+  }
+}
+
+
+.search-input {
+  @include placeholder {
+    font-style: italic;
+    // font-family: $main-font-family;
+    font-size: 18px;
+  }
+}
+
+.label-input-wrapper {
+  display: inline-block;
+  width: 100%;
+}

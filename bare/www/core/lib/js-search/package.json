@@ -1,0 +1,48 @@
+{
+  "name": "js-search",
+  "version": "1.3.2",
+  "description": "### What is it?",
+  "main": "dist/js-search.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "fly": "^0.8.2",
+    "fly-ts": "^0.2.2",
+    "fly-uglify": "^1.0.0",
+    "jasmine": "^2.3.1",
+    "jasmine-core": "^2.3.4",
+    "karma": "^0.13.3",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-jasmine": "^0.3.6",
+    "typescript": "^1.5.3",
+    "uglify": "^0.1.5"
+  },
+  "scripts": {
+    "build": "npm run compile && npm run test",
+    "compile": "fly",
+    "dev": "fly watchAndBuild",
+    "test": "karma start karma.conf.js",
+    "tdd": "karma start karma.conf.js --auto-watch --no-single-run"
+  },
+  "author": "Brian Vaughn <briandavidvaughn@gmail.com> (https://github.com/bvaughn/)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bvaughn/js-search.git"
+  },
+  "keywords": [
+    "search",
+    "javascript",
+    "js",
+    "clientside",
+    "client-side",
+    "local",
+    "query"
+  ],
+  "bugs": {
+    "url": "https://github.com/bvaughn/js-search/issues"
+  },
+  "homepage": "https://github.com/bvaughn/js-search"
+}

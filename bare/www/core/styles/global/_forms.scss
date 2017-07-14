@@ -1,0 +1,88 @@
+/**
+ * FORMS
+ *
+ * Style for forms elements
+ */
+
+/* ------------------------------------ *\
+   #GENERAL
+\* ------------------------------------ */
+
+.checkbox-container {
+  display: inline-block;
+  width: 25%;
+
+  .item-checkbox {
+    height: 36px;
+    padding: 36px 0 0 0;
+
+    .checkbox {
+      margin-top: -17px;
+      right: 0;
+      left: 0;
+    }
+  }
+}
+
+.input-ph  {
+  @include placeholder {
+    color: transparentize($color-brown,0.4);
+  }
+}
+
+/* Filters checkboxes */
+
+.modal-filters {
+  .checkbox  {
+    margin-top: -18px;
+    padding: 7px 0;
+    right: 0;
+    left: 0;
+
+    input {
+      &:checked {
+        &:before,
+        & + .checkbox-icon:before {
+          background: #BF410E;
+          border-color: #BF410E;
+          border-radius: 50%;
+        }
+      }
+    }
+
+    input,
+    .checkbox-icon {
+      width: 16px;
+      height: 16px;
+
+      &:after {
+        width: 8px;
+        height: 4px;
+        border-width: 2px;
+      }
+    }
+  }
+}
+
+.checkbox-icon {
+  .modal-filters & {
+    display: none;
+  }
+
+  .modal-filters .is-selected & {
+    display: inline-block;
+  }
+}
+
+.item-checkbox {
+
+  .modal-filters & {
+    padding-left: 0;
+  }
+
+  .modal-filters &.is-selected, .modal-filters &.is-not-selected {
+    padding-left: 25px;
+  }
+
+}
+

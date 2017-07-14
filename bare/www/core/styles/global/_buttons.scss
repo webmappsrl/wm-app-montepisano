@@ -1,0 +1,285 @@
+/**
+ * BUTTONS
+ *
+ * Style for all types of buttons
+ */
+
+/* ------------------------------------ *\
+   #BUTTONS
+\* ------------------------------------ */
+
+
+button {
+  .modal.static-modal & {
+    max-width: 80%;
+    margin: 0 auto;
+  }
+
+  &.button-orange {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 0.8em;
+    line-height: 1.2;
+  }
+
+  &.button-reset {
+    color: #4C676A;
+    font-size: 1.1em;
+  }
+
+  &.button-positive {
+    background-color: #444 !important;
+  }
+
+  //&.vcm-btn {
+  //  margin-top: 3.4em !important;
+  //}
+
+  &.button-block {
+    display: inline-block;
+    color: $color-white;
+    background-color: #444;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 18px;
+    padding: 5px 30px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border: 1px solid rgba(0,0,0,0.3);
+    border-bottom-width: 3px;
+    margin: 0px auto 10px!important;
+    @include linear-gradient(rgba(119,113,97,1), rgba(98,90,71,1));
+    -webkit-tap-highlight-color: rgba(0,0,0,0.5);
+
+    .icon {
+      vertical-align: baseline;
+      margin: 0 5px;
+
+      &:before {
+        vertical-align: middle;
+      }
+    }
+
+    /*&:hover {
+      background-color: #e3e3e3!important;
+      border-color: rgba(0,0,0,0.5);
+      color: #444!important;
+    }*/
+
+  }
+
+  &.sign-in,
+  &.button-enable-disable {
+    @include linear-gradient(rgba(180,178,161,1), $color-light-02);
+    text-shadow: none;
+  }
+
+  &.button-reset {
+    background: transparentize($color-blue-grey,0.6);
+    text-shadow: 0 0 1px transparentize($color-button-text-shadow, 0.6);
+  }
+
+  &.login-button {
+    max-width: 215px;
+    display: block;
+    .icon {
+      margin-left: 3px;
+      font-size: 19px;
+    }
+  }
+}
+
+.button {
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  
+  &.button-full {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  &.button-half.button-block {
+    width: 49%;
+    display: inline;
+  }
+}
+
+/* Map/images expand button */
+
+.btn-expand {
+  display: block;
+  width: 54px;
+  height: 54px;
+  background: $color-brown;
+  border-radius: 50%;
+  position: absolute;
+  text-align: center;
+  line-height: 54px;
+  color: $color-light-03;
+
+  .icon {
+    font-size: 34px;
+    vertical-align: middle;
+  }
+
+  &:hover,
+  &:focus {
+    background: darken($color-brown, 10%);
+  }
+}
+
+/* Map expand */
+
+.map-expand {
+  width: 45px;
+  height: 45px;
+  margin-top: -22px;
+  margin-left: -22px;
+  background: transparentize($color-brown,0.3);
+  top: 50%;
+  left: 50%;
+  z-index: 1000;
+  line-height: 43px;
+
+  .icon {
+    font-size: 27px;
+    position: absolute;
+    top: 50%;
+    margin-top: -20.5px;
+    left: 50%;
+    margin-left: -8px;
+  }
+
+  &:hover,
+  &:focus {
+    background: $color-brown;
+  }
+
+  .map-search &,
+  .map-page &,
+  .hide-map & {
+    display: none;
+  }
+
+  &.map-expand-right {
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-left: 0;
+    top: 0;
+    right: 0;
+    left: initial;
+
+  }
+  
+  &.map-shrink {
+    display: none;
+    .icon {
+      margin-top: -13px;
+      margin-left: -10px;
+    }
+
+    .map-page & {
+      display: block;
+    }
+  }
+
+}
+
+/* Search buttons */
+
+//TODO - SET COLOR HERE IN JS
+.button-select {
+  display: inline-block;
+  width: 100%;
+  //height: 32px;
+  //min-height: 32px;
+  height: 44px;
+  min-height: 44px;
+  margin-right: 5px;
+  padding-left: 35px;
+  background: transparent;
+  border: 1px solid $color-light-02;
+  border-radius: 40px;
+  font-size: 11px;
+  color: $color-light-02;
+  line-height: 1;
+
+  text-align: left;
+  position: relative;
+  // font-family: $main-font-family;
+
+  .icon {
+    display: inline-block;
+    margin-right: 0;
+    position: absolute;
+    left: 15px;
+    color: inherit;
+
+    &:before {
+      font-size: 13px;
+      line-height: 32px;
+    }
+  }
+
+  &:hover,
+  &:focus {
+    // color: $color-white;
+    // background: $color-green;
+    // border-color: $color-green;
+  }
+}
+
+.button-search-map {
+  width: 100%;
+  height: 40px;
+  min-height: 40px;
+  text-align: center;
+  color: $color-white;
+  border-radius: 0;
+  position: relative;
+  z-index: 300;
+  line-height: 40px;
+
+  &:hover {
+    color: $color-white;
+  }
+}
+
+@media only screen and (min-width: 1025px) {
+  .map-expand {
+    display: block;
+
+    .desktop-full-map &,
+    .map-search &,
+    .map-page & {
+      display: none;
+    }
+
+
+    &.map-shrink {
+      display: none;
+
+      .map-search & {
+        display: block
+      }
+      .hide-map &,
+      .map-page &,
+      .map-search &{
+        display: block
+      }
+    }
+
+
+  }
+
+
+}
+
+@media only screen and (max-width: 380px) {
+  .button {
+    &.button-half.button-block {
+      width: 100%;
+      display: block;
+    }
+  }
+}

@@ -1,0 +1,74 @@
+/*
+ * OFFLINE PAGE
+ *
+ * Styles for offline map page
+ */
+
+/* ------------------------------------ *\
+   #OFFLINE
+\* ------------------------------------ */
+
+/* Card content */
+
+.offline-page {
+  position: absolute;
+  background: transparent;
+  color: $color-white;
+
+  .offline-content {
+    width: 90%;
+    margin: 0 auto;
+  }
+}
+
+.offline-description {
+  margin: 30px 0;
+
+  .offline-desc-title {
+    margin-bottom: 15px;
+    color: $color-white;
+    font-size: 32px;
+    text-transform: uppercase;
+  }
+
+  .offline-desc-text {
+    font-size: 17px;
+    line-height: 1;
+  }
+}
+
+.offline-text {
+    margin: 40px 0;
+    font-size: 18px;
+    color: $color-white;
+    text-align: center;
+}
+
+.percentage {
+  font-weight: $font-weight-bold;
+  color: $color-dark-red;
+}
+
+.button.button-block {
+  // margin: 10px 0;
+}
+
+.offline-image {
+  width: 234px;
+  height: 130px;
+  margin: 40px auto;
+}
+
+@media screen and (min-width: 768px) {
+
+  .offline-page {
+    .offline-content {
+      // width: 500px;
+      button.button-block {
+        width: 336px;
+        margin: 0 auto 10px;
+      }
+    }
+  }
+
+}
