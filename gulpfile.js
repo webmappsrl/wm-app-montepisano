@@ -172,7 +172,7 @@ gulp.copy= function(src,dest){
 
     console.log( src+'/node_modules' );
 
-    var result = gulp.src([src + '/**', '!'+src+'/node_modules', '!'+src+'/node_modules/**'] )
+    var result = gulp.src([src + '/**', '!'+src+'/node_modules', '!'+src+'/node_modules/**','!'+src+'/platforms', '!'+src+'/platforms/**'] )
         .pipe(gulp.dest(dest));
 
     gulp.start( 'node_modules_link' );
@@ -199,7 +199,7 @@ gulp.updateConfigXML = function( config ){
 
     var edit_tag = '<widget id="'+config.id+'" version="'+config.version+'"',
         edit_name = '<name>' + config.name+ '</name>',
-        edit_desc = '<description>'+config.description+'<description>'
+        edit_desc = '<description>'+config.description+'</description>'
     ;
 
     return gulp.src( config_file )
