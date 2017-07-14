@@ -1,7 +1,7 @@
 angular.module('webmapp').constant('GENERAL_CONFIG', {
     'VERSION': '0.4',
     'OPTIONS': {
-        'title': 'PNFC Trekking Map',
+        'title': 'Webmapp Core',
         'startUrl': '/',
         'useLocalStorageCaching': true,
         'advancedDebug': false,

@@ -48,7 +48,7 @@ gulp.task('templates_link', function () {
 
 gulp.task('node_modules_link', function () {
     return gulp.src('bare/node_modules')
-        .pipe(symlink('instances/'+instance_name+'/node_modules')) // Write to the destination folder 
+        .pipe(symlink('instances/'+instance_name+'/node_modules', {force: true})) // Write to the destination folder 
 });
 
 gulp.task('create', function(){
@@ -62,15 +62,13 @@ gulp.task('create', function(){
     // create
     if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
-        return gulp.copy( 'bare', dir );
-        //gulp.start('update');
+        gulp.copy( 'bare', dir );
+        return gulp.start('update');
         //gulp.start('edit-config-xml');
 
     } else {
         console.warn( '[WARN] instance already exits');
     }
-
-    
 
 });
 
@@ -137,17 +135,37 @@ gulp.task( 'update', function(){
 gulp.task('set', function(){
     
     var newConfUrl = 'config/config.js'; 
+    var destDir = 'bare/www/'; 
 
     if( argv.config){
         newConfUrl = argv.config
+    }
+    if( argv.instance){
+        destDir = argv.instance;
     } 
 
     gulp.src(['bare/www/.index.html'])
         .pipe(replace(/\$CONFIG/g, newConfUrl))
         .pipe(rename('index.html'))
-        .pipe(gulp.dest('bare/www/'));
+        .pipe(gulp.dest(destDir));
 
     
+});
+
+gulp.task('generate-index', function(){
+
+    var newConfUrl = 'config/config.js'; 
+    var destDir = 'bare/www/';
+    var dir = 'instances/' + instance_name;
+
+    if( argv.instance){
+        destDir = 'instances/' + argv.instance;
+    } 
+
+    gulp.src(['bare/www/.index.html'])
+        .pipe(replace(/\$CONFIG/g, newConfUrl))
+        .pipe(rename('index.html'))
+        .pipe(gulp.dest(destDir));
 });
 
 gulp.task( 'edit-config-xml', ['create'], function(){
@@ -164,13 +182,18 @@ gulp.task('generate-resources', function(callback){
 
 gulp.task( 'update-bare', function(){
 
+    if ( argv.instance ){
+        instance_name = argv.instance;
+    }
+
+    var dir = 'instances/' + instance_name + '/www';
+
+    return gulp.copy( 'bare/www', dir );
 });
 
 gulp.task('build', ['create', 'update']);
 
 gulp.copy= function(src,dest){
-
-    console.log( src+'/node_modules' );
 
     var result = gulp.src([src + '/**', '!'+src+'/node_modules', '!'+src+'/node_modules/**','!'+src+'/platforms', '!'+src+'/platforms/**'] )
         .pipe(gulp.dest(dest));
@@ -201,6 +224,8 @@ gulp.updateConfigXML = function( config ){
         edit_name = '<name>' + config.name+ '</name>',
         edit_desc = '<description>'+config.description+'</description>'
     ;
+
+    gulp.start('generate-index');
 
     return gulp.src( config_file )
         .pipe(replace(/<widget (id=")([a-zA-Z0-9:;\.\s\(\)\-\,]*)(") (version=")([a-zA-Z0-9:;\.\s\(\)\-\,]*)(")/i, edit_tag))
