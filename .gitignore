@@ -1,3 +1,6 @@
 instances/
+bare/resources/android
+bare/resources/ios
+bare/res
 **/node_modules
 **/plugins
