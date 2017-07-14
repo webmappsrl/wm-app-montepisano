@@ -244,7 +244,7 @@ angular.module('webmapp')
 
     offline.removeMap = function() {
         $cordovaFile
-            .removeRecursively(cordova.file.dataDirectory + 'map/')
+            .removeRecursively(cordova.file.dataDirectory + 'map')
             .then(function() {
                 console.log('done remove');
             }, function(error) {
