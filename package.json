@@ -6,7 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "cd bare && npm install"
-
   },
   "keywords": [
     "webmapp"
@@ -16,10 +15,13 @@
     "gulp": "^3.9.1",
     "gulp-cheerio": "^0.6.2",
     "gulp-json-editor": "^2.2.1",
+    "gulp-replace": "^0.6.1",
     "gulp-streamify": "^1.0.2",
     "gulp-symlink": "^2.1.4",
     "replace": "^0.3.0",
     "request": "^2.81.0",
+    "require": "^2.4.20",
+    "shelljs": "^0.7.8",
     "vinyl-source-stream": "^1.1.0",
     "yargs": "^8.0.2"
   },

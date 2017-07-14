@@ -1,7 +1,9 @@
-instances/
+index.html
+instances/*
+platforms
 bare/resources/android
 bare/resources/ios
 bare/res
 bare/.idea
-**/node_modules
-**/plugins
+node_modules
+plugins
