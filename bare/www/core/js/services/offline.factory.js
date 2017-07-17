@@ -100,6 +100,7 @@ angular.module('webmapp')
             }
 
             if (!aborted) {
+                console.log('rimuovo mappa')
                 offline.removeMap();
                 aborted = true;
             }
@@ -113,7 +114,7 @@ angular.module('webmapp')
             transferPromises = [],
             promises = [],
             aborted = false;
-        console.log(destDirectory);
+        //console.log(destDirectory);
 
         arrayLink.forEach(function(item) {
             var filename = item.split('/').pop(),
@@ -139,7 +140,8 @@ angular.module('webmapp')
             console.log(format);
 
             currentTransfert
-                .then(function() {
+                .then(function(result) {
+                    console.log(result);
                     console.log('scaricato ' + format);
                         if (aborted) {
                             return;
@@ -147,6 +149,8 @@ angular.module('webmapp')
 
                         vm.unzipInProgress = true;
                         if (format === 'zip') {
+                            console.log(targetPath);
+                            console.log(destDirectory);
                             $cordovaZip.unzip(targetPath, destDirectory)
                                 .then(function() {
                                     console.log('finito lo unzip');
@@ -154,12 +158,21 @@ angular.module('webmapp')
                                         vm.unzipInProgress = false;
                                         $cordovaFile.removeFile(destDirectory, filename);
                                         currentDefer.resolve();
-                                    }, function(error) {
+                                    }, function() {
                                         currentDefer.reject('Si è verificato un errore nell\'installazione, riprova ');
+                                        console.error('Si è verificato un errore nell\'unzip delle immagini');
                                         abortAll();
-                                        console.error('Si è verificato un errore nell\'installazione, riprova ', JSON.stringify(error));
+                                        $ionicPopup.alert({
+                                            title: 'Attenzione',
+                                            template: 'C\'è stato un problem nello scaricamento, riprova più tardi.',
+                                            buttons: [{
+                                                text: 'Ok',
+                                                type: 'button-positive'
+                                            }]
+                                        });
                                     },
                                     function(progress) {
+                                        //console.log(progress);
                                         vm.unzipInProgress = true;
                                     });
                         } else {
@@ -176,14 +189,14 @@ angular.module('webmapp')
                     },
                     function(error) {
                         currentDefer.reject('Si è verificato un errore nel download, riprova ');
-                        abortAll();
                         console.error('Si è verificato un errore nel download, riprova ', JSON.stringify(error));
+                        abortAll();
                     },
                     function(progress) {
                         if (aborted) {
                             return;
                         }
-
+                        //console.log(progress);
                         if (format === 'mbtiles') {
                             vm.downloadProgress = Math.min(Math.max(Math.round((progress.loaded / progress.total) * 100), vm.downloadProgress), 99);
                         }
@@ -246,7 +259,7 @@ angular.module('webmapp')
         $cordovaFile
             .removeRecursively(cordova.file.dataDirectory + 'map')
             .then(function() {
-                console.log('done remove');
+                console.log(cordova.file.dataDirectory + 'map - removed');
             }, function(error) {
                 console.error(error);
             });
