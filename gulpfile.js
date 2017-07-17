@@ -141,8 +141,10 @@ gulp.task('set', function(){
         newConfUrl = argv.config
     }
     if( argv.instance){
-        destDir = argv.instance;
+        destDir = 'instances/' + argv.instance + '/www/';
     } 
+
+    //console.log(destDir);
 
     gulp.src(['bare/www/.index.html'])
         .pipe(replace(/\$CONFIG/g, newConfUrl))
