@@ -16,35 +16,28 @@ yargs.usage('Usage: $0 <command> [options]')
     .example('$0 create -i webmapp_demo_app -u http://api.webmapp.it/be/starter.cbe.webmapp.it', 'Create the istance of Webmapp')
     .command('update', 'update the istance of Webmapp')
     .example('$0 update -i webmapp_demo_app -u http://api.webmapp.it/be/starter.cbe.webmapp.it', 'update the istance of Webmapp')
-    .command('set', 'set config.js in bare/index.html')
+    .command('set', 'set config.js in bare/index.html e con -i imposta config in istanza')
+    .command('update-instance', 'aggiorna il core dell\'istanza con i files del core')
     .alias('i', 'instance')
     .nargs('i', 1)
     .describe('i', 'Instance Name to create')
-    //.demandOption(['instance'])
     .alias('u', 'url')
     .nargs('u', 1)
     .describe('u', 'Url from get the config')
-    //.demandOption(['url'])
     .alias('c', 'config')
     .nargs('c', 1)
     .describe('c', 'file used for config')
-    
     .epilog('(c) Webmapp 2017');
 
 var argv = yargs.argv,
     config_xml = '';
     instance_name = 'default';
 
- 
-gulp.task('config_link', function () {
-    return gulp.src('bare/www/config')
-        .pipe(symlink('instances/'+instance_name+'/httpdoc/config')) // Write to the destination folder 
+gulp.task( 'default', function(){
+    //yargs.help();
 });
 
-gulp.task('templates_link', function () {
-    return gulp.src('bare/www/templates')
-        .pipe(symlink('instances/'+instance_name+'/httpdoc/templates')) // Write to the destination folder 
-});
+gulp.task('build', ['create', 'update'/*, 'post-install'*/]);
 
 gulp.task('node_modules_link', function () {
     return gulp.src('bare/node_modules')
@@ -56,14 +49,13 @@ gulp.task('create', function(){
     if ( argv.instance ){
         instance_name = argv.instance;
     }
-
     var dir = 'instances/' + instance_name ;
-
     // create
     if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
-        gulp.copy( 'bare', dir );
-        return gulp.start('update');
+        
+        return gulp.copy( 'bare', dir )
+
         //gulp.start('edit-config-xml');
 
     } else {
@@ -73,27 +65,20 @@ gulp.task('create', function(){
 });
 
 /// TODO: aggiorna solo il core
-gulp.task( 'update', function(){
+gulp.task( 'update', ['create'], function(){
     console.log( 'lancio update...' );
 
     if ( argv.instance ){
         instance_name = argv.instance;
     }
-    
     var dir = 'instances/' + instance_name ;
-
-    console.log(dir);
-
     // se esiste istanza
     if (fs.existsSync(dir)){
-        
-        // recupero dati da url
 
         var info = argv.url + '/info.json',
             config = argv.url + '/config.js'
             resources = argv.url + '/resources/';
         ;
-
         // estraggo le info
         request({
             url: info,
@@ -104,9 +89,6 @@ gulp.task( 'update', function(){
         .pipe(source(info))
         .pipe(streamify(jeditor(function (repositories) {
             repo = (repositories);
-
-            // 
-            
             config_xml = {
                 id: repo["config.xml"].id,
                 name: repo["config.xml"].name,
@@ -147,13 +129,14 @@ gulp.task('set', function(){
     //console.log(destDir);
 
     gulp.src(['bare/www/.index.html'])
-        .pipe(replace(/\$CONFIG/g, newConfUrl))
+        .pipe(replace(/config\/config.js/g, newConfUrl))
         .pipe(rename('index.html'))
         .pipe(gulp.dest(destDir));
 
     
 });
 
+/** copia index in istanza */
 gulp.task('generate-index', function(){
 
     var newConfUrl = 'config/config.js'; 
@@ -170,19 +153,35 @@ gulp.task('generate-index', function(){
         .pipe(gulp.dest(destDir));
 });
 
+/** aggiorna il config.xml */
 gulp.task( 'edit-config-xml', ['create'], function(){
     gulp.updateConfigXML(config_xml);
 });
 
-gulp.task('generate-resources', function(callback){
+gulp.task('post-install', ['update'], function(callback){
+
     var dir = 'instances/' + instance_name;
-    process.chdir(dir);
-    sh.cd(dir);
-    sh.exec('ionic cordova resources', function(){
-    });
+
+    if( argv.instance){
+        dir = 'instances/' + argv.instance;
+    } 
+    sh.exec('ionic cordova platform add ios', { cwd: dir });
+    sh.exec('ionic cordova platform add android', { cwd: dir });
+    sh.exec('ionic cordova resources', { cwd: dir });
 });
 
-gulp.task( 'update-bare', function(){
+/** genera le risorse */
+gulp.task('add-resources', function(callback){
+
+    var dir = 'instances/' + instance_name;
+
+    if( argv.instance){
+        dir = 'instances/' + argv.instance;
+    } 
+    sh.exec('ionic cordova resources', { cwd: dir });
+});
+
+gulp.task( 'update-instance', function(){
 
     if ( argv.instance ){
         instance_name = argv.instance;
@@ -192,8 +191,6 @@ gulp.task( 'update-bare', function(){
 
     return gulp.copy( 'bare/www', dir );
 });
-
-gulp.task('build', ['create', 'update']);
 
 gulp.copy= function(src,dest){
 
