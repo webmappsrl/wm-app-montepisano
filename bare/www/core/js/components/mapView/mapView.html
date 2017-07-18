@@ -2,7 +2,7 @@
     cache-view="false" 
     ng-controller="MapController as vm">
     <ion-nav-title>
-        <span>
+        <span ng-bind-html="vm.mapTitle">
             {{ vm.mapTitle }}
         </span>
     </ion-nav-title>
