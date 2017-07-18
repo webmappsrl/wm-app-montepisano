@@ -1,0 +1,49 @@
+<ion-view 
+    class="languages-page"
+    cache-view="false" 
+    ng-controller="LanguagesController as vm">
+    <ion-nav-title>
+        <span>
+            LINGUA
+        </span>
+    </ion-nav-title>
+    <ion-nav-buttons side="left">
+        <button 
+            class="no-animate button button-icon icon ion-navicon"
+            menu-toggle="left"></button>
+    </ion-nav-buttons>
+
+    <ion-content style="color: black; background: {{COLORS.global.background}}">
+        <div 
+            class="static-content card-content">
+            <div 
+                class="card-text card-opportunities">
+            </div>
+
+            <div class="card-title">
+                <span class="card-title-inner">Scegli la lingua</span>
+            </div>
+            <button
+                style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                class="button-download button button-block button-half"
+                ng-click="vm.chooseLang()">
+                ITALIANO
+            </button>
+            <button
+                style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                class="button-download button button-block button-half"
+                ng-click="vm.chooseLang()">
+                INGLESE
+            </button>
+            <button
+                style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                class="button-download button button-block button-half"
+                ng-click="vm.chooseLang()">
+                TEDESCO
+            </button>
+            <br/>
+        </div>
+       
+    </ion-content>
+</ion-view>
+
