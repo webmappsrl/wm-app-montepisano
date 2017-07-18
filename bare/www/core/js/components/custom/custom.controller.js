@@ -54,7 +54,6 @@ angular.module('webmapp')
     });
 
 
-
     $rootScope.$on('logged-in', function() {
         vm.isLoggedIn = true;
     });

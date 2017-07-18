@@ -36,9 +36,13 @@
                 }">
                 <!--    one columns layout -->
                 <div class="details-rows">
-                    <div class="details-route">
-                        <span class="code"><strong>Codice</strong>: {{vm.codeRoute}} </span>
-                        <span class="difficulty"><strong>Difficoltà</strong>:
+                    <div class="details-route"
+                         ng-if="vm.codeRoute || vm.difficulty">
+                        <span class="code"
+                              ng-if="vm.codeRoute">
+                            <strong>Codice</strong>: {{vm.codeRoute}} </span>
+                        <span class="difficulty"
+                              ng-if="vm.difficulty"><strong>Difficoltà</strong>:
                         <i  class="fa"
                             aria-hidden="true"
                             ng-repeat="n in [].constructor(5) track by $index"

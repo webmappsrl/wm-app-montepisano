@@ -7,7 +7,8 @@ angular.module('webmapp')
     $cordovaZip,
     $q,
     Utils,
-    CONFIG
+    CONFIG,
+    $ionicPopup
 ) {
     var offline = {};
 
@@ -80,15 +81,25 @@ angular.module('webmapp')
         resetMapView = resetView;
     };
 
+    offline.removeMap = function() {
+        $cordovaFile
+            .removeRecursively(cordova.file.dataDirectory + 'map')
+            .then(function() {
+                console.log(cordova.file.dataDirectory + 'map - removed');
+            }, function(error) {
+                console.error(error);
+            });
+    };
+
     offline.downloadMap = function(vm) {
 
         var arrayLink = [ offline.options.urlMbtiles , offline.options.urlImages ];
-        console.log(arrayLink);
+        //console.log(arrayLink);
 
         var vmReset = function() {
             vm.downloadInProgress = false;
             vm.downloadProgress = 0;
-            vm.unzipInProgress = false;
+            //vm.unzipInProgress = false;
         };
 
         var abortAll = function() {
@@ -114,8 +125,16 @@ angular.module('webmapp')
             transferPromises = [],
             promises = [],
             aborted = false;
-        //console.log(destDirectory);
 
+        console.log(destDirectory);
+        /*
+        cordova.exec(function(result) {
+            var diskSizeInMB = result/1024;
+            console.log(diskSizeInMB)
+        }, function(error) {
+            alert("Error: " + error);
+        }, "File", "getFreeDiskSpace", []);
+        */
         arrayLink.forEach(function(item) {
             var filename = item.split('/').pop(),
                 format = filename.split('.').pop(),
@@ -135,25 +154,29 @@ angular.module('webmapp')
             currentTransfert = $cordovaFileTransfer.download(encodeURI(item), encodeURI(targetPath), {}, true);
             transferPromises.push(currentTransfert);
             console.log(item);
-            console.log(targetPath);
-            console.log(destDirectory);
             console.log(format);
 
             currentTransfert
                 .then(function(result) {
-                    console.log(result);
-                    console.log('scaricato ' + format);
+
                         if (aborted) {
                             return;
                         }
 
-                        vm.unzipInProgress = true;
+                        //vm.unzipInProgress = true;
                         if (format === 'zip') {
                             console.log(targetPath);
                             console.log(destDirectory);
-                            $cordovaZip.unzip(targetPath, destDirectory)
+
+
+
+
+                            _state.available = true;
+                            vm.unzipInProgress = false;
+                            currentDefer.resolve();
+                            /*$cordovaZip.unzip(targetPath, destDirectory)
                                 .then(function() {
-                                    console.log('finito lo unzip');
+                                    console.log('finito l\'unzip');
                                         _state.available = true;
                                         vm.unzipInProgress = false;
                                         $cordovaFile.removeFile(destDirectory, filename);
@@ -161,35 +184,35 @@ angular.module('webmapp')
                                     }, function() {
                                         currentDefer.reject('Si è verificato un errore nell\'installazione, riprova ');
                                         console.error('Si è verificato un errore nell\'unzip delle immagini');
-                                        abortAll();
-                                        $ionicPopup.alert({
-                                            title: 'Attenzione',
-                                            template: 'C\'è stato un problem nello scaricamento, riprova più tardi.',
-                                            buttons: [{
-                                                text: 'Ok',
-                                                type: 'button-positive'
-                                            }]
-                                        });
                                     },
                                     function(progress) {
                                         //console.log(progress);
                                         vm.unzipInProgress = true;
-                                    });
+                                    });*/
                         } else {
                             currentDefer.resolve();
-                            localStorage.setItem('offlineAvailable', _state.available);
                             vm.active = offline.isActive();
                             vm.canBeEnabled = true;
                             vm.downloadInProgress = false;
-                            vm.unzipInProgress = true;
+                            //vm.unzipInProgress = true;
                             _state.available = true;
                             localStorage.setItem('offlineAvailable', _state.available);
                         }
 
+                        console.log(result);
+                        console.log('scaricato ' + format);
                     },
                     function(error) {
                         currentDefer.reject('Si è verificato un errore nel download, riprova ');
                         console.error('Si è verificato un errore nel download, riprova ', JSON.stringify(error));
+                        $ionicPopup.alert({
+                            title: 'Attenzione',
+                            template: 'C\'è stato un problema nello scaricamento, riprova più tardi.',
+                            buttons: [{
+                                text: 'Ok',
+                                type: 'button-positive'
+                            }]
+                        });
                         abortAll();
                     },
                     function(progress) {
@@ -255,15 +278,7 @@ angular.module('webmapp')
             });
     };
 
-    offline.removeMap = function() {
-        $cordovaFile
-            .removeRecursively(cordova.file.dataDirectory + 'map')
-            .then(function() {
-                console.log(cordova.file.dataDirectory + 'map - removed');
-            }, function(error) {
-                console.error(error);
-            });
-    };
+
 
     offline.downloadUserMap = function(id, arrayLink, vm) {
         var vmReset = function() {

@@ -758,7 +758,7 @@ angular.module('webmapp')
 
         if (useLocalCaching && currentFromLocalStorage) {
             if (currentOverlay.type === 'line_geojson') {
-                db.get(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl).then(function(e) {
+                db.get(currentOverlay.geojsonUrl).then(function(e) {
                     lineCallback(e.data, currentOverlay);
                 });
                 //lineCallback(JSON.parse(currentFromLocalStorage), currentOverlay);
@@ -766,17 +766,17 @@ angular.module('webmapp')
                 poiCallback(JSON.parse(currentFromLocalStorage), currentOverlay);
             }
 
-            $.getJSON(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, function(data) {
-                setItemInLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, data);
+            $.getJSON(currentOverlay.geojsonUrl, function(data) {
+                setItemInLocalStorage(currentOverlay.geojsonUrl, data);
             });
         } else {
-            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, function(data) {
+            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(currentOverlay.geojsonUrl, function(data) {
                 if (currentOverlay.type === 'line_geojson') {
                     lineCallback(data, currentOverlay);
                 } else if (currentOverlay.type === 'poi_geojson') {
                     poiCallback(data, currentOverlay);
                 }
-                setItemInLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, data);
+                setItemInLocalStorage(currentOverlay.geojsonUrl, data);
                 delete overlayLayersQueueByLabel[currentOverlay.label];
             }).fail(function() {
                 defer.reject();
@@ -943,10 +943,6 @@ angular.module('webmapp')
 
         eventsPromise = initializeEvents();
         couponsPromise = initializeOffers();
-
-        if( typeof localStorage.$wm_mhildConf === 'undefined' ){
-            pagePromise = initializePages();
-        }
 
         $q.all(promises).then(function() {
             $ionicLoading.hide();
@@ -1137,6 +1133,11 @@ angular.module('webmapp')
     }
 
     var initialize = function() {
+
+        if( typeof localStorage.$wm_mhildConf === 'undefined' ){
+            pagePromise = initializePages();
+        }
+
         if (map && map !== null) {
             return map;
         }
