@@ -13,11 +13,13 @@ var gulp = require('gulp'),
 
 yargs.usage('Usage: $0 <command> [options]')
     .command('create', 'Create the istance of Webmapp')
-    .example('$0 create -i webmapp_demo_app -u http://api.webmapp.it/be/starter.cbe.webmapp.it', 'Create the istance of Webmapp')
+    .example('$0 create -i webmapp_demo_app -u http://pnfc.j.webmapp.it/', 'Create the istance of Webmapp')
     .command('update', 'update the istance of Webmapp')
-    .example('$0 update -i webmapp_demo_app -u http://api.webmapp.it/be/starter.cbe.webmapp.it', 'update the istance of Webmapp')
-    .command('set', 'set config.js in bare/index.html e con -i imposta config in istanza')
+    .example('$0 update -i webmapp_demo_app -u http://pnfc.j.webmapp.it/', 'update the istance of Webmapp')
+    .command('set', 'set config.js in bare/index.html e con -c recupera config.js da url remoto')
+    .example('$0 config -i webmapp_demo_app -c http://pnfc.j.webmapp.it/config.js', 'update the istance of Webmapp')
     .command('update-instance', 'aggiorna il core dell\'istanza con i files del core')
+    .example('$0 update-instance -i webmapp_demo_app')
     .alias('i', 'instance')
     .nargs('i', 1)
     .describe('i', 'Instance Name to create')
@@ -37,7 +39,7 @@ gulp.task( 'default', function(){
     //yargs.help();
 });
 
-gulp.task('build', ['create', 'update'/*, 'post-install'*/]);
+gulp.task('build', ['create', 'update', 'post-install']);
 
 gulp.task('node_modules_link', function () {
     return gulp.src('bare/node_modules')
