@@ -129,7 +129,7 @@ gulp.task('set', function(){
     //console.log(destDir);
 
     gulp.src(['bare/www/.index.html'])
-        .pipe(replace(/config\/config.js/g, newConfUrl))
+        .pipe(replace(/\$CONFIG/g, newConfUrl))
         .pipe(rename('index.html'))
         .pipe(gulp.dest(destDir));
 
