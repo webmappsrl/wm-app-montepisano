@@ -94,13 +94,18 @@ angular.module('webmapp')
     offline.downloadMap = function(vm) {
 
         var arrayLink = [ offline.options.urlMbtiles , offline.options.urlImages ];
-        //console.log(arrayLink);
+
+        //offline.reset();
 
         var vmReset = function() {
-            vm.downloadInProgress = false;
             vm.downloadProgress = 0;
-            //vm.unzipInProgress = false;
+            vm.unzipProgress = 0;
+            vm.downloadInProgress = false;
+            vm.unzipInProgress = false;
+            vm.canBeEnabled = false;
         };
+
+        vmReset();
 
         var abortAll = function() {
             for (var i = 0; i < transferPromises.length; i++) {
@@ -119,14 +124,11 @@ angular.module('webmapp')
             vmReset();
         };
 
-        vmReset();
-
         var destDirectory = cordova.file.dataDirectory + 'map/',
             transferPromises = [],
             promises = [],
             aborted = false;
 
-        console.log(destDirectory);
         /*
         cordova.exec(function(result) {
             var diskSizeInMB = result/1024;
@@ -135,19 +137,13 @@ angular.module('webmapp')
             alert("Error: " + error);
         }, "File", "getFreeDiskSpace", []);
         */
+
         arrayLink.forEach(function(item) {
             var filename = item.split('/').pop(),
                 format = filename.split('.').pop(),
                 targetPath = destDirectory + filename,
                 currentDefer = $q.defer(),
                 currentTransfert;
-
-            if(format === 'mbtiles'){
-                //offline.reset();
-                _offlineUrl = destDirectory + filename;
-                localStorage.setItem('offlineUrl', _offlineUrl);
-                console.log('sono in format mbtiles');
-            }
 
             promises.push(currentDefer.promise);
 
@@ -158,26 +154,16 @@ angular.module('webmapp')
 
             currentTransfert
                 .then(function(result) {
-
                         if (aborted) {
                             return;
                         }
-
-                        //vm.unzipInProgress = true;
+                        vm.unzipInProgress = true;
                         if (format === 'zip') {
-                            console.log(targetPath);
-                            console.log(destDirectory);
-
-
-
-
-                            _state.available = true;
-                            vm.unzipInProgress = false;
+                            vm.unzipInProgress = true;
                             currentDefer.resolve();
-                            /*$cordovaZip.unzip(targetPath, destDirectory)
+                            $cordovaZip.unzip(targetPath, destDirectory)
                                 .then(function() {
-                                    console.log('finito l\'unzip');
-                                        _state.available = true;
+                                        console.log('finito l\'unzip');
                                         vm.unzipInProgress = false;
                                         $cordovaFile.removeFile(destDirectory, filename);
                                         currentDefer.resolve();
@@ -188,17 +174,12 @@ angular.module('webmapp')
                                     function(progress) {
                                         //console.log(progress);
                                         vm.unzipInProgress = true;
-                                    });*/
-                        } else {
+                                    });
+                        } else if (format === 'mbtiles') {
                             currentDefer.resolve();
-                            vm.active = offline.isActive();
-                            vm.canBeEnabled = true;
-                            vm.downloadInProgress = false;
-                            //vm.unzipInProgress = true;
-                            _state.available = true;
-                            localStorage.setItem('offlineAvailable', _state.available);
+                            _offlineUrl = destDirectory + filename;
+                            localStorage.setItem('offlineUrl', _offlineUrl);
                         }
-
                         console.log(result);
                         console.log('scaricato ' + format);
                     },
@@ -225,6 +206,14 @@ angular.module('webmapp')
                         }
                         vm.downloadInProgress = true;
                     });
+        });
+
+        $q.all(promises).then(function() {
+            vm.downloadInProgress = false;
+            vm.canBeEnabled = true;
+            vm.unzipInProgress = false;
+            _state.available = true;
+            localStorage.setItem('offlineAvailable', _state.available);
         });
 
         return $q.all(promises);
