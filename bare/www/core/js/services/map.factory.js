@@ -756,9 +756,13 @@ angular.module('webmapp')
             }, currentOverlay));
         };
 
+        var geojsonUrl = currentOverlay.geojsonUrl;
+        if (offlineConf.resourceBaseUrl !== undefined) {
+            geojsonUrl = offlineConf.resourceBaseUrl + geojsonUrl;
+        }
         if (useLocalCaching && currentFromLocalStorage) {
             if (currentOverlay.type === 'line_geojson') {
-                db.get(currentOverlay.geojsonUrl).then(function(e) {
+                db.get(geojsonUrl).then(function(e) {
                     lineCallback(e.data, currentOverlay);
                 });
                 //lineCallback(JSON.parse(currentFromLocalStorage), currentOverlay);
@@ -766,17 +770,17 @@ angular.module('webmapp')
                 poiCallback(JSON.parse(currentFromLocalStorage), currentOverlay);
             }
 
-            $.getJSON(currentOverlay.geojsonUrl, function(data) {
-                setItemInLocalStorage(currentOverlay.geojsonUrl, data);
+            $.getJSON(geojsonUrl, function(data) {
+                setItemInLocalStorage(geojsonUrl, data);
             });
         } else {
-            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(currentOverlay.geojsonUrl, function(data) {
+            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(geojsonUrl, function(data) {
                 if (currentOverlay.type === 'line_geojson') {
                     lineCallback(data, currentOverlay);
                 } else if (currentOverlay.type === 'poi_geojson') {
                     poiCallback(data, currentOverlay);
                 }
-                setItemInLocalStorage(currentOverlay.geojsonUrl, data);
+                setItemInLocalStorage(geojsonUrl, data);
                 delete overlayLayersQueueByLabel[currentOverlay.label];
             }).fail(function() {
                 defer.reject();

@@ -143,7 +143,7 @@ angular.module('webmapp')
                 currentTransfert;
 
             if(format === 'mbtiles'){
-                offline.reset();
+                //offline.reset();
                 _offlineUrl = destDirectory + filename;
                 localStorage.setItem('offlineUrl', _offlineUrl);
                 console.log('sono in format mbtiles');
