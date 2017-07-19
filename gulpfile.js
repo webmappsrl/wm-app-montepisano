@@ -12,13 +12,16 @@ var gulp = require('gulp'),
     
 
 yargs.usage('Usage: $0 <command> [options]')
+    .command('build', 'Create, Update and generate Ionic platforms and resources  of the istance of Webmapp')
     .command('create', 'Create the istance of Webmapp')
     .example('$0 create -i webmapp_demo_app -u http://pnfc.j.webmapp.it/', 'Create the istance of Webmapp')
+    .command('update', 'update the istance of Webmapp')
     .command('update', 'update the istance of Webmapp')
     .example('$0 update -i webmapp_demo_app -u http://pnfc.j.webmapp.it/', 'update the istance of Webmapp')
     .command('set', 'set config.js in bare/index.html e con -c recupera config.js da url remoto')
     .example('$0 config -i webmapp_demo_app -c http://pnfc.j.webmapp.it/config.js', 'update the istance of Webmapp')
     .command('update-instance', 'aggiorna il core dell\'istanza con i files del core')
+    .demandCommand(1, '')
     .example('$0 update-instance -i webmapp_demo_app')
     .alias('i', 'instance')
     .nargs('i', 1)
@@ -34,10 +37,6 @@ yargs.usage('Usage: $0 <command> [options]')
 var argv = yargs.argv,
     config_xml = '';
     instance_name = 'default';
-
-gulp.task( 'default', function(){
-    //yargs.help();
-});
 
 gulp.task('build', ['create', 'update', 'post-install']);
 
@@ -122,13 +121,28 @@ gulp.task('set', function(){
     var destDir = 'bare/www/'; 
 
     if( argv.config){
-        newConfUrl = argv.config
+        newConfUrl = argv.config;
+
+        if (!newConfUrl.startsWith("http://")){
+            newConfUrl = "http://" + newConfUrl;
+        }
+        if (!newConfUrl.endsWith('config.js'))
+        {
+            newConfUrl = newConfUrl + '/config.js';    
+        }
+        else if (!newConfUrl.endsWith('/') && !newConfUrl.endsWith('config.js'))
+        {
+            newConfUrl = newConfUrl + '/';
+        }
+
+        console.log(newConfUrl);
+
     }
     if( argv.instance){
-        destDir = 'instances/' + argv.instance + '/www/';
+        destDir = 'instances/' + destDir + '/www/';
     } 
 
-    //console.log(destDir);
+    console.log(destDir);
 
     gulp.src(['bare/www/.index.html'])
         .pipe(replace(/\$CONFIG/g, newConfUrl))
