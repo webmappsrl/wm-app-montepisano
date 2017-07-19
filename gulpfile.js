@@ -1,5 +1,6 @@
 var gulp = require('gulp'),
     fs = require('graceful-fs'),
+    del = require( 'del' ),
     symlink = require('gulp-symlink'),
     jeditor = require('gulp-json-editor'),
     request = require('request'),
@@ -51,13 +52,15 @@ gulp.task('create', function(){
         instance_name = argv.instance;
     }
     var dir = 'instances/' + instance_name ;
+
+    if (!fs.existsSync('instances')){
+        fs.mkdirSync('instances');
+    }
     // create
     if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
         
         return gulp.copy( 'bare', dir )
-
-        //gulp.start('edit-config-xml');
 
     } else {
         console.warn( '[WARN] instance already exits');
@@ -135,21 +138,19 @@ gulp.task('set', function(){
             newConfUrl = newConfUrl + '/';
         }
 
-        console.log(newConfUrl);
-
     }
     if( argv.instance){
         destDir = 'instances/' + destDir + '/www/';
     } 
 
-    console.log(destDir);
-
     gulp.src(['bare/www/.index.html'])
         .pipe(replace(/\$CONFIG/g, newConfUrl))
         .pipe(rename('index.html'))
         .pipe(gulp.dest(destDir));
+});
 
-    
+gulp.task('clean', function () {
+    return del('instances/**/*', {force:true});
 });
 
 /** copia index in istanza */
@@ -183,7 +184,7 @@ gulp.task('post-install', ['update'], function(callback){
     } 
     sh.exec('ionic cordova platform add ios', { cwd: dir });
     sh.exec('ionic cordova platform add android', { cwd: dir });
-    sh.exec('ionic cordova resources', { cwd: dir });
+    sh.exec('ionic cordova resources --verbose', { cwd: dir });
 });
 
 /** genera le risorse */

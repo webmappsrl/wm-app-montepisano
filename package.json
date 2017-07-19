@@ -11,6 +11,7 @@
     "webmapp"
   ],
   "dependencies": {
+    "del": "^3.0.0",
     "fs": "~0.0.1-security",
     "gulp": "^3.9.1",
     "gulp-cheerio": "^0.6.2",
