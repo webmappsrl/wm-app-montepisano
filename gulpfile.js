@@ -125,7 +125,15 @@ gulp.task('set', function(){
         newConfUrl = argv.config
     }
     if( argv.instance){
-        destDir = 'instances/' + argv.instance + '/www/';
+        if (!argv.instance.StartsWith("http://")){
+            destDir = "http://" + argv.instance;
+        }
+        if (!destDir.endsWith('/'))
+        {
+            destDir = destDir + '/';
+        }
+
+        destDir = 'instances/' + destDir + '/www/';
     } 
 
     //console.log(destDir);
