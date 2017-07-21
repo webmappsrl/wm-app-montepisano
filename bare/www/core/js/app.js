@@ -1,5 +1,6 @@
 angular.module('webmapp', [
     'ionic',
     'ngCordova', 
-    'igTruncate'
+    'igTruncate',
+    'pascalprecht.translate'
 ]);

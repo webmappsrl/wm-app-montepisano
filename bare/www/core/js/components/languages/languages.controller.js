@@ -10,16 +10,25 @@ angular.module('webmapp')
     Model,
     Offline,
     Utils,
-    $ionicPopup
+    $ionicPopup,
+    CONFIG,
+    $translate
 ) {
     var vm = {},
         offlineModal;
 
     var offlineScope = $rootScope.$new();
 
-    vm.chooseLang = function(){
-        $state.go('/');
-        $window.location.reload();
+    vm.languages = CONFIG.LANGUAGES.available;
+
+    console.log( vm.languages);
+
+    vm.chooseLang = function( lng ){
+        console.log( lng );
+
+        $translate.use(lng.substring(0,2));
+        
+        //window.location.reload();
     };
 
     return vm;

@@ -634,6 +634,11 @@ angular.module('webmapp')
         return promise;
     };
 
+    var initializeLanguages = function(){
+        var languages = CONFIG.LANGUAGES;
+        
+    }
+
     var initializePages = function() {
         var pages = CONFIG.PAGES;
 
@@ -1137,6 +1142,9 @@ angular.module('webmapp')
     }
 
     var initialize = function() {
+
+        //
+        initializeLanguages();
 
         if( typeof localStorage.$wm_mhildConf === 'undefined' ){
             pagePromise = initializePages();
