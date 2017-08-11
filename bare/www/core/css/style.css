@@ -1492,7 +1492,6 @@ button.login-button {
 
 /* Map center element */
 .icon.map-center {
-  display: none;
   margin-top: -24px;
   margin-left: -24px;
   position: absolute;
@@ -1501,8 +1500,6 @@ button.login-button {
   z-index: 401;
   font-size: 48px;
   color: rgba(96, 88, 70, 0.7); }
-  .map-page .icon.map-center {
-    display: none; }
 
 /* ------------------------------------ *   #MAP BUTTONS
 \* ------------------------------------ */
