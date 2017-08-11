@@ -144,7 +144,6 @@
 /* Map center element */
 
 .icon.map-center {
-  display: none;
   margin-top: -24px;
   margin-left: -24px;
   position: absolute;
@@ -155,7 +154,7 @@
   color: transparentize($color-brown, 0.3);
 
   .map-page & {
-    display: none;
+    //display: none;
   }
 }
 

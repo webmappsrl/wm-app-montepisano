@@ -1046,7 +1046,6 @@ angular.module('webmapp')
 
               if (Offline.isActive()) {
                   address = Offline.getOfflineUrl();
-                  console.log(address);
                   resolveLocalFileSystemURL(
                       address,
                       function(ap) {
@@ -1063,7 +1062,7 @@ angular.module('webmapp')
                   resolve();
               }
 
-              //setBaseLayer(baseMap, baseTms, L.tileLayer(address, options));
+              setBaseLayer(baseMap, baseTms, L.tileLayer(address, options));
 
         } else if (baseMap.type === 'wms') {
             baseLayer = L.tileLayer.wms(baseMap.tilesUrl + '{z}/{x}/{y}.png', {
@@ -1071,7 +1070,7 @@ angular.module('webmapp')
                 format: baseMap.format,
                 attribution: baseMap.attribution
             });
-            setBaseLayer(baseMap, baseTms, L.tileLayer(address, options));
+            setBaseLayer(baseMap, baseTms, baseLayer);
             resolve();
         } else if (baseMap.type === 'utfgrid') {
             utfGridBaseLayerByLabel[baseMap.label] = L.utfGridCanvas(baseMap.tilesUrl + '{z}/{x}/{y}.grid.json', {
