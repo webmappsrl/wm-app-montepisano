@@ -107,8 +107,6 @@ angular.module('webmapp')
             mappingFields = mapping ? mapping.fields : {},
             phoneMatch;
 
-        console.log(data);
-
         vm.hasTable = false;
         vm.detailTable = {};
 
@@ -123,8 +121,6 @@ angular.module('webmapp')
                 }
             }
             vm.featureDetails = _feature;
-            console.log(vm.featureDetails);
-            console.log(vm.featureDetails.opening_hours);
         }
 
         if (typeof mappingUrls !== 'undefined') {
@@ -194,7 +190,7 @@ angular.module('webmapp')
                         console.log('successo');
                     },
                     function() {
-                        console.log('error');
+                        console.error('error');
                     }, number);
             };
 
@@ -249,7 +245,6 @@ angular.module('webmapp')
             vm.feature = feature;
             vm.geometry = data.geometry;
             vm.coordinates = data.geometry.coordinates.toString();
-            console.log(vm.coordinates);
         }
 
         setTimeout(function() {

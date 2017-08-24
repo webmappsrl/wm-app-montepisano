@@ -50,7 +50,7 @@
         <a
             href=""
             class="btn-expand map-expand map-expand-right"
-            ng-click="vm.goToMap()"
+            ng-click="vm.useExandMapInDetails ? vm.toggleMap() : vm.goToMap()"
             ng-if="!vm.hideExpander">
             <i class="icon ion-arrow-expand"></i>
         </a>

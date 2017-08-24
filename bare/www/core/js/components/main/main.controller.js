@@ -63,6 +63,7 @@ angular.module('webmapp')
     vm.deg = 0;
     vm.colors = CONFIG.STYLE;
     vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
+    vm.useExandMapInDetails = CONFIG.OPTIONS.useExandMapInDetails;
     vm.showLocate = !CONFIG.MAP.hideLocationControl;
     vm.viewTitle = 'MAPPA';
     vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
@@ -99,6 +100,64 @@ angular.module('webmapp')
             return;
         }
 
+        if (vm.useExandMapInDetails && vm.detail) {
+            MapService.stopControlLocate();
+            MapService.getFeatureById($state.params.id, $rootScope.currentParams.parentId.replace(/_/g, ' '))
+                .then(function(feature) {
+                    var featureLat = feature.geometry.coordinates[1],
+                        featureLong = feature.geometry.coordinates[0];
+                    
+                    vm.locateLoading = true;
+
+                    $cordovaGeolocation
+                        .getCurrentPosition({
+                            timeout: 10000,
+                            enableHighAccuracy: Utils.isBrowser() ? true : false
+                        })
+                        .then(function(position) {
+                            var posLat = position.coords.latitude,
+                                posLong = position.coords.longitude;
+
+                            var sw, ne;
+
+                            if (!MapService.isInBoundingBox(posLat, posLong)) {
+                                $ionicPopup.alert({
+                                    title: 'ATTENZIONE',
+                                    template: 'Sembra che tu sia fuori dai limiti della mappa',
+                                    buttons: [{
+                                        text: 'Ok',
+                                        type: 'button-positive'
+                                    }]
+                                });
+                            } else {
+                                MapService.createPositionMarkerAt(posLat, posLong);
+
+                                sw = ((featureLong > posLong ? featureLong : posLong) + 0.001) + ' ' + ((featureLat > posLat ? featureLat : posLat) + 0.001)
+                                ne = ((featureLong < posLong ? featureLong : posLong) - 0.001) + ' ' + ((featureLat < posLat ? featureLat : posLat) - 0.001)
+
+                                MapService.fitBoundsFromString(sw + ',' + ne);
+                            }
+
+                            vm.locateLoading = false;
+                        }, function(err) {
+                            vm.locateLoading = false;
+                            $ionicPopup.alert({
+                                title: 'ATTENZIONE',
+                                template: err.message,
+                                buttons: [{
+                                    text: 'Ok',
+                                    type: 'button-positive'
+                                }]
+                            });
+                        });
+
+                }, function() {
+                    console.error('Retrive feature error');
+                });
+
+            return;
+        }
+
         MapService.startControlLocate();
 
         if (vm.canFollow || vm.isRotating) {
@@ -118,7 +177,7 @@ angular.module('webmapp')
                         if (vm.isRotating) {
                             vm.isRotating = false;
                         }
-                        console.log(error);
+                        console.error(error);
                     },
                     function(result) {
                         if (!vm.canFollow) {
@@ -286,6 +345,7 @@ angular.module('webmapp')
         var layerState = false;
 
         vm.turnOffGeolocationAndRotion();
+        MapService.removePositionMarker();
 
         if (currentState !== 'app.main.detaillayer' &&
             currentState !== 'app.main.detailevent' &&
