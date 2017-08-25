@@ -37,7 +37,7 @@ angular.module('webmapp')
         useLocalCaching = generalConf.useLocalStorageCaching,
         centerCoords = {},
         singleFeatureUrl = CONFIG.COMMUNICATION ? CONFIG.COMMUNICATION.singleFeatureUrl : null,
-        eventsPromise, couponsPromise, pagePromise;
+        eventsPromise, couponsPromise, pagePromise, positionMarker, positionCircle;
 
     var baseLayersByLabel = {},
         tileLayersByLabel = {},
@@ -1056,8 +1056,6 @@ angular.module('webmapp')
                       resetOfflineData);
               } else {
                   address = baseMap.tilesUrl + '{z}/{x}/{y}.png';
-                  console.log(address);
-                  console.log(baseMap);
                   setBaseLayer(baseMap, baseTms, L.tileLayer(address, options));
                   resolve();
               }
@@ -1126,7 +1124,6 @@ angular.module('webmapp')
                 resolve();
             } else {
                 address = baseMap.tilesUrl;
-                console.log(address);
                 resolveLocalFileSystemURL(
                   address,
                   function(ap) {
@@ -1300,7 +1297,7 @@ angular.module('webmapp')
             baseLayersByLabel[localStorage.currentMapLayer].addTo(map);
           })
           .catch(function(e) {
-            console.log(e);
+            console.error(e);
           });
 
         layerControl = L.control.groupedLayers();
@@ -1771,7 +1768,7 @@ angular.module('webmapp')
     mapService.fitBounds = function(bounds) {
         fitBounds(bounds);
     };
-
+    
     mapService.fitBoundsFromString = function(stringBounds) {
         var bsplit = stringBounds.split(','),
             swsplit = bsplit[0].split(' '),
@@ -1816,17 +1813,67 @@ angular.module('webmapp')
         if ( controlLocate !== null ){
             controlLocate.start();
         }
-    }
+    };
 
     mapService.stopControlLocate = function(){
         if ( controlLocate !== null ){
             controlLocate.stop();
         }
-    }
+    };
 
     mapService.centerOnScreen = function(location) {
         map.panTo(new L.LatLng(location.latlng.lat, location.latlng.lng));
-    }
+    };
+
+    mapService.createPositionMarkerAt = function(lat, long) {
+        var getIncrement = function(n) {
+            var value = 19.6618;
+
+            for (var i = 2; i <= n; i++) {
+                value = value / 2;
+            }
+            return value;
+        };
+
+        var radius = 35,
+            styleCircle = {
+                color: '#136AEC',
+                fillColor: '#136AEC',
+                fillOpacity: 0.15,
+                weight: 2,
+                opacity: 0.5
+            },
+            styleMarker =  {
+                color: '#136AEC',
+                fillColor: '#2A93EE',
+                fillOpacity: 0.7,
+                weight: 2,
+                opacity: 0.9,
+                radius: 5
+            };
+
+        positionCircle = L.circle({lat: lat, lng: long}, radius, styleCircle).addTo(map);
+        positionMarker = new L.CircleMarker({lat: lat, lng: long}, styleMarker).addTo(map);
+
+        positionMarker.on('click', function(e) {
+            L.popup()
+                .setLatLng({
+                    lat: e.latlng.lat,
+                    lng: e.latlng.lng
+                })
+                .setContent('La tua posizione')
+                .openOn(map);
+        });
+    };
+
+    mapService.removePositionMarker = function() {
+        if (positionMarker) {
+            map.removeLayer(positionMarker);
+            map.removeLayer(positionCircle);
+            positionMarker = null;
+            positionCircle = null;
+        }
+    };
 
     window.closePopup = mapService.closePopup = function(e) {
         map && map.closePopup();

@@ -37,7 +37,6 @@ angular.module('webmapp')
     vm.showFilers = !CONFIG.OPTIONS.hideFiltersInMap;
 
     vm.mapLayers = CONFIG.MAP.layers;
-    console.log(vm.mapLayers);
 
     if (vm.mapLayers.length > 1) {
         modalScope.vm.isMap = true;
