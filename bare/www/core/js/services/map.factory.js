@@ -37,7 +37,7 @@ angular.module('webmapp')
         useLocalCaching = generalConf.useLocalStorageCaching,
         centerCoords = {},
         singleFeatureUrl = CONFIG.COMMUNICATION ? CONFIG.COMMUNICATION.singleFeatureUrl : null,
-        eventsPromise, couponsPromise, pagePromise, positionMarker;
+        eventsPromise, couponsPromise, pagePromise, positionMarker, positionCircle;
 
     var baseLayersByLabel = {},
         tileLayersByLabel = {},
@@ -1835,12 +1835,30 @@ angular.module('webmapp')
             return value;
         };
 
-        positionMarker = new L.marker(new L.LatLng(lat, long)).addTo(map);
+        var radius = 35,
+            styleCircle = {
+                color: '#136AEC',
+                fillColor: '#136AEC',
+                fillOpacity: 0.15,
+                weight: 2,
+                opacity: 0.5
+            },
+            styleMarker =  {
+                color: '#136AEC',
+                fillColor: '#2A93EE',
+                fillOpacity: 0.7,
+                weight: 2,
+                opacity: 0.9,
+                radius: 5
+            };
+
+        positionCircle = L.circle({lat: lat, lng: long}, radius, styleCircle).addTo(map);
+        positionMarker = new L.CircleMarker({lat: lat, lng: long}, styleMarker).addTo(map);
 
         positionMarker.on('click', function(e) {
             L.popup()
                 .setLatLng({
-                    lat: e.latlng.lat + getIncrement(map.getZoom()),
+                    lat: e.latlng.lat,
                     lng: e.latlng.lng
                 })
                 .setContent('La tua posizione')
@@ -1851,7 +1869,9 @@ angular.module('webmapp')
     mapService.removePositionMarker = function() {
         if (positionMarker) {
             map.removeLayer(positionMarker);
+            map.removeLayer(positionCircle);
             positionMarker = null;
+            positionCircle = null;
         }
     };
 
