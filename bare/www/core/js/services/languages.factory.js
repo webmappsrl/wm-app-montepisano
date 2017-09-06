@@ -3,7 +3,7 @@ angular.module('webmapp')
 .factory('Languages', function Languages(
     $q,
     $timeout,
-    CONFIG,
+    CONFIG
 ) {
 
     var lang = {};
