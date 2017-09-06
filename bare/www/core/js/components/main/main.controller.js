@@ -67,6 +67,8 @@ angular.module('webmapp')
     vm.showLocate = !CONFIG.MAP.hideLocationControl;
     vm.viewTitle = 'MAPPA';
     vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
+    vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
+    vm.useUTM32 = false;
 
     vm.turnOffGeolocationAndRotion = function() {
         if (!vm.canFollow) {
@@ -306,6 +308,14 @@ angular.module('webmapp')
     vm.goToMap = function() {
         Utils.goTo('/');
     };
+
+    vm.switchCoords = function () {
+       if (!CONFIG.OPTIONS.UTM32Enabled) {
+           return;
+       }
+
+       vm.useUTM32 = !vm.useUTM32;
+    }
 
     vm.openExternalMap = function() {
         var coordinates = $rootScope.detailCoordinates;

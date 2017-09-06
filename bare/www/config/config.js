@@ -14,7 +14,8 @@ angular.module('webmapp').constant('GENERAL_CONFIG', {
         "hideShowInMapFromSearch": true,
         "avoidModalInDetails": true,
         "useAlmostOver": false,
-        "filterIcon": "wm-icon-layers"
+        "filterIcon": "wm-icon-layers",
+        "UTM32Enabled": true
     },
     "STYLE": {
         "global": {

@@ -120,8 +120,12 @@
 
         <div 
             class="coords-block"
-            ng-if="vm.centerCoords">
-            <span>
+            ng-if="vm.centerCoords"
+            ng-click="vm.switchCoords()" >
+            <span ng-if="vm.useUTM32">
+                {{vm.centerCoordsUTM32.lat}}, {{vm.centerCoordsUTM32.lng}} 
+            </span>
+            <span ng-if="!vm.useUTM32">
                 {{vm.centerCoords.lat}}, {{vm.centerCoords.lng}} 
                 
                 <!-- TODO: implement share -->

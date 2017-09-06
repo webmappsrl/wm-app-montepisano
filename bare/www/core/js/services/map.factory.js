@@ -36,6 +36,7 @@ angular.module('webmapp')
         layerCliked = null,
         useLocalCaching = generalConf.useLocalStorageCaching,
         centerCoords = {},
+        centerCoordsUTM32 = {},
         singleFeatureUrl = CONFIG.COMMUNICATION ? CONFIG.COMMUNICATION.singleFeatureUrl : null,
         eventsPromise, couponsPromise, pagePromise, positionMarker, positionCircle;
 
@@ -1215,9 +1216,15 @@ angular.module('webmapp')
 
         map.on('move', function() {
             var center = map.getCenter();
+            var etrs89projection = "+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs ";
+            var etrs89coords;
 
             centerCoords.lat = center.lat.toFixed(4);
             centerCoords.lng = center.lng.toFixed(4);
+
+            etrs89coords = proj4(etrs89projection, [Number(centerCoords.lat), Number(centerCoords.lng)]);
+            centerCoordsUTM32.lat = Math.round(etrs89coords[0]);
+            centerCoordsUTM32.lng = Math.round(etrs89coords[1]);
 
             Utils.forceDigest();
         });
@@ -1763,6 +1770,10 @@ angular.module('webmapp')
 
     mapService.getCenterCoordsReference = function() {
         return centerCoords;
+    };
+
+    mapService.getCenterCoordsUTM32Reference = function() {
+        return centerCoordsUTM32;
     };
 
     mapService.fitBounds = function(bounds) {
