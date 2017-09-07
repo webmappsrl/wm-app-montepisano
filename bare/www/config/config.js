@@ -10,12 +10,12 @@ angular.module('webmapp').constant('GENERAL_CONFIG', {
         "hideMenuButton": false,
         "hideExpanderInDetails": false,
         "hideFiltersInMap": false,
-        "hideDeactiveCentralPointer": true,
+        "hideDeactiveCentralPointer": false,
         "hideShowInMapFromSearch": true,
         "avoidModalInDetails": true,
         "useAlmostOver": false,
         "filterIcon": "wm-icon-layers",
-        "UTM32Enabled": true
+        "UTM32Enabled": true,
     },
     "STYLE": {
         "global": {

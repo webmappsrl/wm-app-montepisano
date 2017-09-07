@@ -73,10 +73,11 @@
         </a>
 
         <i 
-            class="icon wm-icon-pinpoint map-center"
+            class="icon wm-icon-ios7-plus-empty map-center"
             ng-if="!vm.hideDeactiveCentralPointer || vm.followActive"
             ng-style="{
-                'color': vm.followActive ? vm.colors.global.centralPointerActive : '#8A8677'
+                'color': vm.followActive ? vm.colors.global.centralPointerActive : '#000000';
+                'opacity': 0.7
             }"></i>
 
         <div
