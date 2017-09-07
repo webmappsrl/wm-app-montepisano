@@ -1222,9 +1222,9 @@ angular.module('webmapp')
             centerCoords.lat = center.lat.toFixed(4);
             centerCoords.lng = center.lng.toFixed(4);
 
-            etrs89coords = proj4(etrs89projection, [Number(centerCoords.lat), Number(centerCoords.lng)]);
-            centerCoordsUTM32.lat = Math.round(etrs89coords[0]);
-            centerCoordsUTM32.lng = Math.round(etrs89coords[1]);
+            etrs89coords = proj4(etrs89projection, [Number(centerCoords.lng), Number(centerCoords.lat)]); 
+            centerCoordsUTM32.lng = Math.round(etrs89coords[0]); 
+            centerCoordsUTM32.lat = Math.round(etrs89coords[1]);
 
             Utils.forceDigest();
         });
