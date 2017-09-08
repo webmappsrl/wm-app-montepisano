@@ -1,0 +1,68 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-stable">
+        <a
+           class="modal-close-header"
+           ng-click="hide()">
+           <i class="icon wm-icon-android-close"></i>
+       </a>
+        <h1 class="title">
+            <span class="title-inner-header">
+                CONDIVIDI
+            </span>
+        </h1>
+    </ion-header-bar>
+
+    <ion-content class="offline-page" style="">
+        <div class="static-content offline-content">
+            <div class="static-description offline-description">
+                <h2 class="offline-desc-title">SEGNALA LA TUA POSIZIONE</h2>
+            </div>
+
+            <div 
+                class="list list-inset"
+                ng-if="!vm.sendInProgress && !vm.sendSuccess">
+                <input 
+                    style="padding-left: 17px;" 
+                    type="text" 
+                    placeholder="Email"
+                    autocorrect="off"
+                    autocomplete="off"
+                    spellcheck="false"
+                    ng-model="vm.emailblock">
+                <label class="item item-input item-stacked-label">
+                    <!-- <span class="input-label">Titolo text area</span> -->
+                    <textarea 
+                        placeholder="Inserisci il testo della tua segnalazione"
+                        ng-model="vm.textblock">
+                    </textarea>
+                </label>
+            </div>
+
+            <div style="color: black;" ng-if="vm.sendInProgress">
+                <p class="offline-text offline-download">
+                    Invio in corso
+                </p>
+                <div
+                    style="border-top: 16px solid {{COLORS.global.buttonsBackground}};"
+                    class="loader">
+                </div>
+            </div>
+
+            <div style="color: black;" ng-if="vm.sendSuccess">
+                <p class="offline-text offline-download">
+                    Segnalazione inviata
+                </p>
+            </div>
+
+            <button
+                style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                class="button-download button button-block"
+                ng-if="!vm.sendInProgress && !vm.sendSuccess"
+                ng-click="vm.sendText()">
+                <span>
+                    INVIA
+                </span>
+            </button>
+        </div>
+    </ion-content>
+</ion-modal-view>

@@ -17,6 +17,11 @@ angular.module('webmapp').constant('GENERAL_CONFIG', {
         "filterIcon": "wm-icon-layers",
         "UTM32Enabled": true,
     },
+    "SHARE": {
+        "active": false,
+        "type": "email", // or social
+        "apiUrl": "http://api.webmapp.it/services/share.php"
+    },
     "STYLE": {
         "global": {
             "background": "#FAFAFA",

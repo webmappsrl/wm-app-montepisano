@@ -9,6 +9,7 @@ angular.module('webmapp')
     $ionicPopup,
     Utils,
     MapService,
+    Communication,
     Model,
     $cordovaGeolocation,
     $cordovaDeviceOrientation,
@@ -26,6 +27,9 @@ angular.module('webmapp')
 
     var maxZoom = CONFIG.MAP.maxZoom,
         hideExpanderInDetails = CONFIG.OPTIONS.hideExpanderInDetails;
+
+    var shareScope = $rootScope.$new(),
+        shareModal;
 
     var distanceInMeters = function(lat1, lon1, lat2, lon2) {
         var R = 6371, // Radius of the earth in km
@@ -55,6 +59,45 @@ angular.module('webmapp')
         return result;
     };
 
+    Utils.createModal('core/js/modals/shareModal.html', {backdropClickToClose: true, hardwareBackButtonClose: true}, shareScope)
+        .then(function(modal) {
+            shareModal = modal;
+        });
+
+    shareScope.vm = {};
+    shareScope.vm.textblock = '';
+    shareScope.vm.emailblock = '';
+
+    shareScope.vm.hide = function() {
+        if (!shareScope.shareInProgress) {
+            shareModal.hide();
+        }
+    };
+
+    shareScope.vm.sendText = function() {
+        var currentRequest;
+        if (shareScope.vm.textblock !== '' && shareScope.vm.emailblock !== '') {
+            shareScope.vm.sendInProgress = true;
+            currentRequest = Communication.post(CONFIG.SHARE.apiUrl, {
+                email: shareScope.vm.emailblock,
+                content: shareScope.vm.textblock,
+                lat: vm.centerCoords.lat,
+                lng: vm.centerCoords.lng,
+                type: 'email'
+            });
+
+            currentRequest
+                .then(function() {
+                    shareScope.vm.sendInProgress = false;
+                    shareScope.vm.sendSuccess = true;
+
+                    setTimeout(function() {
+                        shareModal.hide();
+                    }, 1000);
+                });
+        }
+    };
+
     vm.isLandscape = isLandscape();
     vm.hideDeactiveCentralPointer = CONFIG.OPTIONS.hideDeactiveCentralPointer;
     vm.followActive = false;
@@ -69,6 +112,38 @@ angular.module('webmapp')
     vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
     vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
     vm.useUTM32 = false;
+    vm.useShare = CONFIG.SHARE.active;
+
+    vm.shareCurrentPosition = function($event) {
+        $event.stopPropagation();
+
+        if (!vm.useShare) {
+            return;
+        }
+
+        if (CONFIG.SHARE.type === 'social') {
+            $cordovaSocialSharing
+                .share(
+                    shareOptions.message + ' ', 
+                    shareOptions.mailSubject, 
+                    undefined, 
+                    shareOptions.baseUrl +
+                        '?map=' + 
+                        MapService.getZoom() + '/' +
+                        vm.centerCoords.lat + '/' +
+                        vm.centerCoords.lng)
+                .then(function(result) {
+                  // Success!
+                }, function(err) {
+                  // An error occured. Show a message to the user
+                });
+            } else if (CONFIG.SHARE.type === 'email') {
+                shareScope.vm.textblock = '';
+                shareScope.vm.emailblock = '';
+                shareScope.vm.sendSuccess = false;
+                shareModal && shareModal.show();
+            }
+    };
 
     vm.turnOffGeolocationAndRotion = function() {
         if (!vm.canFollow) {
