@@ -15,7 +15,7 @@ angular.module('webmapp').constant('GENERAL_CONFIG', {
         "avoidModalInDetails": true,
         "useAlmostOver": false,
         "filterIcon": "wm-icon-layers",
-        "UTM32Enabled": true,
+        "UTM32Enabled": true
     },
     "SHARE": {
         "active": false,
