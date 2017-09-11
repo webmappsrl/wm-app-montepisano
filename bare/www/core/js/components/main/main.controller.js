@@ -112,7 +112,7 @@ angular.module('webmapp')
     vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
     vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
     vm.useUTM32 = false;
-    vm.useShare = CONFIG.SHARE.active;
+    vm.useShare = CONFIG.SHARE && CONFIG.SHARE.active;
 
     vm.shareCurrentPosition = function($event) {
         $event.stopPropagation();
