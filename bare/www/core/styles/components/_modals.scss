@@ -392,12 +392,12 @@ ion-modal-view.modal-download {
   .modal {
     &.modal-details-gallery {
       width: 800px!important;
-      margin-left: -400px;
+
     }
   }
 }
 
-@media (max-width: 680px) {
+@media (min-width: 680px) {
   .modal {
     width: 400px;
     left: 50%;

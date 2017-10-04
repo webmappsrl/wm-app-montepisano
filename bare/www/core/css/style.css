@@ -2340,10 +2340,9 @@ ion-modal-view.modal-download {
 
 @media (min-width: 1025px) {
   .modal.modal-details-gallery {
-    width: 800px !important;
-    margin-left: -400px; } }
+    width: 800px !important; } }
 
-@media (max-width: 680px) {
+@media (min-width: 680px) {
   .modal {
     width: 400px;
     left: 50%;
