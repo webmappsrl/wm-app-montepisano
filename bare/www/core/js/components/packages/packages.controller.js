@@ -56,6 +56,24 @@ angular.module('webmapp')
         });
     };
 
+    var getRoutes = function(){
+        $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/', function(data) {
+            vm.packages = data;
+
+            localStorage.$wm_packages = JSON.stringify(data);
+
+            // TODO: download images
+
+            $ionicLoading.hide();
+            Utils.forceDigest();
+        }).fail(function() {
+            console.error('routes retrive error');
+            if (vm.packages.length === 0) {
+                // TODO: controllare se non si hanno pacchetti per mancanza di connessione
+            }
+        });
+    };
+
     // TODO: check if a map is not setted ready but there is a folder and delete it
 
     modalScope.vm = {};
@@ -93,21 +111,7 @@ angular.module('webmapp')
         }, 500);
     }
 
-    $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/', function(data) {
-        vm.packages = data;
-
-        localStorage.$wm_packages = JSON.stringify(data);
-
-        // TODO: download images
-
-        $ionicLoading.hide();
-        Utils.forceDigest();
-    }).fail(function() {
-        console.error('routes retrive error');
-        if (vm.packages.length === 0) {
-            // TODO: controllare se non si hanno pacchetti per mancanza di connessione
-        }
-    });
+    getRoutes();
 
     $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/detailMapModal.html', {
         scope: modalScope,
@@ -301,6 +305,8 @@ angular.module('webmapp')
     vm.doRefresh = function(refresher) {
         console.log('Begin async operation', refresher);
 
+        getRoutes();
+
         getPackagesIdByUserId(userData.ID)
             .then(function() {
                 setTimeout(function() {
@@ -312,6 +318,8 @@ angular.module('webmapp')
                 });
                 $scope.$broadcast('scroll.refreshComplete');
             });
+
+        location.reload();
     };
 
     $ionicPlatform.ready(function() {

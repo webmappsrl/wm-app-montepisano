@@ -36,8 +36,9 @@ angular.module('webmapp')
         layerCliked = null,
         useLocalCaching = generalConf.useLocalStorageCaching,
         centerCoords = {},
+        centerCoordsUTM32 = {},
         singleFeatureUrl = CONFIG.COMMUNICATION ? CONFIG.COMMUNICATION.singleFeatureUrl : null,
-        eventsPromise, couponsPromise, pagePromise;
+        eventsPromise, couponsPromise, pagePromise, positionMarker, positionCircle;
 
     var baseLayersByLabel = {},
         tileLayersByLabel = {},
@@ -634,6 +635,11 @@ angular.module('webmapp')
         return promise;
     };
 
+    var initializeLanguages = function(){
+        var languages = CONFIG.LANGUAGES;
+        
+    }
+
     var initializePages = function() {
         var pages = CONFIG.PAGES;
 
@@ -1051,8 +1057,6 @@ angular.module('webmapp')
                       resetOfflineData);
               } else {
                   address = baseMap.tilesUrl + '{z}/{x}/{y}.png';
-                  console.log(address);
-                  console.log(baseMap);
                   setBaseLayer(baseMap, baseTms, L.tileLayer(address, options));
                   resolve();
               }
@@ -1121,7 +1125,6 @@ angular.module('webmapp')
                 resolve();
             } else {
                 address = baseMap.tilesUrl;
-                console.log(address);
                 resolveLocalFileSystemURL(
                   address,
                   function(ap) {
@@ -1136,6 +1139,9 @@ angular.module('webmapp')
     }
 
     var initialize = function() {
+
+        //
+        initializeLanguages();
 
         if( typeof localStorage.$wm_mhildConf === 'undefined' ){
             pagePromise = initializePages();
@@ -1210,9 +1216,15 @@ angular.module('webmapp')
 
         map.on('move', function() {
             var center = map.getCenter();
+            var etrs89projection = "+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs ";
+            var etrs89coords;
 
             centerCoords.lat = center.lat.toFixed(4);
             centerCoords.lng = center.lng.toFixed(4);
+
+            etrs89coords = proj4(etrs89projection, [Number(centerCoords.lng), Number(centerCoords.lat)]); 
+            centerCoordsUTM32.lng = Math.round(etrs89coords[0]); 
+            centerCoordsUTM32.lat = Math.round(etrs89coords[1]);
 
             Utils.forceDigest();
         });
@@ -1292,7 +1304,7 @@ angular.module('webmapp')
             baseLayersByLabel[localStorage.currentMapLayer].addTo(map);
           })
           .catch(function(e) {
-            console.log(e);
+            console.error(e);
           });
 
         layerControl = L.control.groupedLayers();
@@ -1760,10 +1772,14 @@ angular.module('webmapp')
         return centerCoords;
     };
 
+    mapService.getCenterCoordsUTM32Reference = function() {
+        return centerCoordsUTM32;
+    };
+
     mapService.fitBounds = function(bounds) {
         fitBounds(bounds);
     };
-
+    
     mapService.fitBoundsFromString = function(stringBounds) {
         var bsplit = stringBounds.split(','),
             swsplit = bsplit[0].split(' '),
@@ -1808,17 +1824,67 @@ angular.module('webmapp')
         if ( controlLocate !== null ){
             controlLocate.start();
         }
-    }
+    };
 
     mapService.stopControlLocate = function(){
         if ( controlLocate !== null ){
             controlLocate.stop();
         }
-    }
+    };
 
     mapService.centerOnScreen = function(location) {
         map.panTo(new L.LatLng(location.latlng.lat, location.latlng.lng));
-    }
+    };
+
+    mapService.createPositionMarkerAt = function(lat, long) {
+        var getIncrement = function(n) {
+            var value = 19.6618;
+
+            for (var i = 2; i <= n; i++) {
+                value = value / 2;
+            }
+            return value;
+        };
+
+        var radius = 35,
+            styleCircle = {
+                color: '#136AEC',
+                fillColor: '#136AEC',
+                fillOpacity: 0.15,
+                weight: 2,
+                opacity: 0.5
+            },
+            styleMarker =  {
+                color: '#136AEC',
+                fillColor: '#2A93EE',
+                fillOpacity: 0.7,
+                weight: 2,
+                opacity: 0.9,
+                radius: 5
+            };
+
+        positionCircle = L.circle({lat: lat, lng: long}, radius, styleCircle).addTo(map);
+        positionMarker = new L.CircleMarker({lat: lat, lng: long}, styleMarker).addTo(map);
+
+        positionMarker.on('click', function(e) {
+            L.popup()
+                .setLatLng({
+                    lat: e.latlng.lat,
+                    lng: e.latlng.lng
+                })
+                .setContent('La tua posizione')
+                .openOn(map);
+        });
+    };
+
+    mapService.removePositionMarker = function() {
+        if (positionMarker) {
+            map.removeLayer(positionMarker);
+            map.removeLayer(positionCircle);
+            positionMarker = null;
+            positionCircle = null;
+        }
+    };
 
     window.closePopup = mapService.closePopup = function(e) {
         map && map.closePopup();

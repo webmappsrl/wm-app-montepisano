@@ -8,6 +8,26 @@ angular.module('webmapp')
 ) {
     var communication = {};
 
+    communication.post = function(url, data) {
+        var defer = $q.defer(),
+            options = {
+                method: 'POST',
+                url: url,
+                data: data,
+                dataType: 'json'
+            };
+
+        $http(options)
+            .success(function(data) {
+                defer.resolve(data);
+            })
+            .error(function(error) {
+                defer.reject(error);
+            });
+
+        return defer.promise;
+    };
+
     communication.getJSON = function(url) {
         var defer = $q.defer(),
             options = {

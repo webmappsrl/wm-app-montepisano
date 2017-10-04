@@ -9,6 +9,7 @@ angular.module('webmapp')
     $ionicPopup,
     Utils,
     MapService,
+    Communication,
     Model,
     $cordovaGeolocation,
     $cordovaDeviceOrientation,
@@ -26,6 +27,9 @@ angular.module('webmapp')
 
     var maxZoom = CONFIG.MAP.maxZoom,
         hideExpanderInDetails = CONFIG.OPTIONS.hideExpanderInDetails;
+
+    var shareScope = $rootScope.$new(),
+        shareModal;
 
     var distanceInMeters = function(lat1, lon1, lat2, lon2) {
         var R = 6371, // Radius of the earth in km
@@ -55,6 +59,45 @@ angular.module('webmapp')
         return result;
     };
 
+    Utils.createModal('core/js/modals/shareModal.html', {backdropClickToClose: true, hardwareBackButtonClose: true}, shareScope)
+        .then(function(modal) {
+            shareModal = modal;
+        });
+
+    shareScope.vm = {};
+    shareScope.vm.textblock = '';
+    shareScope.vm.emailblock = '';
+
+    shareScope.vm.hide = function() {
+        if (!shareScope.shareInProgress) {
+            shareModal.hide();
+        }
+    };
+
+    shareScope.vm.sendText = function() {
+        var currentRequest;
+        if (shareScope.vm.textblock !== '' && shareScope.vm.emailblock !== '') {
+            shareScope.vm.sendInProgress = true;
+            currentRequest = Communication.post(CONFIG.SHARE.apiUrl, {
+                email: shareScope.vm.emailblock,
+                content: shareScope.vm.textblock,
+                lat: vm.centerCoords.lat,
+                lng: vm.centerCoords.lng,
+                type: 'email'
+            });
+
+            currentRequest
+                .then(function() {
+                    shareScope.vm.sendInProgress = false;
+                    shareScope.vm.sendSuccess = true;
+
+                    setTimeout(function() {
+                        shareModal.hide();
+                    }, 1000);
+                });
+        }
+    };
+
     vm.isLandscape = isLandscape();
     vm.hideDeactiveCentralPointer = CONFIG.OPTIONS.hideDeactiveCentralPointer;
     vm.followActive = false;
@@ -63,9 +106,44 @@ angular.module('webmapp')
     vm.deg = 0;
     vm.colors = CONFIG.STYLE;
     vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
+    vm.useExandMapInDetails = CONFIG.OPTIONS.useExandMapInDetails;
     vm.showLocate = !CONFIG.MAP.hideLocationControl;
     vm.viewTitle = 'MAPPA';
     vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
+    vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
+    vm.useUTM32 = false;
+    vm.useShare = CONFIG.SHARE && CONFIG.SHARE.active;
+
+    vm.shareCurrentPosition = function($event) {
+        $event.stopPropagation();
+
+        if (!vm.useShare) {
+            return;
+        }
+
+        if (CONFIG.SHARE.type === 'social') {
+            $cordovaSocialSharing
+                .share(
+                    shareOptions.message + ' ', 
+                    shareOptions.mailSubject, 
+                    undefined, 
+                    shareOptions.baseUrl +
+                        '?map=' + 
+                        MapService.getZoom() + '/' +
+                        vm.centerCoords.lat + '/' +
+                        vm.centerCoords.lng)
+                .then(function(result) {
+                  // Success!
+                }, function(err) {
+                  // An error occured. Show a message to the user
+                });
+            } else if (CONFIG.SHARE.type === 'email') {
+                shareScope.vm.textblock = '';
+                shareScope.vm.emailblock = '';
+                shareScope.vm.sendSuccess = false;
+                shareModal && shareModal.show();
+            }
+    };
 
     vm.turnOffGeolocationAndRotion = function() {
         if (!vm.canFollow) {
@@ -99,6 +177,64 @@ angular.module('webmapp')
             return;
         }
 
+        if (vm.useExandMapInDetails && vm.detail) {
+            MapService.stopControlLocate();
+            MapService.getFeatureById($state.params.id, $rootScope.currentParams.parentId.replace(/_/g, ' '))
+                .then(function(feature) {
+                    var featureLat = feature.geometry.coordinates[1],
+                        featureLong = feature.geometry.coordinates[0];
+                    
+                    vm.locateLoading = true;
+
+                    $cordovaGeolocation
+                        .getCurrentPosition({
+                            timeout: 10000,
+                            enableHighAccuracy: Utils.isBrowser() ? true : false
+                        })
+                        .then(function(position) {
+                            var posLat = position.coords.latitude,
+                                posLong = position.coords.longitude;
+
+                            var sw, ne;
+
+                            if (!MapService.isInBoundingBox(posLat, posLong)) {
+                                $ionicPopup.alert({
+                                    title: 'ATTENZIONE',
+                                    template: 'Sembra che tu sia fuori dai limiti della mappa',
+                                    buttons: [{
+                                        text: 'Ok',
+                                        type: 'button-positive'
+                                    }]
+                                });
+                            } else {
+                                MapService.createPositionMarkerAt(posLat, posLong);
+
+                                sw = ((featureLong > posLong ? featureLong : posLong) + 0.001) + ' ' + ((featureLat > posLat ? featureLat : posLat) + 0.001)
+                                ne = ((featureLong < posLong ? featureLong : posLong) - 0.001) + ' ' + ((featureLat < posLat ? featureLat : posLat) - 0.001)
+
+                                MapService.fitBoundsFromString(sw + ',' + ne);
+                            }
+
+                            vm.locateLoading = false;
+                        }, function(err) {
+                            vm.locateLoading = false;
+                            $ionicPopup.alert({
+                                title: 'ATTENZIONE',
+                                template: err.message,
+                                buttons: [{
+                                    text: 'Ok',
+                                    type: 'button-positive'
+                                }]
+                            });
+                        });
+
+                }, function() {
+                    console.error('Retrive feature error');
+                });
+
+            return;
+        }
+
         MapService.startControlLocate();
 
         if (vm.canFollow || vm.isRotating) {
@@ -118,7 +254,7 @@ angular.module('webmapp')
                         if (vm.isRotating) {
                             vm.isRotating = false;
                         }
-                        console.log(error);
+                        console.error(error);
                     },
                     function(result) {
                         if (!vm.canFollow) {
@@ -248,6 +384,14 @@ angular.module('webmapp')
         Utils.goTo('/');
     };
 
+    vm.switchCoords = function () {
+       if (!CONFIG.OPTIONS.UTM32Enabled) {
+           return;
+       }
+
+       vm.useUTM32 = !vm.useUTM32;
+    }
+
     vm.openExternalMap = function() {
         var coordinates = $rootScope.detailCoordinates;
 
@@ -286,6 +430,7 @@ angular.module('webmapp')
         var layerState = false;
 
         vm.turnOffGeolocationAndRotion();
+        MapService.removePositionMarker();
 
         if (currentState !== 'app.main.detaillayer' &&
             currentState !== 'app.main.detailevent' &&

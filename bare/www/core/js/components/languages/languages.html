@@ -23,13 +23,13 @@
             <div class="card-title">
                 <span class="card-title-inner">Scegli la lingua</span>
             </div>
-            <button
+            <button ng-repeat="lang in vm.languages"
                 style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
                 class="button-download button button-block button-half"
-                ng-click="vm.chooseLang()">
-                ITALIANO
+                ng-click="vm.chooseLang( lang )">
+                {{lang | translate}}
             </button>
-            <button
+            <!-- <button
                 style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
                 class="button-download button button-block button-half"
                 ng-click="vm.chooseLang()">
@@ -40,7 +40,7 @@
                 class="button-download button button-block button-half"
                 ng-click="vm.chooseLang()">
                 TEDESCO
-            </button>
+            </button> -->
             <br/>
         </div>
        
