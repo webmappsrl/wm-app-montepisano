@@ -22,7 +22,9 @@ angular.module('webmapp')
     var modalScope = $rootScope.$new(),
         modal = {},
         modalDownloadScope = $rootScope.$new(),
-        modalDownload = {};
+        modalDownload = {},
+        modalFiltersScope = $rootScope.$new(),
+        modalFilters = {};
 
     var config = CONFIG,
         baseUrl = config.COMMUNICATION.baseUrl,
@@ -86,6 +88,11 @@ angular.module('webmapp')
         modalDownload && modalDownload.hide();
     };
 
+    modalFiltersScope.vm = {};
+    modalFiltersScope.vm.hide = function() {
+        modalFilters && modalFilters.hide();
+    };
+
     vm.userDownloadedPackages = localStorage.$wm_userDownloadedPackages ? JSON.parse(localStorage.$wm_userDownloadedPackages) : {};
     vm.packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : [];
     vm.userPackagesId = localStorage.$wm_userPackagesId ? JSON.parse(localStorage.$wm_userPackagesId) : {};
@@ -95,6 +102,7 @@ angular.module('webmapp')
     vm.isBrowser = Utils.isBrowser();
     vm.openInAppBrowser = Utils.openInAppBrowser;
     vm.pageConf = Model.getPage('Pacchetti');
+    vm.filters = {};
 
     if (Auth.isLoggedIn()) {
         if (vm.packages.length === 0) {
@@ -125,6 +133,12 @@ angular.module('webmapp')
         animation: 'slide-in-up'
     }).then(function(modalObj) {
         modalDownload = modalObj;
+    });
+
+    $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/filtersModal.html', {
+        scope: modalFiltersScope
+    }).then(function(modalObj) {
+        modalFilters = modalObj;
     });
 
     vm.openPackage = function(pack) {
@@ -345,6 +359,7 @@ angular.module('webmapp')
                     template: 'Loading...'
                 });
             }
+            location.href = "#/page/help";
         }
     });
 
@@ -352,7 +367,57 @@ angular.module('webmapp')
 
     function showLogin(isRegistration) {
         $rootScope.showLogin(isRegistration);
-    }
+    };
+
+    var areAllActive = function(filtersMap) {
+        var allActive = true;
+
+        for (var i in filtersMap) {
+            if (i !== 'Tutte') {
+                if (!filtersMap[i]) {
+                    allActive = false;
+                    break;
+                }
+            }
+        }
+
+        return allActive;
+    };
+
+    vm.setFilters = function() {
+        vm.packages.forEach(function(element) {
+            element.webmapp_category.forEach(function(category) {
+                var tmp = {};
+                tmp[category] = true;
+                vm.filters = angular.extend(tmp, vm.filters);
+            }, this);
+        }, this);
+    };
+
+    vm.setFilters();
+
+    modalFiltersScope.vm.updateFilter = function(filterName, value) {
+        if (filterName === 'Tutte') {
+            for (var i in modalFiltersScope.vm.filters) {
+                modalFiltersScope.vm.filters[i] = value;
+                // MapService.setFilter(i, value);
+            }
+        } else {
+            // MapService.setFilter(filterName, value);
+            modalFiltersScope.vm.filters[filterName] = value;
+            modalFiltersScope.vm.filters['Tutte'] = areAllActive(modalFiltersScope.vm.filters);
+        } 
+    };
+
+    vm.openFilters = function() {
+        var activeFilters = angular.extend({Tutte: false}, vm.filters),
+            allActive = areAllActive(activeFilters);
+
+        activeFilters['Tutte'] = allActive;
+        modalFiltersScope.vm.filters = activeFilters;
+
+        modalFilters.show();
+    };
 
     return vm;
 });

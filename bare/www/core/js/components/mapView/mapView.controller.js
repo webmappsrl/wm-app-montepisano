@@ -81,6 +81,8 @@ angular.module('webmapp')
     vm.openFilters = function() {
         var activeFilters = angular.extend({Tutte: true}, MapService.getActiveFilters()),
             allActive = areAllActive(activeFilters);
+        
+        console.log(activeFilters);
 
         activeFilters['Tutte'] = allActive;
         modalScope.vm.filters = activeFilters;
