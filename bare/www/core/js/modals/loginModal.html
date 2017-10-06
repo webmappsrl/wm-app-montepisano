@@ -131,7 +131,7 @@
             <form
                 class="registration-form"
                 ng-if="state.resetMode"
-                ng-submit="completeSimpleRegistration(ud.firstName, ud.lastName, ud.email, ud.checkEmail, ud.password, ud.checkPassword, ud.privacy)">
+                ng-submit="completeSimpleRegistration(ud.firstName, ud.lastName, ud.email, ud.checkEmail, ud.password, ud.checkPassword, ud.newsletter, ud.privacy)">
                 <div class="list">
                     <label class="item item-input">
                         <input
@@ -209,6 +209,15 @@
                             onfocus="this.placeholder = ''"
                             onblur="this.placeholder = 'conferma password'">
                     </label>
+
+                    <div class="privacy" ng-if="newsletter">
+                        <input
+                            class="input-privacy input-ph"
+                            type="checkbox"
+                            ng-model="ud.newsletter">
+                        Voglio iscrivermi alla newsletter
+                    </div>
+
                     <div class="privacy">
                         <input
                             class="input-privacy input-ph"

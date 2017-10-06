@@ -31,7 +31,7 @@ angular.module('webmapp')
     var mainMenuItems = CONFIG.MENU,
         itemInGroupMap = {},
         overlayLayersConfMap = {};
-
+    
     vm.colors = CONFIG.STYLE;
     vm.overlay_maps_group = [];
     vm.static_pages_group = [];
@@ -87,6 +87,7 @@ angular.module('webmapp')
             loginScope.ud.username = '';
             loginScope.ud.password = '';
             loginScope.ud.checkPassword = '';
+            loginScope.ud.newsletter = false;
             loginScope.ud.privacy = '';
         };
 
@@ -99,6 +100,8 @@ angular.module('webmapp')
 
         loginScope.marginForm = 0;
         loginScope.logging = false;
+
+        loginScope.newsletter = CONFIG.OPTIONS.newsletter;
 
         loginScope.loginMode = '';
         loginScope.registrationMode = false;
@@ -165,7 +168,7 @@ angular.module('webmapp')
             }
         };
 
-        loginScope.completeSimpleRegistration = function(firstName, lastName, email, checkEmail, password, checkPassword, privacy) {
+        loginScope.completeSimpleRegistration = function(firstName, lastName, email, checkEmail, password, checkPassword, newsletter, privacy) {
             if (loginScope.logging) {
                 return;
             }
@@ -213,7 +216,7 @@ angular.module('webmapp')
                     });
                 } else {
                     loginScope.logging = true;
-                    Account.createAccount(firstName, lastName, email, password, true)
+                    Account.createAccount(firstName, lastName, email, password, newsletter, true)
                         .then(function(data) {
                             console.log(data);
                             $ionicPopup.alert({

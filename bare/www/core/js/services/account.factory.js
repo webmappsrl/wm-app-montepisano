@@ -228,7 +228,7 @@ angular.module('webmapp')
         return defer.promise;
     };
 
-    account.createAccount = function(firstName, lastName, email, password, isWordpress) {
+    account.createAccount = function(firstName, lastName, email, password, newsl, isWordpress) {
         var defer = $q.defer(),
             data = {
                 user: email,
@@ -236,7 +236,8 @@ angular.module('webmapp')
                 mail: email,
                 appname: config.OPTIONS.title,
                 first_name: firstName,
-                last_name: lastName
+                last_name: lastName,
+                newsletter: newsl
             };
 
         $http({
