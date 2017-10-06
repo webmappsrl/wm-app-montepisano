@@ -216,11 +216,7 @@ angular.module('webmapp')
                     });
                 } else {
                     loginScope.logging = true;
-                    var newsl = 'false';
-                    if (newsletter) {
-                        newsl = 'true';
-                    }
-                    Account.createAccount(firstName, lastName, email, password, newsl, true)
+                    Account.createAccount(firstName, lastName, email, password, newsletter, true)
                         .then(function(data) {
                             console.log(data);
                             $ionicPopup.alert({
