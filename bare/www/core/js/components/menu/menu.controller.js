@@ -101,7 +101,7 @@ angular.module('webmapp')
         loginScope.marginForm = 0;
         loginScope.logging = false;
 
-        loginScope.newsletter = CONFIG.OPTIONS.newsletter;
+        loginScope.newsletter = CONFIG.LOGIN.showNewsletterCheckbox;
 
         loginScope.loginMode = '';
         loginScope.registrationMode = false;
@@ -216,7 +216,11 @@ angular.module('webmapp')
                     });
                 } else {
                     loginScope.logging = true;
-                    Account.createAccount(firstName, lastName, email, password, newsletter, true)
+                    var newsl = 'false';
+                    if (newsletter) {
+                        newsl = 'true';
+                    }
+                    Account.createAccount(firstName, lastName, email, password, newsl, true)
                         .then(function(data) {
                             console.log(data);
                             $ionicPopup.alert({
