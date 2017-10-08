@@ -2290,7 +2290,10 @@ a.item {
 .modal-image-content .modal-content {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%); }
+  transform: translateY(-50%);
+  width: 100%; }
+  .modal-image-content .modal-content img {
+    width: 100%; }
 
 /* Tappa POIs */
 .modal-tappa-poi .tappa-poi-list {
@@ -2337,8 +2340,7 @@ ion-modal-view.modal-download {
 
 @media (min-width: 1025px) {
   .modal.modal-details-gallery {
-    width: 800px;
-    margin-left: -400px; } }
+    width: 800px !important; } }
 
 @media (min-width: 680px) {
   .modal {

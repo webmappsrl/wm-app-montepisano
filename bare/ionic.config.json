@@ -4,6 +4,12 @@
   "app_id": "cf0d8507",
   "type": "ionic1",
   "watchPatterns": [
-    "scss/**/*"
-  ]
+    "scss/**/*",
+    "www/**/*",
+    "!www/lib/**/*",
+    "!www/**/*.map"
+  ],
+  "integrations": {
+    "cordova": {}
+  }
 }

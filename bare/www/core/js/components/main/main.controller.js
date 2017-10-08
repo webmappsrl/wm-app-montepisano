@@ -380,6 +380,12 @@ angular.module('webmapp')
         }
     };
 
+    vm.returnToMap = function() {
+        MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
+
+        vm.goToMap();
+    };
+
     vm.goToMap = function() {
         Utils.goTo('/');
     };

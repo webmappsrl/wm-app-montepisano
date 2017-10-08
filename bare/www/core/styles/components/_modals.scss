@@ -316,6 +316,11 @@
 
   .modal-content {
     @include vertical-centering;
+    width: 100%;
+
+    img {
+      width: 100%;
+    }
   }
 }
 
@@ -386,8 +391,8 @@ ion-modal-view.modal-download {
 @media (min-width: 1025px) {
   .modal {
     &.modal-details-gallery {
-      width: 800px;
-      margin-left: -400px;
+      width: 800px!important;
+
     }
   }
 }
