@@ -91,7 +91,7 @@ gulp.task( 'update', ['create'], function(){
             }   
         })
         .pipe(source(info))
-	.pipe(fs.access(info))
+	// .pipe(fs.access(info))
         .pipe(streamify(jeditor(function (repositories) {
             repo = (repositories);
             config_xml = {
