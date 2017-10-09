@@ -58,6 +58,23 @@ angular.module('webmapp')
         });
     };
 
+    var getCategoriesName = function() {
+        return $.getJSON(baseUrl + config.COMMUNICATION.wordPressEndpoint + 'webmapp_category?per_page=100', function(data) {
+            vm.categories = {};
+
+            data.forEach(function(category) {
+                var tmp = {};
+                tmp[category.id] = category.name;
+                vm.categories = angular.extend(vm.categories, tmp);
+            });
+
+            return data;
+        }).fail(function() {
+            console.error('categories retrive error');
+            return 'categories retrive error';
+        });
+    };
+
     var getRoutes = function(){
         $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/', function(data) {
             vm.packages = data;
@@ -394,23 +411,39 @@ angular.module('webmapp')
         }, this);
     };
 
-    vm.setFilters();
-
     modalFiltersScope.vm.updateFilter = function(filterName, value) {
         if (filterName === 'Tutte') {
             for (var i in modalFiltersScope.vm.filters) {
                 modalFiltersScope.vm.filters[i] = value;
-                // MapService.setFilter(i, value);
+            }
+
+            for (var i in vm.filters) {
+                vm.filters[i] = value;
             }
         } else {
-            // MapService.setFilter(filterName, value);
             modalFiltersScope.vm.filters[filterName] = value;
+            
+            for (var i in vm.categories) {
+                if (vm.categories[i] === filterName) {
+                    vm.filters[i] = value;
+                    break;
+                }
+            }
+
             modalFiltersScope.vm.filters['Tutte'] = areAllActive(modalFiltersScope.vm.filters);
         } 
     };
 
     vm.openFilters = function() {
-        var activeFilters = angular.extend({Tutte: false}, vm.filters),
+        var newFilters = {};
+
+        for (var key in vm.filters) {
+            var tmp = {};
+            tmp[vm.categories[key]] = vm.filters[key];
+            newFilters = angular.extend(newFilters, tmp);
+        }
+
+        var activeFilters = angular.extend({Tutte: false}, newFilters),
             allActive = areAllActive(activeFilters);
 
         activeFilters['Tutte'] = allActive;
@@ -418,6 +451,9 @@ angular.module('webmapp')
 
         modalFilters.show();
     };
+
+    vm.setFilters();
+    getCategoriesName();
 
     return vm;
 });

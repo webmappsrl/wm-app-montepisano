@@ -23,3 +23,23 @@ angular.module('webmapp')
         return results;
     };
 });
+
+angular.module('webmapp')
+
+.filter('categoryFilter', function() {
+    return function(input, filter) {
+        var results = [],
+            order = 'asc';
+
+        for (var package in input) {
+            for (var key in input[package].webmapp_category) {
+                if (filter[input[package].webmapp_category[key]]) {
+                    results.push(input[package]);
+                    break;
+                }
+            }
+        };
+
+        return results;
+    };
+});
