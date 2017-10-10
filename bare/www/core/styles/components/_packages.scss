@@ -1,6 +1,32 @@
-.packages-title{
+.packages-title {
   margin: 10px 0;
   font-size: 20px;
   line-height: 1.2;
   font-weight: 600;
+}
+
+.details-image-reduced {
+  padding: 5px;
+  position: relative;
+  width: 40%;
+  float: left;
+  img {
+    border: 2px solid #f2f5e8;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+.details-reduced {
+  float: right;
+  width: 60%;
+}
+
+.buttons-reduced {
+  width: 100%;
+  .reduced-button {
+    width: 49%!important;
+    display: inline!important;
+    padding: 0;
+  }
 }

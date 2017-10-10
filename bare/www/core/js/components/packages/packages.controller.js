@@ -64,9 +64,17 @@ angular.module('webmapp')
 
             data.forEach(function(category) {
                 var tmp = {};
-                tmp[category.id] = category.name;
+                if (!category.icon) {
+                    category.icon = 'wm-icon-generic';
+                }
+                tmp[category.id] = {
+                    name: category.name,
+                    icon: category.icon
+                };
                 vm.categories = angular.extend(vm.categories, tmp);
             });
+
+            vm.setFilters();
 
             return data;
         }).fail(function() {
@@ -152,7 +160,7 @@ angular.module('webmapp')
         modalDownload = modalObj;
     });
 
-    $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/filtersModal.html', {
+    $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/categoriesFiltersModal.html', {
         scope: modalFiltersScope
     }).then(function(modalObj) {
         modalFilters = modalObj;
@@ -391,7 +399,7 @@ angular.module('webmapp')
 
         for (var i in filtersMap) {
             if (i !== 'Tutte') {
-                if (!filtersMap[i]) {
+                if (!filtersMap[i].value) {
                     allActive = false;
                     break;
                 }
@@ -405,7 +413,11 @@ angular.module('webmapp')
         vm.packages.forEach(function(element) {
             element.webmapp_category.forEach(function(category) {
                 var tmp = {};
-                tmp[category] = true;
+                tmp[category] = {
+                    name: vm.categories[category].name,
+                    icon: vm.categories[category].icon,
+                    value: true
+                };
                 vm.filters = angular.extend(tmp, vm.filters);
             }, this);
         }, this);
@@ -414,46 +426,32 @@ angular.module('webmapp')
     modalFiltersScope.vm.updateFilter = function(filterName, value) {
         if (filterName === 'Tutte') {
             for (var i in modalFiltersScope.vm.filters) {
-                modalFiltersScope.vm.filters[i] = value;
+                modalFiltersScope.vm.filters[i].value = value;
             }
 
             for (var i in vm.filters) {
-                vm.filters[i] = value;
+                vm.filters[i].value = value;
             }
         } else {
-            modalFiltersScope.vm.filters[filterName] = value;
-            
-            for (var i in vm.categories) {
-                if (vm.categories[i] === filterName) {
-                    vm.filters[i] = value;
-                    break;
-                }
-            }
+            modalFiltersScope.vm.filters[filterName].value = value;
+            vm.filters[filterName].value = value;
 
-            modalFiltersScope.vm.filters['Tutte'] = areAllActive(modalFiltersScope.vm.filters);
+            modalFiltersScope.vm.filters['Tutte'].value = areAllActive(modalFiltersScope.vm.filters);
         } 
     };
 
     vm.openFilters = function() {
-        var newFilters = {};
-
-        for (var key in vm.filters) {
-            var tmp = {};
-            tmp[vm.categories[key]] = vm.filters[key];
-            newFilters = angular.extend(newFilters, tmp);
-        }
-
-        var activeFilters = angular.extend({Tutte: false}, newFilters),
+        var activeFilters = angular.extend(vm.filters, {Tutte: {value: true}}),
             allActive = areAllActive(activeFilters);
-
-        activeFilters['Tutte'] = allActive;
+        
+        activeFilters['Tutte'].value = allActive;
         modalFiltersScope.vm.filters = activeFilters;
 
         modalFilters.show();
     };
 
-    vm.setFilters();
     getCategoriesName();
 
+    // vm.type = "reduced";
     return vm;
 });

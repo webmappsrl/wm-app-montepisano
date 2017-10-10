@@ -27,18 +27,29 @@ angular.module('webmapp')
 angular.module('webmapp')
 
 .filter('categoryFilter', function() {
-    return function(input, filter) {
+    return function(input, filters) {
         var results = [],
-            order = 'asc';
+            order = 'asc',
+            filt = false;
+
+        for (var k in filters) {
+            filt = true;
+            break;
+        }
+
+        if (!filt) {
+            return input;
+        }
 
         for (var package in input) {
             for (var key in input[package].webmapp_category) {
-                if (filter[input[package].webmapp_category[key]]) {
+                if (filters[input[package].webmapp_category[key]] && 
+                    filters[input[package].webmapp_category[key]].value) {
                     results.push(input[package]);
                     break;
                 }
             }
-        };
+        }
 
         return results;
     };
