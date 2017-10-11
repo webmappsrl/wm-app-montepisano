@@ -223,7 +223,7 @@ gulp.task('complete-update', function () {
         instance_name = argv.instance;
     }
     else {
-        console.warning("missing instance name");
+        console.log("missing instance name");
         console.log("aborting...");
         return;
     }
@@ -232,7 +232,7 @@ gulp.task('complete-update', function () {
         url = argv.url;
     }
     else {
-        console.warning("missing url");
+        console.log("missing url");
         console.log("aborting...");
         return
     }
