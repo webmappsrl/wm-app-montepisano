@@ -2861,6 +2861,10 @@ ion-modal-view.modal-download {
   line-height: 1.2;
   font-weight: 600; }
 
+.modal-inner-content.modal-two-columns.coupons-list {
+  padding: 0 !important;
+  position: relative; }
+
 .details-image-reduced {
   padding: 11px;
   position: relative;
@@ -2869,35 +2873,46 @@ ion-modal-view.modal-download {
   .details-image-reduced img {
     border: 2px solid #f2f5e8;
     display: block;
-    margin: 0 auto; }
+    margin: 0 auto;
+    min-height: 90px; }
 
 .details-reduced {
   float: right;
   width: 60%;
   height: 100%;
-  position: relative; }
+  position: absolute;
+  right: 0;
+  padding: 10px 0; }
 
 .content-reduced {
   min-height: 15%;
   height: 15%; }
+  .content-reduced .code-reduced {
+    float: left;
+    width: 20%; }
+  .content-reduced .stars-reduced {
+    float: left;
+    width: 60%; }
+  .content-reduced .icons-reduced {
+    float: left;
+    width: 20%; }
 
 .packages-title {
-  font-size: 1.2em;
-  line-height: 1.2em;
-  height: 2.4em;
-  overflow: hidden; }
+  font-size: 1.0em;
+  line-height: 1.0em;
+  height: 2em;
+  overflow: hidden;
+  text-align: left; }
 
 .buttons-reduced {
   width: 100%;
   position: absolute;
-  bottom: 0;
+  bottom: 10px;
   height: 20%; }
   .buttons-reduced .reduced-button {
     width: 48% !important;
     display: inline !important;
     padding: 0;
-    line-height: 30px !important;
-    min-height: 30px !important; }
-
-.modal-inner-content.modal-two-columns.coupons-list {
-  padding: 0 !important; }
+    line-height: 1em !important;
+    min-height: 24px !important;
+    height: 1em !important; }

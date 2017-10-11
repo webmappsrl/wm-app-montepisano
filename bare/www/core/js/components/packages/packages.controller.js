@@ -32,6 +32,10 @@ angular.module('webmapp')
 
     var communicationConf = CONFIG.COMMUNICATION;
 
+    if (config.MULTIMAP && config.MULTIMAP.useReducedPackages) {
+        vm.type = "reduced";
+    }
+
     var updateDownloadedPackagesInStorage = function() {
         localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
     };
@@ -83,13 +87,34 @@ angular.module('webmapp')
         });
     };
 
+    var getImages = function(){
+        for (var i in vm.packages) {
+            $.getJSON(baseUrl + config.COMMUNICATION.wordPressEndpoint + 'media/' + vm.packages[i].featured_media, function(data) {
+                for (var pos in vm.packages) {
+                    if (vm.packages[pos].featured_media === data.id) {
+                        vm.packages[pos].imgUrl = data.media_details.sizes.medium.source_url;
+                        break;
+                    }
+                }
+                Utils.forceDigest();
+            }).fail(function() {
+                console.error('routes retrive error');
+            });
+        }
+    };
+
     var getRoutes = function(){
         $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/', function(data) {
             vm.packages = data;
 
+            for (var i in vm.packages) {
+                vm.packages[i].imgUrl = "https://gifimage.net/wp-content/uploads/2017/09/ajax-loading-gif-transparent-background-9.gif";
+            }
+
             localStorage.$wm_packages = JSON.stringify(data);
 
             // TODO: download images
+            getImages();
 
             $ionicLoading.hide();
             Utils.forceDigest();
@@ -452,6 +477,5 @@ angular.module('webmapp')
 
     getCategoriesName();
 
-    // vm.type = "reduced";
     return vm;
 });
