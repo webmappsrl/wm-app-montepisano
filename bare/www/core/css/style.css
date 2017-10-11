@@ -2862,7 +2862,7 @@ ion-modal-view.modal-download {
   font-weight: 600; }
 
 .details-image-reduced {
-  padding: 5px;
+  padding: 11px;
   position: relative;
   width: 40%;
   float: left; }
@@ -2873,11 +2873,31 @@ ion-modal-view.modal-download {
 
 .details-reduced {
   float: right;
-  width: 60%; }
+  width: 60%;
+  height: 100%;
+  position: relative; }
+
+.content-reduced {
+  min-height: 15%;
+  height: 15%; }
+
+.packages-title {
+  font-size: 1.2em;
+  line-height: 1.2em;
+  height: 2.4em;
+  overflow: hidden; }
 
 .buttons-reduced {
-  width: 100%; }
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  height: 20%; }
   .buttons-reduced .reduced-button {
-    width: 49% !important;
+    width: 48% !important;
     display: inline !important;
-    padding: 0; }
+    padding: 0;
+    line-height: 30px !important;
+    min-height: 30px !important; }
+
+.modal-inner-content.modal-two-columns.coupons-list {
+  padding: 0 !important; }
