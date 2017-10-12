@@ -2870,7 +2870,7 @@ ion-modal-view.modal-download {
   overflow: hidden;
   text-align: left; }
 
-.modal-inner-content.modal-two-columns.coupons-list {
+.modal-inner-content.modal-two-columns.coupons-list.reduced-list {
   padding: 0 !important;
   position: relative;
   box-shadow: 0px 5px 7px #888888;
