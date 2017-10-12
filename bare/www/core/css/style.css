@@ -2861,28 +2861,37 @@ ion-modal-view.modal-download {
   line-height: 1.2;
   font-weight: 600; }
 
+.packages-title-reduced {
+  margin: 10px 0;
+  font-weight: 600;
+  font-size: 1.2em;
+  line-height: 1.2em;
+  height: 2.4em;
+  overflow: hidden;
+  text-align: left; }
+
 .modal-inner-content.modal-two-columns.coupons-list {
   padding: 0 !important;
-  position: relative; }
+  position: relative;
+  box-shadow: 0px 5px 7px #888888;
+  margin-bottom: 9px; }
 
 .details-image-reduced {
-  padding: 11px;
   position: relative;
-  width: 40%;
+  width: 35%;
   float: left; }
   .details-image-reduced img {
-    border: 2px solid #f2f5e8;
     display: block;
     margin: 0 auto;
     min-height: 90px; }
 
 .details-reduced {
   float: right;
-  width: 60%;
+  width: 65%;
   height: 100%;
   position: absolute;
   right: 0;
-  padding: 10px 0; }
+  padding: 0; }
 
 .content-reduced {
   min-height: 15%;
@@ -2897,17 +2906,10 @@ ion-modal-view.modal-download {
     float: left;
     width: 20%; }
 
-.packages-title {
-  font-size: 1.0em;
-  line-height: 1.0em;
-  height: 2em;
-  overflow: hidden;
-  text-align: left; }
-
 .buttons-reduced {
   width: 100%;
   position: absolute;
-  bottom: 10px;
+  bottom: 0px;
   height: 20%; }
   .buttons-reduced .reduced-button {
     width: 48% !important;

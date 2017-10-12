@@ -171,13 +171,17 @@
                 ng-repeat="item in vm.packages | categoryFilter : vm.filters">
                 <div class="details-image-reduced">
                     <img class="modal-image" ng-src="{{item.imgUrl}}" ng-model="item.imgUrl">
-                    <!-- <img class="modal-image" src="http://vn.be.webmapp.it/wp-content/uploads/2017/08/Amsterdam-300x300.jpg"> -->
                 </div>
                 <div class="details-reduced">
+                    <div class="packages-title-reduced" ng-bind-html="item.title.rendered">
+                    </div>
+
                     <div class="content-reduced">
-                        <div class="code-reduced">
-                            {{item.n7webmapp_route_cod}}
+                        <div
+                            ng-repeat="category in item.webmapp_category"
+                            class="icons-reduced icon {{vm.filters[category].icon}}">
                         </div>
+
                         <div class="stars-reduced">
                             <i  class="fa"
                                 aria-hidden="true"
@@ -186,12 +190,10 @@
                                 >
                             </i>
                         </div>
-                        <div
-                            ng-repeat="category in item.webmapp_category"
-                            class="icons-reduced icon {{vm.filters[category].icon}}">
+
+                        <div class="code-reduced">
+                            {{item.n7webmapp_route_cod}}
                         </div>
-                    </div>
-                    <div class="packages-title" ng-bind-html="item.title.rendered">
                     </div>
 
                     <div class="buttons-reduced">
