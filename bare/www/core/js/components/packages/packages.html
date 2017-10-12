@@ -12,7 +12,7 @@
             menu-toggle="left"></button>
     </ion-nav-buttons>
 
-    <ion-nav-buttons ng-if="vm.categoryFiltersOn" side="right">
+    <ion-nav-buttons *ngIf="vm.categoryFiltersOn" side="right">
         <button
             class="no-animate button button-icon icon wm-icon-filter"
             ng-click="vm.openFilters()"></button>
