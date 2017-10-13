@@ -46,7 +46,7 @@
         </div> -->
             <div
                 class="modal-inner-content modal-two-columns coupons-list"
-                ng-if="vm.isLoggedIn && vm.type !== 'reduced'"
+                ng-if="vm.type !== 'reduced' && (vm.isLoggedIn || !vm.useLogin)"
                 ng-repeat="item in vm.packages | categoryFilter : vm.filters">
                 <div
                     class="packages-title"

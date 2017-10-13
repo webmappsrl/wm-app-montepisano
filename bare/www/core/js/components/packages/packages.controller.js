@@ -40,6 +40,10 @@ angular.module('webmapp')
             vm.categoryFiltersOn = config.MULTIMAP.categoryFiltersOn;
         }
 
+        if (config.LOGIN && config.LOGIN.useLogin) {
+            vm.useLogin = config.LOGIN.useLogin
+        }
+
         var updateDownloadedPackagesInStorage = function () {
             localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
         };
@@ -109,7 +113,17 @@ angular.module('webmapp')
 
         var getRoutes = function () {
             $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/', function (data) {
-                vm.packages = data;
+                console.log(data);
+                if (!vm.useLogin) {
+                    for (var pos in data) {
+                        if (data[pos].wm_route_public) {
+                            vm.packages[pos] = data[pos];
+                        }
+                    }
+                }
+                else{
+                    vm.packages = data;
+                }
 
                 for (var i in vm.packages) {
                     vm.packages[i].imgUrl = "https://gifimage.net/wp-content/uploads/2017/09/ajax-loading-gif-transparent-background-9.gif";
@@ -170,9 +184,11 @@ angular.module('webmapp')
             userData = Auth.getUserData();
             getPackagesIdByUserId(userData.ID);
         } else {
-            setTimeout(function () {
-                showLogin();
-            }, 500);
+            if (vm.useLogin) {
+                setTimeout(function () {
+                    showLogin();
+                }, 500);
+            }
         }
 
         getRoutes();
@@ -240,7 +256,9 @@ angular.module('webmapp')
 
                     Auth.resetUserData();
                     $rootScope.isLoggedIn = vm.isLoggedIn = false;
-                    showLogin();
+                    if (vm.useLogin) {
+                        showLogin();
+                    }
                     Utils.forceDigest();
                 }
             });
