@@ -186,7 +186,7 @@
                             <i  class="fa"
                                 aria-hidden="true"
                                 ng-repeat="n in [].constructor(5) track by $index"
-                                ng-class="{ 'fa-star' : item.n7webmapp_route_difficulty > $index, 'fa-star-o': item.n7webmapp_route_difficulty <= $index}"
+                                ng-class="{ 'wm-icon-generic' : item.n7webmapp_route_difficulty > $index, 'wm-icon-ion-android-checkmark-circle-empty': item.n7webmapp_route_difficulty <= $index}"
                                 >
                             </i>
                         </div>
@@ -197,42 +197,63 @@
                     </div>
 
                     <div class="buttons-reduced">
-                        <button
-                            style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                            class="button-download button button-half reduced-button"
-                            ng-if="vm.userDownloadedPackages[item.id]"
-                            ng-click="vm.openPackage(item)">
-                            Apri
-                        </button>
-                        <button
-                            style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                            class="button-download button button-half reduced-button"
-                            ng-if="vm.userDownloadedPackages[item.id]"
-                            ng-click="vm.removePack(item)">
-                            Rimuovi
-                        </button>
-                        <button
-                            style="background: {{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                            class="button-download button button-half reduced-button"
-                            ng-if="(vm.userPackagesId[item.id] || item.wm_route_public) && !vm.userDownloadedPackages[item.id]"
-                            ng-click="vm.downloadPack(item)">
-                            Scarica
-                        </button>
-                        <button
-                            style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                            class="button-download button button-half reduced-button"
-                            ng-if="!item.wm_route_public && !vm.userDownloadedPackages[item.id] && !vm.userPackagesId[item.id]"
-                            ng-disabled="vm.userPackagesIdRquested[item.id]"
-                            ng-click="vm.requestPack(item)">
-                            <!-- TODO: pulsante con scritto "Richiesta effettuata" senza che vada su due righe -->
-                            {{ !vm.userPackagesIdRquested[item.id] ? 'Richiedi' : 'Richiesto'}}
-                        </button>
-                        <button
-                            style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                            class="button button-half reduced-button"
-                            ng-click="vm.openDetailsRoute(item.id);">
-                            Dettagli
-                        </button>
+                        <div
+                            class="third-button-reduced border-right-reduced"
+                            ng-if="vm.userDownloadedPackages[item.id]">
+                            <button
+                                class="reduced-button"
+                                ng-click="vm.openPackage(item)">
+                                <i class="icon wm-icon-ios7-checkmark-outline"></i>
+                            </button>
+                        </div>
+                        <div
+                            class="third-button-reduced border-right-reduced"
+                            ng-if="vm.userDownloadedPackages[item.id]">
+                            <button
+                                class="reduced-button"
+                                ng-click="vm.removePack(item)">
+                                <i class="wm-icon wm-icon-ios7-trash-outline"></i>
+                            </button>
+                        </div>
+                        <div
+                            class="half-button-reduced border-right-reduced"
+                            ng-if="(vm.userPackagesId[item.id] || item.wm_route_public) && !vm.userDownloadedPackages[item.id]">
+                            <button
+                                class="reduced-button"
+                                ng-click="vm.downloadPack(item)">
+                                <i class="icon wm-icon-ios7-cloud-download-outline"></i>
+                            </button>    
+                        </div>
+                        <div
+                            class="half-button-reduced border-right-reduced"
+                            ng-if="!item.wm_route_public && !vm.userDownloadedPackages[item.id] && !vm.userPackagesId[item.id]">
+                            <button
+                                class="reduced-button"
+                                ng-disabled="vm.userPackagesIdRquested[item.id]"
+                                ng-click="vm.requestPack(item)">
+                                <!-- TODO: pulsante con scritto "Richiesta effettuata" senza che vada su due righe -->
+                                <!-- {{ !vm.userPackagesIdRquested[item.id] ? 'Richiedi' : 'Richiesto'}} -->
+                                <i class="icon wm-icon-ios7-cloud-download-outline light-reduced"></i>
+                            </button>
+                        </div>
+                        <div
+                            class="half-button-reduced"
+                            ng-if="!vm.userDownloadedPackages[item.id]">
+                            <button
+                                class="reduced-button"
+                                ng-click="vm.openDetailsRoute(item.id);">
+                                <i class="icon wm-icon-ios7-informatoutline"></i>
+                            </button>
+                        </div>
+                        <div
+                            class="third-button-reduced"
+                            ng-if="vm.userDownloadedPackages[item.id]">
+                            <button
+                                class="reduced-button"
+                                ng-click="vm.openDetailsRoute(item.id);">
+                                <i class="icon wm-icon-ios7-informatoutline"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
