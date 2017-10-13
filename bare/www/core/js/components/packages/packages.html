@@ -12,8 +12,9 @@
             menu-toggle="left"></button>
     </ion-nav-buttons>
 
-    <ion-nav-buttons *ngIf="vm.categoryFiltersOn" side="right">
+    <ion-nav-buttons side="right">
         <button
+            ng-if="vm.categoryFiltersOn"
             class="no-animate button button-icon icon wm-icon-filter"
             ng-click="vm.openFilters()"></button>
     </ion-nav-buttons>
@@ -69,21 +70,21 @@
                         class="button-download button button-block button-half"
                         ng-if="vm.userDownloadedPackages[item.id]"
                         ng-click="vm.openPackage(item)">
-                    Apri
+                    {{vm.openText}}
                 </button>
                     <button
                         style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
                         class="button-download button button-block button-half"
                         ng-if="vm.userDownloadedPackages[item.id]"
                         ng-click="vm.removePack(item)">
-                    Rimuovi
+                    {{vm.removeText}}
                 </button>
                     <button
                         style="background: {{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
                         class="button-download button button-block button-half"
                         ng-if="(vm.userPackagesId[item.id] || item.wm_route_public) && !vm.userDownloadedPackages[item.id]"
                         ng-click="vm.downloadPack(item)">
-                    Scarica
+                    {{vm.downloadText}}
                 </button>
                     <button
                         style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
@@ -92,13 +93,13 @@
                         ng-disabled="vm.userPackagesIdRquested[item.id]"
                         ng-click="vm.requestPack(item)">
                     <!-- TODO: pulsante con scritto "Richiesta effettuata" senza che vada su due righe -->
-                    {{ !vm.userPackagesIdRquested[item.id] ? 'Richiedi' : 'Richiesto'}}
+                    {{ !vm.userPackagesIdRquested[item.id] ? vm.requestText : vm.requestedText}}
                 </button>
                     <button
                         style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
                         class="button-block button button-half"
                         ng-click="vm.openDetailsRoute(item.id);">
-                    Dettagli
+                    {{vm.detailsText}}
                 </button>
                 </div>
 
@@ -130,21 +131,21 @@
                         class="button-download button button-block button-half"
                         ng-if="vm.userDownloadedPackages[item.id]"
                         ng-click="vm.openPackage(item)">
-                    Apri
+                    {{vm.openText}}
                 </button>
                     <button
                         style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
                         class="button-download button button-block button-half"
                         ng-if="vm.userDownloadedPackages[item.id]"
                         ng-click="vm.removePack(item)">
-                    Rimuovi
+                    {{vm.removeText}}
                 </button>
                     <button
                         style="background: {{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
                         class="button-download button button-block button-half"
                         ng-if="(vm.userPackagesId[item.id] || item.wm_route_public) && !vm.userDownloadedPackages[item.id]"
                         ng-click="vm.downloadPack(item)">
-                    Scarica
+                    {{vm.downloadText}}
                 </button>
                     <button
                         style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
@@ -153,13 +154,13 @@
                         ng-disabled="vm.userPackagesIdRquested[item.id]"
                         ng-click="vm.requestPack(item)">
                     <!-- TODO: pulsante con scritto "Richiesta effettuata" senza che vada su due righe -->
-                    {{ !vm.userPackagesIdRquested[item.id] ? 'Richiedi' : 'Richiesto'}}
+                    {{ !vm.userPackagesIdRquested[item.id] ? vm.requestText : vm.requestedText}}
                 </button>
                     <button
                         style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
                         class="button-block button button-half"
                         ng-click="vm.openDetailsRoute(item.id);">
-                    Dettagli
+                    {{vm.detailsText}}
                 </button>
                 </div>
 

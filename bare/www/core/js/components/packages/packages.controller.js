@@ -44,6 +44,35 @@ angular.module('webmapp')
             vm.useLogin = config.LOGIN.useLogin
         }
 
+        vm.openText = "Apri";
+        vm.removeText = "Rimuovi";
+        vm.downloadText = "Scarica";
+        vm.requestText = "Richiedi";
+        vm.requestedText = "Richiesto";
+        vm.detailsText = "Dettagli";
+
+        if (config.PACKAGES) {
+            console.log(config.PACKAGES);
+            if (config.PACKAGES.openText) {
+                vm.openText = config.PACKAGES.openText;
+            }
+            if (config.PACKAGES.removeText) {
+                vm.removeText = config.PACKAGES.removeText;
+            }
+            if (config.PACKAGES.downloadText) {
+                vm.downloadText = config.PACKAGES.downloadText;
+            }
+            if (config.PACKAGES.requestText) {
+                vm.requestText = config.PACKAGES.requestText;
+            }
+            if (config.PACKAGES.requestedText) {
+                vm.requestedText = config.PACKAGES.requestedText;
+            }
+            if (config.PACKAGES.detailsText) {
+                vm.detailsText = config.PACKAGES.detailsText;
+            }
+        }
+
         var updateDownloadedPackagesInStorage = function () {
             localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
         };
