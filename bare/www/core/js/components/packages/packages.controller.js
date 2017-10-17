@@ -52,7 +52,6 @@ angular.module('webmapp')
         vm.detailsText = "Dettagli";
 
         if (config.PACKAGES) {
-            console.log(config.PACKAGES);
             if (config.PACKAGES.openText) {
                 vm.openText = config.PACKAGES.openText;
             }
@@ -533,6 +532,17 @@ angular.module('webmapp')
         };
 
         getCategoriesName();
+
+        vm.truncateTitle = function(title) {
+            var ret = title;
+            var maxLength = 44;
+            console.log(ret);
+            if (ret.length > maxLength) {
+                ret = ret.substr(0, maxLength - 3) + "...";
+            }
+
+            return ret;
+        }
 
         return vm;
     });

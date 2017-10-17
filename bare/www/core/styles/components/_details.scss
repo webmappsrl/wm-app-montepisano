@@ -234,6 +234,14 @@
 /* For no columns layout*/
 
 .details-rows {
+  .details-title {
+    margin: 10px 5%;
+    line-height: 1em;
+    font-size: 2em;
+    font-weight: 700;
+    text-align: center;
+  }
+
   .details-left {
     border-bottom: 1px solid $color-light-02;
   }

@@ -9,14 +9,8 @@
 >
 
     <ion-nav-title>
-        <span
-            class="title-inner">
-
-            <span
-                class="title-right"
-                ng-bind-html="vm.title">
-
-            </span>
+        <span style="font-size: 64%;">
+            {{vm.pageConf.title}}
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left" class="no-animate">
@@ -36,6 +30,10 @@
                 }">
                 <!--    one columns layout -->
                 <div class="details-rows">
+                    <div
+                        class="details-title"
+                        ng-bind-html="vm.title">
+                    </div>
                     <div class="details-route"
                          ng-if="vm.codeRoute || vm.difficulty">
                         <span class="code"

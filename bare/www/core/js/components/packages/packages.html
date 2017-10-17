@@ -2,8 +2,8 @@
     <ion-nav-title>
         <!-- TODO: responsive font-size  -->
         <span style="font-size: 64%;">
-        {{vm.pageConf.title}}
-    </span>
+            {{vm.pageConf.title}}
+        </span>
     </ion-nav-title>
 
     <ion-nav-buttons side="left">
@@ -45,67 +45,6 @@
                 Accedi
             </button>
         </div> -->
-            <div
-                class="modal-inner-content modal-two-columns coupons-list"
-                ng-if="vm.type !== 'reduced' && (vm.isLoggedIn || !vm.useLogin)"
-                ng-repeat="item in vm.packages | categoryFilter : vm.filters">
-                <div
-                    class="packages-title"
-                    ng-bind-html="item.title.rendered">
-                </div>
-                <div
-                    class="details-image">
-                    <img
-                        class="modal-image"
-                        ng-src="{{item.n7webmap_route_media_gallery[0].sizes.medium_large}}">
-                </div>
-                <div
-                    class="details-description"
-                    ng-bind-html="item.excerpt.rendered">
-                </div>
-
-                <div>
-                    <button
-                        style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                        class="button-download button button-block button-half"
-                        ng-if="vm.userDownloadedPackages[item.id]"
-                        ng-click="vm.openPackage(item)">
-                    {{vm.openText}}
-                </button>
-                    <button
-                        style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                        class="button-download button button-block button-half"
-                        ng-if="vm.userDownloadedPackages[item.id]"
-                        ng-click="vm.removePack(item)">
-                    {{vm.removeText}}
-                </button>
-                    <button
-                        style="background: {{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                        class="button-download button button-block button-half"
-                        ng-if="(vm.userPackagesId[item.id] || item.wm_route_public) && !vm.userDownloadedPackages[item.id]"
-                        ng-click="vm.downloadPack(item)">
-                    {{vm.downloadText}}
-                </button>
-                    <button
-                        style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                        class="button-block button button-download button-half"
-                        ng-if="!item.wm_route_public && !vm.userDownloadedPackages[item.id] && !vm.userPackagesId[item.id]"
-                        ng-disabled="vm.userPackagesIdRquested[item.id]"
-                        ng-click="vm.requestPack(item)">
-                    <!-- TODO: pulsante con scritto "Richiesta effettuata" senza che vada su due righe -->
-                    {{ !vm.userPackagesIdRquested[item.id] ? vm.requestText : vm.requestedText}}
-                </button>
-                    <button
-                        style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                        class="button-block button button-half"
-                        ng-click="vm.openDetailsRoute(item.id);">
-                    {{vm.detailsText}}
-                </button>
-                </div>
-
-            </div>
-
-
             <div
                 class="modal-inner-content modal-two-columns coupons-list"
                 ng-if="vm.isLoggedIn && vm.type !== 'reduced'"
@@ -174,7 +113,9 @@
                     <img class="modal-image" ng-src="{{item.imgUrl}}" ng-model="item.imgUrl">
                 </div>
                 <div class="details-reduced">
-                    <div class="packages-title-reduced" ng-bind-html="item.title.rendered">
+                    <div
+                        class="packages-title-reduced"
+                        ng-bind-html="vm.truncateTitle(item.title.rendered)">
                     </div>
 
                     <div class="content-reduced">
