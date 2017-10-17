@@ -213,5 +213,8 @@ angular.module('webmapp').constant('GENERAL_CONFIG', {
         "pagesUrl": "http:\/\/pisatest.j.webmapp.it\/pages\/",
         "urlMbtiles": "http:\/\/pisatest.j.webmapp.it\/tiles\/map.mbtiles",
         "urlImages": "http:\/\/pisatest.j.webmapp.it\/media\/images.zip"
+    },
+    "LANGUAGES": {
+        "actual": "en_GB"
     }
 });
