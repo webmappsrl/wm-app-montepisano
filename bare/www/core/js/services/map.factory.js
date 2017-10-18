@@ -344,8 +344,10 @@ angular.module('webmapp')
             e.layer.feature.properties &&
             e.latlng) {
             var goToDetails = !e.layer.feature.properties.noDetails;
+            var interaction = !e.layer.feature.properties.noInteraction;
 
-            L.popup()
+            if (interaction) {
+                L.popup()
                 .setLatLng({
                     lat: e.latlng.lat + (isPOI ? getIncrement(map.getZoom()) : 0),
                     lng: e.latlng.lng
@@ -373,6 +375,7 @@ angular.module('webmapp')
                     '</p>'
                 )
                 .openOn(map);
+            }
         } else if (e && e.data && e.latlng) {
             L.popup()
                 .setLatLng({
