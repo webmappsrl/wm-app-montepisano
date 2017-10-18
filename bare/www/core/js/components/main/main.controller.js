@@ -13,7 +13,8 @@ angular.module('webmapp')
     Model,
     $cordovaGeolocation,
     $cordovaDeviceOrientation,
-    CONFIG
+    CONFIG,
+    $translate
 ) {
     var vm = {};
 
@@ -108,7 +109,7 @@ angular.module('webmapp')
     vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
     vm.useExandMapInDetails = CONFIG.OPTIONS.useExandMapInDetails;
     vm.showLocate = !CONFIG.MAP.hideLocationControl;
-    vm.viewTitle = 'MAPPA';
+    vm.viewTitle = $translate.instant("MAPPA");;
     vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
     vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
     vm.useUTM32 = false;
@@ -199,8 +200,8 @@ angular.module('webmapp')
 
                             if (!MapService.isInBoundingBox(posLat, posLong)) {
                                 $ionicPopup.alert({
-                                    title: 'ATTENZIONE',
-                                    template: 'Sembra che tu sia fuori dai limiti della mappa',
+                                    title: $translate.instant("ATTENZIONE"),
+                                    template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
                                     buttons: [{
                                         text: 'Ok',
                                         type: 'button-positive'
@@ -219,7 +220,7 @@ angular.module('webmapp')
                         }, function(err) {
                             vm.locateLoading = false;
                             $ionicPopup.alert({
-                                title: 'ATTENZIONE',
+                                title: $translate.instant("ATTENZIONE"),
                                 template: err.message,
                                 buttons: [{
                                     text: 'Ok',
@@ -314,8 +315,8 @@ angular.module('webmapp')
                         if (!MapService.isInBoundingBox(lat, long)) {
                             vm.locateLoading = false;
                             $ionicPopup.alert({
-                                title: 'ATTENZIONE',
-                                template: 'Sembra che tu sia fuori dai limiti della mappa',
+                                title: $translate.instant("ATTENZIONE"),
+                                template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
                                 buttons: [{
                                     text: 'Ok',
                                     type: 'button-positive'
@@ -359,7 +360,7 @@ angular.module('webmapp')
                     }, function(err) {
                         vm.locateLoading = false;
                         $ionicPopup.alert({
-                            title: 'ATTENZIONE',
+                            title: $translate.instant("ATTENZIONE"),
                             template: err.message,
                             buttons: [{
                                 text: 'Ok',

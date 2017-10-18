@@ -26,14 +26,16 @@ angular.module('webmapp')
 
 angular.module('webmapp')
 
-    .filter('categoryFilter', function () {
+    .filter('categoryFilter', function (
+        $translate
+    ) {
         return function (input, filters) {
             var results = [],
                 order = 'asc',
                 filt = false;
 
             for (var k in filters) {
-                if (k !== "Tutte") {
+                if (k !== $translate.instant("Tutte")) {
                     filt = true;
                     break;
                 }

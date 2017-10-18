@@ -6,7 +6,8 @@ angular.module('webmapp')
     $location,
     $ionicModal,
     MapService,
-    CONFIG
+    CONFIG,
+    $translate
 ) {
     var vm = {};
 
@@ -17,7 +18,7 @@ angular.module('webmapp')
         var allActive = true;
 
         for (var i in filtersMap) {
-            if (i !== 'Tutte') {
+            if (i !== $translate.instant("Tutte")) {
                 if (!filtersMap[i]) {
                     allActive = false;
                     break;
@@ -58,7 +59,7 @@ angular.module('webmapp')
     };
 
     modalScope.vm.updateFilter = function(filterName, value) {
-        if (filterName === 'Tutte') {
+        if (filterName === $translate.instant("Tutte")) {
             for (var i in modalScope.vm.filters) {
                 modalScope.vm.filters[i] = value;
                 MapService.setFilter(i, value);
@@ -66,7 +67,7 @@ angular.module('webmapp')
         } else {
             MapService.setFilter(filterName, value);
             modalScope.vm.filters[filterName] = value;
-            modalScope.vm.filters['Tutte'] = areAllActive(modalScope.vm.filters);
+            modalScope.vm.filters[$translate.instant("Tutte")] = areAllActive(modalScope.vm.filters);
         } 
     };    
 
@@ -79,12 +80,14 @@ angular.module('webmapp')
     }; 
 
     vm.openFilters = function() {
-        var activeFilters = angular.extend({Tutte: true}, MapService.getActiveFilters()),
+        var tmp = {};
+        tmp[$translate.instant("Tutte")] = true;
+        var activeFilters = angular.extend(tmp, MapService.getActiveFilters()),
             allActive = areAllActive(activeFilters);
         
         console.log(activeFilters);
 
-        activeFilters['Tutte'] = allActive;
+        activeFilters[$translate.instant("Tutte")] = allActive;
         modalScope.vm.filters = activeFilters;
         modalScope.vm.currentMapLayer = MapService.getCurrentMapLayerName();
 

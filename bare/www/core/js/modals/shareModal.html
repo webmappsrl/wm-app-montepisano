@@ -7,7 +7,7 @@
        </a>
         <h1 class="title">
             <span class="title-inner-header">
-                CONDIVIDI
+                {{::"CONDIVIDI" | translate}}
             </span>
         </h1>
     </ion-header-bar>
@@ -15,7 +15,7 @@
     <ion-content class="offline-page" style="">
         <div class="static-content offline-content">
             <div class="static-description offline-description">
-                <h2 class="offline-desc-title">SEGNALA LA TUA POSIZIONE</h2>
+                <h2 class="offline-desc-title">{{::"SEGNALA LA TUA POSIZIONE" | translate}}</h2>
             </div>
 
             <div 
@@ -40,7 +40,7 @@
 
             <div style="color: black;" ng-if="vm.sendInProgress">
                 <p class="offline-text offline-download">
-                    Invio in corso
+                    {{::"Invio in corso" | translate}}
                 </p>
                 <div
                     style="border-top: 16px solid {{COLORS.global.buttonsBackground}};"
@@ -50,7 +50,7 @@
 
             <div style="color: black;" ng-if="vm.sendSuccess">
                 <p class="offline-text offline-download">
-                    Segnalazione inviata
+                    {{::"Segnalazione inviata" | translate}}
                 </p>
             </div>
 
@@ -60,7 +60,7 @@
                 ng-if="!vm.sendInProgress && !vm.sendSuccess"
                 ng-click="vm.sendText()">
                 <span>
-                    INVIA
+                    {{::"INVIA" | translate}}
                 </span>
             </button>
         </div>

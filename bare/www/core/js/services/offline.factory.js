@@ -8,7 +8,8 @@ angular.module('webmapp')
     $q,
     Utils,
     CONFIG,
-    $ionicPopup
+    $ionicPopup,
+    $translate
 ) {
     var offline = {};
 
@@ -187,8 +188,8 @@ angular.module('webmapp')
                         currentDefer.reject('Si è verificato un errore nel download, riprova ');
                         console.error('Si è verificato un errore nel download, riprova ', JSON.stringify(error));
                         $ionicPopup.alert({
-                            title: 'Attenzione',
-                            template: 'C\'è stato un problema nello scaricamento, riprova più tardi.',
+                            title: $translate.instant("Attenzione"),
+                            template: $translate.instant("C'è stato un problema nello scaricamento, riprova più tardi."),
                             buttons: [{
                                 text: 'Ok',
                                 type: 'button-positive'

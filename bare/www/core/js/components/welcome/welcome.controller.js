@@ -6,20 +6,21 @@ angular.module('webmapp')
     MapService,
     Model,
     Utils,
-    CONFIG
+    CONFIG,
+    $translate
 ) {
     var vm = {},
         baseUrl = '',
         menuItems = {
             label: 'Welcome',
             top: [
-                'Cosa fare',
-                'Percorsi',
-                'Eventi'
+                $translate.instant("Cosa fare"),
+                $translate.instant("Percorsi"),
+                $translate.instant("Eventi")
             ],
             bottom: [
-                'Card',
-                'Offerte'
+                $translate.instant("Card"),
+                $translate.instant("Offerte")
             ]
         },
         menuMap = Model.getMenuMap();
