@@ -491,7 +491,8 @@ angular.module('webmapp')
 
         vm.openFilters = function () {
             var tmp = {};
-            tmp[$translate.instant("Tutte")] = true;
+            tmp[$translate.instant("Tutte")] = {};
+            tmp[$translate.instant("Tutte")].value = true;
             var activeFilters = angular.extend(tmp, vm.filters),
                 allActive = areAllActive(activeFilters);
 
