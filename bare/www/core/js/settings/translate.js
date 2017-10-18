@@ -4,10 +4,10 @@ angular.module('webmapp')
 	$translateProvider,
 	CONFIGProvider
 ) {
-	var lang = "it_IT";
+	var lang = "it";
 
 	var userLang = navigator.language || navigator.userLanguage; 
-	userLang = userLang.replace("-", "_");
+	userLang = userLang.substring(0, 1);
 
 	if (CONFIGProvider.LANGUAGES) {
 		// if (CONFIGProvider.LANGUAGES.available)
@@ -15,9 +15,6 @@ angular.module('webmapp')
 			lang = CONFIGProvider.LANGUAGES.actual;
 		}
 	}
-
-	// $translateProvider.preferredLanguage(lang);
-	// $translateProvider.useLoader('Languages');
 
 	$translateProvider.useSanitizeValueStrategy('sanitizeParameters');
 	$translateProvider.registerAvailableLanguageKeys(['en', 'de', 'it'], {
@@ -31,10 +28,10 @@ angular.module('webmapp')
 	 '*': 'en',
 	 
 	});
-	// $translateProvider.useStaticFilesLoader({
-	//  prefix: 'core/languages/locale-',
-	//  suffix: '.json'
-	// });
+	$translateProvider.useStaticFilesLoader({
+	 prefix: 'core/languages/locale-',
+	 suffix: '.json'
+	});
 
-	$translateProvider.preferredLanguage('en');
+	$translateProvider.preferredLanguage(lang);
 });

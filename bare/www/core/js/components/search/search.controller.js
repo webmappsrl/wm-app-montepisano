@@ -9,7 +9,8 @@ angular.module('webmapp')
     $ionicModal,
     $ionicScrollDelegate,
     $rootScope,
-    CONFIG
+    CONFIG,
+    $translate
 ) {
     var vm = {};
 
@@ -44,7 +45,7 @@ angular.module('webmapp')
         var allActive = true;
 
         for (var i in filtersMap) {
-            if (i !== 'Tutte') {
+            if (i !== $translate.instant("Tutte")) {
                 if (!filtersMap[i]) {
                     allActive = false;
                     break;

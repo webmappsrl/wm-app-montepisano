@@ -47,7 +47,7 @@
         </div> -->
             <div
                 class="modal-inner-content modal-two-columns coupons-list"
-                ng-if="vm.isLoggedIn && vm.type !== 'reduced'"
+                ng-if="(vm.isLoggedIn || !vm.useLogin) && vm.type !== 'reduced'"
                 ng-repeat="item in vm.packages | categoryFilter : vm.filters">
                 <div 
                     class="packages-title"
@@ -70,21 +70,21 @@
                         class="button-download button button-block button-half"
                         ng-if="vm.userDownloadedPackages[item.id]"
                         ng-click="vm.openPackage(item)">
-                    {{vm.openText}}
+                    {{::"Apri" | translate}}
                 </button>
                     <button
                         style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
                         class="button-download button button-block button-half"
                         ng-if="vm.userDownloadedPackages[item.id]"
                         ng-click="vm.removePack(item)">
-                    {{vm.removeText}}
+                    {{::"Rimuovi" | translate}}
                 </button>
                     <button
                         style="background: {{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
                         class="button-download button button-block button-half"
                         ng-if="(vm.userPackagesId[item.id] || item.wm_route_public) && !vm.userDownloadedPackages[item.id]"
                         ng-click="vm.downloadPack(item)">
-                    {{vm.downloadText}}
+                    {{::"Scarica" | translate}}
                 </button>
                     <button
                         style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
@@ -93,13 +93,13 @@
                         ng-disabled="vm.userPackagesIdRquested[item.id]"
                         ng-click="vm.requestPack(item)">
                     <!-- TODO: pulsante con scritto "Richiesta effettuata" senza che vada su due righe -->
-                    {{ !vm.userPackagesIdRquested[item.id] ? vm.requestText : vm.requestedText}}
+                    {{ !vm.userPackagesIdRquested[item.id] ? "Richiedi" : "Richiesto" | translate}}
                 </button>
                     <button
                         style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
                         class="button-block button button-half"
                         ng-click="vm.openDetailsRoute(item.id);">
-                    {{vm.detailsText}}
+                    {{::"Dettagli" | translate}}
                 </button>
                 </div>
 
@@ -107,7 +107,7 @@
 
             <div
                 class="modal-inner-content modal-two-columns coupons-list reduced-list"
-                ng-if="vm.isLoggedIn && vm.type === 'reduced'"
+                ng-if="(vm.isLoggedIn || !vm.useLogin) && vm.type === 'reduced'"
                 ng-repeat="item in vm.packages | categoryFilter : vm.filters">
                 <div class="details-image-reduced">
                     <img class="modal-image" ng-src="{{item.imgUrl}}" ng-model="item.imgUrl">
@@ -209,7 +209,7 @@
 
             <!-- TODO: font? -->
             <div class="card-text card-opportunities" ng-if="vm.isLoggedIn">
-                <h2 class="card-text-title">ESCI DAL TUO ACCOUNT</h2>
+                <h2 class="card-text-title">{{::"ESCI DAL TUO ACCOUNT" | translate}}</h2>
                 <!-- <p>Una card, tante iniziative e sorprese esclusive solo per gli esploratori della Valle dei Segni</p> -->
             </div>
 
@@ -218,7 +218,7 @@
                 class="login-button button button-block"
                 ng-if="vm.isLoggedIn"
                 ng-click="vm.logout()">
-            LOGOUT
+            {{::"LOGOUT" | translate}}
         </button>
         </div>
     </ion-content>

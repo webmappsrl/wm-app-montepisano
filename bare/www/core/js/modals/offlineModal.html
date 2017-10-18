@@ -8,7 +8,7 @@
        </a>
         <h1 class="title">
             <span class="title-inner-header">
-                MAPPA OFFLINE
+                {{::"MAPPA OFFLINE" | translate}}
             </span>
         </h1>
     </ion-header-bar>
@@ -22,20 +22,20 @@
 
             <div class="static-description offline-description">
                 <h2 class="offline-desc-title"
-                    ng-if="!canBeEnabled && !downloadInProgress && !unzipInProgress">Scarica la mappa</h2>
+                    ng-if="!canBeEnabled && !downloadInProgress && !unzipInProgress">{{::"Scarica la mappa" | translate}}</h2>
                 <p class="offline-desc-text"
-                   ng-if="!active && canBeEnabled">Abilita la funzione di navigazione offline</p>
+                   ng-if="!active && canBeEnabled">{{::"Abilita la funzione di navigazione offline" | translate}}</p>
                 <p class="offline-desc-text"
-                   ng-if="active && canBeEnabled">Disabilita la funzione di navigazione offline</p>
+                   ng-if="active && canBeEnabled">{{::"Disabilita la funzione di navigazione offline" | translate}}</p>
 
                 <p ng-if="!canBeEnabled && !downloadInProgress && !unzipInProgress">
-                    La mappa offline occupa circa 250 MB di spazio, è consigliabile effettuare il download con una rete Wi-Fi (l'installazione può richiedere alcuni minuti)
+                    {{::"La mappa offline occupa circa 250 MB di spazio, è consigliabile effettuare il download con una rete Wi-Fi (l'installazione può richiedere alcuni minuti)" | translate}}
                 </p>
             </div>
 
             <div style="color: black;" ng-if="downloadInProgress">
                 <p class="offline-text offline-download">
-                    Download della mappa in corso
+                    {{::"Download della mappa in corso" | translate}}
                 </p>
                 <div
                     style="border-top: 16px solid {{COLORS.global.buttonsBackground}};"
@@ -53,7 +53,7 @@
                 ng-if="!canBeEnabled && !downloadInProgress && !unzipInProgress"
                 ng-click="downloadMap()">
                 <span>
-                    <i class="icon wm-icon-ios7-download-outline"></i> Download
+                    <i class="icon wm-icon-ios7-download-outline"></i> {{::"Download" | translate}}
                 </span>
             </button>
 
@@ -63,8 +63,8 @@
                 class="button-download button button-block"
                 ng-click="toggleMode()"
                 ng-if="canBeEnabled">
-                <span ng-if="active">Disabilita modalità offline</span>
-                <span ng-if="!active">Abilita modalità offline</span>
+                <span ng-if="active">{{::"Disabilita modalità offline" | translate}}</span>
+                <span ng-if="!active">{{::"Abilita modalità offline" | translate}}</span>
             </button>
 
             <!-- TODO:replace with style -->
@@ -72,8 +72,7 @@
             
             <div ng-if="!downloadInProgress && !unzipInProgress && canBeEnabled">
                 <span>
-                    Premi il tasto Reset per cancellare l'attuale versione della mappa e 
-                    procedere successivamente al download della nuova versione
+                    {{::"Premi il tasto Reset per cancellare l'attuale versione della mappa e procedere successivamente al download della nuova versione" | translate}}
                 </span>
 
                 <br/>
@@ -84,7 +83,7 @@
                     class="button button-block button-reset"
                     ng-click="reset()"
                     ng-if="!downloadInProgress && !unzipInProgress && canBeEnabled">
-                    <span>Reset</span>
+                    <span>{{::"Reset" | translate}}</span>
                 </button>
             </div>
         </div>

@@ -11,7 +11,8 @@ angular.module('webmapp')
     $ionicLoading,
     Account,
     Auth,
-    Utils
+    Utils,
+    $translate
 ) {
     var vm = {};
 

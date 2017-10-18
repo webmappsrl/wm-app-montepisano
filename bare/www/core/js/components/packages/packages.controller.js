@@ -14,7 +14,8 @@ angular.module('webmapp')
         Auth,
         Communication,
         Utils,
-        CONFIG
+        CONFIG,
+        $translate
     ) {
         var vm = {},
             userData = {};
@@ -41,35 +42,7 @@ angular.module('webmapp')
         }
 
         if (config.LOGIN && config.LOGIN.useLogin) {
-            vm.useLogin = config.LOGIN.useLogin
-        }
-
-        vm.openText = "Apri";
-        vm.removeText = "Rimuovi";
-        vm.downloadText = "Scarica";
-        vm.requestText = "Richiedi";
-        vm.requestedText = "Richiesto";
-        vm.detailsText = "Dettagli";
-
-        if (config.PACKAGES) {
-            if (config.PACKAGES.openText) {
-                vm.openText = config.PACKAGES.openText;
-            }
-            if (config.PACKAGES.removeText) {
-                vm.removeText = config.PACKAGES.removeText;
-            }
-            if (config.PACKAGES.downloadText) {
-                vm.downloadText = config.PACKAGES.downloadText;
-            }
-            if (config.PACKAGES.requestText) {
-                vm.requestText = config.PACKAGES.requestText;
-            }
-            if (config.PACKAGES.requestedText) {
-                vm.requestedText = config.PACKAGES.requestedText;
-            }
-            if (config.PACKAGES.detailsText) {
-                vm.detailsText = config.PACKAGES.detailsText;
-            }
+            vm.useLogin = config.LOGIN.useLogin;
         }
 
         var updateDownloadedPackagesInStorage = function () {
@@ -267,8 +240,8 @@ angular.module('webmapp')
 
         vm.logout = function () {
             var confirmPopup = $ionicPopup.confirm({
-                title: 'LOGOUT',
-                template: 'Sei sicuro di voler effettuare il logout?'
+                title: $translate.instant("LOGOUT"),
+                template: $translate.instant("Sei sicuro di voler effettuare il logout?")
             });
 
             confirmPopup.then(function (res) {
@@ -294,8 +267,8 @@ angular.module('webmapp')
 
         vm.downloadPack = function (pack) {
             $ionicPopup.confirm({
-                    title: 'ATTENZIONE',
-                    template: 'Stai per scaricare l\'itinerario sul dispositivo, vuoi procedere ?'
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Stai per scaricare l'itinerario sul dispositivo, vuoi procedere?")
                 })
                 .then(function (res) {
                     if (res) {
@@ -303,7 +276,7 @@ angular.module('webmapp')
 
                         if (typeof currentId === 'undefined') {
                             // TODO: add ionic alert
-                            alert('Errore, effettuare logout');
+                            alert($translate.instant("Errore, effettuare logout"));
                             return;
                         }
 
@@ -320,7 +293,7 @@ angular.module('webmapp')
                             var downloadFail = function () {
                                 // TODO: add ionic alert
                                 // TODO: rimuovere cartella, verificare interuzzione altri dowload
-                                alert('Si è verificato un errore nello scaricamento del pacchetto, riprova');
+                                alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, riprova"));
                                 modalDownload.hide();
                                 // updateDownloadedPackagesInStorage();
                             };
@@ -342,7 +315,7 @@ angular.module('webmapp')
                                 .then(downloadSuccess, downloadFail);
                         }).fail(function () {
                             // TODO: add ionic alert
-                            alert('Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova');
+                            alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova"));
                         });
                     }
                 });
@@ -350,9 +323,8 @@ angular.module('webmapp')
 
         vm.removePack = function (item) {
             $ionicPopup.confirm({
-                    title: 'ATTENZIONE',
-                    template: 'Stai per rimuovere l\'itinerario dal dispositivo, vuoi procedere ? <br /> ' +
-                        'Questo itinerario è riservato ai clienti Verde Natura che hanno acquistato questo viaggio. Terminata la fase di sperimentazione, gli itinerari saranno disponibili a tutti"'
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Stai per rimuovere l'itinerario dal dispositivo, vuoi procedere?<br />") + $translate.instant("Questo itinerario è riservato ai clienti Verde Natura che hanno acquistato questo viaggio. Terminata la fase di sperimentazione, gli itinerari saranno disponibili a tutti")
                 })
                 .then(function (res) {
                     if (res) {
@@ -366,8 +338,8 @@ angular.module('webmapp')
         vm.requestPack = function (item) {
             $ionicPopup
                 .confirm({
-                    title: 'ATTENZIONE',
-                    template: 'Stai per richiedere accesso al download dell\'itinerario, intendi proseguire?'
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Stai per richiedere accesso al download dell'itinerario, intendi proseguire?")
                 })
                 .then(function (res) {
                     if (res) {
@@ -396,14 +368,14 @@ angular.module('webmapp')
                             }
                         }).success(function (data) {
                             $ionicPopup.alert({
-                                template: 'La richiesta è stata inviata, verrà processata al più presto'
+                                template: $translate.instant("La richiesta è stata inviata, verrà processata al più presto")
                             });
                             vm.userPackagesIdRquested[item.id] = true;
                             localStorage.$wm_userPackagesIdRquested = JSON.stringify(vm.userPackagesIdRquested);
                             $ionicLoading.hide();
                         }).error(function (error) {
                             $ionicPopup.alert({
-                                template: 'Si è verificato un errore durante la richiesta, riprova'
+                                template: $translate.instant("Si è verificato un errore durante la richiesta, riprova")
                             });
                             $ionicLoading.hide();
                             console.error(error);
@@ -430,7 +402,7 @@ angular.module('webmapp')
                     }, 2000);
                 }, function () {
                     $ionicPopup.alert({
-                        template: 'Si è verificato un errore di connessione, riprova più tardi'
+                        template: $translate.instant("Si è verificato un errore di connessione, riprova più tardi")
                     });
                     $scope.$broadcast('scroll.refreshComplete');
                 });
@@ -475,7 +447,7 @@ angular.module('webmapp')
             var allActive = true;
 
             for (var i in filtersMap) {
-                if (i !== 'Tutte') {
+                if (i !== $translate.instant("Tutte")) {
                     if (!filtersMap[i].value) {
                         allActive = false;
                         break;
@@ -501,7 +473,7 @@ angular.module('webmapp')
         };
 
         modalFiltersScope.vm.updateFilter = function (filterName, value) {
-            if (filterName === 'Tutte') {
+            if (filterName === $translate.instant("Tutte")) {
                 for (var i in modalFiltersScope.vm.filters) {
                     modalFiltersScope.vm.filters[i].value = value;
                 }
@@ -513,19 +485,17 @@ angular.module('webmapp')
                 modalFiltersScope.vm.filters[filterName].value = value;
                 vm.filters[filterName].value = value;
 
-                modalFiltersScope.vm.filters['Tutte'].value = areAllActive(modalFiltersScope.vm.filters);
+                modalFiltersScope.vm.filters[$translate.instant("Tutte")].value = areAllActive(modalFiltersScope.vm.filters);
             }
         };
 
         vm.openFilters = function () {
-            var activeFilters = angular.extend(vm.filters, {
-                    Tutte: {
-                        value: true
-                    }
-                }),
+            var tmp = {};
+            tmp[$translate.instant("Tutte")] = true;
+            var activeFilters = angular.extend(tmp, vm.filters),
                 allActive = areAllActive(activeFilters);
 
-            activeFilters['Tutte'].value = allActive;
+            activeFilters[$translate.instant("Tutte")].value = allActive;
             modalFiltersScope.vm.filters = activeFilters;
 
             modalFilters.show();
@@ -536,7 +506,6 @@ angular.module('webmapp')
         vm.truncateTitle = function(title) {
             var ret = title;
             var maxLength = 44;
-            console.log(ret);
             if (ret.length > maxLength) {
                 ret = ret.substr(0, maxLength - 3) + "...";
             }

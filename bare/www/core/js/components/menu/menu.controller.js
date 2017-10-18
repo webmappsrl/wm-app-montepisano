@@ -18,7 +18,8 @@ angular.module('webmapp')
     Account,
     Tracking,
     $ionicSideMenuDelegate,
-    CONFIG
+    CONFIG,
+    $translate
 ) {
     var vm = {};
 
@@ -132,8 +133,8 @@ angular.module('webmapp')
             if (firstName && lastName && email && password) {
                 if (!isEmailValid(email)) {
                     $ionicPopup.alert({
-                        title: 'ATTENZIONE',
-                        template: 'Inserisci un\'email valida per continuare',
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Inserisci un'email valida per continuare"),
                         buttons: [{
                             text: 'Ok',
                             type: 'button-positive'
@@ -147,8 +148,8 @@ angular.module('webmapp')
                         }, function() {
                             loginScope.logging = false;
                             $ionicPopup.alert({
-                                title: 'ATTENZIONE',
-                                template: 'C\'è stato un\'errore nella registrazione, riprova più tardi',
+                                title: $translate.instant("ATTENZIONE"),
+                                template: $translate.instant("C'è stato un errore nella registrazione, riprova più tardi"),
                                 buttons: [{
                                     text: 'Ok',
                                     type: 'button-positive'
@@ -158,8 +159,8 @@ angular.module('webmapp')
                 }
             } else {
                 $ionicPopup.alert({
-                    title: 'ATTENZIONE',
-                    template: 'Compila tutti i campi richiesti',
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Compila tutti i campi richiesti"),
                     buttons: [{
                         text: 'Ok',
                         type: 'button-positive'
@@ -180,8 +181,8 @@ angular.module('webmapp')
             if (email && password && checkEmail && checkPassword && firstName && lastName) {
                 if (!isEmailValid(email)) {
                     $ionicPopup.alert({
-                        title: 'ATTENZIONE',
-                        template: 'Inserisci un\'email valida per continuare',
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Inserisci un'email valida per continuare"),
                         buttons: [{
                             text: 'Ok',
                             type: 'button-positive'
@@ -189,8 +190,8 @@ angular.module('webmapp')
                     });
                 } else if (privacy !== true) {
                     $ionicPopup.alert({
-                        title: 'ATTENZIONE',
-                        template: 'Per registrarsi è richiesto accettare le condizioni dell\'informativa sulla privacy',
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Per registrarsi è richiesto accettare le condizioni dell'informativa sulla privacy"),
                         buttons: [{
                             text: 'Ok',
                             type: 'button-positive'
@@ -198,8 +199,8 @@ angular.module('webmapp')
                     });
                 } else if (password !== checkPassword) {
                     $ionicPopup.alert({
-                        title: 'ATTENZIONE',
-                        template: 'La password e la conferma della password non coincidono',
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("La password e la conferma della password non coincidono"),
                         buttons: [{
                             text: 'Ok',
                             type: 'button-positive'
@@ -207,8 +208,8 @@ angular.module('webmapp')
                     });
                 } else if (email !== checkEmail) {
                     $ionicPopup.alert({
-                        title: 'ATTENZIONE',
-                        template: 'L\'email e la conferma dell\'email non coincidono',
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("L'email e la conferma dell'email non coincidono"),
                         buttons: [{
                             text: 'Ok',
                             type: 'button-positive'
@@ -220,8 +221,8 @@ angular.module('webmapp')
                         .then(function(data) {
                             console.log(data);
                             $ionicPopup.alert({
-                                title: 'REGISTRAZIONE',
-                                template: 'Complimenti ti sei appena registrato',
+                                title: $translate.instant("REGISTRAZIONE"),
+                                template: $translate.instant("Complimenti ti sei appena registrato"),
                                 buttons: [{
                                     text: 'Ok',
                                     type: 'button-positive'
@@ -240,7 +241,7 @@ angular.module('webmapp')
                             
                         }, function(error) {
                             $ionicPopup.alert({
-                                title: 'ATTENZIONE',
+                                title: $translate.instant("ATTENZIONE"),
                                 template: error,
                                 buttons: [{
                                     text: 'Ok',
@@ -253,8 +254,8 @@ angular.module('webmapp')
                 }
             } else {
                 $ionicPopup.alert({
-                    title: 'ATTENZIONE',
-                    template: 'Compila tutti i campi richiesti',
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Compila tutti i campi richiesti"),
                     buttons: [{
                         text: 'Ok',
                         type: 'button-positive'
@@ -266,8 +267,8 @@ angular.module('webmapp')
         loginScope.resetPassword = function(email) {
             if (!isEmailValid(email)) {
                 $ionicPopup.alert({
-                    title: 'ATTENZIONE',
-                    template: 'Inserisci un\'email valida per continuare',
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Inserisci un'email valida per continuare"),
                     buttons: [{
                         text: 'Ok',
                         type: 'button-positive'
@@ -284,7 +285,7 @@ angular.module('webmapp')
                     resetFields();
                 }, function(error) {
                     $ionicPopup.alert({
-                        title: 'ATTENZIONE',
+                        title: $translate.instant("ATTENZIONE"),
                         template: error,
                         buttons: [{
                             text: 'Ok',
@@ -338,7 +339,7 @@ angular.module('webmapp')
 
                     if (typeof error !== 'undefined') {
                         $ionicPopup.alert({
-                            title: 'ATTENZIONE',
+                            title: $translate.instant("ATTENZIONE"),
                             template: error,
                             buttons: [{
                                 text: 'Ok',
@@ -368,8 +369,8 @@ angular.module('webmapp')
             if ((typeof username !== 'string' || username.length < 2) &&
                 (typeof password !== 'string' || password.length === 0)) {
                 $ionicPopup.alert({
-                    title: 'ATTENZIONE',
-                    template: 'Inserisci username e password',
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Inserisci username e password"),
                     buttons: [{
                         text: 'Ok',
                         type: 'button-positive'
@@ -431,8 +432,8 @@ angular.module('webmapp')
                 }, function(error) {
                     loginScope.logging = false;
                     $ionicPopup.alert({
-                        title: 'ATTENZIONE',
-                        template: 'Email o password errati',
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Email o password errati"),
                         buttons: [{
                             text: 'Ok',
                             type: 'button-positive'

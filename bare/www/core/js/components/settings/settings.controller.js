@@ -9,7 +9,8 @@ angular.module('webmapp')
     Model,
     Offline,
     Utils,
-    $ionicPopup
+    $ionicPopup,
+    $translate
 ) {
     var vm = {},
         offlineModal;
@@ -68,8 +69,8 @@ angular.module('webmapp')
 
     vm.logout = function() {
         var confirmPopup = $ionicPopup.confirm({
-            title: 'LOGOUT',
-            template: 'Sei sicuro di voler effettuare il logout?'
+            title: $translate.instant("LOGOUT"),
+            template: $translate.instant("Sei sicuro di voler effettuare il logout?")
         });
 
         confirmPopup.then(function(res) {

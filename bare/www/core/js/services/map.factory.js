@@ -14,7 +14,8 @@ angular.module('webmapp')
     $ionicPlatform,
     Utils,
     Offline,
-    CONFIG
+    CONFIG,
+    $translate
 ) {
     var mapService = {};
 
@@ -1261,8 +1262,8 @@ angular.module('webmapp')
                 onLocationOutsideMapBounds: function() {
                     // TODO: add language and message in settings
                     $ionicPopup.alert({
-                        template: 'Sembra che tu sia fuori dai limiti della mappa!',
-                        title: 'Avviso'
+                        template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa!"),
+                        title: $translate.instant("Avviso")
                     });
                 }
             }).addTo(map);
@@ -1872,7 +1873,7 @@ angular.module('webmapp')
                     lat: e.latlng.lat,
                     lng: e.latlng.lng
                 })
-                .setContent('La tua posizione')
+                .setContent($translate.instant("La tua posizione"))
                 .openOn(map);
         });
     };
