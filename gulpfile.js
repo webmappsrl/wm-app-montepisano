@@ -162,7 +162,7 @@ gulp.task('generate-index', function () {
     var dir = 'instances/' + instance_name;
 
     if (argv.instance) {
-        destDir = 'instances/' + argv.instance;
+        destDir = 'instances/' + argv.instance + "/www";
     }
 
     gulp.src(['bare/www/.index.html'])
