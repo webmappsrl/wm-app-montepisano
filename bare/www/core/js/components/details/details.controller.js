@@ -11,7 +11,8 @@ angular.module('webmapp')
     Model,
     Offline,
     Utils,
-    CONFIG
+    CONFIG,
+    $translate
 ) {
     var vm = {},
         current = $state.current || {},
@@ -426,7 +427,7 @@ angular.module('webmapp')
         var featureById = MapService.getFeatureIdMap();
 
         modalScope.vm.featureList = [];
-        modalScope.vm.featureTitle = 'PUNTI DI INTERESSE';
+        modalScope.vm.featureTitle = $translate.instant("PUNTI DI INTERESSE");
 
         for (var i in stage.pois) {
             modalScope.vm.featureList.push(stage.pois[i]);
@@ -439,7 +440,7 @@ angular.module('webmapp')
         var featureById = MapService.getFeatureIdMap();
 
         modalScope.vm.featureList = [];
-        modalScope.vm.featureTitle = 'ITINERARI';
+        modalScope.vm.featureTitle = $translate.instant("ITINERARI");
 
         for (var i in vm.relatedItinerary) {
             if (typeof featureById[vm.relatedItinerary[i]] !== 'undefined') {
@@ -454,7 +455,7 @@ angular.module('webmapp')
         var featureById = MapService.getFeatureIdMap();
 
         modalScope.vm.featureList = [];
-        modalScope.vm.featureTitle = 'LUOGHI';
+        modalScope.vm.featureTitle = $translate.instant("LUOGHI");
 
         for (var i in vm.relatedPlaces) {
             if (vm.relatedPlaces[i].properties &&
@@ -544,6 +545,8 @@ angular.module('webmapp')
         vm.isListExpanded = !vm.isListExpanded;
         $rootScope.$emit('toggle-list', vm.isListExpanded);
     };
+
+    console.log(vm);
 
     return vm;
 });
