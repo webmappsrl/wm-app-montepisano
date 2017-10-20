@@ -4,7 +4,7 @@
     ng-controller="LanguagesController as vm">
     <ion-nav-title>
         <span>
-            LINGUA
+            {{::"Impostazioni" | translate}}
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">
@@ -14,36 +14,26 @@
     </ion-nav-buttons>
 
     <ion-content style="color: black; background: {{COLORS.global.background}}">
-        <div 
-            class="static-content card-content">
-            <div 
-                class="card-text card-opportunities">
-            </div>
+        <div id="settingsContent">
+            <h3>{{::"Seleziona la lingua" | translate}}</h3>
+            <div id="radio">
+                <label
+                    ng-repeat="lang in vm.languages">
+                    <input
+                        type="radio"
+                        name="language"
+                        value="{{lang}}"
+                        ng-click="vm.chooseLang(lang)"
+                        />
+                    {{lang | translate}}
+                </label>
 
-            <div class="card-title">
-                <span class="card-title-inner">Scegli la lingua</span>
             </div>
-            <button ng-repeat="lang in vm.languages"
-                style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                class="button-download button button-block button-half"
-                ng-click="vm.chooseLang( lang )">
-                {{lang | translate}}
-            </button>
-            <!-- <button
-                style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                class="button-download button button-block button-half"
-                ng-click="vm.chooseLang()">
-                INGLESE
-            </button>
-            <button
-                style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                class="button-download button button-block button-half"
-                ng-click="vm.chooseLang()">
-                TEDESCO
-            </button> -->
-            <br/>
+            <p id="warning">
+                <img src="https://api.webmapp.it/j/vn.j.webmapp.it/media/images/warning.png" alt="WARNING!" />
+                Questa funzionalità sarà disponibile a breve
+            </p>
         </div>
-       
     </ion-content>
 </ion-view>
 

@@ -20,16 +20,19 @@ angular.module('webmapp')
     var offlineScope = $rootScope.$new();
 
     vm.languages = CONFIG.LANGUAGES.available;
+    vm.currentLang = $translate.preferredLanguage();
 
-    console.log( vm.languages);
-
-    vm.chooseLang = function( lng ){
-        console.log( lng );
-
-        $translate.use(lng.substring(0,2));
-        
-        //window.location.reload();
+    vm.chooseLang = function( lang ){
+        // var user = Auth.getUserData();
+        // user.language = lang.substring(0,2);
+        // Auth.setUserData(user);
+        // $translate.preferredLanguage(user.language);
+        // $translate.use(user.language);
+        // window.location.reload();
     };
+
+    setLang = function(lang) {
+    }
 
     return vm;
 });

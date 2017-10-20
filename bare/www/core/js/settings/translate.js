@@ -2,7 +2,8 @@ angular.module('webmapp')
 
 .config(function (
 	$translateProvider,
-	CONFIGProvider
+	CONFIGProvider,
+	LANGUAGEProvider
 ) {
 	var lang = "it";
 
@@ -14,6 +15,11 @@ angular.module('webmapp')
 		if (CONFIGProvider.LANGUAGES.actual) {
 			lang = CONFIGProvider.LANGUAGES.actual;
 		}
+	}
+
+	var currentLang = LANGUAGEProvider.getLanguage();
+	if (currentLang) {
+		lang = currentLang;
 	}
 
 	$translateProvider.useSanitizeValueStrategy('sanitizeParameters');

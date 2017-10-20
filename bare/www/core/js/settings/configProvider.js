@@ -1,7 +1,9 @@
 /*global angular*/
 angular.module('webmapp')
 
-.provider('CONFIG', function(GENERAL_CONFIG) {
+.provider('CONFIG', function(
+    GENERAL_CONFIG
+    ) {
     var config = angular.extend(this, GENERAL_CONFIG);
 
     if (!!localStorage.$wm_mhildConf) {
