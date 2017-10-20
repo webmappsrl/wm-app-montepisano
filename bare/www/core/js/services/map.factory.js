@@ -647,37 +647,47 @@ angular.module('webmapp')
     var initializePages = function() {
         var pages = CONFIG.PAGES;
 
-        var getPagesHtml = function(item, index) {
+        var requestPages = function(item, index) {
             if (item.isCustom) {
-                var url = CONFIG.OFFLINE.pagesUrl + item.type + '.html';
+                for (var pos in CONFIG.LANGUAGES.available) {
+                    var url = CONFIG.OFFLINE.pagesUrl + item.type;
 
-                $.get(url).done(function(data) {
+                    if (CONFIG.LANGUAGES.available[pos] !== CONFIG.LANGUAGES.actual) {
+                        url = url + "_" + CONFIG.LANGUAGES.available[pos].substring(0, 2);
+                    }
 
-                    var insert = function() {
-                        db.put({
-                            _id: url,
-                            data: data
-                        }).then(function() {
-
-                        });
-                    };
-
-                    db.get(url).then(function(e) {
-                        //console.log(e)
-                        db.remove(e)
-                            .then(function() {
-                                insert();
-                            });
-                    }).catch(function() {
-                        insert();
-                    });
-
-                });
+                    url = url + '.html';
+                    getPagesHtml(url);
+                }
             };
         };
 
+        var getPagesHtml = function(url) {
+            $.get(url).done(function(data) {
+                var insert = function() {
+                    db.put({
+                        _id: url,
+                        data: data
+                    }).then(function() {
+
+                    });
+                };
+
+                db.get(url).then(function(e) {
+                    // console.log(e)
+                    db.remove(e)
+                        .then(function() {
+                            insert();
+                        });
+                }).catch(function() {
+                    insert();
+                });
+
+            });
+        };
+
         if (pages) {
-            pages.forEach(getPagesHtml);
+            pages.forEach(requestPages);
         }
 
 

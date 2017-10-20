@@ -18,12 +18,19 @@ angular.module('webmapp')
     MapService,
     $compile,
     $scope,
-    CONFIG
+    CONFIG,
+    $translate
 ) {
     var vm = {},
         currentPageType = $state.current.name.split('.').pop(),
-        templateUrl = $sce.getTrustedResourceUrl('templates/' + currentPageType + '.html');
+        currentLang = $translate.preferredLanguage(),
+        defaultLang = "it";
 
+    var templateUrl = $sce.getTrustedResourceUrl('templates/' + currentPageType + '.html');
+
+    if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) {
+        defaultLang = CONFIG.LANGUAGES.actual.substring(0, 2);
+    }
 
     vm.currentPage = Model.getPageByType(currentPageType);
     vm.isAPageChild = Model.isAPageChild(vm.currentPage.label);
@@ -36,7 +43,6 @@ angular.module('webmapp')
         vm.mainCategory = Model.getPageParent(vm.currentPage.label);
     }
 
-
     vm.goBackToCategory = function(category) {
         if (!category) {
             return;
@@ -44,7 +50,15 @@ angular.module('webmapp')
         Utils.goTo('pages/' + category.replace(/ /g, '_'));
     };
 
-    var key = CONFIG.OFFLINE.pagesUrl + currentPageType + '.html';
+    var key = CONFIG.OFFLINE.pagesUrl + currentPageType;
+
+    if (currentLang != defaultLang) {
+        key = key + "_" + currentLang;
+    }
+
+    key = key + ".html";
+
+    // console.log(key);
     MapService.getPageInPouchDB(key).then(function(rsp) {
         var html = rsp.data;
         // console.log(html);

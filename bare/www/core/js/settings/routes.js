@@ -1,6 +1,12 @@
 angular.module('webmapp')
 
-.config(function($stateProvider, $httpProvider, $urlRouterProvider, $ionicConfigProvider, CONFIGProvider) {
+.config(function(
+    $stateProvider,
+    $httpProvider,
+    $urlRouterProvider,
+    $ionicConfigProvider,
+    CONFIGProvider)
+    {
     var basePath = templateBasePath || '';
 
     // Cache each view in DOM
