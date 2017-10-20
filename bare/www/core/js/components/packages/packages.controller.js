@@ -45,6 +45,8 @@ angular.module('webmapp')
             vm.useLogin = config.LOGIN.useLogin;
         }
 
+        vm.currentLang = $translate.preferredLanguage();
+
         var updateDownloadedPackagesInStorage = function () {
             localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
         };
@@ -107,7 +109,7 @@ angular.module('webmapp')
                     }
                     Utils.forceDigest();
                 }).fail(function () {
-                    console.error('routes retrive error');
+                    console.error('images retrive error');
                 });
             }
         };
@@ -128,6 +130,17 @@ angular.module('webmapp')
 
                 for (var i in vm.packages) {
                     vm.packages[i].imgUrl = "https://gifimage.net/wp-content/uploads/2017/09/ajax-loading-gif-transparent-background-9.gif";
+
+                    vm.packages[i].packageTitle = vm.packages[i].title.rendered;
+                    
+                    if (vm.packages[i].wpml_translations) {
+                        for (var p in vm.packages[i].wpml_translations) {
+                            if (vm.packages[i].wpml_translations[p].locale.substring(0, 2) === vm.currentLang) {
+                                vm.packages[i].packageTitle = vm.packages[i].wpml_translations[p].post_title;
+                                break;
+                            }
+                        }
+                    }
                 }
 
                 localStorage.$wm_packages = JSON.stringify(data);
