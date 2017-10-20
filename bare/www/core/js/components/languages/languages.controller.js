@@ -4,6 +4,7 @@ angular.module('webmapp')
     $location,
     $state,
     $rootScope,
+    $window,
     MapService,
     Auth,
     Account,
@@ -22,17 +23,16 @@ angular.module('webmapp')
     vm.languages = CONFIG.LANGUAGES.available;
     vm.currentLang = $translate.preferredLanguage();
 
-    vm.chooseLang = function( lang ){
-        // var user = Auth.getUserData();
-        // user.language = lang.substring(0,2);
-        // Auth.setUserData(user);
-        // $translate.preferredLanguage(user.language);
-        // $translate.use(user.language);
-        // window.location.reload();
+    var setLanguage = function(lang) {
+        $translate.preferredLanguage(lang.substring(0,2));
+        $window.localStorage.language = JSON.stringify(lang.substring(0,2));
     };
 
-    setLang = function(lang) {
-    }
+    vm.chooseLang = function( lang ){
+        setLanguage(lang);
+        
+        window.location.reload();
+    };
 
     return vm;
 });

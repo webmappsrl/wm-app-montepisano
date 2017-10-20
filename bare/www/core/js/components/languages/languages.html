@@ -18,21 +18,18 @@
             <h3>{{::"Seleziona la lingua" | translate}}</h3>
             <div id="radio">
                 <label
-                    ng-repeat="lang in vm.languages">
+                    ng-repeat="language in vm.languages">
                     <input
                         type="radio"
-                        name="language"
-                        value="{{lang}}"
-                        ng-click="vm.chooseLang(lang)"
+                        name="languageRadio"
+                        value="{{language}}"
+                        ng-click="vm.chooseLang(language)"
+                        ng-checked="vm.currentLang === language"
                         />
-                    {{lang | translate}}
+                    {{language | translate}}
                 </label>
 
             </div>
-            <p id="warning">
-                <img src="https://api.webmapp.it/j/vn.j.webmapp.it/media/images/warning.png" alt="WARNING!" />
-                Questa funzionalità sarà disponibile a breve
-            </p>
         </div>
     </ion-content>
 </ion-view>

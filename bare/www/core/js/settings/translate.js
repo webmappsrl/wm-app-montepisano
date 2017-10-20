@@ -2,13 +2,22 @@ angular.module('webmapp')
 
 .config(function (
 	$translateProvider,
-	CONFIGProvider,
-	LANGUAGEProvider
+	$windowProvider,
+	CONFIGProvider
 ) {
 	var lang = "it";
+	var $window = $windowProvider.$get();
 
 	var userLang = navigator.language || navigator.userLanguage; 
 	userLang = userLang.substring(0, 1);
+
+	var getLanguage = function() {
+		var language = null;
+		if (typeof $window.localStorage.language === 'string') {
+				language = JSON.parse($window.localStorage.language);
+		}
+		return language;
+	};
 
 	if (CONFIGProvider.LANGUAGES) {
 		// if (CONFIGProvider.LANGUAGES.available)
@@ -17,7 +26,7 @@ angular.module('webmapp')
 		}
 	}
 
-	var currentLang = LANGUAGEProvider.getLanguage();
+	var currentLang = getLanguage();
 	if (currentLang) {
 		lang = currentLang;
 	}
