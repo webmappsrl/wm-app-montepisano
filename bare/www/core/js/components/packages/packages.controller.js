@@ -73,9 +73,21 @@ angular.module('webmapp')
             });
         };
 
+        var translateCategory = function(lang, id){
+            return $.getJSON(baseUrl + config.COMMUNICATION.wordPressEndpoint + 'webmapp_category/' + id + "?lang=" + lang, function (data) {
+                vm.categories[id].name = data.name;
+                vm.setFilters();
+                return data;
+            }).fail(function () {
+                console.error('Translations retrive error');
+                return 'Translations retrive error';
+            });
+        };
+
         var getCategoriesName = function () {
             return $.getJSON(baseUrl + config.COMMUNICATION.wordPressEndpoint + 'webmapp_category?per_page=100', function (data) {
                 vm.categories = {};
+                var currentLang = $translate.preferredLanguage();
 
                 data.forEach(function (category) {
                     var tmp = {};
@@ -87,6 +99,10 @@ angular.module('webmapp')
                         icon: category.icon
                     };
                     vm.categories = angular.extend(vm.categories, tmp);
+
+                    if (config.LANGUAGES && currentLang !== config.LANGUAGES.actual) {
+                        translateCategory(currentLang, category.id);
+                    }
                 });
 
                 vm.setFilters();
@@ -472,6 +488,7 @@ angular.module('webmapp')
         };
 
         vm.setFilters = function () {
+            vm.filters = {};
             vm.packages.forEach(function (element) {
                 element.webmapp_category.forEach(function (category) {
                     var tmp = {};
