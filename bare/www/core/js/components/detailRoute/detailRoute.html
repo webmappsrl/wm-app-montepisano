@@ -35,16 +35,16 @@
                         ng-bind-html="vm.title">
                     </div>
                     <div class="details-route"
-                         ng-if="vm.codeRoute || vm.difficulty">
+                         ng-if="vm.codeRoute || vm.difficulty !== '0' ">
                         <span class="code"
                               ng-if="vm.codeRoute">
                             <strong>{{::"Codice" | translate}}</strong>: {{vm.codeRoute}} </span>
                         <span class="difficulty"
-                              ng-if="vm.difficulty"><strong>{{::"Difficoltà" | translate}}</strong>:
+                              ng-if="vm.difficulty !== '0'"><strong>{{::"Difficoltà" | translate}}</strong>:
                         <i  class="fa"
                             aria-hidden="true"
                             ng-repeat="n in [].constructor(5) track by $index"
-                            ng-class="{ 'fa-star' : vm.difficulty > $index, 'fa-star-o': vm.difficulty <= $index}"
+                            ng-class="{ 'fa-star-half-o' : (vm.difficulty - $index) == 0.5 , 'fa-star' : vm.difficulty > $index, 'fa-star-o': vm.difficulty <= $index  }"
                         ></i></span>
                     </div>
 
