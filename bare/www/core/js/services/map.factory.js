@@ -726,6 +726,30 @@ angular.module('webmapp')
             return overlayLayersQueueByLabel[currentOverlay.label];
         }
 
+        var languageUrl = "",
+            currentLang = $translate.preferredLanguage(),
+            available = false;
+
+        if (CONFIG.LANGUAGES) {
+            // if (CONFIG.LANGUAGES.available) {
+            //     for (var i in CONFIG.LANGUAGES.available) {
+            //         if (currentLang === CONFIG.LANGUAGES.available[i].substring(0, 2)) {
+                        if (currentLang !== CONFIG.LANGUAGES.actual.substring(0, 2)) {
+                            available = true;
+                        }
+            //             break;
+            //         }
+            //     }
+            // }
+        }
+
+        if (available) {
+            var split = currentOverlay.geojsonUrl.split("/");
+            languageUrl = "/languages/" + currentLang + "/" + split.pop();
+            
+            currentOverlay.geojsonUrl = split.join("/") + languageUrl;
+        }
+
         var currentFromLocalStorage = localStorage.getItem(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl);
 
         var defer = $q.defer(),
@@ -780,6 +804,7 @@ angular.module('webmapp')
         if (offlineConf.resourceBaseUrl !== undefined) {
             geojsonUrl = offlineConf.resourceBaseUrl + geojsonUrl;
         }
+
         if (useLocalCaching && currentFromLocalStorage) {
             if (currentOverlay.type === 'line_geojson') {
                 db.get(geojsonUrl).then(function(e) {
@@ -808,7 +833,12 @@ angular.module('webmapp')
         }
 
         promise.then(function() {
-            initializeThen(currentOverlay);
+            var currentLang = $translate.preferredLanguage(),
+                url = geojsonUrl.split('/'),
+                lang = url[url.length - 2];
+            if (lang === currentLang || (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual === currentLang && lang.length !== 2)) {
+                initializeThen(currentOverlay);
+            }
         });
 
         return promise;
@@ -935,10 +965,12 @@ angular.module('webmapp')
     var initializeLayers = function() {
         var promises = [];
 
+        console.log(overlayLayersConf);
         for (var i = overlayLayersConf.length - 1; i >= 0; i--) {
             if (!overlayLayersConf[i]) {
                 continue;
             }
+            
             if (overlayLayersConf[i].type === 'utfgrid') {
                 var utfGridmap = new L.UtfGrid(overlayLayersConf[i].url, {
                         useJsonP: false,

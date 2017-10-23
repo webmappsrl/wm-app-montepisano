@@ -301,11 +301,22 @@ angular.module('webmapp')
             aborted = false;
 
         arrayLink.forEach(function(item) {
-            var filename = item.split('/').pop(),
+            var split = item.split("/"),
+                filename = split.pop(),
                 format = filename.split('.').pop(),
-                targetPath = destDirectory + filename,
+                targetPath = destDirectory,
                 currentDefer = $q.defer(),
                 currentTransfert;
+
+            if (split[split.length - 2] === "languages") {
+                filename = split[split.length - 2] + "/" + split[split.length - 1] + "/" + filename;
+            }
+
+            targetPath = destDirectory + filename;
+
+            currentDefer = $q.defer();
+
+            console.log(targetPath);
 
             promises.push(currentDefer.promise);
 
