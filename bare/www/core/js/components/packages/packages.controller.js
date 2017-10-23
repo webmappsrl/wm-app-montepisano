@@ -88,20 +88,29 @@ angular.module('webmapp')
             return $.getJSON(baseUrl + config.COMMUNICATION.wordPressEndpoint + 'webmapp_category?per_page=100', function (data) {
                 vm.categories = {};
                 var currentLang = $translate.preferredLanguage();
+                vm.categoriesId = [];
+
+                vm.packages.forEach(function (element) {
+                    element.webmapp_category.forEach(function (category) {
+                        vm.categoriesId[category] = true;
+                    }, this);
+                }, this);
 
                 data.forEach(function (category) {
-                    var tmp = {};
-                    if (!category.icon) {
-                        category.icon = 'wm-icon-generic';
-                    }
-                    tmp[category.id] = {
-                        name: category.name,
-                        icon: category.icon
-                    };
-                    vm.categories = angular.extend(vm.categories, tmp);
-
-                    if (config.LANGUAGES && currentLang !== config.LANGUAGES.actual) {
-                        translateCategory(currentLang, category.id);
+                    if (vm.categoriesId[category.id]) {
+                        var tmp = {};
+                        if (!category.icon) {
+                            category.icon = 'wm-icon-generic';
+                        }
+                        tmp[category.id] = {
+                            name: category.name,
+                            icon: category.icon
+                        };
+                        vm.categories = angular.extend(vm.categories, tmp);
+    
+                        if (config.LANGUAGES && currentLang !== config.LANGUAGES.actual) {
+                            translateCategory(currentLang, category.id);
+                        }
                     }
                 });
 
@@ -489,17 +498,15 @@ angular.module('webmapp')
 
         vm.setFilters = function () {
             vm.filters = {};
-            vm.packages.forEach(function (element) {
-                element.webmapp_category.forEach(function (category) {
-                    var tmp = {};
-                    tmp[category] = {
-                        name: vm.categories[category].name,
-                        icon: vm.categories[category].icon,
-                        value: true
-                    };
-                    vm.filters = angular.extend(tmp, vm.filters);
-                }, this);
-            }, this);
+            for (var category in vm.categoriesId) {
+                var tmp = {};
+                tmp[category] = {
+                    name: vm.categories[category].name,
+                    icon: vm.categories[category].icon,
+                    value: true
+                };
+                vm.filters = angular.extend(tmp, vm.filters);
+            }
         };
 
         modalFiltersScope.vm.updateFilter = function (filterName, value) {
