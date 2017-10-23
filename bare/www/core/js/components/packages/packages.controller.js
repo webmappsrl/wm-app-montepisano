@@ -460,7 +460,7 @@ angular.module('webmapp')
             var allActive = true;
 
             for (var i in filtersMap) {
-                if (i !== $translate.instant("Tutte")) {
+                if (i !== "Tutte") {
                     if (!filtersMap[i].value) {
                         allActive = false;
                         break;
@@ -486,7 +486,7 @@ angular.module('webmapp')
         };
 
         modalFiltersScope.vm.updateFilter = function (filterName, value) {
-            if (filterName === $translate.instant("Tutte")) {
+            if (filterName === "Tutte") {
                 for (var i in modalFiltersScope.vm.filters) {
                     modalFiltersScope.vm.filters[i].value = value;
                 }
@@ -498,18 +498,21 @@ angular.module('webmapp')
                 modalFiltersScope.vm.filters[filterName].value = value;
                 vm.filters[filterName].value = value;
 
-                modalFiltersScope.vm.filters[$translate.instant("Tutte")].value = areAllActive(modalFiltersScope.vm.filters);
+                modalFiltersScope.vm.filters["Tutte"].value = areAllActive(modalFiltersScope.vm.filters);
             }
         };
 
         vm.openFilters = function () {
             var tmp = {};
-            tmp[$translate.instant("Tutte")] = {};
-            tmp[$translate.instant("Tutte")].value = true;
+            tmp["Tutte"] = {
+                name: $translate.instant("Tutte"),
+                icon: "wm-icon-generic",
+                value: true
+            };
             var activeFilters = angular.extend(tmp, vm.filters),
                 allActive = areAllActive(activeFilters);
 
-            activeFilters[$translate.instant("Tutte")].value = allActive;
+            activeFilters["Tutte"].value = allActive;
             modalFiltersScope.vm.filters = activeFilters;
 
             modalFilters.show();

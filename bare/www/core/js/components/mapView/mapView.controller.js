@@ -19,7 +19,7 @@ angular.module('webmapp')
 
         for (var i in filtersMap) {
             if (i !== $translate.instant("Tutte")) {
-                if (!filtersMap[i]) {
+                if (!filtersMap[i].value) {
                     allActive = false;
                     break;
                 }
@@ -59,15 +59,15 @@ angular.module('webmapp')
     };
 
     modalScope.vm.updateFilter = function(filterName, value) {
-        if (filterName === $translate.instant("Tutte")) {
+        if (filterName === "Tutte") {
             for (var i in modalScope.vm.filters) {
-                modalScope.vm.filters[i] = value;
+                modalScope.vm.filters[i].value = value;
                 MapService.setFilter(i, value);
             }
         } else {
             MapService.setFilter(filterName, value);
-            modalScope.vm.filters[filterName] = value;
-            modalScope.vm.filters[$translate.instant("Tutte")] = areAllActive(modalScope.vm.filters);
+            modalScope.vm.filters[filterName].value = value;
+            modalScope.vm.filters["Tutte"].value = areAllActive(modalScope.vm.filters);
         } 
     };    
 
@@ -80,14 +80,34 @@ angular.module('webmapp')
     }; 
 
     vm.openFilters = function() {
-        var tmp = {};
-        tmp[$translate.instant("Tutte")] = true;
-        var activeFilters = angular.extend(tmp, MapService.getActiveFilters()),
-            allActive = areAllActive(activeFilters);
-        
-        console.log(activeFilters);
+        var filt = MapService.getActiveFilters(),
+            lang = $translate.preferredLanguage(),
+            tmp = {},
+            allActive = false,
+            activeFilters = {};
 
-        activeFilters[$translate.instant("Tutte")] = allActive;
+        tmp["Tutte"] = {
+            name: $translate.instant("Tutte"),
+            value: true
+        };
+
+        for (var i in CONFIG.OVERLAY_LAYERS) {
+            var nameTranslated = CONFIG.OVERLAY_LAYERS[i].label;
+
+            if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[lang]) {
+                nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[lang];
+            }
+
+            activeFilters[CONFIG.OVERLAY_LAYERS[i].label] = {
+                name: nameTranslated,
+                value: filt[CONFIG.OVERLAY_LAYERS[i].label]
+            };
+        }
+
+        activeFilters = angular.extend(tmp, activeFilters);
+        allActive = areAllActive(activeFilters);
+        
+        activeFilters["Tutte"].value = allActive;
         modalScope.vm.filters = activeFilters;
         modalScope.vm.currentMapLayer = MapService.getCurrentMapLayerName();
 

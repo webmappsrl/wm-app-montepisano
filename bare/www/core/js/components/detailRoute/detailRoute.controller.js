@@ -10,11 +10,13 @@ angular.module('webmapp')
     MapService,
     Model,
     Utils,
-    CONFIG
+    CONFIG,
+    $translate
 ) {
     var vm = {},
         current = $state.current || {},
-        params = $state.params || {};
+        params = $state.params || {},
+        currentLang = $translate.preferredLanguage();
 
     var modalScope = $rootScope.$new(),
         modal = {},
@@ -48,10 +50,32 @@ angular.module('webmapp')
 
     vm.packages = JSON.parse(localStorage.$wm_packages);
 
+    var getTranslatedContent = function(id) {
+
+        return $.getJSON(CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.wordPressEndpoint + 'route/' + id, function (data) {
+            vm.title = data.title.rendered;
+            vm.description = data.content.rendered;
+            vm.gallery = data.n7webmap_route_media_gallery;
+            return data;
+        }).fail(function () {
+            console.error('translation retrive error');
+            return 'translation retrive error';
+        });
+    };
+
     var getRoute = function(id) {
         for (var i = 0; i < vm.packages.length; i++) {
             if (vm.packages[i].id == id) {
-
+                if (currentLang !== CONFIG.LANGUAGES.actual) {
+                    
+                    for (var lang in vm.packages[i].wpml_translations) {
+                        if (vm.packages[i].wpml_translations[lang].locale.substring(0, 2) === currentLang) {
+                            getTranslatedContent(vm.packages[i].wpml_translations[lang].id);
+                            break;
+                        }
+                    }
+                    
+                }
                 return vm.packages[i];
             }
         }
@@ -116,7 +140,6 @@ angular.module('webmapp')
             $ionicSlideBoxDelegate._instances[0].previous();
         }
     };
-
 
     return vm;
 });

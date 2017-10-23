@@ -59,25 +59,67 @@ angular.module('webmapp')
     vm.areAllActive = areAllActive(Search.getActiveLayersMap());
     vm.filtersList = Search.getActiveLayers();
     vm.othersCount = String(vm.filtersList.length -1);
+    vm.translatedFiltersList = vm.filtersList;
 
+    vm.translateOverlayInArray = function(array) {
+        var currentLang = $translate.preferredLanguage();
+        var translated = [];
+        for (var i in array) {
+            var translatedName = "";
+            if (array[i].label) {
+                translatedName = array[i].label;
+            }
+            console.log(typeof(array[i]))
+            if (typeof(array[i]) === "string") {
+                translatedName = array[i];
+            }
+
+            if (translatedName !== "") {
+                for (var pos in CONFIG.OVERLAY_LAYERS) {
+                    if (CONFIG.OVERLAY_LAYERS[pos].label === translatedName &&
+                        CONFIG.OVERLAY_LAYERS[pos].languages &&
+                        CONFIG.OVERLAY_LAYERS[pos].languages[currentLang]) {
+                        translatedName = CONFIG.OVERLAY_LAYERS[pos].languages[currentLang];
+                    }
+                }
+    
+                if (array[i].label) {
+                    translated[i] = array[i];
+                    translated[i].label = translatedName;
+                }
+                else {
+                    translated[i] = translatedName;
+                }
+            }
+            else {
+                translated[i] = array[i];
+            }
+        }
+
+        console.log(array, translated);
+        return translated;
+    };
+
+    vm.translatedFiltersList = vm.translateOverlayInArray(vm.translatedFiltersList);
 
     modalScope.vm.updateFilter = function(filterName, value) {
-        var activeFilters = angular.extend([], Search.getActiveLayersMap()),
+        var activeFilters = modalScope.vm.filters,
             toUpdate = [];
 
-        activeFilters[filterName] = value;
+        activeFilters[filterName].value = value;
 
         for (var i in activeFilters) {
-            if (activeFilters[i]) {
+            if (activeFilters[i].value) {
                 toUpdate.push(i);
             }
         }
 
         Search.setActiveLayers(toUpdate);
         vm.filtersList = Search.getActiveLayers();
+        vm.translatedFiltersList = vm.translateOverlayInArray(vm.filtersList);
         vm.othersCount = String(vm.filtersList.length -1);
         vm.areAllActive = modalScope.vm.areAllActive = areAllActive(Search.getActiveLayersMap());
-        vm.results = Search.getByLayersWithDivider(lastQuery, vm.filtersList);
+        vm.results = vm.translateOverlayInArray(Search.getByLayersWithDivider(lastQuery, vm.filtersList));
         MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery, vm.filtersList));
 
         $ionicScrollDelegate.scrollTop();
@@ -92,9 +134,32 @@ angular.module('webmapp')
     };
 
     vm.openFilters = function() {
-        modalScope.vm.areAllActive = vm.areAllActive;
-        modalScope.vm.filters = Search.getActiveLayersMap();
-        // modalScope.vm.filters['Tutte'] = vm.areAllActive;
+        var filt = Search.getActiveLayersMap(),
+            lang = $translate.preferredLanguage(),
+            tmp = {},
+            allActive = false,
+            activeFilters = {};
+
+        for (var i in CONFIG.OVERLAY_LAYERS) {
+            var nameTranslated = CONFIG.OVERLAY_LAYERS[i].label;
+
+            if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[lang]) {
+                nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[lang];
+            }
+
+            activeFilters[CONFIG.OVERLAY_LAYERS[i].label] = {
+                name: nameTranslated,
+                value: filt[CONFIG.OVERLAY_LAYERS[i].label]
+            };
+        }
+
+        // activeFilters = angular.extend(tmp, activeFilters);
+        allActive = areAllActive(activeFilters);
+        
+        // activeFilters["Tutte"].value = allActive;
+        modalScope.vm.filters = activeFilters;
+        
+        modalScope.vm.areAllActive = allActive;
         modal.show();
     };
     
@@ -107,7 +172,7 @@ angular.module('webmapp')
     };
 
     vm.updateSearch = function(query) {
-        vm.results = Search.getByLayersWithDivider(query, Search.getActiveLayers());
+        vm.results = vm.translateOverlayInArray(Search.getByLayersWithDivider(query, Search.getActiveLayers()));
         MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(query, Search.getActiveLayers()));
         $ionicScrollDelegate.scrollTop();
         lastQuery = query;
