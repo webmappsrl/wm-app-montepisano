@@ -5,6 +5,7 @@ angular.module('webmapp')
     $scope,
     $rootScope,
     $sce,
+    $ionicLoading,
     $ionicModal,
     $ionicSlideBoxDelegate,
     MapService,
@@ -51,13 +52,17 @@ angular.module('webmapp')
     vm.packages = JSON.parse(localStorage.$wm_packages);
 
     var getTranslatedContent = function(id) {
-
+        $ionicLoading.show({
+            template: 'Loading...'
+        });
         return $.getJSON(CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.wordPressEndpoint + 'route/' + id, function (data) {
             vm.title = data.title.rendered;
             vm.description = data.content.rendered;
             vm.gallery = data.n7webmap_route_media_gallery;
+            $ionicLoading.hide();
             return data;
         }).fail(function () {
+            $ionicLoading.hide();
             console.error('translation retrive error');
             return 'translation retrive error';
         });
