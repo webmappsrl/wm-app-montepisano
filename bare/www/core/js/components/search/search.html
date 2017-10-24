@@ -40,14 +40,14 @@
                 <span 
                     class="label-select-name"
                     ng-if="!vm.areAllActive && vm.filtersList.length">
-                    {{ vm.translatedFiltersList[0] }} 
+                    {{ vm.translatedFiltersList[0] + " "}} 
                     <span 
                         class="label-select-others">
                         <span ng-if="vm.othersCount !== '0' && vm.othersCount === '1'">
-                            {{::" + 1 altra categoria" | translate}}
+                            {{::"+ 1 altra categoria" | translate}}
                         </span>
                         <span ng-if="vm.othersCount !== '0' && vm.othersCount !== '1'">
-                            {{::" + altre " | translate}}{{vm.othersCount}}{{::" categorie" | translate}}
+                            {{::"+ altre " | translate}}{{vm.othersCount + " "}}{{::"categorie" | translate}}
                         </span>
                     <span>
                 </span>
