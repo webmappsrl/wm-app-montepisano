@@ -746,8 +746,10 @@ angular.module('webmapp')
         if (available) {
             var split = currentOverlay.geojsonUrl.split("/");
             languageUrl = "/languages/" + currentLang + "/" + split.pop();
-            
-            currentOverlay.geojsonUrl = split.join("/") + languageUrl;
+
+            if (localStorage.getItem(split.join("/") + languageUrl)) {
+                currentOverlay.geojsonUrl = split.join("/") + languageUrl;
+            }
         }
 
         var currentFromLocalStorage = localStorage.getItem(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl);
