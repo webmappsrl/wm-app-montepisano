@@ -38,7 +38,7 @@
     
     <!-- TODO: aggiungere classe has-show-more per il caso in cui ci sia la freccia di espansione -->
     <ion-content
-        class="has-show-more"
+        class="has-show-more {{currentParams.id}}"
         style="background: {{vm.colors.global.background}}"
         ng-class="{
             'has-filter': vm.hasFilter,
