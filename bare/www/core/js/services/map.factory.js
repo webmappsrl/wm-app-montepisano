@@ -742,14 +742,13 @@ angular.module('webmapp')
             //     }
             // }
         }
+        var currentLangGeojsonUrl;
 
         if (available) {
             var split = currentOverlay.geojsonUrl.split("/");
             languageUrl = "/languages/" + currentLang + "/" + split.pop();
 
-            if (localStorage.getItem(split.join("/") + languageUrl)) {
-                currentOverlay.geojsonUrl = split.join("/") + languageUrl;
-            }
+            currentLangGeojsonUrl = split.join("/") + languageUrl;
         }
 
         var currentFromLocalStorage = localStorage.getItem(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl);
@@ -803,8 +802,10 @@ angular.module('webmapp')
         };
 
         var geojsonUrl = currentOverlay.geojsonUrl;
+        var langGeojsonUrl = currentLangGeojsonUrl;
         if (offlineConf.resourceBaseUrl !== undefined) {
             geojsonUrl = offlineConf.resourceBaseUrl + geojsonUrl;
+            langGeojsonUrl = offlineConf.resourceBaseUrl + currentLangGeojsonUrl;
         }
 
         if (useLocalCaching && currentFromLocalStorage) {
@@ -821,7 +822,7 @@ angular.module('webmapp')
                 setItemInLocalStorage(geojsonUrl, data);
             });
         } else {
-            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(geojsonUrl, function(data) {
+            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(langGeojsonUrl, function(data) {
                 if (currentOverlay.type === 'line_geojson') {
                     lineCallback(data, currentOverlay);
                 } else if (currentOverlay.type === 'poi_geojson') {
@@ -830,7 +831,18 @@ angular.module('webmapp')
                 setItemInLocalStorage(geojsonUrl, data);
                 delete overlayLayersQueueByLabel[currentOverlay.label];
             }).fail(function() {
-                defer.reject();
+                overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(geojsonUrl, function(data) {
+                    console.log(currentOverlay.type);
+                    if (currentOverlay.type === 'line_geojson') {
+                        lineCallback(data, currentOverlay);
+                    } else if (currentOverlay.type === 'poi_geojson') {
+                        poiCallback(data, currentOverlay);
+                    }
+                    setItemInLocalStorage(geojsonUrl, data);
+                    delete overlayLayersQueueByLabel[currentOverlay.label];
+                }).fail(function() {
+                    defer.reject();
+                });
             });
         }
 
