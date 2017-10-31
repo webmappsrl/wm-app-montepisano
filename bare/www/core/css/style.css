@@ -1669,7 +1669,7 @@ button.login-button {
     padding: 0;
     background: transparent;
     border: none;
-    color: #ffffff; }
+    color: inherit; }
   .coords-block .icon {
     vertical-align: middle; }
 

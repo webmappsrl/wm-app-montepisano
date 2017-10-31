@@ -8,7 +8,9 @@ angular.module('webmapp')
     $timeout,
     $location,
     $rootScope,
-    $ionicModal
+    $ionicModal,
+    $ionicPopup,
+    $translate
 ) {
     var utils = {},
         modals = {};
@@ -150,7 +152,18 @@ angular.module('webmapp')
 
     utils.openInAppBrowser = function(url) {
         // Open in app browser
-        window.open(url, '_blank');
+        if (navigator.onLine) {
+            window.open(url, '_blank');
+        } else {
+            $ionicPopup.alert({
+                title: $translate.instant("Attenzione"),
+                template: $translate.instant("Pagina disponibile solo online. Controlla la connessione e riprova"),
+                buttons: [{
+                    text: 'Ok',
+                    type: 'button-positive'
+                }]
+            });
+        }
     };
 
     utils.openCordovaWebView = function(url) {

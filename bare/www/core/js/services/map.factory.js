@@ -680,7 +680,6 @@ angular.module('webmapp')
                 };
 
                 db.get(url).then(function(e) {
-                    // console.log(e)
                     db.remove(e)
                         .then(function() {
                             insert();
@@ -1876,6 +1875,10 @@ angular.module('webmapp')
 
     mapService.setZoom = function(n) {
         map && map.setZoom(n);
+    };
+
+    mapService.getZoom = function() {
+        return map.getZoom();
     };
 
     mapService.disableDrag = function() {

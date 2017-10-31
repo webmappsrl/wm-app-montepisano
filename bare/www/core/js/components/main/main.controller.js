@@ -13,6 +13,7 @@ angular.module('webmapp')
     Model,
     $cordovaGeolocation,
     $cordovaDeviceOrientation,
+    $cordovaSocialSharing,
     CONFIG,
     $translate
 ) {
@@ -109,7 +110,7 @@ angular.module('webmapp')
     vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
     vm.useExandMapInDetails = CONFIG.OPTIONS.useExandMapInDetails;
     vm.showLocate = !CONFIG.MAP.hideLocationControl;
-    vm.viewTitle = $translate.instant("MAPPA");;
+    vm.viewTitle = $translate.instant("MAPPA");
     vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
     vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
     vm.useUTM32 = false;
@@ -122,14 +123,20 @@ angular.module('webmapp')
             return;
         }
 
+        shareOptions = {
+            message: "",
+            mailSubject: "",
+            baseUrl: CONFIG.COMMUNICATION.baseUrl
+        };
+
         if (CONFIG.SHARE.type === 'social') {
             $cordovaSocialSharing
                 .share(
-                    shareOptions.message + ' ', 
+                    shareOptions.message, 
                     shareOptions.mailSubject, 
-                    undefined, 
+                    undefined,
                     shareOptions.baseUrl +
-                        '?map=' + 
+                        '/#/?map=' + 
                         MapService.getZoom() + '/' +
                         vm.centerCoords.lat + '/' +
                         vm.centerCoords.lng)
