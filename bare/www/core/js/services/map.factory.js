@@ -649,14 +649,20 @@ angular.module('webmapp')
 
         var requestPages = function(item, index) {
             if (item.isCustom) {
-                for (var pos in CONFIG.LANGUAGES.available) {
-                    var url = CONFIG.OFFLINE.pagesUrl + item.type;
-
-                    if (CONFIG.LANGUAGES.available[pos] !== CONFIG.LANGUAGES.actual) {
-                        url = url + "_" + CONFIG.LANGUAGES.available[pos].substring(0, 2);
+                if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.available) {
+                    for (var pos in CONFIG.LANGUAGES.available) {
+                        var url = CONFIG.OFFLINE.pagesUrl + item.type;
+    
+                        if (CONFIG.LANGUAGES.available[pos] !== CONFIG.LANGUAGES.actual) {
+                            url = url + "_" + CONFIG.LANGUAGES.available[pos].substring(0, 2);
+                        }
+    
+                        url = url + '.html';
+                        getPagesHtml(url);
                     }
-
-                    url = url + '.html';
+                }
+                else {
+                    var url = CONFIG.OFFLINE.pagesUrl + item.type + ".html";
                     getPagesHtml(url);
                 }
             };
