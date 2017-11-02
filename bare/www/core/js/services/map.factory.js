@@ -837,7 +837,6 @@ angular.module('webmapp')
                 delete overlayLayersQueueByLabel[currentOverlay.label];
             }).fail(function() {
                 overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(geojsonUrl, function(data) {
-                    console.log(currentOverlay.type);
                     if (currentOverlay.type === 'line_geojson') {
                         lineCallback(data, currentOverlay);
                     } else if (currentOverlay.type === 'poi_geojson') {

@@ -148,6 +148,10 @@ angular.module('webmapp')
             } else if (CONFIG.SHARE.type === 'email') {
                 shareScope.vm.textblock = '';
                 shareScope.vm.emailblock = '';
+
+                if (CONFIG.SHARE.defaultEmail) {
+                    shareScope.vm.emailblock = CONFIG.SHARE.defaultEmail;
+                }
                 shareScope.vm.sendSuccess = false;
                 shareModal && shareModal.show();
             }
