@@ -78,13 +78,26 @@ angular.module('webmapp')
 
     shareScope.vm.sendText = function() {
         var currentRequest;
-        if (shareScope.vm.textblock !== '' && shareScope.vm.emailblock !== '') {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (shareScope.vm.emailblock === '' || !re.test(shareScope.vm.emailblock)) {
+            $ionicPopup.alert({
+                title: $translate.instant("ATTENZIONE"),
+                template: $translate.instant("Inserisci un'email valida per continuare"),
+                buttons: [{
+                    text: 'Ok',
+                    type: 'button-positive'
+                }]
+            });
+        }
+        else {
             shareScope.vm.sendInProgress = true;
-            currentRequest = Communication.post(CONFIG.SHARE.apiUrl, {
+            currentRequest = Communication.post(CONFIG.REPORT.apiUrl, {
                 email: shareScope.vm.emailblock,
+                to: CONFIG.REPORT.defaultEmail,
                 content: shareScope.vm.textblock,
                 lat: vm.centerCoords.lat,
                 lng: vm.centerCoords.lng,
+                phone: shareScope.vm.phoneNumber,
                 type: 'email'
             });
 
@@ -96,6 +109,17 @@ angular.module('webmapp')
                     setTimeout(function() {
                         shareModal.hide();
                     }, 1000);
+                },
+                function(error) {
+                    $ionicPopup.alert({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Si è verificato un errore di connessione, riprova più tardi"),
+                        buttons: [{
+                            text: 'Ok',
+                            type: 'button-positive'
+                        }]
+                    });
+                    shareScope.vm.sendInProgress = false;
                 });
         }
     };
@@ -114,7 +138,7 @@ angular.module('webmapp')
     vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
     vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
     vm.useUTM32 = false;
-    vm.useShare = CONFIG.SHARE && CONFIG.SHARE.active;
+    vm.useShare = CONFIG.REPORT && CONFIG.REPORT.active;
 
     vm.shareCurrentPosition = function($event) {
         $event.stopPropagation();
@@ -129,7 +153,7 @@ angular.module('webmapp')
             baseUrl: CONFIG.COMMUNICATION.baseUrl
         };
 
-        if (CONFIG.SHARE.type === 'social') {
+        if (CONFIG.REPORT.type === 'social') {
             $cordovaSocialSharing
                 .share(
                     shareOptions.message, 
@@ -145,13 +169,10 @@ angular.module('webmapp')
                 }, function(err) {
                   // An error occured. Show a message to the user
                 });
-            } else if (CONFIG.SHARE.type === 'email') {
+            } else if (CONFIG.REPORT.type === 'email') {
                 shareScope.vm.textblock = '';
                 shareScope.vm.emailblock = '';
-
-                if (CONFIG.SHARE.defaultEmail) {
-                    shareScope.vm.emailblock = CONFIG.SHARE.defaultEmail;
-                }
+                shareScope.vm.phoneNumber = '';
                 shareScope.vm.sendSuccess = false;
                 shareModal && shareModal.show();
             }

@@ -7,7 +7,7 @@
        </a>
         <h1 class="title">
             <span class="title-inner-header">
-                {{::"CONDIVIDI" | translate}}
+                {{::"SEGNALA" | translate}}
             </span>
         </h1>
     </ion-header-bar>
@@ -22,18 +22,27 @@
                 class="list list-inset"
                 ng-if="!vm.sendInProgress && !vm.sendSuccess">
                 <input 
-                    style="padding-left: 17px;" 
+                    style="padding-left: 17px; width: 100%;" 
                     type="text" 
-                    placeholder="Email"
+                    placeholder="{{::'Inserisci la tua email' | translate}}"
                     autocorrect="off"
                     autocomplete="off"
                     spellcheck="false"
                     ng-model="vm.emailblock">
+                <input
+                    style="padding-left: 17px; width: 100%;" 
+                    type="text"
+                    placeholder="{{::'Inserisci il tuo numero di telefono (opzionale)' | translate}}"
+                    autocorrect="off"
+                    autocomplete="off"
+                    spellcheck="false"
+                    ng-model="vm.phoneNumber">
                 <label class="item item-input item-stacked-label">
                     <!-- <span class="input-label">Titolo text area</span> -->
                     <textarea 
-                        placeholder="Inserisci il testo della tua segnalazione"
-                        ng-model="vm.textblock">
+                        placeholder="{{::'Inserisci il testo della tua segnalazione (opzionale)' | translate}}"
+                        ng-model="vm.textblock"
+                        style="height: 30vh">
                     </textarea>
                 </label>
             </div>
