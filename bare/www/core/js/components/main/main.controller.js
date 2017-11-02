@@ -143,6 +143,18 @@ angular.module('webmapp')
     vm.shareCurrentPosition = function($event) {
         $event.stopPropagation();
 
+        if (!navigator.onLine) {
+            $ionicPopup.alert({
+                title: $translate.instant("ATTENZIONE"),
+                template: $translate.instant("Questa funzionalità è disponibile solo con una connessione attiva. Controlla la tua connessione e riprova"),
+                buttons: [{
+                    text: 'Ok',
+                    type: 'button-positive'
+                }]
+            });
+            return;
+        }
+
         if (!vm.useShare) {
             return;
         }
