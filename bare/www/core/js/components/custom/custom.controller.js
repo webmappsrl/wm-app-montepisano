@@ -64,7 +64,6 @@ angular.module('webmapp')
         vm.body = html.replace(/href="([^\'\"]+)/g, 'ng-click="' + openFn + '(\'$1\')" href=""');
     });
 
-
     $rootScope.$on('logged-in', function() {
         vm.isLoggedIn = true;
     });

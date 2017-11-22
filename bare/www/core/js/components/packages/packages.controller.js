@@ -108,7 +108,7 @@ angular.module('webmapp')
                         };
                         vm.categories = angular.extend(vm.categories, tmp);
     
-                        if (config.LANGUAGES && currentLang !== config.LANGUAGES.actual) {
+                        if (config.LANGUAGES && config.LANGUAGES.actual && currentLang !== config.LANGUAGES.actual) {
                             translateCategory(currentLang, category.id);
                         }
                     }

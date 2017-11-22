@@ -739,7 +739,8 @@ angular.module('webmapp')
             // if (CONFIG.LANGUAGES.available) {
             //     for (var i in CONFIG.LANGUAGES.available) {
             //         if (currentLang === CONFIG.LANGUAGES.available[i].substring(0, 2)) {
-                        if (currentLang !== CONFIG.LANGUAGES.actual.substring(0, 2)) {
+                        if (!CONFIG.LANGUAGES.actual ||
+                            (CONFIG.LANGUAGES.actual && currentLang !== CONFIG.LANGUAGES.actual.substring(0, 2))) {
                             available = true;
                         }
             //             break;
@@ -747,7 +748,7 @@ angular.module('webmapp')
             //     }
             // }
         }
-        var currentLangGeojsonUrl;
+        var currentLangGeojsonUrl = "";
 
         if (available) {
             var split = currentOverlay.geojsonUrl.split("/");
@@ -854,7 +855,7 @@ angular.module('webmapp')
             var currentLang = $translate.preferredLanguage(),
                 url = geojsonUrl.split('/'),
                 lang = url[url.length - 2];
-            if (lang === currentLang || (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual === currentLang && lang.length !== 2)) {
+            if (lang === currentLang || (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual && CONFIG.LANGUAGES.actual === currentLang && lang.length !== 2)) {
                 initializeThen(currentOverlay);
             }
         });
