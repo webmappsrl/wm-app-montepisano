@@ -61,6 +61,8 @@ angular.module('webmapp')
 
     var skipAreaClick = null;
 
+    var polylineDecoratorLayers = {};
+
     var controlLocate = null;
 
     var db = new PouchDB('webmapp');
@@ -161,6 +163,11 @@ angular.module('webmapp')
                 markerClusters.removeLayer(layer);
             } else if (isALineLayer(layerName)) {
                 map.removeLayer(layer);
+
+                // map.removeLayer(polylineDecoratorLayers[layerName]);
+
+                // polylineDecoratorLayers[layerName] = {};
+
                 if (generalConf.useAlmostOver) {
                     map.almostOver.removeLayer(layer);
                 }
@@ -789,6 +796,24 @@ angular.module('webmapp')
                             feature.parent = currentOverlay;
                         }
                         globalOnEachLine(feature, layer);
+
+                        // console.log("lol");
+
+                        // polylineDecoratorLayers[currentOverlay.label] = L.polylineDecorator(layer, {
+                        //     patterns: [{
+                        //         offset: 25,
+                        //         repeat: 150,
+                        //         symbol: L.Symbol.arrowHead({
+                        //             pixelSize: 15,
+                        //             pathOptions: {
+                        //                 fillOpacity: 1,
+                        //                 weight: 0
+                        //             }
+                        //         })
+                        //     }]
+                        // });
+
+                        polylineDecoratorLayers[currentOverlay.label].addTo(map);
                     },
                     style: function(feature) {
                         if (!feature.parent) {

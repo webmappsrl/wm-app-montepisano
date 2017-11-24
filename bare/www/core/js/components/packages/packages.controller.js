@@ -117,7 +117,8 @@ angular.module('webmapp')
                 vm.setFilters();
 
                 return data;
-            }).fail(function () {
+            }).fail(function (error) {
+                console.log(error);
                 console.error('categories retrive error');
                 return 'categories retrive error';
             });
@@ -291,7 +292,7 @@ angular.module('webmapp')
                     delete vm.userPackages;
                     delete vm.userDownloadedPackages;
                     delete localStorage.$wm_userPackages;
-                    delete localStorage.$$wm_userDownloadedPackages;
+                    delete localStorage.$wm_userDownloadedPackages;
 
                     Auth.resetUserData();
                     $rootScope.isLoggedIn = vm.isLoggedIn = false;

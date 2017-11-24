@@ -40,7 +40,7 @@
                               ng-if="vm.codeRoute">
                             <strong>{{::"Codice" | translate}}</strong>: {{vm.codeRoute}} </span>
                         <span class="difficulty"
-                              ng-if="vm.difficulty !== '0'"><strong>{{::"Difficoltà" | translate}}</strong>:
+                              ng-if="vm.difficulty !== 0"><strong>{{::"Difficoltà" | translate}}</strong>:
                         <i  class="fa"
                             aria-hidden="true"
                             ng-repeat="n in [].constructor(5) track by $index"
