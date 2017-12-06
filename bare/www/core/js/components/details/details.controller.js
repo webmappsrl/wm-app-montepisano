@@ -163,9 +163,9 @@ angular.module('webmapp')
 
             if (feature.description) {
                 feature.description = feature.description.replace(new RegExp(/src="\//g), 'src="' + CONFIG.COMMUNICATION.baseUrl);
-                feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), '');
+                // feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), '');
                 // feature.description = feature.description.replace(new RegExp(/href="\//g), 'href="' + CONFIG.COMMUNICATION.baseUrl);
-                // feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'href="" onclick="window.open(\'$1\', \'_system\', \'\')"');
+                feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'href="" onclick="window.open(\'$1\', \'_system\', \'\')"');
                 // feature.description = feature.description.replace(new RegExp(/window.open\(\'#\', \'_system\', \'\'\)/g), '');
 
                 vm.mainDescription = Utils.trimHtml(feature.description, {
@@ -244,6 +244,7 @@ angular.module('webmapp')
 
             vm.relatedItinerary = MapService.getItineraryRefByFeatureIdMap()[feature.id] || [];
             vm.feature = feature;
+            console.log(vm.feature);
             vm.geometry = data.geometry;
             vm.coordinates = data.geometry.coordinates.toString();
         }
@@ -262,6 +263,10 @@ angular.module('webmapp')
                 MapService.adjust();
             }, 2500);
         }, 1000);
+
+        // console.log(vm["feature"]);
+        // vm.feature.description = "ciao <a href=\"http://www.google.com\">ciaociao</a> ciao";
+        // console.log(vm.feature);
     };
 
     modalScope.vm.openFeature = function(feature) {
