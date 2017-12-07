@@ -1700,18 +1700,44 @@ button.login-button {
   box-shadow: 0 0 3px rgba(18, 16, 11, 0.75); }
 
 .leaflet-popup-content-wrapper {
-  border-radius: 2px; }
-  .leaflet-popup-content-wrapper .popup-title,
-  .leaflet-popup-content-wrapper .popup-description {
+  border-radius: 0px;
+  margin: 0;
+  padding: 0;
+  padding-right: 13px; }
+  .leaflet-popup-content-wrapper .leaflet-popup-content {
     margin: 0;
     padding: 0;
-    color: inherit;
-    line-height: 1; }
-  .leaflet-popup-content-wrapper .popup-title {
-    margin-bottom: 5px;
-    font-size: 23px; }
-  .leaflet-popup-content-wrapper .popup-description {
-    font-size: 15px; }
+    padding-right: 15px; }
+    .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div img {
+      width: 40%;
+      height: 90px; }
+    .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full,
+    .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img {
+      width: 100%;
+      padding-left: 10px; }
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-title,
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-category,
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-description,
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-title,
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-category,
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-description {
+        margin: 0;
+        padding: 0;
+        color: inherit; }
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-title,
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-title {
+        font-size: 23px; }
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-category,
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-category {
+        height: 14px;
+        font-size: 14px;
+        margin: 3px 0; }
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-description,
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-description {
+        font-size: 15px; }
+    .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img {
+      float: right;
+      width: 60%; }
 
 .leaflet-popup-content {
   width: auto !important;

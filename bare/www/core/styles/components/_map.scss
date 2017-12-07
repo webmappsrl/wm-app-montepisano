@@ -412,23 +412,59 @@
 }
 
 .leaflet-popup-content-wrapper {
-  border-radius: 2px;
-  .popup-title,
-  .popup-description {
+  border-radius: 0px;
+  margin: 0;
+  padding: 0;
+  padding-right: 13px;
+
+  .leaflet-popup-content {
     margin: 0;
     padding: 0;
-    color: inherit;
-    // font-family: $main-font-family;
-    line-height: 1;
-  }
+    padding-right: 15px;
 
-  .popup-title {
-    margin-bottom: 5px;
-    font-size: 23px;
-  }
+    div.popup-div {
 
-  .popup-description {
-    font-size: 15px;
+      img {
+        width: 40%;
+        height: 90px;
+      }
+  
+      div.popup-content-full,
+      div.popup-content-img {
+        width: 100%;
+        padding-left: 10px;
+
+        .popup-title,
+        .popup-category,
+        .popup-description {
+          margin: 0;
+          padding: 0;
+          color: inherit;
+          // font-family: $main-font-family;
+        }
+      
+        .popup-title {
+          // margin-bottom: 5px;
+          font-size: 23px;
+          // height: 70px;
+        }
+
+        .popup-category {
+          height: 14px;
+          font-size: 14px;
+          margin: 3px 0;
+        }
+      
+        .popup-description {
+          font-size: 15px;
+        }
+      }
+
+      div.popup-content-img {
+        float: right;
+        width: 60%;
+      }
+    }
   }
 }
 

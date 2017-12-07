@@ -354,32 +354,46 @@ angular.module('webmapp')
             var interaction = !e.layer.feature.properties.noInteraction;
 
             if (interaction) {
+                var content = '<div class="popup-div" onclick="goToDetail(\'' + e.layer.feature.properties.id +'\', \'' + e.layer.feature.parent.label + '\', \'' + isPOI + '\', \'' + goToDetails + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">'
+                // (!Utils.isBrowser() ? '<button class="popup-close" onclick="closePopup()">' +
+                //     '<i class="icon wm-icon-android-close"></i></button>' : '') +
+                ;
+
+                if (e.layer.feature.properties.picture_url) {
+                    content  = content +
+                        '<img class="popup-img" src="' + e.layer.feature.properties.picture_url + '" />' +
+                        '<div class="popup-content-img">' + 
+                            '<div class="popup-category">' +
+                                e.layer.feature.parent.label +
+                            '</div>' +
+                            '<div class="popup-title">' +
+                                e.layer.feature.properties.name +
+                            '</div>' +
+                        '</div>' +
+                        (goToDetails ? '<button class="popup-button"><i class="icon wm-icon-ios7-arrow-forward"></i></button>' : '') +
+                        '</div>';
+                }
+                else {
+                    content  = content +
+                    '<div class="popup-content-full">' + 
+                        '<div class="popup-category">' +
+                            e.layer.feature.parent.label +
+                        '</div>' +
+                        '<div class="popup-title">' +
+                            e.layer.feature.properties.name +
+                        '</div>' +
+                    '</div>' +
+                    (goToDetails ? '<button class="popup-button"><i class="icon wm-icon-ios7-arrow-forward"></i></button>' : '') +
+                    '</div>';
+                }
+
                 L.popup()
                 .setLatLng({
                     lat: e.latlng.lat + (isPOI ? getIncrement(map.getZoom()) : 0),
                     lng: e.latlng.lng
                 })
                 .setContent(
-                    '<p onclick="goToDetail(\'' +
-                    e.layer.feature.properties.id +
-                    '\', \'' +
-                    e.layer.feature.parent.label +
-                    '\', \'' +
-                    isPOI +
-                    '\', \'' +
-                    goToDetails +
-                    '\', \'' +
-                    e.latlng.lat +
-                    '\', \'' +
-                    e.latlng.lng +
-                    '\')">' +
-                    // (!Utils.isBrowser() ? '<button class="popup-close" onclick="closePopup()">' +
-                    //     '<i class="icon wm-icon-android-close"></i></button>' : '') +
-                    '<span class="popup-title">' +
-                    e.layer.feature.properties.name +
-                    '</span>' +
-                    (goToDetails ? '<button class="popup-button"><i class="icon wm-icon-ios7-arrow-forward"></i></button>' : '') +
-                    '</p>'
+                    content
                 )
                 .openOn(map);
             }
@@ -813,7 +827,7 @@ angular.module('webmapp')
                         //     }]
                         // });
 
-                        polylineDecoratorLayers[currentOverlay.label].addTo(map);
+                        // polylineDecoratorLayers[currentOverlay.label].addTo(map);
                     },
                     style: function(feature) {
                         if (!feature.parent) {
