@@ -353,6 +353,8 @@ angular.module('webmapp')
             var goToDetails = !e.layer.feature.properties.noDetails;
             var interaction = !e.layer.feature.properties.noInteraction;
 
+            console.log(e.layer.feature.properties);
+
             if (interaction) {
                 var content = '<div class="popup-div" onclick="goToDetail(\'' + e.layer.feature.properties.id +'\', \'' + e.layer.feature.parent.label + '\', \'' + isPOI + '\', \'' + goToDetails + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">'
                 // (!Utils.isBrowser() ? '<button class="popup-close" onclick="closePopup()">' +
@@ -361,31 +363,38 @@ angular.module('webmapp')
 
                 if (e.layer.feature.properties.picture_url) {
                     content  = content +
-                        '<img class="popup-img" src="' + e.layer.feature.properties.picture_url + '" />' +
-                        '<div class="popup-content-img">' + 
-                            '<div class="popup-category">' +
-                                e.layer.feature.parent.label +
-                            '</div>' +
-                            '<div class="popup-title">' +
-                                e.layer.feature.properties.name +
-                            '</div>' +
-                        '</div>' +
-                        (goToDetails ? '<button class="popup-button"><i class="icon wm-icon-ios7-arrow-forward"></i></button>' : '') +
-                        '</div>';
+                        '<div class="popup-img">' + 
+                            '<img src="' + e.layer.feature.properties.picture_url + '" />' +
+                        '</div>' + 
+                        '<div class="popup-content-img">';
+                }
+                else if (e.layer.feature.properties.imageGallery) {
+                    content  = content +
+                    '<div class="popup-img">' + 
+                        '<img src="' + e.layer.feature.properties.imageGallery[0].src + '" />' +
+                    '</div>' + 
+                    '<div class="popup-content-img">';
                 }
                 else {
                     content  = content +
-                    '<div class="popup-content-full">' + 
+                    '<div class="popup-img">' + 
+                        '<i class="icon ' + e.layer.feature.properties.icon + '"></i>' +
+                    '</div>' +
+                    '<div class="popup-content-img">';
+                }
+
+                content = content + 
                         '<div class="popup-category">' +
                             e.layer.feature.parent.label +
                         '</div>' +
-                        '<div class="popup-title">' +
-                            e.layer.feature.properties.name +
-                        '</div>' +
+                        '<div class="popup-content-title">' + 
+                            '<div class="popup-title">' +
+                                e.layer.feature.properties.name +
+                            '</div>' +
+                        '</div>' + 
                     '</div>' +
                     (goToDetails ? '<button class="popup-button"><i class="icon wm-icon-ios7-arrow-forward"></i></button>' : '') +
                     '</div>';
-                }
 
                 L.popup()
                 .setLatLng({
@@ -398,28 +407,56 @@ angular.module('webmapp')
                 .openOn(map);
             }
         } else if (e && e.data && e.latlng) {
+            var content = '<div class="popup-div-margin" onclick="goToTileUtfGridDetail(\'' + e.data.id + '\', \'' + e.parent.label + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">'
+            // (!Utils.isBrowser() ? '<button class="popup-close" onclick="closePopup()">' +
+            //     '<i class="icon wm-icon-android-close"></i></button>' : '') +
+            ;
+
+            console.log(e);
+
+            if (e.layer && e.layer.feature.properties.picture_url) {
+                content  = content +
+                    '<img class="popup-img" src="' + e.layer.feature.properties.picture_url + '" />' +
+                    '<div class="popup-content-img">' + 
+                        '<div class="popup-category">' +
+                            e.parent.label +
+                        '</div>' +
+                        '<div class="popup-title">' +
+                            e.data.name +
+                        '</div>' +
+                    '</div>' +
+                    '<button class="popup-button"><i class="icon wm-icon-ios7-arrow-forward"></i></button>' +
+                    '</div>';
+            }
+            else {
+                content  = content +
+                '<div class="popup-content-full">' + 
+                    '<div class="popup-category">' +
+                        e.parent.label +
+                    '</div>' +
+                    '<div class="popup-title">' +
+                        e.data.name +
+                    '</div>' +
+                '</div>' +
+                '<button class="popup-button"><i class="icon wm-icon-ios7-arrow-forward"></i></button>' +
+                '</div>';
+            }
+
             L.popup()
                 .setLatLng({
                     lat: e.latlng.lat,
                     lng: e.latlng.lng
                 })
                 .setContent(
-                    '<p onclick="goToTileUtfGridDetail(\'' +
-                    e.data.id +
-                    '\', \'' +
-                    e.parent.label +
-                    '\', \'' +
-                    e.latlng.lat +
-                    '\', \'' +
-                    e.latlng.lng +
-                    '\')">' +
-                    // '<button class="popup-close" onclick="closePopup()">' +
-                    // '<i class="icon wm-icon-android-close"></i></button>' +
-                    '<span class="popup-title">' +
-                    e.data.name +
-                    '</span>' +
-                    '<button class="popup-button"><i class="icon wm-icon-ios7-arrow-forward"></i></button>' +
-                    '</p>'
+                    content
+                    // '<div class="popup-div-margin" onclick="goToTileUtfGridDetail(\'' + e.data.id + '\', \'' + e.parent.label + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">' +
+                    // // '<button class="popup-close" onclick="closePopup()">' +
+                    // // '<i class="icon wm-icon-android-close"></i></button>' +
+                    // '<span class="popup-title">' +
+                    // e.data.name +
+                    // '</span>' +
+                    // '<button class="popup-button"><i class="icon wm-icon-ios7-arrow-forward"></i></button>' +
+                    // '</div>'
                 )
                 .openOn(map);
         }

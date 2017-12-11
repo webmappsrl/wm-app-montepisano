@@ -1703,41 +1703,75 @@ button.login-button {
   border-radius: 0px;
   margin: 0;
   padding: 0;
-  padding-right: 13px; }
+  padding-right: 13px;
+  width: 310px; }
   .leaflet-popup-content-wrapper .leaflet-popup-content {
+    font-family: "Abel", sans-serif;
     margin: 0;
     padding: 0;
-    padding-right: 15px; }
-    .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div img {
-      width: 40%;
-      height: 90px; }
-    .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full,
-    .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img {
-      width: 100%;
-      padding-left: 10px; }
-      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-title,
-      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-category,
-      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-description,
-      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-title,
-      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-category,
-      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-description {
-        margin: 0;
+    padding-right: 20px;
+    height: 104px; }
+    .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div-margin {
+      padding: 10px; }
+    .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div {
+      overflow: hidden; }
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-img {
+        width: 103px;
+        height: 103px;
+        display: inline-block;
+        overflow: hidden; }
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-img img {
+          object-fit: cover;
+          width: 103px;
+          height: 103px; }
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-img i {
+          font-size: 103px;
+          opacity: 0.6; }
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full,
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img {
+        display: inline-block;
+        width: 100%;
+        padding: 10px; }
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-title,
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-content-title,
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-category,
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-description,
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-title,
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-content-title,
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-category,
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-description {
+          margin: 0;
+          padding: 0;
+          color: inherit; }
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-content-title,
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-content-title {
+          height: 84px; }
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-title,
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-title {
+          font-size: 23px;
+          line-height: 27px;
+          max-height: 81px;
+          overflow: hidden;
+          display: block;
+          display: -webkit-box;
+          max-width: 164px;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          text-overflow: ellipsis; }
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-category,
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-category {
+          height: 14px;
+          font-size: 14px;
+          margin: 3px 0;
+          color: #E2E2E2; }
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-description,
+        .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-description {
+          font-size: 15px; }
+      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img {
+        float: right;
+        width: 174px;
         padding: 0;
-        color: inherit; }
-      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-title,
-      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-title {
-        font-size: 23px; }
-      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-category,
-      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-category {
-        height: 14px;
-        font-size: 14px;
-        margin: 3px 0; }
-      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-description,
-      .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-description {
-        font-size: 15px; }
-    .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img {
-      float: right;
-      width: 60%; }
+        padding-left: 10px; }
 
 .leaflet-popup-content {
   width: auto !important;

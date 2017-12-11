@@ -416,25 +416,49 @@
   margin: 0;
   padding: 0;
   padding-right: 13px;
+  width: 310px;
 
   .leaflet-popup-content {
+    font-family: $main-font-family;
     margin: 0;
     padding: 0;
-    padding-right: 15px;
+    padding-right: 20px;
+    height: 104px;
+
+    div.popup-div-margin {
+      padding: 10px;
+    }
 
     div.popup-div {
+      overflow: hidden;
 
-      img {
-        width: 40%;
-        height: 90px;
+      div.popup-img {
+        width: 103px;
+        height: 103px;
+        display: inline-block;
+        overflow: hidden;
+
+        img {
+          object-fit: cover;
+          width: 103px;
+          height: 103px;
+        }
+
+        i {
+          font-size: 103px;
+          opacity: 0.6;
+        }
       }
   
       div.popup-content-full,
       div.popup-content-img {
+        display: inline-block;
         width: 100%;
-        padding-left: 10px;
+        // padding-left: 10px;
+        padding: 10px;
 
         .popup-title,
+        .popup-content-title,
         .popup-category,
         .popup-description {
           margin: 0;
@@ -442,17 +466,36 @@
           color: inherit;
           // font-family: $main-font-family;
         }
+
+        .popup-content-title {
+          height: 84px;
+          // To center vertically
+          // display: table;
+        }
       
         .popup-title {
-          // margin-bottom: 5px;
           font-size: 23px;
-          // height: 70px;
+          line-height: 27px;
+          max-height: 81px;
+          overflow: hidden;
+
+          display: block;
+          display: -webkit-box;
+          max-width: 164px;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          text-overflow: ellipsis;
+
+          // To center vertically
+          // vertical-align: middle;
+          // display: table-cell;
         }
 
         .popup-category {
           height: 14px;
           font-size: 14px;
           margin: 3px 0;
+          color: #E2E2E2;
         }
       
         .popup-description {
@@ -462,7 +505,9 @@
 
       div.popup-content-img {
         float: right;
-        width: 60%;
+        width: 174px;
+        padding: 0;
+        padding-left: 10px;
       }
     }
   }
