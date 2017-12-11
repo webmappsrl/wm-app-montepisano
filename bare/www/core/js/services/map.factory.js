@@ -378,7 +378,9 @@ angular.module('webmapp')
                 else {
                     content  = content +
                     '<div class="popup-img">' + 
-                        '<i class="icon ' + e.layer.feature.properties.icon + '"></i>' +
+                        '<div>' + 
+                            '<i class="icon ' + e.layer.feature.properties.icon + '"></i>' +
+                        '</div>' + 
                     '</div>' +
                     '<div class="popup-content-img">';
                 }
