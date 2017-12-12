@@ -1707,6 +1707,7 @@ button.login-button {
   width: 310px; }
   .leaflet-popup-content-wrapper .leaflet-popup-content {
     font-family: "Abel", sans-serif;
+    font-weight: 700;
     margin: 0;
     padding: 0;
     padding-right: 20px;
@@ -1729,8 +1730,7 @@ button.login-button {
           margin: 5px;
           padding: 20px; }
           .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-img div i {
-            font-size: 53px;
-            opacity: 0.6; }
+            font-size: 53px; }
       .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full,
       .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img {
         display: inline-block;
@@ -1765,9 +1765,14 @@ button.login-button {
         .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-category,
         .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-category {
           height: 14px;
+          line-height: 14px;
+          width: 164px;
           font-size: 14px;
           margin: 3px 0;
-          color: #E2E2E2; }
+          color: #E2E2E2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis; }
         .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-full .popup-description,
         .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-content-img .popup-description {
           font-size: 15px; }

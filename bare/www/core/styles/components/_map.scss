@@ -420,6 +420,7 @@
 
   .leaflet-popup-content {
     font-family: $main-font-family;
+    font-weight: 700;
     margin: 0;
     padding: 0;
     padding-right: 20px;
@@ -452,7 +453,7 @@
           padding:20px;
           i {
             font-size: 53px;
-            opacity: 0.6;
+            // opacity: 0.6;
           }
         }
       }
@@ -500,9 +501,14 @@
 
         .popup-category {
           height: 14px;
+          line-height: 14px;
+          width: 164px;
           font-size: 14px;
           margin: 3px 0;
           color: #E2E2E2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       
         .popup-description {
