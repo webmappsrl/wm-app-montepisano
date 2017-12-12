@@ -353,8 +353,6 @@ angular.module('webmapp')
             var goToDetails = !e.layer.feature.properties.noDetails;
             var interaction = !e.layer.feature.properties.noInteraction;
 
-            console.log(e.layer.feature.properties);
-
             if (interaction) {
                 var content = '<div class="popup-div" onclick="goToDetail(\'' + e.layer.feature.properties.id +'\', \'' + e.layer.feature.parent.label + '\', \'' + isPOI + '\', \'' + goToDetails + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">'
                 // (!Utils.isBrowser() ? '<button class="popup-close" onclick="closePopup()">' +
@@ -365,15 +363,13 @@ angular.module('webmapp')
                     content  = content +
                         '<div class="popup-img">' + 
                             '<img src="' + e.layer.feature.properties.picture_url + '" />' +
-                        '</div>' + 
-                        '<div class="popup-content-img">';
+                        '</div>';
                 }
                 else if (e.layer.feature.properties.imageGallery) {
                     content  = content +
                     '<div class="popup-img">' + 
                         '<img src="' + e.layer.feature.properties.imageGallery[0].src + '" />' +
-                    '</div>' + 
-                    '<div class="popup-content-img">';
+                    '</div>';
                 }
                 else {
                     content  = content +
@@ -381,11 +377,11 @@ angular.module('webmapp')
                         '<div>' + 
                             '<i class="icon ' + e.layer.feature.properties.icon + '"></i>' +
                         '</div>' + 
-                    '</div>' +
-                    '<div class="popup-content-img">';
+                    '</div>';
                 }
 
                 content = content + 
+                    '<div class="popup-content-img">' +
                         '<div class="popup-category">' +
                             e.layer.feature.parent.label +
                         '</div>' +
@@ -409,30 +405,29 @@ angular.module('webmapp')
                 .openOn(map);
             }
         } else if (e && e.data && e.latlng) {
-            var content = '<div class="popup-div-margin" onclick="goToTileUtfGridDetail(\'' + e.data.id + '\', \'' + e.parent.label + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">'
+            var content = '<div class="popup-div" onclick="goToTileUtfGridDetail(\'' + e.data.id + '\', \'' + e.parent.label + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">'
             // (!Utils.isBrowser() ? '<button class="popup-close" onclick="closePopup()">' +
             //     '<i class="icon wm-icon-android-close"></i></button>' : '') +
             ;
 
             console.log(e);
 
-            if (e.layer && e.layer.feature.properties.picture_url) {
+            // Check for pictures linked
+            // if (false) {
+            //     content  = content +
+            //         '<img class="popup-img" src="' + e.layer.feature.properties.picture_url + '" />';
+            // }
+            // else {
                 content  = content +
-                    '<img class="popup-img" src="' + e.layer.feature.properties.picture_url + '" />' +
-                    '<div class="popup-content-img">' + 
-                        '<div class="popup-category">' +
-                            e.parent.label +
-                        '</div>' +
-                        '<div class="popup-title">' +
-                            e.data.name +
-                        '</div>' +
-                    '</div>' +
-                    '<button class="popup-button"><i class="icon wm-icon-ios7-arrow-forward"></i></button>' +
+                    '<div class="popup-img">' + 
+                        '<div>' + 
+                            '<i class="icon wm-icon-trail"></i>' +
+                        '</div>' + 
                     '</div>';
-            }
-            else {
-                content  = content +
-                '<div class="popup-content-full">' + 
+            // }
+
+            content = content +
+                '<div class="popup-content-img">' + 
                     '<div class="popup-category">' +
                         e.parent.label +
                     '</div>' +
@@ -441,8 +436,8 @@ angular.module('webmapp')
                     '</div>' +
                 '</div>' +
                 '<button class="popup-button"><i class="icon wm-icon-ios7-arrow-forward"></i></button>' +
-                '</div>';
-            }
+                '</div>'
+
 
             L.popup()
                 .setLatLng({
