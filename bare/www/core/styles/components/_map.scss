@@ -412,7 +412,7 @@
 }
 
 .leaflet-popup-content-wrapper {
-  border-radius: 10px;
+  border-radius: 4px;
   margin: 0;
   padding: 0;
   padding-right: 13px;
@@ -442,13 +442,13 @@
           object-fit: cover;
           width: 103px;
           height: 103px;
-          border-radius: 10px 0 0 10px;
+          border-radius: 4px 0 0 4px;
         }
 
         div {
-          margin: 4px;
-          border: 1px solid #CCCCCC;
-          border-radius: 10px;
+          margin: 5px;
+          // border: 1px solid #CCCCCC;
+          // border-radius: 10px;
           padding:20px;
           i {
             font-size: 53px;

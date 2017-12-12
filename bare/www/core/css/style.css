@@ -1700,7 +1700,7 @@ button.login-button {
   box-shadow: 0 0 3px rgba(18, 16, 11, 0.75); }
 
 .leaflet-popup-content-wrapper {
-  border-radius: 10px;
+  border-radius: 4px;
   margin: 0;
   padding: 0;
   padding-right: 13px;
@@ -1724,11 +1724,9 @@ button.login-button {
           object-fit: cover;
           width: 103px;
           height: 103px;
-          border-radius: 10px 0 0 10px; }
+          border-radius: 4px 0 0 4px; }
         .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-img div {
-          margin: 4px;
-          border: 1px solid #CCCCCC;
-          border-radius: 10px;
+          margin: 5px;
           padding: 20px; }
           .leaflet-popup-content-wrapper .leaflet-popup-content div.popup-div div.popup-img div i {
             font-size: 53px;
