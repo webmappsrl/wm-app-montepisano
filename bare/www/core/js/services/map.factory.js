@@ -61,7 +61,7 @@ angular.module('webmapp')
 
     var skipAreaClick = null;
 
-    var polylineDecoratorLayers = {};
+    // var polylineDecoratorLayers = {};
 
     var controlLocate = null;
 

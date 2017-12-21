@@ -1,5 +1,4 @@
 angular.module('webmapp')
-
     .filter('orderObjectByName', function () {
         return function (input) {
             var results = [],
@@ -25,7 +24,6 @@ angular.module('webmapp')
     });
 
 angular.module('webmapp')
-
     .filter('categoryFilter', function (
         $translate
     ) {
@@ -55,6 +53,26 @@ angular.module('webmapp')
                 }
             }
 
+            return results;
+        };
+    });
+
+angular.module('webmapp')
+    .filter('packagesSearchFilter', function (
+    ) {
+        return function (input, search) {
+            var results = [],
+                pattern = new RegExp(search.toLowerCase());
+
+            if (search === "") {
+                return input;
+            }
+
+            for (var id in input) {
+                if (pattern.test(input[id].title.rendered.toLowerCase()) || pattern.test(input[id].n7webmapp_route_cod.toLowerCase())) {
+                    results.push(input[id]);
+                }
+            }
             return results;
         };
     });

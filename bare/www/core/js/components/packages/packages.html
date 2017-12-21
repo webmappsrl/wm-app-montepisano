@@ -19,6 +19,10 @@
             ng-click="vm.openFilters()"></button>
     </ion-nav-buttons>
 
+    <div id="search-fixed">
+        <input type="search" placeholder="{{::'cerca' | translate}}" ng-model="vm.search" />
+    </div>
+
     <ion-content
         style="color: {{COLORS.global.color}}; background: {{COLORS.global.background}}">
         <ion-refresher
@@ -38,17 +42,18 @@
         <div
             class="static-content card-content">
             <!-- <div
-            ng-if="!vm.isLoggedIn"
-            ng-click="vm.openLoginOrRegistration()">
-            <button style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}}; margin-top: 150px!important"
-                    class="button-download button button-block">
-                Accedi
-            </button>
-        </div> -->
+                ng-if="!vm.isLoggedIn"
+                ng-click="vm.openLoginOrRegistration()">
+                <button style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}}; margin-top: 150px!important"
+                        class="button-download button button-block">
+                    Accedi
+                </button>
+            </div> -->
+
             <div
                 class="modal-inner-content modal-two-columns coupons-list"
                 ng-if="(vm.isLoggedIn || !vm.useLogin) && vm.type !== 'reduced'"
-                ng-repeat="item in vm.packages | categoryFilter : vm.filters">
+                ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search">
                 <div 
                     class="packages-title"
                     ng-bind-html="item.title.rendered">
@@ -108,7 +113,7 @@
             <div
                 class="modal-inner-content modal-two-columns coupons-list reduced-list"
                 ng-if="(vm.isLoggedIn || !vm.useLogin) && vm.type === 'reduced'"
-                ng-repeat="item in vm.packages | categoryFilter : vm.filters">
+                ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search">
                 <div class="details-image-reduced">
                     <img class="modal-image" ng-src="{{item.imgUrl}}" ng-model="item.imgUrl">
                 </div>

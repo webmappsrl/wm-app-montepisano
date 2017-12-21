@@ -240,7 +240,6 @@ gulp.task('complete-update', function () {
     sh.exec("gulp sass", {
         cwd: 'bare/'
     });
-    sh.exec("gulp add-resources");
     sh.exec("gulp update-instance -i " + instance_name);
     sh.exec("gulp update -i " + instance_name + " -u " + url);
 });

@@ -212,6 +212,7 @@ angular.module('webmapp')
         vm.isBrowser = Utils.isBrowser();
         vm.openInAppBrowser = Utils.openInAppBrowser;
         vm.pageConf = Model.getPage('Pacchetti');
+        vm.search = "";
         vm.filters = {};
 
         if (Auth.isLoggedIn()) {
