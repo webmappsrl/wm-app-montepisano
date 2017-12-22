@@ -69,7 +69,9 @@ angular.module('webmapp')
             }
 
             for (var id in input) {
-                if (pattern.test(input[id].title.rendered.toLowerCase()) || pattern.test(input[id].n7webmapp_route_cod.toLowerCase())) {
+                if (pattern.test(input[id].title.rendered.toLowerCase()) ||
+                    pattern.test(input[id].n7webmapp_route_cod.toLowerCase()) ||
+                    pattern.test(input[id].packageTitle.toLowerCase())) {
                     results.push(input[id]);
                 }
             }
