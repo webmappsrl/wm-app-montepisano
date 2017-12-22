@@ -20,7 +20,7 @@ angular.module('webmapp')
 
     var offlineScope = $rootScope.$new();
 
-    // vm.languages = CONFIG.LANGUAGES.available;
+    vm.languages = CONFIG.LANGUAGES.available;
     vm.currentLang = $translate.preferredLanguage();
 
     var setLanguage = function(lang) {
