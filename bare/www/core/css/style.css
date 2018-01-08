@@ -2945,7 +2945,7 @@ ion-modal-view.modal-download {
     padding: 0 15px;
     background-color: #FCFDF7; }
 
-ion-content ion-content.scroll-content {
+ion-content ion-content.withSearchBar.scroll-content {
   padding-top: 40px; }
 
 .packages-title {
@@ -3073,3 +3073,14 @@ div#settingsContent {
     margin: 0 auto;
     height: 3em;
     vertical-align: middle; }
+
+/**
+ * CUSTOM PAGE
+ *
+ * Style for details page
+ */
+/* ------------------------------------ *   #GENERAL
+\* ------------------------------------ */
+ion-content.fullView {
+  padding: 0;
+  margin: 0; }

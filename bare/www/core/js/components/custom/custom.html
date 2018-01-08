@@ -13,7 +13,9 @@
             menu-toggle="left"></button>
     </ion-nav-buttons>
 
-    <ion-content style="color: black; background: {{COLORS.global.background}}">
+    <ion-content 
+        class="fullView"
+        style="color: black; background: {{COLORS.global.background}}">
         <ion-item 
             class="item item-icon-left back-item"
             style="background: {{COLORS.subnav.background}}; color: {{COLORS.subnav.color}}"
@@ -22,10 +24,10 @@
             <i class="icon ion-ios-arrow-left"></i>
             {{vm.mainCategory.label}}
         </ion-item>
-        <br>
+        <br ng-if="vm.isAPageChild">
         <div
             style="text-align: left"
-            class="static-content card-content"
+            class="static-content"
             compile="vm.body">
         </div>
     </ion-content>
