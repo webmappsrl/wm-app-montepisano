@@ -116,7 +116,8 @@ angular.module('webmapp')
         if (typeof mappingTable !== 'undefined') {
             for (var i in mappingTable) {
                 if (typeof _feature[i] !== 'undefined' &&
-                    _feature[i] !== null) {
+                    _feature[i] !== null &&
+                    _feature[i] !== "") {
                     vm.hasTable = true;
                     vm.detailTable[i] = mappingTable[i];
                 }
@@ -244,7 +245,6 @@ angular.module('webmapp')
 
             vm.relatedItinerary = MapService.getItineraryRefByFeatureIdMap()[feature.id] || [];
             vm.feature = feature;
-            console.log(vm.feature);
             vm.geometry = data.geometry;
             vm.coordinates = data.geometry.coordinates.toString();
         }
