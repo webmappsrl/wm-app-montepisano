@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?ews5xi');
-  src:  url('fonts/webmapp.eot?ews5xi#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?ews5xi') format('truetype'),
-    url('fonts/webmapp.woff?ews5xi') format('woff'),
-    url('fonts/webmapp.svg?ews5xi#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?z4ttny');
+  src:  url('fonts/webmapp.eot?z4ttny#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?z4ttny') format('truetype'),
+    url('fonts/webmapp.woff?z4ttny') format('woff'),
+    url('fonts/webmapp.svg?z4ttny#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -2383,9 +2383,12 @@
 .wm-icon-xbox:before {
   content: "\f30c";
 }
-.wm-icon-layers:before {
-  content: "\e924";
-}
 .wm-icon-filter:before {
   content: "\f0b0";
+}
+.wm-icon-funnel-wm:before {
+  content: "\e9b9";
+}
+.wm-icon-layers:before {
+  content: "\e924";
 }
