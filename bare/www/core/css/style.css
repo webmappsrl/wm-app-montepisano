@@ -3084,3 +3084,43 @@ div#settingsContent {
 ion-content.fullView {
   padding: 0;
   margin: 0; }
+
+/**
+ * CUSTOM PAGE
+ *
+ * Style for details page
+ */
+/* ------------------------------------ *   #GENERAL
+\* ------------------------------------ */
+ion-content button-icon.icon::before {
+  font-size: 40px; }
+
+ion-content div.width-1 {
+  width: 100%; }
+
+ion-content div.width-2 {
+  width: 50%;
+  float: left; }
+
+ion-content div.width-3 {
+  width: calc(100% / 3);
+  float: left; }
+
+ion-content div.height-1 {
+  height: 100%; }
+
+ion-content div.height-2 {
+  height: 50%; }
+
+ion-content div.height-3 {
+  height: calc(100% / 3); }
+
+ion-content div.height-4 {
+  height: 25%; }
+
+ion-content div.home-content {
+  font-size: 20px;
+  text-align: center;
+  margin: 0 auto; }
+  ion-content div.home-content div.home-icon {
+    margin: 10% 0; }

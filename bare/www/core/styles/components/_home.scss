@@ -1,0 +1,47 @@
+/**
+ * CUSTOM PAGE
+ *
+ * Style for details page
+ */
+
+/* ------------------------------------ *\
+   #GENERAL
+\* ------------------------------------ */
+ion-content {
+  button-icon.icon::before {
+    font-size: 40px;
+  }
+  
+  div.width-1 {
+    width: 100%;
+  }
+  div.width-2 {
+    width: 50%;
+    float: left;
+  }
+  div.width-3 {
+    width: calc(100% / 3);
+    float: left;
+  }
+  div.height-1 {
+    height: 100%;
+  }
+  div.height-2 {
+    height: 50%;
+  }
+  div.height-3 {
+    height: calc(100% / 3);
+  }
+  div.height-4 {
+    height: 25%;
+  }
+
+  div.home-content {
+    font-size: 20px;
+    text-align: center;
+    margin: 0 auto;
+    div.home-icon {
+      margin: 10% 0;
+    }
+  }
+}
