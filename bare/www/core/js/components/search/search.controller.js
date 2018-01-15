@@ -96,7 +96,6 @@ angular.module('webmapp')
             }
         }
 
-        console.log(array, translated);
         return translated;
     };
 

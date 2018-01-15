@@ -95,6 +95,10 @@ angular.module('webmapp')
             realType = separator = '';
         }
 
+        if (realType === "packages") {
+            realUrl = "";
+        }
+
         return realType + separator + realUrl;
     };
 

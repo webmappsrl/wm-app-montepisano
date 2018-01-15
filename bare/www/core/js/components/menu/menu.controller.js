@@ -219,7 +219,6 @@ angular.module('webmapp')
                     loginScope.logging = true;
                     Account.createAccount(firstName, lastName, email, password, newsletter, true)
                         .then(function(data) {
-                            console.log(data);
                             $ionicPopup.alert({
                                 title: $translate.instant("REGISTRAZIONE"),
                                 template: $translate.instant("Complimenti ti sei appena registrato"),

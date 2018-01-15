@@ -23,6 +23,8 @@ angular.module('webmapp')
     vm.columns = 1;
     vm.rows = 1;
     var communicationConf = CONFIG.COMMUNICATION;
+    vm.title = "Cosa vuoi fare?";
+    vm.asyncTranslations = 0;
 
     vm.currentLang = $translate.preferredLanguage();
 
@@ -47,16 +49,23 @@ angular.module('webmapp')
     var translateCategory = function(id){
         return $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'webmapp_category/' + id + "?lang=" + vm.currentLang, function (data) {
             vm.categories[id].name = data.name;
+            vm.asyncTranslations--;
+            if (vm.asyncTranslations === 0) {
+                $ionicLoading.hide();
+            }
             return;
         }).fail(function () {
             console.error('Translations retrive error');
+            vm.asyncTranslations--;
+            if (vm.asyncTranslations === 0) {
+                $ionicLoading.hide();
+            }
             return 'Translations retrive error';
         });
     };
 
     var getCategoriesName = function () {
         return $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'webmapp_category?per_page=100', function (data) {
-            console.log(data);
             vm.categories = {};
             var totalCategories = 0;
 
@@ -72,66 +81,68 @@ angular.module('webmapp')
                 }, this);
             }, this);
 
-            vm.categories[1] = {
-                name: "prova",
-                icon: "wm-icon-bicycle-15"
-            };
-            totalCategories++;
-            vm.categories[2] = {
-                name: "prova",
-                icon: "wm-icon-bicycle-15"
-            };
-            totalCategories++;
-            vm.categories[3] = {
-                name: "prova",
-                icon: "wm-icon-bicycle-15"
-            };
-            totalCategories++;
-            vm.categories[4] = {
-                name: "prova",
-                icon: "wm-icon-bicycle-15"
-            };
-            totalCategories++;
-            vm.categories[5] = {
-                name: "prova",
-                icon: "wm-icon-bicycle-15"
-            };
-            totalCategories++;
-            vm.categories[6] = {
-                name: "prova",
-                icon: "wm-icon-bicycle-15"
-            };
-            totalCategories++;
-            vm.categories[7] = {
-                name: "prova",
-                icon: "wm-icon-bicycle-15"
-            };
-            totalCategories++;
-            vm.categories[8] = {
-                name: "prova",
-                icon: "wm-icon-bicycle-15"
-            };
-            totalCategories++;
-            vm.categories[9] = {
-                name: "prova",
-                icon: "wm-icon-bicycle-15"
-            };
-            totalCategories++;
-            vm.categories[10] = {
-                name: "prova",
-                icon: "wm-icon-bicycle-15"
-            };
-            totalCategories++;
-            vm.categories[11] = {
-                name: "prova",
-                icon: "wm-icon-bicycle-15"
-            };
-            totalCategories++;
-            vm.categories[12] = {
-                name: "prova",
-                icon: "wm-icon-bicycle-15"
-            };
-            totalCategories++;
+            // {
+            //     vm.categories[1] = {
+            //         name: "prova",
+            //         icon: "wm-icon-bicycle-15"
+            //     };
+            //     totalCategories++;
+            //     vm.categories[2] = {
+            //         name: "prova",
+            //         icon: "wm-icon-bicycle-15"
+            //     };
+            //     totalCategories++;
+            //     vm.categories[3] = {
+            //         name: "prova",
+            //         icon: "wm-icon-bicycle-15"
+            //     };
+            //     totalCategories++;
+            //     vm.categories[4] = {
+            //         name: "prova",
+            //         icon: "wm-icon-bicycle-15"
+            //     };
+            //     totalCategories++;
+            //     vm.categories[5] = {
+            //         name: "prova",
+            //         icon: "wm-icon-bicycle-15"
+            //     };
+            //     totalCategories++;
+            //     vm.categories[6] = {
+            //         name: "prova",
+            //         icon: "wm-icon-bicycle-15"
+            //     };
+            //     totalCategories++;
+            //     vm.categories[7] = {
+            //         name: "prova",
+            //         icon: "wm-icon-bicycle-15"
+            //     };
+            //     totalCategories++;
+            //     vm.categories[8] = {
+            //         name: "prova",
+            //         icon: "wm-icon-bicycle-15"
+            //     };
+            //     totalCategories++;
+            //     vm.categories[9] = {
+            //         name: "prova",
+            //         icon: "wm-icon-bicycle-15"
+            //     };
+            //     totalCategories++;
+            //     vm.categories[10] = {
+            //         name: "prova",
+            //         icon: "wm-icon-bicycle-15"
+            //     };
+            //     totalCategories++;
+            //     vm.categories[11] = {
+            //         name: "prova",
+            //         icon: "wm-icon-bicycle-15"
+            //     };
+            //     totalCategories++;
+            //     vm.categories[12] = {
+            //         name: "prova",
+            //         icon: "wm-icon-bicycle-15"
+            //     };
+            //     totalCategories++;
+            // }
 
             switch (totalCategories) {
                 case 1: case 2: case 3:
@@ -176,12 +187,15 @@ angular.module('webmapp')
                     vm.categories[category.id].icon = category.icon;
 
                     if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual && vm.currentLang !== CONFIG.LANGUAGES.actual) {
+                        vm.asyncTranslations++;
                         translateCategory(category.id);
                     }
                 }
             });
 
-            $ionicLoading.hide();
+            if (vm.asyncTranslations === 0) {
+                $ionicLoading.hide();
+            }
 
             return;
         }).fail(function (error) {
@@ -189,6 +203,10 @@ angular.module('webmapp')
             console.error('categories retrive error');
             return 'categories retrive error';
         });
+    };
+
+    vm.goTo = function (id) {
+        Utils.goTo('packages/' + id);
     };
 
     getRoutes();

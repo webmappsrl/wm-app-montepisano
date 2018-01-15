@@ -8,40 +8,69 @@
    #GENERAL
 \* ------------------------------------ */
 ion-content {
-  button-icon.icon::before {
-    font-size: 40px;
-  }
-  
-  div.width-1 {
-    width: 100%;
-  }
-  div.width-2 {
-    width: 50%;
-    float: left;
-  }
-  div.width-3 {
-    width: calc(100% / 3);
-    float: left;
-  }
-  div.height-1 {
-    height: 100%;
-  }
-  div.height-2 {
-    height: 50%;
-  }
-  div.height-3 {
-    height: calc(100% / 3);
-  }
-  div.height-4 {
-    height: 25%;
+  div.home-title {
+    padding: 4vh;
+    font-size: 25px;
+    text-align: center;
   }
 
   div.home-content {
-    font-size: 20px;
-    text-align: center;
-    margin: 0 auto;
-    div.home-icon {
-      margin: 10% 0;
+    width: 100%;
+    height: calc(100vh - 44px - 25px - 8vh);
+    div.width-1 {
+      width: 100%;
+    }
+    div.width-2 {
+      width: 50%;
+      float: left;
+    }
+    div.width-3 {
+      width: calc(100% / 3);
+      float: left;
+    }
+    div.height-1 {
+      height: 100%;
+    }
+    div.height-2 {
+      height: 50%;
+    }
+    div.height-3 {
+      height: calc(100% / 3);
+    }
+    div.height-4 {
+      height: 25%;
+    }
+  
+    div.home-button {
+      font-size: 20px;
+      text-align: center;
+      margin: 0 auto;
+      color: rgb(99, 98, 93);
+      div.home-icon {
+        padding: 14% 0 3% 0;
+        .icon:before {
+          font-size: 40px;
+        }
+      }
+    }
+  
+    div.home-button.height-1.width-1,
+    div.home-button.height-1.width-2,
+    div.home-button.height-2.width-1,
+    div.home-button.height-2.width-2,
+    div.home-button.height-3.width-1,
+    div.home-button.height-3.width-2 {
+      div.home-icon {
+        padding: 20% 0 3% 0;
+        .icon:before {
+          font-size: 60px;
+        }
+      }
+    }
+
+    div.home-button:active {
+      color: rgb(68, 64, 64);
+      background: #dddddd;
     }
   }
 }

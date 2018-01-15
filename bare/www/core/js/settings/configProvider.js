@@ -44,7 +44,6 @@ angular.module('webmapp')
 
         if (!!localStorage.$wm_mhildBaseUrl) {
             mhildBaseUrl = localStorage.$wm_mhildBaseUrl;
-            console.log(mhildBaseUrl)
             config.MAP.layers[0].tilesUrl = mhildBaseUrl + config.MAP.layers[0].tilesUrl;
 
             for (var i = 0; i < config.OVERLAY_LAYERS.length; i++) {

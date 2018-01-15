@@ -4,6 +4,7 @@ angular.module('webmapp')
         $http,
         $q,
         $scope,
+        $state,
         $ionicPlatform,
         $rootScope,
         $ionicPopup,
@@ -142,7 +143,6 @@ angular.module('webmapp')
 
         var getRoutes = function () {
             $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/', function (data) {
-                console.log(data);
                 if (!vm.useLogin) {
                     for (var pos in data) {
                         if (data[pos].wm_route_public) {
@@ -509,6 +509,18 @@ angular.module('webmapp')
                 };
                 vm.filters = angular.extend(tmp, vm.filters);
             }
+
+            //Apply selected filter in homepage
+            if ($state.params.id && $state.params.id !== "") {
+                for (var category in vm.filters) {
+                    if (category === $state.params.id) {
+                        vm.filters[category].value = true;
+                    }
+                    else {
+                        vm.filters[category].value = false;
+                    }
+                }
+            }
         };
 
         modalFiltersScope.vm.updateFilter = function (filterName, value) {
@@ -547,9 +559,10 @@ angular.module('webmapp')
         getCategoriesName();
 
         vm.truncateTitle = function(title) {
+
             var ret = title;
             var maxLength = 44;
-            if (ret.length > maxLength) {
+            if (ret.length && ret.length > maxLength) {
                 ret = ret.substr(0, maxLength - 3) + "...";
             }
 

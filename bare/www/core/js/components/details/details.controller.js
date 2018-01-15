@@ -551,7 +551,5 @@ angular.module('webmapp')
         $rootScope.$emit('toggle-list', vm.isListExpanded);
     };
 
-    console.log(vm);
-
     return vm;
 });
