@@ -562,7 +562,7 @@ angular.module('webmapp')
 
             var ret = title;
             var maxLength = 44;
-            if (ret.length && ret.length > maxLength) {
+            if (ret && ret.length && ret.length > maxLength) {
                 ret = ret.substr(0, maxLength - 3) + "...";
             }
 
