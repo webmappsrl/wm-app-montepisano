@@ -1391,10 +1391,11 @@ angular.module('webmapp')
             controlLocate = L.control.locate({
                 remainActive: false,
                 position: 'topleft',
+                setView: false,
                 locateOptions: {
                     enableHighAccuracy: true,
-                    watch: true,
-                    setView: true
+                    watch: false,
+                    setView: false
                 },
                 onLocationOutsideMapBounds: function() {
                     // TODO: add language and message in settings

@@ -129,6 +129,9 @@ angular.module('webmapp')
     vm.followActive = false;
     vm.isRotating = false;
     vm.canFollow = false;
+
+    vm.dragged = false;
+
     vm.deg = 0;
     vm.colors = CONFIG.STYLE;
     vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
@@ -280,7 +283,14 @@ angular.module('webmapp')
             return;
         }
 
-        MapService.startControlLocate();
+        if (vm.dragged) {
+            vm.dragged = false;
+            MapService.centerOnCoords(prevLatLong.lat, prevLatLong.long);
+            return;
+        }
+        else {
+            MapService.startControlLocate();
+        }
 
         if (vm.canFollow || vm.isRotating) {
             if (vm.isRotating) {
@@ -346,7 +356,10 @@ angular.module('webmapp')
                                 doCenter = true;
                             }
 
-                            if (doCenter) {
+                            console.log(position, vm.dragged);
+
+                            if (doCenter && !vm.dragged) {
+                                console.log("yes");
                                 MapService.centerOnCoords(lat, long);
                             }
 
@@ -615,7 +628,8 @@ angular.module('webmapp')
 
     $rootScope.$on('map-dragstart', function(e, value) {
         vm.locateLoading = false;
-        vm.turnOffGeolocationAndRotion();
+        vm.dragged = true;
+        // vm.turnOffGeolocationAndRotion();
     });
 
     window.addEventListener('orientationchange', function() {

@@ -102,18 +102,18 @@
                     <span 
                         class="icon"
                         ng-class="{
-                            'wm-icon-android-locate-full': !vm.followActive,
+                            'wm-icon-android-locate-full': !vm.followActive || vm.dragged,
                             'fa-spin': vm.locateLoading && !vm.followActive
                         }"
                         style="-webkit-transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg); transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg)">
                         <img
                             style="margin: 5px" 
                             src="core/images/compass.svg"
-                            ng-if="vm.followActive && !vm.isRotating">
+                            ng-if="vm.followActive && !vm.isRotating && !vm.dragged">
                         <img
                             style="margin: 5px" 
                             src="core/images/compass_.svg"
-                            ng-if="vm.followActive && vm.isRotating">
+                            ng-if="vm.followActive && vm.isRotating && !vm.dragged">
                         </span>
                 </a>
             </div>
