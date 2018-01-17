@@ -352,21 +352,25 @@ angular.module('webmapp')
 
                             if (!prevLatLong) {
                                 doCenter = true;
-                            } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 10) {
+                                console.log(prevLatLong);
+                            } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 6) {
                                 doCenter = true;
+                                console.log(distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long));
                             }
 
-                            console.log(position, vm.dragged);
+                            console.log(position, !vm.dragged && doCenter);
 
-                            if (doCenter && !vm.dragged) {
-                                console.log("yes");
-                                MapService.centerOnCoords(lat, long);
+                            if (doCenter) {
+                                MapService.drawPosition(position);
+                                if (!vm.dragged) {
+                                    console.log("yes");
+                                    MapService.centerOnCoords(lat, long);
+                                    prevLatLong = {
+                                        lat: lat,
+                                        long: long
+                                    };
+                                }
                             }
-
-                            prevLatLong = {
-                                lat: lat,
-                                long: long
-                            };
                         };
 
                         if (!MapService.isInBoundingBox(lat, long)) {

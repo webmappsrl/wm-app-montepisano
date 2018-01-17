@@ -55,53 +55,53 @@ angular.module('webmapp')
             var errors = 0;
                 warnings = 0;
 
-        //     if (config.INCLUDE.url) {
-        //         var url = config.COMMUNICATION.baseUrl + config.INCLUDE.url;
-        //         var data = getAsyncJSON(url);
+            if (config.INCLUDE.url) {
+                var url = config.COMMUNICATION.baseUrl + config.INCLUDE.url;
+                var data = getAsyncJSON(url);
 
-        //         if (data === "ERROR") {
-        //             var value = localStorage.getItem(url);
-        //             if (value) {
-        //                 var tmp = {};
-        //                 tmp[i] = JSON.parse(value);
-        //                 config = angular.extend(config, tmp);
+                if (data === "ERROR") {
+                    var value = localStorage.getItem(url);
+                    if (value) {
+                        var tmp = {};
+                        tmp[i] = JSON.parse(value);
+                        config = angular.extend(config, tmp);
 
-        //                 warnings++;
-        //             }
-        //             else {
-        //                 errors++;
-        //             }
-        //         }
-        //         else {
-        //             config = angular.extend(config, data);
-        //             localStorage.setItem(url, JSON.stringify(data));
-        //         }
-        //     }
-        //     else {
-        //         for (var i in config.INCLUDE) {
-        //             var url = config.COMMUNICATION.baseUrl + config.INCLUDE[i];
-        //             var data = getAsyncJSON(url);
-        //             if (data === "ERROR") {
-        //                 var value = localStorage.getItem(url);
-        //                 if (value) {
-        //                     var tmp = {};
-        //                     tmp[i] = JSON.parse(value);
-        //                     config = angular.extend(config, tmp);
+                        warnings++;
+                    }
+                    else {
+                        errors++;
+                    }
+                }
+                else {
+                    config = angular.extend(config, data);
+                    localStorage.setItem(url, JSON.stringify(data));
+                }
+            }
+            else {
+                for (var i in config.INCLUDE) {
+                    var url = config.COMMUNICATION.baseUrl + config.INCLUDE[i];
+                    var data = getAsyncJSON(url);
+                    if (data === "ERROR") {
+                        var value = localStorage.getItem(url);
+                        if (value) {
+                            var tmp = {};
+                            tmp[i] = JSON.parse(value);
+                            config = angular.extend(config, tmp);
     
-        //                     warnings++;
-        //                 }
-        //                 else {
-        //                     errors++;
-        //                 }
-        //             }
-        //             else {
-        //                 var tmp = {};
-        //                 tmp[i] = data;
-        //                 config = angular.extend(config, tmp);
-        //                 localStorage.setItem(url, JSON.stringify(data));
-        //             }
-        //         }
-        //     }
+                            warnings++;
+                        }
+                        else {
+                            errors++;
+                        }
+                    }
+                    else {
+                        var tmp = {};
+                        tmp[i] = data;
+                        config = angular.extend(config, tmp);
+                        localStorage.setItem(url, JSON.stringify(data));
+                    }
+                }
+            }
 
             if (errors > 0) {
                 $ionicPopup.alert({

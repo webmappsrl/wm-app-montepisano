@@ -64,6 +64,16 @@ angular.module('webmapp')
     // var polylineDecoratorLayers = {};
 
     var controlLocate = null;
+    var circleLocation = {
+        position: null,
+        accuracy: null
+    };
+    var locationIcon  = L.icon({
+        iconUrl: 'core/images/location-icon.png',
+
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
+    });
 
     var db = new PouchDB('webmapp');
 
@@ -1392,6 +1402,15 @@ angular.module('webmapp')
                 remainActive: false,
                 position: 'topleft',
                 setView: false,
+                drawCircle: false,
+                circleStyle: {
+                    opacity: 0,
+                    fillOpacity: 0
+                },
+                markerStyle: {
+                    opacity: 0,
+                    fillOpacity: 0
+                },
                 locateOptions: {
                     enableHighAccuracy: true,
                     watch: false,
@@ -1708,7 +1727,28 @@ angular.module('webmapp')
         map.setView({
             lat: lat,
             lng: lng
-        });
+        },
+        CONFIG.MAP.maxZoom);
+    };
+
+    mapService.drawPosition = function(position) {
+        if (circleLocation.position === null && circleLocation.accuracy === null) {
+            circleLocation.position = L.marker([position.coords.latitude, position.coords.longitude], {icon: locationIcon}).addTo(map);
+
+            circleLocation.accuracy = L.circle([position.coords.latitude, position.coords.longitude], {
+                weight: 1,
+                color: '#3E82F7',
+                fillColor: '#3E82F7',
+                fillOpacity: 0.2,
+                radius: position.coords.accuracy
+            }).addTo(map);
+        }
+        else {
+            var newLatLng = new L.LatLng(position.coords.latitude, position.coords.longitude);
+            circleLocation.position.setLatLng(newLatLng);
+            circleLocation.accuracy.setLatLng(newLatLng);
+        }
+        
     };
 
     mapService.isInBoundingBox = function(lat, long) {
