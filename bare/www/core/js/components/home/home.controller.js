@@ -28,6 +28,10 @@ angular.module('webmapp')
 
     vm.currentLang = $translate.preferredLanguage();
 
+    if (CONFIG.LOGIN && CONFIG.LOGIN.useLogin) {
+        vm.useLogin = CONFIG.LOGIN.useLogin;
+    }
+
     $ionicLoading.show();
 
     var getRoutes = function () {
@@ -51,14 +55,14 @@ angular.module('webmapp')
             vm.categories[id].name = data.name;
             vm.asyncTranslations--;
             if (vm.asyncTranslations === 0) {
-                $ionicLoading.hide();
+                finishLoading();
             }
             return;
         }).fail(function () {
             console.error('Translations retrive error');
             vm.asyncTranslations--;
             if (vm.asyncTranslations === 0) {
-                $ionicLoading.hide();
+                finishLoading();
             }
             return 'Translations retrive error';
         });
@@ -81,7 +85,6 @@ angular.module('webmapp')
                 }, this);
             }, this);
 
-            // {
             //     vm.categories[1] = {
             //         name: "prova",
             //         icon: "wm-icon-bicycle-15"
@@ -194,7 +197,7 @@ angular.module('webmapp')
             });
 
             if (vm.asyncTranslations === 0) {
-                $ionicLoading.hide();
+                finishLoading();
             }
 
             return;
@@ -208,6 +211,25 @@ angular.module('webmapp')
     vm.goTo = function (id) {
         Utils.goTo('packages/' + id);
     };
+
+    var finishLoading = function() {
+        $ionicLoading.hide();
+        if (vm.useLogin && !Auth.isLoggedIn()) {
+            setTimeout(function () {
+                showLogin();
+            }, 500);
+        }
+    }
+
+    function showLogin(isRegistration) {
+        $rootScope.showLogin(isRegistration);
+    };
+
+    $rootScope.$on('logged-in', function () {
+        if (Auth.isLoggedIn()) {
+            location.href = "#/page/help";
+        }
+    });
 
     getRoutes();
 

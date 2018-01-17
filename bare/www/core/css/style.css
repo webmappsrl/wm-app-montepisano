@@ -2931,6 +2931,9 @@ ion-modal-view.modal-download {
 .settings-page {
   background: white; }
 
+button.no-animate.button.button-icon.icon.wm-icon-funnel-wm {
+  font-weight: 500; }
+
 #search-fixed {
   width: 90%;
   margin: 10px 5%;
