@@ -16,7 +16,8 @@ angular.module('webmapp')
         Communication,
         Utils,
         CONFIG,
-        $translate
+        $translate,
+        $window
     ) {
         var vm = {},
             userData = {};
@@ -286,11 +287,22 @@ angular.module('webmapp')
 
             confirmPopup.then(function (res) {
                 if (res) {
-                    for (var i in vm.userDownloadedPackages) {
-                        Offline.removePackById(i);
-                    }
+                    // for (var i in vm.userDownloadedPackages) {
+                    //     Offline.removePackById(i);
+                    // }
 
-                    delete vm.userPackages;
+                    //Save which packages user can see
+                    var available = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable) : {};
+                    var tmp = {};
+                    tmp[userData.ID] = vm.userDownloadedPackages;
+                    tmp[15] = {
+                        4833: true,
+                        1010: true
+                    };
+                    available = angular.extend(available, tmp);
+                    localStorage.$wm_usersPackagesAvailable = JSON.stringify(available);
+
+                    delete vm.userPackagesId;
                     delete vm.userDownloadedPackages;
                     delete localStorage.$wm_userPackages;
                     delete localStorage.$wm_userDownloadedPackages;
@@ -465,6 +477,11 @@ angular.module('webmapp')
                 userData = Auth.getUserData();
                 vm.isLoggedIn = true;
                 vm.userDownloadedPackages = {};
+
+                //Add packages downloaded and available for the current user
+                vm.userDownloadedPackages = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable)[userData.ID] : {};
+                localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
+
                 getPackagesIdByUserId(userData.ID);
                 Utils.forceDigest();
 

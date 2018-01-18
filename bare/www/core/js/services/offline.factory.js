@@ -263,6 +263,16 @@ angular.module('webmapp')
             .removeRecursively(cordova.file.dataDirectory, 'map_' + id)
             .then(function() {
                 console.log('done remove' + id);
+
+                //Remove packages from downloaded for single user
+                var available = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable) : {};
+                if (available !== {}) {
+                    for (var userId in available) {
+                        if (available[userId][id]) {
+                            delete available[userId][id];
+                        }
+                    }
+                }
             }, function(error) {
                 console.error(error);
             });
