@@ -43,169 +43,140 @@ angular.module('webmapp')
             getCategoriesName();
             Utils.forceDigest();
         }).fail(function () {
-            console.error('routes retrive error');
-            if (vm.packages.length === 0) {
-                // TODO: controllare se non si hanno pacchetti per mancanza di connessione
+            console.warn("No connection available. Searching packages from local storage");
+            vm.packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : {};
+            if (!vm.packages.length) {
+                finishLoading();
+                //Popup connection not available
+                console.warn("Looks like this is your first application load. Do it again with a connection open");
+                return;
             }
+            getCategoriesName();
         });
     };
 
     var translateCategory = function(id){
         return $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'webmapp_category/' + id + "?lang=" + vm.currentLang, function (data) {
             vm.categories[id].name = data.name;
+
+            var tmp = localStorage.$wm_categories_translated ? JSON.parse(localStorage.$wm_categories_translated) : {};
+
+            tmp[vm.currentLang] = vm.categories;
+
+            localStorage.$wm_categories_translated = JSON.stringify(tmp);
+
             vm.asyncTranslations--;
+
             if (vm.asyncTranslations === 0) {
                 finishLoading();
             }
             return;
         }).fail(function () {
-            console.error('Translations retrive error');
+            console.warn('Connection not available. Translating category ' + id + ' from local storage');
+            //Retrieve category from offline if available
+            var tmp = localStorage.$wm_categories_translated ? JSON.parse(localStorage.$wm_categories_translated) : {};
+
+            if (tmp !== {}) {
+                vm.categories[id].name = tmp[vm.currentLang][id].name;
+            }
             vm.asyncTranslations--;
             if (vm.asyncTranslations === 0) {
                 finishLoading();
             }
-            return 'Translations retrive error';
+            return;
         });
     };
 
     var getCategoriesName = function () {
         return $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'webmapp_category?per_page=100', function (data) {
-            vm.categories = {};
-            var totalCategories = 0;
+            localStorage.$wm_categories = JSON.stringify(data);
 
-            vm.packages.forEach(function (element) {
-                element.webmapp_category.forEach(function (category) {
-                    if (!vm.categories[category]) {
-                        vm.categories[category] = {
-                            icon: "",
-                            name: ""
-                        };
-                        totalCategories++;
-                    }
-                }, this);
-            }, this);
-
-            //     vm.categories[1] = {
-            //         name: "prova",
-            //         icon: "wm-icon-bicycle-15"
-            //     };
-            //     totalCategories++;
-            //     vm.categories[2] = {
-            //         name: "prova",
-            //         icon: "wm-icon-bicycle-15"
-            //     };
-            //     totalCategories++;
-            //     vm.categories[3] = {
-            //         name: "prova",
-            //         icon: "wm-icon-bicycle-15"
-            //     };
-            //     totalCategories++;
-            //     vm.categories[4] = {
-            //         name: "prova",
-            //         icon: "wm-icon-bicycle-15"
-            //     };
-            //     totalCategories++;
-            //     vm.categories[5] = {
-            //         name: "prova",
-            //         icon: "wm-icon-bicycle-15"
-            //     };
-            //     totalCategories++;
-            //     vm.categories[6] = {
-            //         name: "prova",
-            //         icon: "wm-icon-bicycle-15"
-            //     };
-            //     totalCategories++;
-            //     vm.categories[7] = {
-            //         name: "prova",
-            //         icon: "wm-icon-bicycle-15"
-            //     };
-            //     totalCategories++;
-            //     vm.categories[8] = {
-            //         name: "prova",
-            //         icon: "wm-icon-bicycle-15"
-            //     };
-            //     totalCategories++;
-            //     vm.categories[9] = {
-            //         name: "prova",
-            //         icon: "wm-icon-bicycle-15"
-            //     };
-            //     totalCategories++;
-            //     vm.categories[10] = {
-            //         name: "prova",
-            //         icon: "wm-icon-bicycle-15"
-            //     };
-            //     totalCategories++;
-            //     vm.categories[11] = {
-            //         name: "prova",
-            //         icon: "wm-icon-bicycle-15"
-            //     };
-            //     totalCategories++;
-            //     vm.categories[12] = {
-            //         name: "prova",
-            //         icon: "wm-icon-bicycle-15"
-            //     };
-            //     totalCategories++;
-            // }
-
-            switch (totalCategories) {
-                case 1: case 2: case 3:
-                    vm.columns = 1;
-                break;
-                case 4: case 5: case 6: case 7: case 8:
-                    vm.columns = 2;
-                break;
-                case 9: case 10: case 11: case 12:
-                    vm.columns = 3;
-                break;
-                default:
-                    vm.columns = 3;
-                break;
-            }
-
-            switch (totalCategories) {
-                case 1:
-                    vm.rows = 1;
-                break;
-                case 2: case 4:
-                    vm.rows = 2;
-                break;
-                case 3: case 5: case 6: case 9:
-                    vm.rows = 3;
-                break;
-                case 7: case 8: case 10: case 11: case 12:
-                    vm.rows = 4;
-                break;
-                default:
-                    vm.rows = 4;
-                break;
-            }
-
-            data.forEach(function (category) {
-                if (vm.categories[category.id]) {
-                    if (!category.icon) {
-                        category.icon = 'wm-icon-generic';
-                    }
-
-                    vm.categories[category.id].name = category.name;
-                    vm.categories[category.id].icon = category.icon;
-
-                    if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual && vm.currentLang !== CONFIG.LANGUAGES.actual) {
-                        vm.asyncTranslations++;
-                        translateCategory(category.id);
-                    }
-                }
-            });
-
-            if (vm.asyncTranslations === 0) {
-                finishLoading();
-            }
+            setCategoriesName(data);
 
             return;
         }).fail(function (error) {
-            console.log(error);
-            console.error('categories retrive error');
+            console.warn("No connection available. Searching categories from local storage");
+            var categoriesStorage = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : {};
+
+            if (!categoriesStorage.length) {
+                //Popup connection not available
+                finishLoading();
+                console.warn("Looks like this is your first application load. Do it again with a connection open");
+                return;
+            }
+
+            setCategoriesName(categoriesStorage);
             return 'categories retrive error';
         });
+    };
+
+    var setCategoriesName = function(data) {
+        vm.categories = {};      
+        var totalCategories = 0;
+
+        vm.packages.forEach(function (element) {
+            element.webmapp_category.forEach(function (category) {
+                if (!vm.categories[category]) {
+                    vm.categories[category] = {
+                        icon: "",
+                        name: ""
+                    };
+                    totalCategories++;
+                }
+            }, this);
+        }, this);
+
+        switch (totalCategories) {
+            case 1: case 2: case 3:
+                vm.columns = 1;
+            break;
+            case 4: case 5: case 6: case 7: case 8:
+                vm.columns = 2;
+            break;
+            case 9: case 10: case 11: case 12:
+                vm.columns = 3;
+            break;
+            default:
+                vm.columns = 3;
+            break;
+        }
+        switch (totalCategories) {
+            case 1:
+                vm.rows = 1;
+            break;
+            case 2: case 4:
+                vm.rows = 2;
+            break;
+            case 3: case 5: case 6: case 9:
+                vm.rows = 3;
+            break;
+            case 7: case 8: case 10: case 11: case 12:
+                vm.rows = 4;
+            break;
+            default:
+                vm.rows = 4;
+            break;
+        }
+
+        data.forEach(function (category) {
+            if (vm.categories[category.id]) {
+                if (!category.icon) {
+                    category.icon = 'wm-icon-generic';
+                }
+
+                vm.categories[category.id].name = category.name;
+                vm.categories[category.id].icon = category.icon;
+
+                if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual && vm.currentLang !== CONFIG.LANGUAGES.actual) {
+                    vm.asyncTranslations++;
+                    translateCategory(category.id);
+                }
+            }
+        });
+
+        if (vm.asyncTranslations === 0) {
+            finishLoading();
+        }
     };
 
     vm.goTo = function (id) {
