@@ -34,6 +34,11 @@ angular.module('webmapp')
         overlayLayersConfMap = {};
     
     vm.colors = CONFIG.STYLE;
+
+    if (CONFIG.MAIN) {
+        vm.colors.mainBar.background = CONFIG.MAIN.STYLE.mainBar.background;
+    }
+
     vm.overlay_maps_group = [];
     vm.static_pages_group = [];
     vm.staticPages = [];
