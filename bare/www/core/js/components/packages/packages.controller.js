@@ -66,12 +66,19 @@ angular.module('webmapp')
                 }
 
                 localStorage.$wm_userPackagesId = JSON.stringify(vm.userPackagesId);
+
                 Utils.forceDigest();
 
-                return data;
+                return;
             }).fail(function () {
-                console.error('routes retrive error');
-                return 'routes retrive error';
+                console.warn('Internet connection not available. Using local storage permissions');
+
+                vm.userPackagesId = localStorage.$wm_userPackagesId ? JSON.parse(localStorage.$wm_userPackagesId) : {};
+
+                if (!vm.userPackagesId) {
+                    console.warn("No permissions available. Shutting down...");
+                }
+                return;
             });
         };
 
@@ -87,7 +94,8 @@ angular.module('webmapp')
         };
 
         var getCategoriesName = function () {
-            return $.getJSON(baseUrl + config.COMMUNICATION.wordPressEndpoint + 'webmapp_category?per_page=100', function (data) {
+
+            var setCategoriesName = function(data) {
                 vm.categories = {};
                 var currentLang = $translate.preferredLanguage();
                 vm.categoriesId = [];
@@ -117,12 +125,22 @@ angular.module('webmapp')
                 });
 
                 vm.setFilters();
+            }
+
+            return $.getJSON(baseUrl + config.COMMUNICATION.wordPressEndpoint + 'webmapp_category?per_page=100', function (data) {
+                localStorage.$wm_categories = JSON.stringify(data);
+                setCategoriesName(data);
 
                 return data;
             }).fail(function (error) {
-                console.log(error);
-                console.error('categories retrive error');
-                return 'categories retrive error';
+                console.warn('Internet connection not available. Using local storage categories');
+                var localCategories = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : {};
+                if (!localCategories.length) {
+                    console.warn("No categories available. Shutting down...");
+                    return;
+                }
+                setCategoriesName(localCategories);
+                return;
             });
         };
 
@@ -143,7 +161,7 @@ angular.module('webmapp')
         };
 
         var getRoutes = function () {
-            $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/', function (data) {
+            var setRoutes = function(data) {
                 if (!vm.useLogin) {
                     for (var pos in data) {
                         if (data[pos].wm_route_public) {
@@ -156,7 +174,7 @@ angular.module('webmapp')
                 }
 
                 for (var i in vm.packages) {
-                    vm.packages[i].imgUrl = "https://gifimage.net/wp-content/uploads/2017/09/ajax-loading-gif-transparent-background-9.gif";
+                    vm.packages[i].imgUrl = "core/images/image-loading.gif";
 
                     vm.packages[i].packageTitle = vm.packages[i].title.rendered;
                     
@@ -170,8 +188,6 @@ angular.module('webmapp')
                     }
                 }
 
-                localStorage.$wm_packages = JSON.stringify(data);
-
                 // TODO: download images
                 if (vm.type === "reduced") {
                     getImages();
@@ -179,11 +195,23 @@ angular.module('webmapp')
 
                 $ionicLoading.hide();
                 Utils.forceDigest();
+            };
+
+            $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/', function (data) {
+                localStorage.$wm_packages = JSON.stringify(data);
+                setRoutes(data);
             }).fail(function () {
-                console.error('routes retrive error');
-                if (vm.packages.length === 0) {
-                    // TODO: controllare se non si hanno pacchetti per mancanza di connessione
+                console.warn('Internet connection not available. Using local storage routes');
+
+                var packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : {};
+
+                if (!packages.length) {
+                    console.warn("No routes available. Restart the app with an open connection. Shutting down the app...");
+                    return;
                 }
+                
+                setRoutes(packages);
+                return;
             });
         };
 
@@ -443,7 +471,7 @@ angular.module('webmapp')
         };
 
         vm.doRefresh = function (refresher) {
-            console.log('Begin async operation', refresher);
+            console.log('Begin refresh');
 
             getRoutes();
 
@@ -459,7 +487,7 @@ angular.module('webmapp')
                     $scope.$broadcast('scroll.refreshComplete');
                 });
 
-            location.reload();
+            // location.reload();
         };
 
         $ionicPlatform.ready(function () {
@@ -493,8 +521,6 @@ angular.module('webmapp')
                 location.href = "#/page/help";
             }
         });
-
-
 
         function showLogin(isRegistration) {
             $rootScope.showLogin(isRegistration);

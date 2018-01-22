@@ -43,7 +43,7 @@ angular.module('webmapp')
             getCategoriesName();
             Utils.forceDigest();
         }).fail(function () {
-            console.warn("No connection available. Searching packages from local storage");
+            console.warn("Internet connection not available. Using local storage packages");
             vm.packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : {};
             if (!vm.packages.length) {
                 finishLoading();
@@ -72,7 +72,7 @@ angular.module('webmapp')
             }
             return;
         }).fail(function () {
-            console.warn('Connection not available. Translating category ' + id + ' from local storage');
+            console.warn('Internet connection not available. Using local storage translation for ' + id);
             //Retrieve category from offline if available
             var tmp = localStorage.$wm_categories_translated ? JSON.parse(localStorage.$wm_categories_translated) : {};
 
@@ -95,7 +95,7 @@ angular.module('webmapp')
 
             return;
         }).fail(function (error) {
-            console.warn("No connection available. Searching categories from local storage");
+            console.warn("Internet connection not available. Using local storage categories");
             var categoriesStorage = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : {};
 
             if (!categoriesStorage.length) {
