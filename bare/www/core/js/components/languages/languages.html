@@ -13,22 +13,52 @@
             menu-toggle="left"></button>
     </ion-nav-buttons>
 
-    <ion-content style="color: black; background: {{COLORS.global.background}}">
-        <div id="settingsContent">
-            <h3>{{::"Seleziona la lingua" | translate}}</h3>
+    <ion-content style="background: {{COLORS.global.background}}">
+        <div class="modal-content">
+            <span class="modal-title">{{::"SELEIONA LA LINGUA" | translate}}</span>
+            <!-- <ion-list>
+                <label 
+                    class="item item-checkbox ng-not-empty" 
+                    ng-repeat="language in vm.languages"
+                    ng-model="obj.value" 
+                    ng-class="{
+                        'is-selected': obj.value,
+                        'is-not-selected': !obj.value
+                    }">
+                </label>
+            </ion-list> -->
+            
             <div id="radio">
                 <label
+                    class="item item-radio ng-not-empty" 
                     ng-repeat="language in vm.languages">
-                    <input
-                        type="radio"
-                        name="languageRadio"
-                        value="{{language}}"
-                        ng-click="vm.chooseLang(language)"
-                        ng-checked="vm.currentLang === language"
-                        />
-                    {{language | translate}}
+                    <div
+                        class="radio radio-input-hidden disable-pointer-events radio-circle">
+                        <input
+                            type="radio"
+                            name="languageRadio"
+                            ng-click="vm.chooseLang(language)">
+                        <i 
+                            class="wm-icon-ion-android-checkmark-circle"
+                            ng-class="{
+                                'wm-icon-ion-android-checkmark-circle': vm.currentLang === language,
+                                'wm-icon-ion-android-checkmark-circle-empty': !(vm.currentLang === language)
+                            }"></i>
+                        {{language | translate}}
+                    </div>
                 </label>
-
+            </div>
+            <span class="modal-title">{{::"APP" | translate}}</span>
+            <div id="app-description">
+                <p>
+                    {{::"App sviluppata da Webmapp Srl" | translate}}
+                </p>
+                <p>
+                    {{::"Versione" | translate}} {{vm.version}}
+                </p>
+                <p>
+                    <a href="" ng-click="vm.openInAppBrowser('http://www.webmapp.it/')" target="_blank">www.webmapp.it</a>
+                </p>
             </div>
         </div>
     </ion-content>

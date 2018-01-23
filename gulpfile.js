@@ -269,13 +269,19 @@ gulp.getUrlFile = function (file, src, dest) {
 gulp.updateConfigXML = function (config) {
 
     var dir = 'instances/' + instance_name,
-        config_file = dir + '/config.xml';
+        config_file = dir + '/config.xml',
+        configJs_file = dir + '/www/config/config.js';
 
     var edit_tag = '<widget id="' + config.id + '" version="' + config.version + '"',
         edit_name = '<name>' + config.name + '</name>',
-        edit_desc = '<description>' + config.description + '</description>';
+        edit_desc = '<description>' + config.description + '</description>',
+        edit_version = "VERSION: \"" + config.version + "\"";
 
     gulp.start('generate-index');
+
+    gulp.src(configJs_file)
+        .pipe(replace(/VERSION: '0.4'/, edit_version ))
+        .pipe(gulp.dest(dir + '/www/config/'));
 
     return gulp.src(config_file)
         .pipe(replace(/<widget (id=")([a-zA-Z0-9:;\.\s\(\)\-\,]*)(") (version=")([a-zA-Z0-9:;\.\s\(\)\-\,]*)(")/i, edit_tag))

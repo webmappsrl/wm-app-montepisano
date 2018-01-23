@@ -112,6 +112,7 @@ angular.module('webmapp')
         loginScope.loginMode = '';
         loginScope.registrationMode = false;
         loginScope.urlPrivacy = CONFIG.COMMUNICATION.privacy;
+        loginScope.urlRecoveryPassword = CONFIG.LOGIN.passwordRecoveryURL ? CONFIG.LOGIN.passwordRecoveryURL : false;
 
         loginScope.facebook = typeof CONFIG.COMMUNICATION.facebookId !== 'undefined';
         loginScope.google = typeof CONFIG.COMMUNICATION.googleId !== 'undefined';

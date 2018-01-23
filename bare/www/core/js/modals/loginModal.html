@@ -111,11 +111,11 @@
                             onfocus="this.placeholder = ''" 
                             onblur="this.placeholder = 'password'">
                     </label>
-                    <!-- <label class="item=" ng-click="state.resetMode = true">
-                        <div class="skip-link password-lost-link">
-                            <a>Recupera password <i class="icon ion-ios-arrow-thin-right"></i></a>
-                        </div>
-                    </label> -->
+                    <div
+                        class="skip-link password-lost-link"
+                        ng-if="urlRecoveryPassword">
+                        <a href="" ng-click="openInAppBrowser(urlRecoveryPassword)" target="_blank">{{::"Recupera password" | translate}} <i class="icon ion-ios-arrow-thin-right"></i></a>
+                    </div>
                     <label class="item">
                         <button
                             style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
@@ -223,7 +223,7 @@
                             class="input-privacy input-ph"
                             type="checkbox"
                             ng-model="ud.privacy">
-                        {{::"Accetto le condizioni dell'informativa sulla " | translate}}<a href="" ng-click="openInAppBrowser(urlPrivacy)" target="_blank">privacy</a>
+                        {{::"Accetto le condizioni dell'informativa sulla " | translate}}<a href="" ng-click="openInAppBrowser(urlPrivacy)" target="_blank"> privacy</a>
                     </div>
                     <label class="item">
                         <button

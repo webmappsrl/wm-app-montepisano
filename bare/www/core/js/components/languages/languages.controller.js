@@ -22,6 +22,7 @@ angular.module('webmapp')
 
     vm.languages = CONFIG.LANGUAGES.available;
     vm.currentLang = $translate.preferredLanguage();
+    vm.version = CONFIG.VERSION;
 
     var setLanguage = function(lang) {
         $translate.preferredLanguage(lang.substring(0,2));
@@ -32,6 +33,10 @@ angular.module('webmapp')
         setLanguage(lang);
         
         window.location.reload();
+    };
+
+    vm.openInAppBrowser = function(url) {
+        Utils.openInAppBrowser(url);
     };
 
     return vm;

@@ -3057,25 +3057,18 @@ ion-content ion-content.withSearchBar.scroll-content {
     .buttons-reduced i {
       font-size: 1.6em; } }
 
-div#settingsContent {
-  width: 100%;
-  padding: 20px 5px 5px 5px; }
-  div#settingsContent div#radio {
-    width: fit-content;
-    margin: 0 auto; }
-    div#settingsContent div#radio label {
-      display: block; }
-  div#settingsContent h3 {
-    font-size: 1.5em !important;
-    text-align: center; }
-  div#settingsContent p#warning {
-    color: #EFB700;
-    text-align: center; }
-  div#settingsContent img {
-    padding: 10px;
-    margin: 0 auto;
-    height: 3em;
-    vertical-align: middle; }
+div#radio {
+  border-bottom: 1px solid #cecec1;
+  padding: 5px;
+  margin-bottom: 15px; }
+  div#radio label.item.item-radio {
+    border: 0px;
+    padding: 3px; }
+
+div#app-description {
+  padding: 5px;
+  font-size: 22px;
+  color: #918f75; }
 
 /**
  * CUSTOM PAGE

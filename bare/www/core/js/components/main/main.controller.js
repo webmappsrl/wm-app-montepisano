@@ -141,7 +141,10 @@ angular.module('webmapp')
     vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
     vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
     vm.useUTM32 = false;
-    vm.useShare = CONFIG.REPORT && CONFIG.REPORT.active;
+    // vm.useShare = CONFIG.REPORT && (
+    //     (CONFIG.REPORT.email && CONFIG.REPORT.email.apiUrl && CONFIG.REPORT.email.default) ||
+    //     (CONFIG.REPORT.sms && CONFIG.REPORT.sms.default));
+    vm.useShare = false;
 
     vm.shareCurrentPosition = function($event) {
         $event.stopPropagation();
