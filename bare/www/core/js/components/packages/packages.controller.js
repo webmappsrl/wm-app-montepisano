@@ -307,44 +307,6 @@ angular.module('webmapp')
             showLogin(isRegistration);
         };
 
-        vm.logout = function () {
-            var confirmPopup = $ionicPopup.confirm({
-                title: $translate.instant("LOGOUT"),
-                template: $translate.instant("Sei sicuro di voler effettuare il logout?")
-            });
-
-            confirmPopup.then(function (res) {
-                if (res) {
-                    // for (var i in vm.userDownloadedPackages) {
-                    //     Offline.removePackById(i);
-                    // }
-
-                    //Save which packages user can see
-                    var available = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable) : {};
-                    var tmp = {};
-                    tmp[userData.ID] = vm.userDownloadedPackages;
-                    tmp[15] = {
-                        4833: true,
-                        1010: true
-                    };
-                    available = angular.extend(available, tmp);
-                    localStorage.$wm_usersPackagesAvailable = JSON.stringify(available);
-
-                    delete vm.userPackagesId;
-                    delete vm.userDownloadedPackages;
-                    delete localStorage.$wm_userPackages;
-                    delete localStorage.$wm_userDownloadedPackages;
-
-                    Auth.resetUserData();
-                    $rootScope.isLoggedIn = vm.isLoggedIn = false;
-                    if (vm.useLogin) {
-                        showLogin();
-                    }
-                    Utils.forceDigest();
-                }
-            });
-        };
-
         vm.downloadPack = function (pack) {
             $ionicPopup.confirm({
                     title: $translate.instant("ATTENZIONE"),
@@ -368,6 +330,12 @@ angular.module('webmapp')
                                 modalDownload.hide();
                                 vm.userDownloadedPackages[currentId] = true;
                                 updateDownloadedPackagesInStorage();
+
+                                var available = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable) : {};
+                                var tmp = {};
+                                tmp[userData.ID] = vm.userDownloadedPackages;
+                                available = angular.extend(available, tmp);
+                                localStorage.$wm_usersPackagesAvailable = JSON.stringify(available);
                             };
 
                             var downloadFail = function () {

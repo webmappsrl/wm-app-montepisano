@@ -242,108 +242,19 @@
                 </div>
             </form>
 
-            <!--<form
-                class="login-form" 
-                ng-show="state.resetMode"
-                ng-submit="resetPassword(ud.email); resetFields()">
-                <div class="list">
-                    <label class="item item-input">
-                        <input 
-                            class="input-email input-ph"
-                            type="text" 
-                            ng-model="ud.email" 
-                            autocorrect="off" 
-                            autocapitalize="none" 
-                            spellcheck="false" 
-                            autocomplete="off"  
-                            style="" 
-                            placeholder="email"
-                            onfocus="this.placeholder = ''" 
-                            onblur="this.placeholder = 'email'">
-                    </label>
-                    <label class="item">
-                        <button 
-                            style="background: {{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                            class="login-button button button-block" 
-                            type="submit">
-                            {{logging ? '(Loading..)' : 'INVIA'}}
-                            <i class="icon ion-log-in"></i>
-                        </button>
-                    </label>
-                    <label class="item=" ng-click="state.resetMode = false; resetFields()">
-                        <div class="skip-link password-lost-link">
-                            <a>Torna al login <i class="icon ion-ios-arrow-thin-right"></i></a>
-                        </div>
-                    </label>
-                </div>
-            </form>-->
-
-            <!-- <div
-                class="social-login-title-container"
-                ng-show="!state.resetMode">
-                <span class="social-login-title">o accedi con il tuo account social</span>
-            </div>
-
-            <div class="omb_login" ng-show="!state.resetMode">
-                <div class="omb_row-sm-offset-3 omb_socialButtons">
-                    <div class="col-xs-4 col-sm-2 social-block" ng-if="facebook">
-                        <button 
-                            class="omb_btn-facebook"
-                            ng-click="openSocial('facebook')">
-                            <i class="icon wm-icon-social-facebook"></i>
-                            <span class="">Facebook</span>
-                        </button>
-                    </div>
-                    <div class="col-xs-4 col-sm-2 social-block" ng-if="twitter">
-                        <button 
-                            class="omb_btn-twitter"
-                            ng-click="openSocial('twitter')">
-                            <i class="icon wm-icon-social-twitter"></i>
-                            <span class="">Twitter</span>
-                        </button>
-                    </div>    
-                    <div class="col-xs-4 col-sm-2 social-block" ng-if="google">
-                        <button 
-                            class="omb_btn-google"
-                            ng-click="openSocial('google')">
-                            <i class="icon wm-icon-icon-social-google-plus"></i>
-                            <span class="">Google</span>
-                        </button>
-                    </div>    
-                </div>
-            </div> -->
-
-            <!-- <div class="card sign-in-button" ng-show="!state.resetMode">
-                <button
-                    class="button button-block sign-in sign-up-card"
-                    ng-click="state.registrationMode = true; resetFields()">
-                    REGISTRATI
-                </button>
-            </div> -->
-
             <div class="login-footer" ng-if="!state.resetMode">
 
                 <div class="app-logo-container">
-                    <div class="app-logo">
-                        <!-- <img src="/core/images/valcamonica-logo@2x.png"> -->
-                    </div>
-                    <div 
-                        class="skip-login" 
+                    <button 
+                        style="background:{{COLORS.global.buttonsBackground}};"
+                        class="login-button skip-login" 
                         ng-click="state.resetMode = true">
                         <a href="" style="border: none" >
                             {{::"Registrati" | translate}}
                         </a>
-                    </div>
+                    </button>
                 </div>
-
-                <!--<div class="skip-login" ng-click="skipLogin()">
-
-                    <a href="">
-                        <i class="icon wm-icon-ios7-arrow-thin-right"></i>
-                        Salta per adesso</a>
-                </div>-->
             </div>
-
         </div>
     </ion-content>
 </ion-modal-view>

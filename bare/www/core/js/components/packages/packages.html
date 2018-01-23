@@ -40,6 +40,8 @@
             ng-if="!vm.isLoggedIn">
         </div>
 
+        <div id="whitespace"></div>
+
         <div
             class="static-content card-content">
             <!-- <div
@@ -208,25 +210,7 @@
 
                 <div style="clear: both"></div>
 
-                <div style="clear: both"></div>
-
             </div>
-
-            <br><br>
-
-            <!-- TODO: font? -->
-            <div class="card-text card-opportunities" ng-if="vm.isLoggedIn">
-                <h2 class="card-text-title">{{::"ESCI DAL TUO ACCOUNT" | translate}}</h2>
-                <!-- <p>Una card, tante iniziative e sorprese esclusive solo per gli esploratori della Valle dei Segni</p> -->
-            </div>
-
-            <button
-                style="background: {{COLORS.global.buttonsBackground}}"
-                class="login-button button button-block"
-                ng-if="vm.isLoggedIn"
-                ng-click="vm.logout()">
-            {{::"LOGOUT" | translate}}
-        </button>
         </div>
     </ion-content>
 </ion-view>

@@ -28,7 +28,7 @@
                 </label>
             </ion-list> -->
             
-            <div id="radio">
+            <div class="section">
                 <label
                     class="item item-radio ng-not-empty" 
                     ng-repeat="language in vm.languages">
@@ -48,8 +48,14 @@
                     </div>
                 </label>
             </div>
+            <span class="modal-title">{{::"PRIVACY" | translate}}</span>
+            <div class="section">
+                <p>
+                    {{::"Leggi la " | translate}} <a href="" ng-click="vm.openInAppBrowser(vm.privacyUrl)" target="_blank">{{::"normativa sulla privacy" | translate}}</a>
+                </p>
+            </div>
             <span class="modal-title">{{::"APP" | translate}}</span>
-            <div id="app-description">
+            <div class="section">
                 <p>
                     {{::"App sviluppata da Webmapp Srl" | translate}}
                 </p>
@@ -60,6 +66,15 @@
                     <a href="" ng-click="vm.openInAppBrowser('http://www.webmapp.it/')" target="_blank">www.webmapp.it</a>
                 </p>
             </div>
+        </div>
+        <div class="logout">
+            <button
+                style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
+                class="login-button button button-block"
+                ng-if="vm.isLoggedIn"
+                ng-click="vm.logout()">
+            {{::"LOGOUT" | translate}}
+            </button>
         </div>
     </ion-content>
 </ion-view>

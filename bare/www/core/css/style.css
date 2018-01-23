@@ -768,6 +768,22 @@ button.login-button {
  */
 /* ------------------------------------ *   #LOGIN & CARD
 \* ------------------------------------ */
+button.login-button {
+  border: 2px solid;
+  font-size: 25px; }
+
+button.login-button.skip-login {
+  color: #918f75;
+  margin: 0 auto;
+  height: auto;
+  padding: 5px 30px; }
+  button.login-button.skip-login a {
+    position: inherit;
+    font-size: 25px;
+    line-height: 42px;
+    text-transform: uppercase;
+    color: #918f75; }
+
 .login-page {
   background: #f8faf3; }
   .login-page input {
@@ -1020,7 +1036,6 @@ button.login-button {
 .skip-login {
   display: inline-block;
   width: 100%;
-  height: 117px;
   text-align: center;
   position: relative; }
 
@@ -1042,17 +1057,6 @@ button.login-button {
   width: 100%;
   text-align: center;
   font-size: 40px; }
-
-.skip-login a {
-  display: inline-block;
-  border-left: 1px solid #918f75;
-  color: #918f75;
-  font-size: 20px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 0;
-  left: 0; }
 
 /* ------------------------------------ *   #MEDIA QUERIES
 \* ------------------------------------ */
@@ -2948,8 +2952,8 @@ button.no-animate.button.button-icon.icon.wm-icon-funnel-wm {
     padding: 0 15px;
     background-color: #FCFDF7; }
 
-ion-content ion-content.withSearchBar.scroll-content {
-  padding-top: 40px; }
+ion-content ion-content.withSearchBar.scroll-content div#whitespace {
+  height: 55px; }
 
 .packages-title {
   margin: 10px 0;
@@ -2971,7 +2975,7 @@ ion-content ion-content.withSearchBar.scroll-content {
   padding: 0 !important;
   position: relative;
   box-shadow: 0px 2px 5px #d7d7d7;
-  margin-top: 15px;
+  margin-bottom: 15px;
   background-color: #FCFDF7;
   border-bottom: 0; }
 
@@ -3057,18 +3061,21 @@ ion-content ion-content.withSearchBar.scroll-content {
     .buttons-reduced i {
       font-size: 1.6em; } }
 
-div#radio {
+div.section {
   border-bottom: 1px solid #cecec1;
   padding: 5px;
-  margin-bottom: 15px; }
-  div#radio label.item.item-radio {
+  margin-bottom: 15px;
+  font-size: 22px;
+  color: #918f75; }
+  div.section label.item.item-radio {
     border: 0px;
     padding: 3px; }
 
-div#app-description {
-  padding: 5px;
-  font-size: 22px;
-  color: #918f75; }
+div.logout {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%; }
 
 /**
  * CUSTOM PAGE
