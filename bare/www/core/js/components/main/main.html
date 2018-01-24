@@ -147,15 +147,12 @@
         <div 
             class="report-control"
             ng-if="vm.useReport">
-            <div class="leaflet-control-locate leaflet-bar leaflet-control">
-                <a 
-                    class="leaflet-bar-part leaflet-bar-part-single" 
-                    href="" 
-                    ng-click="vm.shareCurrentPosition($event)">
-                    <i class="icon wm-icon-alert-circled">
-                    </i>
-                </a>
-            </div>
+            <a 
+                href="" 
+                ng-click="vm.reportCurrentPosition($event)">
+                <i class="icon wm-icon-alert-circled">
+                </i>
+            </a>
         </div>
 
         <!-- <div class="report">

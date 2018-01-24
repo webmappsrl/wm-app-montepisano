@@ -1950,7 +1950,15 @@ angular.module('webmapp')
     };
 
     mapService.getCenterCoordsReference = function() {
-        return centerCoords;
+        if (centerCoords.lat && centerCoords.lng) {
+            return centerCoords;
+        }
+        else {
+            return {
+                lat: CONFIG.MAP.center.lat.toFixed(4),
+                lng: CONFIG.MAP.center.lng.toFixed(4)
+            };
+        }
     };
 
     mapService.getCenterCoordsUTM32Reference = function() {

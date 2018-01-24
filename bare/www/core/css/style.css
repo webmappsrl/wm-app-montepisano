@@ -1435,17 +1435,24 @@ button.login-button.skip-login {
 .report-control {
   position: absolute;
   top: 20px;
-  right: 15px; }
-  .report-control div a {
+  right: 15px;
+  z-index: 800;
+  width: 45px;
+  height: 45px;
+  background-color: rgba(200, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%; }
+  .report-control a i::before {
+    font-size: 27px;
+    position: absolute;
+    top: 7px;
+    left: 11px;
     color: #fff; }
-    .report-control div a i {
-      width: 45px;
-      height: 45px;
-      font-size: 27px; }
-    .report-control div a i::before {
-      position: absolute;
-      top: 7px;
-      left: 11px; }
+
+.report-control:active {
+  background-color: #c80000; }
+  .report-control:active a i::before {
+    color: #cccccc; }
 
 /* ------------------------------------ *   #MAP ICONS
 \* ------------------------------------ */

@@ -31,19 +31,31 @@
   position: absolute;
   top: 20px;
   right: 15px;
-  div {
-    a {
+  z-index: 800;
+  width: 45px;
+  height: 45px;
+  // background-color: rgba(96, 88, 70, 0.7);
+  background-color: rgba(200, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+  
+  a {
+    i::before {
+      font-size: 27px;
+      position: absolute;
+      top: 7px;
+      left: 11px;
       color: #fff;
-      i {
-        width: 45px;
-        height: 45px;
-        font-size: 27px;
-      }
-      i::before {
-        position: absolute;
-        top: 7px;
-        left: 11px;
-      }
+    }
+  }
+}
+
+.report-control:active {
+  // background-color: rgba(96, 88, 70, 1);
+  background-color: rgba(200, 0, 0, 1);
+  a {
+    i::before {
+      color: #cccccc;
     }
   }
 }
