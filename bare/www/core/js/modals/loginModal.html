@@ -1,6 +1,6 @@
 <ion-modal-view id="login-view" class="login-page">
     <ion-content style="background: {{COLORS.global.background}}">
-        <div class="login-header">
+        <div class="login-header" style="background: {{COLORS.mainBar.background}}; color: {{COLORS.mainBar.color}}">
             <!-- <i class="icon wm-icon-heart-valcamonica"></i> -->
             {{ state.registrationMode || state.resetMode ? "REGISTRATI" : "ACCEDI" | translate}}
         </div>
@@ -122,7 +122,7 @@
                             class="login-button button button-block" 
                             type="submit">
                             {{logging ? "(Loading..)" : "ACCEDI" | translate}}
-                            <i class="icon ion-log-in"></i>
+                            <i class="wm-icon-android-arrow-forward"></i>
                         </button>
                     </label>
                 </div>
@@ -131,7 +131,7 @@
             <form
                 class="registration-form"
                 ng-if="state.resetMode"
-                ng-submit="completeSimpleRegistration(ud.firstName, ud.lastName, ud.email, ud.checkEmail, ud.password, ud.checkPassword, ud.newsletter, ud.privacy)">
+                ng-submit="completeSimpleRegistration(ud.firstName, ud.lastName, ud.email, ud.checkEmail, ud.password, ud.checkPassword, ud.country, ud.newsletter, ud.privacy)">
                 <div class="list">
                     <label class="item item-input">
                         <input
@@ -187,7 +187,7 @@
                             style=""
                             placeholder="{{::'ripeti email' | translate}}"
                             onfocus="this.placeholder = ''"
-                            onblur="this.placeholder = 'conferma email'">
+                            onblur="this.placeholder = 'ripeti email'">
                     </label>
                     <label class="item item-input">
                         <input
@@ -209,29 +209,68 @@
                             onfocus="this.placeholder = ''"
                             onblur="this.placeholder = 'conferma password'">
                     </label>
+                    <label class="item item-input">
+                        <input
+                            class="input-country input-ph"
+                            type="text"
+                            ng-model="ud.country"
+                            autocomplete="off"
+                            placeholder="{{::'paese' | translate}}"
+                            onfocus="this.placeholder = ''"
+                            onblur="this.placeholder = 'paese'">
+                    </label>
 
-                    <div class="privacy" ng-if="newsletter">
+                    <div
+                        class="privacy"
+                        ng-if="newsletter">
+                        <div
+                            ng-click="ud.newsletter = !ud.newsletter">
+                            <i 
+                                class="ion-android-checkbox-outline"
+                                ng-class="{
+                                    'ion-android-checkbox-outline': ud.newsletter,
+                                    'ion-android-checkbox-outline-blank': !ud.newsletter
+                                }"></i>
+                                {{::"Voglio iscrivermi alla newsletter" | translate}}
+                        </div>
+                    </div>
+
+                    <!-- <div class="privacy" ng-if="newsletter">
                         <input
                             class="input-privacy input-ph"
                             type="checkbox"
                             ng-model="ud.newsletter">
                         {{::"Voglio iscrivermi alla newsletter" | translate}}
+                    </div> -->
+
+                    <div
+                        class="privacy">
+                        <div
+                            ng-click="ud.privacy = !ud.privacy">
+                            <i 
+                                class="ion-android-checkbox-outline"
+                                ng-class="{
+                                    'ion-android-checkbox-outline': ud.privacy,
+                                    'ion-android-checkbox-outline-blank': !ud.privacy
+                                }"></i>
+                                {{::"Accetto le condizioni dell'informativa sulla " | translate}}<a href="" ng-click="openInAppBrowser(urlPrivacy)" target="_blank"> privacy</a>
+                        </div>
                     </div>
 
-                    <div class="privacy">
+                    <!-- <div class="privacy">
                         <input
                             class="input-privacy input-ph"
                             type="checkbox"
                             ng-model="ud.privacy">
                         {{::"Accetto le condizioni dell'informativa sulla " | translate}}<a href="" ng-click="openInAppBrowser(urlPrivacy)" target="_blank"> privacy</a>
-                    </div>
+                    </div> -->
                     <label class="item">
                         <button
                             style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
                             class="login-button button button-block"
                             type="submit">
                             {{logging ? "(Loading..)" : "CONFERMA" | translate}}
-                            <i class="icon ion-log-in"></i>
+                            <i class="wm-icon-android-arrow-forward"></i>
                         </button>
                     </label>
                     <label class="item=" ng-click="state.resetMode = false; resetFields()">
@@ -249,9 +288,8 @@
                         style="background:{{COLORS.global.buttonsBackground}};"
                         class="login-button skip-login" 
                         ng-click="state.resetMode = true">
-                        <a href="" style="border: none" >
-                            {{::"Registrati" | translate}}
-                        </a>
+                        {{::"Registrati" | translate}}
+                        <i class="wm-icon-android-arrow-forward"></i>
                     </button>
                 </div>
             </div>

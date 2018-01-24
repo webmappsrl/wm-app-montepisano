@@ -3,14 +3,36 @@
   "version": "1.0.0",
   "description": "WebMappCore",
   "dependencies": {
+    "@ionic-native/social-sharing": "^4.5.2",
+    "call-number": "local_plugins/call-number",
+    "com.verso.cordova.clipboard": "~0.1.0",
     "cordova-android": "^6.2.3",
     "cordova-ios": "^4.4.0",
+    "cordova-plugin-actionsheet": "~2.3.1",
+    "cordova-plugin-compat": "~1.0.0",
+    "cordova-plugin-device": "~1.1.3",
+    "cordova-plugin-device-orientation": "~1.0.7",
+    "cordova-plugin-file": "~4.3.0",
+    "cordova-plugin-file-transfer": "~1.4.0",
+    "cordova-plugin-geolocation": "~2.4.0",
+    "cordova-plugin-inappbrowser": "~1.5.0",
+    "cordova-plugin-network-information": "~1.2.1",
+    "cordova-plugin-splashscreen": "~2.1.0",
+    "cordova-plugin-statusbar": "~2.2.0",
+    "cordova-plugin-whitelist": "~1.3.0",
+    "cordova-plugin-x-socialsharing": "git+https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git",
+    "cordova-plugin-zip": "~3.0.0",
+    "cordova-sqlite-storage-custom": "local_plugins/cordova-sqlite-storage-custom",
+    "es6-promise-plugin": "^4.1.0",
     "gulp": "3.5.6",
     "gulp-concat": "2.2.0",
     "gulp-minify-css": "0.3.0",
     "gulp-rename": "^1.2.0",
     "gulp-sass": "2.0.4",
-    "gulp-sourcemaps": "^2.6.0"
+    "gulp-sourcemaps": "^2.6.0",
+    "ionic-plugin-keyboard": "~1.0.8",
+    "phonegap-plugin-barcodescanner": "~6.0.1",
+    "uk.co.workingedge.phonegap.plugin.launchnavigator": "~3.2.1"
   },
   "devDependencies": {
     "@ionic/cli-plugin-cordova": "1.4.1",
@@ -23,5 +45,32 @@
   },
   "cordovaPlugins": [],
   "cordovaPlatforms": [],
-  "cordova": {}
+  "cordova": {
+    "plugins": {
+      "call-number": {},
+      "com.verso.cordova.clipboard": {},
+      "cordova-plugin-actionsheet": {},
+      "cordova-plugin-compat": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-device-orientation": {},
+      "cordova-plugin-file": {},
+      "cordova-plugin-file-transfer": {},
+      "cordova-plugin-geolocation": {},
+      "cordova-plugin-inappbrowser": {},
+      "cordova-plugin-network-information": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-zip": {},
+      "ionic-plugin-keyboard": {},
+      "cordova-sqlite-storage-custom": {},
+      "phonegap-plugin-barcodescanner": {},
+      "uk.co.workingedge.phonegap.plugin.launchnavigator": {},
+      "cordova-plugin-x-socialsharing": {}
+    },
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  }
 }

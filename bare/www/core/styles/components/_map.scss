@@ -20,10 +20,31 @@
 
 .locate-custom-control {
   position: absolute;
-  bottom: 24px;
-  left: 6px;
+  bottom: 20px;
+  right: 15px;
   a {
     cursor: pointer;
+  }
+}
+
+.report-control {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  div {
+    a {
+      color: #fff;
+      i {
+        width: 45px;
+        height: 45px;
+        font-size: 27px;
+      }
+      i::before {
+        position: absolute;
+        top: 7px;
+        left: 11px;
+      }
+    }
   }
 }
 
@@ -350,7 +371,7 @@
   position: absolute;
   right: 0;
   left: 0;
-  bottom: 24px;
+  bottom: 20px;
   z-index: 400;
   font-size: 20px;
   text-align: center;

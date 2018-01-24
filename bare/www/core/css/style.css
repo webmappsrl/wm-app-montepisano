@@ -770,19 +770,22 @@ button.login-button {
 \* ------------------------------------ */
 button.login-button {
   border: 2px solid;
-  font-size: 25px; }
+  font-size: 25px;
+  border-radius: 0;
+  line-height: 42px;
+  vertical-align: middle; }
+  button.login-button i {
+    line-height: 42px;
+    font-size: 21px;
+    position: absolute;
+    right: 20px; }
 
 button.login-button.skip-login {
   color: #918f75;
   margin: 0 auto;
   height: auto;
-  padding: 5px 30px; }
-  button.login-button.skip-login a {
-    position: inherit;
-    font-size: 25px;
-    line-height: 42px;
-    text-transform: uppercase;
-    color: #918f75; }
+  padding: 5px 30px;
+  text-transform: uppercase; }
 
 .login-page {
   background: #f8faf3; }
@@ -867,12 +870,11 @@ button.login-button.skip-login {
   .registration-form .privacy {
     width: 100%;
     margin: 15px auto;
-    text-align: center; }
-    .login-form .privacy .input-privacy,
-    .registration-form .privacy .input-privacy {
-      height: 20px;
-      margin-right: 5px;
-      vertical-align: middle; }
+    font-size: 20px;
+    margin-left: 20px; }
+    .login-form .privacy i,
+    .registration-form .privacy i {
+      margin-left: -20px; }
 
 .login-form .item .input-label {
   display: none; }
@@ -1425,10 +1427,25 @@ button.login-button.skip-login {
 
 .locate-custom-control {
   position: absolute;
-  bottom: 24px;
-  left: 6px; }
+  bottom: 20px;
+  right: 15px; }
   .locate-custom-control a {
     cursor: pointer; }
+
+.report-control {
+  position: absolute;
+  top: 20px;
+  right: 15px; }
+  .report-control div a {
+    color: #fff; }
+    .report-control div a i {
+      width: 45px;
+      height: 45px;
+      font-size: 27px; }
+    .report-control div a i::before {
+      position: absolute;
+      top: 7px;
+      left: 11px; }
 
 /* ------------------------------------ *   #MAP ICONS
 \* ------------------------------------ */
@@ -1655,7 +1672,7 @@ button.login-button.skip-login {
   position: absolute;
   right: 0;
   left: 0;
-  bottom: 24px;
+  bottom: 20px;
   z-index: 400;
   font-size: 20px;
   text-align: center; }

@@ -141,10 +141,16 @@ angular.module('webmapp')
     vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
     vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
     vm.useUTM32 = false;
-    // vm.useShare = CONFIG.REPORT && (
-    //     (CONFIG.REPORT.email && CONFIG.REPORT.email.apiUrl && CONFIG.REPORT.email.default) ||
-    //     (CONFIG.REPORT.sms && CONFIG.REPORT.sms.default));
     vm.useShare = false;
+    vm.useReport = 
+        (CONFIG.REPORT && (
+        (CONFIG.REPORT.email && CONFIG.REPORT.email.apiUrl && CONFIG.REPORT.email.default) ||
+        (CONFIG.REPORT.sms && CONFIG.REPORT.sms.default)))
+        ||
+        (CONFIG.MAIN && CONFIG.MAIN.REPORT && (
+        (CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl && CONFIG.MAIN.REPORT.email.default) ||
+        (CONFIG.MAIN.REPORT.sms && CONFIG.MAIN.REPORT.sms.default)));
+
 
     vm.shareCurrentPosition = function($event) {
         $event.stopPropagation();
@@ -160,6 +166,7 @@ angular.module('webmapp')
             });
             return;
         }
+        console.log("yeah");
 
         if (!vm.useShare) {
             return;
@@ -171,7 +178,11 @@ angular.module('webmapp')
             baseUrl: CONFIG.COMMUNICATION.baseUrl
         };
 
+        console.log($cordovaSocialSharing);
+
         if (CONFIG.REPORT.type === 'social') {
+        // if (true) {
+            console.log("ok");
             $cordovaSocialSharing
                 .share(
                     shareOptions.message, 
@@ -187,12 +198,36 @@ angular.module('webmapp')
                 }, function(err) {
                   // An error occured. Show a message to the user
                 });
-            } else if (CONFIG.REPORT.type === 'email') {
-                shareScope.vm.textblock = '';
-                shareScope.vm.emailblock = '';
-                shareScope.vm.phoneNumber = '';
-                shareScope.vm.sendSuccess = false;
-                shareModal && shareModal.show();
+            }
+            if (CONFIG.REPORT.sms || (CONFIG.MAIN && CONFIG.MAIN.REPORT.sms)) {//CONFIG.REPORT.type === 'email') {
+                console.log("sharing...");
+                $cordovaSocialSharing
+                    .shareViaSMS("ciao", "3345345345")
+                    .then(function(result) {
+                    // Success!
+                    }, function(err) {
+                    // An error occurred. Show a message to the user
+                    });
+                // shareScope.vm.textblock = '';
+                // shareScope.vm.emailblock = '';
+                // shareScope.vm.phoneNumber = '';
+                // shareScope.vm.sendSuccess = false;
+                // shareModal && shareModal.show();
+            }
+            if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) {//CONFIG.REPORT.type === 'email') {
+                console.log("sharing...");
+                $cordovaSocialSharing
+                    .shareViaSMS("ciao", "3345345345")
+                    .then(function(result) {
+                    // Success!
+                    }, function(err) {
+                    // An error occurred. Show a message to the user
+                    });
+                // shareScope.vm.textblock = '';
+                // shareScope.vm.emailblock = '';
+                // shareScope.vm.phoneNumber = '';
+                // shareScope.vm.sendSuccess = false;
+                // shareModal && shareModal.show();
             }
     };
 

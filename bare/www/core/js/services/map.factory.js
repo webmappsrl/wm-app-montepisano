@@ -1336,10 +1336,12 @@ angular.module('webmapp')
             rotate: true
         });
 
-        if (!mapConf.hideZoomControl) {
-            L.control.zoom({
-                position: 'bottomright'
-            }).addTo(map);
+        if (CONFIG.MAIN && !CONFIG.MAIN.MAP.hideZoomControl) {
+            if (!mapConf.hideZoomControl) {
+                L.control.zoom({
+                    position: 'bottomright'
+                }).addTo(map);
+            }
         }
 
         map.on('click', function() {
@@ -1388,7 +1390,7 @@ angular.module('webmapp')
 
         if (mapConf.showScaleInMap) {
             L.control.scale({
-                position: 'bottomright',
+                position: 'bottomleft',
                 imperial: false
             }).addTo(map);
         }

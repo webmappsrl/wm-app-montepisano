@@ -142,5 +142,29 @@
                 </button>
             </span>
         </div>
+
+
+        <div 
+            class="report-control"
+            ng-if="vm.useReport">
+            <div class="leaflet-control-locate leaflet-bar leaflet-control">
+                <a 
+                    class="leaflet-bar-part leaflet-bar-part-single" 
+                    href="" 
+                    ng-click="vm.shareCurrentPosition($event)">
+                    <i class="icon wm-icon-alert-circled">
+                    </i>
+                </a>
+            </div>
+        </div>
+
+        <!-- <div class="report">
+            <button 
+                class="coords-share-button"
+                ng-click="vm.shareCurrentPosition($event)"
+                ng-if="vm.useReport">
+                <i class="icon wm-icon-alert-circled"></i>
+            </button>
+        </div> -->
     </ion-footer-bar>
 </ion-view>

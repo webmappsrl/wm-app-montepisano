@@ -12,6 +12,15 @@
 button.login-button {
   border: 2px solid;
   font-size: 25px;
+  border-radius: 0;
+  line-height: 42px;
+  vertical-align: middle;
+  i {
+    line-height: 42px;
+    font-size: 21px;
+    position: absolute;
+    right: 20px;
+  }
 }
 
 button.login-button.skip-login {
@@ -19,13 +28,7 @@ button.login-button.skip-login {
   margin: 0 auto;
   height: auto;
   padding: 5px 30px;
-  a {
-    position: inherit;
-    font-size: 25px;
-    line-height: 42px;
-    text-transform: uppercase;
-    color: #918f75;
-  }
+  text-transform: uppercase;
 }
 
 .login-page {
@@ -128,12 +131,10 @@ button.login-button.skip-login {
   .privacy {
     width: 100%;
     margin: 15px auto;
-    text-align: center;
-
-    .input-privacy {
-      height: 20px;
-      margin-right: 5px;
-      vertical-align: middle;
+    font-size: 20px;
+    margin-left: 20px;
+    i {
+      margin-left: -20px;
     }
   }
 }

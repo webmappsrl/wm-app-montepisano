@@ -95,6 +95,7 @@ angular.module('webmapp')
             loginScope.ud.checkPassword = '';
             loginScope.ud.newsletter = false;
             loginScope.ud.privacy = '';
+            loginScope.ud.country = '';
         };
 
         var isEmailValid = function(email) {
@@ -175,7 +176,7 @@ angular.module('webmapp')
             }
         };
 
-        loginScope.completeSimpleRegistration = function(firstName, lastName, email, checkEmail, password, checkPassword, newsletter, privacy) {
+        loginScope.completeSimpleRegistration = function(firstName, lastName, email, checkEmail, password, checkPassword, country, newsletter, privacy) {
             if (loginScope.logging) {
                 return;
             }
@@ -184,7 +185,7 @@ angular.module('webmapp')
                 $cordovaKeyboard.close();
             }
 
-            if (email && password && checkEmail && checkPassword && firstName && lastName) {
+            if (email && password && checkEmail && checkPassword && firstName && lastName && country) {
                 if (!isEmailValid(email)) {
                     $ionicPopup.alert({
                         title: $translate.instant("ATTENZIONE"),
@@ -223,7 +224,7 @@ angular.module('webmapp')
                     });
                 } else {
                     loginScope.logging = true;
-                    Account.createAccount(firstName, lastName, email, password, newsletter, true)
+                    Account.createAccount(firstName, lastName, email, password, country, newsletter, true)
                         .then(function(data) {
                             $ionicPopup.alert({
                                 title: $translate.instant("REGISTRAZIONE"),

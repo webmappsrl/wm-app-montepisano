@@ -25,6 +25,7 @@ angular.module('webmapp')
     var communicationConf = CONFIG.COMMUNICATION;
     vm.title = "Cosa vuoi fare?";
     vm.asyncTranslations = 0;
+    vm.appTitle = CONFIG.OPTIONS.title;
 
     vm.currentLang = $translate.preferredLanguage();
 
