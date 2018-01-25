@@ -28,6 +28,30 @@ angular.module('webmapp')
         return defer.promise;
     };
 
+    communication.callAPI = function(url, data) {
+        var defer = $q.defer();
+
+
+        $http({
+            method: 'POST',
+            url: url,
+            dataType: 'json',
+            crossDomain: true,
+            data: data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+            .success(function(data) {
+                defer.resolve(data);
+            })
+            .error(function(error) {
+                defer.reject(error);
+            });
+
+        return defer.promise;
+    }
+
     communication.getJSON = function(url) {
         var defer = $q.defer(),
             options = {

@@ -222,7 +222,7 @@ angular.module('webmapp')
                 }
 
                 if (emailTo !== '' && url !== '') {
-                    var currentRequest = Communication.post(url, {
+                    var currentRequest = Communication.callAPI(url, {
                         email: '',
                         to: emailTo,
                         text: text,

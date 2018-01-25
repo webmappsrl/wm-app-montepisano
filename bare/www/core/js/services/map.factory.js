@@ -61,7 +61,7 @@ angular.module('webmapp')
 
     var skipAreaClick = null;
 
-    // var polylineDecoratorLayers = {};
+    var polylineDecoratorLayers = {};
 
     var controlLocate = null;
     var circleLocation = {
@@ -155,6 +155,31 @@ angular.module('webmapp')
                 markerClusters.addLayer(layer);
             } else if (isALineLayer(layerName)) {
                 map.addLayer(layer);
+
+                // if (!polylineDecoratorLayers[layerName]) {
+                //     polylineDecoratorLayers[layerName] = L.polylineDecorator(layer, {
+                //         patterns: [{
+                //             offset: 25,
+                //             repeat: 150,
+                //             symbol: L.Symbol.arrowHead({
+                //                 pixelSize: 15,
+                //                 pathOptions: {
+                //                     fillOpacity: 1,
+                //                     weight: 0
+                //                 }
+                //             })
+                //         }]
+                //     });
+                // }
+                // else {
+                //     map.removeLayer(polylineDecoratorLayers[layerName]);
+                // }
+
+                // polylineDecoratorLayers[layerName].addTo(map);
+                for (var i in polylineDecoratorLayers[layerName]) {
+                    polylineDecoratorLayers[layerName][i].addTo(map);
+                }
+
                 if (generalConf.useAlmostOver) {
                     map.almostOver.addLayer(layer);
                 }
@@ -174,9 +199,12 @@ angular.module('webmapp')
             } else if (isALineLayer(layerName)) {
                 map.removeLayer(layer);
 
-                // map.removeLayer(polylineDecoratorLayers[layerName]);
-
-                // polylineDecoratorLayers[layerName] = {};
+                if (polylineDecoratorLayers[layerName]) {
+                    // map.removeLayer(polylineDecoratorLayers[layerName]);
+                    for (var i in polylineDecoratorLayers[layerName]) {
+                        map.removeLayer(polylineDecoratorLayers[layerName][i]);
+                    }
+                }
 
                 if (generalConf.useAlmostOver) {
                     map.almostOver.removeLayer(layer);
@@ -392,7 +420,7 @@ angular.module('webmapp')
                 var currentLang = $translate.preferredLanguage(),
                     category = e.layer.feature.parent.label;
 
-                if (e.layer.feature.parent.languages[currentLang]) {
+                if (e.layer.feature.parent.languages && e.layer.feature.parent.languages[currentLang]) {
                     category = e.layer.feature.parent.languages[currentLang];
                 }
 
@@ -861,23 +889,26 @@ angular.module('webmapp')
                         }
                         globalOnEachLine(feature, layer);
 
-                        // console.log("lol");
+                        if (!polylineDecoratorLayers[currentOverlay.label]) {
+                            polylineDecoratorLayers[currentOverlay.label] = {};
+                        }
 
-                        // polylineDecoratorLayers[currentOverlay.label] = L.polylineDecorator(layer, {
-                        //     patterns: [{
-                        //         offset: 25,
-                        //         repeat: 150,
-                        //         symbol: L.Symbol.arrowHead({
-                        //             pixelSize: 15,
-                        //             pathOptions: {
-                        //                 fillOpacity: 1,
-                        //                 weight: 0
-                        //             }
-                        //         })
-                        //     }]
-                        // });
+                        polylineDecoratorLayers[currentOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
+                            patterns: [{
+                                offset: 20,
+                                repeat: 50,
+                                symbol: L.Symbol.arrowHead({
+                                    pixelSize: 15,
+                                    pathOptions: {
+                                        color: feature.properties.color,
+                                        fillOpacity: 0.7,
+                                        weight: 0
+                                    }
+                                })
+                            }]
+                        });
 
-                        // polylineDecoratorLayers[currentOverlay.label].addTo(map);
+                        polylineDecoratorLayers[currentOverlay.label][feature.properties.id].addTo(map);
                     },
                     style: function(feature) {
                         if (!feature.parent) {
