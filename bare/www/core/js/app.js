@@ -2,5 +2,6 @@ angular.module('webmapp', [
     'ionic',
     'ngCordova', 
     'igTruncate',
-    'pascalprecht.translate'
+    'pascalprecht.translate',
+    'countrySelect'
 ]);

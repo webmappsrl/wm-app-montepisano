@@ -95,7 +95,7 @@ angular.module('webmapp')
             loginScope.ud.checkPassword = '';
             loginScope.ud.newsletter = false;
             loginScope.ud.privacy = '';
-            loginScope.ud.country = '';
+            loginScope.ud.country = 'IT';
         };
 
         var isEmailValid = function(email) {

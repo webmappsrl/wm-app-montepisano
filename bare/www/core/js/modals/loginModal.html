@@ -210,14 +210,7 @@
                             onblur="this.placeholder = 'conferma password'">
                     </label>
                     <label class="item item-input">
-                        <input
-                            class="input-country input-ph"
-                            type="text"
-                            ng-model="ud.country"
-                            autocomplete="off"
-                            placeholder="{{::'paese' | translate}}"
-                            onfocus="this.placeholder = ''"
-                            onblur="this.placeholder = 'paese'">
+                        <country-select ng-model="ud.country" cs-mandatory></country-select>
                     </label>
 
                     <div

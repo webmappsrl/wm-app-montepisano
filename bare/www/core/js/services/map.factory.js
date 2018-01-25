@@ -389,11 +389,17 @@ angular.module('webmapp')
                         '</div>' + 
                     '</div>';
                 }
+                var currentLang = $translate.preferredLanguage(),
+                    category = e.layer.feature.parent.label;
+
+                if (e.layer.feature.parent.languages[currentLang]) {
+                    category = e.layer.feature.parent.languages[currentLang];
+                }
 
                 content = content + 
                     '<div class="popup-content-img">' +
                         '<div class="popup-category">' +
-                            e.layer.feature.parent.label +
+                            category +
                         '</div>' +
                         '<div class="popup-content-title">' + 
                             '<div class="popup-title">' +
@@ -1950,15 +1956,14 @@ angular.module('webmapp')
     };
 
     mapService.getCenterCoordsReference = function() {
-        if (centerCoords.lat && centerCoords.lng) {
-            return centerCoords;
-        }
-        else {
-            return {
+        if (!(centerCoords.lat || centerCoords.lng)) {
+            centerCoords = {
                 lat: CONFIG.MAP.center.lat.toFixed(4),
                 lng: CONFIG.MAP.center.lng.toFixed(4)
             };
         }
+
+        return centerCoords;
     };
 
     mapService.getCenterCoordsUTM32Reference = function() {

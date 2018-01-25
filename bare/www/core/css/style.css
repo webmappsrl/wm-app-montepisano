@@ -886,6 +886,14 @@ button.login-button.skip-login {
     position: relative; }
     .registration-form .list .item input {
       height: 60px; }
+    .registration-form .list .item select {
+      border: 0;
+      border-bottom: 1px solid rgba(145, 143, 117, 0.7);
+      background-color: transparent;
+      margin: 0;
+      padding: 13px 20% 14px 20%;
+      width: 100%;
+      font-size: 20px; }
 
 .registration-terms label {
   display: inline-block;
