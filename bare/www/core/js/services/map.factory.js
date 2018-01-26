@@ -163,8 +163,10 @@ angular.module('webmapp')
             } else if (isALineLayer(layerName)) {
                 map.addLayer(layer);
 
-                for (var i in polylineDecoratorLayers[layerName]) {
-                    polylineDecoratorLayers[layerName][i].addTo(map);
+                if (generalConf.showArrows) {
+                    for (var i in polylineDecoratorLayers[layerName]) {
+                        polylineDecoratorLayers[layerName][i].addTo(map);
+                    }
                 }
 
                 if (generalConf.useAlmostOver) {
@@ -186,9 +188,11 @@ angular.module('webmapp')
             } else if (isALineLayer(layerName)) {
                 map.removeLayer(layer);
 
-                if (polylineDecoratorLayers[layerName]) {
-                    for (var i in polylineDecoratorLayers[layerName]) {
-                        map.removeLayer(polylineDecoratorLayers[layerName][i]);
+                if (generalConf.showArrows) {
+                    if (polylineDecoratorLayers[layerName]) {
+                        for (var i in polylineDecoratorLayers[layerName]) {
+                            map.removeLayer(polylineDecoratorLayers[layerName][i]);
+                        }
                     }
                 }
 
@@ -875,33 +879,26 @@ angular.module('webmapp')
                         }
                         globalOnEachLine(feature, layer);
 
-                        if (!polylineDecoratorLayers[currentOverlay.label]) {
-                            polylineDecoratorLayers[currentOverlay.label] = {};
+                        if (generalConf.showArrows) {
+                            if (!polylineDecoratorLayers[currentOverlay.label]) {
+                                polylineDecoratorLayers[currentOverlay.label] = {};
+                            }
+    
+                            polylineDecoratorLayers[currentOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
+                                patterns: [{
+                                    offset: 20,
+                                    repeat: 100,
+                                    symbol: L.Symbol.marker({
+                                        markerOptions: {
+                                            icon: arrowIcon
+                                        },
+                                        rotate: true
+                                    })
+                                }]
+                            });
+    
+                            polylineDecoratorLayers[currentOverlay.label][feature.properties.id].addTo(map);
                         }
-
-                        var color = "#000000";
-
-                        if (feature.properties.color) {
-                            color = feature.properties.color;
-                        }
-                        else if (currentOverlay.color) {
-                            color = currentOverlay.color;
-                        }
-
-                        polylineDecoratorLayers[currentOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
-                            patterns: [{
-                                offset: 20,
-                                repeat: 100,
-                                symbol: L.Symbol.marker({
-                                    markerOptions: {
-                                        icon: arrowIcon
-                                    },
-                                    rotate: true
-                                })
-                            }]
-                        });
-
-                        polylineDecoratorLayers[currentOverlay.label][feature.properties.id].addTo(map);
                     },
                     style: function(feature) {
                         if (!feature.parent) {
