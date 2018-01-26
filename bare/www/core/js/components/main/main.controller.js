@@ -15,7 +15,8 @@ angular.module('webmapp')
         $cordovaDeviceOrientation,
         $cordovaSocialSharing,
         CONFIG,
-        $translate
+        $translate,
+        Auth
     ) {
         var vm = {};
 
@@ -197,48 +198,7 @@ angular.module('webmapp')
             }
         };
 
-        vm.reportCurrentPosition = function ($event) {
-            $event.stopPropagation();
-            var alertSent = 0,
-                text = "Sono qua! " +
-                vm.centerCoords.lat + '-' +
-                vm.centerCoords.lng;
-
-            if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) { //CONFIG.REPORT.type === 'email') {
-                console.log("Alerting via email...");
-                var emailTo = '',
-                    url = '';
-
-                if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.default) {
-                    emailTo = CONFIG.REPORT.email.default;
-                } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.default) {
-                    emailTo = CONFIG.MAIN.REPORT.email.default;
-                }
-
-                if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.apiUrl) {
-                    url = CONFIG.REPORT.email.apiUrl;
-                } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl) {
-                    url = CONFIG.MAIN.REPORT.email.apiUrl;
-                }
-
-                if (emailTo !== '' && url !== '') {
-                    var currentRequest = Communication.callAPI(url, {
-                        email: '',
-                        to: emailTo,
-                        text: text,
-                        lat: vm.centerCoords.lat,
-                        lng: vm.centerCoords.lng
-                    });
-
-                    currentRequest
-                        .then(function () {
-                                return;
-                            },
-                            function (error) {
-                                return;
-                            });
-                }
-            }
+        var sendSMS = function(text) {
             if (CONFIG.REPORT.sms || (CONFIG.MAIN && CONFIG.MAIN.REPORT.sms)) { //CONFIG.REPORT.type === 'email') {
                 console.log("Alerting via SMS...");
 
@@ -259,6 +219,70 @@ angular.module('webmapp')
                         return;
                     });
                 }
+            }
+        };
+
+        vm.reportCurrentPosition = function ($event) {
+            var userData = Auth.getUserData();
+            $event.stopPropagation();
+            text = "ALERT MSG - Myeasyroute user: " +
+                    userData.user_email + " http://maps.google.com/maps/place/" +
+                    vm.centerCoords.lat + ',' +
+                    vm.centerCoords.lng;
+            
+            if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) {
+                $ionicPopup.confirm({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Cliccando su OK verrà inviata una mail di segnalazione, vuoi procedere?")
+                })
+                .then(function (res) {
+                    if (res) {
+                        console.log("Alerting via email...");
+                        var emailTo = '',
+                            url = '';
+
+                        if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.default) {
+                            emailTo = CONFIG.REPORT.email.default;
+                        } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.default) {
+                            emailTo = CONFIG.MAIN.REPORT.email.default;
+                        }
+
+                        if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.apiUrl) {
+                            url = CONFIG.REPORT.email.apiUrl;
+                        } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl) {
+                            url = CONFIG.MAIN.REPORT.email.apiUrl;
+                        }
+
+                        var app = CONFIG.OPTIONS.title;
+                        if (CONFIG.MAIN) {
+                            app = CONFIG.MAIN.OPTIONS.title + " - " + app;
+                        }
+
+                        if (emailTo !== '' && url !== '') {
+                            var currentRequest = Communication.callAPI(url, {
+                                email: userData.user_email,
+                                to: emailTo,
+                                lat: vm.centerCoords.lat,
+                                lng: vm.centerCoords.lng,
+                                type: "alert",
+                                app: app
+                            });
+
+                            currentRequest
+                                .then(function () {
+                                        return;
+                                    },
+                                    function (error) {
+                                        return;
+                                    });
+                        }
+                    }
+
+                    sendSMS(text);
+                });
+            }
+            else {
+                sendSMS(text);
             }
         }
 

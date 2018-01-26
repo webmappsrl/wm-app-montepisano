@@ -178,12 +178,14 @@ angular.module('webmapp')
             }
 
             if (feature.phone) {
-                var regExp = /\+(\d{2,2})\s+(\d{3,3}\s\d+)/g;
+                var regExp = /\+(\d{2,4})\s+(\d{2,5}\s\d+)/g;
                 phoneMatch = regExp.exec(feature.phone);
+                console.log("Phone: ", phoneMatch);
 
                 if (phoneMatch) {
                     var localPhone = phoneMatch[2].replace(/\s/g, '');
                     vm.availablePhoneNumber = phoneMatch[1] + '-' + localPhone.replace(/(\d\d\d)(\d\d\d)(\d\d\d)/, '$1-$2-$3');
+                    console.log("asdas", vm.availablePhoneNumber);
                 }
             }
 
