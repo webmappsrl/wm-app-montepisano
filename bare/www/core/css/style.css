@@ -1429,6 +1429,8 @@ button.login-button.skip-login {
   height: 100%;
   width: 100%;
   background-color: white; }
+  #map img.leaflet-tile.leaflet-tile-loaded[src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="] {
+    visibility: hidden; }
 
 .map-center {
   pointer-events: none; }

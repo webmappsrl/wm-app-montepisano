@@ -901,7 +901,7 @@ angular.module('webmapp')
                                     pixelSize: 15,
                                     pathOptions: {
                                         color: feature.properties.color,
-                                        fillOpacity: 0.7,
+                                        fillOpacity: 1,
                                         weight: 0
                                     }
                                 })
