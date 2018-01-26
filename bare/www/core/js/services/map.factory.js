@@ -75,6 +75,13 @@ angular.module('webmapp')
         iconAnchor: [20, 20],
     });
 
+    var arrowIcon  = L.icon({
+        iconUrl: 'core/images/arrow-icon.png',
+
+        iconSize: [10, 14],
+        iconAnchor: [5, 7],
+    });
+
     var db = new PouchDB('webmapp');
 
     // for (var i in overlayLayersConf) {
@@ -156,26 +163,6 @@ angular.module('webmapp')
             } else if (isALineLayer(layerName)) {
                 map.addLayer(layer);
 
-                // if (!polylineDecoratorLayers[layerName]) {
-                //     polylineDecoratorLayers[layerName] = L.polylineDecorator(layer, {
-                //         patterns: [{
-                //             offset: 25,
-                //             repeat: 150,
-                //             symbol: L.Symbol.arrowHead({
-                //                 pixelSize: 15,
-                //                 pathOptions: {
-                //                     fillOpacity: 1,
-                //                     weight: 0
-                //                 }
-                //             })
-                //         }]
-                //     });
-                // }
-                // else {
-                //     map.removeLayer(polylineDecoratorLayers[layerName]);
-                // }
-
-                // polylineDecoratorLayers[layerName].addTo(map);
                 for (var i in polylineDecoratorLayers[layerName]) {
                     polylineDecoratorLayers[layerName][i].addTo(map);
                 }
@@ -200,7 +187,6 @@ angular.module('webmapp')
                 map.removeLayer(layer);
 
                 if (polylineDecoratorLayers[layerName]) {
-                    // map.removeLayer(polylineDecoratorLayers[layerName]);
                     for (var i in polylineDecoratorLayers[layerName]) {
                         map.removeLayer(polylineDecoratorLayers[layerName][i]);
                     }
@@ -893,17 +879,24 @@ angular.module('webmapp')
                             polylineDecoratorLayers[currentOverlay.label] = {};
                         }
 
+                        var color = "#000000";
+
+                        if (feature.properties.color) {
+                            color = feature.properties.color;
+                        }
+                        else if (currentOverlay.color) {
+                            color = currentOverlay.color;
+                        }
+
                         polylineDecoratorLayers[currentOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
                             patterns: [{
                                 offset: 20,
-                                repeat: 50,
-                                symbol: L.Symbol.arrowHead({
-                                    pixelSize: 15,
-                                    pathOptions: {
-                                        color: feature.properties.color,
-                                        fillOpacity: 1,
-                                        weight: 0
-                                    }
+                                repeat: 100,
+                                symbol: L.Symbol.marker({
+                                    markerOptions: {
+                                        icon: arrowIcon
+                                    },
+                                    rotate: true
                                 })
                             }]
                         });
@@ -919,7 +912,6 @@ angular.module('webmapp')
                 },
                 linesLayer = L.geoJson(data, geoJsonOptions);
 
-            // geojsonByLabel[currentOverlay.label] = data;
             overlayLayersByLabel[currentOverlay.label] = linesLayer;
             activateLineHandlers(linesLayer);
             defer.resolve(angular.extend({
