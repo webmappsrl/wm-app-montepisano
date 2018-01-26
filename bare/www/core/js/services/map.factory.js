@@ -163,7 +163,7 @@ angular.module('webmapp')
             } else if (isALineLayer(layerName)) {
                 map.addLayer(layer);
 
-                if (generalConf.showArrows) {
+                if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
                     for (var i in polylineDecoratorLayers[layerName]) {
                         polylineDecoratorLayers[layerName][i].addTo(map);
                     }
@@ -188,7 +188,7 @@ angular.module('webmapp')
             } else if (isALineLayer(layerName)) {
                 map.removeLayer(layer);
 
-                if (generalConf.showArrows) {
+                if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
                     if (polylineDecoratorLayers[layerName]) {
                         for (var i in polylineDecoratorLayers[layerName]) {
                             map.removeLayer(polylineDecoratorLayers[layerName][i]);
@@ -879,7 +879,7 @@ angular.module('webmapp')
                         }
                         globalOnEachLine(feature, layer);
 
-                        if (generalConf.showArrows) {
+                        if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
                             if (!polylineDecoratorLayers[currentOverlay.label]) {
                                 polylineDecoratorLayers[currentOverlay.label] = {};
                             }
