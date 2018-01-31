@@ -1416,7 +1416,7 @@ angular.module('webmapp')
 
         if (mapConf.showScaleInMap) {
             L.control.scale({
-                position: 'bottomleft',
+                position: 'topleft',
                 imperial: false
             }).addTo(map);
         }

@@ -102,25 +102,37 @@
                     <span 
                         class="icon"
                         ng-class="{
-                            'wm-icon-android-locate-full': !vm.followActive || vm.dragged,
-                            'fa-spin': vm.locateLoading && !vm.followActive
+                            'wm-icon-android-locate-full': !vm.followActive || vm.dragged || (vm.followActive && !vm.isRotating && !vm.dragged),
+                            'fa-spin': vm.locateLoading && !vm.followActive,
+                            'blu-icon': vm.followActive && !vm.isRotating && !vm.dragged
                         }"
                         style="-webkit-transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg); transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg)">
+                        <!-- <i
+                            class="icon wm-icon-android-locate-full"
+                            ng-if="vm.followActive && !vm.isRotating && !vm.dragged">
+                        </i> -->
                         <img
                             style="margin: 5px" 
                             src="core/images/compass.svg"
-                            ng-if="vm.followActive && !vm.isRotating && !vm.dragged">
-                        <img
-                            style="margin: 5px" 
-                            src="core/images/compass_.svg"
                             ng-if="vm.followActive && vm.isRotating && !vm.dragged">
                         </span>
                 </a>
             </div>
         </div>
 
+        <div class="coords-expander">
+            <a href="" ng-click="vm.expandCoords()">
+                <i ng-if="!vm.isCoordsBlockExpanded" class="wm-icon-ios7-arrow-back"></i>
+                <i ng-if="vm.isCoordsBlockExpanded" class="wm-icon-ios7-arrow-forward"></i>
+            </a>
+        </div>
+
         <div 
             class="coords-block"
+            ng-class="{
+                'animate-rightin': vm.isCoordsBlockExpanded,
+                'animate-rightout': !vm.isCoordsBlockExpanded
+            }"
             ng-if="vm.centerCoords"
             ng-click="vm.switchCoords()" >
             <span ng-if="vm.useUTM32">
@@ -129,7 +141,7 @@
                     class="coords-share-button"
                     ng-click="vm.shareCurrentPosition($event)"
                     ng-if="vm.useShare">
-                    <i class="icon wm-icon-alert-circled"></i>
+                    <i class="icon wm-icon-android-share"></i>
                 </button>
             </span>
             <span ng-if="!vm.useUTM32">
@@ -138,7 +150,7 @@
                     class="coords-share-button"
                     ng-click="vm.shareCurrentPosition($event)"
                     ng-if="vm.useShare">
-                    <i class="icon wm-icon-alert-circled"></i>
+                    <i class="icon wm-icon-android-share"></i>
                 </button>
             </span>
         </div>
@@ -146,7 +158,7 @@
 
         <div 
             class="report-control"
-            ng-if="vm.useReport">
+            ng-if="vm.useReport && !vm.outsideBoundingBox">
             <a 
                 href="" 
                 ng-click="vm.reportCurrentPosition($event)">

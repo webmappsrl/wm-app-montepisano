@@ -16,7 +16,8 @@ angular.module('webmapp')
         $cordovaSocialSharing,
         CONFIG,
         $translate,
-        Auth
+        Auth,
+        $ionicPlatform
     ) {
         var vm = {};
 
@@ -61,6 +62,37 @@ angular.module('webmapp')
 
             return result;
         };
+
+        var checkGPS = function() {
+            if (window.cordova && vm.showLocate) {
+                return cordova.plugins.diagnostic.isGpsLocationEnabled(
+                    function (e) {
+                        if (e) {
+                            vm.dragged = true;
+                            vm.gpsActive = true;
+                            vm.centerOnMe();
+                        } else {
+                            return $ionicPopup.confirm({
+                                title: $translate.instant("ATTENZIONE"),
+                                template: $translate.instant("Sembra che tu abbia il GPS disattivato. Per accedere a tutte le funzionalità dell'app occorre attivarlo. Vuoi farlo ora?")
+                            })
+                            .then(function (res) {
+                                if (res) {
+                                    cordova.plugins.diagnostic.switchToLocationSettings();
+                                    return;
+                                }
+                                else {
+                                    return;
+                                }
+                            })
+                        }
+                    },
+                    function (e) {
+                        alert('Error ' + e);
+                    }
+                );
+            }
+        }
 
         Utils.createModal('core/js/modals/shareModal.html', {
                 backdropClickToClose: true,
@@ -134,6 +166,9 @@ angular.module('webmapp')
         vm.canFollow = false;
 
         vm.dragged = false;
+        vm.isCoordsBlockExpanded = true;
+        vm.gpsActive = false;
+        vm.outsideBoundingBox = false;
 
         vm.deg = 0;
         vm.colors = CONFIG.STYLE;
@@ -144,7 +179,7 @@ angular.module('webmapp')
         vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
         vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
         vm.useUTM32 = false;
-        vm.useShare = false;
+        vm.useShare = CONFIG.OPTIONS.allowCoordsShare || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.allowCoordsShare);
         vm.useReport =
             (CONFIG.REPORT && (
                 (CONFIG.REPORT.email && CONFIG.REPORT.email.apiUrl && CONFIG.REPORT.email.default) ||
@@ -152,7 +187,6 @@ angular.module('webmapp')
             (CONFIG.MAIN && CONFIG.MAIN.REPORT && (
                 (CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl && CONFIG.MAIN.REPORT.email.default) ||
                 (CONFIG.MAIN.REPORT.sms && CONFIG.MAIN.REPORT.sms.default)));
-
 
         vm.shareCurrentPosition = function ($event) {
             $event.stopPropagation();
@@ -198,7 +232,7 @@ angular.module('webmapp')
             }
         };
 
-        var sendSMS = function(text) {
+        var sendSMS = function (text) {
             if (CONFIG.REPORT.sms || (CONFIG.MAIN && CONFIG.MAIN.REPORT.sms)) { //CONFIG.REPORT.type === 'email') {
                 console.log("Alerting via SMS...");
 
@@ -212,28 +246,45 @@ angular.module('webmapp')
 
                 if (smsTo !== '') {
                     $cordovaSocialSharing
-                    .shareViaSMS(text, smsTo)
-                    .then(function (result) {
-                        return;
-                    }, function (err) {
-                        return;
-                    });
+                        .shareViaSMS(text, smsTo)
+                        .then(function (result) {
+                            return;
+                        }, function (err) {
+                            return;
+                        });
                 }
             }
         };
 
         vm.reportCurrentPosition = function ($event) {
+            if (!vm.gpsActive) {
+                checkGPS();
+                return;
+            }
+
+            if (!prevLatLong) {
+                $ionicPopup.alert({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Attendi che il GPS ti localizzi e riprova"),
+                    buttons: [{
+                        text: 'Ok',
+                        type: 'button-positive'
+                    }]
+                });
+                return;
+            }
+
             var userData = Auth.getUserData();
             $event.stopPropagation();
             text = "ALERT MSG - Myeasyroute user: " +
-                    userData.user_email + " http://maps.google.com/maps/place/" +
-                    vm.centerCoords.lat + ',' +
-                    vm.centerCoords.lng;
-            
+                userData.user_email + " nome: " + userData.first_name + " cognome: " + userData.last_name + " https://www.google.com/maps/search/?api=1&query=" +
+                vm.centerCoords.lat + ',' +
+                vm.centerCoords.lng;
+
             if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) {
                 $ionicPopup.confirm({
                     title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Cliccando su OK verrà inviata una mail di segnalazione, vuoi procedere?")
+                    template: $translate.instant("Cliccando su OK verrà inviata una segnalazione di pericolo, vuoi procedere?")
                 })
                 .then(function (res) {
                     if (res) {
@@ -261,6 +312,8 @@ angular.module('webmapp')
                         if (emailTo !== '' && url !== '') {
                             var currentRequest = Communication.callAPI(url, {
                                 email: userData.user_email,
+                                firstName: userData.first_name,
+                                lastName: userData.last_name,
                                 to: emailTo,
                                 lat: vm.centerCoords.lat,
                                 lng: vm.centerCoords.lng,
@@ -276,12 +329,10 @@ angular.module('webmapp')
                                         return;
                                     });
                         }
+                        sendSMS(text);
                     }
-
-                    sendSMS(text);
                 });
-            }
-            else {
+            } else {
                 sendSMS(text);
             }
         }
@@ -314,6 +365,12 @@ angular.module('webmapp')
         };
 
         vm.centerOnMe = function () {
+
+            if (!vm.gpsActive) {
+                checkGPS();
+                return;
+            }
+
             if (vm.locateLoading) {
                 return;
             }
@@ -339,6 +396,7 @@ angular.module('webmapp')
                                 var sw, ne;
 
                                 if (!MapService.isInBoundingBox(posLat, posLong)) {
+                                    vm.outsideBoundingBox = true;
                                     $ionicPopup.alert({
                                         title: $translate.instant("ATTENZIONE"),
                                         template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
@@ -376,7 +434,7 @@ angular.module('webmapp')
                 return;
             }
 
-            if (vm.dragged) {
+            if (vm.dragged && prevLatLong) {
                 vm.dragged = false;
                 MapService.centerOnCoords(prevLatLong.lat, prevLatLong.long);
                 return;
@@ -444,24 +502,19 @@ angular.module('webmapp')
 
                                 if (!prevLatLong) {
                                     doCenter = true;
-                                    console.log(prevLatLong);
                                 } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 6) {
                                     doCenter = true;
-                                    console.log(distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long));
                                 }
-
-                                console.log(position, !vm.dragged && doCenter);
 
                                 if (doCenter) {
                                     MapService.drawPosition(position);
                                     if (!vm.dragged) {
-                                        console.log("yes");
                                         MapService.centerOnCoords(lat, long);
-                                        prevLatLong = {
-                                            lat: lat,
-                                            long: long
-                                        };
                                     }
+                                    prevLatLong = {
+                                        lat: lat,
+                                        long: long
+                                    };
                                 }
                             };
 
@@ -542,6 +595,10 @@ angular.module('webmapp')
 
         vm.goToMap = function () {
             Utils.goTo('/');
+        };
+
+        vm.expandCoords = function () {
+            vm.isCoordsBlockExpanded = !vm.isCoordsBlockExpanded;
         };
 
         vm.switchCoords = function () {
@@ -724,8 +781,12 @@ angular.module('webmapp')
 
         $rootScope.$on('map-dragstart', function (e, value) {
             vm.locateLoading = false;
-            vm.dragged = true;
-            // vm.turnOffGeolocationAndRotion();
+            if (vm.isRotating) {
+                vm.centerOnMe();
+            }
+            else {
+                vm.dragged = true;
+            }
         });
 
         window.addEventListener('orientationchange', function () {
@@ -736,6 +797,10 @@ angular.module('webmapp')
         //     MapService.resetMap();
         //     console.log('map destroy');
         // });
+
+        $ionicPlatform.ready(function () {
+            checkGPS();
+        });
 
         return vm;
     });

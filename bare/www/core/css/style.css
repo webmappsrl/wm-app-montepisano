@@ -1437,8 +1437,10 @@ button.login-button.skip-login {
 
 .locate-custom-control {
   position: absolute;
-  bottom: 20px;
+  bottom: 100px;
   right: 15px; }
+  .locate-custom-control .leaflet-control-locate a span.blu-icon, .locate-custom-control .leaflet-control-locate a:hover span.blu-icon {
+    color: #87f1ff; }
   .locate-custom-control a {
     cursor: pointer; }
 
@@ -1449,7 +1451,7 @@ button.login-button.skip-login {
   z-index: 800;
   width: 45px;
   height: 45px;
-  background-color: rgba(200, 0, 0, 0.6);
+  background-color: rgba(96, 88, 70, 0.7);
   border: none;
   border-radius: 50%; }
   .report-control a i::before {
@@ -1460,7 +1462,7 @@ button.login-button.skip-login {
     color: #fff; }
 
 .report-control:active {
-  background-color: #c80000; }
+  background-color: #605846; }
   .report-control:active a i::before {
     color: #cccccc; }
 
@@ -1683,13 +1685,62 @@ button.login-button.skip-login {
     .leaflet-control-locate a:hover span.fa-spinner {
       font-family: 'webmapp' !important; }
 
+/* Scale control */
+.leaflet-control-scale-line {
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid #605846;
+  color: #605846;
+  font-size: 15px; }
+
 /* Coordinates block */
+@keyframes animaterightin {
+  from {
+    right: -300px;
+    opacity: 0; }
+  to {
+    right: 37px;
+    opacity: 1; } }
+
+@keyframes animaterightout {
+  from {
+    right: 37px;
+    opacity: 1; }
+  to {
+    right: -300px;
+    opacity: 0; } }
+
+.animate-rightin {
+  position: absolute;
+  animation: animaterightin 0.4s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards; }
+
+.animate-rightout {
+  position: absolute;
+  animation: animaterightout 0.4s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards; }
+
+.coords-expander {
+  width: 36px;
+  height: 36px;
+  position: absolute;
+  bottom: 24px;
+  right: 0;
+  background: rgba(96, 88, 70, 0.8);
+  z-index: 800;
+  font-size: 26px;
+  padding: 4px 0;
+  text-align: center; }
+  .coords-expander a {
+    color: #fff; }
+
 .coords-block {
   margin: 0 auto;
   position: absolute;
-  right: 0;
-  left: 0;
-  bottom: 20px;
+  right: 37px;
+  bottom: 24px;
   z-index: 400;
   font-size: 20px;
   text-align: center; }
@@ -1712,13 +1763,21 @@ button.login-button.skip-login {
     vertical-align: middle; }
 
 .leaflet-bar,
-.coords-block {
+.coords-block,
+.coords-expander,
+.report-control {
   display: none; }
   .map-page .leaflet-bar,
   .map-search .leaflet-bar, .map-page
   .coords-block,
   .map-search
-  .coords-block {
+  .coords-block, .map-page
+  .coords-expander,
+  .map-search
+  .coords-expander, .map-page
+  .report-control,
+  .map-search
+  .report-control {
     display: block; }
 
 .leaflet-control-attribution {
