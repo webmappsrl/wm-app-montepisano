@@ -73,7 +73,15 @@
                 class="login-button button button-block"
                 ng-if="vm.isLoggedIn"
                 ng-click="vm.logout()">
-            {{::"LOGOUT" | translate}}
+            {{"LOGOUT" | translate}}
+            <i class="wm-icon-android-arrow-forward"></i>
+            </button>
+            <button
+                style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
+                class="login-button button button-block"
+                ng-if="!vm.isLoggedIn"
+                ng-click="vm.login()">
+            {{"LOGIN" | translate}}
             <i class="wm-icon-android-arrow-forward"></i>
             </button>
         </div>

@@ -3070,7 +3070,8 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
   box-shadow: 0px 2px 5px #d7d7d7;
   margin-bottom: 15px;
   background-color: #FCFDF7;
-  border-bottom: 0; }
+  border-bottom: 0;
+  height: calc(90vw * 35 / 100); }
 
 .details-image-reduced {
   position: relative;
@@ -3110,39 +3111,20 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
     float: right;
     text-align: right; }
 
-.buttons-reduced {
-  width: 96%;
-  margin: 0 2%;
-  border-top: 1px solid #BBBBBB;
+.button-reduced {
+  padding: 6px 0 0 0;
   position: absolute;
-  bottom: 0px;
-  min-height: 20px;
-  height: 2em; }
-  .buttons-reduced div {
-    float: left;
-    height: 100%; }
-  .buttons-reduced .half-button-reduced {
-    width: 50%; }
-  .buttons-reduced .third-button-reduced {
-    width: 33.33%; }
-  .buttons-reduced .half-button-reduced, .buttons-reduced .third-button-reduced {
-    margin: 3px 0;
-    height: 80%; }
-  .buttons-reduced [class^="wm-icon-"], .buttons-reduced [class*=" wm-icon-"] {
-    display: inline-block;
-    width: 100%; }
-  .buttons-reduced i {
-    font-size: 2em; }
-  .buttons-reduced .reduced-button {
-    background-color: inherit;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    padding: 0; }
-    .buttons-reduced .reduced-button .light-reduced {
-      color: #AAAAAA; }
-  .buttons-reduced .border-right-reduced {
-    border-right: 1px solid #BBBBBB; }
+  bottom: 0; }
+  .button-reduced button.login-button.button.button-block {
+    font-size: 16px;
+    width: auto;
+    padding: 0 11px 0 10px;
+    line-height: 24px;
+    min-height: 28px;
+    height: 28px;
+    margin-left: 12px !important;
+    margin-bottom: 5px !important;
+    letter-spacing: 0; }
 
 @media screen and (max-width: 360px) {
   .packages-title-reduced {

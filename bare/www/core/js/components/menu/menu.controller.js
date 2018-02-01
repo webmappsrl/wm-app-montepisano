@@ -128,6 +128,10 @@ angular.module('webmapp')
             loginScope.loginMode = mode;
         };
 
+        loginScope.hide = function() {
+            login.modal.hide();
+        }
+
         loginScope.completeRegistration = function(firstName, lastName, email, password) {
             if (loginScope.logging) {
                 return;

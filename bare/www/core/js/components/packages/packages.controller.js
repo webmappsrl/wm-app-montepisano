@@ -162,18 +162,23 @@ angular.module('webmapp')
 
         var getRoutes = function () {
             var setRoutes = function(data) {
-                if (!vm.useLogin) {
-                    for (var pos in data) {
-                        if (data[pos].wm_route_public) {
-                            vm.packages[pos] = data[pos];
-                        }
-                    }
-                }
-                else{
+                // if (!vm.useLogin) {
+                //     for (var pos in data) {
+                //         if (data[pos].wm_route_public) {
+                //             vm.packages[pos] = data[pos];
+                //         }
+                //     }
+                // }
+                // else{
                     vm.packages = data;
-                }
+                    console.log(data);
+                // }
 
                 for (var i in vm.packages) {
+                    if (vm.packages[i].wm_route_public) {
+                        vm.userPackagesId[vm.packages[i].id] = true;
+                    }
+
                     vm.packages[i].imgUrl = "core/images/image-loading.gif";
 
                     vm.packages[i].packageTitle = vm.packages[i].title.rendered;
@@ -217,6 +222,16 @@ angular.module('webmapp')
 
         // TODO: check if a map is not setted ready but there is a folder and delete it
 
+        vm.getPack = function(pack) {
+            console.log(vm.userDownloadedPackages);
+            if (vm.userDownloadedPackages[pack.id]) {
+                vm.openPackage(pack);
+            }
+            else {
+                vm.downloadPack(pack);
+            }
+        }
+
         modalScope.vm = {};
         modalScope.vm.hide = function () {
             modal && modal.hide();
@@ -253,13 +268,14 @@ angular.module('webmapp')
 
             userData = Auth.getUserData();
             getPackagesIdByUserId(userData.ID);
-        } else {
-            if (vm.useLogin) {
-                setTimeout(function () {
-                    showLogin();
-                }, 500);
-            }
         }
+        // else {
+        //     if (vm.useLogin) {
+        //         setTimeout(function () {
+        //             showLogin();
+        //         }, 500);
+        //     }
+        // }
 
         getRoutes();
 
@@ -329,6 +345,7 @@ angular.module('webmapp')
                             var downloadSuccess = function () {
                                 modalDownload.hide();
                                 vm.userDownloadedPackages[currentId] = true;
+                                console.log(vm.userDownloadedPackages);
                                 updateDownloadedPackagesInStorage();
 
                                 var available = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable) : {};
@@ -475,7 +492,8 @@ angular.module('webmapp')
                 vm.userDownloadedPackages = {};
 
                 //Add packages downloaded and available for the current user
-                vm.userDownloadedPackages = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable)[userData.ID] : {};
+                var wm_usersPackagesAvailable = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable) : {};
+                vm.userDownloadedPackages = localStorage.$wm_usersPackagesAvailable[userData.ID] ? localStorage.$wm_usersPackagesAvailable[userData.ID] : {};
                 localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
 
                 getPackagesIdByUserId(userData.ID);

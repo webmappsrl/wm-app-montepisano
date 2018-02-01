@@ -115,8 +115,9 @@
 
             <div
                 class="modal-inner-content modal-two-columns coupons-list reduced-list"
-                ng-if="(vm.isLoggedIn || !vm.useLogin) && vm.type === 'reduced'"
-                ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search">
+                ng-if="vm.type === 'reduced'"
+                ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search"
+                ng-click="vm.openDetailsRoute(item.id)">
                 <div class="details-image-reduced">
                     <img class="modal-image" ng-src="{{item.imgUrl}}" ng-model="item.imgUrl">
                 </div>
@@ -147,7 +148,23 @@
                         </div>
                     </div>
 
-                    <div class="buttons-reduced">
+                    <div class="button-reduced">
+                        <button
+                            style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
+                            class="login-button button button-block"
+                            ng-if="!vm.isLoggedIn || !vm.userPackagesId[item.id]"
+                            ng-click="vm.openDetailsRoute(item.id)"> <!-- ITINERARIO NON COMPRATO oppure NON LOGGATO-->
+                            OTTIENI
+                        </button>
+                        <button
+                            style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
+                            class="login-button button button-block"
+                            ng-if="vm.isLoggedIn && vm.userPackagesId[item.id]"
+                            ng-click="vm.getPack(item)"> <!-- LOGGATO e ITINERARIO COMPRATO (se non scaricato alert e scarica)-->
+                            APRI
+                        </button>
+                    </div>
+                    <!-- <div class="buttons-reduced">
                         <div
                             class="third-button-reduced border-right-reduced"
                             ng-if="vm.userDownloadedPackages[item.id]">
@@ -182,30 +199,21 @@
                                 class="reduced-button"
                                 ng-disabled="vm.userPackagesIdRquested[item.id]"
                                 ng-click="vm.requestPack(item)">
-                                <!-- TODO: pulsante con scritto "Richiesta effettuata" senza che vada su due righe -->
-                                <!-- {{ !vm.userPackagesIdRquested[item.id] ? 'Richiedi' : 'Richiesto'}} -->
                                 <i class="icon wm-icon-ios7-cloud-download-outline light-reduced"></i>
                             </button>
                         </div>
                         <div
-                            class="half-button-reduced"
-                            ng-if="!vm.userDownloadedPackages[item.id]">
+                            ng-class="{
+                                'half-button-reduced': !vm.userDownloadedPackages[item.id]
+                                'third-button-reduced': 'vm.userDownloadedPackages[item.id]
+                            }">
                             <button
                                 class="reduced-button"
                                 ng-click="vm.openDetailsRoute(item.id);">
                                 <i class="icon wm-icon-ios7-informatoutline"></i>
                             </button>
                         </div>
-                        <div
-                            class="third-button-reduced"
-                            ng-if="vm.userDownloadedPackages[item.id]">
-                            <button
-                                class="reduced-button"
-                                ng-click="vm.openDetailsRoute(item.id);">
-                                <i class="icon wm-icon-ios7-informatoutline"></i>
-                            </button>
-                        </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div style="clear: both"></div>

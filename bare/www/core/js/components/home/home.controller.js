@@ -29,10 +29,6 @@ angular.module('webmapp')
 
     vm.currentLang = $translate.preferredLanguage();
 
-    if (CONFIG.LOGIN && CONFIG.LOGIN.useLogin) {
-        vm.useLogin = CONFIG.LOGIN.useLogin;
-    }
-
     $ionicLoading.show();
 
     var getRoutes = function () {
@@ -186,22 +182,7 @@ angular.module('webmapp')
 
     var finishLoading = function() {
         $ionicLoading.hide();
-        if (vm.useLogin && !Auth.isLoggedIn()) {
-            setTimeout(function () {
-                showLogin();
-            }, 500);
-        }
     }
-
-    function showLogin(isRegistration) {
-        $rootScope.showLogin(isRegistration);
-    };
-
-    $rootScope.$on('logged-in', function () {
-        if (Auth.isLoggedIn()) {
-            location.href = "#/page/help";
-        }
-    });
 
     getRoutes();
 
