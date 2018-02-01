@@ -266,13 +266,14 @@ angular.module('webmapp')
 
                 //Remove packages from downloaded for single user
                 var available = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable) : {};
-                if (available !== {}) {
-                    for (var userId in available) {
-                        if (available[userId][id]) {
-                            delete available[userId][id];
-                        }
+                for (var userId in available) {
+                    if (available[userId][id]) {
+                        delete available[userId][id];
                     }
+                    console.log(userId);
                 }
+                console.log(available);
+                localStorage.$wm_usersPackagesAvailable = JSON.stringify(available);
             }, function(error) {
                 console.error(error);
             });

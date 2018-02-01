@@ -64,7 +64,7 @@ angular.module('webmapp')
         };
 
         var checkGPS = function() {
-            if (window.cordova && vm.showLocate) {
+            if (window.cordova && vm.showLocate && $state.current.name === "app.main.map") {
                 return cordova.plugins.diagnostic.isGpsLocationEnabled(
                     function (e) {
                         if (e) {
@@ -284,7 +284,7 @@ angular.module('webmapp')
             if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) {
                 $ionicPopup.confirm({
                     title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Cliccando su OK verrà inviata una segnalazione di pericolo, vuoi procedere?")
+                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
                 })
                 .then(function (res) {
                     if (res) {

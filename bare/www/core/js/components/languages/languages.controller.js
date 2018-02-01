@@ -78,7 +78,8 @@ angular.module('webmapp')
 
         $rootScope.$on('logged-in', function () {
             if (Auth.isLoggedIn()) {
-                location.href = "#/page/help";
+                // location.href = "#/page/help";
+                vm.isLoggedIn = true;
             }
         });
 

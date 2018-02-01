@@ -66,18 +66,44 @@
                     </div>
                 </div>
             </div>
-            <div class="details-footer">
-                <button
-                    style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
-                    class="login-button button button-block">
-                    VOUCHER
-                </button>
-                <button
-                    style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
-                    class="login-button button button-block">
-                    ACQUISTA
-                </button>
-            </div>
         </div>
     </ion-content>
+    <div
+        style="background: {{vm.colors.global.background}}" 
+        class="detailRoute-footer">
+        <div
+            ng-if="!vm.isLoggedIn || !vm.userPackagesId[vm.id]">
+            <button
+                style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
+                class="login-button button left"
+                ng-click="vm.openVoucherModal()">
+                {{::"Voucher" | translate}}
+            </button>
+            <button
+                style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
+                class="login-button button right"
+                ng-click="vm.requestRoute()">
+                {{::"Richiedi" | translate}}
+            </button>
+        </div>
+        <div
+            ng-if="vm.isLoggedIn && vm.userPackagesId[vm.id] && !vm.userDownloadedPackages[vm.id]">
+            <button
+                style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
+                class="login-button button button-block"
+                ng-click="vm.downloadPack()">
+                {{::"Scarica" | translate}}
+            </button>
+        </div>
+        <div
+            ng-if="vm.isLoggedIn && vm.userPackagesId[vm.id] && vm.userDownloadedPackages[vm.id]">
+            <button
+                style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
+                class="login-button button button-block"
+                ng-click="vm.openPackage()">
+                {{::"Apri" | translate}}
+            </button>
+            <i class="icon wm-icon-android-trash" ng-click="vm.removePack()"></i>
+        </div>
+    </div>
 </ion-view>

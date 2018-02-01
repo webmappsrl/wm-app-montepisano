@@ -120,6 +120,10 @@
                 ng-click="vm.openDetailsRoute(item.id)">
                 <div class="details-image-reduced">
                     <img class="modal-image" ng-src="{{item.imgUrl}}" ng-model="item.imgUrl">
+                    <i
+                        class="icon wm-icon-checkmark-circled"
+                        ng-if="vm.userDownloadedPackages[item.id]">
+                    </i>
                 </div>
                 <div class="details-reduced">
                     <div
@@ -160,7 +164,7 @@
                             style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
                             class="login-button button button-block"
                             ng-if="vm.isLoggedIn && vm.userPackagesId[item.id]"
-                            ng-click="vm.getPack(item)"> <!-- LOGGATO e ITINERARIO COMPRATO (se non scaricato alert e scarica)-->
+                            ng-click="vm.getPack(item, $event)"> <!-- LOGGATO e ITINERARIO COMPRATO (se non scaricato alert e scarica)-->
                             APRI
                         </button>
                     </div>

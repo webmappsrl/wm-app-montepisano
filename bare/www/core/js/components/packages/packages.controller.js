@@ -193,6 +193,8 @@ angular.module('webmapp')
                     }
                 }
 
+                localStorage.$wm_userPackagesId = JSON.stringify(vm.userPackagesId);
+
                 // TODO: download images
                 if (vm.type === "reduced") {
                     getImages();
@@ -222,8 +224,8 @@ angular.module('webmapp')
 
         // TODO: check if a map is not setted ready but there is a folder and delete it
 
-        vm.getPack = function(pack) {
-            console.log(vm.userDownloadedPackages);
+        vm.getPack = function(pack, $event) {
+            $event.stopPropagation();
             if (vm.userDownloadedPackages[pack.id]) {
                 vm.openPackage(pack);
             }
@@ -344,8 +346,7 @@ angular.module('webmapp')
 
                             var downloadSuccess = function () {
                                 modalDownload.hide();
-                                vm.userDownloadedPackages[currentId] = true;
-                                console.log(vm.userDownloadedPackages);
+                                vm.userDownloadedPackages[pack.id] = true;
                                 updateDownloadedPackagesInStorage();
 
                                 var available = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable) : {};
@@ -395,6 +396,7 @@ angular.module('webmapp')
                     if (res) {
                         Offline.removePackById(item.id);
                         delete vm.userDownloadedPackages[item.id];
+                        localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
                         Utils.forceDigest();
                     }
                 });
@@ -492,8 +494,7 @@ angular.module('webmapp')
                 vm.userDownloadedPackages = {};
 
                 //Add packages downloaded and available for the current user
-                var wm_usersPackagesAvailable = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable) : {};
-                vm.userDownloadedPackages = localStorage.$wm_usersPackagesAvailable[userData.ID] ? localStorage.$wm_usersPackagesAvailable[userData.ID] : {};
+                vm.userDownloadedPackages = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable)[userData.ID] : {};
                 localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
 
                 getPackagesIdByUserId(userData.ID);
@@ -504,7 +505,6 @@ angular.module('webmapp')
                         template: 'Loading...'
                     });
                 }
-                location.href = "#/page/help";
             }
         });
 

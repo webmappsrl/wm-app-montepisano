@@ -64,6 +64,13 @@ ion-content {
     margin: 0 auto;
     min-height: 90px;
   }
+  i.icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 20px;
+    color: #00cc00;
+  }
 }
 
 .details-reduced {
