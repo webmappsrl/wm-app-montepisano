@@ -83,6 +83,22 @@ angular.module('webmapp')
                         templateUrl: basePath + 'js/components/detailRoute/detailRoute.html'
                     }
                 }
+            })
+            .state('app.main.webmapp', {
+                url: '/page/webmapp',
+                views: {
+                    'inception-top': {
+                        templateUrl: basePath + 'js/components/webmapp/webmapp.html'
+                    }
+                }
+            })
+            .state('app.main.attribution', {
+                url: '/page/attribution',
+                views: {
+                    'inception-top': {
+                        templateUrl: basePath + 'js/components/attribution/attribution.html'
+                    }
+                }
             });
 
         if (CONFIGProvider.PAGES) {

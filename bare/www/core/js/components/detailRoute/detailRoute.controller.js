@@ -355,7 +355,7 @@ angular.module('webmapp')
         };
 
         var getPackagesIdByUserId = function (id) {
-            return $.getJSON(baseUrl + endpoint + 'route_id/' + id, function (data) {
+            return $.getJSON(CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'route_id/' + id, function (data) {
                 vm.userPackagesId = {};
 
                 for (var key in data) {

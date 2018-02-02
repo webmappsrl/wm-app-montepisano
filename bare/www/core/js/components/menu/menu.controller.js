@@ -49,6 +49,20 @@ angular.module('webmapp')
 
     vm.menuWidth = Math.min(window.innerWidth - 50, 400);
 
+    if (!CONFIG.mainMenuHideWebmappPage) {
+        mainMenuItems[mainMenuItems.length] = {
+            type: 'webmapp',
+            label: 'Webmapp'
+        };
+    }
+
+    if (!CONFIG.mainMenuHideAttributionPage) {
+        mainMenuItems[mainMenuItems.length] = {
+            type: 'attribution',
+            label: 'Attribution'
+        };
+    }
+
     for (var i in mainMenuItems) {
         var type = mainMenuItems[i].type,
             currentUrl = Model.buildItemUrl(mainMenuItems[i]);
@@ -95,7 +109,7 @@ angular.module('webmapp')
             loginScope.ud.checkPassword = '';
             loginScope.ud.newsletter = false;
             loginScope.ud.privacy = '';
-            loginScope.ud.country = 'IT';
+            loginScope.ud.country = '';
         };
 
         var isEmailValid = function(email) {

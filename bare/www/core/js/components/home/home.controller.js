@@ -1,6 +1,6 @@
 angular.module('webmapp')
 
-.controller('HomeController', function LanguagesController(
+.controller('HomeController', function HomeController(
     $location,
     $state,
     $rootScope,

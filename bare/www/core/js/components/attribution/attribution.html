@@ -1,9 +1,9 @@
 <ion-view 
     cache-view="false" 
-    ng-controller="WebmappController as vm">
+    ng-controller="AttributionController as vm">
     <ion-nav-title>
         <span>
-            Webmapp
+            {{vm.title}}
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">
@@ -16,10 +16,7 @@
         <div 
             class="static-content card-content" 
             style="text-align: left">
-            <img src="/core/images/webmapp.png" alt="Webmapp Logo" width="100%">
-            <br>
-            {{::"Realizziamo mappe ed applicazioni web e mobile per il turismo natura e le attività outdoor." | translate}}<br>
-            {{::"Per maggiori informazioni, visitate il nostro sito web: " | translate}}<a href="" ng-click="vm.openInExternalBrowser('http://webmapp.it')">webmapp.it</a>
+            Tante cose benne su openstreetmap e altro
         </div>
     </ion-content>
 </ion-view>

@@ -1,6 +1,6 @@
 angular.module('webmapp')
 
-.controller('WebmappController', function WebmappController(
+.controller('AttributionController', function AttributionController(
     $location,
     $rootScope,
     $templateCache,
@@ -11,12 +11,14 @@ angular.module('webmapp')
     Offline,
     Utils,
     $ionicPopup,
-    $state
+    $state,
+    CONFIG
 ) {
     var vm = {};
 
     vm.openInAppBrowser = Utils.openInAppBrowser;
     vm.openInExternalBrowser = Utils.openInExternalBrowser;
+    vm.title = CONFIG.OPTIONS.title;
 
     return vm;
 });

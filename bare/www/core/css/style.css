@@ -3083,9 +3083,10 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
     min-height: 90px; }
   .details-image-reduced i.icon {
     position: absolute;
-    top: 3px;
-    right: 3px;
-    font-size: 15px; }
+    top: 5px;
+    right: 5px;
+    font-size: 20px;
+    color: #00cc00; }
 
 .details-reduced {
   float: right;
