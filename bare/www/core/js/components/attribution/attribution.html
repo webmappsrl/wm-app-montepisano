@@ -1,23 +1,34 @@
-<ion-view 
-    cache-view="false" 
-    ng-controller="AttributionController as vm">
+<ion-view cache-view="false" ng-controller="AttributionController as vm">
     <ion-nav-title>
         <span>
             {{vm.title}}
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">
-        <button 
-            class="no-animate button button-icon icon ion-navicon"
-            menu-toggle="left"></button>
+        <button class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
 
-    <ion-content style="color: black; background: white">
-        <div 
-            class="static-content card-content" 
-            style="text-align: left">
-            Tante cose benne su openstreetmap e altro
+    <ion-content style="background: {{vm.colors.global.background}}">
+        <div class="static-content card-content" style="text-align: left">
+            <div class="attribution-title">
+                {{::"Dati cartografici" | translate}}
+            </div>
+            <div class="attribution-text">
+                © <a href="" ng-click="vm.openInAppBrowser('https://www.openstreetmap.org/')">OpenStreetMap and contributors</a>
+            </div>
+            <div class="attribution-title">
+                {{::"Mappa di base" | translate}}
+            </div>
+            <div class="attribution-text">
+                © <a href="" ng-click="vm.openInAppBrowser('http://www.webmapp.it/')">Webmapp.it</a>, {{::"distribuita con licenza" | translate}} <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA</a>
+            </div>
+            <div class="attribution-title">
+                Software
+            </div>
+            <div class="attribution-text">
+                © <a href="" ng-click="vm.openInAppBrowser('https://ionicframework.com/')">Ionic</a><br/>
+                © <a href="" ng-click="vm.openInAppBrowser('http://leafletjs.com/')">Leaflet</a>
+            </div>
         </div>
     </ion-content>
 </ion-view>
-

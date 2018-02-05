@@ -1,0 +1,23 @@
+/*
+ * ATTRIBUTION PAGE
+ *
+ * Styles for attribution page
+ */
+
+/* ------------------------------------ *\
+   #ATTRIBUTION
+\* ------------------------------------ */
+
+ion-content {
+  div.static-content.card-content {
+    color: $color-brown;
+    div.attribution-title {
+      font-size: 1.5em;
+      padding: 20px 0 10px 0;
+    }
+    div.attribution-text {
+      font-size: 1.2em;
+      padding: 0 10px;
+    }
+  }
+}

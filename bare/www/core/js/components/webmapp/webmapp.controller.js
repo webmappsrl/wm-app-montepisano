@@ -11,12 +11,13 @@ angular.module('webmapp')
     Offline,
     Utils,
     $ionicPopup,
-    $state
+    $state,
+    CONFIG
 ) {
     var vm = {};
 
+    vm.colors = CONFIG.STYLE;
     vm.openInAppBrowser = Utils.openInAppBrowser;
-    vm.openInExternalBrowser = Utils.openInExternalBrowser;
 
     return vm;
 });

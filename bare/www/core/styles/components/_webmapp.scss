@@ -1,0 +1,25 @@
+/*
+ * WEBMAPP PAGE
+ *
+ * Styles for webmapp page
+ */
+
+/* ------------------------------------ *\
+   #WEBMAPP
+\* ------------------------------------ */
+
+ion-content {
+  div.static-content.card-content {
+    color: $color-brown;
+    div.webmapp-paragraph {
+      font-size: 1.2em;
+      padding: 10px 0;
+    }
+    div.webmapp-img {
+      margin: 15px auto 0;
+      img {
+        height: auto;
+      }
+    }
+  }
+}

@@ -16,8 +16,8 @@ angular.module('webmapp')
 ) {
     var vm = {};
 
+    vm.colors = CONFIG.STYLE;
     vm.openInAppBrowser = Utils.openInAppBrowser;
-    vm.openInExternalBrowser = Utils.openInExternalBrowser;
     vm.title = CONFIG.OPTIONS.title;
 
     return vm;

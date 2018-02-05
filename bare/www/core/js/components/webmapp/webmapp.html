@@ -1,26 +1,27 @@
-<ion-view 
-    cache-view="false" 
-    ng-controller="WebmappController as vm">
+<ion-view cache-view="false" ng-controller="WebmappController as vm">
     <ion-nav-title>
         <span>
             Webmapp
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">
-        <button 
-            class="no-animate button button-icon icon ion-navicon"
-            menu-toggle="left"></button>
+        <button class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
 
-    <ion-content style="color: black; background: white">
-        <div 
-            class="static-content card-content" 
-            style="text-align: left">
-            <img src="/core/images/webmapp.png" alt="Webmapp Logo" width="100%">
-            <br>
-            {{::"Realizziamo mappe ed applicazioni web e mobile per il turismo natura e le attività outdoor." | translate}}<br>
-            {{::"Per maggiori informazioni, visitate il nostro sito web: " | translate}}<a href="" ng-click="vm.openInExternalBrowser('http://webmapp.it')">webmapp.it</a>
+    <ion-content style="background: {{vm.colors.global.background}}">
+        <div class="static-content card-content" style="text-align: left">
+            <div class="webmapp-img">
+                <img src="core/images/logowebmapp.png" />
+            </div>
+            <div class="webmapp-paragraph">
+                <a href="" ng-click="vm.openInAppBrowser('http://www.webmapp.it/')">Webmapp</a> {{::"realizza servizi cartografici web e mobile, e cartografia stampata per il Turismo Natura & Avventura e il Marketing Territoriale in genere." | translate}}
+            </div>
+            <div class="webmapp-paragraph">
+                <a href="" ng-click="vm.openInAppBrowser('http://webmapp.it/myeasyroute/')">MyEasyRoute</a> {{::"è una piattaforma sviluppata per i tour operator, che permette di creare un’App mobile (iOS e Android), organizzata secondo pacchetti viaggio: itinerari, punti di interesse, mappe OpenStreetMap. Tutti i contenuti sono disponibili in modalità offline." | translate}}
+            </div>
+            <div class="webmapp-paragraph">
+                {{::"Per maggiori informazioni:" | translate}} <a href="mailto:info@webmapp.it?Subject=MuEasyRoute%20App%20info">info@webmapp.it</a>
+            </div>
         </div>
     </ion-content>
 </ion-view>
-

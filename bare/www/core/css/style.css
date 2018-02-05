@@ -3268,3 +3268,36 @@ div.detailRoute-footer {
     bottom: 22px;
     left: 14px;
     font-size: 38px; }
+
+/*
+ * ATTRIBUTION PAGE
+ *
+ * Styles for attribution page
+ */
+/* ------------------------------------ *   #ATTRIBUTION
+\* ------------------------------------ */
+ion-content div.static-content.card-content {
+  color: #605846; }
+  ion-content div.static-content.card-content div.attribution-title {
+    font-size: 1.5em;
+    padding: 20px 0 10px 0; }
+  ion-content div.static-content.card-content div.attribution-text {
+    font-size: 1.2em;
+    padding: 0 10px; }
+
+/*
+ * WEBMAPP PAGE
+ *
+ * Styles for webmapp page
+ */
+/* ------------------------------------ *   #WEBMAPP
+\* ------------------------------------ */
+ion-content div.static-content.card-content {
+  color: #605846; }
+  ion-content div.static-content.card-content div.webmapp-paragraph {
+    font-size: 1.2em;
+    padding: 10px 0; }
+  ion-content div.static-content.card-content div.webmapp-img {
+    margin: 15px auto 0; }
+    ion-content div.static-content.card-content div.webmapp-img img {
+      height: auto; }
