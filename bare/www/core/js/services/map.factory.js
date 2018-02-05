@@ -444,7 +444,7 @@ angular.module('webmapp')
             //     '<i class="icon wm-icon-android-close"></i></button>' : '') +
             ;
 
-            console.log(e);
+            // console.log(e);
 
             // Check for pictures linked
             // if (false) {
@@ -1093,7 +1093,7 @@ angular.module('webmapp')
     var initializeLayers = function() {
         var promises = [];
 
-        console.log(overlayLayersConf);
+        // console.log(overlayLayersConf);
         for (var i = overlayLayersConf.length - 1; i >= 0; i--) {
             if (!overlayLayersConf[i]) {
                 continue;

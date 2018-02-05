@@ -386,8 +386,22 @@ button.login-button {
 .modal-filters .item-checkbox {
   padding-left: 0; }
 
-.modal-filters .item-checkbox.is-selected, .modal-filters .item-checkbox.is-not-selected {
+.modal-filters .item-checkbox.is-selected,
+.modal-filters .item-checkbox.is-not-selected {
   padding-left: 25px; }
+
+div.popup .popup-head h3 {
+  font-size: 1.7em !important; }
+
+div.popup .popup-head h5.popup-sub-title {
+  font-size: 1.2em; }
+
+div.popup .popup-body input {
+  padding: 3px 15px;
+  font-size: 1.2em; }
+
+div.popup .popup-body span {
+  font-size: 1.2em; }
 
 /**
  * TABLE

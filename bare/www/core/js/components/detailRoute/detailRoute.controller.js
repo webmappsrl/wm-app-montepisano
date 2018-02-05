@@ -175,35 +175,93 @@ angular.module('webmapp')
             }
         };
 
-        var notLoggedIn = function() {
+        var notLoggedIn = function () {
             $ionicPopup.confirm({
-                title: $translate.instant("ATTENZIONE"),
-                template: $translate.instant("Devi eseguire l'accesso per poter usufruire di questa funzionalità")
-            })
-            .then(function (res) {
-                if (res) {
-                    showLogin();
-                }
-            });
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Devi eseguire l'accesso per poter usufruire di questa funzionalità")
+                })
+                .then(function (res) {
+                    if (res) {
+                        showLogin();
+                    }
+                });
         };
 
-        vm.openVoucherModal = function() {
+        vm.openVoucherModal = function () {
             if (vm.isLoggedIn) {
-                $ionicPopup.alert({
-                    template: $translate.instant("Questa funzionalità sarà disponibile dai prossimi update")
+                $ionicPopup.prompt({
+                    title: $translate.instant('Voucher'),
+                    subTitle: $translate.instant('Inserisci il voucher da attivare'),
+                    inputType: 'text',
+                    inputPlaceholder: $translate.instant('Voucher')
+                })
+                .then(function (res) {
+                    if (res) {
+                        var data = $.param({
+                            route_id: routeDetail.id,
+                            user_id: userData.ID,
+                            code: res
+                        });
+
+                        var config = {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+                            }
+                        }
+
+                        $ionicLoading.show();
+
+                        $http.post(
+                                CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
+                                data,
+                                config
+                            )
+                            .success(function (data, status, headers, config) {
+                                $ionicLoading.hide();
+                                ///Update offline data
+                                vm.userPackagesId[routeDetail.id] = true;
+                                localStorage.$wm_userPackagesId = JSON.stringify(vm.userPackagesId);
+                            })
+                            .error(function (data, status, header, config) {
+                                $ionicLoading.hide();
+                                if (data.error === "Voucher Expired") {
+                                    $ionicPopup.alert({
+                                        template: $translate.instant("Il voucher che hai utilizzato è scaduto")
+                                    });
+                                }
+                                else {
+                                    $ionicPopup.alert({
+                                        template: $translate.instant("Il voucher che hai inserito non è valido. Controlla di averlo inserito correttamente e inseriscilo nuovamente.")
+                                    });
+                                }
+                            });
+                    }
                 });
-            }
-            else {
+
+                // $http({
+                //     method: 'POST',
+                //     url: CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
+                //     dataType: 'json',
+                //     crossDomain: true,
+                //     data: data,
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     }
+                // }).success(function (data) {
+                //     console.log(data);
+                // }).error(function (error) {
+                //     console.error(error);
+                // });
+            } else {
                 notLoggedIn();
             }
 
         };
 
-        vm.requestRoute = function() {
+        vm.requestRoute = function () {
             if (vm.isLoggedIn) {
                 requestPack(routeDetail);
-            }
-            else {
+            } else {
                 notLoggedIn();
             }
         };
@@ -258,7 +316,7 @@ angular.module('webmapp')
                     }
                 });
         };
-        
+
         vm.openPackage = function () {
             var basePackUrl = Offline.getOfflineMhildBasePathById(routeDetail.id);
 
