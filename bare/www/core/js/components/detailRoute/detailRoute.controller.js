@@ -1,6 +1,7 @@
 angular.module('webmapp')
 
     .controller('DetailRouteController', function DetailRouteController(
+        $http,
         $state,
         $scope,
         $rootScope,
@@ -231,7 +232,7 @@ angular.module('webmapp')
 
                         $http({
                             method: 'POST',
-                            url: baseUrl + endpoint + 'mail',
+                            url: CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'mail',
                             dataType: 'json',
                             crossDomain: true,
                             data: data,
