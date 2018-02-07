@@ -49,14 +49,14 @@ angular.module('webmapp')
 
     vm.menuWidth = Math.min(window.innerWidth - 50, 400);
 
-    if (!CONFIG.mainMenuHideWebmappPage) {
+    if (!CONFIG.OPTIONS.mainMenuHideWebmappPage) {
         mainMenuItems[mainMenuItems.length] = {
             type: 'webmapp',
             label: 'Webmapp'
         };
     }
 
-    if (!CONFIG.mainMenuHideAttributionPage) {
+    if (!CONFIG.OPTIONS.mainMenuHideAttributionPage) {
         mainMenuItems[mainMenuItems.length] = {
             type: 'attribution',
             label: 'Attribution'
