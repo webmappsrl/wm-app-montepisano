@@ -421,6 +421,13 @@ angular.module('webmapp')
                     vm.userPackagesId[key] = true;
                 }
 
+                for (var i in vm.packages) {
+                    if (vm.packages[i].wm_route_public) {
+                        vm.userPackagesId[vm.packages[i].id] = true;
+                        localStorage.$wm_userPackagesId = JSON.stringify(vm.userPackagesId);
+                    }
+                }
+
                 localStorage.$wm_userPackagesId = JSON.stringify(vm.userPackagesId);
 
                 Utils.forceDigest();
@@ -453,6 +460,7 @@ angular.module('webmapp')
                 localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
 
                 getPackagesIdByUserId(userData.ID);
+
                 Utils.forceDigest();
             }
         });
