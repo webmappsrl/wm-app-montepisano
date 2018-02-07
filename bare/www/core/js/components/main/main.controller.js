@@ -63,34 +63,78 @@ angular.module('webmapp')
             return result;
         };
 
-        var checkGPS = function() {
-            if (window.cordova && vm.showLocate && $state.current.name === "app.main.map") {
-                return cordova.plugins.diagnostic.isGpsLocationEnabled(
-                    function (e) {
-                        if (e) {
-                            vm.dragged = true;
-                            vm.gpsActive = true;
-                            vm.centerOnMe();
-                        } else {
-                            return $ionicPopup.confirm({
-                                title: $translate.instant("ATTENZIONE"),
-                                template: $translate.instant("Sembra che tu abbia il GPS disattivato. Per accedere a tutte le funzionalità dell'app occorre attivarlo. Vuoi farlo ora?")
-                            })
-                            .then(function (res) {
-                                if (res) {
+        var checkGPS = function () {
+            var onSuccess = function (e) {
+                if (e) {
+                    vm.dragged = true;
+                    vm.gpsActive = true;
+                    vm.centerOnMe();
+                } else {
+                    return $ionicPopup.confirm({
+                            title: $translate.instant("ATTENZIONE"),
+                            template: $translate.instant("Sembra che tu abbia il GPS disattivato. Per accedere a tutte le funzionalità dell'app occorre attivarlo. Vuoi farlo ora?")
+                        })
+                        .then(function (res) {
+                            if (res) {
+                                if (window.cordova.platformId === "ios") {
+                                    cordova.plugins.diagnostic.switchToSettings();
+                                } else {
                                     cordova.plugins.diagnostic.switchToLocationSettings();
-                                    return;
                                 }
-                                else {
-                                    return;
-                                }
-                            })
+                                return;
+                            } else {
+                                return;
+                            }
+                        })
+                }
+            };
+
+            var onError = function (e) {
+                alert("Error: " + e);
+            }
+
+            if (window.cordova && vm.showLocate && $state.current.name === "app.main.map") {
+                return cordova.plugins.diagnostic.isLocationAuthorized(function (authorized) {
+                    if (authorized) {
+                        if (window.cordova.platformId === "ios") {
+                            return cordova.plugins.diagnostic.isLocationEnabled(
+                                onSuccess,
+                                onError
+                            );
+                        } else {
+                            return cordova.plugins.diagnostic.isGpsLocationEnabled(
+                                onSuccess,
+                                onError
+                            );
                         }
-                    },
-                    function (e) {
-                        alert('Error ' + e);
+                    } else {
+                        return cordova.plugins.diagnostic.requestLocationAuthorization(function (result) {
+                            if (result) {
+                                if (window.cordova.platformId === "ios") {
+                                    return cordova.plugins.diagnostic.isLocationEnabled(
+                                        onSuccess,
+                                        onError
+                                    );
+                                } else {
+                                    return cordova.plugins.diagnostic.isGpsLocationEnabled(
+                                        onSuccess,
+                                        onError
+                                    );
+                                }
+                            }
+                            else {
+                                $ionicPopup.alert({
+                                    title: $translate.instant("ATTENZIONE"),
+                                    template: $translate.instant("Tutte le funzionalità legate alla tua posizione rimarranno disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo"),
+                                    buttons: [{
+                                        text: 'Ok',
+                                        type: 'button-positive'
+                                    }]
+                                });
+                            }
+                        });
                     }
-                );
+                });
             }
         }
 
@@ -283,55 +327,55 @@ angular.module('webmapp')
 
             if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) {
                 $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
-                })
-                .then(function (res) {
-                    if (res) {
-                        console.log("Alerting via email...");
-                        var emailTo = '',
-                            url = '';
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                    })
+                    .then(function (res) {
+                        if (res) {
+                            console.log("Alerting via email...");
+                            var emailTo = '',
+                                url = '';
 
-                        if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.default) {
-                            emailTo = CONFIG.REPORT.email.default;
-                        } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.default) {
-                            emailTo = CONFIG.MAIN.REPORT.email.default;
+                            if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.default) {
+                                emailTo = CONFIG.REPORT.email.default;
+                            } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.default) {
+                                emailTo = CONFIG.MAIN.REPORT.email.default;
+                            }
+
+                            if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.apiUrl) {
+                                url = CONFIG.REPORT.email.apiUrl;
+                            } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl) {
+                                url = CONFIG.MAIN.REPORT.email.apiUrl;
+                            }
+
+                            var app = CONFIG.OPTIONS.title;
+                            if (CONFIG.MAIN) {
+                                app = CONFIG.MAIN.OPTIONS.title + " - " + app;
+                            }
+
+                            if (emailTo !== '' && url !== '') {
+                                var currentRequest = Communication.callAPI(url, {
+                                    email: userData.user_email,
+                                    firstName: userData.first_name,
+                                    lastName: userData.last_name,
+                                    to: emailTo,
+                                    lat: vm.centerCoords.lat,
+                                    lng: vm.centerCoords.lng,
+                                    type: "alert",
+                                    app: app
+                                });
+
+                                currentRequest
+                                    .then(function () {
+                                            return;
+                                        },
+                                        function (error) {
+                                            return;
+                                        });
+                            }
+                            sendSMS(text);
                         }
-
-                        if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.apiUrl) {
-                            url = CONFIG.REPORT.email.apiUrl;
-                        } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl) {
-                            url = CONFIG.MAIN.REPORT.email.apiUrl;
-                        }
-
-                        var app = CONFIG.OPTIONS.title;
-                        if (CONFIG.MAIN) {
-                            app = CONFIG.MAIN.OPTIONS.title + " - " + app;
-                        }
-
-                        if (emailTo !== '' && url !== '') {
-                            var currentRequest = Communication.callAPI(url, {
-                                email: userData.user_email,
-                                firstName: userData.first_name,
-                                lastName: userData.last_name,
-                                to: emailTo,
-                                lat: vm.centerCoords.lat,
-                                lng: vm.centerCoords.lng,
-                                type: "alert",
-                                app: app
-                            });
-
-                            currentRequest
-                                .then(function () {
-                                        return;
-                                    },
-                                    function (error) {
-                                        return;
-                                    });
-                        }
-                        sendSMS(text);
-                    }
-                });
+                    });
             } else {
                 sendSMS(text);
             }
@@ -783,8 +827,7 @@ angular.module('webmapp')
             vm.locateLoading = false;
             if (vm.isRotating) {
                 vm.centerOnMe();
-            }
-            else {
+            } else {
                 vm.dragged = true;
             }
         });
