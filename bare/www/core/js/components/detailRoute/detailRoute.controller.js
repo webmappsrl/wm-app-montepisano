@@ -52,6 +52,10 @@ angular.module('webmapp')
         vm.imageUrl = CONFIG.OFFLINE.imagesUrl;
         vm.goBack = Utils.goBack;
 
+        if (CONFIG.MAIN) {
+            Utils.goTo(CONFIG.OPTIONS.startUrl);
+        }
+
         $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/imagesModal.html', {
             scope: modalScope,
             animation: 'slide-in-up'
@@ -332,7 +336,6 @@ angular.module('webmapp')
                         template: 'Loading...'
                     });
 
-                    Utils.goTo('/');
                     location.reload();
                     Utils.forceDigest();
                 });
