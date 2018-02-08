@@ -277,9 +277,7 @@ angular.module('webmapp')
         };
 
         var sendSMS = function (text) {
-            if (CONFIG.REPORT.sms || (CONFIG.MAIN && CONFIG.MAIN.REPORT.sms)) { //CONFIG.REPORT.type === 'email') {
-                console.log("Alerting via SMS...");
-
+            if (CONFIG.REPORT.sms || (CONFIG.MAIN && CONFIG.MAIN.REPORT.sms)) {
                 var smsTo = '';
 
                 if (CONFIG.REPORT && CONFIG.REPORT.sms && CONFIG.REPORT.sms.default) {
@@ -309,7 +307,7 @@ angular.module('webmapp')
             if (!prevLatLong) {
                 $ionicPopup.alert({
                     title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Attendi che il GPS ti localizzi e riprova"),
+                    template: $translate.instant("Devi essere localizzato per segnalare la tua posizione"),
                     buttons: [{
                         text: 'Ok',
                         type: 'button-positive'
@@ -322,8 +320,8 @@ angular.module('webmapp')
             $event.stopPropagation();
             text = "ALERT MSG - Myeasyroute user: " +
                 userData.user_email + " nome: " + userData.first_name + " cognome: " + userData.last_name + " https://www.google.com/maps/search/?api=1&query=" +
-                vm.centerCoords.lat + ',' +
-                vm.centerCoords.lng;
+                prevLatLong.lat + ',' +
+                prevLatLong.long;
 
             if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) {
                 $ionicPopup.confirm({
@@ -332,7 +330,6 @@ angular.module('webmapp')
                     })
                     .then(function (res) {
                         if (res) {
-                            console.log("Alerting via email...");
                             var emailTo = '',
                                 url = '';
 
@@ -359,8 +356,8 @@ angular.module('webmapp')
                                     firstName: userData.first_name,
                                     lastName: userData.last_name,
                                     to: emailTo,
-                                    lat: vm.centerCoords.lat,
-                                    lng: vm.centerCoords.lng,
+                                    lat: prevLatLong.lat,
+                                    lng: prevLatLong.long,
                                     type: "alert",
                                     app: app
                                 });
