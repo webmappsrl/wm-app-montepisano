@@ -594,7 +594,8 @@ div.popup .popup-body span {
   display: none; }
 
 .details-description {
-  padding: 10px; }
+  padding: 10px;
+  margin-bottom: 78px; }
   .details-description .opening-hours {
     padding: 10px 0; }
     .details-description .opening-hours .icon {
@@ -3099,8 +3100,11 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
     position: absolute;
     top: 5px;
     right: 5px;
-    font-size: 20px;
-    color: #00cc00; }
+    font-size: 14px;
+    padding: 5px;
+    border-radius: 50%;
+    background-color: #00cc00;
+    color: #fff; }
 
 .details-reduced {
   float: right;
