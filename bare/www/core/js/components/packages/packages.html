@@ -156,14 +156,14 @@
                         <button
                             style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
                             class="login-button button button-block"
-                            ng-if="!vm.isLoggedIn || !vm.userPackagesId[item.id]"
-                            ng-click="vm.openDetailsRoute(item.id)"> <!-- ITINERARIO NON COMPRATO oppure NON LOGGATO-->
+                            ng-if="!item.wm_route_public && (!vm.isLoggedIn || !vm.userPackagesId[item.id])"
+                            ng-click="vm.openDetailsRoute(item.id)"> <!-- ITINERARIO NON COMPRATO oppure NON LOGGATO e ITINERARIO A PAGAMENTO-->
                             OTTIENI
                         </button>
                         <button
                             style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
                             class="login-button button button-block"
-                            ng-if="vm.isLoggedIn && vm.userPackagesId[item.id]"
+                            ng-if="(vm.isLoggedIn && vm.userPackagesId[item.id]) || item.wm_route_public"
                             ng-click="vm.getPack(item, $event)"> <!-- LOGGATO e ITINERARIO COMPRATO (se non scaricato alert e scarica)-->
                             APRI
                         </button>

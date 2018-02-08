@@ -1775,8 +1775,8 @@ angular.module('webmapp')
             var newLatLng = new L.LatLng(position.coords.latitude, position.coords.longitude);
             circleLocation.position.setLatLng(newLatLng);
             circleLocation.accuracy.setLatLng(newLatLng);
+            circleLocation.accuracy.setRadius(position.coords.accuracy);
         }
-        
     };
 
     mapService.isInBoundingBox = function(lat, long) {

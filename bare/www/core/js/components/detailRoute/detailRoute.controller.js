@@ -116,6 +116,7 @@ angular.module('webmapp')
         };
 
         var routeDetail = getRoute(params.id);
+        vm.isPublic = routeDetail.wm_route_public;
 
         if (routeDetail) {
             vm.title = routeDetail.title.rendered;
@@ -190,53 +191,52 @@ angular.module('webmapp')
         vm.openVoucherModal = function () {
             if (vm.isLoggedIn) {
                 $ionicPopup.prompt({
-                    title: $translate.instant('Voucher'),
-                    subTitle: $translate.instant('Inserisci il voucher da attivare'),
-                    inputType: 'text',
-                    inputPlaceholder: $translate.instant('Voucher')
-                })
-                .then(function (res) {
-                    if (res) {
-                        var data = $.param({
-                            route_id: routeDetail.id,
-                            user_id: userData.ID,
-                            code: res
-                        });
-
-                        var config = {
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-                            }
-                        }
-
-                        $ionicLoading.show();
-
-                        $http.post(
-                                CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
-                                data,
-                                config
-                            )
-                            .success(function (data, status, headers, config) {
-                                $ionicLoading.hide();
-                                ///Update offline data
-                                vm.userPackagesId[routeDetail.id] = true;
-                                localStorage.$wm_userPackagesId = JSON.stringify(vm.userPackagesId);
-                            })
-                            .error(function (data, status, header, config) {
-                                $ionicLoading.hide();
-                                if (data.error === "Voucher Expired") {
-                                    $ionicPopup.alert({
-                                        template: $translate.instant("Il voucher che hai utilizzato è scaduto")
-                                    });
-                                }
-                                else {
-                                    $ionicPopup.alert({
-                                        template: $translate.instant("Il voucher che hai inserito non è valido. Controlla di averlo inserito correttamente e inseriscilo nuovamente.")
-                                    });
-                                }
+                        title: $translate.instant('Voucher'),
+                        subTitle: $translate.instant('Inserisci il voucher da attivare'),
+                        inputType: 'text',
+                        inputPlaceholder: $translate.instant('Voucher')
+                    })
+                    .then(function (res) {
+                        if (res) {
+                            var data = $.param({
+                                route_id: routeDetail.id,
+                                user_id: userData.ID,
+                                code: res
                             });
-                    }
-                });
+
+                            var config = {
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+                                }
+                            }
+
+                            $ionicLoading.show();
+
+                            $http.post(
+                                    CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
+                                    data,
+                                    config
+                                )
+                                .success(function (data, status, headers, config) {
+                                    $ionicLoading.hide();
+                                    ///Update offline data
+                                    vm.userPackagesId[routeDetail.id] = true;
+                                    localStorage.$wm_userPackagesId = JSON.stringify(vm.userPackagesId);
+                                })
+                                .error(function (data, status, header, config) {
+                                    $ionicLoading.hide();
+                                    if (data.error === "Voucher Expired") {
+                                        $ionicPopup.alert({
+                                            template: $translate.instant("Il voucher che hai utilizzato è scaduto")
+                                        });
+                                    } else {
+                                        $ionicPopup.alert({
+                                            template: $translate.instant("Il voucher che hai inserito non è valido. Controlla di averlo inserito correttamente e inseriscilo nuovamente.")
+                                        });
+                                    }
+                                });
+                        }
+                    });
 
                 // $http({
                 //     method: 'POST',
@@ -340,59 +340,65 @@ angular.module('webmapp')
 
         vm.downloadPack = function () {
             pack = routeDetail;
-            $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Stai per scaricare l'itinerario sul dispositivo, vuoi procedere?")
-                })
-                .then(function (res) {
-                    if (res) {
-                        var currentId = pack.id;
+            if (vm.isLoggedIn) {
+                $ionicPopup.confirm({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Stai per scaricare l'itinerario sul dispositivo, vuoi procedere?")
+                    })
+                    .then(function (res) {
+                        if (res) {
+                            var currentId = pack.id;
 
-                        $.getJSON(CONFIG.COMMUNICATION.downloadJSONUrl + currentId + '/app.json', function (data) {
+                            $.getJSON(CONFIG.COMMUNICATION.downloadJSONUrl + currentId + '/app.json', function (data) {
 
-                            var arrayLink = [];
+                                var arrayLink = [];
 
-                            var downloadSuccess = function () {
-                                modalDownload.hide();
-                                vm.userDownloadedPackages[pack.id] = true;
-                                localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
+                                var downloadSuccess = function () {
+                                    modalDownload.hide();
+                                    vm.userDownloadedPackages[pack.id] = true;
+                                    localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
 
-                                var available = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable) : {};
-                                var tmp = {};
-                                tmp[userData.ID] = vm.userDownloadedPackages;
-                                available = angular.extend(available, tmp);
-                                localStorage.$wm_usersPackagesAvailable = JSON.stringify(available);
-                            };
+                                    var available = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable) : {};
+                                    var tmp = {};
+                                    tmp[userData.ID] = vm.userDownloadedPackages;
+                                    available = angular.extend(available, tmp);
+                                    localStorage.$wm_usersPackagesAvailable = JSON.stringify(available);
+                                };
 
-                            var downloadFail = function () {
-                                // TODO: add ionic alert
-                                // TODO: rimuovere cartella, verificare interuzzione altri dowload
-                                alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, riprova"));
-                                modalDownload.hide();
-                                // updateDownloadedPackagesInStorage();
-                            };
+                                var downloadFail = function () {
+                                    // TODO: add ionic alert
+                                    // TODO: rimuovere cartella, verificare interuzzione altri dowload
+                                    alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, riprova"));
+                                    modalDownload.hide();
+                                    // updateDownloadedPackagesInStorage();
+                                };
 
-                            for (var i in data) {
-                                if (typeof data[i] === 'string') {
-                                    arrayLink.push(data[i]);
-                                } else if (typeof data[i] === 'object') {
-                                    for (var j in data[i]) {
-                                        arrayLink.push(data[i][j]);
+                                for (var i in data) {
+                                    if (typeof data[i] === 'string') {
+                                        arrayLink.push(data[i]);
+                                    } else if (typeof data[i] === 'object') {
+                                        for (var j in data[i]) {
+                                            arrayLink.push(data[i][j]);
+                                        }
                                     }
                                 }
-                            }
 
-                            modalDownload.show();
+                                modalDownload.show();
 
-                            Offline
-                                .downloadUserMap(currentId, arrayLink, modalDownloadScope.vm)
-                                .then(downloadSuccess, downloadFail);
-                        }).fail(function () {
-                            // TODO: add ionic alert
-                            alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova"));
-                        });
-                    }
-                });
+                                Offline
+                                    .downloadUserMap(currentId, arrayLink, modalDownloadScope.vm)
+                                    .then(downloadSuccess, downloadFail);
+                            }).fail(function () {
+                                // TODO: add ionic alert
+                                alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova"));
+                            });
+                        }
+                    });
+            }
+            else {
+                notLoggedIn();
+            }
+
         };
 
         vm.removePack = function () {
@@ -419,13 +425,6 @@ angular.module('webmapp')
 
                 for (var key in data) {
                     vm.userPackagesId[key] = true;
-                }
-
-                for (var i in vm.packages) {
-                    if (vm.packages[i].wm_route_public) {
-                        vm.userPackagesId[vm.packages[i].id] = true;
-                        localStorage.$wm_userPackagesId = JSON.stringify(vm.userPackagesId);
-                    }
                 }
 
                 localStorage.$wm_userPackagesId = JSON.stringify(vm.userPackagesId);

@@ -175,10 +175,6 @@ angular.module('webmapp')
                 // }
 
                 for (var i in vm.packages) {
-                    if (vm.packages[i].wm_route_public) {
-                        vm.userPackagesId[vm.packages[i].id] = true;
-                    }
-
                     vm.packages[i].imgUrl = "core/images/image-loading.gif";
 
                     vm.packages[i].packageTitle = vm.packages[i].title.rendered;
@@ -226,11 +222,17 @@ angular.module('webmapp')
 
         vm.getPack = function(pack, $event) {
             $event.stopPropagation();
-            if (vm.userDownloadedPackages[pack.id]) {
-                vm.openPackage(pack);
+
+            if (vm.isLoggedIn) {
+                if (vm.userDownloadedPackages[pack.id]) {
+                    vm.openPackage(pack);
+                }
+                else {
+                    vm.downloadPack(pack);
+                }
             }
             else {
-                vm.downloadPack(pack);
+                vm.openDetailsRoute(pack.id);
             }
         }
 
