@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?z4ttny');
-  src:  url('fonts/webmapp.eot?z4ttny#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?z4ttny') format('truetype'),
-    url('fonts/webmapp.woff?z4ttny') format('woff'),
-    url('fonts/webmapp.svg?z4ttny#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?lxj5g');
+  src:  url('fonts/webmapp.eot?lxj5g#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?lxj5g') format('truetype'),
+    url('fonts/webmapp.woff?lxj5g') format('woff'),
+    url('fonts/webmapp.svg?lxj5g#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,154 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.wm-icon-adults-15:before {
+  content: "\e9ba";
+}
+.wm-icon-alpinism-15:before {
+  content: "\e9bb";
+}
+.wm-icon-autumn-15:before {
+  content: "\e9bc";
+}
+.wm-icon-bakery-alt-15:before {
+  content: "\e9bd";
+}
+.wm-icon-binoculars-15:before {
+  content: "\e9be";
+}
+.wm-icon-cave-15:before {
+  content: "\e9bf";
+}
+.wm-icon-church-15:before {
+  content: "\e9c0";
+}
+.wm-icon-family-15:before {
+  content: "\e9c1";
+}
+.wm-icon-fauna-15:before {
+  content: "\e9c2";
+}
+.wm-icon-flora-15:before {
+  content: "\e9c3";
+}
+.wm-icon-geology-15:before {
+  content: "\e9c4";
+}
+.wm-icon-hiking-15:before {
+  content: "\e9c5";
+}
+.wm-icon-magnifying_glass-15:before {
+  content: "\e9c6";
+}
+.wm-icon-mine-15:before {
+  content: "\e9c7";
+}
+.wm-icon-monastery-15:before {
+  content: "\e9c8";
+}
+.wm-icon-panorama-15:before {
+  content: "\e9c9";
+}
+.wm-icon-panoramic_view-15:before {
+  content: "\e9ca";
+}
+.wm-icon-pieve-15:before {
+  content: "\e9cb";
+}
+.wm-icon-quarry-15 .path1:before {
+  content: "\e9cc";
+  color: rgb(34, 30, 30);
+}
+.wm-icon-quarry-15 .path2:before {
+  content: "\e9cd";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-spring-15:before {
+  content: "\e9ce";
+}
+.wm-icon-stroller-15:before {
+  content: "\e9cf";
+}
+.wm-icon-summer-15 .path1:before {
+  content: "\e9d0";
+  color: rgb(0, 0, 0);
+}
+.wm-icon-summer-15 .path2:before {
+  content: "\e9d1";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-summer-15 .path3:before {
+  content: "\e9d2";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-summer-15 .path4:before {
+  content: "\e9d3";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-summer-15 .path5:before {
+  content: "\e9d4";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-summer-15 .path6:before {
+  content: "\e9d5";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-summer-15 .path7:before {
+  content: "\e9d6";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-summer-15 .path8:before {
+  content: "\e9d7";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-summer-15 .path9:before {
+  content: "\e9d8";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-summer-15 .path10:before {
+  content: "\e9d9";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-summer-15 .path11:before {
+  content: "\e9da";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-summer-15 .path12:before {
+  content: "\e9db";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-summer-15 .path13:before {
+  content: "\e9dc";
+  margin-left: -1em;
+  color: rgb(35, 31, 32);
+}
+.wm-icon-umbrella-15:before {
+  content: "\e9dd";
+}
+.wm-icon-w_f_tasting-15:before {
+  content: "\e9de";
+}
+.wm-icon-w_tasting-15:before {
+  content: "\e9df";
+}
+.wm-icon-waterfall-15:before {
+  content: "\e9e0";
+}
+.wm-icon-winter-15:before {
+  content: "\e9e1";
+}
 .wm-icon-aerialway-15:before {
   content: "\e925";
 }
