@@ -91,7 +91,8 @@ angular.module('webmapp')
 
             var onError = function (e) {
                 alert("Error: " + e);
-            }
+                console.log("Error: ", e);
+            };
 
             if (window.cordova && vm.showLocate && $state.current.name === "app.main.map") {
                 return cordova.plugins.diagnostic.isLocationAuthorized(function (authorized) {
@@ -108,29 +109,69 @@ angular.module('webmapp')
                             );
                         }
                     } else {
-                        return cordova.plugins.diagnostic.requestLocationAuthorization(function (result) {
-                            if (result) {
-                                if (window.cordova.platformId === "ios") {
-                                    return cordova.plugins.diagnostic.isLocationEnabled(
-                                        onSuccess,
-                                        onError
-                                    );
-                                } else {
-                                    return cordova.plugins.diagnostic.isGpsLocationEnabled(
-                                        onSuccess,
-                                        onError
-                                    );
-                                }
-                            }
-                            else {
+                        if (window.cordova.platformId === "ios") {
+                            var permissionDenied = localStorage.$wm_ios_location_permission_denied ? true : false;
+                            if (permissionDenied) {
                                 $ionicPopup.alert({
                                     title: $translate.instant("ATTENZIONE"),
-                                    template: $translate.instant("Tutte le funzionalità legate alla tua posizione rimarranno disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo"),
+                                    template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo"),
                                     buttons: [{
                                         text: 'Ok',
                                         type: 'button-positive'
                                     }]
                                 });
+                                return;
+                            }
+                        }
+
+                        return cordova.plugins.diagnostic.requestLocationAuthorization(function (result) {
+                            switch (status) {
+                                case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+                                case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
+                                    if (window.cordova.platformId === "ios") {
+                                        return cordova.plugins.diagnostic.isLocationEnabled(
+                                            onSuccess,
+                                            onError
+                                        );
+                                    } else {
+                                        return cordova.plugins.diagnostic.isGpsLocationEnabled(
+                                            onSuccess,
+                                            onError
+                                        );
+                                    }
+                                    break;
+                                case cordova.plugins.diagnostic.permissionStatus.DENIED:
+                                    if (window.cordova.platformId === "ios") {
+                                        localStorage.$wm_ios_location_permission_denied = true;
+                                        $ionicPopup.alert({
+                                            title: $translate.instant("ATTENZIONE"),
+                                            template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo"),
+                                            buttons: [{
+                                                text: 'Ok',
+                                                type: 'button-positive'
+                                            }]
+                                        });
+                                    } else {
+                                        $ionicPopup.alert({
+                                            title: $translate.instant("ATTENZIONE"),
+                                            template: $translate.instant("Alcune funzionalità funzionano solo se hai abilitato la geolocalizzazione"),
+                                            buttons: [{
+                                                text: 'Ok',
+                                                type: 'button-positive'
+                                            }]
+                                        });
+                                    }
+                                    break;
+                                case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
+                                    $ionicPopup.alert({
+                                        title: $translate.instant("ATTENZIONE"),
+                                        template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi attivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo"),
+                                        buttons: [{
+                                            text: 'Ok',
+                                            type: 'button-positive'
+                                        }]
+                                    });
+                                    break;
                             }
                         });
                     }
