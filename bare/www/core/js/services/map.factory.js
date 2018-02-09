@@ -1448,7 +1448,7 @@ angular.module('webmapp')
                     // TODO: add language and message in settings
                     $ionicPopup.alert({
                         template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa!"),
-                        title: $translate.instant("Avviso")
+                        title: $translate.instant("ATTENZIONE")
                     });
                 }
             }).addTo(map);
@@ -1757,6 +1757,10 @@ angular.module('webmapp')
             lng: lng
         },
         CONFIG.MAP.maxZoom);
+    };
+
+    mapService.drawAccuracy = function(accuracy) {
+        circleLocation.accuracy.setRadius(accuracy);
     };
 
     mapService.drawPosition = function(position) {

@@ -254,6 +254,7 @@ angular.module('webmapp')
         vm.isCoordsBlockExpanded = true;
         vm.gpsActive = false;
         vm.outsideBoundingBox = false;
+        vm.isOutsideBoundingBox = false;
 
         vm.deg = 0;
         vm.colors = CONFIG.STYLE;
@@ -345,6 +346,18 @@ angular.module('webmapp')
                 return;
             }
 
+            if (vm.isOutsideBoundingBox) {
+                $ionicPopup.alert({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa: la richiesta di aiuto non è disponibile."),
+                    buttons: [{
+                        text: 'Ok',
+                        type: 'button-positive'
+                    }]
+                });
+                return;
+            }
+
             if (!prevLatLong) {
                 $ionicPopup.alert({
                     title: $translate.instant("ATTENZIONE"),
@@ -415,7 +428,15 @@ angular.module('webmapp')
                         }
                     });
             } else {
-                sendSMS(text);
+                $ionicPopup.confirm({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                })
+                .then(function (res) {
+                    if (res) {
+                        sendSMS(text);
+                    }
+                });
             }
         }
 
@@ -476,7 +497,6 @@ angular.module('webmapp')
                                     posLong = position.coords.longitude;
 
                                 var sw, ne;
-
                                 if (!MapService.isInBoundingBox(posLat, posLong)) {
                                     vm.outsideBoundingBox = true;
                                     $ionicPopup.alert({
@@ -598,10 +618,14 @@ angular.module('webmapp')
                                         long: long
                                     };
                                 }
+                                else {
+                                    MapService.drawAccuracy(position.coords.accuracy);
+                                }
                             };
 
                             if (!MapService.isInBoundingBox(lat, long)) {
                                 vm.locateLoading = false;
+                                vm.isOutsideBoundingBox = true;
                                 $ionicPopup.alert({
                                     title: $translate.instant("ATTENZIONE"),
                                     template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
