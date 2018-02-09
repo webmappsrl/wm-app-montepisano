@@ -124,7 +124,7 @@ angular.module('webmapp')
                             }
                         }
 
-                        return cordova.plugins.diagnostic.requestLocationAuthorization(function (result) {
+                        return cordova.plugins.diagnostic.requestLocationAuthorization(function (status) {
                             switch (status) {
                                 case cordova.plugins.diagnostic.permissionStatus.GRANTED:
                                 case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
