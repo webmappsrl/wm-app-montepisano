@@ -84,16 +84,16 @@ angular.module('webmapp')
                     }
                 }
             })
-            .state('app.main.webmapp', {
-                url: '/page/webmapp',
+            .state('app.main.webmappInternal', {
+                url: '/page/webmappInternal',
                 views: {
                     'inception-top': {
                         templateUrl: basePath + 'js/components/webmapp/webmapp.html'
                     }
                 }
             })
-            .state('app.main.attribution', {
-                url: '/page/attribution',
+            .state('app.main.attributionInternal', {
+                url: '/page/attributionInternal',
                 views: {
                     'inception-top': {
                         templateUrl: basePath + 'js/components/attribution/attribution.html'

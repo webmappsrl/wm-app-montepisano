@@ -69,7 +69,6 @@ angular.module('webmapp')
             if (array[i].label) {
                 translatedName = array[i].label;
             }
-            console.log(typeof(array[i]))
             if (typeof(array[i]) === "string") {
                 translatedName = array[i];
             }

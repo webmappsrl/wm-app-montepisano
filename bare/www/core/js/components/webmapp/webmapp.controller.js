@@ -1,15 +1,8 @@
 angular.module('webmapp')
 
 .controller('WebmappController', function WebmappController(
-    $location,
-    $rootScope,
-    $templateCache,
-    Account,
-    Model,
-    Offline,
     Utils,
     $ionicPopup,
-    $state,
     CONFIG,
     $translate
 ) {

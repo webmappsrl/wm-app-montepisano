@@ -848,7 +848,7 @@ angular.module('webmapp')
             } else if (currentState === 'app.main.detailulayer') {
                 MapService.resetUtfGridLayers();
                 vm.hideExpander = true;
-            } else if (currentState === 'app.main.coupons' || currentState === 'app.main.packages' || currentState === 'app.main.route' || currentState === 'app.main.languages' || currentState === 'app.main.webmapp' || currentState === 'app.main.attribution') {
+            } else if (currentState === 'app.main.coupons' || currentState === 'app.main.packages' || currentState === 'app.main.route' || currentState === 'app.main.languages' || currentState === 'app.main.webmappInternal' || currentState === 'app.main.attributionInternal') {
                 vm.hideMap = true;
                 vm.hasShadow = true;
                 vm.extendShadow = true;

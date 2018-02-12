@@ -1,14 +1,9 @@
 angular.module('webmapp')
 
     .controller('LanguagesController', function LanguagesController(
-        $location,
-        $state,
         $rootScope,
         $window,
-        MapService,
         Auth,
-        Account,
-        Model,
         Offline,
         Utils,
         $ionicPopup,
@@ -78,7 +73,6 @@ angular.module('webmapp')
 
         $rootScope.$on('logged-in', function () {
             if (Auth.isLoggedIn()) {
-                // location.href = "#/page/help";
                 vm.isLoggedIn = true;
             }
         });

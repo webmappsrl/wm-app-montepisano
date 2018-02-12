@@ -51,14 +51,14 @@ angular.module('webmapp')
 
     if (!CONFIG.OPTIONS.mainMenuHideWebmappPage) {
         mainMenuItems[mainMenuItems.length] = {
-            type: 'webmapp',
+            type: 'webmappInternal',
             label: 'Webmapp'
         };
     }
 
     if (!CONFIG.OPTIONS.mainMenuHideAttributionPage) {
         mainMenuItems[mainMenuItems.length] = {
-            type: 'attribution',
+            type: 'attributionInternal',
             label: 'Attribution'
         };
     }
