@@ -223,7 +223,7 @@ angular.module('webmapp')
         vm.getPack = function(pack, $event) {
             $event.stopPropagation();
 
-            if (vm.isLoggedIn) {
+            if ((CONFIG.OPTIONS.skipLoginPublicRoutesDownload && pack.wm_route_public) || vm.isLoggedIn) {
                 if (vm.userDownloadedPackages[pack.id]) {
                     vm.openPackage(pack);
                 }
@@ -255,6 +255,7 @@ angular.module('webmapp')
         vm.packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : [];
         vm.userPackagesId = localStorage.$wm_userPackagesId ? JSON.parse(localStorage.$wm_userPackagesId) : {};
         vm.userPackagesIdRquested = localStorage.$wm_userPackagesIdRquested ? JSON.parse(localStorage.$wm_userPackagesIdRquested) : {};
+        vm.skipLoginPublicRoutesDownload = CONFIG.OPTIONS.skipLoginPublicRoutesDownload;
 
         vm.isLoggedIn = Auth.isLoggedIn();
         vm.isBrowser = Utils.isBrowser();
@@ -350,12 +351,6 @@ angular.module('webmapp')
                                 modalDownload.hide();
                                 vm.userDownloadedPackages[pack.id] = true;
                                 updateDownloadedPackagesInStorage();
-
-                                var available = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable) : {};
-                                var tmp = {};
-                                tmp[userData.ID] = vm.userDownloadedPackages;
-                                available = angular.extend(available, tmp);
-                                localStorage.$wm_usersPackagesAvailable = JSON.stringify(available);
                             };
 
                             var downloadFail = function () {
@@ -495,9 +490,7 @@ angular.module('webmapp')
                 vm.isLoggedIn = true;
                 vm.userDownloadedPackages = {};
 
-                //Add packages downloaded and available for the current user
-                vm.userDownloadedPackages = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable)[userData.ID] : {};
-                localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
+                vm.userDownloadedPackages = localStorage.$wm_userDownloadedPackages ? JSON.parse(localStorage.$wm_userDownloadedPackages) : {};
 
                 getPackagesIdByUserId(userData.ID);
                 Utils.forceDigest();

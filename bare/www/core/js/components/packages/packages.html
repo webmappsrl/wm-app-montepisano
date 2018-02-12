@@ -122,7 +122,7 @@
                     <img class="modal-image" ng-src="{{item.imgUrl}}" ng-model="item.imgUrl">
                     <i
                         class="icon wm-icon-android-checkmark "
-                        ng-if="vm.userDownloadedPackages[item.id]">
+                        ng-if="vm.userDownloadedPackages[item.id] && ((vm.isLoggedIn && vm.userPackagesId[item.id]) || (item.wm_route_public && vm.skipLoginPublicRoutesDownload))">
                     </i>
                 </div>
                 <div class="details-reduced">

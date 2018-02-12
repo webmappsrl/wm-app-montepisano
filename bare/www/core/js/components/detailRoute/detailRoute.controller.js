@@ -80,8 +80,7 @@ angular.module('webmapp')
         vm.id = params.id;
 
         if (vm.isLoggedIn) {
-            vm.userDownloadedPackages = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable)[userData.ID] : {};
-            localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
+            vm.userDownloadedPackages = localStorage.$wm_userDownloadedPackages ? JSON.parse(localStorage.$wm_userDownloadedPackages) : {};
         }
 
         var getTranslatedContent = function (id) {
@@ -241,21 +240,6 @@ angular.module('webmapp')
                                 });
                         }
                     });
-
-                // $http({
-                //     method: 'POST',
-                //     url: CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
-                //     dataType: 'json',
-                //     crossDomain: true,
-                //     data: data,
-                //     headers: {
-                //         'Content-Type': 'application/json'
-                //     }
-                // }).success(function (data) {
-                //     console.log(data);
-                // }).error(function (error) {
-                //     console.error(error);
-                // });
             } else {
                 notLoggedIn();
             }
@@ -343,7 +327,7 @@ angular.module('webmapp')
 
         vm.downloadPack = function () {
             pack = routeDetail;
-            if (vm.isLoggedIn) {
+            if ((CONFIG.OPTIONS.skipLoginPublicRoutesDownload && pack.wm_route_public) || vm.isLoggedIn) {
                 $ionicPopup.confirm({
                         title: $translate.instant("ATTENZIONE"),
                         template: $translate.instant("Stai per scaricare l'itinerario sul dispositivo, vuoi procedere?")
@@ -360,12 +344,6 @@ angular.module('webmapp')
                                     modalDownload.hide();
                                     vm.userDownloadedPackages[pack.id] = true;
                                     localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
-
-                                    var available = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable) : {};
-                                    var tmp = {};
-                                    tmp[userData.ID] = vm.userDownloadedPackages;
-                                    available = angular.extend(available, tmp);
-                                    localStorage.$wm_usersPackagesAvailable = JSON.stringify(available);
                                 };
 
                                 var downloadFail = function () {
@@ -457,9 +435,7 @@ angular.module('webmapp')
                 vm.isLoggedIn = true;
                 vm.userDownloadedPackages = {};
 
-                //Add packages downloaded and available for the current user
-                vm.userDownloadedPackages = localStorage.$wm_usersPackagesAvailable ? JSON.parse(localStorage.$wm_usersPackagesAvailable)[userData.ID] : {};
-                localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
+                vm.userDownloadedPackages = localStorage.$wm_userDownloadedPackages ? JSON.parse(localStorage.$wm_userDownloadedPackages) : {};
 
                 getPackagesIdByUserId(userData.ID);
 

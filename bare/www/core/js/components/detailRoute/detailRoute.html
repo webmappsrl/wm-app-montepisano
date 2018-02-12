@@ -87,7 +87,7 @@
             </button>
         </div>
         <div
-            ng-if="(vm.isPublic && (!vm.isLoggedIn || !vm.userDownloadedPackages[vm.id])) || (vm.isLoggedIn && vm.userPackagesId[vm.id] && !vm.userDownloadedPackages[vm.id])">
+            ng-if="(vm.isPublic && (!vm.userDownloadedPackages[vm.id])) || (!vm.isPublic && vm.isLoggedIn && vm.userPackagesId[vm.id] && !vm.userDownloadedPackages[vm.id])">
             <button
                 style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
                 class="login-button button button-block"
@@ -96,7 +96,7 @@
             </button>
         </div>
         <div
-            ng-if="vm.isLoggedIn && (vm.userPackagesId[vm.id] || vm.isPublic) && vm.userDownloadedPackages[vm.id]">
+            ng-if="vm.userDownloadedPackages[vm.id] && ((vm.isLoggedIn && vm.userPackagesId[vm.id]) || vm.isPublic)">
             <button
                 style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
                 class="login-button button button-block"

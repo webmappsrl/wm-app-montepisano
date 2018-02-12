@@ -56,7 +56,6 @@ angular.module('webmapp')
                     // }
 
                     delete localStorage.$wm_userPackages;
-                    delete localStorage.$wm_userDownloadedPackages;
 
                     Auth.resetUserData();
                     $rootScope.isLoggedIn = vm.isLoggedIn = false;
