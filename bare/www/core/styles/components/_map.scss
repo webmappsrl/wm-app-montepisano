@@ -315,6 +315,21 @@
   }
 }
 
+div.leaflet-top.leaflet-right {
+  right: 15px;
+  top: 50%;
+  
+  div.leaflet-control-zoom.leaflet-bar.leaflet-control {
+    right: 0;
+    top: 0;
+    margin-top: -55px;
+    margin-right: 0;
+    a.leaflet-control-zoom-in {
+      margin-bottom: 20px;
+    }
+  }
+}
+
 .leaflet-top {
   .leaflet-control-locate {
     display:none !important;

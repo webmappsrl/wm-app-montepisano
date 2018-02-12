@@ -1362,12 +1362,10 @@ angular.module('webmapp')
             rotate: true
         });
 
-        if (CONFIG.MAIN && !CONFIG.MAIN.MAP.hideZoomControl) {
-            if (!mapConf.hideZoomControl) {
-                L.control.zoom({
-                    position: 'bottomright'
-                }).addTo(map);
-            }
+        if (CONFIG.MAP.activateZoomControl || (CONFIG.MAIN && CONFIG.MAIN.MAP.activateZoomControl)) {
+            L.control.zoom({
+                position: 'topright'
+            }).addTo(map);
         }
 
         map.on('click', function() {
