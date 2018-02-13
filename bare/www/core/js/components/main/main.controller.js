@@ -894,14 +894,13 @@ angular.module('webmapp')
             }
         });
 
+        $rootScope.$on('item-navigable', function (e, value) {
+            vm.isNavigable = value;
+        });
+
         window.addEventListener('orientationchange', function () {
             vm.isLandscape = isLandscape();
         });
-
-        // $scope.$on('$destroy', function() {
-        //     MapService.resetMap();
-        //     console.log('map destroy');
-        // });
 
         $ionicPlatform.ready(function () {
             checkGPS();

@@ -1719,6 +1719,12 @@ div.leaflet-top.leaflet-right {
   color: #605846;
   font-size: 15px; }
 
+.show-start-navigation .leaflet-top.leaflet-left {
+  bottom: 20px;
+  right: 10px;
+  left: auto;
+  top: auto; }
+
 /* Coordinates block */
 @keyframes animaterightin {
   from {
@@ -1787,6 +1793,21 @@ div.leaflet-top.leaflet-right {
     color: inherit; }
   .coords-block .icon {
     vertical-align: middle; }
+
+.start-navigation {
+  height: 45px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(96, 88, 70, 0.8);
+  z-index: 800;
+  font-size: 26px;
+  padding: 8px 18px 8px 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: none; }
+  .show-start-navigation .start-navigation {
+    display: block; }
 
 .leaflet-bar,
 .coords-block,

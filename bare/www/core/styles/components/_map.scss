@@ -409,6 +409,15 @@ div.leaflet-top.leaflet-right {
   font-size: 15px;
 }
 
+.leaflet-top.leaflet-left {
+  .show-start-navigation & {
+    bottom: 20px;
+    right: 10px;
+    left: auto;
+    top: auto;
+  }
+}
+
 /* Coordinates block */
 
 @keyframes animaterightin {
@@ -492,6 +501,24 @@ div.leaflet-top.leaflet-right {
 
   .icon {
     vertical-align: middle;
+  }
+}
+
+.start-navigation {
+  height: 45px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: transparentize($color-brown, .2);
+  z-index: 800;
+  font-size: 26px;
+  padding: 8px 18px 8px 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: none;
+
+  .show-start-navigation & {
+    display: block;
   }
 }
 

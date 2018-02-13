@@ -7,7 +7,8 @@
         'desktop-half-map': !vm.mapView && !vm.isSearchPage,
         'desktop-full-map': vm.mapView,
         'has-howtoreach': vm.detail && detailCoordinates && !vm.hideHowToReach,
-        'has-shadow': vm.hasShadow
+        'has-shadow': vm.hasShadow,
+        'show-start-navigation': vm.isNavigable
     }"
     ng-controller="MainController as vm">
 
@@ -167,13 +168,9 @@
             </a>
         </div>
 
-        <!-- <div class="report">
-            <button 
-                class="coords-share-button"
-                ng-click="vm.shareCurrentPosition($event)"
-                ng-if="vm.useReport">
-                <i class="icon wm-icon-alert-circled"></i>
-            </button>
-        </div> -->
+        <div class="start-navigation">
+            <i class="wm-icon-navigate"></i>
+            {{::"Inizia" | translate}}
+        </div>
     </ion-footer-bar>
 </ion-view>

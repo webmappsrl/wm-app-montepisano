@@ -224,7 +224,6 @@ angular.module('webmapp')
 
     model.getListColor = function(name) {
         if (typeof confMainMenuMap[name] !== 'undefined') {
-            console.log(confMainMenuMap[name].color)
             if (confMainMenuMap[name].color) {
                 return confMainMenuMap[name].color;
             }

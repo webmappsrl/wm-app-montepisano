@@ -38,12 +38,20 @@ angular.module('webmapp')
     vm.avoidModal = CONFIG.OPTIONS.avoidModalInDetails;
     vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
     vm.imageUrl = CONFIG.OFFLINE.imagesUrl;
-    vm.goBack = Utils.goBack;
     vm.isEventDetail = current.name === 'app.main.detailevent';
     vm.isFormationDetail = current.name === 'app.main.detailulayer';
     vm.openInAppBrowser = Utils.openInAppBrowser;
     vm.openInExternalBrowser = Utils.openInExternalBrowser;
     vm.additionalLinks = {};
+    vm.isNavigable = false;
+
+    vm.goBack = function () {
+        if (vm.isNavigable) {
+            vm.isNavigable = false;
+            $rootScope.$emit('item-navigable', vm.isNavigable);
+        }
+        Utils.goBack();
+    }
 
     MapService.resetUtfGridLayers();
 
@@ -249,6 +257,11 @@ angular.module('webmapp')
             vm.feature = feature;
             vm.geometry = data.geometry;
             vm.coordinates = data.geometry.coordinates.toString();
+
+            if (vm.geometry.type === "LineString") {
+                vm.isNavigable = true;
+                $rootScope.$emit('item-navigable', vm.isNavigable);
+            }
         }
 
         setTimeout(function() {
@@ -502,6 +515,8 @@ angular.module('webmapp')
 
     vm.toggleMap = function() {
         $rootScope.$emit('toggle-map-from-detail');
+        vm.isNavigable = false;        
+        $rootScope.$emit('item-navigable', vm.isNavigable);
     };
 
     vm.renderDate = function(date) {
