@@ -224,7 +224,14 @@ angular.module('webmapp')
 
     model.getListColor = function(name) {
         if (typeof confMainMenuMap[name] !== 'undefined') {
-            return confMainMenuMap[name].color;
+            console.log(confMainMenuMap[name].color)
+            if (confMainMenuMap[name].color) {
+                return confMainMenuMap[name].color;
+            }
+            if (CONFIG.MAIN) {
+                return CONFIG.MAIN.STYLE.menu.color;
+            }
+            return CONFIG.STYLE.menu.color;
         } else {
             if (model.isAChild(name)) {
                 return overlaysChildMap[name].color || 

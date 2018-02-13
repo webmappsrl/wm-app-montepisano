@@ -20,7 +20,7 @@ angular.module('webmapp')
     var isAnOverlayGroup = false,
         realState = '';
 
-    vm.colors = CONFIG.STYLE;
+    vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
     vm.isListExpanded = false,
     vm.layersMap = Model.getLayersMap();
     vm.goTo = Utils.goTo;
