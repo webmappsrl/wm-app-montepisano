@@ -1806,8 +1806,40 @@ div.leaflet-top.leaflet-right {
   text-transform: uppercase;
   letter-spacing: 1px;
   display: none; }
+  .start-navigation a {
+    color: #fff; }
   .show-start-navigation .start-navigation {
     display: block; }
+
+.navigator-div-controller {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 800;
+  background-color: #fff;
+  font-size: 25px;
+  text-align: center; }
+  .navigator-div-controller div.pause-button {
+    width: calc(100% - 27% * 3);
+    float: left;
+    height: 100%;
+    font-size: 3em; }
+  .navigator-div-controller div.time-section,
+  .navigator-div-controller div.distance-section,
+  .navigator-div-controller div.speed-section {
+    color: #605846;
+    height: 100%;
+    width: 27%;
+    float: left; }
+    .navigator-div-controller div.time-section div,
+    .navigator-div-controller div.distance-section div,
+    .navigator-div-controller div.speed-section div {
+      margin: 2px 0; }
+    .navigator-div-controller div.time-section span,
+    .navigator-div-controller div.distance-section span,
+    .navigator-div-controller div.speed-section span {
+      font-size: 20px; }
 
 .leaflet-bar,
 .coords-block,

@@ -1,5 +1,4 @@
-<ion-view
-    ng-class="{
+<ion-view ng-class="{
         'welcome-page': vm.isWelcomePage,
         'map-page': vm.isMapPage,
         'hide-map': vm.hideMap,
@@ -9,114 +8,69 @@
         'has-howtoreach': vm.detail && detailCoordinates && !vm.hideHowToReach,
         'has-shadow': vm.hasShadow,
         'show-start-navigation': vm.isNavigable
-    }"
-    ng-controller="MainController as vm">
+    }" ng-controller="MainController as vm">
 
-    <ion-content
-        class="content-pane"
-        delegate-handle="mainScroll">
+    <ion-content class="content-pane" delegate-handle="mainScroll">
 
-        <ion-nav-view
-            name="inception-top"></ion-nav-view>
+        <ion-nav-view name="inception-top"></ion-nav-view>
 
     </ion-content>
 
-    <a
-        href=""
-        class="details-shadow"
-        ng-class="{'extend-shadow': vm.extendShadow}"
-        ng-if="vm.hasShadow">
+    <a href="" class="details-shadow" ng-class="{'extend-shadow': vm.extendShadow}" ng-if="vm.hasShadow">
     </a>
-    <a
-        href=""
-        class="details-howtoreach"
-        style="background: {{vm.colors.details.buttons}}"
-        ng-click="vm.openExternalMap()"
-        ng-if="vm.detail && detailCoordinates && !vm.hideHowToReach">
+    <a href="" class="details-howtoreach" style="background: {{vm.colors.details.buttons}}" ng-click="vm.openExternalMap()" ng-if="vm.detail && detailCoordinates && !vm.hideHowToReach">
         <i class="icon ion-map"></i> {{::"Come raggiungerci" | translate}}
     </a>
 
     <!-- TODO: add bottom element check from config -->
     <div ui-view="inception-bottom"></div>
 
-    <ion-footer-bar
-        align-title="left"
-        class="bar-assertive"
-        data-tap-disabled="true"
-        ng-class="{
+    <ion-footer-bar align-title="left" class="bar-assertive" data-tap-disabled="true" ng-class="{
             'when-welcome': vm.isWelcomePage
         }">
 
         <!-- Map expand -->
-        <a
-            href=""
-            class="btn-expand map-expand map-expand-right"
-            ng-click="vm.useExandMapInDetails ? vm.toggleMap() : vm.returnToMap()"
+        <a href="" class="btn-expand map-expand map-expand-right" ng-click="vm.useExandMapInDetails ? vm.toggleMap() : vm.returnToMap()"
             ng-if="!vm.hideExpander">
             <i class="icon ion-arrow-expand"></i>
         </a>
-        <a
-            href=""
-            class="btn-expand map-expand"
-            ng-click="vm.goToMap()"
-            ng-if="vm.isWelcomePage">
+        <a href="" class="btn-expand map-expand" ng-click="vm.goToMap()" ng-if="vm.isWelcomePage">
             <i class="icon ion-arrow-expand"></i>
         </a>
 
         <!-- Map shrink -->
-        <a
-            href=""
-            class="btn-expand map-expand map-shrink map-expand-right"
-            ng-click="vm.toggleMap()"
-            ng-show="!vm.isSearchPage && !vm.hideExpander"
+        <a href="" class="btn-expand map-expand map-shrink map-expand-right" ng-click="vm.toggleMap()" ng-show="!vm.isSearchPage && !vm.hideExpander"
             ng-if="!vm.isWelcomePage">
             <i class="icon wm-icon-arrow-shrink"></i>
         </a>
 
-        <i 
-            class="icon wm-icon-ios7-plus-empty map-center"
-            ng-if="!vm.hideDeactiveCentralPointer || vm.followActive"
-            ng-style="{
+        <i class="icon wm-icon-ios7-plus-empty map-center" ng-if="!vm.hideDeactiveCentralPointer || vm.followActive" ng-style="{
                 'color': vm.followActive ? vm.colors.global.centralPointerActive : '#000000',
                 'opacity': 0.4
             }"></i>
 
-        <div
-            id="map"
-            class="advanced-layout advanced-map"></div>
+        <div id="map" class="advanced-layout advanced-map"></div>
 
-        <div 
-            class="locate-custom-control"
-            ng-if="vm.showLocate">
+        <div class="locate-custom-control" ng-if="vm.showLocate">
             <div class="leaflet-control-locate leaflet-bar leaflet-control">
-                <a 
-                    class="leaflet-bar-part leaflet-bar-part-single" 
-                    href="" 
-                    title="Show me where I am"
-                    ng-click="vm.centerOnMe()">
+                <a class="leaflet-bar-part leaflet-bar-part-single" href="" title="Show me where I am" ng-click="vm.centerOnMe()">
                     <!-- ng-class="{
                             'wm-icon-mappalo': vm.isRotating,
                             'wm-icon-android-locate': !vm.isRotating && !vm.canFollow,
                             'wm-icon-android-locate-full': !vm.isRotating && vm.canFollow,
                             'fa-spin': vm.locateLoading
                     }" -->
-                    <span 
-                        class="icon"
-                        ng-class="{
+                    <span class="icon" ng-class="{
                             'wm-icon-android-locate-full': !vm.followActive || vm.dragged || (vm.followActive && !vm.isRotating && !vm.dragged),
                             'fa-spin': vm.locateLoading && !vm.followActive,
                             'blu-icon': vm.followActive && !vm.isRotating && !vm.dragged
-                        }"
-                        style="-webkit-transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg); transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg)">
+                        }" style="-webkit-transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg); transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg)">
                         <!-- <i
                             class="icon wm-icon-android-locate-full"
                             ng-if="vm.followActive && !vm.isRotating && !vm.dragged">
                         </i> -->
-                        <img
-                            style="margin: 5px" 
-                            src="core/images/compass.svg"
-                            ng-if="vm.followActive && vm.isRotating && !vm.dragged">
-                        </span>
+                        <img style="margin: 5px" src="core/images/compass.svg" ng-if="vm.followActive && vm.isRotating && !vm.dragged">
+                    </span>
                 </a>
             </div>
         </div>
@@ -128,49 +82,73 @@
             </a>
         </div>
 
-        <div 
-            class="coords-block"
-            ng-class="{
+        <div class="coords-block" ng-class="{
                 'animate-rightin': vm.isCoordsBlockExpanded,
                 'animate-rightout': !vm.isCoordsBlockExpanded
-            }"
-            ng-if="vm.centerCoords"
-            ng-click="vm.switchCoords()" >
+            }" ng-if="vm.centerCoords" ng-click="vm.switchCoords()">
             <span ng-if="vm.useUTM32">
-                {{vm.centerCoordsUTM32.lat}}, {{vm.centerCoordsUTM32.lng}} 
-                <button 
-                    class="coords-share-button"
-                    ng-click="vm.shareCurrentPosition($event)"
-                    ng-if="vm.useShare">
+                {{vm.centerCoordsUTM32.lat}}, {{vm.centerCoordsUTM32.lng}}
+                <button class="coords-share-button" ng-click="vm.shareCurrentPosition($event)" ng-if="vm.useShare">
                     <i class="icon wm-icon-android-share"></i>
                 </button>
             </span>
             <span ng-if="!vm.useUTM32">
-                {{vm.centerCoords.lat}}, {{vm.centerCoords.lng}} 
-                <button 
-                    class="coords-share-button"
-                    ng-click="vm.shareCurrentPosition($event)"
-                    ng-if="vm.useShare">
+                {{vm.centerCoords.lat}}, {{vm.centerCoords.lng}}
+                <button class="coords-share-button" ng-click="vm.shareCurrentPosition($event)" ng-if="vm.useShare">
                     <i class="icon wm-icon-android-share"></i>
                 </button>
             </span>
         </div>
 
 
-        <div 
-            class="report-control"
-            ng-if="vm.useReport && !vm.outsideBoundingBox">
-            <a 
-                href="" 
-                ng-click="vm.reportCurrentPosition($event)">
+        <div class="report-control" ng-if="vm.useReport && !vm.outsideBoundingBox">
+            <a href="" ng-click="vm.reportCurrentPosition($event)">
                 <i class="icon wm-icon-alert-circled">
                 </i>
             </a>
         </div>
 
         <div class="start-navigation">
-            <i class="wm-icon-navigate"></i>
-            {{::"Inizia" | translate}}
+            <a href="" ng-click="vm.startNavigation()">
+                <i class="wm-icon-navigate"></i>
+                {{::"Inizia" | translate}}
+            </a>
+        </div>
+
+        <div class="navigator-div-controller" ng-if="vm.navigating">
+            <div class="pause-button" ng-style="{
+                'background': vm.colors.mainBar.background,
+                'color': vm.colors.mainBar.color
+            }">
+                <i class="wm-icon-ios7-pause"></i>
+            </div>
+            <div class="time-section">
+                <div>
+                    <i class="wm-icon-android-clock"></i>
+                </div>
+                <span>
+                    0:29
+                    <br> in motion
+                </span>
+            </div>
+            <div class="distance-section">
+                <div>
+                    <i class="wm-icon-arrow-right-c"></i>
+                </div>
+                <span>
+                    126 km
+                    <br> traveled
+                </span>
+            </div>
+            <div class="speed-section">
+                <div>
+                    <i class="wm-icon-speedometer"></i>
+                </div>
+                <span>
+                    17 kmh
+                    <br> 24 kmh
+                </span>
+            </div>
         </div>
     </ion-footer-bar>
 </ion-view>

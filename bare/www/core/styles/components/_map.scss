@@ -516,9 +516,44 @@ div.leaflet-top.leaflet-right {
   text-transform: uppercase;
   letter-spacing: 1px;
   display: none;
+  a {
+    color: #fff;
+  }
 
   .show-start-navigation & {
     display: block;
+  }
+}
+
+.navigator-div-controller {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 800;
+  background-color: #fff;
+  font-size: 25px;
+  text-align: center;
+  div.pause-button {
+    width: calc(100% - 27% * 3);
+    float: left;
+    height: 100%;
+    font-size: 3em;
+  }
+
+  div.time-section,
+  div.distance-section,
+  div.speed-section {
+    div {
+      margin: 2px 0;
+    }
+    span {
+      font-size: 20px;
+    }
+    color: $color-brown;
+    height: 100%;
+    width: 27%;
+    float: left;
   }
 }
 

@@ -94,7 +94,7 @@ angular.module('webmapp')
                 console.log("Error: ", e);
             };
 
-            if (window.cordova && vm.showLocate && $state.current.name === "app.main.map") {
+            if (window.cordova && vm.showLocate && ($state.current.name === "app.main.map" || vm.isNavigable)) {
                 return cordova.plugins.diagnostic.isLocationAuthorized(function (authorized) {
                     if (authorized) {
                         if (window.cordova.platformId === "ios") {
@@ -257,10 +257,11 @@ angular.module('webmapp')
         vm.isOutsideBoundingBox = false;
 
         vm.deg = 0;
-        vm.colors = CONFIG.STYLE;
+        vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
         vm.useExandMapInDetails = CONFIG.OPTIONS.useExandMapInDetails;
         vm.showLocate = !CONFIG.MAP.hideLocationControl || !Utils.isBrowser();
+        vm.recording = false;
         vm.viewTitle = $translate.instant("MAPPA");
         vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
         vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
@@ -429,14 +430,14 @@ angular.module('webmapp')
                     });
             } else {
                 $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
-                })
-                .then(function (res) {
-                    if (res) {
-                        sendSMS(text);
-                    }
-                });
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                    })
+                    .then(function (res) {
+                        if (res) {
+                            sendSMS(text);
+                        }
+                    });
             }
         }
 
@@ -600,15 +601,22 @@ angular.module('webmapp')
                             var posCallback = function (position) {
                                 var lat = position.coords.latitude,
                                     long = position.coords.longitude,
-                                    doCenter = false;
+                                    locateLoading = false,
+                                    doCenter = false,
+                                    distance = 0;
 
                                 if (!prevLatLong) {
                                     doCenter = true;
-                                } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 6) {
+                                } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 6 || true) {
+                                    distance = distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long);
                                     doCenter = true;
                                 }
 
                                 if (doCenter) {
+                                    if (vm.recording) {
+                                        vm.distance = vm.distance > 0 ? vm.distance + distance : distance;
+                                        console.log(vm.distance);
+                                    }
                                     MapService.drawPosition(position);
                                     if (!vm.dragged) {
                                         MapService.centerOnCoords(lat, long);
@@ -617,8 +625,7 @@ angular.module('webmapp')
                                         lat: lat,
                                         long: long
                                     };
-                                }
-                                else {
+                                } else {
                                     MapService.drawAccuracy(position.coords.accuracy);
                                 }
                             };
@@ -737,6 +744,35 @@ angular.module('webmapp')
             $rootScope.$emit('expand-map', vm.isMapPage);
         };
 
+        vm.startNavigation = function () {
+            // if (!vm.gpsActive) {
+            //     checkGPS();
+            //     return;
+            // }
+
+            // if (vm.isOutsideBoundingBox) {
+            //     $ionicPopup.alert({
+            //         title: $translate.instant("ATTENZIONE"),
+            //         template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
+            //         buttons: [{
+            //             text: 'Ok',
+            //             type: 'button-positive'
+            //         }]
+            //     });
+            //     return;
+            // }
+
+            // if (!prevLatLong && !vm.locateLoading) {
+            //     vm.centerOnMe();
+            // }
+            // vm.recording = true;
+
+            vm.isNavigable = false;
+            vm.navigating = true;
+
+            Utils.goTo ('/');
+        };
+
         $scope.$on('$stateChangeStart', function (e, dest) {
             if ((dest.name === 'app.main.detaillayer' ||
                     dest.name === 'app.main.detailevent' ||
@@ -833,6 +869,26 @@ angular.module('webmapp')
                 }
 
                 // vm.hasShadow = true;
+            } else if (currentState === 'app.main.navigation') {
+
+                vm.mapView = true;
+                vm.hideExpander = true;
+                realState = $rootScope.currentParams.id.replace(/_/g, ' ');
+                layerState = true;
+
+                if (typeof overlayMap[realState] !== 'undefined' ||
+                    typeof overlaysGroupMap[realState] !== 'undefined') {
+
+                    setTimeout(function () {
+                        if (layerState) {
+                            MapService.activateLayer(realState, false, true);
+                        }
+                    }, 50);
+                } else {
+                    // TODO: go to map? 
+                    // vm.hideMap = true;
+                }
+
             } else if (currentState === 'app.main.detaillayer') {
                 if (MapService.isAPOILayer($rootScope.currentParams.parentId.replace(/_/g, ' '))) {
                     vm.detail = true;
