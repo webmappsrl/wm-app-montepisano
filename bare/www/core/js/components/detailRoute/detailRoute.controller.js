@@ -120,6 +120,7 @@ angular.module('webmapp')
 
         var routeDetail = getRoute(params.id);
         vm.isPublic = routeDetail.wm_route_public;
+        vm.skipLogin = CONFIG.OPTIONS.skipLoginPublicRoutesDownload ? CONFIG.OPTIONS.skipLoginPublicRoutesDownload : false;
 
         if (routeDetail) {
             vm.title = routeDetail.title.rendered;
@@ -306,23 +307,27 @@ angular.module('webmapp')
         };
 
         vm.openPackage = function () {
-            var basePackUrl = Offline.getOfflineMhildBasePathById(routeDetail.id);
+            if ((CONFIG.OPTIONS.skipLoginPublicRoutesDownload && pack.wm_route_public) || vm.isLoggedIn) {
+                var basePackUrl = Offline.getOfflineMhildBasePathById(routeDetail.id);
 
-            Communication.getLocalFile(basePackUrl + 'config.json')
-                .then(function (data) {
-                    localStorage.$wm_mhildConf = data;
-                    localStorage.$wm_mhildBaseUrl = Offline.getOfflineMhildBasePathById(routeDetail.id);
-                    localStorage.$wm_mhildId = routeDetail.id;
+                Communication.getLocalFile(basePackUrl + 'config.json')
+                    .then(function (data) {
+                        localStorage.$wm_mhildConf = data;
+                        localStorage.$wm_mhildBaseUrl = Offline.getOfflineMhildBasePathById(routeDetail.id);
+                        localStorage.$wm_mhildId = routeDetail.id;
 
-                    sessionStorage.$wm_doBack = 'allowed';
+                        sessionStorage.$wm_doBack = 'allowed';
 
-                    $ionicLoading.show({
-                        template: 'Loading...'
+                        $ionicLoading.show({
+                            template: 'Loading...'
+                        });
+
+                        location.reload();
+                        Utils.forceDigest();
                     });
-
-                    location.reload();
-                    Utils.forceDigest();
-                });
+            } else {
+                notLoggedIn();
+            }
         };
 
         vm.downloadPack = function () {
@@ -375,8 +380,7 @@ angular.module('webmapp')
                             });
                         }
                     });
-            }
-            else {
+            } else {
                 notLoggedIn();
             }
 

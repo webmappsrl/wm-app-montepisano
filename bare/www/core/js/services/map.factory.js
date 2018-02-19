@@ -764,7 +764,6 @@ angular.module('webmapp')
                         _id: url,
                         data: data
                     }).then(function() {
-
                     }).catch(function() {
                         console.log(url + " page not updated");
                     });

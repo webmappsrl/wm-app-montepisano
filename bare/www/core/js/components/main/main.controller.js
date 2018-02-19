@@ -255,6 +255,11 @@ angular.module('webmapp')
         vm.gpsActive = false;
         vm.outsideBoundingBox = false;
         vm.isOutsideBoundingBox = false;
+        vm.navigationAvailable = false;
+
+        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.activate && !Utils.isBrowser()) {
+            vm.navigationAvailable = true;
+        }
 
         vm.deg = 0;
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;

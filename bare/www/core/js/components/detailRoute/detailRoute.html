@@ -72,7 +72,13 @@
         style="background: {{vm.colors.global.background}}" 
         class="detailRoute-footer">
         <div
-            ng-if="!vm.isPublic && (!vm.isLoggedIn || !vm.userPackagesId[vm.id])">
+            ng-if="!vm.isPublic && 
+                (
+                    (
+                        vm.isLoggedIn && !vm.userPackagesId[vm.id]
+                    ) ||
+                    !vm.isLoggedIn
+                )">
             <button
                 style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
                 class="login-button button left"
@@ -87,7 +93,17 @@
             </button>
         </div>
         <div
-            ng-if="(vm.isPublic && (!vm.userDownloadedPackages[vm.id])) || (!vm.isPublic && vm.isLoggedIn && vm.userPackagesId[vm.id] && !vm.userDownloadedPackages[vm.id])">
+            ng-if="(
+                    !vm.userDownloadedPackages[vm.id] &&
+                    (
+                        (
+                            vm.isLoggedIn && vm.userPackagesId[vm.id]
+                        ) || vm.isPublic
+                    )
+                ) ||
+                (
+                    vm.userDownloadedPackages[vm.id] && !vm.isLoggedIn && vm.isPublic && !vm.skipLogin
+                )">
             <button
                 style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
                 class="login-button button button-block"
@@ -96,7 +112,18 @@
             </button>
         </div>
         <div
-            ng-if="vm.userDownloadedPackages[vm.id] && ((vm.isLoggedIn && vm.userPackagesId[vm.id]) || vm.isPublic)">
+            ng-if="vm.userDownloadedPackages[vm.id] &&
+                (
+                    (
+                        vm.isLoggedIn && 
+                        (
+                            vm.userPackagesId[vm.id] || vm.isPublic
+                        )
+                    ) ||
+                    (
+                        !vm.isLoggedIn && vm.isPublic && vm.skipLogin
+                    )
+                )">
             <button
                 style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
                 class="login-button button button-block"
