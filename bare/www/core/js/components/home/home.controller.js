@@ -22,9 +22,15 @@ angular.module('webmapp')
 
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
 
-        $ionicLoading.show();
-
         var getRoutes = function () {
+            vm.packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : {};
+            if (!vm.packages.length) {
+                $ionicLoading.show();
+            }
+            else {
+                getCategoriesName();
+            }
+
             $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/', function (data) {
                 vm.packages = data;
 
@@ -46,6 +52,16 @@ angular.module('webmapp')
         };
 
         var translateCategory = function (id) {
+            var tmp = localStorage.$wm_categories_translated ? JSON.parse(localStorage.$wm_categories_translated) : {};
+
+            if (tmp[vm.currentLang][id]) {
+                vm.categories[id].name = tmp[vm.currentLang][id].name;
+            }
+            vm.asyncTranslations--;
+            if (vm.asyncTranslations === 0) {
+                finishLoading();
+            }
+
             return $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'webmapp_category/' + id + "?lang=" + vm.currentLang, function (data) {
                 vm.categories[id].name = data.name;
 
@@ -78,6 +94,12 @@ angular.module('webmapp')
         };
 
         var getCategoriesName = function () {
+            var categoriesStorage = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : {};
+
+            if (categoriesStorage.length) {
+                setCategoriesName(categoriesStorage);    
+            }
+
             return $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'webmapp_category?per_page=100', function (data) {
                 localStorage.$wm_categories = JSON.stringify(data);
 

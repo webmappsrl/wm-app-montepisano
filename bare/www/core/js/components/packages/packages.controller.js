@@ -58,6 +58,9 @@ angular.module('webmapp')
         };
 
         var getPackagesIdByUserId = function (id) {
+            // if (!id) {
+            //     return;
+            // }
             return $.getJSON(baseUrl + endpoint + 'route_id/' + id, function (data) {
                 vm.userPackagesId = {};
 
@@ -126,6 +129,11 @@ angular.module('webmapp')
                 vm.setFilters();
             }
 
+            var localCategories = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : {};
+            if (localCategories.length) {
+                setCategoriesName(localCategories);
+            }
+
             return $.getJSON(baseUrl + config.COMMUNICATION.wordPressEndpoint + 'webmapp_category?per_page=100', function (data) {
                 localStorage.$wm_categories = JSON.stringify(data);
                 setCategoriesName(data);
@@ -161,17 +169,7 @@ angular.module('webmapp')
 
         var getRoutes = function () {
             var setRoutes = function(data) {
-                // if (!vm.useLogin) {
-                //     for (var pos in data) {
-                //         if (data[pos].wm_route_public) {
-                //             vm.packages[pos] = data[pos];
-                //         }
-                //     }
-                // }
-                // else{
-                    vm.packages = data;
-                    console.log(data);
-                // }
+                vm.packages = data;
 
                 for (var i in vm.packages) {
                     vm.packages[i].imgUrl = "core/images/image-loading.gif";
@@ -195,9 +193,17 @@ angular.module('webmapp')
                     getImages();
                 }
 
+                getCategoriesName();
+
                 $ionicLoading.hide();
                 Utils.forceDigest();
             };
+
+            var packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : {};
+
+            if (packages.length) {
+                setRoutes(packages);
+            }
 
             $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/', function (data) {
                 localStorage.$wm_packages = JSON.stringify(data);
@@ -280,8 +286,6 @@ angular.module('webmapp')
         //         }, 500);
         //     }
         // }
-
-        getRoutes();
 
         $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/detailMapModal.html', {
             scope: modalScope,
@@ -458,7 +462,8 @@ angular.module('webmapp')
 
             getRoutes();
 
-            getPackagesIdByUserId(userData.ID)
+            if (userData.ID) {
+                getPackagesIdByUserId(userData.ID)
                 .then(function () {
                     setTimeout(function () {
                         $scope.$broadcast('scroll.refreshComplete');
@@ -469,6 +474,7 @@ angular.module('webmapp')
                     });
                     $scope.$broadcast('scroll.refreshComplete');
                 });
+            }
 
             // location.reload();
         };
@@ -480,7 +486,7 @@ angular.module('webmapp')
                     getPackagesIdByUserId(userData.ID);
                 }
             });
-
+            getRoutes();
         });
 
         $rootScope.$on('logged-in', function () {
@@ -578,8 +584,6 @@ angular.module('webmapp')
 
             modalFilters.show();
         };
-
-        getCategoriesName();
 
         vm.truncateTitle = function(title) {
 
