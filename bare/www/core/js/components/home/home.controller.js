@@ -20,7 +20,7 @@ angular.module('webmapp')
         vm.asyncTranslations = 0;
         vm.appTitle = CONFIG.OPTIONS.title;
 
-        vm.currentLang = $translate.preferredLanguage();
+        vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
 
         $ionicLoading.show();
 
@@ -174,7 +174,7 @@ angular.module('webmapp')
                     vm.categories[category.id].name = category.name;
                     vm.categories[category.id].icon = category.icon;
 
-                    if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual && vm.currentLang !== CONFIG.LANGUAGES.actual) {
+                    if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual && vm.currentLang !== CONFIG.LANGUAGES.actual.substring(0, 2)) {
                         vm.asyncTranslations++;
                         translateCategory(category.id);
                     }

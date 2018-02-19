@@ -27,7 +27,8 @@ angular.module('webmapp')
         generalConf = CONFIG.OPTIONS,
         overlayLayersConf = CONFIG.OVERLAY_LAYERS,
         styleConf = CONFIG.STYLE,
-        offlineConf = CONFIG.OFFLINE;
+        offlineConf = CONFIG.OFFLINE,
+        currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
 
     var eventsList = [],
         eventsMap = {},
@@ -407,8 +408,7 @@ angular.module('webmapp')
                         '</div>' + 
                     '</div>';
                 }
-                var currentLang = $translate.preferredLanguage(),
-                    category = e.layer.feature.parent.label;
+                var category = e.layer.feature.parent.label;
 
                 if (e.layer.feature.parent.languages && e.layer.feature.parent.languages[currentLang]) {
                     category = e.layer.feature.parent.languages[currentLang];
@@ -742,7 +742,7 @@ angular.module('webmapp')
                     for (var pos in CONFIG.LANGUAGES.available) {
                         var url = CONFIG.OFFLINE.pagesUrl + item.type;
     
-                        if (CONFIG.LANGUAGES.available[pos] !== CONFIG.LANGUAGES.actual) {
+                        if (CONFIG.LANGUAGES.available[pos].substring(0, 2) !== CONFIG.LANGUAGES.actual.substring(0, 2)) {
                             url = url + "_" + CONFIG.LANGUAGES.available[pos].substring(0, 2);
                         }
     
@@ -765,6 +765,8 @@ angular.module('webmapp')
                         data: data
                     }).then(function() {
 
+                    }).catch(function() {
+                        console.log(url + " page not updated");
                     });
                 };
 
@@ -821,7 +823,6 @@ angular.module('webmapp')
         }
 
         var languageUrl = "",
-            currentLang = $translate.preferredLanguage(),
             available = false;
 
         if (CONFIG.LANGUAGES) {
@@ -961,10 +962,9 @@ angular.module('webmapp')
         }
 
         promise.then(function() {
-            var currentLang = $translate.preferredLanguage(),
-                url = geojsonUrl.split('/'),
+            var url = geojsonUrl.split('/'),
                 lang = url[url.length - 2];
-            if (lang === currentLang || (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual && CONFIG.LANGUAGES.actual === currentLang && lang.length !== 2)) {
+            if (lang === currentLang || (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual && CONFIG.LANGUAGES.actual.substring(0, 2) === currentLang && lang.length !== 2)) {
                 initializeThen(currentOverlay);
             }
         });

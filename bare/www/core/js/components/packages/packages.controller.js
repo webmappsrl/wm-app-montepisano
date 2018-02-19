@@ -47,7 +47,7 @@ angular.module('webmapp')
             vm.useLogin = config.LOGIN.useLogin;
         }
 
-        vm.currentLang = $translate.preferredLanguage();
+        currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
 
         var updateDownloadedPackagesInStorage = function () {
             localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
@@ -97,7 +97,6 @@ angular.module('webmapp')
 
             var setCategoriesName = function(data) {
                 vm.categories = {};
-                var currentLang = $translate.preferredLanguage();
                 vm.categoriesId = [];
 
                 vm.packages.forEach(function (element) {
@@ -118,7 +117,7 @@ angular.module('webmapp')
                         };
                         vm.categories = angular.extend(vm.categories, tmp);
     
-                        if (config.LANGUAGES && config.LANGUAGES.actual && currentLang !== config.LANGUAGES.actual) {
+                        if (config.LANGUAGES && config.LANGUAGES.actual && currentLang !== config.LANGUAGES.actual.substring(0, 2)) {
                             translateCategory(currentLang, category.id);
                         }
                     }
@@ -181,7 +180,7 @@ angular.module('webmapp')
                     
                     if (vm.packages[i].wpml_translations) {
                         for (var p in vm.packages[i].wpml_translations) {
-                            if (vm.packages[i].wpml_translations[p].locale.substring(0, 2) === vm.currentLang) {
+                            if (vm.packages[i].wpml_translations[p].locale.substring(0, 2) === currentLang) {
                                 vm.packages[i].packageTitle = vm.packages[i].wpml_translations[p].post_title;
                                 break;
                             }

@@ -23,7 +23,7 @@ angular.module('webmapp')
 ) {
     var vm = {},
         currentPageType = $state.current.name.split('.').pop(),
-        currentLang = $translate.preferredLanguage(),
+        currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
         defaultLang = "it";
 
     var templateUrl = $sce.getTrustedResourceUrl('templates/' + currentPageType + '.html');
@@ -62,6 +62,9 @@ angular.module('webmapp')
         var html = rsp.data;
         var openFn = vm.isBrowser ? 'vm.openInAppBrowser' : 'vm.openInExternalBrowser';
         vm.body = html.replace(/href="([^\'\"]+)/g, 'ng-click="' + openFn + '(\'$1\')" href=""');
+    },
+    function (e) {
+        console.log(e);
     });
 
     $rootScope.$on('logged-in', function() {

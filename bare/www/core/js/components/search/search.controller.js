@@ -19,6 +19,7 @@ angular.module('webmapp')
         lastQuery;
 
     var options = CONFIG.OPTIONS;
+    var currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
     
     modalScope.vm = {};
 
@@ -62,7 +63,6 @@ angular.module('webmapp')
     vm.translatedFiltersList = vm.filtersList;
 
     vm.translateOverlayInArray = function(array) {
-        var currentLang = $translate.preferredLanguage();
         var translated = [];
         for (var i in array) {
             var translatedName = "";

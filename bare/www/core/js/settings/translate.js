@@ -22,7 +22,7 @@ angular.module('webmapp')
 	if (CONFIGProvider.LANGUAGES) {
 		// if (CONFIGProvider.LANGUAGES.available)
 		if (CONFIGProvider.LANGUAGES.actual) {
-			lang = CONFIGProvider.LANGUAGES.actual;
+			lang = CONFIGProvider.LANGUAGES.actual.substring(0, 2);
 		}
 	}
 

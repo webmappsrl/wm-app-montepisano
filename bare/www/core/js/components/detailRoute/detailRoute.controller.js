@@ -22,7 +22,7 @@ angular.module('webmapp')
         var vm = {},
             current = $state.current || {},
             params = $state.params || {},
-            currentLang = $translate.preferredLanguage();
+            currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
 
         var modalScope = $rootScope.$new(),
             modal = {},
@@ -103,7 +103,7 @@ angular.module('webmapp')
         var getRoute = function (id) {
             for (var i = 0; i < vm.packages.length; i++) {
                 if (vm.packages[i].id == id) {
-                    if (CONFIG.LANGUAGES.actual && currentLang !== CONFIG.LANGUAGES.actual) {
+                    if (CONFIG.LANGUAGES.actual && currentLang !== CONFIG.LANGUAGES.actual.substring(0, 2)) {
 
                         for (var lang in vm.packages[i].wpml_translations) {
                             if (vm.packages[i].wpml_translations[lang].locale.substring(0, 2) === currentLang) {

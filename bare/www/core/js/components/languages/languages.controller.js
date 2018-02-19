@@ -16,7 +16,7 @@ angular.module('webmapp')
         var offlineScope = $rootScope.$new();
 
         vm.languages = CONFIG.LANGUAGES.available;
-        vm.currentLang = $translate.preferredLanguage();
+        vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
         vm.version = CONFIG.VERSION;
         vm.privacyUrl = CONFIG.COMMUNICATION.privacy;
         vm.isLoggedIn = false;
