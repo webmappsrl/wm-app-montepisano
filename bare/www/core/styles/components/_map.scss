@@ -525,6 +525,36 @@ div.leaflet-top.leaflet-right {
   }
 }
 
+.leaflet-bar,
+.coords-block,
+.coords-expander,
+.report-control {
+  display: none;
+
+  .map-page &,
+  .map-search & {
+    display: block;
+  }
+}
+
+.leaflet-control-attribution {
+  display: none;
+}
+
+/* Navigation interface */
+.coords-block,
+.coords-expander {
+  .navigating-interface & {
+    bottom: 99px;
+  }
+}
+
+.locate-custom-control {
+  .navigating-interface & {
+    bottom: 150px;
+  }
+}
+
 .navigator-div-controller {
   position: absolute;
   left: 0;
@@ -541,11 +571,12 @@ div.leaflet-top.leaflet-right {
     div.pause-button {
       width: calc(100% - 27% * 3);
       float: left;
-      font-size: 3em;
+      font-size: 50px;
       height: inherit;
       a {
         color: #fff;
       }
+      padding: 11.5px;
     }
   
     div.time-section,
@@ -584,23 +615,6 @@ div.leaflet-top.leaflet-right {
       margin: 12px 8% 13px 2%;
     }
   }
-}
-
-.leaflet-bar,
-.coords-block,
-.coords-expander,
-.report-control {
-  display: none;
-
-  .map-page &,
-  .map-search & {
-    display: block;
-  }
-}
-
-
-.leaflet-control-attribution {
-  display: none;
 }
 
 /* ------------------------------------ *\

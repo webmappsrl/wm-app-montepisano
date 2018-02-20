@@ -1811,6 +1811,38 @@ div.leaflet-top.leaflet-right {
   .show-start-navigation .start-navigation {
     display: block; }
 
+.leaflet-bar,
+.coords-block,
+.coords-expander,
+.report-control {
+  display: none; }
+  .map-page .leaflet-bar,
+  .map-search .leaflet-bar, .map-page
+  .coords-block,
+  .map-search
+  .coords-block, .map-page
+  .coords-expander,
+  .map-search
+  .coords-expander, .map-page
+  .report-control,
+  .map-search
+  .report-control {
+    display: block; }
+
+.leaflet-control-attribution {
+  display: none; }
+
+/* Navigation interface */
+ion-navbar .navigating-interface {
+  display: none; }
+
+.navigating-interface .coords-block, .navigating-interface
+.coords-expander {
+  bottom: 99px; }
+
+.navigating-interface .locate-custom-control {
+  bottom: 150px; }
+
 .navigator-div-controller {
   position: absolute;
   left: 0;
@@ -1826,8 +1858,9 @@ div.leaflet-top.leaflet-right {
     .navigator-div-controller div.content-div div.pause-button {
       width: calc(100% - 27% * 3);
       float: left;
-      font-size: 3em;
-      height: inherit; }
+      font-size: 50px;
+      height: inherit;
+      padding: 11.5px; }
       .navigator-div-controller div.content-div div.pause-button a {
         color: #fff; }
     .navigator-div-controller div.content-div div.time-section,
@@ -1858,27 +1891,6 @@ div.leaflet-top.leaflet-right {
     .navigator-div-controller div.content-div div.stop-navigation {
       background-color: #FF4108;
       margin: 12px 8% 13px 2%; }
-
-.leaflet-bar,
-.coords-block,
-.coords-expander,
-.report-control {
-  display: none; }
-  .map-page .leaflet-bar,
-  .map-search .leaflet-bar, .map-page
-  .coords-block,
-  .map-search
-  .coords-block, .map-page
-  .coords-expander,
-  .map-search
-  .coords-expander, .map-page
-  .report-control,
-  .map-search
-  .report-control {
-    display: block; }
-
-.leaflet-control-attribution {
-  display: none; }
 
 /* ------------------------------------ *   #MAP POPOVER
 \* ------------------------------------ */

@@ -7,7 +7,8 @@
         'desktop-full-map': vm.mapView,
         'has-howtoreach': vm.detail && detailCoordinates && !vm.hideHowToReach,
         'has-shadow': vm.hasShadow,
-        'show-start-navigation': vm.isNavigable
+        'show-start-navigation': vm.isNavigable,
+        'navigating-interface': vm.isNavigating
     }" ng-controller="MainController as vm">
 
     <ion-content class="content-pane" delegate-handle="mainScroll">
@@ -108,7 +109,7 @@
             </a>
         </div>
 
-        <div class="start-navigation" ng-if="vm.navigationAvailable || true">
+        <div class="start-navigation" ng-if="vm.navigationAvailable">
             <a href="" ng-click="vm.startNavigation()">
                 <i class="wm-icon-navigate"></i>
                 {{::"Inizia" | translate}}

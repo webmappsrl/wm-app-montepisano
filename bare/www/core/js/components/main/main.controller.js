@@ -268,6 +268,7 @@ angular.module('webmapp')
         vm.showLocate = !CONFIG.MAP.hideLocationControl || !Utils.isBrowser();
         vm.isNavigating = false;
         vm.isPaused = false;
+        vm.stopNavigationUrl = '';
         vm.viewTitle = $translate.instant("MAPPA");
         vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
         vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
@@ -707,6 +708,7 @@ angular.module('webmapp')
         };
 
         vm.returnToMap = function () {
+            vm.isNavigable = false;
             MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
 
             vm.goToMap();
@@ -743,6 +745,7 @@ angular.module('webmapp')
         vm.toggleMap = function () {
             vm.isMapPage = !vm.isMapPage;
             vm.mapView = vm.isMapPage;
+            vm.isNavigable = false;
             setTimeout(function () {
                 MapService.adjust();
             }, 350);
@@ -751,26 +754,26 @@ angular.module('webmapp')
         };
 
         vm.startNavigation = function () {
-            // if (!vm.gpsActive) {
-            //     checkGPS();
-            //     return;
-            // }
+            if (!vm.gpsActive) {
+                checkGPS();
+                return;
+            }
 
-            // if (vm.isOutsideBoundingBox) {
-            //     $ionicPopup.alert({
-            //         title: $translate.instant("ATTENZIONE"),
-            //         template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
-            //         buttons: [{
-            //             text: 'Ok',
-            //             type: 'button-positive'
-            //         }]
-            //     });
-            //     return;
-            // }
+            if (vm.isOutsideBoundingBox) {
+                $ionicPopup.alert({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
+                    buttons: [{
+                        text: 'Ok',
+                        type: 'button-positive'
+                    }]
+                });
+                return;
+            }
 
-            // if (!prevLatLong && !vm.locateLoading) {
-            //     vm.centerOnMe();
-            // }
+            if (!prevLatLong && !vm.locateLoading) {
+                vm.centerOnMe();
+            }
 
             //Hide start button
             vm.isNavigable = false;
@@ -778,6 +781,7 @@ angular.module('webmapp')
             //Start recording
             vm.isNavigating = true;
             vm.isPaused = false;
+            vm.stopNavigationUrl = 'layer/' + $rootScope.currentParams.parentId + '/' + $rootScope.currentParams.id;
 
             Utils.goTo ('/');
         };
@@ -787,14 +791,17 @@ angular.module('webmapp')
         };
 
         vm.resumeNavigation = function () {
-            console.log("paused");
             vm.isPaused = false;
         };
 
         vm.stopNavigation = function () {
-            console.log("stopped");
             vm.isPaused = false;
             vm.isNavigating = false;
+            if (vm.stopNavigationUrl !== '') {
+                var url = vm.stopNavigationUrl;
+                vm.stopNavigationUrl = '';
+                Utils.goTo(url);
+            }
         };
 
         $scope.$on('$stateChangeStart', function (e, dest) {
