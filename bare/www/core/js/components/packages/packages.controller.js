@@ -47,11 +47,110 @@ angular.module('webmapp')
             vm.useLogin = config.LOGIN.useLogin;
         }
 
-        currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+        var currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+
+        modalScope.vm = {};
+        modalScope.vm.hide = function () {
+            modal && modal.hide();
+        };
+
+        modalDownloadScope.vm = {};
+        modalDownloadScope.vm.hide = function () {
+            modalDownload && modalDownload.hide();
+        };
+
+        modalFiltersScope.vm = {};
+        modalFiltersScope.vm.hide = function () {
+            modalFilters && modalFilters.hide();
+        };
 
         var updateDownloadedPackagesInStorage = function () {
             localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
         };
+
+        var areAllActive = function (filtersMap) {
+            var allActive = true;
+
+            for (var i in filtersMap) {
+                if (i !== "Tutte") {
+                    if (!filtersMap[i].value) {
+                        allActive = false;
+                        break;
+                    }
+                }
+            }
+
+            return allActive;
+        };
+
+        vm.setFilters = function () {
+            vm.filters = {};
+            for (var category in vm.categoriesId) {
+                var tmp = {};
+                tmp[category] = {
+                    name: vm.categories[category].name,
+                    icon: vm.categories[category].icon,
+                    value: true
+                };
+                vm.filters = angular.extend(tmp, vm.filters);
+            }
+
+            //Apply selected filter in homepage
+            if ($state.params.id && $state.params.id !== "") {
+                for (var category in vm.filters) {
+                    if (category === $state.params.id) {
+                        vm.filters[category].value = true;
+                    }
+                    else {
+                        vm.filters[category].value = false;
+                    }
+                }
+            }
+        };
+
+        modalFiltersScope.vm.updateFilter = function (filterName, value) {
+            if (filterName === "Tutte") {
+                for (var i in modalFiltersScope.vm.filters) {
+                    modalFiltersScope.vm.filters[i].value = value;
+                }
+
+                for (var i in vm.filters) {
+                    vm.filters[i].value = value;
+                }
+            } else {
+                modalFiltersScope.vm.filters[filterName].value = value;
+                vm.filters[filterName].value = value;
+
+                modalFiltersScope.vm.filters["Tutte"].value = areAllActive(modalFiltersScope.vm.filters);
+            }
+        };
+
+        vm.openFilters = function () {
+            var tmp = {};
+            tmp["Tutte"] = {
+                name: $translate.instant("Tutte"),
+                icon: "wm-icon-generic",
+                value: true
+            };
+            var activeFilters = angular.extend(tmp, vm.filters),
+                allActive = areAllActive(activeFilters);
+
+            activeFilters["Tutte"].value = allActive;
+            modalFiltersScope.vm.filters = activeFilters;
+
+            modalFilters.show();
+        };
+
+        vm.truncateTitle = function(title) {
+
+            var ret = title;
+            var maxLength = 44;
+            if (ret && ret.length && ret.length > maxLength) {
+                ret = ret.substr(0, maxLength - 3) + "...";
+            }
+
+            return ret;
+        }
 
         var showPopup = function (template) {
             // TODO ...
@@ -156,10 +255,13 @@ angular.module('webmapp')
                 $.getJSON(baseUrl + config.COMMUNICATION.wordPressEndpoint + 'media/' + vm.packages[i].featured_media, function (data) {
                     for (var pos in vm.packages) {
                         if (vm.packages[pos].featured_media === data.id) {
-                            vm.packages[pos].imgUrl = data.media_details.sizes.medium.source_url;
+                            if (vm.packages[pos].imgUrl !== data.media_details.sizes.medium.source_url) {
+                                vm.packages[pos].imgUrl = data.media_details.sizes.medium.source_url;
+                            }
                             break;
                         }
                     }
+                    localStorage.$wm_packages = JSON.stringify(vm.packages);
                     Utils.forceDigest();
                 }).fail(function () {
                     console.error('images retrive error');
@@ -168,11 +270,37 @@ angular.module('webmapp')
         };
 
         var getRoutes = function () {
+            var mergePackages = function(packages, newPackages) {
+                for (var i in newPackages) {
+                    for (var j in packages) {
+                        if (packages[j].id === newPackages[i].id) {
+                            if (packages[j].imgUrl) {
+                                newPackages[i].imgUrl = packages[j].imgUrl;
+                            }
+
+                            if (packages[j].packageTitle) {
+                                newPackages[i].packageTitle = packages[j].packageTitle;
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                return newPackages;
+            };
+
             var setRoutes = function(data) {
-                vm.packages = data;
+                if (!vm.packages.length) {
+                    vm.packages = data;
+                }
+                else {
+                    vm.packages = mergePackages(vm.packages, data);
+                }
 
                 for (var i in vm.packages) {
-                    vm.packages[i].imgUrl = "core/images/image-loading.gif";
+                    if (!vm.packages[i].imgUrl) {
+                        vm.packages[i].imgUrl = "core/images/image-loading.gif";
+                    }
 
                     vm.packages[i].packageTitle = vm.packages[i].title.rendered;
                     
@@ -185,6 +313,8 @@ angular.module('webmapp')
                         }
                     }
                 }
+
+                localStorage.$wm_packages = JSON.stringify(vm.packages);
 
                 localStorage.$wm_userPackagesId = JSON.stringify(vm.userPackagesId);
 
@@ -240,21 +370,6 @@ angular.module('webmapp')
                 vm.openDetailsRoute(pack.id);
             }
         }
-
-        modalScope.vm = {};
-        modalScope.vm.hide = function () {
-            modal && modal.hide();
-        };
-
-        modalDownloadScope.vm = {};
-        modalDownloadScope.vm.hide = function () {
-            modalDownload && modalDownload.hide();
-        };
-
-        modalFiltersScope.vm = {};
-        modalFiltersScope.vm.hide = function () {
-            modalFilters && modalFilters.hide();
-        };
 
         vm.userDownloadedPackages = localStorage.$wm_userDownloadedPackages ? JSON.parse(localStorage.$wm_userDownloadedPackages) : {};
         vm.packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : [];
@@ -511,90 +626,6 @@ angular.module('webmapp')
         function showLogin(isRegistration) {
             $rootScope.showLogin(isRegistration);
         };
-
-        var areAllActive = function (filtersMap) {
-            var allActive = true;
-
-            for (var i in filtersMap) {
-                if (i !== "Tutte") {
-                    if (!filtersMap[i].value) {
-                        allActive = false;
-                        break;
-                    }
-                }
-            }
-
-            return allActive;
-        };
-
-        vm.setFilters = function () {
-            vm.filters = {};
-            for (var category in vm.categoriesId) {
-                var tmp = {};
-                tmp[category] = {
-                    name: vm.categories[category].name,
-                    icon: vm.categories[category].icon,
-                    value: true
-                };
-                vm.filters = angular.extend(tmp, vm.filters);
-            }
-
-            //Apply selected filter in homepage
-            if ($state.params.id && $state.params.id !== "") {
-                for (var category in vm.filters) {
-                    if (category === $state.params.id) {
-                        vm.filters[category].value = true;
-                    }
-                    else {
-                        vm.filters[category].value = false;
-                    }
-                }
-            }
-        };
-
-        modalFiltersScope.vm.updateFilter = function (filterName, value) {
-            if (filterName === "Tutte") {
-                for (var i in modalFiltersScope.vm.filters) {
-                    modalFiltersScope.vm.filters[i].value = value;
-                }
-
-                for (var i in vm.filters) {
-                    vm.filters[i].value = value;
-                }
-            } else {
-                modalFiltersScope.vm.filters[filterName].value = value;
-                vm.filters[filterName].value = value;
-
-                modalFiltersScope.vm.filters["Tutte"].value = areAllActive(modalFiltersScope.vm.filters);
-            }
-        };
-
-        vm.openFilters = function () {
-            var tmp = {};
-            tmp["Tutte"] = {
-                name: $translate.instant("Tutte"),
-                icon: "wm-icon-generic",
-                value: true
-            };
-            var activeFilters = angular.extend(tmp, vm.filters),
-                allActive = areAllActive(activeFilters);
-
-            activeFilters["Tutte"].value = allActive;
-            modalFiltersScope.vm.filters = activeFilters;
-
-            modalFilters.show();
-        };
-
-        vm.truncateTitle = function(title) {
-
-            var ret = title;
-            var maxLength = 44;
-            if (ret && ret.length && ret.length > maxLength) {
-                ret = ret.substr(0, maxLength - 3) + "...";
-            }
-
-            return ret;
-        }
 
         return vm;
     });
