@@ -251,19 +251,38 @@ angular.module('webmapp')
         };
 
         var getImages = function () {
-            for (var i in vm.packages) {
-                $.getJSON(baseUrl + config.COMMUNICATION.wordPressEndpoint + 'media/' + vm.packages[i].featured_media, function (data) {
-                    for (var pos in vm.packages) {
-                        if (vm.packages[pos].featured_media === data.id) {
-                            if (vm.packages[pos].imgUrl !== data.media_details.sizes.medium.source_url) {
-                                vm.packages[pos].imgUrl = data.media_details.sizes.medium.source_url;
+            var setImages = function(packageId) {
+                return function (data) {
+                    for (var i in vm.packages) {
+                        if (vm.packages[i].id === packageId) {
+                            if (vm.packages[i].imgUrl !== data.media_details.sizes.medium.source_url) {
+                                vm.packages[i].imgUrl = data.media_details.sizes.medium.source_url;
                             }
                             break;
                         }
                     }
+    
                     localStorage.$wm_packages = JSON.stringify(vm.packages);
                     Utils.forceDigest();
-                }).fail(function () {
+                }
+            };
+            
+            for (var i in vm.packages) {
+                $.getJSON(baseUrl + config.COMMUNICATION.wordPressEndpoint + 'media/' + vm.packages[i].featured_media,
+                setImages(vm.packages[i].id)
+                // function (data) {
+                //     for (var pos in vm.packages) {
+                //         if (vm.packages[pos].featured_media === data.id) {
+                //             if (vm.packages[pos].imgUrl !== data.media_details.sizes.medium.source_url) {
+                //                 vm.packages[pos].imgUrl = data.media_details.sizes.medium.source_url;
+                //             }
+                //             break;
+                //         }
+                //     }
+                //     localStorage.$wm_packages = JSON.stringify(vm.packages);
+                //     Utils.forceDigest();
+                // }
+            ).fail(function () {
                     console.error('images retrive error');
                 });
             }
