@@ -108,46 +108,62 @@
             </a>
         </div>
 
-        <div class="start-navigation" ng-if="vm.navigationAvailable">
+        <div class="start-navigation" ng-if="vm.navigationAvailable || true">
             <a href="" ng-click="vm.startNavigation()">
                 <i class="wm-icon-navigate"></i>
                 {{::"Inizia" | translate}}
             </a>
         </div>
 
-        <div class="navigator-div-controller" ng-if="vm.navigating">
-            <div class="pause-button" ng-style="{
-                'background': vm.colors.mainBar.background,
-                'color': vm.colors.mainBar.color
-            }">
-                <i class="wm-icon-ios7-pause"></i>
-            </div>
-            <div class="time-section">
-                <div>
-                    <i class="wm-icon-android-clock"></i>
+        <div class="navigator-div-controller" ng-if="vm.isNavigating">
+            <div class="content-div" ng-if="!vm.isPaused">
+                <div class="pause-button" ng-style="{
+                        'background': vm.colors.mainBar.background,
+                        'color': vm.colors.mainBar.color
+                    }">
+                    <a href="" ng-click="vm.pauseNavigation()">
+                        <i class="wm-icon-ios7-pause"></i>
+                    </a>
                 </div>
-                <span>
-                    0:29
-                    <br> in motion
-                </span>
-            </div>
-            <div class="distance-section">
-                <div>
-                    <i class="wm-icon-arrow-right-c"></i>
+                <div class="time-section">
+                    <div>
+                        <i class="wm-icon-android-clock"></i>
+                    </div>
+                    <span>
+                        0:29
+                        <br> in motion
+                    </span>
                 </div>
-                <span>
-                    126 km
-                    <br> traveled
-                </span>
-            </div>
-            <div class="speed-section">
-                <div>
-                    <i class="wm-icon-speedometer"></i>
+                <div class="distance-section">
+                    <div>
+                        <i class="wm-icon-arrow-right-c"></i>
+                    </div>
+                    <span>
+                        126 km
+                        <br> traveled
+                    </span>
                 </div>
-                <span>
-                    17 kmh
-                    <br> 24 kmh
-                </span>
+                <div class="speed-section">
+                    <div>
+                        <i class="wm-icon-speedometer"></i>
+                    </div>
+                    <span>
+                        17 kmh
+                        <br> 24 kmh
+                    </span>
+                </div>
+            </div>
+            <div class="content-div" ng-if="vm.isPaused">
+                <div class="resume-navigation">
+                    <a href="" ng-click="vm.resumeNavigation()">
+                        {{::"Riprendi" | translate}}
+                    </a>
+                </div> 
+                <div class="stop-navigation">
+                    <a href="" ng-click="vm.stopNavigation()">
+                        {{::"Interrompi" | translate}}
+                    </a>
+                </div>
             </div>
         </div>
     </ion-footer-bar>

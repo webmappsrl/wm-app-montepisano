@@ -266,7 +266,8 @@ angular.module('webmapp')
         vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
         vm.useExandMapInDetails = CONFIG.OPTIONS.useExandMapInDetails;
         vm.showLocate = !CONFIG.MAP.hideLocationControl || !Utils.isBrowser();
-        vm.recording = false;
+        vm.isNavigating = false;
+        vm.isPaused = false;
         vm.viewTitle = $translate.instant("MAPPA");
         vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
         vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
@@ -750,32 +751,50 @@ angular.module('webmapp')
         };
 
         vm.startNavigation = function () {
-            if (!vm.gpsActive) {
-                checkGPS();
-                return;
-            }
+            // if (!vm.gpsActive) {
+            //     checkGPS();
+            //     return;
+            // }
 
-            if (vm.isOutsideBoundingBox) {
-                $ionicPopup.alert({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
-                    buttons: [{
-                        text: 'Ok',
-                        type: 'button-positive'
-                    }]
-                });
-                return;
-            }
+            // if (vm.isOutsideBoundingBox) {
+            //     $ionicPopup.alert({
+            //         title: $translate.instant("ATTENZIONE"),
+            //         template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
+            //         buttons: [{
+            //             text: 'Ok',
+            //             type: 'button-positive'
+            //         }]
+            //     });
+            //     return;
+            // }
 
-            if (!prevLatLong && !vm.locateLoading) {
-                vm.centerOnMe();
-            }
-            vm.recording = true;
+            // if (!prevLatLong && !vm.locateLoading) {
+            //     vm.centerOnMe();
+            // }
 
+            //Hide start button
             vm.isNavigable = false;
-            vm.navigating = true;
+
+            //Start recording
+            vm.isNavigating = true;
+            vm.isPaused = false;
 
             Utils.goTo ('/');
+        };
+
+        vm.pauseNavigation = function () {
+            vm.isPaused = true;
+        };
+
+        vm.resumeNavigation = function () {
+            console.log("paused");
+            vm.isPaused = false;
+        };
+
+        vm.stopNavigation = function () {
+            console.log("stopped");
+            vm.isPaused = false;
+            vm.isNavigating = false;
         };
 
         $scope.$on('$stateChangeStart', function (e, dest) {

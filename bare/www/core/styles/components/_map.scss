@@ -534,26 +534,55 @@ div.leaflet-top.leaflet-right {
   background-color: #fff;
   font-size: 25px;
   text-align: center;
-  div.pause-button {
-    width: calc(100% - 27% * 3);
-    float: left;
-    height: 100%;
-    font-size: 3em;
-  }
+  height: 75px;
+  div.content-div {
+    height: inherit;
 
-  div.time-section,
-  div.distance-section,
-  div.speed-section {
-    div {
-      margin: 2px 0;
+    div.pause-button {
+      width: calc(100% - 27% * 3);
+      float: left;
+      font-size: 3em;
+      height: inherit;
+      a {
+        color: #fff;
+      }
     }
-    span {
-      font-size: 20px;
+  
+    div.time-section,
+    div.distance-section,
+    div.speed-section {
+      div {
+        margin: 2px 0;
+      }
+      span {
+        font-size: 20px;
+      }
+      color: $color-brown;
+      width: 27%;
+      float: left;
+      height: inherit;
     }
-    color: $color-brown;
-    height: 100%;
-    width: 27%;
-    float: left;
+
+    a {
+      color: #fff;
+    }
+
+    div.resume-navigation,
+    div.stop-navigation {
+      width: 40%;
+      float: left;
+      padding: 15px;
+    }
+
+    div.resume-navigation {
+      background-color: #7BB221;
+      margin: 12px 2% 13px 8%;
+    }
+
+    div.stop-navigation {
+      background-color: #FF4108;
+      margin: 12px 8% 13px 2%;
+    }
   }
 }
 
