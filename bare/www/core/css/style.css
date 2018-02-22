@@ -3364,7 +3364,8 @@ div.detailRoute-footer {
   padding: 12px; }
   div.detailRoute-footer button.login-button.button {
     height: 54px;
-    width: auto; }
+    width: auto;
+    font-size: 20px; }
   div.detailRoute-footer .left {
     float: left; }
   div.detailRoute-footer .right {
