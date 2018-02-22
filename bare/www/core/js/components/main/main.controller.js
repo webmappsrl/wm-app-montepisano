@@ -835,7 +835,7 @@ angular.module('webmapp')
                 vm.currentMovingTime = Date.now() - vm.startMovingTime;
             }
 
-            vm.averageSpeedText = (vm.distanceTravelled / ((vm.currentMovingTime + vm.movingTime) * 1000) * 3.6) + ' km/h';
+            vm.averageSpeedText = (vm.distanceTravelled / ((vm.currentMovingTime + vm.movingTime) / 1000) * 3.6) + ' km/h';
 
             vm.currentSpeedText = (distance / (timeElapsedBetweenPositions / 1000) * 3.6).toFixed(1) + ' km/h';
             clearTimeout(vm.currentSpeedExpireTimeout);
