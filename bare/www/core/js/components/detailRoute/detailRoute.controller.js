@@ -341,6 +341,9 @@ angular.module('webmapp')
                         if (res) {
                             var currentId = pack.id;
 
+                            $.ajaxSetup({
+                                cache: false
+                            });
                             $.getJSON(CONFIG.COMMUNICATION.downloadJSONUrl + currentId + '/app.json', function (data) {
 
                                 var arrayLink = [];
@@ -374,6 +377,8 @@ angular.module('webmapp')
                                 Offline
                                     .downloadUserMap(currentId, arrayLink, modalDownloadScope.vm)
                                     .then(downloadSuccess, downloadFail);
+                                    
+                                $.ajaxSetup();
                             }).fail(function () {
                                 // TODO: add ionic alert
                                 alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova"));

@@ -17,7 +17,8 @@ angular.module('webmapp')
         CONFIG,
         $translate,
         Auth,
-        $ionicPlatform
+        $ionicPlatform,
+        $interval
     ) {
         var vm = {};
 
@@ -255,7 +256,39 @@ angular.module('webmapp')
         vm.gpsActive = false;
         vm.outsideBoundingBox = false;
         vm.isOutsideBoundingBox = false;
+
         vm.navigationAvailable = false;
+        vm.isNavigating = false;
+        vm.isPaused = false;
+        vm.stopNavigationUrl = '';
+
+        vm.navigationStartTime = 0;
+        vm.navigationStopTime = 0;
+        vm.firstPositionSet = false;
+        vm.lastPositionRecordTime = 0;
+
+        vm.timeInMotion = 0;
+        vm.timeInMotionBeforePause = 0;
+        vm.timeInMotionText = '00:00';
+
+        vm.distanceTravelled = 0;
+        vm.distanceTravelledBeforePause = 0;
+        vm.distanceTravelledText = '0.0 km';
+
+        vm.currentSpeedExpireTimeout = null;
+        vm.currentSpeedText = '0.0 km/h';
+        vm.averageSpeedText = '0.0 km/h';
+        vm.movingTime = 0;
+        vm.currentMovingTime = 0;
+        vm.isNotMoving = false;
+
+        vm.navigationInterval = null;
+
+        if (!Date.now) {
+            Date.now = function () {
+                return new Date().getTime();
+            };
+        }
 
         if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.activate && !Utils.isBrowser()) {
             vm.navigationAvailable = true;
@@ -266,9 +299,6 @@ angular.module('webmapp')
         vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
         vm.useExandMapInDetails = CONFIG.OPTIONS.useExandMapInDetails;
         vm.showLocate = !CONFIG.MAP.hideLocationControl || !Utils.isBrowser();
-        vm.isNavigating = false;
-        vm.isPaused = false;
-        vm.stopNavigationUrl = '';
         vm.viewTitle = $translate.instant("MAPPA");
         vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
         vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
@@ -609,25 +639,37 @@ angular.module('webmapp')
                                 var lat = position.coords.latitude,
                                     long = position.coords.longitude,
                                     locateLoading = false,
-                                    doCenter = false,
-                                    distance = 0;
+                                    doCenter = false;
 
                                 if (!prevLatLong) {
                                     doCenter = true;
-                                } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 6 || true) {
-                                    distance = distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long);
+                                } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 6) {
                                     doCenter = true;
                                 }
 
                                 if (doCenter) {
-                                    if (vm.recording) {
-                                        vm.distance = vm.distance > 0 ? vm.distance + distance : distance;
-                                        console.log(vm.distance);
-                                    }
                                     MapService.drawPosition(position);
                                     if (!vm.dragged) {
                                         MapService.centerOnCoords(lat, long);
                                     }
+
+                                    if (vm.isNavigating && !vm.isPaused) {
+                                        if (vm.firstPositionSet) {
+                                            updateNavigationValues(position, prevLatLong);
+                                        }
+                                        else {
+                                            vm.firstPositionSet = true;
+                                            vm.lastPositionRecordTime = Date.now();
+                                            vm.isNotMoving = false;
+                                            vm.startMovingTime = Date.now();
+                                            vm.currentSpeedExpireTimeout = setTimeout(function () {
+                                                vm.currentSpeedText = '0.0 km/h';
+                                                vm.isNotMoving = true;
+                                                vm.movingTime = vm.movingTime + vm.currentMovingTime;
+                                            }, 5000);
+                                        }
+                                    }
+
                                     prevLatLong = {
                                         lat: lat,
                                         long: long
@@ -753,6 +795,88 @@ angular.module('webmapp')
             $rootScope.$emit('expand-map', vm.isMapPage);
         };
 
+        var getTimeText = function (time) {
+            var hours = 0,
+                minutes = 0,
+                seconds = 0;
+
+            time = (time - (time % 1000)) / 1000;
+            seconds = time % 60;
+            minutes = ((time - seconds) / 60) % 60;
+            hours = ((time - seconds - minutes * 60) / 3600) % 24;
+
+            if (hours > 0) {
+                return ("0" + hours).slice(-2) + ':' + ("0" + minutes).slice(-2) + ':' + ("0" + seconds).slice(-2);
+            } else {
+                return ("0" + minutes).slice(-2) + ':' + ("0" + seconds).slice(-2);
+            }
+        };
+
+        var getDistanceText = function(distance) {
+            return (distance / 1000).toFixed(1) + ' km';
+        };
+
+        var updateNavigationValues = function(position, prevPosition) {
+            var distance = distanceInMeters(position.coords.latitude, position.coords.longitude, prevPosition.lat, prevPosition.long)
+            vm.distanceTravelled = distance + vm.distanceTravelled;
+            if (vm.distanceTravelledBeforePause > 0) {
+                vm.distanceTravelled = vm.distanceTravelled + vm.distanceTravelledBeforePause;
+                vm.distanceTravelledBeforePause = 0;
+            }
+            vm.distanceTravelledText = getDistanceText(vm.distanceTravelled);
+
+            var timeElapsedBetweenPositions = Date.now() - vm.lastPositionRecordTime;
+
+            if (vm.isNotMoving) {
+                vm.startMovingTime = Date.now();
+                vm.isNotMoving = false;
+            }
+            else {
+                vm.currentMovingTime = Date.now() - vm.startMovingTime;
+            }
+
+            vm.averageSpeedText = (vm.distanceTravelled / ((vm.currentMovingTime + vm.movingTime) * 1000) * 3.6) + ' km/h';
+
+            vm.currentSpeedText = (distance / (timeElapsedBetweenPositions / 1000) * 3.6).toFixed(1) + ' km/h';
+            clearTimeout(vm.currentSpeedExpireTimeout);
+            vm.currentSpeedExpireTimeout = setTimeout(function() {
+                vm.currentSpeedText = '0.0 km/h';
+                vm.isNotMoving = true;
+                vm.movingTime = vm.movingTime + vm.currentMovingTime;
+            }, 5000);
+
+            vm.lastPositionRecordTime = Date.now();
+        };
+
+        var navigationIntervalFunction = function () {
+            vm.timeInMotion = Date.now() - vm.navigationStartTime + vm.timeInMotionBeforePause;
+            vm.timeInMotionText = getTimeText(vm.timeInMotion);
+            Utils.forceDigest();
+        };
+
+        var cleanNavigationValues = function () {
+            vm.navigationStartTime = 0;
+            vm.navigationStopTime = 0;
+            vm.firstPositionSet = false;
+            vm.lastPositionRecordTime = 0;
+
+            vm.timeInMotion = 0;
+            vm.timeInMotionBeforePause = 0;
+            vm.timeInMotionText = '00:00';
+
+            vm.distanceTravelled = 0;
+            vm.distanceTravelledBeforePause = 0;
+            vm.distanceTravelledText = '0.0 km';
+
+            vm.currentSpeedExpireTimeout = null;
+            vm.currentSpeedText = '0.0 km/h';
+            vm.averageSpeedText = '0.0 km/h';
+            vm.movingTime = 0;
+            vm.currentMovingTime = 0;
+            vm.isNotMoving = false;
+            vm.navigationInterval = null;
+        };
+
         vm.startNavigation = function () {
             if (!vm.gpsActive) {
                 checkGPS();
@@ -783,20 +907,33 @@ angular.module('webmapp')
             vm.isPaused = false;
             vm.stopNavigationUrl = 'layer/' + $rootScope.currentParams.parentId + '/' + $rootScope.currentParams.id;
 
-            Utils.goTo ('/');
+            vm.navigationStartTime = Date.now();
+
+            vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
+
+            Utils.goTo('/');
         };
 
         vm.pauseNavigation = function () {
             vm.isPaused = true;
+            vm.timeInMotionBeforePause = Date.now() - vm.navigationStartTime + vm.timeInMotionBeforePause;
+            vm.distanceTravelledBeforePause = vm.distanceTravelled;
+            clearInterval(vm.navigationInterval);
         };
 
         vm.resumeNavigation = function () {
             vm.isPaused = false;
+            vm.navigationStartTime = Date.now();
+            vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
+            vm.distanceTravelled = 0;
+            vm.firstPositionSet = false;
         };
 
         vm.stopNavigation = function () {
             vm.isPaused = false;
             vm.isNavigating = false;
+            clearInterval(vm.navigationInterval);
+            cleanNavigationValues();
             if (vm.stopNavigationUrl !== '') {
                 var url = vm.stopNavigationUrl;
                 vm.stopNavigationUrl = '';

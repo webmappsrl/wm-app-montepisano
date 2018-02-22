@@ -1833,9 +1833,6 @@ div.leaflet-top.leaflet-right {
   display: none; }
 
 /* Navigation interface */
-ion-navbar .navigating-interface {
-  display: none; }
-
 .navigating-interface .coords-block, .navigating-interface
 .coords-expander {
   bottom: 99px; }
@@ -1874,10 +1871,19 @@ ion-navbar .navigating-interface {
       .navigator-div-controller div.content-div div.distance-section div,
       .navigator-div-controller div.content-div div.speed-section div {
         margin: 2px 0; }
+      .navigator-div-controller div.content-div div.time-section span.navigation-value,
+      .navigator-div-controller div.content-div div.distance-section span.navigation-value,
+      .navigator-div-controller div.content-div div.speed-section span.navigation-value {
+        font-size: 22px; }
+      .navigator-div-controller div.content-div div.time-section span.navigation-text,
+      .navigator-div-controller div.content-div div.distance-section span.navigation-text,
+      .navigator-div-controller div.content-div div.speed-section span.navigation-text {
+        font-size: 16px; }
       .navigator-div-controller div.content-div div.time-section span,
       .navigator-div-controller div.content-div div.distance-section span,
       .navigator-div-controller div.content-div div.speed-section span {
-        font-size: 20px; }
+        display: block;
+        line-height: 22px; }
     .navigator-div-controller div.content-div a {
       color: #fff; }
     .navigator-div-controller div.content-div div.resume-navigation,

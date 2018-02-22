@@ -109,7 +109,7 @@
             </a>
         </div>
 
-        <div class="start-navigation" ng-if="vm.navigationAvailable">
+        <div class="start-navigation" ng-if="vm.navigationAvailable || true">
             <a href="" ng-click="vm.startNavigation()">
                 <i class="wm-icon-navigate"></i>
                 {{::"Inizia" | translate}}
@@ -130,27 +130,33 @@
                     <div>
                         <i class="wm-icon-android-clock"></i>
                     </div>
-                    <span>
-                        0:29
-                        <br> in motion
+                    <span class="navigation-value">
+                        {{vm.timeInMotionText}}
+                    </span>
+                    <span class="navigation-text">
+                        {{::"in movimento" | translate}}
                     </span>
                 </div>
                 <div class="distance-section">
                     <div>
                         <i class="wm-icon-arrow-right-c"></i>
                     </div>
-                    <span>
-                        126 km
-                        <br> traveled
+                    <span class="navigation-value">
+                        {{vm.distanceTravelledText}}
+                    </span>
+                    <span class="navigation-text">
+                        {{::"percorsi" | translate}}
                     </span>
                 </div>
                 <div class="speed-section">
                     <div>
                         <i class="wm-icon-speedometer"></i>
                     </div>
-                    <span>
-                        17 kmh
-                        <br> 24 kmh
+                    <span class="navigation-value">
+                        {{vm.currentSpeedText}}
+                    </span>
+                    <span class="navigation-value">
+                        {{vm.averageSpeedText}}
                     </span>
                 </div>
             </div>

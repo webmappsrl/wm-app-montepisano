@@ -100,6 +100,6 @@
     <plugin name="cordova-sqlite-storage-custom" spec="local_plugins/cordova-sqlite-storage-custom" />
     <plugin name="phonegap-plugin-barcodescanner" spec="~6.0.1" />
     <plugin name="uk.co.workingedge.phonegap.plugin.launchnavigator" spec="~3.2.1" />
-    <plugin name="cordova-plugin-x-socialsharing" spec="https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git" />
+    <plugin name="cordova-plugin-x-socialsharing" spec="^5.2.1" />
     <plugin name="cordova.plugins.diagnostic" spec="^3.9.2" />
 </widget>

@@ -585,8 +585,15 @@ div.leaflet-top.leaflet-right {
       div {
         margin: 2px 0;
       }
+      span.navigation-value {
+        font-size: 22px;
+      }
+      span.navigation-text {
+        font-size: 16px;
+      }
       span {
-        font-size: 20px;
+        display: block;
+        line-height: 22px;
       }
       color: $color-brown;
       width: 27%;
