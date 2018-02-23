@@ -631,6 +631,17 @@ ion-side-menus.navigation-interface {
   .map-page ion-footer-bar.bar.bar-assertive.bar-footer {
     height: 100%;
   }
+
+  .bar.bar-assertive.bar-footer {
+    @include calc(height, '100% - 60%');
+  }
+
+  ion-view ion-content.has-header {
+    top: 0;
+  }
+  .show-start-navigation .start-navigation {
+    display: none;
+  }
 }
 
 /* ------------------------------------ *\

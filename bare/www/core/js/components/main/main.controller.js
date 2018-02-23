@@ -751,7 +751,9 @@ angular.module('webmapp')
 
         vm.returnToMap = function () {
             vm.isNavigable = false;
-            MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
+            if ($state.params.parentId) {
+                MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
+            }
 
             vm.goToMap();
         };
@@ -897,6 +899,8 @@ angular.module('webmapp')
 
             if (!prevLatLong && !vm.locateLoading) {
                 vm.centerOnMe();
+                // vm.dragged = false;
+                /////
             }
 
             //Hide start button
@@ -1024,6 +1028,7 @@ angular.module('webmapp')
             } else if (currentState === 'app.main.layer') {
                 realState = $rootScope.currentParams.id.replace(/_/g, ' ');
                 layerState = true;
+                // vm.hideExpander = true;
 
                 if (typeof overlayMap[realState] !== 'undefined' ||
                     typeof overlaysGroupMap[realState] !== 'undefined') {
