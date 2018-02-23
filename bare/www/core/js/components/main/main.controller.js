@@ -504,8 +504,24 @@ angular.module('webmapp')
             MapService.stopControlLocate();
         };
 
-        vm.centerOnMe = function () {
+        vm.turnOffRotationAndFollow = function () {
+            vm.canFollow = false;
 
+            if (vm.isRotating) {
+                orientationWatchRef.clearWatch();
+            }
+
+            vm.followActive = false;
+            vm.isRotating = false;
+
+            setTimeout(function () {
+                MapService.setBearing(-359.95);
+                MapService.setBearing(-359.97);
+                MapService.setBearing(-359.99);
+            }, 100);
+        };
+
+        vm.centerOnMe = function () {
             if (!vm.gpsActive) {
                 checkGPS();
                 return;
@@ -583,7 +599,8 @@ angular.module('webmapp')
 
             if (vm.canFollow || vm.isRotating) {
                 if (vm.isRotating) {
-                    vm.turnOffGeolocationAndRotion();
+                    // vm.turnOffGeolocationAndRotion();
+                    vm.turnOffRotationAndFollow();
                 } else {
                     MapService.setZoom(maxZoom);
                     lpf = new LPF(0.5);
@@ -622,7 +639,8 @@ angular.module('webmapp')
                 }
             } else {
                 if (vm.followActive) {
-                    vm.turnOffGeolocationAndRotion();
+                    // vm.turnOffGeolocationAndRotion();
+                    vm.turnOffRotationAndFollow();
                 } else {
                     vm.locateLoading = true;
                     $cordovaGeolocation
@@ -965,7 +983,8 @@ angular.module('webmapp')
             var layerState = false;
 
             if (currentState !== 'app.main.map') {
-                vm.turnOffGeolocationAndRotion();
+                // vm.turnOffGeolocationAndRotion();
+                vm.turnOffRotationAndFollow();
             }
             MapService.removePositionMarker();
 
