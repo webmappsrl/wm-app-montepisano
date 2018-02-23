@@ -642,7 +642,7 @@ angular.module('webmapp')
 
                                 if (!prevLatLong) {
                                     doCenter = true;
-                                } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 6 || true) {
+                                } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 6) {
                                     doCenter = true;
                                 }
 
