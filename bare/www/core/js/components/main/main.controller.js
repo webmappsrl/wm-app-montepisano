@@ -878,30 +878,28 @@ angular.module('webmapp')
         };
 
         vm.startNavigation = function () {
-            // if (!vm.gpsActive) {
-            //     checkGPS();
-            //     return;
-            // }
+            if (!vm.gpsActive) {
+                checkGPS();
+                return;
+            }
 
-            // if (vm.isOutsideBoundingBox) {
-            //     $ionicPopup.alert({
-            //         title: $translate.instant("ATTENZIONE"),
-            //         template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
-            //         buttons: [{
-            //             text: 'Ok',
-            //             type: 'button-positive'
-            //         }]
-            //     });
-            //     return;
-            // }
+            if (vm.isOutsideBoundingBox) {
+                $ionicPopup.alert({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
+                    buttons: [{
+                        text: 'Ok',
+                        type: 'button-positive'
+                    }]
+                });
+                return;
+            }
 
-            // if (!prevLatLong && !vm.locateLoading) {
-            //     vm.centerOnMe();
-            // }
+            if (!prevLatLong && !vm.locateLoading) {
+                vm.centerOnMe();
+            }
 
             //Hide start button
-            console.log("boh");
-
             vm.isNavigable = false;
 
             //Start recording

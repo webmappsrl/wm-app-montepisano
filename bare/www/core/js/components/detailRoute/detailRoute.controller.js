@@ -307,7 +307,7 @@ angular.module('webmapp')
         };
 
         vm.openPackage = function () {
-            if ((CONFIG.OPTIONS.skipLoginPublicRoutesDownload && pack.wm_route_public) || vm.isLoggedIn) {
+            if ((CONFIG.OPTIONS.skipLoginPublicRoutesDownload && routeDetail.wm_route_public) || vm.isLoggedIn) {
                 var basePackUrl = Offline.getOfflineMhildBasePathById(routeDetail.id);
 
                 Communication.getLocalFile(basePackUrl + 'config.json')
