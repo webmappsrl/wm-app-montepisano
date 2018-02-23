@@ -31,7 +31,7 @@ angular.module('webmapp')
                 getCategoriesName();
             }
 
-            $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/', function (data) {
+            $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/?per_page=100', function (data) {
                 vm.packages = data;
 
                 localStorage.$wm_packages = JSON.stringify(data);

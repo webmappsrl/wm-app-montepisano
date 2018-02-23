@@ -354,7 +354,7 @@ angular.module('webmapp')
                 setRoutes(packages);
             }
 
-            $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/', function (data) {
+            $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/?per_page=100', function (data) {
                 localStorage.$wm_packages = JSON.stringify(data);
                 setRoutes(data);
             }).fail(function () {
