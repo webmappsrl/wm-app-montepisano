@@ -279,7 +279,6 @@ angular.module('webmapp')
         vm.currentSpeedText = '0.0 km/h';
         vm.averageSpeedText = '0.0 km/h';
         vm.movingTime = 0;
-        vm.currentMovingTime = 0;
         vm.isNotMoving = false;
 
         vm.navigationInterval = null;
@@ -643,7 +642,7 @@ angular.module('webmapp')
 
                                 if (!prevLatLong) {
                                     doCenter = true;
-                                } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 6) {
+                                } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 6 || true) {
                                     doCenter = true;
                                 }
 
@@ -665,7 +664,7 @@ angular.module('webmapp')
                                             vm.currentSpeedExpireTimeout = setTimeout(function () {
                                                 vm.currentSpeedText = '0.0 km/h';
                                                 vm.isNotMoving = true;
-                                                vm.movingTime = vm.movingTime + vm.currentMovingTime;
+                                                vm.movingTime = vm.movingTime + Date.now() - vm.startMovingTime;
                                             }, 5000);
                                         }
                                     }
@@ -739,6 +738,7 @@ angular.module('webmapp')
                 }
 
             }
+
         };
 
         vm.goBack = function () {
@@ -833,18 +833,15 @@ angular.module('webmapp')
                 vm.startMovingTime = Date.now();
                 vm.isNotMoving = false;
             }
-            else {
-                vm.currentMovingTime = Date.now() - vm.startMovingTime;
-            }
 
-            vm.averageSpeedText = (vm.distanceTravelled / ((vm.currentMovingTime + vm.movingTime) / 1000) * 3.6).toFixed(1) + ' km/h';
+            vm.averageSpeedText = (vm.distanceTravelled / ((Date.now() - vm.startMovingTime + vm.movingTime) / 1000) * 3.6).toFixed(1) + ' km/h';
 
             vm.currentSpeedText = (distance / (timeElapsedBetweenPositions / 1000) * 3.6).toFixed(1) + ' km/h';
             clearTimeout(vm.currentSpeedExpireTimeout);
             vm.currentSpeedExpireTimeout = setTimeout(function() {
                 vm.currentSpeedText = '0.0 km/h';
                 vm.isNotMoving = true;
-                vm.movingTime = vm.movingTime + vm.currentMovingTime;
+                vm.movingTime = vm.movingTime + Date.now() - vm.startMovingTime;
             }, 5000);
 
             vm.lastPositionRecordTime = Date.now();
@@ -874,7 +871,6 @@ angular.module('webmapp')
             vm.currentSpeedText = '0.0 km/h';
             vm.averageSpeedText = '0.0 km/h';
             vm.movingTime = 0;
-            vm.currentMovingTime = 0;
             vm.isNotMoving = false;
             vm.navigationInterval = null;
         };
@@ -897,10 +893,16 @@ angular.module('webmapp')
                 return;
             }
 
+            vm.dragged = false;
+
             if (!prevLatLong && !vm.locateLoading) {
                 vm.centerOnMe();
-                // vm.dragged = false;
-                /////
+            }
+
+            if (!vm.isRotating) {
+                vm.canFollow = true;
+                vm.followActive = true;
+                vm.centerOnMe();
             }
 
             //Hide start button
@@ -962,7 +964,9 @@ angular.module('webmapp')
 
             var layerState = false;
 
-            vm.turnOffGeolocationAndRotion();
+            if (currentState !== 'app.main.map') {
+                vm.turnOffGeolocationAndRotion();
+            }
             MapService.removePositionMarker();
 
             if (currentState !== 'app.main.detaillayer' &&
