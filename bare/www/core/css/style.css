@@ -1833,11 +1833,11 @@ div.leaflet-top.leaflet-right {
   display: none; }
 
 /* Navigation interface */
-.navigating-interface .coords-block, .navigating-interface
+.navigation-interface .coords-block, .navigation-interface
 .coords-expander {
   bottom: 99px; }
 
-.navigating-interface .locate-custom-control {
+.navigation-interface .locate-custom-control {
   bottom: 150px; }
 
 .navigator-div-controller {
@@ -1897,6 +1897,12 @@ div.leaflet-top.leaflet-right {
     .navigator-div-controller div.content-div div.stop-navigation {
       background-color: #FF4108;
       margin: 12px 8% 13px 2%; }
+
+ion-side-menus.navigation-interface ion-nav-bar {
+  display: none; }
+
+ion-side-menus.navigation-interface .map-page ion-footer-bar.bar.bar-assertive.bar-footer {
+  height: 100%; }
 
 /* ------------------------------------ *   #MAP POPOVER
 \* ------------------------------------ */

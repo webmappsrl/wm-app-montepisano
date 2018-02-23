@@ -835,7 +835,7 @@ angular.module('webmapp')
                 vm.currentMovingTime = Date.now() - vm.startMovingTime;
             }
 
-            vm.averageSpeedText = (vm.distanceTravelled / ((vm.currentMovingTime + vm.movingTime) / 1000) * 3.6) + ' km/h';
+            vm.averageSpeedText = (vm.distanceTravelled / ((vm.currentMovingTime + vm.movingTime) / 1000) * 3.6).toFixed(1) + ' km/h';
 
             vm.currentSpeedText = (distance / (timeElapsedBetweenPositions / 1000) * 3.6).toFixed(1) + ' km/h';
             clearTimeout(vm.currentSpeedExpireTimeout);
@@ -878,28 +878,30 @@ angular.module('webmapp')
         };
 
         vm.startNavigation = function () {
-            if (!vm.gpsActive) {
-                checkGPS();
-                return;
-            }
+            // if (!vm.gpsActive) {
+            //     checkGPS();
+            //     return;
+            // }
 
-            if (vm.isOutsideBoundingBox) {
-                $ionicPopup.alert({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
-                    buttons: [{
-                        text: 'Ok',
-                        type: 'button-positive'
-                    }]
-                });
-                return;
-            }
+            // if (vm.isOutsideBoundingBox) {
+            //     $ionicPopup.alert({
+            //         title: $translate.instant("ATTENZIONE"),
+            //         template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
+            //         buttons: [{
+            //             text: 'Ok',
+            //             type: 'button-positive'
+            //         }]
+            //     });
+            //     return;
+            // }
 
-            if (!prevLatLong && !vm.locateLoading) {
-                vm.centerOnMe();
-            }
+            // if (!prevLatLong && !vm.locateLoading) {
+            //     vm.centerOnMe();
+            // }
 
             //Hide start button
+            console.log("boh");
+
             vm.isNavigable = false;
 
             //Start recording
@@ -910,6 +912,7 @@ angular.module('webmapp')
             vm.navigationStartTime = Date.now();
 
             vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
+            $rootScope.$emit('is-navigating', vm.isNavigating);
 
             Utils.goTo('/');
         };
@@ -934,6 +937,7 @@ angular.module('webmapp')
             vm.isNavigating = false;
             clearInterval(vm.navigationInterval);
             cleanNavigationValues();
+            $rootScope.$emit('is-navigating', vm.isNavigating);
             if (vm.stopNavigationUrl !== '') {
                 var url = vm.stopNavigationUrl;
                 vm.stopNavigationUrl = '';

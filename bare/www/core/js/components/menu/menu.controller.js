@@ -44,6 +44,7 @@ angular.module('webmapp')
     vm.staticPages = [];
     vm.advancedMenuItems = [];
     vm.hideMenuButton = CONFIG.OPTIONS.hideMenuButton;
+    vm.isNavigating = false;
 
     vm.isBrowser = Utils.isBrowser();
 
@@ -576,5 +577,8 @@ angular.module('webmapp')
         }
     });
 
+    $rootScope.$on('is-navigating', function(e, value) {
+        vm.isNavigating = value;
+    });
     return vm;
 });

@@ -544,13 +544,13 @@ div.leaflet-top.leaflet-right {
 /* Navigation interface */
 .coords-block,
 .coords-expander {
-  .navigating-interface & {
+  .navigation-interface & {
     bottom: 99px;
   }
 }
 
 .locate-custom-control {
-  .navigating-interface & {
+  .navigation-interface & {
     bottom: 150px;
   }
 }
@@ -621,6 +621,15 @@ div.leaflet-top.leaflet-right {
       background-color: #FF4108;
       margin: 12px 8% 13px 2%;
     }
+  }
+}
+
+ion-side-menus.navigation-interface {
+  ion-nav-bar {
+    display: none;
+  }
+  .map-page ion-footer-bar.bar.bar-assertive.bar-footer {
+    height: 100%;
   }
 }
 
