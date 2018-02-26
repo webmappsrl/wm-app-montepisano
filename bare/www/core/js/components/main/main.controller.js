@@ -522,6 +522,62 @@ angular.module('webmapp')
             }, 100);
         };
 
+        var geolocationTimedOut = function(err) {
+            console.log(err);
+            console.log("Restarting geolocalization");
+            watchInterval = $cordovaGeolocation.watchPosition({
+                timeout: 10000,
+                enableHighAccuracy: true
+            });
+            watchInterval.then(
+                null,
+                geolocationTimedOut,
+                posCallback);
+        };
+
+        var posCallback = function (position) {
+            var lat = position.coords.latitude,
+                long = position.coords.longitude,
+                locateLoading = false,
+                doCenter = false;
+
+            if (!prevLatLong) {
+                doCenter = true;
+            } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 6) {
+                doCenter = true;
+            }
+
+            if (doCenter) {
+                MapService.drawPosition(position);
+                if (!vm.dragged) {
+                    MapService.centerOnCoords(lat, long);
+                }
+
+                if (vm.isNavigating && !vm.isPaused) {
+                    if (vm.firstPositionSet) {
+                        updateNavigationValues(position, prevLatLong);
+                    } else {
+                        vm.firstPositionSet = true;
+                        vm.lastPositionRecordTime = Date.now();
+                        vm.isNotMoving = false;
+                        vm.startMovingTime = Date.now();
+                        vm.currentSpeedExpireTimeout = setTimeout(function () {
+                            vm.currentSpeedText = '0.0 km/h';
+                            vm.isNotMoving = true;
+                            vm.movingTime = vm.movingTime + Date.now() - vm.startMovingTime;
+                        }, 5000);
+                    }
+                }
+
+                prevLatLong = {
+                    lat: lat,
+                    long: long
+                };
+            } else {
+                MapService.drawAccuracy(position.coords.accuracy);
+            }
+        };
+
         vm.centerOnMe = function () {
             if (!vm.gpsActive) {
                 checkGPS();
@@ -605,20 +661,12 @@ angular.module('webmapp')
                 return;
             }
 
-            // else if (vm.dragged && !prevLatLong) {
-            //     vm.dragged = false;
-            //     return;
-            // }
-            // else {
-            //     MapService.startControlLocate();
-            // }
-
             if (vm.canFollow || vm.isRotating) {
                 if (vm.isRotating) {
                     // vm.turnOffGeolocationAndRotion();
                     vm.turnOffRotationAndFollow();
                 } else {
-                    MapService.setZoom(maxZoom);
+                    MapService.centerOnCoords(prevLatLong.lat, prevLatLong.long);
                     lpf = new LPF(0.5);
 
                     orientationWatchRef = $cordovaDeviceOrientation.watchHeading({
@@ -668,49 +716,6 @@ angular.module('webmapp')
                             var lat = position.coords.latitude,
                                 long = position.coords.longitude;
 
-                            var posCallback = function (position) {
-                                var lat = position.coords.latitude,
-                                    long = position.coords.longitude,
-                                    locateLoading = false,
-                                    doCenter = false;
-
-                                if (!prevLatLong) {
-                                    doCenter = true;
-                                } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 6) {
-                                    doCenter = true;
-                                }
-
-                                if (doCenter) {
-                                    MapService.drawPosition(position);
-                                    if (!vm.dragged) {
-                                        MapService.centerOnCoords(lat, long);
-                                    }
-
-                                    if (vm.isNavigating && !vm.isPaused) {
-                                        if (vm.firstPositionSet) {
-                                            updateNavigationValues(position, prevLatLong);
-                                        } else {
-                                            vm.firstPositionSet = true;
-                                            vm.lastPositionRecordTime = Date.now();
-                                            vm.isNotMoving = false;
-                                            vm.startMovingTime = Date.now();
-                                            vm.currentSpeedExpireTimeout = setTimeout(function () {
-                                                vm.currentSpeedText = '0.0 km/h';
-                                                vm.isNotMoving = true;
-                                                vm.movingTime = vm.movingTime + Date.now() - vm.startMovingTime;
-                                            }, 5000);
-                                        }
-                                    }
-
-                                    prevLatLong = {
-                                        lat: lat,
-                                        long: long
-                                    };
-                                } else {
-                                    MapService.drawAccuracy(position.coords.accuracy);
-                                }
-                            };
-
                             vm.locateLoading = false;
 
                             if (!MapService.isInBoundingBox(lat, long)) {
@@ -750,9 +755,7 @@ angular.module('webmapp')
                                     });
                                     watchInterval.then(
                                         null,
-                                        function (err) {
-                                            console.error(err);
-                                        },
+                                        geolocationTimedOut,
                                         posCallback);
                                 }
 
