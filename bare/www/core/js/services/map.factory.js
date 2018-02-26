@@ -1912,6 +1912,15 @@ angular.module('webmapp')
         return defer.promise;
     };
 
+    mapService.getRelatedFeaturesById = function(relatedId) {
+        var features = [];
+        for (var pos in relatedId) {
+            features[pos] = featureMapById[relatedId[pos]];
+        }
+
+        return features;
+    };
+
     mapService.getAreaById = function(id) {
         var defer = $q.defer();
 

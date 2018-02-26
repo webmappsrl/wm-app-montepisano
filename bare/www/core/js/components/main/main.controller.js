@@ -262,7 +262,10 @@ angular.module('webmapp')
         vm.navigationAvailable = false;
         vm.isNavigating = false;
         vm.isPaused = false;
-        vm.stopNavigationUrl = '';
+        vm.stopNavigationUrlParams = {
+            parentId: null,
+            id: null
+        };
 
         vm.navigationStartTime = 0;
         vm.navigationStopTime = 0;
@@ -522,7 +525,7 @@ angular.module('webmapp')
             }, 100);
         };
 
-        var geolocationTimedOut = function(err) {
+        var geolocationTimedOut = function (err) {
             console.log(err);
             console.log("Restarting geolocalization");
             watchInterval = $cordovaGeolocation.watchPosition({
@@ -536,7 +539,6 @@ angular.module('webmapp')
         };
 
         var posCallback = function (position) {
-            console.log(position);
             var lat = position.coords.latitude,
                 long = position.coords.longitude,
                 locateLoading = false,
@@ -948,12 +950,14 @@ angular.module('webmapp')
             //Start recording
             vm.isNavigating = true;
             vm.isPaused = false;
-            vm.stopNavigationUrl = 'layer/' + $rootScope.currentParams.parentId + '/' + $rootScope.currentParams.id;
+            vm.stopNavigationUrlParams.parentId = $rootScope.currentParams.parentId;
+            vm.stopNavigationUrlParams.id = $rootScope.currentParams.id;
 
             vm.navigationStartTime = Date.now();
 
             vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
             $rootScope.$emit('is-navigating', vm.isNavigating);
+            $rootScope.$emit('navigation-path', vm.stopNavigationUrlParams);
 
             Utils.goTo('/');
         };
@@ -979,11 +983,37 @@ angular.module('webmapp')
             clearInterval(vm.navigationInterval);
             cleanNavigationValues();
             $rootScope.$emit('is-navigating', vm.isNavigating);
-            if (vm.stopNavigationUrl !== '') {
-                var url = vm.stopNavigationUrl;
-                vm.stopNavigationUrl = '';
+            if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
+                var url = 'layer/' + vm.stopNavigationUrlParams.parentId + '/' + vm.stopNavigationUrlParams.id;
+                vm.stopNavigationUrlParams = {
+                    parentId: null,
+                    id: null
+                };
                 Utils.goTo(url);
             }
+        };
+
+        var showPathAndRelated = function (params) {
+            var parentId = params.parentId,
+                id = params.id;
+
+            MapService.resetLayers();
+            MapService.getFeatureById(id, parentId.replace(/_/g, ' '))
+                .then(function (data) {
+                    var featuresToShow = [data];
+
+                    if (data.properties.id_pois) {
+                        var related = MapService.getRelatedFeaturesById(data.properties.id_pois);
+                        featuresToShow = featuresToShow.concat(related);
+                    }
+
+                    MapService.addFeaturesToFilteredLayer({
+                        'detail': featuresToShow
+                    }, false);
+                    setTimeout(function () {
+                        MapService.adjust();
+                    }, 2500);
+                });
         };
 
         $scope.$on('$stateChangeStart', function (e, dest) {
@@ -1062,6 +1092,11 @@ angular.module('webmapp')
             if (currentState === 'app.main.map') {
                 vm.mapView = true;
                 vm.hideExpander = true;
+                setTimeout(function () {
+                    if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
+                        showPathAndRelated(vm.stopNavigationUrlParams);
+                    }
+                }, 50);
             } else if (currentState === 'app.main.events') {
                 MapService.showEventsLayer();
                 vm.hasShadow = true;
@@ -1086,26 +1121,6 @@ angular.module('webmapp')
                 }
 
                 // vm.hasShadow = true;
-            } else if (currentState === 'app.main.navigation') {
-
-                vm.mapView = true;
-                vm.hideExpander = true;
-                realState = $rootScope.currentParams.id.replace(/_/g, ' ');
-                layerState = true;
-
-                if (typeof overlayMap[realState] !== 'undefined' ||
-                    typeof overlaysGroupMap[realState] !== 'undefined') {
-
-                    setTimeout(function () {
-                        if (layerState) {
-                            MapService.activateLayer(realState, false, true);
-                        }
-                    }, 50);
-                } else {
-                    // TODO: go to map? 
-                    // vm.hideMap = true;
-                }
-
             } else if (currentState === 'app.main.detaillayer') {
                 if (MapService.isAPOILayer($rootScope.currentParams.parentId.replace(/_/g, ' '))) {
                     vm.detail = true;
