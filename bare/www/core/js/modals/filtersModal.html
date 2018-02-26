@@ -35,6 +35,10 @@
                         class="item-content disable-pointer-events">
                         <span ng-if="key !== 'Tutte'">{{obj.name}}</span>
                         <strong ng-if="key === 'Tutte'">{{obj.name}}</strong>
+                        <span ng-if="obj.icon !== 'wm-icon-generic'"
+                            class="icon {{obj.icon}}"
+                            style="float: right"
+                            ng-style="{ 'color': obj.color }"></span>
                     </div>
                 </label>
             </ion-list>
@@ -71,10 +75,4 @@
 
         </div>
     </ion-content>
-
-    <!-- <div class="modal-footer"> -->
-        <!-- <span class="modal-footer-title">TITOLO FOOTER <i class="icon wm-icon-ios7-barcode-outline"></i></span> -->
-        <!-- For modals that need this -->
-       <!-- <div class="arrow-show-more"><i class="icon wm-icon-ios7-arrow-down"></i></div>-->
-    <!-- </div> -->
 </ion-modal-view>

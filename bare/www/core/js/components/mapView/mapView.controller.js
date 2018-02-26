@@ -121,7 +121,9 @@ angular.module('webmapp')
 
             activeFilters[CONFIG.OVERLAY_LAYERS[i].label] = {
                 name: nameTranslated,
-                value: filt[CONFIG.OVERLAY_LAYERS[i].label]
+                value: filt[CONFIG.OVERLAY_LAYERS[i].label],
+                icon: CONFIG.OVERLAY_LAYERS[i].icon,
+                color: CONFIG.OVERLAY_LAYERS[i].color
             };
         }
 
