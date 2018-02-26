@@ -278,8 +278,8 @@ angular.module('webmapp')
         vm.distanceTravelledText = '0.0 km';
 
         vm.currentSpeedExpireTimeout = null;
-        vm.currentSpeedText = '0.0 km/h';
-        vm.averageSpeedText = '0.0 km/h';
+        vm.currentSpeedText = '0 km/h';
+        vm.averageSpeedText = '0 km/h';
         vm.movingTime = 0;
         vm.isNotMoving = false;
 
@@ -536,6 +536,7 @@ angular.module('webmapp')
         };
 
         var posCallback = function (position) {
+            console.log(position);
             var lat = position.coords.latitude,
                 long = position.coords.longitude,
                 locateLoading = false,
@@ -562,7 +563,7 @@ angular.module('webmapp')
                         vm.isNotMoving = false;
                         vm.startMovingTime = Date.now();
                         vm.currentSpeedExpireTimeout = setTimeout(function () {
-                            vm.currentSpeedText = '0.0 km/h';
+                            vm.currentSpeedText = '0 km/h';
                             vm.isNotMoving = true;
                             vm.movingTime = vm.movingTime + Date.now() - vm.startMovingTime;
                         }, 5000);
@@ -870,12 +871,12 @@ angular.module('webmapp')
                 vm.isNotMoving = false;
             }
 
-            vm.averageSpeedText = (vm.distanceTravelled / ((Date.now() - vm.startMovingTime + vm.movingTime) / 1000) * 3.6).toFixed(1) + ' km/h';
+            vm.averageSpeedText = (vm.distanceTravelled / ((Date.now() - vm.startMovingTime + vm.movingTime) / 1000) * 3.6).toFixed(0) + ' km/h';
 
-            vm.currentSpeedText = (distance / (timeElapsedBetweenPositions / 1000) * 3.6).toFixed(1) + ' km/h';
+            vm.currentSpeedText = (distance / (timeElapsedBetweenPositions / 1000) * 3.6).toFixed(0) + ' km/h';
             clearTimeout(vm.currentSpeedExpireTimeout);
             vm.currentSpeedExpireTimeout = setTimeout(function () {
-                vm.currentSpeedText = '0.0 km/h';
+                vm.currentSpeedText = '0 km/h';
                 vm.isNotMoving = true;
                 vm.movingTime = vm.movingTime + Date.now() - vm.startMovingTime;
             }, 5000);
@@ -904,8 +905,8 @@ angular.module('webmapp')
             vm.distanceTravelledText = '0.0 km';
 
             vm.currentSpeedExpireTimeout = null;
-            vm.currentSpeedText = '0.0 km/h';
-            vm.averageSpeedText = '0.0 km/h';
+            vm.currentSpeedText = '0 km/h';
+            vm.averageSpeedText = '0 km/h';
             vm.movingTime = 0;
             vm.isNotMoving = false;
             vm.navigationInterval = null;
