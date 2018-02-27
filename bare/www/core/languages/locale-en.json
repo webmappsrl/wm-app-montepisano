@@ -180,5 +180,34 @@
   "(Loading..)": "(Loading..)",
   "+ 1 altra categoria": "+ 1 other category",
   "+ altre ": "+ others ",
-  "categorie": "categories"
+  "categorie": "categories",
+  "help": {
+    "0": {
+      "title": "How it works",
+      "html": "After sign up, with a click you can request <span class='bold'>access</span> to the route download."
+    },
+    "1": {
+      "title": "Download the routes",
+      "html": "You will be notified by adminstrators. Now with just a click you could <span class='bold'>download the routes</span> assigned."
+    },
+    "2": {
+      "title": "Navigate the map",
+      "html": "Every route has a <span class='bold'>reference map</span> where there are the <span class='bold'>points of interest</span> select by us."
+    },
+    "3": {
+      "title": "Open the info",
+      "html": "By clicking <span class='bold'>on the icon</span> you can access the descricption, the photo gallery and other info about that <span class='bold'>point of interest</span>."
+    },
+    "4": {
+      "title": "Geolocate yourself",
+      "html": "By clicking <span class='bold'>the geolocation button</span> you can see your position (the blu point in the map)."
+    },
+    "5": {
+      "title": "Direct the map",
+      "html": "By clicking again <span class='bold'>the geolocation button</span> you activate the <span class='bold'>compass mode</span> and the map will rotate and orientate to Nord."
+    },
+    "6": {
+      "title": "Start"
+    }
+  }
 }

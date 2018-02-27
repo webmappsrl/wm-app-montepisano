@@ -27,22 +27,23 @@
 // #COMPONENTS
 // ------------------------------------ //
 
+@import "components/attribution";
+@import "components/card";
+@import "components/custom";
+@import "components/detailRoute";
 @import "components/details";
+@import "components/help";
+@import "components/home";
+@import "components/languages";
+@import "components/lists";
 @import "components/login";
 @import "components/main";
-@import "components/map";
 @import "components/menu";
-@import "components/lists";
+@import "components/map";
 @import "components/modals";
 @import "components/offline";
-@import "components/search";
-@import "components/welcome";
-@import "components/card";
-@import "components/settings";
 @import "components/packages";
-@import "components/languages";
-@import "components/custom";
-@import "components/home";
-@import "components/detailRoute";
-@import "components/attribution";
+@import "components/search";
+@import "components/settings";
 @import "components/webmapp";
+@import "components/welcome";

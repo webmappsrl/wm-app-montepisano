@@ -180,5 +180,34 @@
   "(Loading..)": "(Loading..)",
   "+ 1 altra categoria": "+ 1 altra categoria",
   "+ altre ": "+ altre ",
-  "categorie": "categorie"
+  "categorie": "categorie",
+  "help": {
+    "0": {
+      "title": "Come funziona",
+      "html": "Dopo esserti registrato, con un semplice click potrai richiedere <span class='bold'>l'accesso</span> al download di un itinerario."
+    },
+    "1": {
+      "title": "Scarica gli itinerari",
+      "html": "Riceverai una notifica dagli amministratori. Ora con un semplice click potrai <span class='bold'>scaricare gli itinerari</span> che ti sono stati assegnati."
+    },
+    "2": {
+      "title": "Naviga la mappa",
+      "html": "Ogni itinerario ha una <span class='bold'>mappa di riferimento</span> nella quale sono presenti i vari <span class='bold'>punti di interesse</span> da noi scrupolosamente selezionati."
+    },
+    "3": {
+      "title": "Apri le schede informative",
+      "html": "Cliccando <span class='bold'>sull'icona</span> è possibile accedere alla descrizione, alle foto e alle altre informazioni del <span class='bold'>punto di interesse</span>."
+    },
+    "4": {
+      "title": "Geolocalizzati",
+      "html": "Cliccando <span class='bold'>sul bottone di geolocalizzazione</span> è possibile visualizzare la propria posizione (punto blu in mappa)."
+    },
+    "5": {
+      "title": "Orienta la mappa",
+      "html": "Cliccando nuovamente <span class='bold'>sul bottone di geolocalizzazione</span> si attiva la <span class='bold'>modalità bussola</span> e la mappa ruota e si orienta secondo il Nord."
+    },
+    "6": {
+      "title": "Inizia"
+    }
+  }
 }

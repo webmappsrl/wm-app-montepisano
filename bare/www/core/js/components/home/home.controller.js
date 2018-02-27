@@ -54,7 +54,7 @@ angular.module('webmapp')
         var translateCategory = function (id) {
             var tmp = localStorage.$wm_categories_translated ? JSON.parse(localStorage.$wm_categories_translated) : {};
 
-            if (tmp[vm.currentLang][id]) {
+            if (tmp[vm.currentLang] && tmp[vm.currentLang][id]) {
                 vm.categories[id].name = tmp[vm.currentLang][id].name;
             }
             vm.asyncTranslations--;

@@ -413,13 +413,6 @@ angular.module('webmapp')
             userData = Auth.getUserData();
             getPackagesIdByUserId(userData.ID);
         }
-        // else {
-        //     if (vm.useLogin) {
-        //         setTimeout(function () {
-        //             showLogin();
-        //         }, 500);
-        //     }
-        // }
 
         $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/detailMapModal.html', {
             scope: modalScope,

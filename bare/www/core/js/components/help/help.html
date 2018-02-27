@@ -1,0 +1,70 @@
+<ion-view class="help-page" cache-view="false" ng-controller="HelpController as vm">
+    <ion-nav-title>
+        <span id="pageTitle">
+            {{vm.title | translate}}
+        </span>
+    </ion-nav-title>
+    <ion-nav-buttons side="left">
+        <button class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
+    </ion-nav-buttons>
+
+    <ion-content id="help-content">
+        <div class="tab">
+            <p ng-bind-html="'help.0.html' | translate">
+            </p>
+            <div class="help-img">
+                <img ng-src="core/images/help_0_{{vm.currentLang}}.png" alt="help_0" />
+            </div>
+        </div>
+        <div class="tab">
+            <p ng-bind-html="'help.1.html' | translate">
+            </p>
+            <div class="help-img">
+                <img ng-src="core/images/help_1_{{vm.currentLang}}.png" alt="help_1" />
+            </div>
+        </div>
+        <div class="tab">
+            <p class="large" ng-bind-html="'help.2.html' | translate">
+            </p>
+            <div class="help-img">
+                <img ng-src="core/images/help_2_{{vm.currentLang}}.png" alt="help_2" />
+            </div>
+        </div>
+        <div class="tab">
+            <p ng-bind-html="'help.3.html' | translate">
+            </p>
+            <div class="help-img">
+                <img ng-src="core/images/help_3_{{vm.currentLang}}.png" alt="help_3" />
+            </div>
+        </div>
+        <div class="tab">
+            <p ng-bind-html="'help.4.html' | translate">
+            </p>
+            <div class="help-img">
+                <img ng-src="core/images/help_4_{{vm.currentLang}}.png" alt="help_4" />
+            </div>
+        </div>
+        <div class="tab">
+            <p class="large" ng-bind-html="'help.5.html' | translate">
+            </p>
+            <div class="help-img">
+                <img ng-src="core/images/help_5_{{vm.currentLang}}.png" alt="help_5" />
+            </div>
+        </div>
+        <div class="tab final-tab">
+            <div class="home-button" ng-click="vm.goToHome()">
+                {{'help.6.title' | translate}}
+            </div>
+        </div>
+
+        <div class="step-counter">
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+        </div>
+    </ion-content>
+</ion-view>
