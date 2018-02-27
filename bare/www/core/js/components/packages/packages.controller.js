@@ -100,8 +100,7 @@ angular.module('webmapp')
                 for (var category in vm.filters) {
                     if (category === $state.params.id) {
                         vm.filters[category].value = true;
-                    }
-                    else {
+                    } else {
                         vm.filters[category].value = false;
                     }
                 }
@@ -141,7 +140,7 @@ angular.module('webmapp')
             modalFilters.show();
         };
 
-        vm.truncateTitle = function(title) {
+        vm.truncateTitle = function (title) {
 
             var ret = title;
             var maxLength = 44;
@@ -184,7 +183,7 @@ angular.module('webmapp')
             });
         };
 
-        var translateCategory = function(lang, id){
+        var translateCategory = function (lang, id) {
             return $.getJSON(baseUrl + config.COMMUNICATION.wordPressEndpoint + 'webmapp_category/' + id + "?lang=" + lang, function (data) {
                 vm.categories[id].name = data.name;
                 vm.setFilters();
@@ -197,7 +196,7 @@ angular.module('webmapp')
 
         var getCategoriesName = function () {
 
-            var setCategoriesName = function(data) {
+            var setCategoriesName = function (data) {
                 vm.categories = {};
                 vm.categoriesId = [];
 
@@ -218,7 +217,7 @@ angular.module('webmapp')
                             icon: category.icon
                         };
                         vm.categories = angular.extend(vm.categories, tmp);
-    
+
                         if (config.LANGUAGES && config.LANGUAGES.actual && currentLang !== config.LANGUAGES.actual.substring(0, 2)) {
                             translateCategory(currentLang, category.id);
                         }
@@ -251,45 +250,52 @@ angular.module('webmapp')
         };
 
         var getImages = function () {
-            var setImages = function(packageId) {
+            var downloadImage = function (url, pos) {
+                Communication.get(url)
+                    .then(function (response) {
+                            console.log(response);
+                            var blob = response;
+                            var urlCreator = window.URL || window.webkitURL;
+                            var imageUrl = urlCreator.createObjectURL(blob);
+                            vm.test = imageUrl;
+
+                            vm.packages[i].imgUrl = imageUrl;
+                        },
+                        function (err) {
+                            console.log(err)
+                        });
+            };
+
+            var setImages = function (packageId) {
                 return function (data) {
                     for (var i in vm.packages) {
                         if (vm.packages[i].id === packageId) {
-                            if (vm.packages[i].imgUrl !== data.media_details.sizes.medium.source_url) {
-                                vm.packages[i].imgUrl = data.media_details.sizes.medium.source_url;
+                            if (vm.packages[i].imgUrl !== data.media_details.sizes.thumbnail.source_url) {
+                                vm.packages[i].imgUrl = data.media_details.sizes.thumbnail.source_url;
+                                downloadImage(vm.packages[i].imgUrl, i);
                             }
                             break;
                         }
                     }
-    
+
                     localStorage.$wm_packages = JSON.stringify(vm.packages);
                     Utils.forceDigest();
+
+                    console.log(vm.packages);
                 }
             };
-            
+
             for (var i in vm.packages) {
                 $.getJSON(baseUrl + config.COMMUNICATION.wordPressEndpoint + 'media/' + vm.packages[i].featured_media,
-                setImages(vm.packages[i].id)
-                // function (data) {
-                //     for (var pos in vm.packages) {
-                //         if (vm.packages[pos].featured_media === data.id) {
-                //             if (vm.packages[pos].imgUrl !== data.media_details.sizes.medium.source_url) {
-                //                 vm.packages[pos].imgUrl = data.media_details.sizes.medium.source_url;
-                //             }
-                //             break;
-                //         }
-                //     }
-                //     localStorage.$wm_packages = JSON.stringify(vm.packages);
-                //     Utils.forceDigest();
-                // }
-            ).fail(function () {
+                    setImages(vm.packages[i].id)
+                ).fail(function () {
                     console.error('images retrive error');
                 });
             }
         };
 
         var getRoutes = function () {
-            var mergePackages = function(packages, newPackages) {
+            var mergePackages = function (packages, newPackages) {
                 for (var i in newPackages) {
                     for (var j in packages) {
                         if (packages[j].id === newPackages[i].id) {
@@ -308,11 +314,10 @@ angular.module('webmapp')
                 return newPackages;
             };
 
-            var setRoutes = function(data) {
+            var setRoutes = function (data) {
                 if (!vm.packages.length) {
                     vm.packages = data;
-                }
-                else {
+                } else {
                     vm.packages = mergePackages(vm.packages, data);
                 }
 
@@ -322,7 +327,7 @@ angular.module('webmapp')
                     }
 
                     vm.packages[i].packageTitle = vm.packages[i].title.rendered;
-                    
+
                     if (vm.packages[i].wpml_translations) {
                         for (var p in vm.packages[i].wpml_translations) {
                             if (vm.packages[i].wpml_translations[p].locale.substring(0, 2) === currentLang) {
@@ -366,7 +371,7 @@ angular.module('webmapp')
                     console.warn("No routes available. Restart the app with an open connection. Shutting down the app...");
                     return;
                 }
-                
+
                 setRoutes(packages);
                 return;
             });
@@ -374,18 +379,16 @@ angular.module('webmapp')
 
         // TODO: check if a map is not setted ready but there is a folder and delete it
 
-        vm.getPack = function(pack, $event) {
+        vm.getPack = function (pack, $event) {
             $event.stopPropagation();
 
             if ((CONFIG.OPTIONS.skipLoginPublicRoutesDownload && pack.wm_route_public) || vm.isLoggedIn) {
                 if (vm.userDownloadedPackages[pack.id]) {
                     vm.openPackage(pack);
-                }
-                else {
+                } else {
                     vm.downloadPack(pack);
                 }
-            }
-            else {
+            } else {
                 vm.openDetailsRoute(pack.id);
             }
         }
@@ -509,7 +512,7 @@ angular.module('webmapp')
                             Offline
                                 .downloadUserMap(currentId, arrayLink, modalDownloadScope.vm)
                                 .then(downloadSuccess, downloadFail);
-                            
+
                             $.ajaxSetup();
                         }).fail(function () {
                             // TODO: add ionic alert
@@ -596,16 +599,16 @@ angular.module('webmapp')
 
             if (userData.ID) {
                 getPackagesIdByUserId(userData.ID)
-                .then(function () {
-                    setTimeout(function () {
+                    .then(function () {
+                        setTimeout(function () {
+                            $scope.$broadcast('scroll.refreshComplete');
+                        }, 2000);
+                    }, function () {
+                        $ionicPopup.alert({
+                            template: $translate.instant("Si è verificato un errore di connessione, riprova più tardi")
+                        });
                         $scope.$broadcast('scroll.refreshComplete');
-                    }, 2000);
-                }, function () {
-                    $ionicPopup.alert({
-                        template: $translate.instant("Si è verificato un errore di connessione, riprova più tardi")
                     });
-                    $scope.$broadcast('scroll.refreshComplete');
-                });
             }
 
             // location.reload();

@@ -7,143 +7,89 @@
     </ion-nav-title>
 
     <ion-nav-buttons side="left">
-        <button
-            class="no-animate button button-icon icon ion-navicon"
-            menu-toggle="left"></button>
+        <button class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
 
     <ion-nav-buttons side="right">
-        <button
-            ng-if="vm.categoryFiltersOn"
-            class="no-animate button button-icon icon wm-icon-funnel-wm"
-            ng-click="vm.openFilters()"></button>
+        <button ng-if="vm.categoryFiltersOn" class="no-animate button button-icon icon wm-icon-funnel-wm" ng-click="vm.openFilters()"></button>
     </ion-nav-buttons>
 
     <div id="search-fixed">
         <input type="search" placeholder="{{::'Cerca' | translate}}" ng-model="vm.search" />
     </div>
 
-    <ion-content
-        class="withSearchBar"
-        style="color: {{COLORS.global.color}}; background: {{COLORS.global.background}}">
-        <ion-refresher
-            on-refresh="vm.doRefresh(event)">
-            <ion-refresher-content
-                pullingIcon="arrow-dropdown"
-                pullingText="Pull to refresh"
-                refreshingSpinner="circles"
-                refreshingText="Refreshing...">
+    <ion-content class="withSearchBar" style="color: {{COLORS.global.color}}; background: {{COLORS.global.background}}">
+        <ion-refresher on-refresh="vm.doRefresh(event)">
+            <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
             </ion-refresher-content>
         </ion-refresher>
-        <div
-            class="static-content card-content"
-            ng-if="!vm.isLoggedIn">
+        <div class="static-content card-content" ng-if="!vm.isLoggedIn">
         </div>
 
         <div id="whitespace"></div>
 
-        <div
-            class="static-content card-content">
-            <!-- <div
-                ng-if="!vm.isLoggedIn"
-                ng-click="vm.openLoginOrRegistration()">
-                <button style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}}; margin-top: 150px!important"
-                        class="button-download button button-block">
-                    Accedi
-                </button>
-            </div> -->
+        <div class="static-content card-content">
 
-            <div
-                class="modal-inner-content modal-two-columns coupons-list"
-                ng-if="(vm.isLoggedIn || !vm.useLogin) && vm.type !== 'reduced'"
+
+            <div ng-if="vm.test">
+                <img ng-src="{{vm.test}}">
+            </div>
+
+            
+            <div class="modal-inner-content modal-two-columns coupons-list" ng-if="(vm.isLoggedIn || !vm.useLogin) && vm.type !== 'reduced'"
                 ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search">
-                <div 
-                    class="packages-title"
-                    ng-bind-html="item.title.rendered">
+                <div class="packages-title" ng-bind-html="item.title.rendered">
                 </div>
-                <div
-                    class="details-image">
-                    <img
-                        class="modal-image"
-                        ng-src="{{item.n7webmap_route_media_gallery[0].sizes.medium_large}}">
+                <div class="details-image">
+                    <img class="modal-image" ng-src="{{item.n7webmap_route_media_gallery[0].sizes.medium_large}}">
                 </div>
-                <div
-                    class="details-description"
-                    ng-bind-html="item.excerpt.rendered">
+                <div class="details-description" ng-bind-html="item.excerpt.rendered">
                 </div>
 
                 <div>
-                    <button
-                        style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                        class="button-download button button-block button-half"
-                        ng-if="vm.userDownloadedPackages[item.id]"
-                        ng-click="vm.openPackage(item)">
-                    {{::"Apri" | translate}}
-                </button>
-                    <button
-                        style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                        class="button-download button button-block button-half"
-                        ng-if="vm.userDownloadedPackages[item.id]"
-                        ng-click="vm.removePack(item)">
-                    {{::"Rimuovi" | translate}}
-                </button>
-                    <button
-                        style="background: {{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                        class="button-download button button-block button-half"
-                        ng-if="(vm.userPackagesId[item.id] || item.wm_route_public) && !vm.userDownloadedPackages[item.id]"
-                        ng-click="vm.downloadPack(item)">
-                    {{::"Scarica" | translate}}
-                </button>
-                    <button
-                        style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                        class="button-block button button-download button-half"
-                        ng-if="!item.wm_route_public && !vm.userDownloadedPackages[item.id] && !vm.userPackagesId[item.id]"
-                        ng-disabled="vm.userPackagesIdRquested[item.id]"
+                    <button style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};" class="button-download button button-block button-half"
+                        ng-if="vm.userDownloadedPackages[item.id]" ng-click="vm.openPackage(item)">
+                        {{::"Apri" | translate}}
+                    </button>
+                    <button style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};" class="button-download button button-block button-half"
+                        ng-if="vm.userDownloadedPackages[item.id]" ng-click="vm.removePack(item)">
+                        {{::"Rimuovi" | translate}}
+                    </button>
+                    <button style="background: {{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};" class="button-download button button-block button-half"
+                        ng-if="(vm.userPackagesId[item.id] || item.wm_route_public) && !vm.userDownloadedPackages[item.id]" ng-click="vm.downloadPack(item)">
+                        {{::"Scarica" | translate}}
+                    </button>
+                    <button style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};" class="button-block button button-download button-half"
+                        ng-if="!item.wm_route_public && !vm.userDownloadedPackages[item.id] && !vm.userPackagesId[item.id]" ng-disabled="vm.userPackagesIdRquested[item.id]"
                         ng-click="vm.requestPack(item)">
-                    <!-- TODO: pulsante con scritto "Richiesta effettuata" senza che vada su due righe -->
-                    {{ !vm.userPackagesIdRquested[item.id] ? "Richiedi" : "Richiesto" | translate}}
-                </button>
-                    <button
-                        style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
-                        class="button-block button button-half"
+                        <!-- TODO: pulsante con scritto "Richiesta effettuata" senza che vada su due righe -->
+                        {{ !vm.userPackagesIdRquested[item.id] ? "Richiedi" : "Richiesto" | translate}}
+                    </button>
+                    <button style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};" class="button-block button button-half"
                         ng-click="vm.openDetailsRoute(item.id);">
-                    {{::"Dettagli" | translate}}
-                </button>
+                        {{::"Dettagli" | translate}}
+                    </button>
                 </div>
 
             </div>
 
-            <div
-                class="modal-inner-content modal-two-columns coupons-list reduced-list"
-                ng-if="vm.type === 'reduced'"
-                ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search"
+            <div class="modal-inner-content modal-two-columns coupons-list reduced-list" ng-if="vm.type === 'reduced'" ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search"
                 ng-click="vm.openDetailsRoute(item.id)">
                 <div class="details-image-reduced">
                     <img class="modal-image" ng-src="{{item.imgUrl}}" ng-model="item.imgUrl">
-                    <i
-                        class="icon wm-icon-android-checkmark "
-                        ng-if="vm.userDownloadedPackages[item.id] && ((vm.isLoggedIn && (vm.userPackagesId[item.id] || item.wm_route_public)) || (!vm.isLoggedIn && item.wm_route_public && vm.skipLoginPublicRoutesDownload))">
+                    <i class="icon wm-icon-android-checkmark " ng-if="vm.userDownloadedPackages[item.id] && ((vm.isLoggedIn && (vm.userPackagesId[item.id] || item.wm_route_public)) || (!vm.isLoggedIn && item.wm_route_public && vm.skipLoginPublicRoutesDownload))">
                     </i>
                 </div>
                 <div class="details-reduced">
-                    <div
-                        class="packages-title-reduced"
-                        ng-bind-html="vm.truncateTitle(item.packageTitle)">
+                    <div class="packages-title-reduced" ng-bind-html="vm.truncateTitle(item.packageTitle)">
                     </div>
 
                     <div class="content-reduced">
-                        <div
-                            ng-repeat="category in item.webmapp_category"
-                            class="icons-reduced icon {{vm.filters[category].icon}}">
+                        <div ng-repeat="category in item.webmapp_category" class="icons-reduced icon {{vm.filters[category].icon}}">
                         </div>
 
-                        <div class="stars-reduced"
-                        ng-if="item.n7webmapp_route_difficulty !== '0'">
-                            <i  class="fa"
-                                aria-hidden="true"
-                                ng-repeat="n in [].constructor(5) track by $index"
-                                ng-class="{ 'wm-icon-contrast' : (item.n7webmapp_route_difficulty - $index) == 0.5 ,'wm-icon-generic' : item.n7webmapp_route_difficulty > $index, 'wm-icon-ion-android-checkmark-circle-empty': item.n7webmapp_route_difficulty <= $index}"
-                                >
+                        <div class="stars-reduced" ng-if="item.n7webmapp_route_difficulty !== '0'">
+                            <i class="fa" aria-hidden="true" ng-repeat="n in [].constructor(5) track by $index" ng-class="{ 'wm-icon-contrast' : (item.n7webmapp_route_difficulty - $index) == 0.5 ,'wm-icon-generic' : item.n7webmapp_route_difficulty > $index, 'wm-icon-ion-android-checkmark-circle-empty': item.n7webmapp_route_difficulty <= $index}">
                             </i>
                         </div>
 
@@ -153,18 +99,14 @@
                     </div>
 
                     <div class="button-reduced">
-                        <button
-                            style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
-                            class="login-button button button-block"
-                            ng-if="!item.wm_route_public && (!vm.isLoggedIn || !vm.userPackagesId[item.id])"
-                            ng-click="vm.openDetailsRoute(item.id)"> <!-- ITINERARIO NON COMPRATO oppure NON LOGGATO e ITINERARIO A PAGAMENTO-->
+                        <button style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}" class="login-button button button-block"
+                            ng-if="!item.wm_route_public && (!vm.isLoggedIn || !vm.userPackagesId[item.id])" ng-click="vm.openDetailsRoute(item.id)">
+                            <!-- ITINERARIO NON COMPRATO oppure NON LOGGATO e ITINERARIO A PAGAMENTO-->
                             {{::"Ottieni" | translate}}
                         </button>
-                        <button
-                            style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
-                            class="login-button button button-block"
-                            ng-if="(vm.isLoggedIn && vm.userPackagesId[item.id]) || item.wm_route_public"
-                            ng-click="vm.getPack(item, $event)"> <!-- LOGGATO e ITINERARIO COMPRATO (se non scaricato alert e scarica)-->
+                        <button style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}" class="login-button button button-block"
+                            ng-if="(vm.isLoggedIn && vm.userPackagesId[item.id]) || item.wm_route_public" ng-click="vm.getPack(item, $event)">
+                            <!-- LOGGATO e ITINERARIO COMPRATO (se non scaricato alert e scarica)-->
                             {{::"Apri" | translate}}
                         </button>
                     </div>
