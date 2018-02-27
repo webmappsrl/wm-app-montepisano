@@ -259,7 +259,8 @@ angular.module('webmapp')
                             var imageUrl = urlCreator.createObjectURL(blob);
                             vm.test = imageUrl;
 
-                            vm.packages[i].imgUrl = imageUrl;
+                            vm.packages[i].image = imageUrl;
+                            console.log(vm.packages, imageUrl);
                         },
                         function (err) {
                             console.log(err)
