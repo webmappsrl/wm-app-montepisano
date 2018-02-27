@@ -964,7 +964,7 @@ div.detailRoute-footer {
     .help-page.pane div.tab div.help-img {
       width: 100%;
       position: fixed;
-      max-height: 65vh;
+      max-height: 60vh;
       bottom: 50px;
       padding: 0 5%; }
       .help-page.pane div.tab div.help-img > img {
@@ -1028,8 +1028,6 @@ div.detailRoute-footer {
     right: 0;
     opacity: 1; } }
   @media screen and (max-height: 600px) {
-    .help-page.pane div.help-img {
-      max-height: 60vh; }
     .help-page.pane p {
       font-size: 2.1em; } }
   @media screen and (min-height: 700px) {

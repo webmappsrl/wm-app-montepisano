@@ -48,7 +48,7 @@
     div.help-img {
       width: 100%;
       position: fixed;
-      max-height: 65vh;
+      max-height: 60vh;
       bottom: 50px;
       padding: 0 5%;
       &>img {
@@ -129,9 +129,6 @@
     }
   }
   @media screen and (max-height: 600px) {
-    div.help-img {
-      max-height: 60vh;
-    }
     p {
       font-size: 2.1em;
     }
