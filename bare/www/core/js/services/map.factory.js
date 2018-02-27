@@ -165,8 +165,15 @@ angular.module('webmapp')
                 map.addLayer(layer);
 
                 if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
-                    for (var i in polylineDecoratorLayers[layerName]) {
-                        polylineDecoratorLayers[layerName][i].addTo(map);
+                    if (layerName === 'filteredLine') {
+                        for (var i in layer.arrows) {
+                            polylineDecoratorLayers[layer.arrows[i].parentLabel][layer.arrows[i].featureId].addTo(map);
+                        }
+                    }
+                    else {
+                        for (var i in polylineDecoratorLayers[layerName]) {
+                            polylineDecoratorLayers[layerName][i].addTo(map);
+                        }
                     }
                 }
 
@@ -630,6 +637,18 @@ angular.module('webmapp')
 
         pointsLayer.addData(poiCollection);
         linesLayer.addData(linesCollection);
+
+        if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
+            var featureIds = [];
+            for (var pos in linesCollection.features) {
+                featureIds = featureIds.concat([{
+                    parentLabel: linesCollection.features[pos].parent.label,
+                    featureId: linesCollection.features[pos].properties.id
+                }]);
+            }
+
+            linesLayer.arrows = featureIds;
+        }
 
         activatePOIHandlers(pointsLayer);
         activateLineHandlers(linesLayer);
