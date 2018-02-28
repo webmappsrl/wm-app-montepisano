@@ -491,6 +491,8 @@ angular.module('webmapp')
 
             if (vm.isRotating) {
                 orientationWatchRef.clearWatch();
+                vm.isRotating = false;
+                MapService.mapIsRotating(vm.isRotating);
             }
 
             if (vm.followActive) {
@@ -498,7 +500,6 @@ angular.module('webmapp')
             }
 
             vm.followActive = false;
-            vm.isRotating = false;
 
             setTimeout(function () {
                 MapService.setBearing(-359.95);
@@ -512,11 +513,12 @@ angular.module('webmapp')
         vm.turnOffRotationAndFollow = function () {
             if (vm.isRotating) {
                 orientationWatchRef.clearWatch();
+                vm.isRotating = false;
+                MapService.mapIsRotating(vm.isRotating);
             }
 
             vm.canFollow = false;
             vm.followActive = false;
-            vm.isRotating = false;
 
             setTimeout(function () {
                 MapService.setBearing(-359.95);
@@ -570,6 +572,11 @@ angular.module('webmapp')
                             vm.movingTime = vm.movingTime + Date.now() - vm.startMovingTime;
                         }, 5000);
                     }
+
+                    MapService.triggerNearestPopup({
+                        lat: lat,
+                        long: long
+                    });
                 }
 
                 prevLatLong = {
@@ -591,7 +598,7 @@ angular.module('webmapp')
                 return;
             }
 
-            if (vm.useExandMapInDetails && vm.detail) {
+            if (vm.useExandMapInDetails && vm.detail && false) {
                 MapService.stopControlLocate();
                 MapService.getFeatureById($state.params.id, $rootScope.currentParams.parentId.replace(/_/g, ' '))
                     .then(function (feature) {
@@ -681,6 +688,7 @@ angular.module('webmapp')
                         function (error) {
                             if (vm.isRotating) {
                                 vm.isRotating = false;
+                                MapService.mapIsRotating(vm.isRotating);
                             }
                             console.error(error);
                         },
@@ -691,6 +699,7 @@ angular.module('webmapp')
 
                             if (!vm.isRotating) {
                                 vm.isRotating = true;
+                                MapService.mapIsRotating(vm.isRotating);
                             }
                             if (Math.abs(result.magneticHeading - prevHeating) > 100) {
                                 lpf = new LPF(0.5);
@@ -753,7 +762,7 @@ angular.module('webmapp')
                                     }, CONFIG.OPTIONS.intervalUpdateMs);
                                 } else {
                                     watchInterval = $cordovaGeolocation.watchPosition({
-                                        timeout: 10000,
+                                        timeout: 30000,
                                         enableHighAccuracy: true
                                     });
                                     watchInterval.then(
@@ -958,6 +967,15 @@ angular.module('webmapp')
             vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
             $rootScope.$emit('is-navigating', vm.isNavigating);
             $rootScope.$emit('navigation-path', vm.stopNavigationUrlParams);
+
+            setTimeout(function () {
+                if (prevLatLong) {
+                    MapService.triggerNearestPopup({
+                        lat: prevLatLong.lat,
+                        long: prevLatLong.long
+                    });
+                }
+            }, 1000);
 
             Utils.goTo('/');
         };
@@ -1174,12 +1192,10 @@ angular.module('webmapp')
         });
 
         $rootScope.$on('map-dragstart', function (e, value) {
-            vm.locateLoading = false;
             if (vm.isRotating) {
-                vm.centerOnMe();
-            } else {
-                vm.dragged = true;
+                vm.turnOffRotationAndFollow();
             }
+            vm.dragged = true;
         });
 
         $rootScope.$on('item-navigable', function (e, value) {

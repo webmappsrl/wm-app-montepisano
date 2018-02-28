@@ -64,6 +64,9 @@ angular.module('webmapp')
 
     var polylineDecoratorLayers = {};
 
+    var activatedPopup = null,
+        mapIsRotating = false;
+
     var controlLocate = null;
     var circleLocation = {
         position: null,
@@ -435,9 +438,11 @@ angular.module('webmapp')
                     (goToDetails ? '<button class="popup-button"><i class="icon wm-icon-ios7-arrow-forward"></i></button>' : '') +
                     '</div>';
 
-                L.popup()
+                L.popup({
+                    autoPan: false
+                })
                 .setLatLng({
-                    lat: e.latlng.lat + (isPOI ? getIncrement(map.getZoom()) : 0),
+                    lat: e.latlng.lat + (isPOI && !mapIsRotating ? getIncrement(map.getZoom()) : 0),
                     lng: e.latlng.lng
                 })
                 .setContent(
@@ -1517,6 +1522,11 @@ angular.module('webmapp')
         return map;
     };
 
+    var makeNotificationSound = function() {
+        var audio = new Audio('core/audio/alertNotificationSound.mp3');
+        audio.play();
+    };
+
     mapService.getPageInPouchDB = function(key){
         return db.get(key);
     };
@@ -2131,6 +2141,38 @@ angular.module('webmapp')
             positionMarker = null;
             positionCircle = null;
         }
+    };
+
+    mapService.triggerNearestPopup = function(latLong) {
+        var layerToSelectNearest = leafletKnn(extraLayersByLabel['filteredPOI']);
+        var nearPois = layerToSelectNearest.nearest([latLong.long, latLong.lat], 10, 100);
+        if (nearPois[0] && nearPois[0].layer && nearPois[0].layer.feature) {
+            for (var pos in nearPois) {
+                if (nearPois[pos].layer.feature.parent.alert) {
+                    if (!activatedPopup || activatedPopup !== nearPois[pos].layer.feature.properties.id) {
+                        nearPois[pos].latlng = {
+                            lat: nearPois[pos].lat,
+                            lng: nearPois[pos].lon
+                        }
+            
+                        activatedPopup = nearPois[pos].layer.feature.properties.id;
+                        activatePopup(nearPois[pos], false);
+
+                        makeNotificationSound();
+                    }
+                    break;
+                }
+            }
+        }
+        else {
+            map.closePopup();
+            activatedPopup = null;
+        }
+    };
+
+    mapService.mapIsRotating = function(isRotating) {
+        map.closePopup();
+        mapIsRotating = isRotating;
     };
 
     window.closePopup = mapService.closePopup = function(e) {
