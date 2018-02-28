@@ -253,14 +253,27 @@ angular.module('webmapp')
             var downloadImage = function (url, pos) {
                 Communication.get(url)
                     .then(function (response) {
-                            console.log(response);
-                            var blob = response;
+                            var imageDownloaded = response;
                             var urlCreator = window.URL || window.webkitURL;
-                            var imageUrl = urlCreator.createObjectURL(blob);
-                            vm.test = imageUrl;
 
-                            vm.packages[i].image = imageUrl;
-                            console.log(vm.packages, imageUrl);
+                            vm.packages[pos].localImageUrl = urlCreator.createObjectURL(imageDownloaded);
+
+                            var reader = new FileReader();
+                            reader.readAsDataURL(imageDownloaded);
+                            reader.onloadend = function () {
+                                base64data = reader.result;
+
+                                if (!vm.images) {
+                                    vm.images = {};
+                                }
+                                vm.images[vm.packages[pos].id] = base64data;
+
+                                vm.packages[pos].localImageUrl = base64data;
+
+                                localStorage.$wm_images = JSON.stringify(vm.images);
+                            }
+
+                            localStorage.$wm_packages = JSON.stringify(vm.packages);
                         },
                         function (err) {
                             console.log(err)
@@ -273,16 +286,14 @@ angular.module('webmapp')
                         if (vm.packages[i].id === packageId) {
                             if (vm.packages[i].imgUrl !== data.media_details.sizes.thumbnail.source_url) {
                                 vm.packages[i].imgUrl = data.media_details.sizes.thumbnail.source_url;
-                                downloadImage(vm.packages[i].imgUrl, i);
                             }
+                            downloadImage(vm.packages[i].imgUrl, i);
                             break;
                         }
                     }
 
                     localStorage.$wm_packages = JSON.stringify(vm.packages);
                     Utils.forceDigest();
-
-                    console.log(vm.packages);
                 }
             };
 
@@ -304,6 +315,10 @@ angular.module('webmapp')
                                 newPackages[i].imgUrl = packages[j].imgUrl;
                             }
 
+                            if (packages[j].localImageUrl) {
+                                newPackages[i].localImageUrl = packages[j].localImageUrl;
+                            }
+
                             if (packages[j].packageTitle) {
                                 newPackages[i].packageTitle = packages[j].packageTitle;
                             }
@@ -322,9 +337,15 @@ angular.module('webmapp')
                     vm.packages = mergePackages(vm.packages, data);
                 }
 
+                vm.images = localStorage.$wm_images ? JSON.parse(localStorage.$wm_images) : {};
+
                 for (var i in vm.packages) {
                     if (!vm.packages[i].imgUrl) {
                         vm.packages[i].imgUrl = "core/images/image-loading.gif";
+                    }
+
+                    if (vm.images[vm.packages[i].id]) {
+                        vm.packages[i].localImageUrl = vm.images[vm.packages[i].id];
                     }
 
                     vm.packages[i].packageTitle = vm.packages[i].title.rendered;
