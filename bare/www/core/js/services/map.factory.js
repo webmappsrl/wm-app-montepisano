@@ -908,15 +908,34 @@ angular.module('webmapp')
                                 polylineDecoratorLayers[currentOverlay.label] = {};
                             }
     
+                            // polylineDecoratorLayers[currentOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
+                            //     patterns: [{
+                            //         offset: 20,
+                            //         repeat: 100,
+                            //         symbol: L.Symbol.marker({
+                            //             markerOptions: {
+                            //                 icon: arrowIcon
+                            //             },
+                            //             rotate: true
+                            //         })
+                            //     }]
+                            // });
                             polylineDecoratorLayers[currentOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
                                 patterns: [{
                                     offset: 20,
                                     repeat: 100,
-                                    symbol: L.Symbol.marker({
-                                        markerOptions: {
-                                            icon: arrowIcon
-                                        },
-                                        rotate: true
+                                    symbol: L.Symbol.arrowHead({
+                                        polygon: true,
+                                        pixelSize: 16,
+                                        headAngle: 30,
+                                        pathOptions: {
+                                            color: '#fff',
+                                            opacity: 0,
+                                            fillColor: '#000',
+                                            fillOpacity: 0.8,
+                                            stroke: true,
+                                            weight: 1
+                                        }
                                     })
                                 }]
                             });
