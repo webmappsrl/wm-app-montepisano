@@ -9,7 +9,8 @@ var gulp = require('gulp'),
     streamify = require('gulp-streamify'),
     rename = require('gulp-rename'),
     sh = require('shelljs'),
-    yargs = require('yargs');
+    yargs = require('yargs'),
+    version = require('./version.json');
 
 
 yargs.usage('Usage: $0 <command> [options]')
@@ -99,7 +100,7 @@ gulp.task('update', ['create'], function () {
                     id: repo["config.xml"].id,
                     name: repo["config.xml"].name,
                     description: repo["config.xml"].description,
-                    version: repo["config.xml"].version
+                    version: version["version"]
                 };
 
                 gulp.updateConfigXML(config_xml);
