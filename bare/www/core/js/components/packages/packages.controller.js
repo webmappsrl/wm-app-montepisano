@@ -85,23 +85,25 @@ angular.module('webmapp')
 
         vm.setFilters = function () {
             vm.filters = {};
-            for (var category in vm.categoriesId) {
-                var tmp = {};
-                tmp[category] = {
-                    name: vm.categories[category].name,
-                    icon: vm.categories[category].icon,
-                    value: true
-                };
-                vm.filters = angular.extend(tmp, vm.filters);
-            }
-
-            //Apply selected filter in homepage
-            if ($state.params.id && $state.params.id !== "") {
-                for (var category in vm.filters) {
-                    if (category === $state.params.id) {
-                        vm.filters[category].value = true;
-                    } else {
-                        vm.filters[category].value = false;
+            if (CONFIG.MULTIMAP && CONFIG.MULTIMAP.categoryFiltersOn) {
+                for (var category in vm.categoriesId) {
+                    var tmp = {};
+                    tmp[category] = {
+                        name: vm.categories[category].name,
+                        icon: vm.categories[category].icon,
+                        value: true
+                    };
+                    vm.filters = angular.extend(tmp, vm.filters);
+                }
+    
+                //Apply selected filter in homepage
+                if ($state.params.id && $state.params.id !== "") {
+                    for (var category in vm.filters) {
+                        if (category === $state.params.id) {
+                            vm.filters[category].value = true;
+                        } else {
+                            vm.filters[category].value = false;
+                        }
                     }
                 }
             }
