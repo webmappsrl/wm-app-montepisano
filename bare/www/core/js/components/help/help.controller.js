@@ -14,7 +14,12 @@ angular.module('webmapp')
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
 
         vm.goToMainPage = function() {
-            Utils.goTo(CONFIG.OPTIONS.startUrl);
+            if (CONFIG.OPTIONS.startUrl.indexOf('packages') !== -1) {
+                Utils.goTo(CONFIG.OPTIONS.startUrl);
+            }
+            else {
+                Utils.goTo('home');
+            }
         };
 
         var currentTab = 0;
