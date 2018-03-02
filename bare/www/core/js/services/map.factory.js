@@ -65,7 +65,8 @@ angular.module('webmapp')
     var polylineDecoratorLayers = {};
 
     var activatedPopup = null,
-        mapIsRotating = false;
+        mapIsRotating = false,
+        currentBearing = 0;
 
     var controlLocate = null;
     var circleLocation = {
@@ -1797,11 +1798,13 @@ angular.module('webmapp')
     };
 
     mapService.centerOnCoords = function(lat, lng) {
+        map.setBearing(0);
         map.setView({
             lat: lat,
             lng: lng
         },
         CONFIG.MAP.maxZoom);
+        map.setBearing(currentBearing);
     };
 
     mapService.drawAccuracy = function(accuracy) {
@@ -2077,6 +2080,7 @@ angular.module('webmapp')
     };
 
     mapService.setBearing = function(n) {
+        currentBearing = n;
         map && map.setBearing(n);
     };
 
