@@ -636,7 +636,8 @@ ion-side-menus.navigation-interface {
     @include calc(height, '100% - 60%');
   }
 
-  ion-view ion-content.has-header {
+  ion-view ion-content.has-header,
+  .platform-ios.platform-cordova:not(.fullscreen) & ion-view ion-content.has-header {
     top: 0;
   }
   .show-start-navigation .start-navigation {
