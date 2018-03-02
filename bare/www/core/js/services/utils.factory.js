@@ -69,22 +69,13 @@ angular.module('webmapp')
                     id: param
                 });
             } else {
-                if (path.indexOf('packages') !== -1) {
-                    splitted = path.split('/');
-                    param = splitted[2];
+                splitted = path.split('/');
+                state = splitted[0];
+                param = splitted[1];
 
-                    $state.go('app.main.packages', {
-                        id: param
-                    });
-                } else {
-                    splitted = path.split('/');
-                    state = splitted[0];
-                    param = splitted[1];
-
-                    $state.go('app.main.' + state, {
-                        id: param
-                    });
-                }
+                $state.go('app.main.' + state, {
+                    id: param
+                });
             }
 
             // $location.path(path);

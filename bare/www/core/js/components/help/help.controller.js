@@ -15,10 +15,13 @@ angular.module('webmapp')
 
         vm.goToMainPage = function() {
             if (CONFIG.OPTIONS.startUrl.indexOf('packages') !== -1) {
-                Utils.goTo(CONFIG.OPTIONS.startUrl);
+                Utils.goTo('packages');
+            }
+            else if (CONFIG.OPTIONS.startUrl.indexOf('home') !== -1) {
+                Utils.goTo('home');
             }
             else {
-                Utils.goTo('home');
+                Utils.goTo('/');
             }
         };
 
