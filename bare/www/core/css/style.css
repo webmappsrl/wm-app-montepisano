@@ -2479,7 +2479,8 @@ ion-side-menus.navigation-interface .bar.bar-assertive.bar-footer {
   height: -moz-calc(100% - 60%);
   height: calc(100% - 60%); }
 
-ion-side-menus.navigation-interface ion-view ion-content.has-header {
+ion-side-menus.navigation-interface ion-view ion-content.has-header,
+.platform-ios.platform-cordova:not(.fullscreen) ion-side-menus.navigation-interface ion-view ion-content.has-header {
   top: 0; }
 
 ion-side-menus.navigation-interface .show-start-navigation .start-navigation {

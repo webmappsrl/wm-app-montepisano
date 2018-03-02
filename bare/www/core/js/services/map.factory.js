@@ -1514,7 +1514,7 @@ angular.module('webmapp')
                     markerClusters.addTo(map);
                 }, 500);
             } else {
-                map.setView({
+                map.flyTo({
                     lat: a.latlng.lat,
                     lng: a.latlng.lng
                 });
@@ -1757,14 +1757,14 @@ angular.module('webmapp')
             lng = baseView.mapCenter.lng,
             zoom = baseView.defZoom;
 
-        map.setView({
+        map.flyTo({
             lat: lat,
             lng: lng
         }, mapConf.defZoom);
 
         // TODO: temporary fix for tms switching
         setTimeout(function() {
-            map.setView({
+            map.flyTo({
                 lat: lat,
                 lng: lng
             }, zoom);
@@ -1790,7 +1790,7 @@ angular.module('webmapp')
 
             fitBounds(latlngs);
         } else {
-            map.setView({
+            map.flyTo({
                 lat: feature.geometry.coordinates[1],
                 lng: feature.geometry.coordinates[0]
             }, mapConf.maxZoom);
@@ -1799,7 +1799,7 @@ angular.module('webmapp')
 
     mapService.centerOnCoords = function(lat, lng) {
         map.setBearing(0);
-        map.setView({
+        map.flyTo({
             lat: lat,
             lng: lng
         },
@@ -2211,12 +2211,12 @@ angular.module('webmapp')
         }
 
         if (isPOI === 'true') {
-            map.setView({
+            map.flyTo({
                 lat: lat,
                 lng: lng
             }, mapConf.maxZoom);
         } else {
-            map.setView({
+            map.flyTo({
                 lat: lat,
                 lng: lng
             });
@@ -2232,7 +2232,7 @@ angular.module('webmapp')
     };
 
     window.goToTileUtfGridDetail = function(id, parentLabel, lat, lng) {
-        map.setView({
+        map.flyTo({
             lat: lat,
             lng: lng
         });

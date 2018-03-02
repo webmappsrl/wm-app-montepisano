@@ -493,6 +493,7 @@ angular.module('webmapp')
                 orientationWatchRef.clearWatch();
                 vm.isRotating = false;
                 MapService.mapIsRotating(vm.isRotating);
+                MapService.enableDrag();
             }
 
             if (vm.followActive) {
@@ -515,6 +516,7 @@ angular.module('webmapp')
                 orientationWatchRef.clearWatch();
                 vm.isRotating = false;
                 MapService.mapIsRotating(vm.isRotating);
+                MapService.enableDrag();
             }
 
             vm.canFollow = false;
@@ -689,6 +691,7 @@ angular.module('webmapp')
                             if (vm.isRotating) {
                                 vm.isRotating = false;
                                 MapService.mapIsRotating(vm.isRotating);
+                                MapService.enableDrag();
                             }
                             console.error(error);
                         },
@@ -700,6 +703,7 @@ angular.module('webmapp')
                             if (!vm.isRotating) {
                                 vm.isRotating = true;
                                 MapService.mapIsRotating(vm.isRotating);
+                                MapService.disableDrag();
                             }
                             if (Math.abs(result.magneticHeading - prevHeating) > 100) {
                                 lpf = new LPF(0.5);
