@@ -204,7 +204,7 @@ angular.module('webmapp')
                 $cordovaKeyboard.close();
             }
 
-            if (email && password && checkEmail && checkPassword && firstName && lastName && country) {
+            if (email && password && checkEmail && checkPassword && firstName && lastName) {
                 if (!isEmailValid(email)) {
                     $ionicPopup.alert({
                         title: $translate.instant("ATTENZIONE"),
