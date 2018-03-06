@@ -60,6 +60,22 @@ angular.module('webmapp')
                     }
                 }
             })
+            .state('app.main.taxonomy', {
+                url: '/taxonomy/:id',
+                views: {
+                    'inception-top': {
+                        templateUrl: basePath + 'js/components/taxonomy/taxonomy.html'
+                    }
+                }
+            })
+            .state('app.main.detailtaxonomy', {
+                url: '/taxonomy/:parentId/:id',
+                views: {
+                    'inception-top': {
+                        templateUrl: basePath + 'js/components/detailTaxonomy/detailTaxonomy.html'
+                    }
+                }
+            })
             .state('app.main.pages', {
                 url: '/pages/:id',
                 views: {

@@ -3273,6 +3273,49 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
   background: white; }
 
 /*
+ * TAXONOMY PAGE
+ *
+ */
+/* ------------------------------------ *   #Taxonomy
+\* ------------------------------------ */
+.taxonomy-page ion-content {
+  padding: 2%; }
+  .taxonomy-page ion-content .taxonomy-button {
+    box-shadow: 0px 2px 5px #d7d7d7;
+    margin: 0 0 10px;
+    width: 100%;
+    height: calc(100% / 3.5); }
+    .taxonomy-page ion-content .taxonomy-button .taxonomy-content {
+      margin-left: 10px;
+      width: calc(100% - 10px);
+      height: 100%; }
+      .taxonomy-page ion-content .taxonomy-button .taxonomy-content div {
+        width: 100%; }
+      .taxonomy-page ion-content .taxonomy-button .taxonomy-content .taxonomy-image {
+        height: calc(100% - 60px);
+        overflow: hidden;
+        position: relative; }
+        .taxonomy-page ion-content .taxonomy-button .taxonomy-content .taxonomy-image img {
+          width: 100%;
+          height: auto;
+          overflow: hidden;
+          position: absolute;
+          top: -9999px;
+          bottom: -9999px;
+          left: -9999px;
+          right: -9999px;
+          margin: auto; }
+      .taxonomy-page ion-content .taxonomy-button .taxonomy-content .taxonomy-titlebar {
+        color: #000;
+        background: #fff;
+        padding: 10px 5px;
+        line-height: 20px;
+        font-size: 17px;
+        height: 60px;
+        text-transform: uppercase;
+        font-weight: 700; }
+
+/*
  * WEBMAPP PAGE
  *
  * Styles for webmapp page

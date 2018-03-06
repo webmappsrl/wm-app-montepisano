@@ -1,0 +1,29 @@
+<ion-view class="taxonomy-page" cache-view="false" ng-controller="TaxonomyController as vm">
+    <ion-nav-title>
+        <span>
+            {{vm.title}}
+        </span>
+    </ion-nav-title>
+    <ion-nav-buttons side="left">
+        <button class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
+    </ion-nav-buttons>
+
+    <ion-content style="color: black; background: {{COLORS.global.background}}">
+        <div
+            ng-repeat="item in vm.taxonomy"
+            class="taxonomy-button"
+            ng-click="vm.goTo(item.id)"
+            ng-style="{
+                'background-color': item.color
+            }" >
+            <div class="taxonomy-content">
+                <div class="taxonomy-image">
+                    <img ng-src="{{item.featured_image.sizes.medium}}">
+                </div>
+                <div class="taxonomy-titlebar">
+                    {{item.name}}<br> {{item.title}}
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
