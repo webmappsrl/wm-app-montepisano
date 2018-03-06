@@ -1,10 +1,10 @@
 /*
- Leaflet 1.0.0-rc.3+abaef34, a JS library for interactive maps. http://leafletjs.com
+ Leaflet 1.0.0-rc.3+, a JS library for interactive maps. http://leafletjs.com
  (c) 2010-2016 Vladimir Agafonkin, (c) 2010-2011 CloudMade
 */
 (function (window, document, undefined) {
 var L = {
-	version: "1.0.0-rc.3+abaef34"
+	version: "1.0.0-rc.3+"
 };
 
 function expose() {
@@ -1037,7 +1037,20 @@ L.Point.prototype = {
 
 	rotateFrom: function(theta, pivot) {
 		if (!theta) { return this; }
-		return this.clone().subtract(pivot).rotate(theta).add(pivot);
+		// Rotate around (pivot.x, pivot.y) by:
+		// 1. subtract (pivot.x, pivot.y)
+		// 2. rotate around (0, 0)
+		// 3. add (pivot.x, pivot.y) back
+		// same as `this.subtract(pivot).rotate(theta).add(pivot)`
+		var sinTheta = Math.sin(theta);
+		var cosTheta = Math.cos(theta);
+		var cx = pivot.x, cy = pivot.y;
+		var x = this.x - cx, y = this.y - cy;
+
+		return new L.Point(
+			x * cosTheta - y * sinTheta + cx,
+			x * sinTheta + y * cosTheta + cy
+		);
 	}
 };
 
@@ -1474,6 +1487,7 @@ L.DomUtil = {
 		var pos = offset || new L.Point(0, 0);
 
 		if (!bearing) {
+			pos._round();
 			el.style[L.DomUtil.TRANSFORM] =
 				(L.Browser.ie3d ?
 				'translate(' + pos.x + 'px,' + pos.y + 'px)' :
@@ -2770,11 +2784,14 @@ L.Map = L.Evented.extend({
 	// @method getBounds(): LatLngBounds
 	// Returns the geographical bounds visible in the current map view
 	getBounds: function () {
-		var bounds = this.getPixelBounds(),
-		    sw = this.unproject(bounds.getBottomLeft()),
-		    ne = this.unproject(bounds.getTopRight());
+		var size = this.getSize();
+		var topleft     = this.layerPointToLatLng(this.containerPointToLayerPoint([0, 0])),
+		    topright    = this.layerPointToLatLng(this.containerPointToLayerPoint([size.x, 0])),
+		    bottomright = this.layerPointToLatLng(this.containerPointToLayerPoint([size.x, size.y])),
+		    bottomleft  = this.layerPointToLatLng(this.containerPointToLayerPoint([0, size.y]));
 
-		return new L.LatLngBounds(sw, ne);
+		// Use LatLngBounds' build-in constructor that automatically extends the bounds to fit the passed points
+		return new L.LatLngBounds([topleft, topright, bottomright, bottomleft]);
 	},
 
 	// @method getMinZoom(): Number
@@ -2965,7 +2982,7 @@ L.Map = L.Evented.extend({
 				.subtract(this._getRotatePanePos());
 		}
 		else {
-		return L.point(point).subtract(this._getMapPanePos());
+			return L.point(point).subtract(this._getMapPanePos());
 		}
 	},
 
@@ -2980,8 +2997,22 @@ L.Map = L.Evented.extend({
 				.add(this._getMapPanePos());
 		}
 		else {
-		return L.point(point).add(this._getMapPanePos());
+			return L.point(point).add(this._getMapPanePos());
 		}
+	},
+
+	// @method rotatedPointToMapPanePoint(point: Point): Point
+	// Converts a coordinate from the rotated pane reference system
+	// to the reference system of the not rotated map pane.
+	rotatedPointToMapPanePoint: function (point) {
+		return L.point(point).rotate(this._bearing)._add(this._getRotatePanePos());
+	},
+
+	// @method mapPanePointToRotatedPoint(point: Point): Point
+	// Converts a coordinate from the not rotated map pane reference system
+	// to the reference system of the rotated pane.
+	mapPanePointToRotatedPoint: function (point) {
+		return L.point(point)._subtract(this._getRotatePanePos()).rotate(-this._bearing);
 	},
 
 	// @method containerPointToLatLng(point: Point): Point
@@ -3034,7 +3065,7 @@ L.Map = L.Evented.extend({
 		this._bearing = theta * L.DomUtil.DEG_TO_RAD; // TODO: mod 360
 		this._rotatePanePos = rotatePanePos.rotateFrom(this._bearing, this._pivot);
 
-		L.DomUtil.setPosition(this._rotatePane, this._rotatePanePos, this._bearing, this._rotatePanePos);
+		L.DomUtil.setPosition(this._rotatePane, rotatePanePos, this._bearing, this._pivot);
 
 		this.fire('rotate');
 	},
@@ -3105,42 +3136,47 @@ L.Map = L.Evented.extend({
 
 		if (this._rotate) {
 			this._rotatePane = this.createPane('rotatePane', this._mapPane);
+			this._norotatePane = this.createPane('norotatePane', this._mapPane);
 
 			// @pane tilePane: HTMLElement = 2
 			// Pane for tile layers
 			this.createPane('tilePane', this._rotatePane);
 			// @pane overlayPane: HTMLElement = 4
 			// Pane for overlays like polylines and polygons
-			this.createPane('shadowPane', this._rotatePane);
+			this.createPane('overlayPane', this._rotatePane);
+
 			// @pane shadowPane: HTMLElement = 5
 			// Pane for overlay shadows (e.g. marker shadows)
-			this.createPane('overlayPane', this._rotatePane);
+			this.createPane('shadowPane', this._norotatePane);
 			// @pane markerPane: HTMLElement = 6
 			// Pane for marker icons
-			this.createPane('markerPane', this._rotatePane);
-			// @pane popupPane: HTMLElement = 7
+			this.createPane('markerPane', this._norotatePane);
+			// @pane tooltipPane: HTMLElement = 650
+			// Pane for tooltips.
+			this.createPane('tooltipPane', this._norotatePane);
+			// @pane popupPane: HTMLElement = 700
 			// Pane for popups.
-			this.createPane('popupPane', this._rotatePane);
+			this.createPane('popupPane', this._norotatePane);
 		}
 		else {
 			// @pane tilePane: HTMLElement = 2
 			// Pane for tile layers
-		this.createPane('tilePane');
+			this.createPane('tilePane');
 			// @pane overlayPane: HTMLElement = 4
 			// Pane for overlays like polylines and polygons
-		this.createPane('shadowPane');
+			this.createPane('overlayPane');
 			// @pane shadowPane: HTMLElement = 5
 			// Pane for overlay shadows (e.g. marker shadows)
-		this.createPane('overlayPane');
+			this.createPane('shadowPane');
 			// @pane markerPane: HTMLElement = 6
 			// Pane for marker icons
-		this.createPane('markerPane');
-		// @pane tooltipPane: HTMLElement = 650
-		// Pane for tooltip.
-		this.createPane('tooltipPane');
-		// @pane popupPane: HTMLElement = 700
-		// Pane for `Popup`s.
-		this.createPane('popupPane');
+			this.createPane('markerPane');
+			// @pane tooltipPane: HTMLElement = 650
+			// Pane for tooltips.
+			this.createPane('tooltipPane');
+			// @pane popupPane: HTMLElement = 700
+			// Pane for popups.
+			this.createPane('popupPane');
 		}
 
 		if (!this.options.markerZoomAnimation) {
@@ -5497,6 +5533,7 @@ L.Icon = L.Class.extend({
 		if (anchor) {
 			img.style.marginLeft = (-anchor.x) + 'px';
 			img.style.marginTop  = (-anchor.y) + 'px';
+			img.style[L.DomUtil.TRANSFORM + "Origin"] = anchor.x + "px " + anchor.y + "px 0px";
 		}
 
 		if (size) {
@@ -5638,12 +5675,16 @@ L.Marker = L.Layer.extend({
 		// `Map pane` where the markers icon will be added.
 		pane: 'markerPane',
 
+		// @option rotation: Number = 0
+		// Rotation of this marker in rad
+		rotation: 0,
+
+		// @option rotateWithView: Boolean = false
+		// Rotate this marker when map rotates
+		rotateWithView: false,
+
 		// FIXME: shadowPane is no longer a valid option
 		nonBubblingEvents: ['click', 'dblclick', 'mouseover', 'mouseout', 'contextmenu'],
-		
-		// @option markerRotate: Boolean = true
-		// Whether the marker remains upright when rotating the map
-		markerRotate: true
 	},
 
 	/* @section
@@ -5833,24 +5874,20 @@ L.Marker = L.Layer.extend({
 	},
 
 	_setPos: function (pos) {
-		var iconAnchor = this.options.icon.options.iconAnchor || new L.Point(0, 0);
-		if (this._map._rotate && this.options.markerRotate) {
-			L.DomUtil.setPosition(this._icon, pos, -this._map._bearing || 0, pos.add(iconAnchor));
-		} else {
-			L.DomUtil.setPosition(this._icon, pos);
+
+		if(this._map._rotate) {
+			pos = this._map.rotatedPointToMapPanePoint(pos);
 		}
 
+		var bearing = this.options.rotation || 0;
+		if (this.options.rotateWithView) {
+			bearing += this._map._bearing;
+		}
+
+		L.DomUtil.setPosition(this._icon, pos, bearing, pos);
 
 		if (this._shadow) {
-			if (this._map._rotate && this.options.markerRotate) {
-				if (this.options.icon.options.shadowAnchor){
-					L.DomUtil.setPosition(this._shadow, pos, -this._map._bearing || 0, pos.add(this.options.icon.options.shadowAnchor));
-				} else {
-					L.DomUtil.setPosition(this._shadow, pos, -this._map._bearing || 0, pos.add(iconAnchor));
-				}
-			} else {
-				L.DomUtil.setPosition(this._shadow, pos);
-			}
+			L.DomUtil.setPosition(this._shadow, pos, bearing, pos);
 		}
 
 		this._zIndex = pos.y + this.options.zIndexOffset;
@@ -5859,7 +5896,7 @@ L.Marker = L.Layer.extend({
 	},
 
 	_updateZIndex: function (offset) {
-		this._icon.style.zIndex = this._zIndex + offset;
+		this._icon.style.zIndex = Math.round(this._zIndex + offset);
 	},
 
 	_animateZoom: function (opt) {
@@ -5900,6 +5937,11 @@ L.Marker = L.Layer.extend({
 		}
 
 		return this;
+	},
+
+	setRotation: function (rotation) {
+		this.options.rotation = rotation;
+		this.update();
 	},
 
 	_updateOpacity: function () {
@@ -6178,17 +6220,11 @@ L.DivOverlay = L.Layer.extend({
 		    offset = L.point(this.options.offset),
 		    anchor = this._getAnchor();
 
-		var bottom = this._containerBottom = -offset.y,
-		    left = this._containerLeft = -Math.round(this._containerWidth / 2) + offset.x;
-
 		if (this._zoomAnimated) {
 			if (this._map._rotate) {
-				// rotation relative to the marker's anchor
-				var popupAnchor = pos.add([-this._containerLeft, this._container.offsetHeight + this._tipContainer.offsetHeight - offset.y]);
-				L.DomUtil.setPosition(this._container, pos.add(anchor), -this._map._bearing || 0, popupAnchor);
-			} else {
-				L.DomUtil.setPosition(this._container, pos.add(anchor));
+				pos = this._map.rotatedPointToMapPanePoint(pos);
 			}
+			L.DomUtil.setPosition(this._container, pos.add(anchor));
 		} else {
 			offset = offset.add(pos).add(anchor);
 		}
@@ -6426,12 +6462,9 @@ L.Popup = L.DivOverlay.extend({
 		var pos = this._map._latLngToNewLayerPoint(this._latlng, e.zoom, e.center),
 			anchor = this._getAnchor();
 		if (this._map._rotate) {
-			var offset = L.point(this.options.offset);
-			var popupAnchor = pos.add([-this._containerLeft, this._container.offsetHeight + this._tipContainer.offsetHeight - offset.y]);
-			L.DomUtil.setPosition(this._container, pos.add(anchor), -this._map._bearing || 0, popupAnchor);
-		} else {
-			L.DomUtil.setPosition(this._container, pos.add(anchor));
+			pos = this._map.rotatedPointToMapPanePoint(pos);
 		}
+		L.DomUtil.setPosition(this._container, pos.add(anchor));
 	},
 
 	_adjustPan: function () {
@@ -6445,7 +6478,7 @@ L.Popup = L.DivOverlay.extend({
 
 		layerPos._add(L.DomUtil.getPosition(this._container));
 
-		var containerPos = map.layerPointToContainerPoint(layerPos),
+		var containerPos = layerPos._add(this._map._getMapPanePos()),
 		    padding = L.point(this.options.autoPanPadding),
 		    paddingTL = L.point(this.options.autoPanPaddingTopLeft || padding),
 		    paddingBR = L.point(this.options.autoPanPaddingBottomRight || padding),
@@ -6897,6 +6930,9 @@ L.Tooltip = L.DivOverlay.extend({
 
 	_updatePosition: function () {
 		var pos = this._map.latLngToLayerPoint(this._latlng);
+		if (this._map._rotate) {
+			pos = this._map.rotatedPointToMapPanePoint(pos);
+		}
 		this._setPosition(pos);
 	},
 
@@ -6910,6 +6946,9 @@ L.Tooltip = L.DivOverlay.extend({
 
 	_animateZoom: function (e) {
 		var pos = this._map._latLngToNewLayerPoint(this._latlng, e.zoom, e.center);
+		if (this._map._rotate) {
+			pos = this._map.rotatedPointToMapPanePoint(pos);
+		}
 		this._setPosition(pos);
 	},
 
@@ -7467,13 +7506,10 @@ L.Renderer = L.Layer.extend({
 
 		this.getPane().appendChild(this._container);
 		this._update();
-
-		this._map.on('rotate', this._update, this);
 	},
 
 	onRemove: function () {
 		L.DomUtil.remove(this._container);
-		this._map.off('rotate', this._update, this);
 	},
 
 	getEvents: function () {
@@ -7512,7 +7548,8 @@ L.Renderer = L.Layer.extend({
 	},
 
 	_update: function () {
-		// update pixel bounds of renderer container (for positioning/sizing/clipping later)
+		// Update pixel bounds of renderer container (for positioning/sizing/clipping later)
+		// Subclasses are responsible of firing the 'update' event.
 		var p = this.options.padding,
 		    map = this._map,
 		    size = this._map.getSize(),
@@ -7533,8 +7570,6 @@ L.Renderer = L.Layer.extend({
 
 		this._center = this._map.getCenter();
 		this._zoom = this._map.getZoom();
-
-		this.fire('update');
 	}
 });
 
@@ -8813,6 +8848,8 @@ L.SVG = L.Renderer.extend({
 		// movement: update container viewBox so that we don't have to change coordinates of individual layers
 		L.DomUtil.setPosition(container, b.min);
 		container.setAttribute('viewBox', [b.min.x, b.min.y, size.x, size.y].join(' '));
+
+		this.fire('update');
 	},
 
 	// methods below are called by vector layers implementations
@@ -9214,6 +9251,9 @@ L.Canvas = L.Renderer.extend({
 
 		// translate so we use the same path coordinates after canvas element moves
 		this._ctx.translate(-b.min.x, -b.min.y);
+
+		// Tell paths to redraw themselves
+		this.fire('update');
 	},
 
 	_initPath: function (layer) {
@@ -10335,12 +10375,7 @@ L.Draggable = L.Evented.extend({
 
 		var first = (e.touches && e.touches.length === 1 ? e.touches[0] : e),
 		    newPoint = new L.Point(first.clientX, first.clientY),
-		    offset = newPoint.subtract(this._startPoint),
-		    bearing = this._mapBearing || 0;
-
-		if (bearing) {
-			offset = offset.rotate(-bearing);
-		}
+		    offset = newPoint.subtract(this._startPoint);
 
 		if (!offset.x && !offset.y) { return; }
 		if (Math.abs(offset.x) + Math.abs(offset.y) < this.options.clickTolerance) { return; }
@@ -11905,45 +11940,45 @@ L.Handler.MarkerDrag = L.Handler.extend({
 		    .fire('movestart')
 		    .fire('dragstart');
 		if (this._marker._map._rotate){
-			this._draggable.updateMapBearing(this._marker._map._bearing);	
+			this._draggable.updateMapBearing(this._marker._map._bearing);
 		}
 	},
 
 	_onDrag: function (e) {
 		var marker = this._marker,
+		    rotated_marker = marker.options.rotation || marker.options.rotateWithView,
 		    shadow = marker._shadow,
-		    iconPos = L.DomUtil.getPosition(marker._icon),
-		    latlng = marker._map.layerPointToLatLng(iconPos);
-
-		if (marker._map._rotate) {
-			var iconAnchor = marker.options.icon.options.iconAnchor;
-			L.DomUtil.setPosition(marker._icon, iconPos, -marker._map._bearing, iconPos.add(iconAnchor));
-		}
+		    iconPos = L.DomUtil.getPosition(marker._icon);
 
 		// update shadow position
-		if (shadow) {
-			if (marker._map._rotate) {
-				var shadowAnchor = marker.options.icon.options.shadowAnchor ? iconPos.add(marker.options.icon.options.shadowAnchor) : iconPos.add(iconAnchor);
-				L.DomUtil.setPosition(shadow, iconPos, -marker._map._bearing || 0, shadowAnchor);
-			} else {
-				L.DomUtil.setPosition(shadow, iconPos);
-			}
+		if (!rotated_marker && shadow) {
+			L.DomUtil.setPosition(shadow, iconPos);
 		}
+
+		if (marker._map._rotate) {
+			// Reverse calculation from mapPane coordinates to rotatePane coordinates
+			iconPos = marker._map.mapPanePointToRotatedPoint(iconPos);
+		}
+		latlng = marker._map.layerPointToLatLng(iconPos);
 
 		marker._latlng = latlng;
 		e.latlng = latlng;
 		e.oldLatLng = this._oldLatLng;
 
+		if (rotated_marker) marker.setLatLng(latlng); // use `setLatLng` to presisit rotation. low efficiency
+		else marker.fire('move', e); // `setLatLng` will trig 'move' event. we imitate here.
+
 		// @event drag: Event
 		// Fired repeatedly while the user drags the marker.
 		marker
-		    .fire('move', e)
 		    .fire('drag', e);
 	},
 
 	_onDragEnd: function (e) {
 		// @event dragend: DragEndEvent
 		// Fired when the user stops dragging the marker.
+
+		this._marker.update();
 
 		// @event moveend: Event
 		// Fired when the marker stops moving (because of dragging).
