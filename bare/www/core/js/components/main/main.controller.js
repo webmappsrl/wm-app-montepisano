@@ -676,7 +676,9 @@ angular.module('webmapp')
                     // vm.turnOffGeolocationAndRotion();
                     vm.turnOffRotationAndFollow();
                 } else {
-                    MapService.centerOnCoords(prevLatLong.lat, prevLatLong.long);
+                    if (prevLatLong) {
+                        MapService.centerOnCoords(prevLatLong.lat, prevLatLong.long);
+                    }
                     lpf = new LPF(0.5);
 
                     orientationWatchRef = $cordovaDeviceOrientation.watchHeading({

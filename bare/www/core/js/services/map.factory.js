@@ -1798,13 +1798,11 @@ angular.module('webmapp')
     };
 
     mapService.centerOnCoords = function(lat, lng) {
-        map.setBearing(0);
         map.setView({
             lat: lat,
             lng: lng
         },
         CONFIG.MAP.maxZoom);
-        map.setBearing(currentBearing);
     };
 
     mapService.drawAccuracy = function(accuracy) {
