@@ -13,5 +13,12 @@ ion-content.fullView {
   margin: 0;
   .custom-page-padding {
     padding: 0 10px;
+    margin: 0 auto;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .custom-page-padding {
+    width: 500px;
   }
 }
