@@ -9,5 +9,23 @@
     </ion-nav-buttons>
 
     <ion-content style="color: black; background: {{COLORS.global.background}}">
+        <div class="detailTaxonomy-color" ng-style="{
+            'background-color': vm.item.color
+            }">
+        </div>
+        <div class="detailTaxonomy-image">
+            <img ng-src="{{vm.item.featured_image.sizes.medium}}">
+        </div>
+        <div class="detailTaxonomy-description" ng-class="{'show-full': vm.fullDescription}">
+            {{vm.item.description}}
+            <div class="detailTaxonomy-read-more">
+                <span ng-click="vm.toggleDescription()">
+                    {{vm.fullDescription ? "nascondi" : "leggi tutto" | translate}}
+                </span>
+            </div>
+        </div>
+        <div class="detailTaxonomy-routes">
+            contenuti vari
+        </div>
     </ion-content>
 </ion-view>

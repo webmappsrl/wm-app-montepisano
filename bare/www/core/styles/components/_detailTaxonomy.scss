@@ -1,0 +1,68 @@
+/*
+ * TAXONOMY PAGE
+ *
+ */
+
+/* ------------------------------------ *\
+   #Detail Taxonomy
+\* ------------------------------------ */
+
+.detailTaxonomy-page {
+  ion-content {
+    padding: 0;
+    .detailTaxonomy-color {
+      width: 100%;
+      height: 10px;
+    }
+    .detailTaxonomy-image {
+      width: 100%;
+      height: 30vh;
+      overflow: hidden;
+      position: relative;
+      img {
+        width: 100%;
+        height: auto;
+        position: absolute;
+        top: -9999px;
+        bottom: -9999px;
+        left: -9999px;
+        right: -9999px;
+        margin: auto;
+      }
+    }
+    .detailTaxonomy-description {
+      width: 100%;
+      padding: 25px 20px 20px;
+      font-size: 23px;
+      font-weight: 700;
+      line-height: 1.5em;
+      height: calc(6em + 5px + 45px);
+      overflow: hidden;
+      position: relative;
+      .detailTaxonomy-read-more {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        margin: 0;
+        padding: 25px 20px 0;
+        text-transform: uppercase;
+        color: red;
+        text-align: right;
+        font-size: 15px;
+        background-image: linear-gradient(to bottom, transparent 0%, #F3F6E9 75%, #F3F6E9 100%);
+        span {
+          background: #F3F6E9;
+          padding: 0 0 0 5px;
+        }
+      }
+      &.show-full {
+        height: auto;
+        .detailTaxonomy-read-more {
+          background-image: linear-gradient(transparent, transparent);
+        }
+      }
+    }
+  }
+}
