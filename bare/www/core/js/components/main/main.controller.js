@@ -36,6 +36,8 @@ angular.module('webmapp')
         var shareScope = $rootScope.$new(),
             shareModal;
 
+        vm.userData = {};
+
         var distanceInMeters = function (lat1, lon1, lat2, lon2) {
             var R = 6371, // Radius of the earth in km
                 dLat = (lat2 - lat1) * Math.PI / 180, // deg2rad below
@@ -412,10 +414,9 @@ angular.module('webmapp')
                 return;
             }
 
-            var userData = Auth.getUserData();
             $event.stopPropagation();
             text = "ALERT MSG - Myeasyroute user: " +
-                userData.user_email + " nome: " + userData.first_name + " cognome: " + userData.last_name + " https://www.google.com/maps/search/?api=1&query=" +
+                vm.userData.user_email + " nome: " + vm.userData.first_name + " cognome: " + vm.userData.last_name + " https://www.google.com/maps/search/?api=1&query=" +
                 prevLatLong.lat + ',' +
                 prevLatLong.long;
 
@@ -448,9 +449,9 @@ angular.module('webmapp')
 
                             if (emailTo !== '' && url !== '') {
                                 var currentRequest = Communication.callAPI(url, {
-                                    email: userData.user_email,
-                                    firstName: userData.first_name,
-                                    lastName: userData.last_name,
+                                    email: vm.userData.user_email,
+                                    firstName: vm.userData.first_name,
+                                    lastName: vm.userData.last_name,
                                     to: emailTo,
                                     lat: prevLatLong.lat,
                                     lng: prevLatLong.long,
@@ -543,6 +544,7 @@ angular.module('webmapp')
         var posCallback = function (position) {
             var lat = position.coords.latitude,
                 long = position.coords.longitude,
+                altitude = position.coords.altitude,
                 locateLoading = false,
                 doCenter = false;
 
@@ -559,6 +561,23 @@ angular.module('webmapp')
                 }
 
                 if (vm.isNavigating && !vm.isPaused) {
+                    if ((CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableRealTimeTracking) ||
+                        (CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.enableRealTimeTracking) &&
+                        vm.userData.ID) {
+                        Communication.callAPI("https://api.webmapp.it/services/share.php", {
+                            email: vm.userData.user_email,
+                            firstName: vm.userData.first_name,
+                            lastName: vm.userData.last_name,
+                            lat: lat,
+                            lng: long,
+                            altitude: altitude,
+                            type: "tracking",
+                            trackId: vm.stopNavigationUrlParams.id,
+                            routeId: CONFIG.routeId,
+                            app: communicationConf.baseUrl
+                        });
+                    }
+
                     if (vm.firstPositionSet) {
                         updateNavigationValues(position, prevLatLong);
                     } else {
@@ -1216,6 +1235,7 @@ angular.module('webmapp')
         });
 
         $ionicPlatform.ready(function () {
+            vm.userData = Auth.getUserData();
             checkGPS();
         });
 

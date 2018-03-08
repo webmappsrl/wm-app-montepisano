@@ -7,7 +7,8 @@
         'desktop-full-map': vm.mapView,
         'has-howtoreach': vm.detail && detailCoordinates && !vm.hideHowToReach,
         'has-shadow': vm.hasShadow,
-        'show-start-navigation': vm.isNavigable
+        'show-start-navigation': vm.isNavigable,
+        'logged-in': vm.userData.ID
     }" ng-controller="MainController as vm">
 
     <ion-content class="content-pane" delegate-handle="mainScroll">
