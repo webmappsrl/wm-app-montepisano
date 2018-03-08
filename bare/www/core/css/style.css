@@ -592,7 +592,7 @@ div.detailRoute-footer {
     font-size: 23px;
     font-weight: 700;
     line-height: 1.5em;
-    height: calc(6em + 5px + 45px);
+    max-height: calc(6em + 5px + 45px);
     overflow: hidden;
     position: relative; }
     .detailTaxonomy-page ion-content .detailTaxonomy-description .detailTaxonomy-read-more {
@@ -612,9 +612,23 @@ div.detailRoute-footer {
         background: #F3F6E9;
         padding: 0 0 0 5px; }
     .detailTaxonomy-page ion-content .detailTaxonomy-description.show-full {
-      height: auto; }
+      height: auto;
+      max-height: none; }
       .detailTaxonomy-page ion-content .detailTaxonomy-description.show-full .detailTaxonomy-read-more {
         background-image: linear-gradient(transparent, transparent); }
+  .detailTaxonomy-page ion-content .detailTaxonomy-routes {
+    width: 100%;
+    padding: 10px; }
+    .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route {
+      border-top: 1px solid #605846;
+      font-size: 25px;
+      padding: 10px 25px; }
+      .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i {
+        margin: 5px; }
+  .detailTaxonomy-page ion-content .detailTaxonomy-map {
+    width: 100%; }
+    .detailTaxonomy-page ion-content .detailTaxonomy-map img {
+      width: 100%; }
 
 /**
  * DETAILS PAGE

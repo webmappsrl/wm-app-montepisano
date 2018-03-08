@@ -25,7 +25,13 @@
             </div>
         </div>
         <div class="detailTaxonomy-routes">
-            contenuti vari
+            <div class="detailTaxonomy-route" ng-repeat="route in vm.routes">
+                <i class="icon {{vm.categories[route.webmapp_category[0]].icon}}"></i>
+                {{route.title.rendered}}
+            </div>
+        </div>
+        <div class="detailTaxonomy-map">
+            <img ng-src="{{vm.item.featured_image.sizes.medium}}">
         </div>
     </ion-content>
 </ion-view>

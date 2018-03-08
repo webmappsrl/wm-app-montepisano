@@ -5,7 +5,7 @@
   "dependencies": {
     "@ionic-native/diagnostic": "^4.5.3",
     "@ionic-native/social-sharing": "^4.5.3",
-    "call-number": "local_plugins/call-number",
+    "call-number": "file:./local_plugins/call-number",
     "com.verso.cordova.clipboard": "~0.1.0",
     "cordova-android": "^6.2.3",
     "cordova-ios": "^4.4.0",
@@ -23,7 +23,7 @@
     "cordova-plugin-whitelist": "~1.3.0",
     "cordova-plugin-x-socialsharing": "^5.2.1",
     "cordova-plugin-zip": "~3.0.0",
-    "cordova-sqlite-storage-custom": "local_plugins/cordova-sqlite-storage-custom",
+    "cordova-sqlite-storage-custom": "file:./local_plugins/cordova-sqlite-storage-custom",
     "cordova.plugins.diagnostic": "^3.9.2",
     "es6-promise-plugin": "^4.1.0",
     "gulp": "3.5.6",
