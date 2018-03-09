@@ -564,7 +564,14 @@ angular.module('webmapp')
                     if ((CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableRealTimeTracking) ||
                         (CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.enableRealTimeTracking) &&
                         vm.userData.ID) {
-                        Communication.callAPI("https://api.webmapp.it/services/share.php", {
+                        var url = "https://api.webmapp.it/services/share.php";
+                        if (CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.realTimeTrackingUrl) {
+                            url = CONFIG.MAIN.NAVIGATION.realTimeTrackingUrl;
+                        }
+                        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.realTimeTrackingUrl) {
+                            url = CONFIG.NAVIGATION.realTimeTrackingUrl;
+                        }
+                        Communication.callAPI(url, {
                             email: vm.userData.user_email,
                             firstName: vm.userData.first_name,
                             lastName: vm.userData.last_name,
