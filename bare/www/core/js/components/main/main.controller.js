@@ -287,8 +287,39 @@ angular.module('webmapp')
         vm.averageSpeedText = '0 km/h';
         vm.movingTime = 0;
         vm.isNotMoving = false;
-
         vm.navigationInterval = null;
+
+        var realTimeTracking = {};
+        realTimeTracking.enabled = (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.TRACKING.enableRealTimeTracking) ||
+            (CONFIG.MAIN && CONFIG.MAIN.TRACKING.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING.enableRealTimeTracking);
+        realTimeTracking.url = "https://api.webmapp.it/services/share.php";
+
+        realTimeTracking.positionsToSend = [];
+        realTimeTracking.minPositionsToSend = 1;
+        realTimeTracking.appUrl = CONFIG.COMMUNICATION.baseUrl;
+                        
+        vm.routeId = CONFIG.routeID ? CONFIG.routeID : 0;
+
+        if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.realTimeTrackingUrl) {
+            realTimeTracking.url = CONFIG.MAIN.NAVIGATION.TRACKING.realTimeTrackingUrl;
+        }
+        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.realTimeTrackingUrl) {
+            realTimeTracking.url = CONFIG.NAVIGATION.TRACKING.realTimeTrackingUrl;
+        }
+
+        if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.TRACKING.minPositionsToSend) {
+            realTimeTracking.minPositionsToSend = CONFIG.MAIN.NAVIGATION.TRACKING.minPositionsToSend;
+        }
+        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.TRACKING.minPositionsToSend) {
+            realTimeTracking.minPositionsToSend = CONFIG.NAVIGATION.TRACKING.minPositionsToSend;
+        }
+
+        if (CONFIG.COMMUNICATION.baseUrl) {
+            realTimeTracking.appUrl = CONFIG.COMMUNICATION.baseUrl;
+        }
+        if (CONFIG.MAIN && CONFIG.MAIN.COMMUNICATION.baseUrl) {
+            realTimeTracking.appUrl = CONFIG.MAIN.COMMUNICATION.baseUrl;
+        }
 
         if (!Date.now) {
             Date.now = function () {
@@ -542,9 +573,9 @@ angular.module('webmapp')
         };
 
         var posCallback = function (position) {
-            var lat = position.coords.latitude,
-                long = position.coords.longitude,
-                altitude = position.coords.altitude,
+            var lat = position.coords.latitude ? position.coords.latitude : 0,
+                long = position.coords.longitude ? position.coords.longitude : 0,
+                altitude = position.coords.altitude ? position.coords.altitude : 0,
                 locateLoading = false,
                 doCenter = false;
 
@@ -561,28 +592,56 @@ angular.module('webmapp')
                 }
 
                 if (vm.isNavigating && !vm.isPaused) {
-                    if ((CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableRealTimeTracking) ||
-                        (CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.enableRealTimeTracking) &&
-                        vm.userData.ID) {
-                        var url = "https://api.webmapp.it/services/share.php";
-                        if (CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.realTimeTrackingUrl) {
-                            url = CONFIG.MAIN.NAVIGATION.realTimeTrackingUrl;
+                    if (realTimeTracking.enabled && vm.userData.ID) {
+                        // vm.positionsToSend.push({
+                        //     lat: lat,
+                        //     lng: long,
+                        //     altitude: altitude,
+                        //     heading: position.coords.heading,
+                        //     speed: position.coords.speed,
+                        //     timestamp: position.timestamp
+                        // });
+
+                        realTimeTracking.positionsToSend.push([
+                            long,
+                            lat,
+                            altitude
+                            // ,
+                            // position.timestamp,
+                            // position.coords.speed,
+                            // position.coords.heading
+                        ]);
+
+                        if (realTimeTracking.positionsToSend.length >= realTimeTracking.minPositionsToSend) {
+                            var currentRequest = Communication.callAPI(realTimeTracking.url, {
+                                type: "FeatureCollection",
+                                features: [{
+                                    type: "Feature",
+                                    properties: {
+                                        type: "tracking",
+                                        app: realTimeTracking.appUrl,
+                                        routeId: vm.routeId,
+                                        trackId: vm.stopNavigationUrlParams.id,
+                                        email: vm.userData.user_email,
+                                        firstName: vm.userData.first_name,
+                                        lastName: vm.userData.last_name
+                                    },
+                                    geometry: {
+                                        type: "LineString",
+                                        coordinates: realTimeTracking.positionsToSend
+                                    }
+                                }]
+                            });
+
+                            currentRequest
+                                .then(function () {
+                                        realTimeTracking.positionsToSend = [];
+                                        return;
+                                    },
+                                    function (error) {
+                                        return;
+                                    });
                         }
-                        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.realTimeTrackingUrl) {
-                            url = CONFIG.NAVIGATION.realTimeTrackingUrl;
-                        }
-                        Communication.callAPI(url, {
-                            email: vm.userData.user_email,
-                            firstName: vm.userData.first_name,
-                            lastName: vm.userData.last_name,
-                            lat: lat,
-                            lng: long,
-                            altitude: altitude,
-                            type: "tracking",
-                            trackId: vm.stopNavigationUrlParams.id,
-                            routeId: CONFIG.routeId,
-                            app: communicationConf.baseUrl
-                        });
                     }
 
                     if (vm.firstPositionSet) {
