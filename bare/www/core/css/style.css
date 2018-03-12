@@ -621,10 +621,15 @@ div.detailRoute-footer {
     padding: 10px; }
     .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route {
       border-top: 1px solid #605846;
-      font-size: 25px;
-      padding: 10px 25px; }
+      font-size: 20px;
+      padding: 10px 2px;
+      text-transform: uppercase;
+      line-height: 34px;
+      vertical-align: middle; }
       .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i {
-        margin: 5px; }
+        font-size: 34px;
+        margin: 0 8px 0 0;
+        float: left; }
   .detailTaxonomy-page ion-content .detailTaxonomy-map {
     width: 100%; }
     .detailTaxonomy-page ion-content .detailTaxonomy-map img {

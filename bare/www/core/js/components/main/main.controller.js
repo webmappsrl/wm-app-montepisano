@@ -1236,6 +1236,11 @@ angular.module('webmapp')
                 // }
 
                 vm.hideExpander = hideExpanderInDetails;
+            } else if (currentState === 'app.main.detailtaxonomy'){
+                vm.hideExpander = true;
+                vm.detail = true;
+                MapService.resetView();
+                MapService.disableInteractions();
             } else if (currentState === 'app.main.detailevent') {
                 vm.hasShadow = true;
             } else if (currentState === 'app.main.detailulayer') {
@@ -1245,7 +1250,6 @@ angular.module('webmapp')
                 currentState === 'app.main.packages' ||
                 currentState === 'app.main.route' ||
                 currentState === 'app.main.taxonomy' ||
-                currentState === 'app.main.detailtaxonomy' ||
                 currentState === 'app.main.languages' ||
                 currentState === 'app.main.webmappInternal' ||
                 currentState === 'app.main.attributionInternal') {

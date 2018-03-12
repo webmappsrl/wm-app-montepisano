@@ -26,12 +26,14 @@
         </div>
         <div class="detailTaxonomy-routes">
             <div class="detailTaxonomy-route" ng-repeat="route in vm.routes">
-                <i class="icon {{vm.categories[route.webmapp_category[0]].icon}}"></i>
-                {{route.title.rendered}}
+                <i class="icon wm-icon-help-circled"></i>
+                <span>
+                    {{route.title.rendered}}
+                </span>
             </div>
         </div>
-        <div class="detailTaxonomy-map">
+        <!-- <div class="detailTaxonomy-map">
             <img ng-src="{{vm.item.featured_image.sizes.medium}}">
-        </div>
+        </div> -->
     </ion-content>
 </ion-view>

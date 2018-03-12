@@ -70,11 +70,20 @@
       padding: 10px;
       .detailTaxonomy-route {
         border-top: 1px solid $color-brown;
-        font-size: 25px;
-        padding: 10px 25px;
+        font-size: 20px;
+        padding: 10px 2px;
+        text-transform: uppercase;
+        line-height: 34px;
+        vertical-align: middle;
         i {
-          margin: 5px;
+          font-size: 34px;
+          margin: 0 8px 0 0;
+          float: left;
         }
+        // span {
+        //   margin: 7px 0;
+        //   vertical-align: middle;
+        // }
       }
     }
     .detailTaxonomy-map {
