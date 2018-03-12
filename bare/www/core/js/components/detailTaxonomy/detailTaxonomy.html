@@ -25,8 +25,8 @@
             </div>
         </div>
         <div class="detailTaxonomy-routes">
-            <div class="detailTaxonomy-route" ng-repeat="route in vm.routes">
-                <i class="icon wm-icon-help-circled"></i>
+            <div class="detailTaxonomy-route" ng-repeat="route in vm.routes" ng-click="vm.downloadPack(route.id)">
+                <i class="icon {{vm.activities[route.activity[0]].icon}}"></i>
                 <span>
                     {{route.title.rendered}}
                 </span>

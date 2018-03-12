@@ -119,8 +119,6 @@ angular.module('webmapp')
         vm.hasTable = false;
         vm.detailTable = {};
 
-
-
         if (typeof mappingTable !== 'undefined') {
             for (var i in mappingTable) {
                 if (typeof _feature[i] !== 'undefined' &&
@@ -253,6 +251,11 @@ angular.module('webmapp')
                 }
             }
 
+            if (feature.id_pois) {
+                vm.related = MapService.getRelatedFeaturesById(feature.id_pois);
+                console.log(vm.related);
+            }
+
             vm.relatedItinerary = MapService.getItineraryRefByFeatureIdMap()[feature.id] || [];
             vm.feature = feature;
             vm.geometry = data.geometry;
@@ -281,7 +284,6 @@ angular.module('webmapp')
 
         // console.log(vm["feature"]);
         // vm.feature.description = "ciao <a href=\"http://www.google.com\">ciaociao</a> ciao";
-        // console.log(vm.feature);
     };
 
     modalScope.vm.openFeature = function(feature) {

@@ -642,9 +642,12 @@ div.detailRoute-footer {
       line-height: 34px;
       vertical-align: middle; }
       .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i {
-        font-size: 34px;
+        font-size: 25px;
         margin: 0 8px 0 0;
-        float: left; }
+        float: left;
+        border: 1px solid;
+        border-radius: 50%;
+        padding: 4px; }
   .detailTaxonomy-page ion-content .detailTaxonomy-map {
     width: 100%; }
     .detailTaxonomy-page ion-content .detailTaxonomy-map img {
@@ -893,7 +896,8 @@ div.detailRoute-footer {
   width: 100%;
   font-size: 14px;
   line-height: 1.2; }
-  .table-details th, .table-details td {
+  .table-details th,
+  .table-details td {
     padding: 10px;
     border-bottom: 1px solid #e5e6dd;
     text-align: left; }
@@ -915,32 +919,30 @@ div.detailRoute-footer {
 /* Itinerari details */
 .itinerario-details-tappe {
   clear: both; }
-
-.itinerario-tappe-title {
-  display: inline-block;
-  width: 100%;
-  font-family: "Abel", sans-serif;
-  margin: 0;
-  padding: 8px;
-  color: #605846;
-  background: #e5e6dd;
-  font-size: 18px;
-  text-align: center; }
-
-.itinerario-details-tappe .itinerario-tappa-item {
-  position: relative;
-  display: block;
-  padding-right: 34px;
-  cursor: pointer;
-  color: #605846; }
-  .itinerario-details-tappe .itinerario-tappa-item .icon {
-    color: #4a6e23; }
-  .itinerario-details-tappe .itinerario-tappa-item .icon-arrow {
-    position: absolute;
-    right: 5px;
-    left: auto; }
-  .itinerario-details-tappe .itinerario-tappa-item:first-child {
-    border-top: none; }
+  .itinerario-details-tappe .itinerario-tappe-title {
+    display: inline-block;
+    width: 100%;
+    font-family: "Abel", sans-serif;
+    margin: 0;
+    padding: 8px;
+    color: #605846;
+    background: #e5e6dd;
+    font-size: 18px;
+    text-align: center; }
+  .itinerario-details-tappe .itinerario-tappe-list .itinerario-tappa-item {
+    position: relative;
+    display: block;
+    padding-right: 34px;
+    cursor: pointer;
+    color: #605846; }
+    .itinerario-details-tappe .itinerario-tappe-list .itinerario-tappa-item .icon {
+      color: #4a6e23; }
+    .itinerario-details-tappe .itinerario-tappe-list .itinerario-tappa-item .icon-arrow {
+      position: absolute;
+      right: 5px;
+      left: auto; }
+    .itinerario-details-tappe .itinerario-tappe-list .itinerario-tappa-item:first-child {
+      border-top: none; }
 
 .tappa-name,
 .tappa-poi {
@@ -958,6 +960,47 @@ div.detailRoute-footer {
   .tappa-poi em {
     font-weight: 700;
     color: #4a6e23; }
+
+.route-related-details {
+  clear: both; }
+  .route-related-details .route-related-title {
+    display: inline-block;
+    width: 100%;
+    font-family: "Abel", sans-serif;
+    margin: 0;
+    padding: 8px;
+    color: #605846;
+    background: #e5e6dd;
+    font-size: 18px;
+    text-align: center; }
+  .route-related-details .route-related-list .route-related-item {
+    position: relative;
+    display: block;
+    padding: 4px 34px 4px 20px;
+    cursor: pointer;
+    color: #605846; }
+    .route-related-details .route-related-list .route-related-item:first-child {
+      border-top: none; }
+    .route-related-details .route-related-list .route-related-item .route-related-image {
+      width: 30%;
+      height: 62px;
+      position: relative;
+      overflow: hidden;
+      float: left; }
+      .route-related-details .route-related-list .route-related-item .route-related-image img {
+        width: 100%;
+        position: absolute;
+        top: -9999px;
+        bottom: -9999px;
+        left: -9999px;
+        right: -9999px;
+        margin: auto; }
+    .route-related-details .route-related-list .route-related-item .route-related-name {
+      width: 70%;
+      padding: 20px 15px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      float: left; }
 
 /* DETAILS ROUTE */
 .details-image-route {

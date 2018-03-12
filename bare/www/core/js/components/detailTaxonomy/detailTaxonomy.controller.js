@@ -15,78 +15,40 @@ angular.module('webmapp')
         currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
         vm.taxonomy = {};
         vm.item = {};
-        vm.taxonomyRoutes = {};
+        vm.taxonomyRoutes = localStorage.$wm_taxonomyRoutes ? JSON.parse(localStorage.$wm_taxonomyRoutes) : {};
         vm.routes = {};
         vm.fullDescription = false;
-        vm.categories = {};
-        vm.categoriesId = [];
+        vm.activities = localStorage.$wm_activities ? JSON.parse(localStorage.$wm_activities) : {};
 
         var taxonomyType = $state.params.parentId,
             id = $state.params.id * 1; // * 1 is to make id integrer
 
-        var getCategoriesName = function () {
+        var setActivities = function () {
+            var getActivity = function (activityId) {};
 
-            var translateCategory = function (lang, id) {
-                return $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'webmapp_category/' + id + "?lang=" + lang, function (data) {
-                    vm.categories[id].name = data.name;
-                    Utils.forceDigest();
-                    return data;
-                }).fail(function () {
-                    console.error('Translations retrive error');
-                    return 'Translations retrive error';
-                });
-            };
+            vm.activities = localStorage.$wm_activities ? JSON.parse(localStorage.$wm_activities) : {};
 
-            var setCategoriesName = function (data) {
-                vm.categories = {};
-                vm.categoriesId = [];
-
-                vm.routes.forEach(function (element) {
-                    element.webmapp_category.forEach(function (category) {
-                        vm.categoriesId[category] = true;
-                    }, this);
-                }, this);
-
-                data.forEach(function (category) {
-                    if (vm.categoriesId[category.id]) {
-                        var tmp = {};
-                        if (!category.icon) {
-                            category.icon = 'wm-icon-generic';
-                        }
-                        tmp[category.id] = {
-                            name: category.name,
-                            icon: category.icon
-                        };
-                        vm.categories = angular.extend(vm.categories, tmp);
-
-                        if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual && currentLang !== CONFIG.LANGUAGES.actual.substring(0, 2)) {
-                            translateCategory(currentLang, category.id);
+            if (vm.taxonomyRoutes && vm.taxonomyRoutes[taxonomyType]) {
+                for (var i in vm.taxonomyRoutes[taxonomyType][id]) {
+                    for (var j in vm.taxonomyRoutes[taxonomyType][id][i].activity) {
+                        if (!vm.activities[vm.taxonomyRoutes[taxonomyType][id][i].activity[j]]) {
+                            vm.activities[vm.taxonomyRoutes[taxonomyType][id][i].activity[j]] = {
+                                icon: 'wm-icon-help-circled'
+                            };
                         }
                     }
-                });
-            };
-
-            var localCategories = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : {};
-            if (localCategories.length) {
-                setCategoriesName(localCategories);
-                Utils.forceDigest();
+                }
             }
 
-            return $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'webmapp_category?per_page=100', function (data) {
-                localStorage.$wm_categories = JSON.stringify(data);
-                setCategoriesName(data);
-                Utils.forceDigest();
-                return data;
-            }).fail(function (error) {
-                console.warn('Internet connection not available. Using local storage categories');
-                var localCategories = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : {};
-                if (!localCategories.length) {
-                    console.warn("No categories available. Shutting down...");
-                    return;
+            $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'activity?per_page=100', function (data) {
+                for (var i in data) {
+                    vm.activities[data[i].id] = data[i];
                 }
-                setCategoriesName(localCategories);
+
+                localStorage.$wm_activities = JSON.stringify(vm.activities);
                 Utils.forceDigest();
-                return;
+            }).fail(function (err) {
+                console.log("Error retrieving activities")
             });
         };
 
@@ -100,12 +62,16 @@ angular.module('webmapp')
 
             if (vm.taxonomyRoutes && vm.taxonomyRoutes[taxonomyType] && vm.taxonomyRoutes[taxonomyType][id]) {
                 vm.routes = vm.taxonomyRoutes[taxonomyType][id];
-                getCategoriesName();
+                setActivities();
                 Utils.forceDigest();
             }
 
             $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route?' + taxonomyType + '=' + id, function (data) {
-                vm.routes = data;
+                var routesTemp = {};
+                for (var i in data) {
+                    routesTemp[data[i].id] = data[i];
+                }
+                vm.routes = routesTemp;
 
                 if (vm.taxonomyRoutes) {
                     if (vm.taxonomyRoutes[taxonomyType]) {
@@ -122,14 +88,14 @@ angular.module('webmapp')
 
                 localStorage.$wm_taxonomyRoutes = JSON.stringify(vm.taxonomyRoutes);
 
-                getCategoriesName();
+                console.log(vm.routes);
+                setActivities();
                 Utils.forceDigest();
             }).fail(function () {
                 if (!vm.routes.length) {
-                    console.log("no routes")
-                }
-                else {
-                    getCategoriesName();
+                    console.log("Unable to get routes")
+                } else {
+                    setActivities();
                 }
             });
         };
@@ -212,7 +178,74 @@ angular.module('webmapp')
 
         vm.toggleDescription = function () {
             vm.fullDescription = !vm.fullDescription;
-            Utils.forceDigest();
+            setTimeout(function() {
+                $(window).trigger('resize');
+                Utils.forceDigest();
+            }, 100);
+        };
+
+        vm.downloadPack = function (routeId) {
+            var pack = vm.routes[routeId];
+            // console.log(pack);
+            // return;
+            $ionicPopup.confirm({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Stai per scaricare l'itinerario sul dispositivo, vuoi procedere?")
+                })
+                .then(function (res) {
+                    if (res) {
+                        var currentId = pack.id;
+
+                        if (typeof currentId === 'undefined') {
+                            // TODO: add ionic alert
+                            alert($translate.instant("Errore, effettuare logout"));
+                            return;
+                        }
+
+                        $.ajaxSetup({
+                            cache: false
+                        });
+                        $.getJSON(CONFIG.COMMUNICATION.downloadJSONUrl + currentId + '/app.json', function (data) {
+
+                            var arrayLink = [];
+
+                            var downloadSuccess = function () {
+                                modalDownload.hide();
+                                vm.userDownloadedPackages[pack.id] = true;
+                                updateDownloadedPackagesInStorage();
+                            };
+
+                            var downloadFail = function () {
+                                // TODO: add ionic alert
+                                // TODO: rimuovere cartella, verificare interuzzione altri dowload
+                                alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, riprova"));
+                                modalDownload.hide();
+                                // updateDownloadedPackagesInStorage();
+                            };
+
+                            for (var i in data) {
+                                if (typeof data[i] === 'string') {
+                                    arrayLink.push(data[i]);
+                                } else if (typeof data[i] === 'object') {
+                                    for (var j in data[i]) {
+                                        arrayLink.push(data[i][j]);
+                                    }
+                                }
+                            }
+
+                            modalDownload.show();
+
+                            Offline
+                                .downloadUserMap(currentId, arrayLink, modalDownloadScope.vm)
+                                .then(downloadSuccess, downloadFail);
+
+                            $.ajaxSetup();
+                        }).fail(function () {
+                            // TODO: add ionic alert
+                            alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova"));
+                        });
+                    }
+                });
         };
 
         getTaxonomyDetails();
