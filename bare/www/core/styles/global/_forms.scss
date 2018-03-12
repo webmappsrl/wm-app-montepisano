@@ -98,3 +98,24 @@ div.popup {
     }
   }
 }
+
+/* Gallery slider */
+ion-slide.slider-slide {
+  height: 100vh;
+  div {
+    height: 100%;
+    ion-scroll.scroll-view.scroll-xy {
+      height: 100%;
+      div.scroll {
+        img {
+          position: absolute;
+          top: -9999px;
+          right: -9999px;
+          bottom: -9999px;
+          left: -9999px;
+          margin: auto;
+        }
+      }
+    }
+  }
+}

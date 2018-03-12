@@ -403,6 +403,21 @@ div.popup .popup-body input {
 div.popup .popup-body span {
   font-size: 1.2em; }
 
+/* Gallery slider */
+ion-slide.slider-slide {
+  height: 100vh; }
+  ion-slide.slider-slide div {
+    height: 100%; }
+    ion-slide.slider-slide div ion-scroll.scroll-view.scroll-xy {
+      height: 100%; }
+      ion-slide.slider-slide div ion-scroll.scroll-view.scroll-xy div.scroll img {
+        position: absolute;
+        top: -9999px;
+        right: -9999px;
+        bottom: -9999px;
+        left: -9999px;
+        margin: auto; }
+
 /**
  * TABLE
  *
