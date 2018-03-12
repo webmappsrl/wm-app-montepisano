@@ -1501,8 +1501,10 @@ angular.module('webmapp')
                 spiderfyOnMaxZoom: mapConf.markerClustersOptions.spiderfyOnMaxZoom,
                 showCoverageOnHover: mapConf.markerClustersOptions.showCoverageOnHover,
                 zoomToBoundsOnClick: false, // used markerClusters.on clusterclick instead
-                maxClusterRadius: mapConf.markerClustersOptions.maxClusterRadius,
-                disableClusteringAtZoom: mapConf.markerClustersOptions.disableClusteringAtZoom
+                maxClusterRadius: function(zoom) {
+                    return (zoom < mapConf.markerClustersOptions.disableClusteringAtZoom) ? mapConf.markerClustersOptions.maxClusterRadius : 1;
+                }
+                // disableClusteringAtZoom: mapConf.markerClustersOptions.disableClusteringAtZoom
             });
 
             markerClusters.addTo(map);
