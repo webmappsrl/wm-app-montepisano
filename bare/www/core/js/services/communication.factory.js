@@ -31,7 +31,6 @@ angular.module('webmapp')
         communication.callAPI = function (url, data) {
             var defer = $q.defer();
 
-
             $http({
                     method: 'POST',
                     url: url,
@@ -87,18 +86,9 @@ angular.module('webmapp')
         }
 
         communication.getJSON = function (url) {
-            var defer = $q.defer(),
-                options = {
-                    method: 'GET',
-                    url: url,
-                    // dataType: 'json',
-                    headers: {
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
-                    }
-                };
+            var defer = $q.defer();
 
-            $http(options)
+            $.getJSON(url)
                 .success(function (data) {
                     defer.resolve(data);
                 })
