@@ -14,7 +14,6 @@ angular.module('webmapp')
         $cordovaOauth,
         $rootScope,
         $ionicLoading,
-        $ionicModal,
         $ionicPopup,
         $translate,
         CONFIG,
@@ -33,8 +32,15 @@ angular.module('webmapp')
             userPackagesId = localStorage.$wm_userPackagesId ? JSON.parse(localStorage.$wm_userPackagesId) : null,
             userDownloadedPackages = localStorage.$wm_userDownloadedPackages ? JSON.parse(localStorage.$wm_userDownloadedPackages) : {},
             userPackagesIdRquested = localStorage.$wm_userPackagesIdRquested ? JSON.parse(localStorage.$wm_userPackagesIdRquested) : {},
-            categories = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : null;
-        
+            categories = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : null,
+            taxonomy = localStorage.$wm_taxonomy ? JSON.parse(localStorage.$wm_taxonomy) : {
+                activity: null,
+                theme: null,
+                when: null,
+                where: null,
+                who: null
+            };
+
         var userData = Auth.getUserData();
 
         var modalDownloadScope = $rootScope.$new(),
@@ -199,6 +205,37 @@ angular.module('webmapp')
             $rootScope.$emit('packages-updated', packages);
         };
 
+        packageService.getTaxonomy = function (taxonomyType) {
+            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')
+                .then(function (data) {
+                        taxonomy[taxonomyType] = {};
+                        for (var i in data) {
+                            if (data[i].count > 0) {
+                                taxonomy[taxonomyType][data[i].id] = data[i];
+                            }
+                        }
+                        console.log(taxonomy);
+
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                        localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
+
+                        $ionicLoading.hide();
+                    })
+                    .catch(function (err) {
+                        if (!taxonomy[taxonomyType]) {
+                            $ionicLoading.hide();
+                            //Popup connection not available
+                            console.warn("No taxonomy " + taxonomyType);
+                            return;
+                        }
+                    });
+
+            if (!taxonomy[taxonomyType]) {
+                $ionicLoading.show();
+            }
+            $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+        };
+
         packageService.getPackagesIdByUserId = function (userId) {
             userData = Auth.getUserData();
             if (!userData || !userData.ID) {
@@ -228,7 +265,7 @@ angular.module('webmapp')
             }
             $rootScope.$emit('userPackagesId-updated', userPackagesId);
         };
-        
+
         packageService.requestPack = function (packId) {
             userData = Auth.getUserData();
             if (!userData || !userData.ID || userPackagesIdRquested[packId]) {
@@ -247,9 +284,7 @@ angular.module('webmapp')
                             appname: CONFIG.OPTIONS.title
                         };
 
-                        $ionicLoading.show({
-                            template: 'Loading...'
-                        });
+                        $ionicLoading.show();
 
                         $http({
                             method: 'POST',
@@ -345,9 +380,7 @@ angular.module('webmapp')
 
                     sessionStorage.$wm_doBack = 'allowed';
 
-                    $ionicLoading.show({
-                        template: 'Loading...'
-                    });
+                    $ionicLoading.show();
 
                     location.reload();
                     Utils.forceDigest();
