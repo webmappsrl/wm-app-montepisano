@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?lxj5g');
-  src:  url('fonts/webmapp.eot?lxj5g#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?lxj5g') format('truetype'),
-    url('fonts/webmapp.woff?lxj5g') format('woff'),
-    url('fonts/webmapp.svg?lxj5g#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?wwol6b');
+  src:  url('fonts/webmapp.eot?wwol6b#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?wwol6b') format('truetype'),
+    url('fonts/webmapp.woff?wwol6b') format('woff'),
+    url('fonts/webmapp.svg?wwol6b#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -171,6 +171,27 @@
 }
 .wm-icon-winter-15:before {
   content: "\e9e1";
+}
+.wm-icon-ascent:before {
+  content: "\e9e2";
+}
+.wm-icon-descent:before {
+  content: "\e9e3";
+}
+.wm-icon-distance:before {
+  content: "\e9e4";
+}
+.wm-icon-vt_botteghe:before {
+  content: "\e9e5";
+}
+.wm-icon-vt_eventi:before {
+  content: "\e9e6";
+}
+.wm-icon-vt_produttori:before {
+  content: "\e9e7";
+}
+.wm-icon-vt_ristoranti:before {
+  content: "\e9e8";
 }
 .wm-icon-aerialway-15:before {
   content: "\e925";
