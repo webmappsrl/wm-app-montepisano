@@ -5,8 +5,8 @@
     <ion-content style="background: {{COLORS.global.background}}">
         <div class="modal-content">
             <div class="modal-inner-content">
-                <div class="modal-content-title">
-                    {{parent.mainTitle}}
+                <div class="modal-content-title" ng-bind-html="{{parent.mainTitle}}">
+                    
                 </div>
                 <div class="modal-full-content">
                     <p ng-bind-html="parent.feature.description"></p>
