@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?wwol6b');
-  src:  url('fonts/webmapp.eot?wwol6b#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?wwol6b') format('truetype'),
-    url('fonts/webmapp.woff?wwol6b') format('woff'),
-    url('fonts/webmapp.svg?wwol6b#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?2lh70n');
+  src:  url('fonts/webmapp.eot?2lh70n#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?2lh70n') format('truetype'),
+    url('fonts/webmapp.woff?2lh70n') format('woff'),
+    url('fonts/webmapp.svg?2lh70n#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -192,6 +192,15 @@
 }
 .wm-icon-vt_ristoranti:before {
   content: "\e9e8";
+}
+.wm-icon-mtb:before {
+  content: "\e9e9";
+}
+.wm-icon-road-bike:before {
+  content: "\e9ea";
+}
+.wm-icon-touring-bike:before {
+  content: "\e9eb";
 }
 .wm-icon-aerialway-15:before {
   content: "\e925";
