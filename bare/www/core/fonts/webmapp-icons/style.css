@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?2lh70n');
-  src:  url('fonts/webmapp.eot?2lh70n#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?2lh70n') format('truetype'),
-    url('fonts/webmapp.woff?2lh70n') format('woff'),
-    url('fonts/webmapp.svg?2lh70n#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?95jk70');
+  src:  url('fonts/webmapp.eot?95jk70#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?95jk70') format('truetype'),
+    url('fonts/webmapp.woff?95jk70') format('woff'),
+    url('fonts/webmapp.svg?95jk70#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -201,6 +201,1603 @@
 }
 .wm-icon-touring-bike:before {
   content: "\e9eb";
+}
+.wm-icon-vc-bike-bronze .path1:before {
+  content: "\e9ec";
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-bronze .path2:before {
+  content: "\e9ed";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path3:before {
+  content: "\e9ee";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path4:before {
+  content: "\e9ef";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path5:before {
+  content: "\e9f0";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path6:before {
+  content: "\e9f1";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path7:before {
+  content: "\e9f2";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path8:before {
+  content: "\e9f3";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path9:before {
+  content: "\e9f4";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path10:before {
+  content: "\e9f5";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path11:before {
+  content: "\e9f6";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path12:before {
+  content: "\e9f7";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path13:before {
+  content: "\e9f8";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path14:before {
+  content: "\e9f9";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path15:before {
+  content: "\e9fa";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path16:before {
+  content: "\e9fb";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path17:before {
+  content: "\e9fc";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path18:before {
+  content: "\e9fd";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path19:before {
+  content: "\e9fe";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path20:before {
+  content: "\e9ff";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path21:before {
+  content: "\ea00";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path22:before {
+  content: "\ea01";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path23:before {
+  content: "\ea02";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path24:before {
+  content: "\ea03";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path25:before {
+  content: "\ea04";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path26:before {
+  content: "\ea05";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path27:before {
+  content: "\ea06";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path28:before {
+  content: "\ea07";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path29:before {
+  content: "\ea08";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path30:before {
+  content: "\ea09";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path31:before {
+  content: "\ea0a";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path32:before {
+  content: "\ea0b";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path33:before {
+  content: "\ea0c";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path34:before {
+  content: "\ea0d";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path35:before {
+  content: "\ea0e";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path36:before {
+  content: "\ea0f";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path37:before {
+  content: "\ea10";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path38:before {
+  content: "\ea11";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path39:before {
+  content: "\ea12";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path40:before {
+  content: "\ea13";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path41:before {
+  content: "\ea14";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path42:before {
+  content: "\ea15";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path43:before {
+  content: "\ea16";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path44:before {
+  content: "\ea17";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path45:before {
+  content: "\ea18";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path46:before {
+  content: "\ea19";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path47:before {
+  content: "\ea1a";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path48:before {
+  content: "\ea1b";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path49:before {
+  content: "\ea1c";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path50:before {
+  content: "\ea1d";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path51:before {
+  content: "\ea1e";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path52:before {
+  content: "\ea1f";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path53:before {
+  content: "\ea20";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path54:before {
+  content: "\ea21";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path55:before {
+  content: "\ea22";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path56:before {
+  content: "\ea23";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path57:before {
+  content: "\ea24";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path58:before {
+  content: "\ea25";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path59:before {
+  content: "\ea26";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path60:before {
+  content: "\ea27";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path61:before {
+  content: "\ea28";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path62:before {
+  content: "\ea29";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path63:before {
+  content: "\ea2a";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path64:before {
+  content: "\ea2b";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path65:before {
+  content: "\ea2c";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path66:before {
+  content: "\ea2d";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path67:before {
+  content: "\ea2e";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path68:before {
+  content: "\ea2f";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path69:before {
+  content: "\ea30";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path70:before {
+  content: "\ea31";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path71:before {
+  content: "\ea32";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path72:before {
+  content: "\ea33";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path73:before {
+  content: "\ea34";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path74:before {
+  content: "\ea35";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path75:before {
+  content: "\ea36";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path76:before {
+  content: "\ea37";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path77:before {
+  content: "\ea38";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path78:before {
+  content: "\ea39";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path79:before {
+  content: "\ea3a";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path80:before {
+  content: "\ea3b";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path81:before {
+  content: "\ea3c";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path82:before {
+  content: "\ea3d";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path83:before {
+  content: "\ea3e";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path84:before {
+  content: "\ea3f";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path85:before {
+  content: "\ea40";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path86:before {
+  content: "\ea41";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path87:before {
+  content: "\ea42";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path88:before {
+  content: "\ea43";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path89:before {
+  content: "\ea44";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path90:before {
+  content: "\ea45";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path91:before {
+  content: "\ea46";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-bronze .path92:before {
+  content: "\ea47";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-bronze .path93:before {
+  content: "\ea48";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-bronze .path94:before {
+  content: "\ea49";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-bronze .path95:before {
+  content: "\ea4a";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-bronze .path96:before {
+  content: "\ea4b";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-bronze .path97:before {
+  content: "\ea4c";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-bronze .path98:before {
+  content: "\ea4d";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-bronze .path99:before {
+  content: "\ea4e";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-bronze .path100:before {
+  content: "\ea4f";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-bronze .path101:before {
+  content: "\ea50";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-bronze .path102:before {
+  content: "\ea51";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path103:before {
+  content: "\ea52";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-bronze .path104:before {
+  content: "\ea53";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-bronze .path105:before {
+  content: "\ea54";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path106:before {
+  content: "\ea55";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path107:before {
+  content: "\ea56";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path108:before {
+  content: "\ea57";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path109:before {
+  content: "\ea58";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path110:before {
+  content: "\ea59";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-bronze .path111:before {
+  content: "\ea5a";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path1:before {
+  content: "\ea5b";
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path2:before {
+  content: "\ea5c";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path3:before {
+  content: "\ea5d";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path4:before {
+  content: "\ea5e";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path5:before {
+  content: "\ea5f";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path6:before {
+  content: "\ea60";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path7:before {
+  content: "\ea61";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path8:before {
+  content: "\ea62";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path9:before {
+  content: "\ea63";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path10:before {
+  content: "\ea64";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path11:before {
+  content: "\ea65";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path12:before {
+  content: "\ea66";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path13:before {
+  content: "\ea67";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path14:before {
+  content: "\ea68";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path15:before {
+  content: "\ea69";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path16:before {
+  content: "\ea6a";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path17:before {
+  content: "\ea6b";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path18:before {
+  content: "\ea6c";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path19:before {
+  content: "\ea6d";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path20:before {
+  content: "\ea6e";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path21:before {
+  content: "\ea6f";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path22:before {
+  content: "\ea70";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path23:before {
+  content: "\ea71";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path24:before {
+  content: "\ea72";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path25:before {
+  content: "\ea73";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path26:before {
+  content: "\ea74";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path27:before {
+  content: "\ea75";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path28:before {
+  content: "\ea76";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path29:before {
+  content: "\ea77";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path30:before {
+  content: "\ea78";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path31:before {
+  content: "\ea79";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path32:before {
+  content: "\ea7a";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path33:before {
+  content: "\ea7b";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path34:before {
+  content: "\ea7c";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path35:before {
+  content: "\ea7d";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path36:before {
+  content: "\ea7e";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path37:before {
+  content: "\ea7f";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path38:before {
+  content: "\ea80";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path39:before {
+  content: "\ea81";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path40:before {
+  content: "\ea82";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path41:before {
+  content: "\ea83";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path42:before {
+  content: "\ea84";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path43:before {
+  content: "\ea85";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path44:before {
+  content: "\ea86";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path45:before {
+  content: "\ea87";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path46:before {
+  content: "\ea88";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path47:before {
+  content: "\ea89";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path48:before {
+  content: "\ea8a";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path49:before {
+  content: "\ea8b";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path50:before {
+  content: "\ea8c";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path51:before {
+  content: "\ea8d";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path52:before {
+  content: "\ea8e";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path53:before {
+  content: "\ea8f";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path54:before {
+  content: "\ea90";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path55:before {
+  content: "\ea91";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path56:before {
+  content: "\ea92";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path57:before {
+  content: "\ea93";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path58:before {
+  content: "\ea94";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path59:before {
+  content: "\ea95";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path60:before {
+  content: "\ea96";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path61:before {
+  content: "\ea97";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path62:before {
+  content: "\ea98";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path63:before {
+  content: "\ea99";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path64:before {
+  content: "\ea9a";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path65:before {
+  content: "\ea9b";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path66:before {
+  content: "\ea9c";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path67:before {
+  content: "\ea9d";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path68:before {
+  content: "\ea9e";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path69:before {
+  content: "\ea9f";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path70:before {
+  content: "\eaa0";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path71:before {
+  content: "\eaa1";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path72:before {
+  content: "\eaa2";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path73:before {
+  content: "\eaa3";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path74:before {
+  content: "\eaa4";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path75:before {
+  content: "\eaa5";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path76:before {
+  content: "\eaa6";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path77:before {
+  content: "\eaa7";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path78:before {
+  content: "\eaa8";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path79:before {
+  content: "\eaa9";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path80:before {
+  content: "\eaaa";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path81:before {
+  content: "\eaab";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path82:before {
+  content: "\eaac";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path83:before {
+  content: "\eaad";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path84:before {
+  content: "\eaae";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path85:before {
+  content: "\eaaf";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path86:before {
+  content: "\eab0";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path87:before {
+  content: "\eab1";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path88:before {
+  content: "\eab2";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path89:before {
+  content: "\eab3";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path90:before {
+  content: "\eab4";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path91:before {
+  content: "\eab5";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path92:before {
+  content: "\eab6";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-gold .path93:before {
+  content: "\eab7";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-gold .path94:before {
+  content: "\eab8";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-gold .path95:before {
+  content: "\eab9";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-gold .path96:before {
+  content: "\eaba";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-gold .path97:before {
+  content: "\eabb";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-gold .path98:before {
+  content: "\eabc";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-gold .path99:before {
+  content: "\eabd";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-gold .path100:before {
+  content: "\eabe";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-gold .path101:before {
+  content: "\eabf";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-gold .path102:before {
+  content: "\eac0";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-gold .path103:before {
+  content: "\eac1";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-silver .path1:before {
+  content: "\eac2";
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path2:before {
+  content: "\eac3";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path3:before {
+  content: "\eac4";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path4:before {
+  content: "\eac5";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path5:before {
+  content: "\eac6";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path6:before {
+  content: "\eac7";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path7:before {
+  content: "\eac8";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path8:before {
+  content: "\eac9";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path9:before {
+  content: "\eaca";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path10:before {
+  content: "\eacb";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path11:before {
+  content: "\eacc";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path12:before {
+  content: "\eacd";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path13:before {
+  content: "\eace";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path14:before {
+  content: "\eacf";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path15:before {
+  content: "\ead0";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path16:before {
+  content: "\ead1";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path17:before {
+  content: "\ead2";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path18:before {
+  content: "\ead3";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path19:before {
+  content: "\ead4";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path20:before {
+  content: "\ead5";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path21:before {
+  content: "\ead6";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path22:before {
+  content: "\ead7";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path23:before {
+  content: "\ead8";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path24:before {
+  content: "\ead9";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path25:before {
+  content: "\eada";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path26:before {
+  content: "\eadb";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path27:before {
+  content: "\eadc";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path28:before {
+  content: "\eadd";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path29:before {
+  content: "\eade";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path30:before {
+  content: "\eadf";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path31:before {
+  content: "\eae0";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path32:before {
+  content: "\eae1";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path33:before {
+  content: "\eae2";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path34:before {
+  content: "\eae3";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path35:before {
+  content: "\eae4";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path36:before {
+  content: "\eae5";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path37:before {
+  content: "\eae6";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path38:before {
+  content: "\eae7";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path39:before {
+  content: "\eae8";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path40:before {
+  content: "\eae9";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path41:before {
+  content: "\eaea";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path42:before {
+  content: "\eaeb";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path43:before {
+  content: "\eaec";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path44:before {
+  content: "\eaed";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path45:before {
+  content: "\eaee";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path46:before {
+  content: "\eaef";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path47:before {
+  content: "\eaf0";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path48:before {
+  content: "\eaf1";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path49:before {
+  content: "\eaf2";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path50:before {
+  content: "\eaf3";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path51:before {
+  content: "\eaf4";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path52:before {
+  content: "\eaf5";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path53:before {
+  content: "\eaf6";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path54:before {
+  content: "\eaf7";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path55:before {
+  content: "\eaf8";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path56:before {
+  content: "\eaf9";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path57:before {
+  content: "\eafa";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path58:before {
+  content: "\eafb";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path59:before {
+  content: "\eafc";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path60:before {
+  content: "\eafd";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path61:before {
+  content: "\eafe";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path62:before {
+  content: "\eaff";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path63:before {
+  content: "\eb00";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path64:before {
+  content: "\eb01";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path65:before {
+  content: "\eb02";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path66:before {
+  content: "\eb03";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path67:before {
+  content: "\eb04";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path68:before {
+  content: "\eb05";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path69:before {
+  content: "\eb06";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path70:before {
+  content: "\eb07";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path71:before {
+  content: "\eb08";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path72:before {
+  content: "\eb09";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path73:before {
+  content: "\eb0a";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path74:before {
+  content: "\eb0b";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path75:before {
+  content: "\eb0c";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path76:before {
+  content: "\eb0d";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path77:before {
+  content: "\eb0e";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path78:before {
+  content: "\eb0f";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path79:before {
+  content: "\eb10";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path80:before {
+  content: "\eb11";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path81:before {
+  content: "\eb12";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path82:before {
+  content: "\eb13";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path83:before {
+  content: "\eb14";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path84:before {
+  content: "\eb15";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path85:before {
+  content: "\eb16";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path86:before {
+  content: "\eb17";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path87:before {
+  content: "\eb18";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path88:before {
+  content: "\eb19";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path89:before {
+  content: "\eb1a";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path90:before {
+  content: "\eb1b";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path91:before {
+  content: "\eb1c";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path92:before {
+  content: "\eb1d";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path93:before {
+  content: "\eb1e";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-silver .path94:before {
+  content: "\eb1f";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-silver .path95:before {
+  content: "\eb20";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-silver .path96:before {
+  content: "\eb21";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-silver .path97:before {
+  content: "\eb22";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-silver .path98:before {
+  content: "\eb23";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-silver .path99:before {
+  content: "\eb24";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-silver .path100:before {
+  content: "\eb25";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-silver .path101:before {
+  content: "\eb26";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-silver .path102:before {
+  content: "\eb27";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-silver .path103:before {
+  content: "\eb28";
+  margin-left: -1.8037109375em;
+  color: rgb(255, 255, 255);
+}
+.wm-icon-vc-bike-silver .path104:before {
+  content: "\eb29";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path105:before {
+  content: "\eb2a";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
+}
+.wm-icon-vc-bike-silver .path106:before {
+  content: "\eb2b";
+  margin-left: -1.8037109375em;
+  color: rgb(0, 0, 0);
 }
 .wm-icon-aerialway-15:before {
   content: "\e925";
