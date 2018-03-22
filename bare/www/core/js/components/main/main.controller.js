@@ -291,7 +291,7 @@ angular.module('webmapp')
 
         var realTimeTracking = {};
         realTimeTracking.enabled = (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.TRACKING.enableRealTimeTracking) ||
-            (CONFIG.MAIN && CONFIG.MAIN.TRACKING.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING.enableRealTimeTracking);
+            (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.TRACKING.enableRealTimeTracking);
         realTimeTracking.url = "https://api.webmapp.it/services/share.php";
 
         realTimeTracking.positionsToSend = [];
