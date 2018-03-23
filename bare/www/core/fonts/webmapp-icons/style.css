@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?95jk70');
-  src:  url('fonts/webmapp.eot?95jk70#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?95jk70') format('truetype'),
-    url('fonts/webmapp.woff?95jk70') format('woff'),
-    url('fonts/webmapp.svg?95jk70#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?6v6cv0');
+  src:  url('fonts/webmapp.eot?6v6cv0#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?6v6cv0') format('truetype'),
+    url('fonts/webmapp.woff?6v6cv0') format('woff'),
+    url('fonts/webmapp.svg?6v6cv0#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -1798,6 +1798,15 @@
   content: "\eb2b";
   margin-left: -1.8037109375em;
   color: rgb(0, 0, 0);
+}
+.wm-icon-vc-mtb:before {
+  content: "\eb2c";
+}
+.wm-icon-vc-road-bike:before {
+  content: "\eb2d";
+}
+.wm-icon-vc-touring-bike:before {
+  content: "\eb2e";
 }
 .wm-icon-aerialway-15:before {
   content: "\e925";
