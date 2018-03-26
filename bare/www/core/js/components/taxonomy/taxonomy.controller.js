@@ -26,8 +26,8 @@ angular.module('webmapp')
             vm.taxonomy = value;
         });
 
+        $ionicLoading.show();
         PackageService.getTaxonomy($state.params.id);
-        PackageService.getTaxonomy('when');
 
         return vm;
     });

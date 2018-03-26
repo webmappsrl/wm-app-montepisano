@@ -1,9 +1,19 @@
 /* ---------------------------------------------------------- *\
-  PACKAGE FACTORY
-  PackageService
-  
-  Provide all the function and the metadata for the routes and
-  packages
+ * PACKAGE FACTORY
+ * PackageService
+ * 
+ * Provide all the function and the metadata for the routes and
+ * packages
+ * Every function does not return directly a value but emit an
+ * event to notify the update of the specified data
+ * Make sure to listen to the specific event to update your data
+ * The data will be emitted twice, one for the instant data (not
+ * yet updated) and one for the final updated data (that are
+ * emitted after some time)
+ * 
+ * @example
+ * getRoutes() update the packages object and notify everyone
+ * the updated values
 \* ---------------------------------------------------------- */
 
 angular.module('webmapp')
@@ -11,7 +21,6 @@ angular.module('webmapp')
     .factory('PackageService', function PackageService(
         $http,
         $q,
-        $cordovaOauth,
         $rootScope,
         $ionicLoading,
         $ionicPopup,
@@ -105,7 +114,7 @@ angular.module('webmapp')
                                     }
                                 },
                                 function (err) {
-                                    console.log(err)
+                                    console.log("Error downloading image for " + packId)
                                 });
 
                         $rootScope.$emit('packages-updated', packages);
@@ -173,6 +182,13 @@ angular.module('webmapp')
             $rootScope.$emit('categories-updated', categories);
         };
 
+        /**
+         * @description
+         * Update the packages list and
+         * Emit the packages updated
+         * 
+         * @event packages-updated
+         */
         packageService.getRoutes = function () {
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/?per_page=100')
                 .then(function (data) {
@@ -205,30 +221,38 @@ angular.module('webmapp')
             $rootScope.$emit('packages-updated', packages);
         };
 
+        /**
+         * @description
+         * Emit taxonomy of type [taxonomyType] updated
+         * 
+         * @event taxonomy-[taxonomyType]-updated
+         * 
+         * @param {string} taxonomyType
+         *      the type of taxonomy to update
+         */
         packageService.getTaxonomy = function (taxonomyType) {
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')
                 .then(function (data) {
-                        taxonomy[taxonomyType] = {};
-                        for (var i in data) {
-                            if (data[i].count > 0) {
-                                taxonomy[taxonomyType][data[i].id] = data[i];
-                            }
+                    taxonomy[taxonomyType] = {};
+                    for (var i in data) {
+                        if (data[i].count > 0) {
+                            taxonomy[taxonomyType][data[i].id] = data[i];
                         }
-                        console.log(taxonomy);
+                    }
 
-                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
-                        localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
+                    $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                    localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
 
+                    $ionicLoading.hide();
+                })
+                .catch(function (err) {
+                    if (!taxonomy[taxonomyType]) {
                         $ionicLoading.hide();
-                    })
-                    .catch(function (err) {
-                        if (!taxonomy[taxonomyType]) {
-                            $ionicLoading.hide();
-                            //Popup connection not available
-                            console.warn("No taxonomy " + taxonomyType);
-                            return;
-                        }
-                    });
+                        //Popup connection not available
+                        console.warn("No taxonomy " + taxonomyType);
+                        return;
+                    }
+                });
 
             if (!taxonomy[taxonomyType]) {
                 $ionicLoading.show();
@@ -236,6 +260,16 @@ angular.module('webmapp')
             $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
         };
 
+        /**
+         * @description
+         * Get the list of packages allowed to a specific user and
+         * Emit the updated list of available packages
+         * 
+         * @event userPackagesId-updated
+         * 
+         * @param {number} userId
+         *      the id of the user to get the list of available packages
+         */
         packageService.getPackagesIdByUserId = function (userId) {
             userData = Auth.getUserData();
             if (!userData || !userData.ID) {
@@ -266,6 +300,16 @@ angular.module('webmapp')
             $rootScope.$emit('userPackagesId-updated', userPackagesId);
         };
 
+        /**
+         * @description
+         * Request the package and
+         * Emit the new list of requested packages
+         * 
+         * @event userPackagesIdRquested-updated
+         * 
+         * @param {number} packId 
+         *      the id of the pack to request
+         */
         packageService.requestPack = function (packId) {
             userData = Auth.getUserData();
             if (!userData || !userData.ID || userPackagesIdRquested[packId]) {
@@ -314,6 +358,16 @@ angular.module('webmapp')
                 });
         };
 
+        /**
+         * @description
+         * Download the requested package and
+         * emit the new list of downloaded packages
+         * 
+         * @event userDownloadedPackages-updated
+         * 
+         * @param {number} packId 
+         *      the id of the pack to download
+         */
         packageService.downloadPack = function (packId) {
             $ionicPopup.confirm({
                     title: $translate.instant("ATTENZIONE"),
@@ -369,6 +423,13 @@ angular.module('webmapp')
                 });
         };
 
+        /**
+         * @description
+         * Method to open a package already downloaded
+         * 
+         * @param {number} packId 
+         *      the id of the pack to open
+         */
         packageService.openPackage = function (packId) {
             var basePackUrl = Offline.getOfflineMhildBasePathById(packId);
 
@@ -387,6 +448,16 @@ angular.module('webmapp')
                 });
         };
 
+        /**
+         * @description
+         * Delete a package already downloaded and
+         * Emit the updated list of downloaded packages
+         * 
+         * @event userDownloadedPackages-updated
+         * 
+         * @param {number} packId 
+         *      the id of the pack to remove from storage
+         */
         packageService.removePack = function (packId) {
             $ionicPopup.confirm({
                     title: $translate.instant("ATTENZIONE"),
