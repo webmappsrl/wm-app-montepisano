@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?udimgw');
-  src:  url('fonts/webmapp.eot?udimgw#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?udimgw') format('truetype'),
-    url('fonts/webmapp.woff?udimgw') format('woff'),
-    url('fonts/webmapp.svg?udimgw#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?5xpjqq');
+  src:  url('fonts/webmapp.eot?5xpjqq#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?5xpjqq') format('truetype'),
+    url('fonts/webmapp.woff?5xpjqq') format('woff'),
+    url('fonts/webmapp.svg?5xpjqq#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -219,6 +219,15 @@
 }
 .wm-icon-vc-bike-silver:before {
   content: "\e9ee";
+}
+.wm-icon-vc-bike-bronze2:before {
+  content: "\e9ef";
+}
+.wm-icon-vc-bike-gold2:before {
+  content: "\e9f0";
+}
+.wm-icon-vc-bike-silver2:before {
+  content: "\e9f1";
 }
 .wm-icon-aerialway-15:before {
   content: "\e925";
