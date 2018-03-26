@@ -251,7 +251,7 @@ angular.module('webmapp')
                 }
             }
 
-            if (feature.id_pois) {
+            if (false && feature.id_pois && feature.id_pois.length) {
                 vm.related = MapService.getRelatedFeaturesById(feature.id_pois);
                 console.log(vm.related);
             }

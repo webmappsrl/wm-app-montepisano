@@ -629,7 +629,7 @@ angular.module('webmapp')
 
             for (var i in groupedFeatures) {
                 for (var j in groupedFeatures[i]) {
-                    if (typeof groupedFeatures[i][j].properties !== 'undefined') {
+                    if (typeof groupedFeatures[i][j] !== 'undefined' && typeof groupedFeatures[i][j].properties !== 'undefined') {
                         currentId = groupedFeatures[i][j].properties.id;
                         if (typeof featureMapById[currentId] !== 'undefined') {
                             feature = featureMapById[currentId];

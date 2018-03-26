@@ -1109,7 +1109,11 @@ angular.module('webmapp')
 
                     if (data.properties.id_pois) {
                         var related = MapService.getRelatedFeaturesById(data.properties.id_pois);
-                        featuresToShow = featuresToShow.concat(related);
+                        for (var i in related) {
+                            if (related[i] && related[i].properties) {
+                                featuresToShow = featuresToShow.concat([related[i].properties]);
+                            }
+                        }
                     }
 
                     MapService.addFeaturesToFilteredLayer({

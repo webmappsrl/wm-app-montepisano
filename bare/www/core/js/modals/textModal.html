@@ -5,13 +5,13 @@
     <ion-content style="background: {{COLORS.global.background}}">
         <div class="modal-content">
             <div class="modal-inner-content">
-                <div class="modal-content-title" ng-bind-html="{{parent.mainTitle}}">
+                <div class="modal-content-title" ng-bind-html="parent.mainTitle">
                     
                 </div>
                 <div class="modal-full-content">
                     <p ng-bind-html="parent.feature.description"></p>
 
-                    <p ng-if="parent.feature.address && parent.feature.address !== '  ()'">{{::"Indirizzo: " | translate}}{{parent.feature.address}}</p>
+                    <p ng-if="parent.feature.address">{{::"Indirizzo: " | translate}}{{parent.feature.address}}</p>
                 </div>
             </div>
         </div>
