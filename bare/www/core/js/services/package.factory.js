@@ -23,6 +23,7 @@ angular.module('webmapp')
         $q,
         $rootScope,
         $ionicLoading,
+        $ionicModal,
         $ionicPopup,
         $translate,
         CONFIG,
@@ -50,15 +51,26 @@ angular.module('webmapp')
                 who: null
             };
 
-        var userData = Auth.getUserData();
+        var userData = Auth.getUserData(),
+            asyncTranslations = 0,
+            asyncRoutes = 0;
 
-        var modalDownloadScope = $rootScope.$new(),
+        var modalScope = $rootScope.$new(),
+            modal = {},
+            modalDownloadScope = $rootScope.$new(),
             modalDownload = {};
 
         modalDownloadScope.vm = {};
         modalDownloadScope.vm.hide = function () {
             modalDownload && modalDownload.hide();
         };
+
+        $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/downloadModal.html', {
+            scope: modalDownloadScope,
+            animation: 'slide-in-up'
+        }).then(function (modalObj) {
+            modalDownload = modalObj;
+        });
 
         var mergePackages = function (newPackages) {
             var result = {};
@@ -109,18 +121,32 @@ angular.module('webmapp')
 
                                         packages[packId].localImageUrl = base64data;
 
-                                        $rootScope.$emit('packages-updated', packages);
+                                        asyncRoutes--;
+                                        if (asyncRoutes === 0) {
+                                            $rootScope.$emit('packages-updated', packages);
+                                        }
                                         localStorage.$wm_packages = JSON.stringify(packages);
                                     }
                                 },
                                 function (err) {
+                                    asyncRoutes--;
+                                    if (asyncRoutes === 0) {
+                                        $rootScope.$emit('packages-updated', packages);
+                                    }
                                     console.log("Error downloading image for " + packId)
                                 });
 
-                        $rootScope.$emit('packages-updated', packages);
+                        // asyncRoutes--;
+                        // if (asyncRoutes === 0) {
+                        //     $rootScope.$emit('packages-updated', packages);
+                        // }
                         localStorage.$wm_packages = JSON.stringify(packages);
                     },
                     function (err) {
+                        asyncRoutes--;
+                        if (asyncRoutes === 0) {
+                            $rootScope.$emit('packages-updated', packages);
+                        }
                         console.error('images retrive error');
                     });
         };
@@ -129,11 +155,18 @@ angular.module('webmapp')
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'webmapp_category/' + categoryId + "?lang=" + lang)
                 .then(function (data) {
                         categories[categoryId].name[lang] = data.name;
-                        $rootScope.$emit('categories-updated', categories);
+                        asyncTranslations--;
+                        if (asyncTranslations === 0) {
+                            $rootScope.$emit('categories-updated', categories);
+                        }
                         localStorage.$wm_categories = JSON.stringify(categories);
                     },
                     function () {
                         console.error('Translations retrive error');
+                        asyncTranslations--;
+                        if (asyncTranslations === 0) {
+                            $rootScope.$emit('categories-updated', categories);
+                        }
                     });
         };
 
@@ -154,6 +187,8 @@ angular.module('webmapp')
                             }
                         }
 
+                        asyncTranslations = 0;
+
                         for (var pos in data) {
                             if (categories[data[pos].id]) {
                                 categories[data[pos].id].name[defaultLang] = data[pos].name;
@@ -162,13 +197,16 @@ angular.module('webmapp')
                                 }
                                 if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.available) {
                                     for (var i in CONFIG.LANGUAGES.available) {
+                                        asyncTranslations++;
                                         translateCategory(data[pos].id, CONFIG.LANGUAGES.available[i].substring(0, 2));
                                     }
                                 }
                             }
                         }
 
-                        $rootScope.$emit('categories-updated', categories);
+                        if (asyncTranslations === 0) {
+                            $rootScope.$emit('categories-updated', categories);
+                        }
                         localStorage.$wm_categories = JSON.stringify(categories);
                     },
                     function (error) {
@@ -176,20 +214,31 @@ angular.module('webmapp')
                             console.warn("No categories available. Shutting down...");
                         }
                     });
-            if (!categories) {
-                $ionicLoading.show();
-            }
-            $rootScope.$emit('categories-updated', categories);
         };
 
         /**
          * @description
-         * Update the packages list and
-         * Emit the packages updated
+         * Update the packages and the categories list and
+         * Emit the updated lists
          * 
          * @event packages-updated
+         * @event categories-updated
          */
         packageService.getRoutes = function () {
+            //Prevent multiple requests
+            if (asyncRoutes > 0) {
+                $rootScope.$emit('packages-updated', packages);
+                $rootScope.$emit('categories-updated', categories);
+                return;
+            }
+
+            if (!packages) {
+                $ionicLoading.show();
+            } else {
+                $rootScope.$emit('packages-updated', packages);
+                $rootScope.$emit('categories-updated', categories);
+            }
+
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/?per_page=100')
                 .then(function (data) {
                         if (!packages) {
@@ -198,14 +247,19 @@ angular.module('webmapp')
 
                         mergePackages(data);
 
+                        asyncRoutes = 0;
+
                         for (var i in packages) {
+                            asyncRoutes++;
                             getImage(i);
                         }
 
+                        if (asyncRoutes === 0) {
+                            $rootScope.$emit('packages-updated', packages);
+                        }
                         localStorage.$wm_packages = JSON.stringify(packages);
 
                         getCategories();
-                        $rootScope.$emit('packages-updated', packages);
                         $ionicLoading.hide();
                     },
                     function (err) {
@@ -214,11 +268,6 @@ angular.module('webmapp')
                         }
                         $ionicLoading.hide();
                     });
-
-            if (!packages) {
-                $ionicLoading.show();
-            }
-            $rootScope.$emit('packages-updated', packages);
         };
 
         /**
@@ -231,6 +280,11 @@ angular.module('webmapp')
          *      the type of taxonomy to update
          */
         packageService.getTaxonomy = function (taxonomyType) {
+            if (!taxonomy[taxonomyType]) {
+                $ionicLoading.show();
+            } else {
+                $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+            }
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')
                 .then(function (data) {
                     taxonomy[taxonomyType] = {};
@@ -253,11 +307,6 @@ angular.module('webmapp')
                         return;
                     }
                 });
-
-            if (!taxonomy[taxonomyType]) {
-                $ionicLoading.show();
-            }
-            $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
         };
 
         /**
@@ -275,6 +324,12 @@ angular.module('webmapp')
             if (!userData || !userData.ID) {
                 return {};
             }
+
+            if (!userPackagesId) {
+                $ionicLoading.show();
+            } else {
+                $rootScope.$emit('userPackagesId-updated', userPackagesId);
+            }
             Communication.getJSON(communicationConf.baseUrl + communicationConf.endpoint + 'route_id/' + userId)
                 .then(function (data) {
                         userPackagesId = {};
@@ -288,16 +343,11 @@ angular.module('webmapp')
                         localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
                     },
                     function (err) {
-                        if (!userPackagesId.length) {
+                        if (!userPackagesId) {
                             console.warn("No userPackagesId available. Shutting down...");
                         }
                         $ionicLoading.hide();
                     });
-
-            if (!userPackagesId) {
-                $ionicLoading.show();
-            }
-            $rootScope.$emit('userPackagesId-updated', userPackagesId);
         };
 
         /**
@@ -471,6 +521,19 @@ angular.module('webmapp')
                         localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
                     }
                 });
+        };
+
+        /**
+         * @description
+         * Emit the updated list of downloaded packages
+         * and return it
+         * 
+         * @event userDownloadedPackages-updated
+         * 
+         */
+        packageService.getDownloadedPackages = function () {
+            $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
+            return userDownloadedPackages;
         };
 
         return packageService;

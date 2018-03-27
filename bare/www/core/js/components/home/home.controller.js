@@ -1,144 +1,35 @@
 angular.module('webmapp')
 
     .controller('HomeController', function HomeController(
+        $ionicLoading,
         $rootScope,
-        Offline,
-        Utils,
-        CONFIG,
         $translate,
-        $ionicLoading
+        CONFIG,
+        Offline,
+        PackageService,
+        Utils
     ) {
         var vm = {},
             offlineModal;
 
-        var offlineScope = $rootScope.$new();
+        var offlineScope = $rootScope.$new(),
+            communicationConf = CONFIG.COMMUNICATION;
+
         vm.categories = {};
         vm.columns = 1;
         vm.rows = 1;
-        var communicationConf = CONFIG.COMMUNICATION;
         vm.title = "Cosa vuoi fare?";
-        vm.asyncTranslations = 0;
         vm.appTitle = CONFIG.OPTIONS.title;
 
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
 
-        var getRoutes = function () {
-            vm.packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : {};
-            if (!vm.packages.length) {
-                $ionicLoading.show();
-            }
-            else {
-                getCategoriesName();
-            }
-
-            $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/?per_page=100', function (data) {
-                vm.packages = data;
-
-                localStorage.$wm_packages = JSON.stringify(data);
-
-                getCategoriesName();
-                Utils.forceDigest();
-            }).fail(function () {
-                console.warn("Internet connection not available. Using local storage packages");
-                vm.packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : {};
-                if (!vm.packages.length) {
-                    finishLoading();
-                    //Popup connection not available
-                    console.warn("Looks like this is your first application load. Do it again with a connection open");
-                    return;
-                }
-                getCategoriesName();
-            });
+        vm.goTo = function (id) {
+            Utils.goTo('packages/' + id);
         };
 
-        var translateCategory = function (id) {
-            var tmp = localStorage.$wm_categories_translated ? JSON.parse(localStorage.$wm_categories_translated) : {};
-
-            if (tmp[vm.currentLang] && tmp[vm.currentLang][id]) {
-                vm.categories[id].name = tmp[vm.currentLang][id].name;
-            }
-            vm.asyncTranslations--;
-            if (vm.asyncTranslations === 0) {
-                finishLoading();
-            }
-
-            return $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'webmapp_category/' + id + "?lang=" + vm.currentLang, function (data) {
-                vm.categories[id].name = data.name;
-
-                var tmp = localStorage.$wm_categories_translated ? JSON.parse(localStorage.$wm_categories_translated) : {};
-
-                tmp[vm.currentLang] = vm.categories;
-
-                localStorage.$wm_categories_translated = JSON.stringify(tmp);
-
-                vm.asyncTranslations--;
-
-                if (vm.asyncTranslations === 0) {
-                    finishLoading();
-                }
-                return;
-            }).fail(function () {
-                console.warn('Internet connection not available. Using local storage translation for ' + id);
-                //Retrieve category from offline if available
-                var tmp = localStorage.$wm_categories_translated ? JSON.parse(localStorage.$wm_categories_translated) : {};
-
-                if (tmp !== {}) {
-                    vm.categories[id].name = tmp[vm.currentLang][id].name;
-                }
-                vm.asyncTranslations--;
-                if (vm.asyncTranslations === 0) {
-                    finishLoading();
-                }
-                return;
-            });
-        };
-
-        var getCategoriesName = function () {
-            var categoriesStorage = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : {};
-
-            if (categoriesStorage.length) {
-                setCategoriesName(categoriesStorage);    
-            }
-
-            return $.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'webmapp_category?per_page=100', function (data) {
-                localStorage.$wm_categories = JSON.stringify(data);
-
-                setCategoriesName(data);
-
-                return;
-            }).fail(function (error) {
-                console.warn("Internet connection not available. Using local storage categories");
-                var categoriesStorage = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : {};
-
-                if (!categoriesStorage.length) {
-                    //Popup connection not available
-                    finishLoading();
-                    console.warn("Looks like this is your first application load. Do it again with a connection open");
-                    return;
-                }
-
-                setCategoriesName(categoriesStorage);
-                return 'categories retrive error';
-            });
-        };
-
-        var setCategoriesName = function (data) {
-            vm.categories = {};
-            var totalCategories = 0;
-
-            vm.packages.forEach(function (element) {
-                element.webmapp_category.forEach(function (category) {
-                    if (!vm.categories[category]) {
-                        vm.categories[category] = {
-                            icon: "",
-                            name: ""
-                        };
-                        totalCategories++;
-                    }
-                }, this);
-            }, this);
-
-            switch (totalCategories) {
+        $rootScope.$on('categories-updated', function (e, value) {
+            $ionicLoading.hide();
+            switch (Object.keys(value).length) {
                 case 1:
                 case 2:
                 case 3:
@@ -161,7 +52,7 @@ angular.module('webmapp')
                     vm.columns = 3;
                     break;
             }
-            switch (totalCategories) {
+            switch (Object.keys(value).length) {
                 case 1:
                     vm.rows = 1;
                     break;
@@ -186,37 +77,12 @@ angular.module('webmapp')
                     vm.rows = 4;
                     break;
             }
+            vm.categories = value;
+            Utils.forceDigest();
+        });
 
-            data.forEach(function (category) {
-                if (vm.categories[category.id]) {
-                    if (!category.icon) {
-                        category.icon = 'wm-icon-generic';
-                    }
-
-                    vm.categories[category.id].name = category.name;
-                    vm.categories[category.id].icon = category.icon;
-
-                    if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual && vm.currentLang !== CONFIG.LANGUAGES.actual.substring(0, 2)) {
-                        vm.asyncTranslations++;
-                        translateCategory(category.id);
-                    }
-                }
-            });
-
-            if (vm.asyncTranslations === 0) {
-                finishLoading();
-            }
-        };
-
-        vm.goTo = function (id) {
-            Utils.goTo('packages/' + id);
-        };
-
-        var finishLoading = function () {
-            $ionicLoading.hide();
-        }
-
-        getRoutes();
+        $ionicLoading.show();
+        PackageService.getRoutes();
 
         return vm;
     });

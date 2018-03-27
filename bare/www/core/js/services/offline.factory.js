@@ -150,8 +150,6 @@ angular.module('webmapp')
 
                 currentTransfert = $cordovaFileTransfer.download(encodeURI(item), encodeURI(targetPath), {}, true);
                 transferPromises.push(currentTransfert);
-                console.log(item);
-                console.log(format);
 
                 currentTransfert
                     .then(function (result) {
@@ -311,8 +309,6 @@ angular.module('webmapp')
                 targetPath = destDirectory + filename;
 
                 currentDefer = $q.defer();
-
-                console.log(targetPath);
 
                 promises.push(currentDefer.promise);
 

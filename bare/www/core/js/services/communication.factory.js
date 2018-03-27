@@ -54,22 +54,6 @@ angular.module('webmapp')
         communication.get = function (url) {
             var defer = $q.defer();
 
-            // $http({
-            //         method: 'GET',
-            //         url: url,
-            //         crossDomain: true,
-            //         repsponseType: 'arrayBuffer',
-            //         headers: {
-            //             'Access-Control-Allow-Origin': '*'
-            //         }
-            //     })
-            //     .success(function (data) {
-            //         defer.resolve(data);
-            //     })
-            //     .error(function (error) {
-            //         defer.reject(error);
-            //     });
-
             $http.get(url, {
                     responseType: 'blob',
                     headers: {
