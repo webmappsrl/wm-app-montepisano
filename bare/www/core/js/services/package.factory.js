@@ -51,7 +51,7 @@ angular.module('webmapp')
                 who: null
             };
 
-        var userData = Auth.getUserData(),
+        var userData = Auth.isLoggedIn() ? Auth.getUserData() : null,
             asyncTranslations = 0,
             asyncRoutes = 0;
 
@@ -70,6 +70,16 @@ angular.module('webmapp')
             animation: 'slide-in-up'
         }).then(function (modalObj) {
             modalDownload = modalObj;
+        });
+
+        //Keep userData updated
+        $rootScope.$on('logged-in', function() {
+            if (Auth.isLoggedIn()) {
+                userData = Auth.getUserData();
+            }
+            else {
+                userData = null;
+            }
         });
 
         var mergePackages = function (newPackages) {
@@ -316,13 +326,10 @@ angular.module('webmapp')
          * 
          * @event userPackagesId-updated
          * 
-         * @param {number} userId
-         *      the id of the user to get the list of available packages
          */
-        packageService.getPackagesIdByUserId = function (userId) {
-            userData = Auth.getUserData();
+        packageService.getPackagesIdByUserId = function () {
             if (!userData || !userData.ID) {
-                return {};
+                return;
             }
 
             if (!userPackagesId) {
@@ -330,7 +337,7 @@ angular.module('webmapp')
             } else {
                 $rootScope.$emit('userPackagesId-updated', userPackagesId);
             }
-            Communication.getJSON(communicationConf.baseUrl + communicationConf.endpoint + 'route_id/' + userId)
+            Communication.getJSON(communicationConf.baseUrl + communicationConf.endpoint + 'route_id/' + userData.ID)
                 .then(function (data) {
                         userPackagesId = {};
 
@@ -361,7 +368,6 @@ angular.module('webmapp')
          *      the id of the pack to request
          */
         packageService.requestPack = function (packId) {
-            userData = Auth.getUserData();
             if (!userData || !userData.ID || userPackagesIdRquested[packId]) {
                 return;
             }
@@ -395,7 +401,7 @@ angular.module('webmapp')
                             });
                             userPackagesIdRquested[packId] = true;
                             $rootScope.$emit('userPackagesIdRquested-updated', userPackagesIdRquested);
-                            localStorage.$wm_userPackagesIdRquested = JSON.stringify(vm.userPackagesIdRquested);
+                            localStorage.$wm_userPackagesIdRquested = JSON.stringify(userPackagesIdRquested);
                             $ionicLoading.hide();
                         }).error(function (error) {
                             $ionicPopup.alert({
@@ -404,6 +410,71 @@ angular.module('webmapp')
                             $ionicLoading.hide();
                             console.error(error);
                         });
+                    }
+                });
+        };
+
+        /**
+         * @description
+         * Use a voucher to get permission to download a route and
+         * Emit the new list of available packages
+         * 
+         * @event userPackagesId-updated
+         * 
+         * @param {number} packId 
+         *      the id of the pack to request
+         * 
+         */
+        packageService.requestPackageWithVoucher = function (packId) {
+            if (!userData || !userData.ID) {
+                return;
+            }
+
+            $ionicPopup.prompt({
+                    title: $translate.instant('Voucher'),
+                    subTitle: $translate.instant('Inserisci il voucher da attivare'),
+                    inputType: 'text',
+                    inputPlaceholder: $translate.instant('Voucher')
+                })
+                .then(function (res) {
+                    if (res) {
+                        var data = $.param({
+                            route_id: packId,
+                            user_id: userData.ID,
+                            code: res
+                        });
+
+                        var config = {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+                            }
+                        }
+
+                        $ionicLoading.show();
+
+                        $http.post(
+                                CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
+                                data,
+                                config
+                            )
+                            .success(function (data, status, headers, config) {
+                                $ionicLoading.hide();
+                                ///Update offline data
+                                userPackagesId[packId] = true;
+                                localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
+                            })
+                            .error(function (data, status, header, config) {
+                                $ionicLoading.hide();
+                                if (data.error === "Voucher Expired") {
+                                    $ionicPopup.alert({
+                                        template: $translate.instant("Il voucher che hai utilizzato è scaduto")
+                                    });
+                                } else {
+                                    $ionicPopup.alert({
+                                        template: $translate.instant("Il voucher che hai inserito non è valido. Controlla di averlo inserito correttamente e inseriscilo nuovamente.")
+                                    });
+                                }
+                            });
                     }
                 });
         };
@@ -428,6 +499,7 @@ angular.module('webmapp')
                         $.ajaxSetup({
                             cache: false
                         });
+                        modalDownload.show();
                         Communication.getJSON(communicationConf.downloadJSONUrl + packId + '/app.json')
                             .then(function (data) {
                                     var arrayLink = [];
@@ -457,8 +529,6 @@ angular.module('webmapp')
                                         }
                                     }
 
-                                    modalDownload.show();
-
                                     Offline
                                         .downloadUserMap(packId, arrayLink, modalDownloadScope.vm)
                                         .then(downloadSuccess, downloadFail);
@@ -467,6 +537,7 @@ angular.module('webmapp')
                                 },
                                 function () {
                                     // TODO: add ionic alert
+                                    modalDownload.hide();
                                     alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova"));
                                 });
                     }
@@ -518,7 +589,7 @@ angular.module('webmapp')
                         Offline.removePackById(packId);
                         delete userDownloadedPackages[packId];
                         $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
-                        localStorage.$wm_userDownloadedPackages = JSON.stringify(vm.userDownloadedPackages);
+                        localStorage.$wm_userDownloadedPackages = JSON.stringify(userDownloadedPackages);
                     }
                 });
         };

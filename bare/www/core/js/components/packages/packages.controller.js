@@ -162,9 +162,8 @@ angular.module('webmapp')
                 vm.isLoggedIn = true;
                 vm.userDownloadedPackages = {};
 
-                vm.userDownloadedPackages = localStorage.$wm_userDownloadedPackages ? JSON.parse(localStorage.$wm_userDownloadedPackages) : {};
-
-                PackageService.getPackagesIdByUserId(userData.ID);
+                PackageService.getDownloadedPackages();
+                PackageService.getPackagesIdByUserId();
                 Utils.forceDigest();
 
                 if (!vm.packages) {
@@ -233,8 +232,8 @@ angular.module('webmapp')
 
             PackageService.getRoutes();
 
-            if (Auth.isLoggedIn() && userData.ID) {
-                PackageService.getPackagesIdByUserId(userData.ID);
+            if (Auth.isLoggedIn()) {
+                PackageService.getPackagesIdByUserId();
             }
 
             // location.reload();
@@ -246,7 +245,7 @@ angular.module('webmapp')
             }
 
             userData = Auth.getUserData();
-            PackageService.getPackagesIdByUserId(userData.ID);
+            PackageService.getPackagesIdByUserId();
         }
 
         PackageService.getRoutes();
