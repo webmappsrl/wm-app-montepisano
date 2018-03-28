@@ -362,15 +362,15 @@
             <div
                 class="route-related-details"
                 ng-if="vm.related">
-                <h2 class="route-related-title">{{::"TAPPE" | translate}}</h2>
 
                 <ul class="list route-related-list">
                     <li
                         class="item item-icon-left route-related-item"
                         ng-repeat="item in vm.related"
-                        ng-click="vm.openRelatedPOI(item)">
+                        ng-click="vm.openRelated(item)">
                         <div class="route-related-image">
-                            <img ng-src="{{item.properties.image}}">
+                            <img ng-if="item.properties.image" ng-src="{{item.properties.image}}">
+                            <i ng-if="!item.properties.image" class="icon {{item.properties.icon}}"></i>
                         </div>
                         <div class="route-related-name">
                             {{item.properties.name}}

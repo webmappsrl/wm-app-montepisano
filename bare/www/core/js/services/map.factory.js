@@ -32,8 +32,7 @@ angular.module('webmapp')
 
         if (!Utils.isBrowser()) {
             generalConf.useAlmostOver = true;
-        }
-        else {
+        } else {
             generalConf.useAlmostOver = false;
         }
 
@@ -63,7 +62,8 @@ angular.module('webmapp')
         var overlayLayersQueueByLabel = {},
             queueLayerToActivate = null,
             queueEvents = false,
-            markerClusters;
+            markerClusters,
+            interactionsDisabled = false;
 
         var updateHitsTimer;
 
@@ -383,6 +383,10 @@ angular.module('webmapp')
         };
 
         var activatePopup = function (e, isPOI) {
+            if (interactionsDisabled) {
+                clearLayerHighlight();
+                return;
+            }
             var getIncrement = function (n) {
                 var value = 19.6618;
 
@@ -1501,7 +1505,7 @@ angular.module('webmapp')
                 spiderfyOnMaxZoom: mapConf.markerClustersOptions.spiderfyOnMaxZoom,
                 showCoverageOnHover: mapConf.markerClustersOptions.showCoverageOnHover,
                 zoomToBoundsOnClick: false, // used markerClusters.on clusterclick instead
-                maxClusterRadius: function(zoom) {
+                maxClusterRadius: function (zoom) {
                     return (zoom < mapConf.markerClustersOptions.disableClusteringAtZoom) ? mapConf.markerClustersOptions.maxClusterRadius : 1;
                 }
                 // disableClusteringAtZoom: mapConf.markerClustersOptions.disableClusteringAtZoom
@@ -2116,6 +2120,8 @@ angular.module('webmapp')
                 map.boxZoom.disable();
                 map.keyboard.disable();
                 if (map.tap) map.tap.disable();
+                document.getElementById('map').style.cursor = 'default';
+                interactionsDisabled = true;
             }
         };
 
@@ -2128,6 +2134,8 @@ angular.module('webmapp')
                 map.boxZoom.enable();
                 map.keyboard.enable();
                 if (map.tap) map.tap.enable();
+                document.getElementById('map').style.cursor = 'grab';
+                interactionsDisabled = false;
             }
         };
 

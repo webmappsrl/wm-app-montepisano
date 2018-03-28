@@ -633,21 +633,33 @@ div.detailRoute-footer {
         background-image: linear-gradient(transparent, transparent); }
   .detailTaxonomy-page ion-content .detailTaxonomy-routes {
     width: 100%;
-    padding: 10px; }
+    padding: 15px; }
     .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route {
       border-top: 1px solid #605846;
       font-size: 20px;
-      padding: 10px 2px;
+      padding: 13px 2px;
       text-transform: uppercase;
       line-height: 34px;
-      vertical-align: middle; }
-      .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i {
+      vertical-align: middle;
+      position: relative; }
+      .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.activity-icon {
         font-size: 25px;
-        margin: 0 8px 0 0;
+        margin: 0 13px 0 0;
         float: left;
         border: 1px solid;
         border-radius: 50%;
         padding: 4px; }
+      .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.download-icon,
+      .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.open-icon {
+        position: absolute;
+        top: 3px;
+        left: 0;
+        font-size: 21px; }
+      .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.open-icon {
+        color: #FF0000;
+        padding: 0; }
+      .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.download-icon {
+        padding: 0 2px 0 0; }
   .detailTaxonomy-page ion-content .detailTaxonomy-map {
     width: 100%; }
     .detailTaxonomy-page ion-content .detailTaxonomy-map img {
@@ -995,6 +1007,9 @@ div.detailRoute-footer {
         left: -9999px;
         right: -9999px;
         margin: auto; }
+      .route-related-details .route-related-list .route-related-item .route-related-image i {
+        left: calc(50% - 25px);
+        font-size: 50px; }
     .route-related-details .route-related-list .route-related-item .route-related-name {
       width: 70%;
       padding: 20px 15px;

@@ -440,6 +440,10 @@
           right: -9999px;
           margin: auto
         }
+        i {
+          left: calc(50% - 25px);
+          font-size: 50px;
+        }
       }
       .route-related-name {
         width: 70%;

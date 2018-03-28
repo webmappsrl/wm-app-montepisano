@@ -25,10 +25,15 @@
             </div>
         </div>
         <div class="detailTaxonomy-routes">
-            <div class="detailTaxonomy-route" ng-repeat="route in vm.routes" ng-click="vm.downloadPack(route.id)">
-                <i class="icon {{vm.activities[route.activity[0]].icon}}"></i>
-                <span>
-                    {{route.title.rendered}}
+            <div class="detailTaxonomy-route" ng-repeat="route in vm.routes" ng-click="vm.openOrDownloadPack(route.id)">
+                <i ng-if="!vm.userDownloadedPackages[route.id]" class="icon wm-icon-arrow-down-c download-icon" ng-style="{'background': COLORS.global.background}"></i>
+                <i ng-if="vm.userDownloadedPackages[route.id]" class="icon wm-icon-checkmark-round open-icon" ng-style="{'background': COLORS.global.background}"></i>
+                <i class="icon {{vm.activities[route.activity[0]].icon}} activity-icon"></i>
+                <span ng-if="route.packageTitle[vm.currentLang]">
+                    {{route.packageTitle[vm.currentLang]}}
+                </span>
+                <span ng-if="!route.packageTitle[vm.currentLang]">
+                    {{route.packageTitle['it']}}
                 </span>
             </div>
         </div>

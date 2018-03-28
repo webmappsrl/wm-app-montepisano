@@ -251,9 +251,8 @@ angular.module('webmapp')
                 }
             }
 
-            if (false && feature.id_pois && feature.id_pois.length) {
+            if (feature.id_pois && feature.id_pois.length) {
                 vm.related = MapService.getRelatedFeaturesById(feature.id_pois);
-                console.log(vm.related);
             }
 
             vm.relatedItinerary = MapService.getItineraryRefByFeatureIdMap()[feature.id] || [];
@@ -439,6 +438,10 @@ angular.module('webmapp')
 
     vm.goBackToCategory = function(category) {
         Utils.goTo('layer/' + category.replace(/ /g, '_'));
+    };
+
+    vm.openRelated = function(item) {
+        Utils.goTo('layer/' + item.parent.label.replace(/ /g, '_') + '/' + item.properties.id);
     };
 
     vm.openRelatedPOI = function(stage) {
