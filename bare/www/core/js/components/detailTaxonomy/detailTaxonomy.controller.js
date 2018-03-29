@@ -20,6 +20,7 @@ angular.module('webmapp')
         vm.taxonomy = {};
         vm.item = {};
         vm.routes = {};
+        vm.tracks = localStorage.$wm_taxonomy_tracks ? JSON.parse(localStorage.$wm_taxonomy_tracks) : {};
         vm.activities = {};
         vm.userDownloadedPackages = {};
 
@@ -84,6 +85,18 @@ angular.module('webmapp')
                             vm.routes[packId].tracks = {};
                         }
                         vm.routes[packId].tracks[pos] = data;
+                        if (!vm.tracks) {
+                            vm.tracks = {};
+                            vm.tracks[packId] = {};
+                        }
+                        else if (!vm.tracks[packId]) {
+                            vm.tracks[packId] = {};
+                        }
+
+                        vm.tracks[packId][pos] = data;
+
+                        localStorage.$wm_taxonomy_tracks = JSON.stringify(vm.tracks);
+
                         updateMapView();
                     },
                     function (error) {
@@ -130,6 +143,7 @@ angular.module('webmapp')
                     for (var j in value[i][taxonomyType]) {
                         if (value[i][taxonomyType][j] === id) {
                             vm.routes[i] = value[i];
+                            vm.routes[i].tracks = vm.tracks[i];
                             getTracksForPack(i);
                             break;
                         }
