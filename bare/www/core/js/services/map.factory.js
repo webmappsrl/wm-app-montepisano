@@ -69,7 +69,8 @@ angular.module('webmapp')
 
         var skipAreaClick = null;
 
-        var polylineDecoratorLayers = {};
+        var polylineDecoratorLayers = {},
+            geojsonLayer = null;
 
         var activatedPopup = null,
             mapIsRotating = false,
@@ -2240,6 +2241,21 @@ angular.module('webmapp')
         mapService.mapIsRotating = function (isRotating) {
             map.closePopup();
             mapIsRotating = isRotating;
+        };
+
+        mapService.createGeojsonLayer = function (geojsonArray) {
+            if (map) {
+                if (geojsonLayer) {
+                    map.removeLayer(geojsonLayer);
+                }
+
+                geojsonLayer = L.geoJSON(geojsonArray).addTo(map);
+                setTimeout(function() {
+                    map.fitBounds(geojsonLayer.getBounds());
+                }, 500);
+
+                map.fire('click');
+            }
         };
 
         window.closePopup = mapService.closePopup = function (e) {

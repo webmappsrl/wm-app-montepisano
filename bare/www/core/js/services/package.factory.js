@@ -73,11 +73,10 @@ angular.module('webmapp')
         });
 
         //Keep userData updated
-        $rootScope.$on('logged-in', function() {
+        $rootScope.$on('logged-in', function () {
             if (Auth.isLoggedIn()) {
                 userData = Auth.getUserData();
-            }
-            else {
+            } else {
                 userData = null;
             }
         });

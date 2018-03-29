@@ -8,7 +8,9 @@
         <button class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
 
-    <ion-content style="color: black; background: {{COLORS.global.background}}">
+    <ion-content style="color: black;" ng-style="{
+        'background': COLORS.global.background
+        }">
         <div class="detailTaxonomy-color" ng-style="{
             'background-color': vm.item.color
             }">

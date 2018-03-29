@@ -1,6 +1,7 @@
 angular.module('webmapp')
 
     .controller('DetailTaxonomyController', function DetailTaxonomyController(
+        Communication,
         CONFIG,
         $ionicLoading,
         $rootScope,
@@ -63,6 +64,45 @@ angular.module('webmapp')
             }
         };
 
+        var updateMapView = function() {
+            MapService.disableInteractions();
+            var toAdd = [],
+                i = 0;
+            for (var id in vm.routes) {
+                for (var pos in vm.routes[id].tracks) {
+                    toAdd[i] = vm.routes[id].tracks[pos];
+                    i++;
+                }
+            }
+            MapService.createGeojsonLayer(toAdd);
+        };
+
+        var getTrack = function (url, packId, pos) {
+            Communication.getJSON(url)
+                .then(function (data) {
+                        if (!vm.routes[packId].tracks) {
+                            vm.routes[packId].tracks = {};
+                        }
+                        vm.routes[packId].tracks[pos] = data;
+                        updateMapView();
+                    },
+                    function (error) {
+                        console.log("PackageService.getTrack() ", error);
+                    });
+        };
+
+        var getTracksForPack = function (packId) {
+            Communication.getJSON(communicationConf.downloadJSONUrl + packId + '/app.json')
+                .then(function (data) {
+                        for (var i in data.routes) {
+                            getTrack(data.routes[i], packId, i);
+                        }
+                    },
+                    function (error) {
+                        console.log("PackageService.getTracksForPack() ", error);
+                    });
+        };
+
         $rootScope.$on('taxonomy-' + taxonomyType + '-updated', function (e, value) {
             $ionicLoading.hide();
             vm.taxonomy = value;
@@ -90,11 +130,13 @@ angular.module('webmapp')
                     for (var j in value[i][taxonomyType]) {
                         if (value[i][taxonomyType][j] === id) {
                             vm.routes[i] = value[i];
+                            getTracksForPack(i);
                             break;
                         }
                     }
                 }
             }
+
             forceDigest();
         });
 
@@ -108,16 +150,7 @@ angular.module('webmapp')
         PackageService.getDownloadedPackages();
         PackageService.getTaxonomy('activity');
         PackageService.getTaxonomy(taxonomyType);
+        MapService.resetView();
 
-        setTimeout(function () {
-            MapService.disableInteractions();
-            MapService.resetView();
-            var features = MapService.getFeatureIdMap();
-            console.log(features);
-            MapService.addFeaturesToFilteredLayer({
-                'details': features
-            }, true);
-            // MapService.showAllLayers();
-        }, 500);
         return vm;
     });
