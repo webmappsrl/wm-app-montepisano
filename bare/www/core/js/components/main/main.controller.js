@@ -335,7 +335,9 @@ angular.module('webmapp')
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
         vm.useExandMapInDetails = CONFIG.OPTIONS.useExandMapInDetails;
-        vm.showLocate = !CONFIG.MAP.hideLocationControl || !Utils.isBrowser();
+        vm.showLocate = !CONFIG.MAP.hideLocationControl && !Utils.isBrowser();
+
+        
         vm.viewTitle = $translate.instant("MAPPA");
         vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
         vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
