@@ -607,7 +607,7 @@ div.detailRoute-footer {
     font-size: 23px;
     font-weight: 700;
     line-height: 1.5em;
-    max-height: calc(6em + 5px + 45px);
+    max-height: calc(6em + 5px + 35px);
     overflow: hidden;
     position: relative; }
     .detailTaxonomy-page ion-content .detailTaxonomy-description .detailTaxonomy-read-more {
@@ -622,7 +622,10 @@ div.detailRoute-footer {
       color: red;
       text-align: right;
       font-size: 15px;
-      background-image: linear-gradient(to bottom, transparent 0%, #F3F6E9 75%, #F3F6E9 100%); }
+      background: -webkit-linear-gradient(bottom, #F3F6E9 0%, #F3F6E9 25%, transparent 100%);
+      /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(to bottom, transparent 0%, #F3F6E9 75%, #F3F6E9 100%);
+      /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ }
       .detailTaxonomy-page ion-content .detailTaxonomy-description .detailTaxonomy-read-more span {
         background: #F3F6E9;
         padding: 0 0 0 5px; }
