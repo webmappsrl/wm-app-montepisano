@@ -8,7 +8,9 @@
         <button class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
 
-    <ion-content style="background: {{vm.colors.global.background}}">
+    <ion-content ng-style="{
+        'background': vm.colors.global.background
+    }">
         <div class="static-content card-content" style="text-align: left">
             <div class="attribution-title">
                 {{::"Dati cartografici" | translate}}

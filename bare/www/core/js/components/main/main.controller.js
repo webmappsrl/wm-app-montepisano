@@ -1,24 +1,24 @@
 angular.module('webmapp')
 
     .controller('MainController', function MainController(
-        $scope,
-        $rootScope,
-        $state,
-        $ionicLoading,
-        $ionicScrollDelegate,
-        $ionicPopup,
-        Utils,
-        MapService,
-        Communication,
-        Model,
-        $cordovaGeolocation,
         $cordovaDeviceOrientation,
-        $cordovaSocialSharing,
-        CONFIG,
+        $cordovaGeolocation,
+        $cordovaSocialSharing,        
+        $interval,
+        $ionicLoading,
+        $ionicPlatform,
+        $ionicPopup,
+        $ionicScrollDelegate,
+        $rootScope,
+        $scope,
+        $state,
         $translate,
         Auth,
-        $ionicPlatform,
-        $interval
+        Communication,
+        CONFIG,
+        MapService,
+        Model,
+        Utils
     ) {
         var vm = {};
 

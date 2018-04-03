@@ -13,7 +13,9 @@
             menu-toggle="left"></button>
     </ion-nav-buttons>
 
-    <ion-content style="color: black; background: {{COLORS.global.background}}">
+    <ion-content style="color: black;" ng-style="{
+        'background': COLORS.global.background
+    }">
         <div class="home-title">
             {{vm.title | translate}}
         </div>

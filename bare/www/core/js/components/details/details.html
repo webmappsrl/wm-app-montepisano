@@ -52,7 +52,9 @@
     </ion-nav-buttons>
 
     <ion-content class="has-show-more"
-                 style="background: {{vm.colors.global.background}}">
+                 ng-style="{
+                     'background': vm.colors.global.background
+                    }">
         <div class="details-container">
             <!-- TODO: for single back to category element add details-subnav-single - for two elements add details-subnav-rows -->
             <div
@@ -383,7 +385,9 @@
     </ion-content>
     <div
       class="arrow-show-more"
-      style="background: {{vm.colors.global.background}}"
+      ng-style="{
+          'background': vm.colors.global.background
+        }"
       ng-click="vm.toggleList()">
         <i
           class="icon"
