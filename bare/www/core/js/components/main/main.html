@@ -19,7 +19,7 @@
 
     <a href="" class="details-shadow" ng-class="{'extend-shadow': vm.extendShadow}" ng-if="vm.hasShadow">
     </a>
-    <a href="" class="details-howtoreach" style="background: {{vm.colors.details.buttons}}" ng-click="vm.openExternalMap()" ng-if="vm.detail && detailCoordinates && !vm.hideHowToReach">
+    <a href="" class="details-howtoreach" ng-style="background: {{vm.colors.details.buttons}}" ng-click="vm.openExternalMap()" ng-if="vm.detail && detailCoordinates && !vm.hideHowToReach">
         <i class="icon ion-map"></i> {{::"Come raggiungerci" | translate}}
     </a>
 
@@ -65,7 +65,7 @@
                             'wm-icon-android-locate-full': !vm.followActive || vm.dragged || (vm.followActive && !vm.isRotating && !vm.dragged),
                             'fa-spin': vm.locateLoading && !vm.followActive,
                             'blu-icon': vm.followActive && !vm.isRotating && !vm.dragged
-                        }" style="-webkit-transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg); transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg)">
+                        }" ng-style="-webkit-transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg); transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg)">
                         <!-- <i
                             class="icon wm-icon-android-locate-full"
                             ng-if="vm.followActive && !vm.isRotating && !vm.dragged">

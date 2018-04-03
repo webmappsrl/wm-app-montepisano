@@ -28,7 +28,8 @@ angular.module('webmapp')
         var previousBounds = null,
             heading = 0,
             watchInterval, orientationWatchRef,
-            prevHeating, prevLatLong, lpf;
+            prevHeating, prevLatLong, lpf,
+            geolocationTimeoutTime = 30000;
 
         var maxZoom = CONFIG.MAP.maxZoom,
             hideExpanderInDetails = CONFIG.OPTIONS.hideExpanderInDetails;
@@ -565,7 +566,7 @@ angular.module('webmapp')
             console.log(err);
             console.log("Restarting geolocalization");
             watchInterval = $cordovaGeolocation.watchPosition({
-                timeout: 10000,
+                timeout: geolocationTimeoutTime,
                 enableHighAccuracy: true
             });
             watchInterval.then(
@@ -696,7 +697,7 @@ angular.module('webmapp')
 
                         $cordovaGeolocation
                             .getCurrentPosition({
-                                timeout: 10000,
+                                timeout: geolocationTimeoutTime,
                                 enableHighAccuracy: Utils.isBrowser() ? true : false
                             })
                             .then(function (position) {
@@ -810,7 +811,7 @@ angular.module('webmapp')
                     vm.locateLoading = true;
                     $cordovaGeolocation
                         .getCurrentPosition({
-                            timeout: 10000,
+                            timeout: geolocationTimeoutTime,
                             enableHighAccuracy: Utils.isBrowser() ? true : false
                         })
                         .then(function (position) {
@@ -844,14 +845,14 @@ angular.module('webmapp')
                                     watchInterval = setInterval(function () {
                                         $cordovaGeolocation
                                             .getCurrentPosition({
-                                                timeout: 10000,
+                                                timeout: geolocationTimeoutTime,
                                                 enableHighAccuracy: true
                                             })
                                             .then(posCallback);
                                     }, CONFIG.OPTIONS.intervalUpdateMs);
                                 } else {
                                     watchInterval = $cordovaGeolocation.watchPosition({
-                                        timeout: 30000,
+                                        timeout: geolocationTimeoutTime,
                                         enableHighAccuracy: true
                                     });
                                     watchInterval.then(
