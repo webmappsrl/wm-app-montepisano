@@ -373,7 +373,7 @@ angular.module('webmapp')
             $ionicPopup
                 .confirm({
                     title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Stai per richiedere accesso al download dell'itinerario, intendi proseguire?")
+                    template: $translate.instant("Stai per richiedere l'accesso al download dell'itinerario, riceverai una e-mail con le istruzioni per procedere all'acquisto. Vuoi procedere?")
                 })
                 .then(function (res) {
                     if (res) {
@@ -396,7 +396,7 @@ angular.module('webmapp')
                             }
                         }).success(function (data) {
                             $ionicPopup.alert({
-                                template: $translate.instant("La richiesta è stata inviata, verrà processata al più presto")
+                                template: $translate.instant("La richiesta è stata inviata, ti è stata spedita una e-mail con le istruzioni per procedere con l'acquisto.")
                             });
                             userPackagesIdRquested[packId] = true;
                             $rootScope.$emit('userPackagesIdRquested-updated', userPackagesIdRquested);
