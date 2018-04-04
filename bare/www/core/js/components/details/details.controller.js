@@ -566,6 +566,7 @@ angular.module('webmapp')
 
     document.addEventListener('deviceready', function() {
         isOnline = Connection && navigator.network.connection.type !== Connection.NONE;
+        console.log(vm)
     }, false);
 
     vm.toggleList = function() {
