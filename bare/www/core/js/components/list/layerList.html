@@ -7,7 +7,7 @@
             ng-style="{
                 color: vm.colors.mainBar.overwrite ? vm.colors.mainBar.color : vm.color
             }">
-            {{vm.viewTitle}} <span ng-if="vm.showCount">({{vm.layersMap[vm.viewTitle].items.length}})</span>
+            {{vm.viewTitle | translate}} <span ng-if="vm.showCount">({{vm.layersMap[vm.viewTitle].items.length}})</span>
         </span>
     </ion-nav-title>
     
@@ -33,7 +33,7 @@
         ng-if="vm.backItem"
         ng-click="vm.goTo('layer/' + vm.backItem.url)">
         <i class="icon ion-ios-arrow-left"></i>
-        {{vm.backItem.label}}
+        {{vm.backItem.label | translate}}
     </ion-item>
     
     <!-- TODO: aggiungere classe has-show-more per il caso in cui ci sia la freccia di espansione -->

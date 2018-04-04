@@ -34,7 +34,7 @@ angular.module('webmapp')
 	}
 
 	$translateProvider.useSanitizeValueStrategy('sanitizeParameters');
-	$translateProvider.registerAvailableLanguageKeys(['en', 'de', 'it'], {
+	$translateProvider.registerAvailableLanguageKeys(['en', 'it'], {
 	
 	 'en-*': 'en',
 	 'it-*': 'it',
