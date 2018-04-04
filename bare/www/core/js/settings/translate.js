@@ -5,28 +5,30 @@ angular.module('webmapp')
 	$windowProvider,
 	CONFIGProvider
 ) {
-	var lang = "it";
+	var lang = "";
 	var $window = $windowProvider.$get();
 
 	var userLang = navigator.language || navigator.userLanguage; 
-	userLang = userLang.substring(0, 1);
-
-	var getLanguage = function() {
-		var language = null;
-		if (typeof $window.localStorage.language === 'string') {
-				language = JSON.parse($window.localStorage.language);
-		}
-		return language;
-	};
+	userLang = userLang.substring(0, 2);
 
 	if (CONFIGProvider.LANGUAGES) {
-		// if (CONFIGProvider.LANGUAGES.available)
-		if (CONFIGProvider.LANGUAGES.actual) {
+		if (CONFIGProvider.LANGUAGES.available) {
+			for (var i in CONFIGProvider.LANGUAGES.available) {
+				if (CONFIGProvider.LANGUAGES.available[i].substring(0, 2) === userLang) {
+					lang = userLang;
+					break;
+				}
+			}
+		}
+		if (lang === "" && CONFIGProvider.LANGUAGES.actual) {
 			lang = CONFIGProvider.LANGUAGES.actual.substring(0, 2);
+		}
+		else if (lang === "" && !CONFIGProvider.LANGUAGES.actual) {
+			lang = "it";
 		}
 	}
 
-	var currentLang = getLanguage();
+	var currentLang = $window.localStorage.language ? JSON.parse($window.localStorage.language) : null;
 	if (currentLang) {
 		lang = currentLang;
 	}
@@ -35,10 +37,8 @@ angular.module('webmapp')
 	$translateProvider.registerAvailableLanguageKeys(['en', 'de', 'it'], {
 	
 	 'en-*': 'en',
-	 'de-*': 'de',
 	 'it-*': 'it',
 	 'en_*': 'en',
-	 'de_*': 'de',
 	 'it_*': 'it',
 	 '*': 'en',
 	 

@@ -2,7 +2,10 @@
 <ion-view
     cache-view="false"
     ng-controller="DetailController as vm" class="layer-details"
-    ng-style="background: {{vm.colors.details.background}}; color: {{vm.colors.details.color}}"
+    ng-style="{
+        'background': vm.colors.details.background,
+        'color': vm.colors.details.color
+    }"
     ng-class="{
         'event-details': vm.isEventDetail
     }">
