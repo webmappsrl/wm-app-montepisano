@@ -860,10 +860,10 @@ angular.module('webmapp')
                 // if (CONFIG.LANGUAGES.available) {
                 //     for (var i in CONFIG.LANGUAGES.available) {
                 //         if (currentLang === CONFIG.LANGUAGES.available[i].substring(0, 2)) {
-                if (!CONFIG.LANGUAGES.actual ||
-                    (CONFIG.LANGUAGES.actual && currentLang !== CONFIG.LANGUAGES.actual.substring(0, 2))) {
+                // if (!CONFIG.LANGUAGES.actual ||
+                //     (CONFIG.LANGUAGES.actual && currentLang !== CONFIG.LANGUAGES.actual.substring(0, 2))) {
                     available = true;
-                }
+                // }
                 //             break;
                 //         }
                 //     }
@@ -988,6 +988,7 @@ angular.module('webmapp')
                     setItemInLocalStorage(geojsonUrl, data);
                 });
             } else {
+                console.log(langGeojsonUrl, "ok");
                 overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(langGeojsonUrl, function (data) {
                     if (currentOverlay.type === 'line_geojson') {
                         lineCallback(data, currentOverlay);
