@@ -113,10 +113,12 @@
         ng-style="{
             'top': !vm.showInMap ? '104px' : '140px'
         }"
-        style="background: {{vm.colors.global.background}}">
+        ng-style="{
+            'background': vm.colors.global.background
+        }">
         <div
             ng-style="{
-                color: vm.colors.search.color
+                'color': vm.colors.search.color
             }">
             <ion-list ng-if="vm.searchReady">
                 <!-- TODO: add class has-subtitle when item has subtitle and remove comment -->

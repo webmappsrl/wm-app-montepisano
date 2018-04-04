@@ -5,7 +5,7 @@
     <ion-nav-title>
         <span
             ng-style="{
-                color: vm.colors.mainBar.overwrite ? vm.colors.mainBar.color : vm.color
+                'color': vm.colors.mainBar.overwrite ? vm.colors.mainBar.color : vm.color
             }">
             {{vm.viewTitle | translate}} <span ng-if="vm.showCount">({{vm.layersMap[vm.viewTitle].items.length}})</span>
         </span>
@@ -29,7 +29,10 @@
 
     <ion-item 
         class="item item-icon-left back-item"
-        style="background: {{vm.colors.subnav.background}}; color: {{vm.colors.subnav.color}}"
+        ng-style="{
+            'background': vm.colors.subnav.background,
+            'color': vm.colors.subnav.color
+        }"
         ng-if="vm.backItem"
         ng-click="vm.goTo('layer/' + vm.backItem.url)">
         <i class="icon ion-ios-arrow-left"></i>
@@ -39,7 +42,9 @@
     <!-- TODO: aggiungere classe has-show-more per il caso in cui ci sia la freccia di espansione -->
     <ion-content
         class="has-show-more {{currentParams.id}} scroll-content ionic-scroll"
-        style="background: {{vm.colors.global.background}}"
+        ng-style="{
+            'background': vm.colors.global.background
+        }"
         ng-class="{
             'has-filter': vm.hasFilter,
             'has-back-btn': vm.showCategoryBack
@@ -88,11 +93,11 @@
                     class="item item-icon-left"
                     ng-if="vm.subGroupMenu"
                     ng-style="{
-                        color: vm.colors.list.color ? vm.colors.list.color : item.color
+                        'color': vm.colors.list.color ? vm.colors.list.color : item.color
                     }"
                     ng-click="vm.goTo('layer/' + item.url)"
                     ng-repeat="item in vm.subGroupMenu">
-                    <i class="icon {{item.icon}}" ng-style="{color: item.color}"></i>
+                    <i class="icon {{item.icon}}" ng-style="{'color': item.color}"></i>
                     {{item.label}}
                 </a>
                 <!-- TODO: add class has-subtitle when item has subtitle -->
@@ -102,9 +107,9 @@
                     ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
                     ng-repeat="item in vm.layersMap[vm.subMenuLabel].items | filter:search"
                     ng-style="{
-                        color: vm.colors.list.color ? vm.colors.list.color : vm.color
+                        'color': vm.colors.list.color ? vm.colors.list.color : vm.color
                     }">
-                    <i class="icon {{item.properties.icon}}" ng-style="{color: vm.color}"></i>
+                    <i class="icon {{item.properties.icon}}" ng-style="{'color': vm.color}"></i>
                     <!-- TODO: add following markup for subtitle -->
                     <span class="list-info-title" ng-bind-html="item.properties.name"></span>
                     <!-- <span class="list-info-subtitle">Via Nazionale 144 25052 Piancogno, BS</span> -->
@@ -119,12 +124,12 @@
                     class="item item-icon-left"
                     ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
                     collection-repeat="item in vm.subMenu | filter:search">
-                    <i class="icon {{item.properties.icon}}" ng-style="{color: vm.color}"></i>
+                    <i class="icon {{item.properties.icon}}" ng-style="{'color': vm.color}"></i>
                     <!-- TODO: add following markup for subtitle -->
                             <span
                                 class="list-info-title"
                                 ng-style="{
-                                    color: vm.colors.list.color ? vm.colors.list.color : vm.color
+                                    'color': vm.colors.list.color ? vm.colors.list.color : vm.color
                                 }"
                                 ng-bind-html="item.properties.name">
                             </span>
@@ -140,7 +145,9 @@
     <!-- TODO: to show only when there are a lot of items -->
     <div 
         class="arrow-show-more"
-        style="background: {{vm.colors.global.background}}"
+        ng-style="{
+            'background': vm.colors.global.background
+        }"
         ng-click="vm.toggleList()">
         <i 
             class="icon"

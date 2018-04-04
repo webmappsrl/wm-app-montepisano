@@ -5,7 +5,7 @@
     <ion-nav-title>
         <span
             ng-style="{
-                color: vm.colors.mainBar.overwrite ? vm.colors.mainBar.color : vm.color
+                'color': vm.colors.mainBar.overwrite ? vm.colors.mainBar.color : vm.color
             }">
             {{vm.viewTitle}}
         </span>
@@ -25,14 +25,14 @@
         <div
             class="is-sub-group"
             ng-style="{
-                color: vm.color
+                'color': vm.color
             }">
             <div 
                 class="list">
                 <a 
                     class="item item-icon-left"
                     ng-style="{
-                        color: item.color
+                        'color': item.color
                     }"
                     ng-if="vm.subGroupMenu"
                     ng-click="vm.goTo(item.type)"
