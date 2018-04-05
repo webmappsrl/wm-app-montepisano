@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?5xpjqq');
-  src:  url('fonts/webmapp.eot?5xpjqq#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?5xpjqq') format('truetype'),
-    url('fonts/webmapp.woff?5xpjqq') format('woff'),
-    url('fonts/webmapp.svg?5xpjqq#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?h0a9gr');
+  src:  url('fonts/webmapp.eot?h0a9gr#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?h0a9gr') format('truetype'),
+    url('fonts/webmapp.woff?h0a9gr') format('woff'),
+    url('fonts/webmapp.svg?h0a9gr#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -228,6 +228,9 @@
 }
 .wm-icon-vc-bike-silver2:before {
   content: "\e9f1";
+}
+.wm-icon-montepisano:before {
+  content: "\e9f2";
 }
 .wm-icon-aerialway-15:before {
   content: "\e925";
