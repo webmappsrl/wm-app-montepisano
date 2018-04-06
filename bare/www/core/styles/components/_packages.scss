@@ -112,6 +112,7 @@ ion-content {
 }
 
 .button-reduced {
+  width: 50%;
   padding: 6px 0 0 0;
   position: absolute;
   bottom: 0;
@@ -126,6 +127,14 @@ ion-content {
     margin-bottom: 5px!important;
     letter-spacing: 0;
   }
+}
+
+.route-languages-reduced {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 5px;
+  font-size: 1.25em;
 }
 
 // .buttons-reduced {

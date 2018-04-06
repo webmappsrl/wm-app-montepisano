@@ -186,7 +186,7 @@ angular.module('webmapp')
             Utils.forceDigest();
         });
 
-        $rootScope.$on('categories-updated', function (e, value) {
+        $rootScope.$on('taxonomy-activity-updated', function (e, value) {
             vm.categories = value;
             vm.setFilters();
             Utils.forceDigest();
@@ -248,6 +248,7 @@ angular.module('webmapp')
             PackageService.getPackagesIdByUserId();
         }
 
+        PackageService.getTaxonomy('activity');
         PackageService.getRoutes();
 
         return vm;

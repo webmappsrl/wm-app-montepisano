@@ -30,23 +30,23 @@ angular.module('webmapp')
         return function (input, filters) {
             var results = [],
                 order = 'asc',
-                filt = false;
+                applyFilter = false;
 
             for (var k in filters) {
-                if (k !== $translate.instant("Tutte")) {
-                    filt = true;
+                if (k !== $translate.instant("Tutte") && !filters[k].value) {
+                    applyFilter = true;
                     break;
                 }
             }
 
-            if (!filt) {
+            if (!applyFilter) {
                 return input;
             }
 
             for (var package in input) {
-                for (var key in input[package].webmapp_category) {
-                    if (filters[input[package].webmapp_category[key]] &&
-                        filters[input[package].webmapp_category[key]].value) {
+                for (var key in input[package].activity) {
+                    if (filters[input[package].activity[key]] &&
+                        filters[input[package].activity[key]].value) {
                         results.push(input[package]);
                         break;
                     }

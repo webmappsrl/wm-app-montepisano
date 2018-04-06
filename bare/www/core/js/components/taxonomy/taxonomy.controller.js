@@ -15,6 +15,7 @@ angular.module('webmapp')
         var communicationConf = CONFIG.COMMUNICATION;
 
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+        vm.defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';
         vm.taxonomy = {};
 
         vm.goTo = function(id) {

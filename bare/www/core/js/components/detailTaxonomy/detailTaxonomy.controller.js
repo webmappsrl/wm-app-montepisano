@@ -17,6 +17,7 @@ angular.module('webmapp')
         var communicationConf = CONFIG.COMMUNICATION;
 
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+        vm.defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';
         vm.taxonomy = {};
         vm.item = {};
         vm.routes = {};
@@ -100,7 +101,7 @@ angular.module('webmapp')
                         updateMapView();
                     },
                     function (error) {
-                        console.log("PackageService.getTrack() ", error);
+                        console.error("DetailTaxonommy.getTrack() ", error);
                     });
         };
 
@@ -112,7 +113,7 @@ angular.module('webmapp')
                         }
                     },
                     function (error) {
-                        console.log("PackageService.getTracksForPack() ", error);
+                        console.error("DetailTaxonommy.getTracksForPack() ", error);
                     });
         };
 

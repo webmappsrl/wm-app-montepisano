@@ -160,69 +160,27 @@ angular.module('webmapp')
                     });
         };
 
-        var translateCategory = function (categoryId, lang) {
-            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'webmapp_category/' + categoryId + "?lang=" + lang)
+        var getTaxonomyTranslated = function (taxonomyType, id, lang) {
+            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '/' + id + '?lang=' + lang)
                 .then(function (data) {
-                        categories[categoryId].name[lang] = data.name;
-                        asyncTranslations--;
-                        if (asyncTranslations === 0) {
-                            $rootScope.$emit('categories-updated', categories);
-                        }
-                        localStorage.$wm_categories = JSON.stringify(categories);
-                    },
-                    function () {
-                        console.error('Translations retrive error');
-                        asyncTranslations--;
-                        if (asyncTranslations === 0) {
-                            $rootScope.$emit('categories-updated', categories);
-                        }
-                    });
-        };
+                    taxonomy[taxonomyType][id].name[lang] = data.name;
+                    taxonomy[taxonomyType][id].description[lang] = data.description;
 
-        var getCategories = function () {
-            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'webmapp_category?per_page=100')
-                .then(function (data) {
-                        categories = {};
+                    asyncTranslations--;
+                    if (asyncTranslations === 0) {
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                        $ionicLoading.hide();
+                    }
+                })
+                .catch(function (err) {
+                    var tmp = err.getResponseHeader("Content-type")
 
-                        for (var packId in packages) {
-                            for (var i in packages[packId].webmapp_category) {
-                                var categoryId = packages[packId].webmapp_category[i];
-                                if (!categories || !categories[categoryId]) {
-                                    categories[categoryId] = {
-                                        name: {},
-                                        icon: 'wm-icon-generic'
-                                    };
-                                }
-                            }
-                        }
-
-                        asyncTranslations = 0;
-
-                        for (var pos in data) {
-                            if (categories[data[pos].id]) {
-                                categories[data[pos].id].name[defaultLang] = data[pos].name;
-                                if (data[pos].icon && data[pos].icon !== 'wm-icon-generic') {
-                                    categories[data[pos].id].icon = data[pos].icon;
-                                }
-                                if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.available) {
-                                    for (var i in CONFIG.LANGUAGES.available) {
-                                        asyncTranslations++;
-                                        translateCategory(data[pos].id, CONFIG.LANGUAGES.available[i].substring(0, 2));
-                                    }
-                                }
-                            }
-                        }
-
-                        if (asyncTranslations === 0) {
-                            $rootScope.$emit('categories-updated', categories);
-                        }
-                        localStorage.$wm_categories = JSON.stringify(categories);
-                    },
-                    function (error) {
-                        if (!categories.length) {
-                            console.warn("No categories available. Shutting down...");
-                        }
-                    });
+                    asyncTranslations--;
+                    if (asyncTranslations === 0) {
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                        $ionicLoading.hide();
+                    }
+                });
         };
 
         /**
@@ -237,7 +195,6 @@ angular.module('webmapp')
             //Prevent multiple requests
             if (asyncRoutes > 0) {
                 $rootScope.$emit('packages-updated', packages);
-                $rootScope.$emit('categories-updated', categories);
                 return;
             }
 
@@ -245,7 +202,6 @@ angular.module('webmapp')
                 $ionicLoading.show();
             } else {
                 $rootScope.$emit('packages-updated', packages);
-                $rootScope.$emit('categories-updated', categories);
             }
 
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/?per_page=100')
@@ -268,7 +224,6 @@ angular.module('webmapp')
                         }
                         localStorage.$wm_packages = JSON.stringify(packages);
 
-                        getCategories();
                         $ionicLoading.hide();
                     },
                     function (err) {
@@ -296,17 +251,37 @@ angular.module('webmapp')
             }
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')
                 .then(function (data) {
+                    asyncTranslations = 0;
                     taxonomy[taxonomyType] = {};
                     for (var i in data) {
                         if (data[i].count > 0) {
                             taxonomy[taxonomyType][data[i].id] = data[i];
+                            if (CONFIG.LANGUAGES) {
+                                var tmpName = taxonomy[taxonomyType][data[i].id].name;
+                                taxonomy[taxonomyType][data[i].id].name = {};
+                                taxonomy[taxonomyType][data[i].id].name[defaultLang] = tmpName;
+                                delete tmpName;
+
+                                var tmpDescription = taxonomy[taxonomyType][data[i].id].description;
+                                taxonomy[taxonomyType][data[i].id].description = {};
+                                taxonomy[taxonomyType][data[i].id].description[defaultLang] = tmpDescription;
+                                delete tmpDescription;
+
+                                if (CONFIG.LANGUAGES.available) {
+                                    for (var langId in CONFIG.LANGUAGES.available) {
+                                        asyncTranslations++;
+                                        getTaxonomyTranslated(taxonomyType, data[i].id, CONFIG.LANGUAGES.available[langId]);
+                                    }
+                                }
+                            }
                         }
                     }
 
-                    $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                    if (asyncTranslations === 0) {
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                        $ionicLoading.hide();
+                    }
                     localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
-
-                    $ionicLoading.hide();
                 })
                 .catch(function (err) {
                     if (!taxonomy[taxonomyType]) {

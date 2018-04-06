@@ -1,6 +1,12 @@
 <ion-view class="detailTaxonomy-page" cache-view="false" ng-controller="DetailTaxonomyController as vm">
     <ion-nav-title>
-        <span>
+        <span ng-if="vm.title[vm.currentLang]">
+            {{vm.title[vm.currentLang]}}
+        </span>
+        <span ng-if="vm.title[vm.defaultLang] && !vm.title[vm.currentLang]">
+            {{vm.title[vm.defaultLang]}}
+        </span>
+        <span ng-if="vm.title && !vm.title[vm.defaultLang] && !vm.title[vm.currentLang]">
             {{vm.title}}
         </span>
     </ion-nav-title>
@@ -19,7 +25,9 @@
             <img ng-src="{{vm.item.featured_image.sizes.medium}}">
         </div>
         <div class="detailTaxonomy-description" ng-class="{'show-full': vm.fullDescription}">
-            {{vm.item.description}}
+            <span ng-if="vm.item.description[vm.currentLang]">{{vm.item.description[vm.currentLang]}}</span>
+            <span ng-if="vm.item.description[vm.defaultLang] && !vm.item.description[vm.currentLang]">{{vm.item.description[vm.defaultLang]}}</span>
+            <span ng-if="vm.item.description && !vm.item.description[vm.defaultLang] && !vm.item.description[vm.currentLang]">{{vm.item.description}}</span>
             <div class="detailTaxonomy-read-more">
                 <span ng-click="vm.toggleDescription()">
                     {{vm.fullDescription ? "nascondi" : "leggi tutto" | translate}}
@@ -35,12 +43,9 @@
                     {{route.packageTitle[vm.currentLang]}}
                 </span>
                 <span ng-if="!route.packageTitle[vm.currentLang]">
-                    {{route.packageTitle['it']}}
+                    {{route.packageTitle[vm.defaultLang]}}
                 </span>
             </div>
         </div>
-        <!-- <div class="detailTaxonomy-map">
-            <img ng-src="{{vm.item.featured_image.sizes.medium}}">
-        </div> -->
     </ion-content>
 </ion-view>

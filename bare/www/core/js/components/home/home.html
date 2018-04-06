@@ -1,16 +1,11 @@
-<ion-view 
-    class="home-page"
-    cache-view="false" 
-    ng-controller="HomeController as vm">
+<ion-view class="home-page" cache-view="false" ng-controller="HomeController as vm">
     <ion-nav-title>
         <span>
             {{vm.appTitle}}
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">
-        <button 
-            class="no-animate button button-icon icon ion-navicon"
-            menu-toggle="left"></button>
+        <button class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
 
     <ion-content style="color: black;" ng-style="{
@@ -20,18 +15,22 @@
             {{vm.title | translate}}
         </div>
         <div class="home-content">
-            <div 
-                ng-repeat="(key, item) in vm.categories"
-                class="home-button width-{{vm.columns}} height-{{vm.rows}}"
-                ng-click="vm.goTo(key)">
+            <div ng-repeat="(key, item) in vm.activities" class="home-button width-{{vm.columns}} height-{{vm.rows}}" ng-click="vm.goTo(key)">
                 <div class="home-icon">
                     <i class="no-animate icon {{item.icon}}"></i>
                 </div>
                 <div class="home-name">
-                    {{item.name[vm.currentLang]}}
+                    <span ng-if="item.name[vm.currentLang]">
+                        {{item.name[vm.currentLang]}}
+                    </span>
+                    <span ng-if="item.name[vm.defaultLang]">
+                        {{item.name[defaultLang]}}
+                    </span>
+                    <span ng-if="item.name && !item.name[vm.currentLang]">
+                        {{item.name}}
+                    </span>
                 </div>
             </div>
         </div>
     </ion-content>
 </ion-view>
-

@@ -9,11 +9,7 @@
     </ion-nav-buttons>
 
     <ion-content style="color: black; background: {{COLORS.global.background}}">
-        <div
-            ng-repeat="item in vm.taxonomy"
-            class="taxonomy-button"
-            ng-click="vm.goTo(item.id)"
-            ng-style="{
+        <div ng-repeat="item in vm.taxonomy" class="taxonomy-button" ng-click="vm.goTo(item.id)" ng-style="{
                 'background-color': item.color
             }">
             <div class="taxonomy-content">
@@ -21,7 +17,18 @@
                     <img ng-src="{{item.featured_image.sizes.medium}}">
                 </div>
                 <div class="taxonomy-titlebar">
-                    {{item.name}}<br> {{item.title}}
+                    <span ng-if="item.name[vm.currentLang]">
+                        {{item.name[vm.currentLang]}}
+                        <br> {{item.title}}
+                    </span>
+                    <span ng-if="item.name[vm.defaultLang] && !item.name[vm.currentLang]">
+                        {{item.name[vm.defaultLang]}}
+                        <br> {{item.title}}
+                    </span>
+                    <span ng-if="item.name && !item.name[vm.currentLang] && !item.name[vm.defaultLang]">
+                        {{item.name}}
+                        <br> {{item.title}}
+                    </span>
                 </div>
             </div>
         </div>

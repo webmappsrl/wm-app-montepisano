@@ -15,19 +15,20 @@ angular.module('webmapp')
         var offlineScope = $rootScope.$new(),
             communicationConf = CONFIG.COMMUNICATION;
 
-        vm.categories = {};
+        vm.activities = {};
         vm.columns = 1;
         vm.rows = 1;
         vm.title = "Cosa vuoi fare?";
         vm.appTitle = CONFIG.OPTIONS.title;
 
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+        vm.defaultLang = "it";
 
         vm.goTo = function (id) {
             Utils.goTo('packages/' + id);
         };
 
-        $rootScope.$on('categories-updated', function (e, value) {
+        $rootScope.$on('taxonomy-activity-updated', function (e, value) {
             $ionicLoading.hide();
             switch (Object.keys(value).length) {
                 case 1:
@@ -77,12 +78,12 @@ angular.module('webmapp')
                     vm.rows = 4;
                     break;
             }
-            vm.categories = value;
+            vm.activities = value;
             Utils.forceDigest();
         });
 
         $ionicLoading.show();
-        PackageService.getRoutes();
+        PackageService.getTaxonomy('activity');
 
         return vm;
     });

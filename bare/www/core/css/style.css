@@ -4,14 +4,17 @@
  *
  * Definition of typographic styles
  */
-/* ------------------------------------ *   #FONTS
+/* ------------------------------------ *\
+   #FONTS
 \* ------------------------------------ */
 /* cyrillic-ext */
 /* Main font - ALEGREYA SANS */
 /* FONT FACE */
-/* ------------------------------------ *   #HEADINGS
+/* ------------------------------------ *\
+   #HEADINGS
 \* ------------------------------------ */
-/* ------------------------------------ *   #LINKS
+/* ------------------------------------ *\
+   #LINKS
 \* ------------------------------------ */
 /*
 !* For fluid typography: setting a minimum font size for smaller screens *!
@@ -113,7 +116,8 @@ button {
  *
  * Style for all types of buttons
  */
-/* ------------------------------------ *   #BUTTONS
+/* ------------------------------------ *\
+   #BUTTONS
 \* ------------------------------------ */
 .modal.static-modal button {
   max-width: 80%;
@@ -331,7 +335,8 @@ button.login-button {
  *
  * Style for forms elements
  */
-/* ------------------------------------ *   #GENERAL
+/* ------------------------------------ *\
+   #GENERAL
 \* ------------------------------------ */
 .checkbox-container {
   display: inline-block;
@@ -423,14 +428,16 @@ ion-slide.slider-slide {
  *
  * Basic style for tables
  */
-/* ------------------------------------ *   #TABLE
+/* ------------------------------------ *\
+   #TABLE
 \* ------------------------------------ */
 /*
  * ATTRIBUTION PAGE
  *
  * Styles for attribution page
  */
-/* ------------------------------------ *   #ATTRIBUTION
+/* ------------------------------------ *\
+   #ATTRIBUTION
 \* ------------------------------------ */
 ion-content div.static-content.card-content {
   color: #605846; }
@@ -446,7 +453,8 @@ ion-content div.static-content.card-content {
  *
  * Styles for Valle dei segni card
  */
-/* ------------------------------------ *   #CARD
+/* ------------------------------------ *\
+   #CARD
 \* ------------------------------------ */
 .card-page {
   background: #f8faf3; }
@@ -506,7 +514,8 @@ ion-content div.static-content.card-content {
   font-size: 16px;
   z-index: 10; }
 
-/* ------------------------------------ *   #MEDIA QUERIES
+/* ------------------------------------ *\
+   #MEDIA QUERIES
 \* ------------------------------------ */
 @media screen and (max-height: 480px) {
   .card-image {
@@ -534,7 +543,8 @@ ion-content div.static-content.card-content {
  *
  * Style for details page
  */
-/* ------------------------------------ *   #GENERAL
+/* ------------------------------------ *\
+   #GENERAL
 \* ------------------------------------ */
 ion-content.fullView {
   padding: 0;
@@ -552,7 +562,8 @@ ion-content.fullView {
  *
  * Style for details page
  */
-/* ------------------------------------ *   #GENERAL
+/* ------------------------------------ *\
+   #GENERAL
 \* ------------------------------------ */
 div.detailRoute-footer {
   position: fixed;
@@ -580,7 +591,8 @@ div.detailRoute-footer {
  * TAXONOMY PAGE
  *
  */
-/* ------------------------------------ *   #Detail Taxonomy
+/* ------------------------------------ *\
+   #Detail Taxonomy
 \* ------------------------------------ */
 .detailTaxonomy-page ion-content {
   padding: 0; }
@@ -659,7 +671,7 @@ div.detailRoute-footer {
         left: 0;
         font-size: 21px; }
       .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.open-icon {
-        color: #FF0000;
+        color: #13BC00;
         padding: 0; }
       .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.download-icon {
         padding: 0 2px 0 0; }
@@ -673,7 +685,8 @@ div.detailRoute-footer {
  *
  * Style for details page
  */
-/* ------------------------------------ *   #GENERAL
+/* ------------------------------------ *\
+   #GENERAL
 \* ------------------------------------ */
 .details-subnav__list {
   margin-top: -1px;
@@ -1041,7 +1054,8 @@ div.detailRoute-footer {
 .details-route span.difficulty {
   float: right; }
 
-/* ------------------------------------ *   #MEDIA QUERIES
+/* ------------------------------------ *\
+   #MEDIA QUERIES
 \* ------------------------------------ */
 /* TODO: use mixin? */
 @media only screen and (max-height: 567px) and (max-width: 768px) {
@@ -1082,7 +1096,8 @@ div.detailRoute-footer {
  *
  * Style for help page
  */
-/* ------------------------------------ *   #GENERAL
+/* ------------------------------------ *\
+   #GENERAL
 \* ------------------------------------ */
 .help-page.pane {
   background-color: #91c068;
@@ -1197,7 +1212,8 @@ div.detailRoute-footer {
  *
  * Style for Home page
  */
-/* ------------------------------------ *   #GENERAL
+/* ------------------------------------ *\
+   #GENERAL
 \* ------------------------------------ */
 ion-content div.home-title {
   padding: 4vh;
@@ -1271,7 +1287,8 @@ div.logout {
  *
  * Style for lists
  */
-/* ------------------------------------ *   #GENERAL
+/* ------------------------------------ *\
+   #GENERAL
 \* ------------------------------------ */
 /* Element */
 .coupons-list {
@@ -1423,7 +1440,8 @@ div.logout {
   .arrow-show-more .icon::before {
     font-size: 35px; }
 
-/* ------------------------------------ *   #MEDIA QUERIES
+/* ------------------------------------ *\
+   #MEDIA QUERIES
 \* ------------------------------------ */
 @media only screen and (min-width: 1025px) {
   .arrow-show-more {
@@ -1434,7 +1452,8 @@ div.logout {
  *
  * Styles for login page
  */
-/* ------------------------------------ *   #LOGIN & CARD
+/* ------------------------------------ *\
+   #LOGIN & CARD
 \* ------------------------------------ */
 button.login-button {
   border: 2px solid;
@@ -1736,7 +1755,8 @@ button.login-button.skip-login {
   text-align: center;
   font-size: 40px; }
 
-/* ------------------------------------ *   #MEDIA QUERIES
+/* ------------------------------------ *\
+   #MEDIA QUERIES
 \* ------------------------------------ */
 @media screen and (max-width: 320px) {
   .social-login-title {
@@ -1780,7 +1800,8 @@ button.login-button.skip-login {
 .xs-visible {
   display: none; }
 
-/* ------------------------------------ *   #BARS - TOPBAR AND FOOTER
+/* ------------------------------------ *\
+   #BARS - TOPBAR AND FOOTER
 \* ------------------------------------ */
 /* Top menu container - set in pane? */
 .menu-content {
@@ -1915,12 +1936,14 @@ button.login-button.skip-login {
 
 }
 */
-/* ------------------------------------ *   #VIEW
+/* ------------------------------------ *\
+   #VIEW
 \* ------------------------------------ */
 .welcome-page .view-container {
   background-color: transparent; }
 
-/* ------------------------------------ *   #CONTENT & SCROLLING ELEMENT
+/* ------------------------------------ *\
+   #CONTENT & SCROLLING ELEMENT
 \* ------------------------------------ */
 .scroll-content {
   background: inherit; }
@@ -1967,7 +1990,8 @@ button.login-button.skip-login {
 .layer-details {
   overflow: visible; }
 
-/* ------------------------------------ *   #MAP
+/* ------------------------------------ *\
+   #MAP
 \* ------------------------------------ */
 /* TODO: for Raffa, testare su mobile */
 .platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) > * {
@@ -1980,7 +2004,8 @@ button.login-button.skip-login {
   top: 43px; }
 
 /* testare su mobile END */
-/* ------------------------------------ *   #MEDIA QUERIES
+/* ------------------------------------ *\
+   #MEDIA QUERIES
 \* ------------------------------------ */
 /* TODO: use mixin? */
 @media only screen and (max-height: 666px) and (max-width: 768px) {
@@ -2091,7 +2116,8 @@ button.login-button.skip-login {
  *
  * Styles for menus
  */
-/* ------------------------------------ *   #MENU
+/* ------------------------------------ *\
+   #MENU
 \* ------------------------------------ */
 /* Container */
 .bar.bar-positive .title {
@@ -2122,7 +2148,8 @@ a.item {
     color: #4a6e23;
     font-weight: 700; }
 
-/* ------------------------------------ *   #ADVANCED MENU
+/* ------------------------------------ *\
+   #ADVANCED MENU
 \* ------------------------------------ */
 .advanced-menu-content {
   background: inherit;
@@ -2163,7 +2190,8 @@ a.item {
  *
  * Styles for map element and components
  */
-/* ------------------------------------ *   #MAP
+/* ------------------------------------ *\
+   #MAP
 \* ------------------------------------ */
 #map {
   height: 100%;
@@ -2206,7 +2234,8 @@ a.item {
   .report-control:active a i::before {
     color: #cccccc; }
 
-/* ------------------------------------ *   #MAP ICONS
+/* ------------------------------------ *\
+   #MAP ICONS
 \* ------------------------------------ */
 /* MarkersCluster style */
 .marker-cluster {
@@ -2288,7 +2317,8 @@ a.item {
   font-size: 48px;
   color: rgba(96, 88, 70, 0.7); }
 
-/* ------------------------------------ *   #MAP BUTTONS
+/* ------------------------------------ *\
+   #MAP BUTTONS
 \* ------------------------------------ */
 .leaflet-bar {
   -webkit-box-shadow: none !important;
@@ -2641,7 +2671,8 @@ ion-side-menus.navigation-interface ion-view ion-content.has-header,
 ion-side-menus.navigation-interface .show-start-navigation .start-navigation {
   display: none; }
 
-/* ------------------------------------ *   #MAP POPOVER
+/* ------------------------------------ *\
+   #MAP POPOVER
 \* ------------------------------------ */
 .leaflet-container a.leaflet-popup-close-button {
   display: none; }
@@ -2778,7 +2809,8 @@ button.popup-close {
     font-size: 20px;
     vertical-align: middle; }
 
-/* ------------------------------------ *   #IMAGE SLIDER
+/* ------------------------------------ *\
+   #IMAGE SLIDER
 \* ------------------------------------ */
 /* Prevent scrolling in image slider */
 .modal-details-gallery .scroll-view.scroll-xy {
@@ -2848,7 +2880,8 @@ button.popup-close {
 .leaflet-tile-container canvas {
   opacity: 0 !important; }
 
-/* ------------------------------------ *   #MEDIA QUERIES
+/* ------------------------------------ *\
+   #MEDIA QUERIES
 \* ------------------------------------ */
 @media only screen and (min-width: 1025px) {
   .leaflet-bar,
@@ -2868,7 +2901,8 @@ button.popup-close {
  *
  * Styles for modals
  */
-/* ------------------------------------ *   #MAPPALO MODAL
+/* ------------------------------------ *\
+   #MAPPALO MODAL
 \* ------------------------------------ */
 .modal {
   background: inherit !important; }
@@ -3163,7 +3197,8 @@ ion-modal-view.modal-download {
  *
  * Styles for offline map page
  */
-/* ------------------------------------ *   #OFFLINE
+/* ------------------------------------ *\
+   #OFFLINE
 \* ------------------------------------ */
 /* Card content */
 .offline-page {
@@ -3298,6 +3333,7 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
     text-align: right; }
 
 .button-reduced {
+  width: 50%;
   padding: 6px 0 0 0;
   position: absolute;
   bottom: 0; }
@@ -3311,6 +3347,13 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
     margin-left: 12px !important;
     margin-bottom: 5px !important;
     letter-spacing: 0; }
+
+.route-languages-reduced {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 5px;
+  font-size: 1.25em; }
 
 @media screen and (max-width: 360px) {
   .packages-title-reduced {
@@ -3327,7 +3370,8 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
  *
  * Style for search page
  */
-/* ------------------------------------ *   #GENERAL
+/* ------------------------------------ *\
+   #GENERAL
 \* ------------------------------------ */
 .item-search-filter {
   padding: 4px;
@@ -3422,7 +3466,8 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
  * SETTINGS PAGE
  *
  */
-/* ------------------------------------ *   #Settings
+/* ------------------------------------ *\
+   #Settings
 \* ------------------------------------ */
 .settings-page {
   background: white; }
@@ -3431,7 +3476,8 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
  * TAXONOMY PAGE
  *
  */
-/* ------------------------------------ *   #Taxonomy
+/* ------------------------------------ *\
+   #Taxonomy
 \* ------------------------------------ */
 .taxonomy-page ion-content {
   padding: 2%; }
@@ -3475,7 +3521,8 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
  *
  * Styles for webmapp page
  */
-/* ------------------------------------ *   #WEBMAPP
+/* ------------------------------------ *\
+   #WEBMAPP
 \* ------------------------------------ */
 ion-content div.static-content.card-content {
   color: #605846; }
@@ -3492,7 +3539,8 @@ ion-content div.static-content.card-content {
  *
  * Styles for welcome page
  */
-/* ------------------------------------ *   #WELCOME ELEMENTS
+/* ------------------------------------ *\
+   #WELCOME ELEMENTS
 \* ------------------------------------ */
 .welcome-page.pane,
 .welcome-page .pane {
@@ -3663,7 +3711,8 @@ ion-content div.static-content.card-content {
   .footer-settings span {
     text-decoration: underline; }
 
-/* ------------------------------------ *   #MEDIA QUERIES
+/* ------------------------------------ *\
+   #MEDIA QUERIES
 \* ------------------------------------ */
 @media only screen and (max-height: 567px) and (max-width: 768px) {
   .card.welcome-list button.item .icon {
