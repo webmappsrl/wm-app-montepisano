@@ -13,7 +13,9 @@
             menu-toggle="left"></button>
     </ion-nav-buttons>
 
-    <ion-content style="background: {{vm.colors.global.background}}">
+    <ion-content ng-style="{
+        'background': vm.colors.global.background
+    }">
         <div 
             class="list">
             <a 

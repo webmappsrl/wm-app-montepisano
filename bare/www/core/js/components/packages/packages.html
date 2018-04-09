@@ -99,7 +99,7 @@
                         </div>
 
                         <div class="stars-reduced" ng-if="item.n7webmapp_route_difficulty !== '0'">
-                            <i class="fa" aria-hidden="true" ng-repeat="n in [].constructor(5) track by $index" ng-class="{ 'wm-icon-contrast' : (item.n7webmapp_route_difficulty - $index) == 0.5 ,'wm-icon-generic' : item.n7webmapp_route_difficulty > $index, 'wm-icon-ion-android-checkmark-circle-empty': item.n7webmapp_route_difficulty <= $index}">
+                            <i class="fa" aria-hidden="true" ng-repeat="n in [].constructor(vm.maxDifficulty) track by $index" ng-class="{ 'wm-icon-contrast' : (item.n7webmapp_route_difficulty - $index) == 0.5 ,'wm-icon-generic' : item.n7webmapp_route_difficulty > $index, 'wm-icon-ion-android-checkmark-circle-empty': item.n7webmapp_route_difficulty <= $index}">
                             </i>
                         </div>
 

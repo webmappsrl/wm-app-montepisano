@@ -12,7 +12,7 @@
         </h1>
     </ion-header-bar>
 
-    <ion-content class="offline-page" style="">
+    <ion-content class="offline-page">
         <div class="static-content offline-content">
             <div class="static-description offline-description">
                 <h2 class="offline-desc-title">{{::"SEGNALA LA TUA POSIZIONE" | translate}}</h2>
@@ -64,7 +64,10 @@
             </div>
 
             <button
-                style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                ng-style="{
+                    'background': COLORS.global.buttonsBackground,
+                    'color': COLORS.global.buttonsColor
+                }"
                 class="button-download button button-block"
                 ng-if="!vm.sendInProgress && !vm.sendSuccess"
                 ng-click="vm.sendText()">

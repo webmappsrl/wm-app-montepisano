@@ -2,8 +2,13 @@
     <a class="modal-close" ng-click="hide()">
         <i class="icon wm-icon-android-close"></i>
     </a>
-    <ion-content style="background: {{COLORS.global.background}}">
-        <div class="login-header" style="background: {{COLORS.mainBar.background}}; color: {{COLORS.mainBar.color}}">
+    <ion-content ng-style="{
+        'background': COLORS.global.background
+    }">
+        <div class="login-header" ng-style="{
+            'background': COLORS.mainBar.background,
+            'color': COLORS.mainBar.color
+        }">
             <!-- <i class="icon wm-icon-heart-valcamonica"></i> -->
             {{ state.registrationMode || state.resetMode ? "REGISTRATI" : "ACCEDI" | translate}}
         </div>
@@ -99,7 +104,6 @@
                             autocapitalize="none" 
                             spellcheck="false" 
                             autocomplete="off"  
-                            style="" 
                             placeholder="{{::'email' | translate}}"
                             onfocus="this.placeholder = ''" 
                             onblur="this.placeholder = 'email'">
@@ -121,7 +125,10 @@
                     </div>
                     <label class="item">
                         <button
-                            style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                            ng-style="{
+                                'background': COLORS.global.buttonsBackground,
+                                'color': COLORS.global.buttonsColor
+                            }"
                             class="login-button button button-block" 
                             type="submit">
                             {{logging ? "(Loading..)" : "ACCEDI" | translate}}
@@ -145,7 +152,6 @@
                             autocapitalize="none"
                             spellcheck="false"
                             autocomplete="off"
-                            style=""
                             placeholder="{{::'nome' | translate}}"
                             onfocus="this.placeholder = ''"
                             onblur="this.placeholder = 'nome'">
@@ -159,7 +165,6 @@
                             autocapitalize="none"
                             spellcheck="false"
                             autocomplete="off"
-                            style=""
                             placeholder="{{::'cognome' | translate}}"
                             onfocus="this.placeholder = ''"
                             onblur="this.placeholder = 'cognome'">
@@ -173,7 +178,6 @@
                             autocapitalize="none"
                             spellcheck="false"
                             autocomplete="off"
-                            style=""
                             placeholder="{{::'email' | translate}}"
                             onfocus="this.placeholder = ''"
                             onblur="this.placeholder = 'email'">
@@ -187,7 +191,6 @@
                             autocapitalize="none"
                             spellcheck="false"
                             autocomplete="off"
-                            style=""
                             placeholder="{{::'ripeti email' | translate}}"
                             onfocus="this.placeholder = ''"
                             onblur="this.placeholder = 'ripeti email'">
@@ -262,7 +265,10 @@
                     </div> -->
                     <label class="item">
                         <button
-                            style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                            ng-style="{
+                                'background': COLORS.global.buttonsBackground,
+                                'color': COLORS.global.buttonsColor
+                            }"
                             class="login-button button button-block"
                             type="submit">
                             {{logging ? "(Loading..)" : "CONFERMA" | translate}}
@@ -281,7 +287,9 @@
 
                 <div class="app-logo-container">
                     <button 
-                        style="background:{{COLORS.global.buttonsBackground}};"
+                        ng-style="{
+                            'background': COLORS.global.buttonsBackground
+                        }"
                         class="login-button skip-login" 
                         ng-click="state.resetMode = true">
                         {{::"Registrati" | translate}}

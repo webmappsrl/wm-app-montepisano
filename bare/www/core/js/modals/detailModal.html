@@ -5,7 +5,9 @@
        ng-click="vm.hide()">
        <i class="icon wm-icon-android-close"></i>
    </a>
-   <ion-content style="background: {{COLORS.global.background}}">
+   <ion-content ng-style="{
+       'background': COLORS.global.background
+    }">
        <div class="modal-content">
            <span class="modal-title">{{::"Dettagli" | translate}}</span>
            <!--TODO: For image and text, add class modal-two-columns -->

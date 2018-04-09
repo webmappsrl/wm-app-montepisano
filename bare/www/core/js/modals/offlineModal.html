@@ -13,7 +13,7 @@
         </h1>
     </ion-header-bar>
 
-    <ion-content class="offline-page" style="">
+    <ion-content class="offline-page">
         <div class="static-content offline-content">
 
             <!-- <div class="offline-image">
@@ -48,7 +48,10 @@
                 </p>
             </div>
             <button
-                style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                ng-style="{
+                    'background': COLORS.global.buttonsBackground,
+                    'color': COLORS.global.buttonsColor
+                    }"
                 class="button-download button button-block"
                 ng-if="!canBeEnabled && !downloadInProgress && !unzipInProgress"
                 ng-click="downloadMap()">
@@ -59,7 +62,10 @@
 
             <!-- TODO: add classes for button -->
             <button
-                style="background:{{COLORS.global.buttonsBackground}}; color:{{COLORS.global.buttonsColor}};"
+                ng-style="{
+                    'background': COLORS.global.buttonsBackground,
+                    'color': COLORS.global.buttonsColor
+                }"
                 class="button-download button button-block"
                 ng-click="toggleMode()"
                 ng-if="canBeEnabled">

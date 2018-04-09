@@ -1,25 +1,25 @@
 angular.module('webmapp')
 
 .controller('MenuController', function MenuController(
-    $timeout,
-    $scope,
-    $state,
-    $rootScope,
-    $location,
+    $cordovaKeyboard,
     $ionicModal,
     $ionicPopup,
     $ionicScrollDelegate,
-    $cordovaKeyboard,
-    Model,
-    MapService,
-    Utils,
-    Offline,
-    Auth,
-    Account,
-    Tracking,
     $ionicSideMenuDelegate,
+    $location,
+    $rootScope,
+    $scope,
+    $state,
+    $timeout,
+    $translate,
+    Account,
+    Auth,
     CONFIG,
-    $translate
+    MapService,
+    Model,
+    Offline,
+    Tracking,
+    Utils
 ) {
     var vm = {};
 

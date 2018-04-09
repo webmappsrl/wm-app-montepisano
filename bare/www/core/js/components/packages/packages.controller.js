@@ -59,6 +59,8 @@ angular.module('webmapp')
         vm.search = "";
         vm.filters = {};
 
+        vm.maxDifficulty = CONFIG.MULTIMAP.maxDifficulty ? CONFIG.MULTIMAP.maxDifficulty : 5;
+
         $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/categoriesFiltersModal.html', {
             scope: modalFiltersScope,
             animation: 'slide-in-up'

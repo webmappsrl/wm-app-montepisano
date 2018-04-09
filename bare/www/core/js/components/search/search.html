@@ -17,7 +17,9 @@
     <div class="item item-search-filter">
         <div 
             class="search-select-box button-search-cat-select"
-            style="background: {{vm.colors.global.background}}">
+            ng-style="{
+                'background': vm.colors.global.background
+            }">
             <button
                 class="select-category-left button-select button-search-cat-select"
                 ng-click="vm.openFilters()"
@@ -64,7 +66,9 @@
 
     <form 
         class="item item-search-form"
-        style="background: {{vm.colors.global.background}}" 
+        ng-style="{
+            'background': vm.colors.global.background
+        }" 
         ng-submit="vm.closeKeyboard()">
 
         <div class="search-input-box">
@@ -100,7 +104,9 @@
         ng-if="vm.showInMap"
         ng-click="vm.toggleMap()"
         class="button button-search-map"
-        style="background-color: {{vm.colors.global.buttonsBackground || vm.colors.search.color}}">
+        ng-style="{
+            'background-color': vm.colors.global.buttonsBackground || vm.colors.search.color
+        }">
         <i 
             class="icon wm-icon-map"
             ng-if="!vm.isMapView"></i>

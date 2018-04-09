@@ -1,12 +1,8 @@
 <!-- TODO: add class itinerario-details for itinerario ?-->
-<ion-view
-    cache-view="false"
-    ng-controller="DetailRouteController as vm" class="layer-details"
-    ng-style="{
+<ion-view cache-view="false" ng-controller="DetailRouteController as vm" class="layer-details" ng-style="{
         'background': vm.colors.details.background,
         'color': vm.colors.details.color
-    }"
->
+    }">
 
     <ion-nav-title>
         <span style="font-size: 64%;">
@@ -14,86 +10,68 @@
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left" class="no-animate">
-        <button
-            class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left"
-            ng-click="vm.goBack()">
+        <button class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left" ng-click="vm.goBack()">
         </button>
     </ion-nav-buttons>
 
-    <ion-content style="background: {{vm.colors.global.background}}">
+    <ion-content ng-style="{
+        'background': vm.colors.global.background
+    }">
         <div class="details-container">
-            <div
-                class="details-content"
-                ng-class="{
+            <div class="details-content" ng-class="{
                     'details-columns': vm.featureImage,
                     'details-row': !vm.featureImage
                 }">
                 <!--    one columns layout -->
                 <div class="details-rows">
-                    <div
-                        class="details-title"
-                        ng-bind-html="vm.title">
+                    <div class="details-title" ng-bind-html="vm.title">
                     </div>
-                    <div class="details-route"
-                         ng-if="vm.codeRoute || vm.difficulty !== '0' ">
-                        <span class="code"
-                              ng-if="vm.codeRoute">
+                    <div class="details-route" ng-if="vm.codeRoute || vm.difficulty !== '0' ">
+                        <span class="code" ng-if="vm.codeRoute">
                             <strong>{{::"Codice" | translate}}</strong>: {{vm.codeRoute}} </span>
-                        <span class="difficulty"
-                              ng-if="vm.difficulty !== 0"><strong>{{::"Difficoltà" | translate}}</strong>:
-                        <i  class="fa"
-                            aria-hidden="true"
-                            ng-repeat="n in [].constructor(5) track by $index"
-                            ng-class="{ 'fa-star-half-o' : (vm.difficulty - $index) == 0.5 , 'fa-star' : vm.difficulty > $index, 'fa-star-o': vm.difficulty <= $index  }"
-                        ></i></span>
+                        <span class="difficulty" ng-if="vm.difficulty !== 0">
+                            <strong>{{::"Difficoltà" | translate}}</strong>:
+                            <i class="fa" aria-hidden="true" ng-repeat="n in [].constructor(vm.maxDifficulty) track by $index" ng-class="{ 'fa-star-half-o' : (vm.difficulty - $index) == 0.5 , 'fa-star' : vm.difficulty > $index, 'fa-star-o': vm.difficulty <= $index  }"></i>
+                        </span>
                     </div>
 
-                    <div
-                        class="details-image-route">
-                        <img
-                            ng-if="!vm.isAreaDetail"
-                            ng-click="vm.openImageModal()"
-                            ng-src="{{vm.featureImage}}">
-                        <img
-                            ng-if="vm.isAreaDetail"
-                            style="max-height: 125px; margin-left: 20%;"
-                            ng-src="{{vm.featureImage}}">
+                    <div class="details-image-route">
+                        <img ng-if="!vm.isAreaDetail" ng-click="vm.openImageModal()" ng-src="{{vm.featureImage}}">
+                        <img ng-if="vm.isAreaDetail" style="max-height: 125px; margin-left: 20%;" ng-src="{{vm.featureImage}}">
                     </div>
 
-                    <div
-                        class="details-description details-rows"
-                        ng-bind-html="vm.description">
+                    <div class="details-description details-rows" ng-bind-html="vm.description">
                     </div>
                 </div>
             </div>
         </div>
     </ion-content>
-    <div
-        style="background: {{vm.colors.global.background}}" 
-        class="detailRoute-footer">
-        <div
-            ng-if="!vm.isPublic && 
+    <div ng-style="{
+        'background': vm.colors.global.background
+    }" class="detailRoute-footer">
+        <div ng-if="!vm.isPublic && 
                 (
                     (
                         vm.isLoggedIn && !vm.userPackagesId[vm.id]
                     ) ||
                     !vm.isLoggedIn
                 )">
-            <button
-                style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
-                class="login-button button left"
+            <button ng-style="{
+                'background': COLORS.global.buttonsBackground,
+                'color': COLORS.global.buttonsColor
+            }" class="login-button button left"
                 ng-click="vm.openVoucherModal()">
                 {{::"Voucher" | translate}}
             </button>
-            <button
-                style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
-                class="login-button button right"
+            <button ng-style="{
+                'background': COLORS.global.buttonsBackground,
+                'color': COLORS.global.buttonsColor
+            }" class="login-button button right"
                 ng-click="vm.requestRoute()">
                 {{::"Acquista 9.99€" | translate}}
             </button>
         </div>
-        <div
-            ng-if="(
+        <div ng-if="(
                     !vm.userDownloadedPackages[vm.id] &&
                     (
                         (
@@ -104,15 +82,15 @@
                 (
                     vm.userDownloadedPackages[vm.id] && !vm.isLoggedIn && vm.isPublic && !vm.skipLogin
                 )">
-            <button
-                style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
-                class="login-button button button-block"
+            <button ng-style="{
+                'background': COLORS.global.buttonsBackground,
+                'color': COLORS.global.buttonsColor
+            }" class="login-button button button-block"
                 ng-click="vm.downloadPack()">
                 {{::"Scarica" | translate}}
             </button>
         </div>
-        <div
-            ng-if="vm.userDownloadedPackages[vm.id] &&
+        <div ng-if="vm.userDownloadedPackages[vm.id] &&
                 (
                     (
                         vm.isLoggedIn && 
@@ -124,9 +102,10 @@
                         !vm.isLoggedIn && vm.isPublic && vm.skipLogin
                     )
                 )">
-            <button
-                style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
-                class="login-button button button-block"
+            <button ng-style="{
+                'background': COLORS.global.buttonsBackground,
+                'color': COLORS.global.buttonsColor
+            }" class="login-button button button-block"
                 ng-click="vm.openPackage()">
                 {{::"Apri" | translate}}
             </button>

@@ -13,7 +13,9 @@
             menu-toggle="left"></button>
     </ion-nav-buttons>
 
-    <ion-content style="background: {{COLORS.global.background}}">
+    <ion-content ng-style="{
+        'background': COLORS.global.background
+    }">
         <div class="modal-content">
             <span class="modal-title">{{::"SELEZIONA LA LINGUA" | translate}}</span>
             <!-- <ion-list>
@@ -69,7 +71,10 @@
         </div>
         <div class="logout">
             <button
-                style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
+                ng-style="{
+                    'background': COLORS.global.buttonsBackground,
+                    'color': COLORS.global.buttonsColor
+                }"
                 class="login-button button button-block"
                 ng-if="vm.isLoggedIn"
                 ng-click="vm.logout()">
@@ -77,7 +82,10 @@
             <i class="wm-icon-android-arrow-forward"></i>
             </button>
             <button
-                style="background: {{COLORS.global.buttonsBackground}}; color: {{COLORS.global.buttonsColor}}"
+                ng-style="{
+                    'background': COLORS.global.buttonsBackground,
+                    'color': COLORS.global.buttonsColor
+                }"
                 class="login-button button button-block"
                 ng-if="!vm.isLoggedIn"
                 ng-click="vm.login()">

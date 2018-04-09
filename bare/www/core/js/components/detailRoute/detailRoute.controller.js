@@ -49,6 +49,8 @@ angular.module('webmapp')
         vm.isPublic = false;
         vm.id = params.id;
 
+        vm.maxDifficulty = CONFIG.MULTIMAP.maxDifficulty ? CONFIG.MULTIMAP.maxDifficulty : 5;
+
         if (CONFIG.MAIN) {
             Utils.goTo(CONFIG.OPTIONS.startUrl);
         }
