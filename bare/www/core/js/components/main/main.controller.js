@@ -1312,6 +1312,9 @@ angular.module('webmapp')
         $ionicPlatform.ready(function () {
             vm.userData = Auth.getUserData();
             checkGPS();
+            if (window !== top) {
+                MapService.disableWheelZoom();
+            }
         });
 
         return vm;

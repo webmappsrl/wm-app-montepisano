@@ -988,7 +988,6 @@ angular.module('webmapp')
                     setItemInLocalStorage(geojsonUrl, data);
                 });
             } else {
-                console.log(langGeojsonUrl, "ok");
                 overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(langGeojsonUrl, function (data) {
                     if (currentOverlay.type === 'line_geojson') {
                         lineCallback(data, currentOverlay);
@@ -2111,6 +2110,12 @@ angular.module('webmapp')
 
         mapService.enableDrag = function () {
             map && map.dragging.enable();
+        };
+
+        mapService.disableWheelZoom = function () {
+            if (map) {
+                map.scrollWheelZoom.disable();
+            }
         };
 
         mapService.disableInteractions = function () {
