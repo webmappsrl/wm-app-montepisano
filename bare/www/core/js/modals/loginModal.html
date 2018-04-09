@@ -9,84 +9,8 @@
             'background': COLORS.mainBar.background,
             'color': COLORS.mainBar.color
         }">
-            <!-- <i class="icon wm-icon-heart-valcamonica"></i> -->
             {{ state.registrationMode || state.resetMode ? "REGISTRATI" : "ACCEDI" | translate}}
         </div>
-        <!-- <div ng-if="state.registrationMode">
-            <form class="registration-form">
-                <div class="list">
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">Nome</span>
-                        <input 
-                            type="text" 
-                            placeholder="Nome"
-                            ng-model="ud.firstName">
-                    </label>
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">Cognome</span>
-                        <input 
-                            type="text" 
-                            placeholder="Cognome"
-                            ng-model="ud.lastName">
-                    </label>
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">Email</span>
-                        <input 
-                            type="text" 
-                            placeholder="Email"
-                            autocorrect="off"
-                            autocapitalize="none"
-                            autocomplete="off"
-                            spellcheck="false" 
-                            ng-model="ud.email">
-                    </label>
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">Password</span>
-                        <input 
-                            type="password" 
-                            autocomplete="off" 
-                            placeholder="Password"
-                            ng-model="ud.password">
-                    </label>
-                     <div class="registration-terms">
-                        <div class="checkbox-container">
-                            <ion-checkbox ng-model="isChecked"></ion-checkbox>
-                        </div>
-                        <label>
-                            Dichiaro di accettare i <a href="" ng-click="openInAppBrowser('http://www.turismovallecamonica.it/it/content/disclaimer')">termini</a> del servizio e le condizioni sulla <a href="" ng-click="openInAppBrowser('http://www.turismovallecamonica.it/it/content/privacy')">privacy</a>. *
-                        </label>
-                    </div>
-                </div>
-                <button 
-                    class="login-button button button-block" 
-                    ng-disabled="!isChecked"
-                    ng-click="completeRegistration(ud.firstName, ud.lastName, ud.email, ud.password)">
-                    {{logging ? '(Loading..)' : 'CONFERMA'}}
-                </button>
-            </form>
-
-            <div class="skip-link go-to-login">
-                <a ng-click="state.registrationMode = false; resetFields()">
-                    hai già un account? effettua il login <i class="icon ion-ios-arrow-thin-right"></i>
-                </a>
-            </div>
-
-            <div class="login-footer">
-
-                <div class="app-logo-container">
-                    <div class="app-logo">
-                        <img src="/core/images/valcamonica-logo@2x.png">
-                    </div>
-                </div>
-
-                <div class="skip-login" ng-click="skipLogin()">
-
-                    <a href="">
-                        <i class="icon wm-icon-ios7-arrow-thin-right"></i>
-                        Salta per adesso</a>
-                </div>
-            </div>
-        </div> -->
 
         <div ng-show="!state.registrationMode">
 
@@ -104,9 +28,7 @@
                             autocapitalize="none" 
                             spellcheck="false" 
                             autocomplete="off"  
-                            placeholder="{{::'email' | translate}}"
-                            onfocus="this.placeholder = ''" 
-                            onblur="this.placeholder = 'email'">
+                            placeholder="{{::'email' | translate}}">
                     </label>
                     <label class="item item-input">
                         <input 
@@ -114,9 +36,7 @@
                             type="password" 
                             ng-model="ud.password" 
                             autocomplete="off"  
-                            placeholder="{{::'password' | translate}}"
-                            onfocus="this.placeholder = ''" 
-                            onblur="this.placeholder = 'password'">
+                            placeholder="{{::'password' | translate}}">
                     </label>
                     <div
                         class="skip-link password-lost-link"
@@ -152,9 +72,7 @@
                             autocapitalize="none"
                             spellcheck="false"
                             autocomplete="off"
-                            placeholder="{{::'nome' | translate}}"
-                            onfocus="this.placeholder = ''"
-                            onblur="this.placeholder = 'nome'">
+                            placeholder="{{::'nome' | translate}}">
                     </label>
                     <label class="item item-input">
                         <input
@@ -165,9 +83,7 @@
                             autocapitalize="none"
                             spellcheck="false"
                             autocomplete="off"
-                            placeholder="{{::'cognome' | translate}}"
-                            onfocus="this.placeholder = ''"
-                            onblur="this.placeholder = 'cognome'">
+                            placeholder="{{::'cognome' | translate}}">
                     </label>
                     <label class="item item-input">
                         <input
@@ -178,9 +94,7 @@
                             autocapitalize="none"
                             spellcheck="false"
                             autocomplete="off"
-                            placeholder="{{::'email' | translate}}"
-                            onfocus="this.placeholder = ''"
-                            onblur="this.placeholder = 'email'">
+                            placeholder="{{::'email' | translate}}">
                     </label>
                     <label class="item item-input">
                         <input
@@ -191,9 +105,7 @@
                             autocapitalize="none"
                             spellcheck="false"
                             autocomplete="off"
-                            placeholder="{{::'ripeti email' | translate}}"
-                            onfocus="this.placeholder = ''"
-                            onblur="this.placeholder = 'ripeti email'">
+                            placeholder="{{::'ripeti email' | translate}}">
                     </label>
                     <label class="item item-input">
                         <input
@@ -201,9 +113,7 @@
                             type="password"
                             ng-model="ud.password"
                             autocomplete="off"
-                            placeholder="{{::'crea password' | translate}}"
-                            onfocus="this.placeholder = ''"
-                            onblur="this.placeholder = 'password'">
+                            placeholder="{{::'crea password' | translate}}">
                     </label>
                     <label class="item item-input">
                         <input
@@ -211,9 +121,7 @@
                             type="password"
                             ng-model="ud.checkPassword"
                             autocomplete="off"
-                            placeholder="{{::'ripeti password' | translate}}"
-                            onfocus="this.placeholder = ''"
-                            onblur="this.placeholder = 'conferma password'">
+                            placeholder="{{::'ripeti password' | translate}}">
                     </label>
                     <label class="item item-input">
                         <country-select ng-model="ud.country"></country-select>
@@ -234,14 +142,6 @@
                         </div>
                     </div>
 
-                    <!-- <div class="privacy" ng-if="newsletter">
-                        <input
-                            class="input-privacy input-ph"
-                            type="checkbox"
-                            ng-model="ud.newsletter">
-                        {{::"Voglio iscrivermi alla newsletter" | translate}}
-                    </div> -->
-
                     <div
                         class="privacy">
                         <div
@@ -256,13 +156,6 @@
                         </div>
                     </div>
 
-                    <!-- <div class="privacy">
-                        <input
-                            class="input-privacy input-ph"
-                            type="checkbox"
-                            ng-model="ud.privacy">
-                        {{::"Accetto le condizioni dell'informativa sulla " | translate}}<a href="" ng-click="openInAppBrowser(urlPrivacy)" target="_blank"> privacy</a>
-                    </div> -->
                     <label class="item">
                         <button
                             ng-style="{
