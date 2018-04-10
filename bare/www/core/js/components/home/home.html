@@ -23,10 +23,13 @@
                     <span ng-if="item.name[vm.currentLang]">
                         {{item.name[vm.currentLang]}}
                     </span>
-                    <span ng-if="item.name[vm.defaultLang]">
+                    <span ng-if="item.name[vm.defaultLang] && !item.name[vm.currentLang]">
                         {{item.name[defaultLang]}}
                     </span>
-                    <span ng-if="item.name && !item.name[vm.currentLang]">
+                    <span ng-if="item.name[Object.keys(item.name)[0]] && !item.name[vm.defaultLang] && !item.name[vm.currentLang]">
+                        {{item.name[defaultLang]}}
+                    </span>
+                    <span ng-if="item.name && !item.name[vm.currentLang] && !item.name[Object.keys(item.name)[0]] && !item.name[vm.defaultLang] && !item.name[vm.currentLang]">
                         {{item.name}}
                     </span>
                 </div>

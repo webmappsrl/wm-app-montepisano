@@ -170,11 +170,10 @@ angular.module('webmapp')
                     if (asyncTranslations === 0) {
                         $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
                         $ionicLoading.hide();
+                        localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
                     }
                 })
                 .catch(function (err) {
-                    var tmp = err.getResponseHeader("Content-type")
-
                     asyncTranslations--;
                     if (asyncTranslations === 0) {
                         $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);

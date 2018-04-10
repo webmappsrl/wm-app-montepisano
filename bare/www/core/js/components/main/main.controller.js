@@ -336,9 +336,9 @@ angular.module('webmapp')
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
         vm.useExandMapInDetails = CONFIG.OPTIONS.useExandMapInDetails;
-        vm.showLocate = !CONFIG.MAP.hideLocationControl && !Utils.isBrowser();
+        vm.showLocate = !CONFIG.MAP.hideLocationControl && !Utils.isBrowser() ||
+            Utils.isBrowser && !CONFIG.MAP.hideLocationControl && window.location.protocol === "https:";
 
-        
         vm.viewTitle = $translate.instant("MAPPA");
         vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
         vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
@@ -1224,7 +1224,7 @@ angular.module('webmapp')
 
                     setTimeout(function () {
                         if (layerState) {
-                            MapService.activateLayer(realState, false, true);
+                            MapService.activateLayer(realState, false, false);
                         }
                     }, 50);
                 } else {
