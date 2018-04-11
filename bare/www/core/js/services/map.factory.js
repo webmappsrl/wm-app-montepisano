@@ -862,7 +862,7 @@ angular.module('webmapp')
                 //         if (currentLang === CONFIG.LANGUAGES.available[i].substring(0, 2)) {
                 // if (!CONFIG.LANGUAGES.actual ||
                 //     (CONFIG.LANGUAGES.actual && currentLang !== CONFIG.LANGUAGES.actual.substring(0, 2))) {
-                    available = true;
+                available = true;
                 // }
                 //             break;
                 //         }
@@ -2244,6 +2244,29 @@ angular.module('webmapp')
             }
         };
 
+        mapService.triggerFeatureClick = function (id) {
+            if (map && featureMapById[id]) {
+                var obj = {
+                    layer: {
+                        feature: featureMapById[id]
+                    },
+                    latlng: {
+                        lat: featureMapById[id].geometry.coordinates[1],
+                        lng: featureMapById[id].geometry.coordinates[0]
+                    }
+                };
+                setTimeout(function () {
+                    activatePopup(obj, true);
+                }, 1000);
+                
+                // var layer = overlayLayersByLabel[featureMapById[id].parent.label];
+                // var coordin = new L.LatLng(featureMapById[id].geometry.coordinates[1], featureMapById[id].geometry.coordinates[0]);
+                // map.fireEvent('click', {
+                //     coordin
+                // });
+            }
+        };
+
         mapService.mapIsRotating = function (isRotating) {
             map.closePopup();
             mapIsRotating = isRotating;
@@ -2256,7 +2279,7 @@ angular.module('webmapp')
                 }
 
                 geojsonLayer = L.geoJSON(geojsonArray).addTo(map);
-                setTimeout(function() {
+                setTimeout(function () {
                     map.fitBounds(geojsonLayer.getBounds());
                 }, 500);
 

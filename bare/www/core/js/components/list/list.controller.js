@@ -82,8 +82,6 @@ angular.module('webmapp')
                 currentName = $state.params.id.replace(/_/g, ' ');
             }
 
-            // TODO: add has-filter class when there's a filter input
-
             if (currentState === 'app.main.events') {
                 vm.eventsList = MapService.getEventsList();
             } else if (currentState === 'app.main.layer') {
@@ -115,28 +113,6 @@ angular.module('webmapp')
 
                     if (Model.isAnOverlayGroup(realState)) {
                         vm.subGroupMenu = getMenuByState(realState);
-                        // setTimeout(function () {
-                        //     var featuresGroup = {
-                        //         'details': []
-                        //     };
-                        //     var count = 0;
-                        //     console.log(vm.subGroupMenu)
-                        //     for (var i in vm.subGroupMenu) {
-                        //         console.log(count)
-                        //         for (var j in vm.subGroupMenu[i].items) {
-                        //             console.log(count)
-                        //             featuresGroup['details'][count] = vm.subGroupMenu[i].items[j];
-                        //             count++;
-                        //         }
-                        //     }
-                        //     console.log(featuresGroup)
-                        //     MapService.addFeaturesToFilteredLayer(featuresGroup, true, false)
-                        // }, 1000);
-                        
-                        // console.log(vm.subGroupMenu)
-                        // setTimeout(function() {
-
-                        // }, 1000)
                     } else {
                         if (MapService.isReady()) {
                             vm.subMenu = [];

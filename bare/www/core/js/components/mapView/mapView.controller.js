@@ -142,7 +142,5 @@ angular.module('webmapp')
         modal.hide();
     });
 
-    console.log($state)
-
     return vm;
 });

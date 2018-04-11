@@ -1129,6 +1129,7 @@ angular.module('webmapp')
         };
 
         $scope.$on('$stateChangeStart', function (e, dest) {
+            console.log($state)
             if ((dest.name === 'app.main.detaillayer' ||
                     dest.name === 'app.main.detailevent' ||
                     dest.name === 'app.main.detailulayer') &&
@@ -1209,6 +1210,9 @@ angular.module('webmapp')
                         showPathAndRelated(vm.stopNavigationUrlParams);
                     }
                 }, 50);
+            } else if (currentState === 'app.main.popup') {
+                vm.mapView = true;
+                vm.hideExpander = true;
             } else if (currentState === 'app.main.events') {
                 MapService.showEventsLayer();
                 vm.hasShadow = true;
