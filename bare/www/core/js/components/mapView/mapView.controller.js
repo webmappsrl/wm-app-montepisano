@@ -1,13 +1,14 @@
 angular.module('webmapp')
 
 .controller('MapController', function MapController(
-    $scope,
-    $rootScope,
-    $location,
     $ionicModal,
-    MapService,
+    $location,
+    $rootScope,
+    $scope,
+    $state,
+    $translate,
     CONFIG,
-    $translate
+    MapService
 ) {
     var vm = {};
 
@@ -140,6 +141,8 @@ angular.module('webmapp')
     $scope.$on('$destroy', function() {
         modal.hide();
     });
+
+    console.log($state)
 
     return vm;
 });

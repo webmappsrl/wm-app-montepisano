@@ -56,7 +56,10 @@ angular.module('webmapp')
                 warnings = 0;
 
             if (config.INCLUDE.url) {
-                var url = config.COMMUNICATION.baseUrl + config.INCLUDE.url;
+                var url = config.INCLUDE.url;
+                if (url.substring(0, 4) !== "http") {
+                    url = config.COMMUNICATION.baseUrl + url;
+                }
                 var data = getAsyncJSON(url);
 
                 if (data === "ERROR") {
