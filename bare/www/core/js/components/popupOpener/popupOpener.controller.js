@@ -1,25 +1,44 @@
 angular.module('webmapp')
 
     .controller('PopupOpenerController', function PopupOpenerController(
+        $ionicPlatform,
         $state,
         MapService,
         Utils
     ) {
         var id = $state.params.id;
         var zoom = $state.params.zoom;
-        setTimeout(function () {
-            var features = MapService.getFeatureIdMap();
 
-            if (features[id]) {
-                MapService.centerOnFeature(features[id]);
-                if (zoom) {
-                    MapService.setZoom(zoom);
+        $ionicPlatform.ready(function () {
+            var timerFunction = function () {
+                if (MapService.isReady()) {
+                    var features = MapService.getFeatureIdMap();
+
+                    setTimeout(function () {
+                        if (features[id]) {
+                            MapService.centerOnFeature(features[id]);
+                            if (zoom) {
+                                setTimeout(function () {
+                                    MapService.setZoom(zoom);
+                                }, 100);
+                            }
+
+                            setTimeout(function () {
+                                MapService.triggerFeatureClick(id);
+                            }, 250);
+                        }
+                    }, 250);
+                } else {
+                    setTimeout(timerFunction, 300);
                 }
+            };
 
-                MapService.triggerFeatureClick(id);
-            }
-        }, 50);
-        Utils.goTo('/');
+            timerFunction();
+
+            MapService.resetView();
+            Utils.goTo('/')
+        });
+
 
         return {};
     });
