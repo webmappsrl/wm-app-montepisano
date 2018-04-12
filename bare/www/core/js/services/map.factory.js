@@ -650,6 +650,8 @@ angular.module('webmapp')
                 }
             }
 
+            console.log(poiCollection, linesCollection)
+
             pointsLayer.addData(poiCollection);
             linesLayer.addData(linesCollection);
 
@@ -1412,7 +1414,7 @@ angular.module('webmapp')
                 rotate: true
             });
 
-            if (CONFIG.OPTIONS.activateZoomControl || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.activateZoomControl)) {
+            if (CONFIG.MAP.activateZoomControl || (CONFIG.MAIN && CONFIG.MAIN.MAP.activateZoomControl)) {
                 L.control.zoom({
                     position: 'topright'
                 }).addTo(map);
@@ -2246,24 +2248,19 @@ angular.module('webmapp')
 
         mapService.triggerFeatureClick = function (id) {
             if (map && featureMapById[id]) {
+                var feature = angular.copy(featureMapById[id]);
                 var obj = {
                     layer: {
-                        feature: featureMapById[id]
+                        feature: feature
                     },
                     latlng: {
-                        lat: featureMapById[id].geometry.coordinates[1],
-                        lng: featureMapById[id].geometry.coordinates[0]
+                        lat: feature.geometry.coordinates[1],
+                        lng: feature.geometry.coordinates[0]
                     }
                 };
                 setTimeout(function () {
                     activatePopup(obj, true);
                 }, 1000);
-                
-                // var layer = overlayLayersByLabel[featureMapById[id].parent.label];
-                // var coordin = new L.LatLng(featureMapById[id].geometry.coordinates[1], featureMapById[id].geometry.coordinates[0]);
-                // map.fireEvent('click', {
-                //     coordin
-                // });
             }
         };
 

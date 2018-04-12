@@ -15,13 +15,13 @@ angular.module('webmapp')
 
         var offlineScope = $rootScope.$new();
 
-        vm.languages = CONFIG.LANGUAGES.available;
+        vm.languages = CONFIG.LANGUAGES.available ? CONFIG.LANGUAGES.available : "";
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
         vm.version = CONFIG.VERSION;
         vm.privacyUrl = CONFIG.COMMUNICATION.privacy;
         vm.isLoggedIn = false;
 
-        var useLogin = CONFIG.LOGIN && CONFIG.LOGIN.useLogin;
+        vm.useLogin = CONFIG.LOGIN && CONFIG.LOGIN.useLogin;
         var userData = {};
 
         var setLanguage = function (lang) {
@@ -76,9 +76,9 @@ angular.module('webmapp')
             }
         });
 
-        if (useLogin && !Auth.isLoggedIn()) {
+        if (vm.useLogin && !Auth.isLoggedIn()) {
             vm.isLoggedIn = false;
-        } else if (useLogin) {
+        } else if (vm.useLogin) {
             vm.isLoggedIn = true;
             userData = Auth.getUserData();
         }

@@ -1114,7 +1114,7 @@ angular.module('webmapp')
                         var related = MapService.getRelatedFeaturesById(data.properties.id_pois);
                         for (var i in related) {
                             if (related[i] && related[i].properties) {
-                                featuresToShow = featuresToShow.concat([related[i].properties]);
+                                featuresToShow = featuresToShow.concat([related[i]]);
                             }
                         }
                     }
@@ -1129,7 +1129,6 @@ angular.module('webmapp')
         };
 
         $scope.$on('$stateChangeStart', function (e, dest) {
-            console.log($state)
             if ((dest.name === 'app.main.detaillayer' ||
                     dest.name === 'app.main.detailevent' ||
                     dest.name === 'app.main.detailulayer') &&

@@ -17,7 +17,7 @@
         'background': COLORS.global.background
     }">
         <div class="modal-content">
-            <span class="modal-title">{{::"SELEZIONA LA LINGUA" | translate}}</span>
+            <span class="modal-title" ng-if="vm.languages">{{::"SELEZIONA LA LINGUA" | translate}}</span>
             <!-- <ion-list>
                 <label 
                     class="item item-checkbox ng-not-empty" 
@@ -30,7 +30,7 @@
                 </label>
             </ion-list> -->
             
-            <div class="section">
+            <div class="section" ng-if="vm.languages">
                 <label
                     class="item item-radio ng-not-empty" 
                     ng-repeat="language in vm.languages">
@@ -69,7 +69,7 @@
                 </p>
             </div>
         </div>
-        <div class="logout">
+        <div class="logout" ng-if="vm.useLogin">
             <button
                 ng-style="{
                     'background': COLORS.global.buttonsBackground,
