@@ -8,6 +8,15 @@ angular.module('webmapp')
 
     if (!!localStorage.$wm_mhildConf) {
         this.MAIN = GENERAL_CONFIG;
+        if (this.MAIN.INCLUDE && this.MAIN.INCLUDE.url) {
+            var url = this.MAIN.INCLUDE.url;
+            if (url.substring(0, 4) !== "http") {
+                url = this.MAIN.COMMUNICATION.baseUrl + url;
+            }
+            var mainInclude = localStorage.getItem(this.MAIN.INCLUDE.url) ? JSON.parse(localStorage.getItem(this.MAIN.INCLUDE.url)) : {};
+            this.MAIN = angular.extend(this.MAIN, mainInclude);
+            console.log(this.MAIN, mainInclude);
+        }
         config = angular.extend(this, JSON.parse(localStorage.$wm_mhildConf));
     }
 

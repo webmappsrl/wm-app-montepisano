@@ -4,6 +4,7 @@ angular.module('webmapp')
         $http,
         $ionicLoading,
         $ionicModal,
+        $ionicPlatform,
         $ionicPopup,
         $ionicSlideBoxDelegate,
         $rootScope,
@@ -50,10 +51,6 @@ angular.module('webmapp')
         vm.id = params.id;
 
         vm.maxDifficulty = CONFIG.MULTIMAP.maxDifficulty ? CONFIG.MULTIMAP.maxDifficulty : 5;
-
-        if (CONFIG.MAIN) {
-            Utils.goTo(CONFIG.OPTIONS.startUrl);
-        }
 
         $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/imagesModal.html', {
             scope: modalScope,
@@ -238,17 +235,21 @@ angular.module('webmapp')
             PackageService.removePack(routeDetail.id);
         };
 
-        PackageService.getRoutes();
-        PackageService.getDownloadedPackages();
+        var initialize = function () {
+            PackageService.getRoutes();
+            PackageService.getDownloadedPackages();
 
-        if (Auth.isLoggedIn()) {
-            userData = Auth.getUserData();
-            vm.isLoggedIn = true;
+            if (Auth.isLoggedIn()) {
+                userData = Auth.getUserData();
+                vm.isLoggedIn = true;
 
-            PackageService.getPackagesIdByUserId();
+                PackageService.getPackagesIdByUserId();
 
-            Utils.forceDigest();
+                Utils.forceDigest();
+            }
         }
+
+        initialize();
 
         return vm;
     });

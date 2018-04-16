@@ -68,22 +68,6 @@ angular.module('webmapp')
                     }
                 }
             })
-            .state('app.main.taxonomy', {
-                url: '/taxonomy/:id',
-                views: {
-                    'inception-top': {
-                        templateUrl: basePath + 'js/components/taxonomy/taxonomy.html'
-                    }
-                }
-            })
-            .state('app.main.detailtaxonomy', {
-                url: '/taxonomy/:parentId/:id',
-                views: {
-                    'inception-top': {
-                        templateUrl: basePath + 'js/components/detailTaxonomy/detailTaxonomy.html'
-                    }
-                }
-            })
             .state('app.main.pages', {
                 url: '/pages/:id',
                 views: {
@@ -97,14 +81,6 @@ angular.module('webmapp')
                 views: {
                     'inception-top': {
                         templateUrl: basePath + 'js/components/details/details.html'
-                    }
-                }
-            })
-            .state('app.main.route', {
-                url: '/route/:id',
-                views: {
-                    'inception-top': {
-                        templateUrl: basePath + 'js/components/detailRoute/detailRoute.html'
                     }
                 }
             })
@@ -135,6 +111,32 @@ angular.module('webmapp')
                                 views: {
                                     'inception-top': {
                                         templateUrl: basePath + 'js/components/packages/packages.html'
+                                    }
+                                }
+                            })
+                            .state('app.main.route', {
+                                url: '/route/:id',
+                                views: {
+                                    'inception-top': {
+                                        templateUrl: basePath + 'js/components/detailRoute/detailRoute.html'
+                                    }
+                                }
+                            });
+                    } else if (CONFIGProvider.PAGES[i].type === "taxonomy") {
+                        $stateProvider
+                            .state('app.main.taxonomy', {
+                                url: '/taxonomy/:id',
+                                views: {
+                                    'inception-top': {
+                                        templateUrl: basePath + 'js/components/taxonomy/taxonomy.html'
+                                    }
+                                }
+                            })
+                            .state('app.main.detailtaxonomy', {
+                                url: '/taxonomy/:parentId/:id',
+                                views: {
+                                    'inception-top': {
+                                        templateUrl: basePath + 'js/components/detailTaxonomy/detailTaxonomy.html'
                                     }
                                 }
                             });
