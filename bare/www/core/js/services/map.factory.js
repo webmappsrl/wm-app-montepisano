@@ -1978,9 +1978,14 @@ angular.module('webmapp')
         };
 
         mapService.getRelatedFeaturesById = function (relatedId) {
-            var features = [];
+            var features = [],
+                newPos = 0;
+
             for (var pos in relatedId) {
-                features[pos] = featureMapById[relatedId[pos]];
+                if (featureMapById[relatedId[pos]]) {
+                    features[newPos] = featureMapById[relatedId[pos]];
+                    newPos++;
+                }
             }
 
             return features;
