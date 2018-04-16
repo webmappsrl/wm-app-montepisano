@@ -125,7 +125,7 @@
                             {{::"Apri" | translate}}
                         </button>
                     </div>
-                    <div class="route-languages-reduced">
+                    <div class="route-languages-reduced" ng-if="vm.isMultilanguage">
                         <span ng-if="item.wpml_current_locale">{{item.wpml_current_locale.substring(0, 2)}} </span>
                         <span ng-if="item.wpml_translations" ng-repeat="translation in item.wpml_translations"> {{translation.locale.substring(0, 2)}}</span>
                     </div>

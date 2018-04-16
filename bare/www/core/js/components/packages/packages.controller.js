@@ -59,6 +59,28 @@ angular.module('webmapp')
         vm.search = "";
         vm.filters = {};
 
+        vm.isMultilanguage = false;
+
+        if (CONFIG.LANGUAGES){
+            var actualInAvailable = false;
+            if (CONFIG.LANGUAGES.actual && CONFIG.LANGUAGES.available) {
+                for (var i in CONFIG.LANGUAGES.available) {
+                    if (CONFIG.LANGUAGES.available[i].substring(0, 2) === CONFIG.LANGUAGES.actual.substring(0, 2)) {
+                        actualInAvailable = true;
+                        break;
+                    }
+                }
+            }
+            var minAvailableLength = 1;
+            if (actualInAvailable) {
+                minAvailableLength = 2;
+            }
+
+            if (CONFIG.LANGUAGES.available && CONFIG.LANGUAGES.available.length >= minAvailableLength) {
+                vm.isMultilanguage = true;
+            }
+        }
+
         vm.maxDifficulty = CONFIG.MULTIMAP.maxDifficulty ? CONFIG.MULTIMAP.maxDifficulty : 5;
 
         $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/categoriesFiltersModal.html', {
