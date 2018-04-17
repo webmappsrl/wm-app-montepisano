@@ -34,12 +34,14 @@ angular.module('webmapp')
 	}
 
 	$translateProvider.useSanitizeValueStrategy('sanitizeParameters');
-	$translateProvider.registerAvailableLanguageKeys(['en', 'it'], {
+	$translateProvider.registerAvailableLanguageKeys(['en', 'it', 'de'], {
 	
 	 'en-*': 'en',
 	 'it-*': 'it',
+	 'de-*': 'de',
 	 'en_*': 'en',
 	 'it_*': 'it',
+	 'de_*': 'de',
 	 '*': 'en',
 	 
 	});
