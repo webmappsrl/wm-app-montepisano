@@ -56,18 +56,20 @@
                     ) ||
                     !vm.isLoggedIn
                 )">
-            <button ng-style="{
-                'background': COLORS.global.buttonsBackground,
-                'color': COLORS.global.buttonsColor
-            }" class="login-button button left"
-                ng-click="vm.openVoucherModal()">
+            <button ng-if="vm.voucherAvailable" ng-style="{
+                    'background': COLORS.global.buttonsBackground,
+                    'color': COLORS.global.buttonsColor
+                }" class="login-button button left" ng-class="{
+                    'full': !(vm.purchaseAvailable && vm.voucherAvailable)
+                }" ng-click="vm.openVoucherModal()">
                 {{::"Voucher" | translate}}
             </button>
-            <button ng-style="{
-                'background': COLORS.global.buttonsBackground,
-                'color': COLORS.global.buttonsColor
-            }" class="login-button button right"
-                ng-click="vm.requestRoute()">
+            <button ng-if="vm.purchaseAvailable" ng-style="{
+                    'background': COLORS.global.buttonsBackground,
+                    'color': COLORS.global.buttonsColor
+                }" class="login-button button right" ng-class="{
+                    'full': !(vm.purchaseAvailable && vm.voucherAvailable)
+                }" ng-click="vm.requestRoute()">
                 {{::"Acquista 9.99€" | translate}}
             </button>
         </div>
@@ -85,8 +87,7 @@
             <button ng-style="{
                 'background': COLORS.global.buttonsBackground,
                 'color': COLORS.global.buttonsColor
-            }" class="login-button button button-block"
-                ng-click="vm.downloadPack()">
+            }" class="login-button button button-block" ng-click="vm.downloadPack()">
                 {{::"Scarica" | translate}}
             </button>
         </div>
@@ -105,8 +106,7 @@
             <button ng-style="{
                 'background': COLORS.global.buttonsBackground,
                 'color': COLORS.global.buttonsColor
-            }" class="login-button button button-block"
-                ng-click="vm.openPackage()">
+            }" class="login-button button button-block" ng-click="vm.openPackage()">
                 {{::"Apri" | translate}}
             </button>
             <i class="icon wm-icon-android-trash" ng-click="vm.removePack()"></i>

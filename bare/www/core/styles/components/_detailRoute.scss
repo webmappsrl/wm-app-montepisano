@@ -20,14 +20,18 @@ div.detailRoute-footer {
     height: 54px;
     width: auto;
     font-size: 20px;
+    &.left {
+      float: left;
+    }
+    &.right {
+      float: right;
+    }
+    &.full {
+      left: 50%;
+      transform: translateX(-50%);
+      float: initial;
+    }
   }
-  .left {
-    float: left;
-  }
-  .right {
-    float: right;
-  }
-
   i.icon {
     position: absolute;
     bottom: 22px;

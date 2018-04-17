@@ -577,10 +577,14 @@ div.detailRoute-footer {
     height: 54px;
     width: auto;
     font-size: 20px; }
-  div.detailRoute-footer .left {
-    float: left; }
-  div.detailRoute-footer .right {
-    float: right; }
+    div.detailRoute-footer button.login-button.button.left {
+      float: left; }
+    div.detailRoute-footer button.login-button.button.right {
+      float: right; }
+    div.detailRoute-footer button.login-button.button.full {
+      left: 50%;
+      transform: translateX(-50%);
+      float: initial; }
   div.detailRoute-footer i.icon {
     position: absolute;
     bottom: 22px;

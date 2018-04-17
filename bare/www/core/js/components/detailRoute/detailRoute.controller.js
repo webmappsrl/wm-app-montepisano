@@ -50,6 +50,14 @@ angular.module('webmapp')
         vm.isPublic = false;
         vm.id = params.id;
 
+        vm.voucherAvailable = CONFIG.MULTIMAP.purchaseType ? CONFIG.MULTIMAP.purchaseType.includes('voucher') : false;
+        vm.purchaseAvailable = CONFIG.MULTIMAP.purchaseType ? CONFIG.MULTIMAP.purchaseType.includes('purchase') : false;
+
+        if (!vm.voucherAvailable && !vm.purchaseAvailable) {
+            vm.voucherAvailable = true;
+            vm.purchaseAvailable = true;
+        }
+
         vm.maxDifficulty = CONFIG.MULTIMAP.maxDifficulty ? CONFIG.MULTIMAP.maxDifficulty : 5;
 
         $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/imagesModal.html', {
