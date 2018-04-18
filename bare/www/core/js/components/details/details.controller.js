@@ -271,6 +271,13 @@ angular.module('webmapp')
                 'detail': [data]
             };
 
+            if (vm.related) {
+                var array = angular.copy(vm.related);
+                array.push(data);
+
+                objData['detail'] = array;
+            }
+
             if (extras.length > 0) {
                 objData.extras = extras;
             }

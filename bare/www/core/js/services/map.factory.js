@@ -650,8 +650,6 @@ angular.module('webmapp')
                 }
             }
 
-            console.log(poiCollection, linesCollection)
-
             pointsLayer.addData(poiCollection);
             linesLayer.addData(linesCollection);
 
