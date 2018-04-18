@@ -116,6 +116,14 @@ angular.module('webmapp')
             mappingFields = mapping ? mapping.fields : {},
             phoneMatch;
 
+            
+        var track = undefined;
+
+        if ($rootScope.track) {
+            track = angular.copy($rootScope.track);
+            delete $rootScope.track;
+        }
+
         vm.hasTable = false;
         vm.detailTable = {};
 
@@ -251,8 +259,10 @@ angular.module('webmapp')
                 }
             }
 
-            if (feature.id_pois && feature.id_pois.length) {
+            if (data.geometry.type === 'LineString' && feature.id_pois && feature.id_pois.length) {
                 vm.related = MapService.getRelatedFeaturesById(feature.id_pois);
+                $rootScope.track = data;
+                track = undefined;
             }
 
             vm.relatedItinerary = MapService.getItineraryRefByFeatureIdMap()[feature.id] || [];
@@ -267,6 +277,7 @@ angular.module('webmapp')
         }
 
         setTimeout(function() {
+            var centerOnPoint = false;
             var objData = {
                 'detail': [data]
             };
@@ -278,11 +289,20 @@ angular.module('webmapp')
                 objData['detail'] = array;
             }
 
+            if (track) {
+                objData['detail'] = [track, data];
+                centerOnPoint = true;
+            }
+
             if (extras.length > 0) {
                 objData.extras = extras;
             }
 
             MapService.addFeaturesToFilteredLayer(objData, true);
+
+            if (centerOnPoint) {
+                MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
+            }
             setTimeout(function() {
                 MapService.adjust();
             }, 2500);

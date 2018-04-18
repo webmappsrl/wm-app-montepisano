@@ -1159,6 +1159,10 @@ angular.module('webmapp')
                 }, 1250);
             }
 
+            if (currentState !== 'app.main.detaillayer' && $rootScope.track) {
+                delete $rootScope.track;
+            }
+
             if (!$rootScope.stateCounter) {
                 $rootScope.stateCounter = 1;
             } else {
