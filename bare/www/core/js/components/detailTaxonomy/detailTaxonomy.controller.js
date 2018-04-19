@@ -16,6 +16,8 @@ angular.module('webmapp')
         vm.title = CONFIG.OPTIONS.title;
         var communicationConf = CONFIG.COMMUNICATION;
 
+        vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
+
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
         vm.defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';
         vm.taxonomy = {};

@@ -16,7 +16,7 @@
 
     <ion-content ng-style="{
         'background': vm.colors.global.background
-    }">
+    }" class="detail-route">
         <div class="details-container">
             <div class="details-content" ng-class="{
                     'details-columns': vm.featureImage,
@@ -28,7 +28,8 @@
                     </div>
                     <div class="details-route" ng-if="vm.codeRoute || vm.difficulty !== '0' ">
                         <span class="code" ng-if="vm.codeRoute">
-                            <strong>{{::"Codice" | translate}}</strong>: {{vm.codeRoute}} </span>
+                            <strong>{{::"Codice" | translate}}</strong>: {{vm.codeRoute}}
+                        </span>
                         <span class="difficulty" ng-if="vm.difficulty !== 0">
                             <strong>{{::"Difficoltà" | translate}}</strong>:
                             <i class="fa" aria-hidden="true" ng-repeat="n in [].constructor(vm.maxDifficulty) track by $index" ng-class="{ 'fa-star-half-o' : (vm.difficulty - $index) == 0.5 , 'fa-star' : vm.difficulty > $index, 'fa-star-o': vm.difficulty <= $index  }"></i>

@@ -38,6 +38,8 @@ angular.module('webmapp')
     vm.filterIcon = CONFIG.OPTIONS.filterIcon;
     vm.showFilers = !CONFIG.OPTIONS.hideFiltersInMap;
 
+    vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
+
     vm.packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : null;
     vm.id = CONFIG.routeID;
     var currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";

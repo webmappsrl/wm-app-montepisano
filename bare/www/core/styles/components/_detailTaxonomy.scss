@@ -51,20 +51,14 @@
         color: red;
         text-align: right;
         font-size: 15px;
-        background: -webkit-linear-gradient(bottom, #F3F6E9 0%, #F3F6E9 25%, transparent 100%); /* Chrome10-25,Safari5.1-6 */
-        background: linear-gradient(to bottom, transparent 0%, #F3F6E9 75%, #F3F6E9 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 
         span {
-          background: #F3F6E9;
           padding: 0 0 0 5px;
         }
       }
       &.show-full {
         height: auto;
         max-height: none;
-        .detailTaxonomy-read-more {
-          background-image: linear-gradient(transparent, transparent);
-        }
       }
     }
     .detailTaxonomy-routes {

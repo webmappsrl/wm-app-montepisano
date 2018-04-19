@@ -1,5 +1,7 @@
 <ion-view class="detailTaxonomy-page" cache-view="false" ng-controller="DetailTaxonomyController as vm">
-    <ion-nav-title>
+    <ion-nav-title ng-style="{
+        'color': vm.item.color
+    }">
         <span ng-if="vm.title[vm.currentLang]">
             {{vm.title[vm.currentLang]}}
         </span>
@@ -15,8 +17,8 @@
     </ion-nav-buttons>
 
     <ion-content style="color: black;" ng-style="{
-        'background': COLORS.global.background
-        }">
+        'background': vm.colors.details.background
+        }" class="has-show-more">
         <div class="detailTaxonomy-color" ng-style="{
             'background-color': vm.item.color
             }">
@@ -28,16 +30,21 @@
             <span ng-if="vm.item.description[vm.currentLang]">{{vm.item.description[vm.currentLang]}}</span>
             <span ng-if="vm.item.description[vm.defaultLang] && !vm.item.description[vm.currentLang]">{{vm.item.description[vm.defaultLang]}}</span>
             <span ng-if="vm.item.description && !vm.item.description[vm.defaultLang] && !vm.item.description[vm.currentLang]">{{vm.item.description}}</span>
-            <div class="detailTaxonomy-read-more">
-                <span ng-click="vm.toggleDescription()">
+            <div class="detailTaxonomy-read-more" ng-style="
+            !vm.fullDescription ? {
+                'background': 'linear-gradient(to bottom, transparent 0%, ' + vm.colors.details.background + ' 75%, ' + vm.colors.details.background + ' 100%)'
+            } : {
+                'background-image': 'linear-gradient(transparent, transparent)'
+            }">
+                <span ng-click="vm.toggleDescription()" ng-style="">
                     {{vm.fullDescription ? "nascondi" : "leggi tutto" | translate}}
                 </span>
             </div>
         </div>
         <div class="detailTaxonomy-routes">
             <div class="detailTaxonomy-route" ng-repeat="route in vm.routes" ng-click="vm.openOrDownloadPack(route.id)">
-                <i ng-if="!vm.userDownloadedPackages[route.id]" class="icon wm-icon-arrow-down-c download-icon" ng-style="{'background': COLORS.global.background}"></i>
-                <i ng-if="vm.userDownloadedPackages[route.id]" class="icon wm-icon-checkmark-round open-icon" ng-style="{'background': COLORS.global.background}"></i>
+                <i ng-if="!vm.userDownloadedPackages[route.id]" class="icon wm-icon-arrow-down-c download-icon" ng-style="{'background': colors.details.background}"></i>
+                <i ng-if="vm.userDownloadedPackages[route.id]" class="icon wm-icon-checkmark-round open-icon" ng-style="{'background': colors.details.background}"></i>
                 <i class="icon {{vm.activities[route.activity[0]].icon}} activity-icon"></i>
                 <span ng-if="route.packageTitle[vm.currentLang]">
                     {{route.packageTitle[vm.currentLang]}}
@@ -48,4 +55,18 @@
             </div>
         </div>
     </ion-content>
+    <div
+      class="arrow-show-more"
+      ng-style="{
+          'background': vm.colors.details.background
+        }"
+      ng-click="vm.toggleList()">
+        <i
+          class="icon"
+          ng-class="{
+               'wm-icon-ios7-arrow-down': !vm.isListExpanded,
+               'wm-icon-ios7-arrow-up': vm.isListExpanded
+            }">
+        </i>
+    </div>
 </ion-view>

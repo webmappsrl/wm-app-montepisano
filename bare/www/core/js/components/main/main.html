@@ -67,7 +67,13 @@
                             'wm-icon-android-locate-full': !vm.followActive || vm.dragged || (vm.followActive && !vm.isRotating && !vm.dragged),
                             'fa-spin': vm.locateLoading && !vm.followActive,
                             'blu-icon': vm.followActive && !vm.isRotating && !vm.dragged
-                        }" style="-webkit-transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg); transform: rotate({{!vm.isRotating ? '0' : 30 - vm.deg}}deg);">
+                        }" ng-style="!vm.isRotating ? {
+                            '-webkit-transform': 'rotate(0deg)',
+                            'transform': 'rotate(0deg)'
+                        } : {
+                            '-webkit-transform': 'rotate(' + (30 - vm.deg) + 'deg)',
+                            'transform': 'rotate(' + (30 - vm.deg) + 'deg)'
+                        }">
                         <!-- <i
                             class="icon wm-icon-android-locate-full"
                             ng-if="vm.followActive && !vm.isRotating && !vm.dragged">

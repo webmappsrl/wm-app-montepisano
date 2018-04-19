@@ -32,13 +32,20 @@
     font-size: 1.5em;
   }
 }*/
+/* */
+@font-face {
+  font-family: 'Josefin Sans';
+  src: url("../fonts/Josefin Sans/JosefinSans-Light.ttf");
+  font-weight: normal;
+  font-style: normal; }
+
 /**
  * BASE
  *
  * Basic style for tag and general classes
  */
 body.fontsloaded {
-  font-family: "Abel", sans-serif !important; }
+  font-family: "Josefin Sans", sans-serif !important; }
 
 body {
   min-height: 100%;
@@ -73,7 +80,7 @@ html {
 
 html, body, .ionic-body {
   height: 100%;
-  font-family: "Abel", sans-serif !important; }
+  font-family: "Josefin Sans", sans-serif !important; }
 
 img {
   max-width: 100%;
@@ -86,10 +93,10 @@ a {
   text-decoration: none; }
 
 p, a {
-  font-family: "Abel", sans-serif; }
+  font-family: "Josefin Sans", sans-serif; }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Abel", sans-serif; }
+  font-family: "Josefin Sans", sans-serif; }
 
 h1, h2, h3, h4 {
   font-size: 16px !important; }
@@ -98,7 +105,7 @@ h1, h2, h3, h4 {
   text-align: center !important; }
 
 button {
-  font-family: "Abel", sans-serif; }
+  font-family: "Josefin Sans", sans-serif; }
 
 .button:hover {
   color: inherit; }
@@ -637,19 +644,12 @@ div.detailRoute-footer {
       text-transform: uppercase;
       color: red;
       text-align: right;
-      font-size: 15px;
-      background: -webkit-linear-gradient(bottom, #F3F6E9 0%, #F3F6E9 25%, transparent 100%);
-      /* Chrome10-25,Safari5.1-6 */
-      background: linear-gradient(to bottom, transparent 0%, #F3F6E9 75%, #F3F6E9 100%);
-      /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ }
+      font-size: 15px; }
       .detailTaxonomy-page ion-content .detailTaxonomy-description .detailTaxonomy-read-more span {
-        background: #F3F6E9;
         padding: 0 0 0 5px; }
     .detailTaxonomy-page ion-content .detailTaxonomy-description.show-full {
       height: auto;
       max-height: none; }
-      .detailTaxonomy-page ion-content .detailTaxonomy-description.show-full .detailTaxonomy-read-more {
-        background-image: linear-gradient(transparent, transparent); }
   .detailTaxonomy-page ion-content .detailTaxonomy-routes {
     width: 100%;
     padding: 15px; }
@@ -869,8 +869,9 @@ div.detailRoute-footer {
   display: none; }
 
 .details-description {
-  padding: 10px;
-  margin-bottom: 78px; }
+  padding: 10px; }
+  .detail-route .details-description {
+    margin-bottom: 78px; }
   .details-description .opening-hours {
     padding: 10px 0; }
     .details-description .opening-hours .icon {
@@ -954,7 +955,7 @@ div.detailRoute-footer {
   .itinerario-details-tappe .itinerario-tappe-title {
     display: inline-block;
     width: 100%;
-    font-family: "Abel", sans-serif;
+    font-family: "Josefin Sans", sans-serif;
     margin: 0;
     padding: 8px;
     color: #605846;
@@ -998,7 +999,7 @@ div.detailRoute-footer {
   .route-related-details .route-related-title {
     display: inline-block;
     width: 100%;
-    font-family: "Abel", sans-serif;
+    font-family: "Josefin Sans", sans-serif;
     margin: 0;
     padding: 8px;
     color: #605846;
@@ -1691,7 +1692,7 @@ button.login-button.skip-login {
     padding-top: 10px;
     padding-bottom: 10px;
     color: #918f75;
-    font-family: "Abel", sans-serif !important;
+    font-family: "Josefin Sans", sans-serif !important;
     font-size: 0.7em; }
     .omb_login button .icon {
       display: block; }
@@ -1871,7 +1872,7 @@ button.login-button.skip-login {
 
 /* Long title and date */
 .details-page .bar.bar-header .title {
-  font-family: "Abel", sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   font-size: 20px;
   height: 100%;
   margin: 0;
@@ -2696,7 +2697,7 @@ ion-side-menus.navigation-interface .show-start-navigation .start-navigation {
   padding-right: 13px;
   width: 310px; }
   .leaflet-popup-content-wrapper .leaflet-popup-content {
-    font-family: "Abel", sans-serif;
+    font-family: "Josefin Sans", sans-serif;
     font-weight: 700;
     margin: 0;
     padding: 0;
@@ -2999,7 +3000,7 @@ button.popup-close {
 .modal-details .modal-title {
   font-size: 22px;
   color: #80181e;
-  font-family: "Abel", sans-serif; }
+  font-family: "Josefin Sans", sans-serif; }
 
 .modal-details.modal-details-gallery .modal-title {
   display: none; }
@@ -3024,7 +3025,7 @@ button.popup-close {
 .modal-content-title {
   margin: 10px 0;
   font-size: 18px;
-  font-family: "Abel", sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   line-height: 1.2; }
   .modal-details-gallery .modal-content-title {
     display: none; }

@@ -1253,6 +1253,8 @@ angular.module('webmapp')
             } else if (currentState === 'app.main.detailtaxonomy'){
                 vm.hideExpander = true;
                 vm.detail = true;
+                vm.hasShadow = true;
+                vm.extendShadow = true;
             } else if (currentState === 'app.main.detailevent') {
                 vm.hasShadow = true;
             } else if (currentState === 'app.main.detailulayer') {

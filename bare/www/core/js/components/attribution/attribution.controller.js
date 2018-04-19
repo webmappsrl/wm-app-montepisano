@@ -9,7 +9,7 @@ angular.module('webmapp')
     ) {
         var vm = {};
 
-        vm.colors = CONFIG.STYLE;
+        vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.openInAppBrowser = Utils.openInAppBrowser;
         vm.title = CONFIG.OPTIONS.title;
 

@@ -63,7 +63,7 @@
                     'color': vm.colors.subnav.color,
                     'background': vm.colors.subnav.background
                 }"
-                ng-if="!vm.isEventDetail && !vm.isAreaDetail && vm.isParentInMenu">
+                ng-if="!vm.isEventDetail && !vm.isAreaDetail && vm.isParentInMenu && !vm.hideSubMenu">
                 <ul class="details-subnav__list">
                     <li class="subnav-list__element">
                         <a href="" ng-click="vm.goBackToCategory(vm.mainCategory)">

@@ -14,11 +14,6 @@
   font-size: 14px;
 }
 
-.details-contacts__list {
-  //padding: 6px;
-  //background: $color-light-01;
-}
-
 .subnav-list__element,
 .contacts-list__element {
   display: inline-block;
@@ -75,10 +70,6 @@
       @include text-ellipsis;
     }
   }
-}
-
-.details-container {
-  //position: relative;
 }
 
 .details-content {
@@ -231,14 +222,15 @@
       display: none;
     }
   }
-  .related-offer {
-    //width: 100%;
-  }
 }
 
 .details-description {
   padding: 10px;
-  margin-bottom: 78px;
+
+  .detail-route & {
+    margin-bottom: 78px;
+  }
+
   .opening-hours {
     padding: 10px 0;
     .icon {
@@ -341,8 +333,6 @@
 .table-row-header {
   font-weight: $font-weight-bold;
 }
-
-.table-row-desc {}
 
 /* Itinerari details */
 

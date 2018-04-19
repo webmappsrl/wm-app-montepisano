@@ -1,6 +1,10 @@
 <ion-view 
     cache-view="false" 
-    ng-controller="MapController as vm">
+    ng-controller="MapController as vm"
+    ng-style="{
+        'background': vm.colors.mainBar.background,
+        'color': vm.colors.mainBar.color
+    }">
     <ion-nav-title>
         <span ng-bind-html="vm.mapTitle">
             {{ vm.mapTitle }}

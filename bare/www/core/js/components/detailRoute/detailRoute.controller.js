@@ -38,7 +38,7 @@ angular.module('webmapp')
         modalScope.parent = vm;
 
         vm.avoidModal = CONFIG.OPTIONS.avoidModalInDetails;
-        vm.colors = CONFIG.STYLE;
+        vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.imageUrl = CONFIG.OFFLINE.imagesUrl;
         vm.goBack = Utils.goBack;
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";

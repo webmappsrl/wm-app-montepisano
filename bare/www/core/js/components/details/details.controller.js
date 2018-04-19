@@ -45,6 +45,8 @@ angular.module('webmapp')
     vm.additionalLinks = {};
     vm.isNavigable = false;
 
+    vm.hideSubMenu = true;
+
     vm.goBack = function () {
         if (vm.isNavigable) {
             vm.isNavigable = false;
