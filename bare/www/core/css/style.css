@@ -627,7 +627,7 @@ div.detailRoute-footer {
   .detailTaxonomy-page ion-content .detailTaxonomy-description {
     width: 100%;
     padding: 25px 20px 20px;
-    font-size: 23px;
+    font-size: 21px;
     font-weight: 700;
     line-height: 1.5em;
     max-height: calc(6em + 5px + 35px);
@@ -642,7 +642,7 @@ div.detailRoute-footer {
       margin: 0;
       padding: 25px 20px 0;
       text-transform: uppercase;
-      color: red;
+      color: #D90101;
       text-align: right;
       font-size: 15px; }
       .detailTaxonomy-page ion-content .detailTaxonomy-description .detailTaxonomy-read-more span {
@@ -671,7 +671,7 @@ div.detailRoute-footer {
       .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.download-icon,
       .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.open-icon {
         position: absolute;
-        top: 3px;
+        top: 4px;
         left: 0;
         font-size: 21px; }
       .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.open-icon {
@@ -867,6 +867,28 @@ div.detailRoute-footer {
 
 .details-rows .details-right .details-image {
   display: none; }
+
+.details-description-expandable {
+  max-height: calc(5em + 5px + 35px);
+  overflow: hidden;
+  position: relative; }
+  .details-description-expandable .details-no-modal-read-more {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 25px 20px 0;
+    text-transform: uppercase;
+    color: #D90101;
+    text-align: right;
+    font-size: 12px; }
+    .details-description-expandable .details-no-modal-read-more span {
+      padding: 0 0 0 5px; }
+  .details-description-expandable.show-full {
+    height: auto;
+    max-height: none; }
 
 .details-description {
   padding: 10px; }
@@ -3519,7 +3541,26 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
         font-size: 17px;
         height: 60px;
         text-transform: uppercase;
-        font-weight: 700; }
+        font-weight: 700;
+        width: 100%;
+        position: relative; }
+        .taxonomy-page ion-content .taxonomy-button .taxonomy-content .taxonomy-titlebar span {
+          display: inline-block;
+          max-width: calc(100% - 125px);
+          max-height: 38px;
+          overflow: hidden; }
+        .taxonomy-page ion-content .taxonomy-button .taxonomy-content .taxonomy-titlebar div.activity-icons {
+          position: absolute;
+          right: 5px;
+          top: 17.5px;
+          width: auto; }
+          .taxonomy-page ion-content .taxonomy-button .taxonomy-content .taxonomy-titlebar div.activity-icons i {
+            font-size: 25px;
+            margin: 12.5px 0;
+            padding: 5px;
+            color: #D80000;
+            border: 1px solid #D80000;
+            border-radius: 50%; }
 
 /*
  * WEBMAPP PAGE

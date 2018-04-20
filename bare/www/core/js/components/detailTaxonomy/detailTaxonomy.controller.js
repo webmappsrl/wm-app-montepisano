@@ -68,6 +68,11 @@ angular.module('webmapp')
             }
         };
 
+        vm.toggleList = function() {
+            vm.isListExpanded = !vm.isListExpanded;
+            $rootScope.$emit('toggle-list', vm.isListExpanded);
+        };
+        
         var updateMapView = function() {
             MapService.disableInteractions();
             var toAdd = [],

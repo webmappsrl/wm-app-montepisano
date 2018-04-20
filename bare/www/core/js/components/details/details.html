@@ -53,7 +53,7 @@
 
     <ion-content class="has-show-more"
                  ng-style="{
-                     'background': vm.colors.global.background
+                     'background': vm.colors.details.background
                     }">
         <div class="details-container">
             <!-- TODO: for single back to category element add details-subnav-single - for two elements add details-subnav-rows -->
@@ -238,9 +238,22 @@
                         <span class="label">{{::"Orari di Apertura:" | translate}}</span>
                         {{vm.featureDetails.opening_hours}}
                     </div>
-                    <p
-                        ng-bind-html="vm.feature.description || vm.feature.title"></p>
-
+                    <div class="details-description-expandable" ng-class="{'show-full': vm.fullDescription}"
+                        ng-if="vm.feature.description && vm.feature.description.expandable">
+                        <p ng-bind-html="vm.feature.description || vm.feature.title"></p>
+                        <div class="details-no-modal-read-more" ng-style="
+                            !vm.fullDescription ? {
+                                'background': 'linear-gradient(to bottom, transparent 0%, ' + vm.colors.details.background + ' 75%, ' + vm.colors.details.background + ' 100%)'
+                            } : {
+                                'background-image': 'linear-gradient(transparent, transparent)'
+                            }">
+                            <span ng-click="vm.toggleDescription()">
+                                {{vm.fullDescription ? "nascondi" : "leggi tutto" | translate}}
+                            </span>
+                        </div>
+                    </div>
+                    <p ng-bind-html="vm.feature.description || vm.feature.title"
+                        ng-if="!vm.feature.description || !(vm.feature.description && vm.feature.description.expandable)"></p>
                     <div class="details-expander">
 
                         <a

@@ -19,18 +19,23 @@
                     <img ng-src="{{item.featured_image.sizes.medium}}">
                 </div>
                 <div class="taxonomy-titlebar">
-                    <span ng-if="item.name[vm.currentLang]">
-                        {{item.name[vm.currentLang]}}
-                        <br> {{item.title}}
+                    <span ng-if="item.name[vm.currentLang]" ng-bind-html="item.name[vm.currentLang]">
+                        <!-- {{item.name[vm.currentLang]}} -->
+                        <!-- <br> {{item.title}} -->
                     </span>
                     <span ng-if="item.name[vm.defaultLang] && !item.name[vm.currentLang]">
                         {{item.name[vm.defaultLang]}}
-                        <br> {{item.title}}
+                        <!-- <br> {{item.title}} -->
                     </span>
                     <span ng-if="item.name && !item.name[vm.currentLang] && !item.name[vm.defaultLang]">
                         {{item.name}}
-                        <br> {{item.title}}
+                        <!-- <br> {{item.title}} -->
                     </span>
+                    <div class="activity-icons">
+                        <i class="icon wm-icon-hiking-15 activity-icon"></i>
+                        <i class="icon wm-icon-car-15 activity-icon"></i>
+                        <i class="icon wm-icon-bicycle-15 activity-icon"></i>
+                    </div>
                 </div>
             </div>
         </div>

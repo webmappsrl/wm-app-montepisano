@@ -36,15 +36,15 @@
             } : {
                 'background-image': 'linear-gradient(transparent, transparent)'
             }">
-                <span ng-click="vm.toggleDescription()" ng-style="">
+                <span ng-click="vm.toggleDescription()">
                     {{vm.fullDescription ? "nascondi" : "leggi tutto" | translate}}
                 </span>
             </div>
         </div>
         <div class="detailTaxonomy-routes">
             <div class="detailTaxonomy-route" ng-repeat="route in vm.routes" ng-click="vm.openOrDownloadPack(route.id)">
-                <i ng-if="!vm.userDownloadedPackages[route.id]" class="icon wm-icon-arrow-down-c download-icon" ng-style="{'background': colors.details.background}"></i>
-                <i ng-if="vm.userDownloadedPackages[route.id]" class="icon wm-icon-checkmark-round open-icon" ng-style="{'background': colors.details.background}"></i>
+                <i ng-if="!vm.userDownloadedPackages[route.id]" class="icon wm-icon-arrow-down-c download-icon" ng-style="{'background': vm.colors.details.background}"></i>
+                <i ng-if="vm.userDownloadedPackages[route.id]" class="icon wm-icon-checkmark-round open-icon" ng-style="{'background': vm.colors.details.background}"></i>
                 <i class="icon {{vm.activities[route.activity[0]].icon}} activity-icon"></i>
                 <span ng-if="route.packageTitle[vm.currentLang]">
                     {{route.packageTitle[vm.currentLang]}}

@@ -44,6 +44,7 @@ angular.module('webmapp')
     vm.openInExternalBrowser = Utils.openInExternalBrowser;
     vm.additionalLinks = {};
     vm.isNavigable = false;
+    vm.fullDescription = false;
 
     vm.hideSubMenu = true;
 
@@ -179,6 +180,10 @@ angular.module('webmapp')
             vm.hasGallery = vm.imageGallery.length > 0;
 
             if (feature.description) {
+                var expandable = false;
+                if (feature.description.length > 200) {
+                    expandable = true;
+                }
                 feature.description = feature.description.replace(new RegExp(/src="\//g), 'src="' + CONFIG.COMMUNICATION.baseUrl);
                 // feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), '');
                 // feature.description = feature.description.replace(new RegExp(/href="\//g), 'href="' + CONFIG.COMMUNICATION.baseUrl);
@@ -191,6 +196,7 @@ angular.module('webmapp')
 
                 vm.mainDescription.html = $sce.trustAsHtml(vm.mainDescription.html);
                 feature.description = $sce.trustAsHtml(feature.description);
+                feature.description.expandable = expandable;
             }
 
             if (feature.phone) {
@@ -577,6 +583,18 @@ angular.module('webmapp')
                 launchnavigator.navigate([coordinates[1], coordinates[0]]);
             }
         }
+    };
+
+    var forceDigest = function () {
+        setTimeout(function () {
+            $(window).trigger('resize');
+            Utils.forceDigest();
+        }, 100);
+    };
+
+    vm.toggleDescription = function () {
+        vm.fullDescription = !vm.fullDescription;
+        forceDigest();
     };
 
     $rootScope.$on('expand-map', function(e, value) {
