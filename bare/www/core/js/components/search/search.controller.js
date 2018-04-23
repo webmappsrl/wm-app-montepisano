@@ -24,9 +24,11 @@ angular.module('webmapp')
     modalScope.vm = {};
 
     vm.showInMap = !options.hideShowInMapFromSearch;
-    vm.colors = CONFIG.STYLE;
+    vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
     vm.results = [];
     vm.goBack = Utils.goBack;
+
+    modalScope.vm.COLORS = vm.colors;
 
     vm.isMapView = false;
 

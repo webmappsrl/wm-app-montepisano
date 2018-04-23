@@ -60,7 +60,6 @@ angular.module('webmapp')
         }
     }
 
-
     vm.mapLayers = CONFIG.MAP.layers;
 
     if (vm.mapLayers.length > 1) {
@@ -70,6 +69,7 @@ angular.module('webmapp')
     }
 
     modalScope.vm.baseLayers = MapService.getBaseLayers();
+    modalScope.vm.COLORS = vm.colors;
 
     $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/filtersModal.html', {
         scope: modalScope,
