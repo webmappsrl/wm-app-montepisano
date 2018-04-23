@@ -1408,8 +1408,10 @@ div.logout {
 .list-info-title {
   padding-bottom: 3px;
   font-size: 22px;
+  overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap; }
+  white-space: nowrap;
+  padding-top: 5px; }
 
 .list-info-subtitle {
   font-size: 14px; }
