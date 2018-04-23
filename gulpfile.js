@@ -111,11 +111,12 @@ gulp.task('update', ['create'], function () {
 
         gulp.getUrlFile('config.js', config, dir + '/www/config/');
 
+        gulp.setFont('Josefin Sans');
+
         gulp.getUrlFile('icon.png', resources + 'icon.png', dir + '/resources/');
         gulp.getUrlFile('splash.png', resources + 'splash.png', dir + '/resources/');
 
-        //gulp.start('generate-resources');
-
+        gulp.start('add-resources');
     } else {
         console.warn('[WARN] instance doesn\'t exits. Create first.');
     }
@@ -222,8 +223,7 @@ gulp.task('update-instance', function () {
 gulp.task('complete-update', function () {
     if (argv.instance) {
         instance_name = argv.instance;
-    }
-    else {
+    } else {
         console.log("missing instance name");
         console.log("aborting...");
         return;
@@ -231,18 +231,21 @@ gulp.task('complete-update', function () {
 
     if (argv.url) {
         url = argv.url;
-    }
-    else {
+    } else {
         console.log("missing url");
         console.log("aborting...");
         return
     }
 
-    sh.exec("gulp sass", {
-        cwd: 'bare/'
-    });
+    // sh.exec("gulp sass", {
+    //     cwd: 'bare/'
+    // });
     sh.exec("gulp update-instance -i " + instance_name);
     sh.exec("gulp update -i " + instance_name + " -u " + url);
+
+    sh.exec("gulp sass", {
+        cwd: 'instances/' + instance_name
+    });
 });
 
 gulp.copy = function (src, dest) {
@@ -281,12 +284,21 @@ gulp.updateConfigXML = function (config) {
     gulp.start('generate-index');
 
     gulp.src(configJs_file)
-        .pipe(replace(/VERSION: '0.4'/, edit_version ))
+        .pipe(replace(/VERSION: '0.4'/, edit_version))
         .pipe(gulp.dest(dir + '/www/config/'));
 
     return gulp.src(config_file)
         .pipe(replace(/<widget (id=")([a-zA-Z0-9:;\.\s\(\)\-\,]*)(") (version=")([a-zA-Z0-9:;\.\s\(\)\-\,]*)(")/i, edit_tag))
         .pipe(replace(/(<name\b[^>]*>)[^<>]*(<\/name>)/i, edit_name))
         .pipe(replace(/(<description\b[^>]*>)[^<>]*(<\/description>)/i, edit_desc))
+        .pipe(gulp.dest(dir));
+};
+
+gulp.setFont = function (fontFamily) {
+    var dir = 'instances/' + instance_name + '/www/core/styles/generic';
+
+    return gulp.src(dir + "/_variables.scss")
+        .pipe(replace(/\$main-font-family: '(.*)', sans-serif;/g, "$main-font-family: '" + fontFamily + "', sans-serif;"))
+        .pipe(replace(/\$title-font-family: '(.*)', sans-serif;/g, "$title-font-family: '" + fontFamily + "', sans-serif;"))
         .pipe(gulp.dest(dir));
 };

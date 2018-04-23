@@ -26,10 +26,6 @@
   .item {
     color: inherit;
 
-    &.activated {
-      // ...
-    }
-
     &.item-content-preview {
       height: 54px;
       .icon {
@@ -98,11 +94,6 @@
 
   &[ng-click]:hover {
     cursor: text;
-  }
-
-  &.activated {
-    // border-color: darken($color-light-green, 5%);
-    // background: darken($color-light-green, 5%);
   }
 }
 
