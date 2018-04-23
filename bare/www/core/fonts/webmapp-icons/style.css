@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?h0a9gr');
-  src:  url('fonts/webmapp.eot?h0a9gr#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?h0a9gr') format('truetype'),
-    url('fonts/webmapp.woff?h0a9gr') format('woff'),
-    url('fonts/webmapp.svg?h0a9gr#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?bd8rz');
+  src:  url('fonts/webmapp.eot?bd8rz#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?bd8rz') format('truetype'),
+    url('fonts/webmapp.woff?bd8rz') format('woff'),
+    url('fonts/webmapp.svg?bd8rz#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -231,6 +231,51 @@
 }
 .wm-icon-montepisano:before {
   content: "\e9f2";
+}
+.wm-icon-fu_bike:before {
+  content: "\e9f3";
+}
+.wm-icon-fu_boat:before {
+  content: "\e9f4";
+}
+.wm-icon-fu_bus_station:before {
+  content: "\e9f5";
+}
+.wm-icon-fu_camera_top:before {
+  content: "\e9f6";
+}
+.wm-icon-fu_camera:before {
+  content: "\e9f7";
+}
+.wm-icon-fu_danger:before {
+  content: "\e9f8";
+}
+.wm-icon-fu_hotel:before {
+  content: "\e9f9";
+}
+.wm-icon-fu_panorama_top:before {
+  content: "\e9fa";
+}
+.wm-icon-fu_panorama:before {
+  content: "\e9fb";
+}
+.wm-icon-fu_restaurant_top:before {
+  content: "\e9fc";
+}
+.wm-icon-fu_restaurant:before {
+  content: "\e9fd";
+}
+.wm-icon-fu_supermarket:before {
+  content: "\e9fe";
+}
+.wm-icon-fu_town_top:before {
+  content: "\e9ff";
+}
+.wm-icon-fu_town:before {
+  content: "\ea00";
+}
+.wm-icon-fu_train_station:before {
+  content: "\ea01";
 }
 .wm-icon-aerialway-15:before {
   content: "\e925";
