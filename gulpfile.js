@@ -111,12 +111,15 @@ gulp.task('update', ['create'], function () {
 
         gulp.getUrlFile('config.js', config, dir + '/www/config/');
 
-        gulp.setFont('Josefin Sans');
+        gulp.setFont('Abel');
 
         gulp.getUrlFile('icon.png', resources + 'icon.png', dir + '/resources/');
         gulp.getUrlFile('splash.png', resources + 'splash.png', dir + '/resources/');
 
-        gulp.start('add-resources');
+        // gulp.start('add-resources');
+        sh.exec('ionic cordova resources', {
+            cwd: dir
+        })
     } else {
         console.warn('[WARN] instance doesn\'t exits. Create first.');
     }
@@ -237,15 +240,15 @@ gulp.task('complete-update', function () {
         return
     }
 
-    // sh.exec("gulp sass", {
-    //     cwd: 'bare/'
-    // });
+    sh.exec("gulp sass", {
+        cwd: 'bare/'
+    });
     sh.exec("gulp update-instance -i " + instance_name);
     sh.exec("gulp update -i " + instance_name + " -u " + url);
 
-    sh.exec("gulp sass", {
-        cwd: 'instances/' + instance_name
-    });
+    // sh.exec("gulp sass", {
+    //     cwd: 'instances/' + instance_name
+    // });
 });
 
 gulp.copy = function (src, dest) {
