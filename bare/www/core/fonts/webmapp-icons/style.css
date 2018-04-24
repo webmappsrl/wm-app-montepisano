@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?bd8rz');
-  src:  url('fonts/webmapp.eot?bd8rz#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?bd8rz') format('truetype'),
-    url('fonts/webmapp.woff?bd8rz') format('woff'),
-    url('fonts/webmapp.svg?bd8rz#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?i6rcm2');
+  src:  url('fonts/webmapp.eot?i6rcm2#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?i6rcm2') format('truetype'),
+    url('fonts/webmapp.woff?i6rcm2') format('woff'),
+    url('fonts/webmapp.svg?i6rcm2#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -276,6 +276,81 @@
 }
 .wm-icon-fu_train_station:before {
   content: "\ea01";
+}
+.wm-icon-beach-umbrella_15:before {
+  content: "\ea02";
+}
+.wm-icon-castle2_15:before {
+  content: "\ea03";
+}
+.wm-icon-cave-entrance_15:before {
+  content: "\ea04";
+}
+.wm-icon-climging_15:before {
+  content: "\ea05";
+}
+.wm-icon-dolmen_15:before {
+  content: "\ea06";
+}
+.wm-icon-domus-de-janas_15:before {
+  content: "\ea07";
+}
+.wm-icon-fishing_15:before {
+  content: "\ea08";
+}
+.wm-icon-fort_15:before {
+  content: "\ea09";
+}
+.wm-icon-giants-grave_15:before {
+  content: "\ea0a";
+}
+.wm-icon-hiking2_15:before {
+  content: "\ea0b";
+}
+.wm-icon-lake_15:before {
+  content: "\ea0c";
+}
+.wm-icon-mill_15:before {
+  content: "\ea0d";
+}
+.wm-icon-museum2_15:before {
+  content: "\ea0e";
+}
+.wm-icon-nuraghe_15:before {
+  content: "\ea0f";
+}
+.wm-icon-olive-tree_15:before {
+  content: "\ea10";
+}
+.wm-icon-paragliding_15:before {
+  content: "\ea11";
+}
+.wm-icon-pnab_15:before {
+  content: "\ea12";
+}
+.wm-icon-pnab-qp_15:before {
+  content: "\ea13";
+}
+.wm-icon-rowing_15:before {
+  content: "\ea14";
+}
+.wm-icon-soccer2_15:before {
+  content: "\ea15";
+}
+.wm-icon-spa_15:before {
+  content: "\ea16";
+}
+.wm-icon-tower_15:before {
+  content: "\ea17";
+}
+.wm-icon-via-ferrata_15:before {
+  content: "\ea18";
+}
+.wm-icon-villa_15:before {
+  content: "\ea19";
+}
+.wm-icon-way-side-shrine_15:before {
+  content: "\ea1a";
 }
 .wm-icon-aerialway-15:before {
   content: "\e925";
