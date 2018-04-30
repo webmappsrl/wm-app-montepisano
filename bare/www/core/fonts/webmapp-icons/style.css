@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?i6rcm2');
-  src:  url('fonts/webmapp.eot?i6rcm2#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?i6rcm2') format('truetype'),
-    url('fonts/webmapp.woff?i6rcm2') format('woff'),
-    url('fonts/webmapp.svg?i6rcm2#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?gu3y5l');
+  src:  url('fonts/webmapp.eot?gu3y5l#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?gu3y5l') format('truetype'),
+    url('fonts/webmapp.woff?gu3y5l') format('woff'),
+    url('fonts/webmapp.svg?gu3y5l#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -351,6 +351,18 @@
 }
 .wm-icon-way-side-shrine_15:before {
   content: "\ea1a";
+}
+.wm-icon-dialysis:before {
+  content: "\ea1b";
+}
+.wm-icon-food-intolerance:before {
+  content: "\ea1c";
+}
+.wm-icon-hearing-impared:before {
+  content: "\ea1d";
+}
+.wm-icon-visually-impaired:before {
+  content: "\ea1e";
 }
 .wm-icon-aerialway-15:before {
   content: "\e925";
