@@ -68,7 +68,9 @@ angular.module('webmapp')
         });
 
         vm.openImageModal = function () {
-            modalImage.show();
+            if (vm.imageGallery.length > 1) {
+                modalImage.show();
+            }
         };
 
         modalScope.vm.hide = function () {
@@ -77,15 +79,15 @@ angular.module('webmapp')
 
         modalScope.vm.nextImage = function () {
             if ($ionicSlideBoxDelegate._instances &&
-                $ionicSlideBoxDelegate._instances[0]) {
-                $ionicSlideBoxDelegate._instances[0].next();
+                $ionicSlideBoxDelegate._instances.length > 0) {
+                $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].next();
             }
         };
 
         modalScope.vm.prevImage = function () {
             if ($ionicSlideBoxDelegate._instances &&
-                $ionicSlideBoxDelegate._instances[0]) {
-                $ionicSlideBoxDelegate._instances[0].previous();
+                $ionicSlideBoxDelegate._instances.length > 0) {
+                $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].previous();
             }
         };
 
@@ -95,8 +97,8 @@ angular.module('webmapp')
             }
 
             if ($ionicSlideBoxDelegate._instances &&
-                $ionicSlideBoxDelegate._instances[0]) {
-                return $ionicSlideBoxDelegate._instances[0].currentIndex() !== 0;
+                $ionicSlideBoxDelegate._instances.length > 0) {
+                return $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].currentIndex() !== 0;
             }
         };
 
@@ -110,8 +112,8 @@ angular.module('webmapp')
             }
 
             if ($ionicSlideBoxDelegate._instances &&
-                $ionicSlideBoxDelegate._instances[0]) {
-                return $ionicSlideBoxDelegate._instances[0].currentIndex() !== vm.imageGallery.length - 1;
+                $ionicSlideBoxDelegate._instances.length > 0) {
+                return $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].currentIndex() !== vm.imageGallery.length - 1;
             }
         };
 
@@ -203,6 +205,15 @@ angular.module('webmapp')
                 PackageService.getPackagesIdByUserId();
 
                 Utils.forceDigest();
+            }
+        });
+
+        $scope.$on('$destroy', function () {
+            if ($ionicSlideBoxDelegate._instances &&
+                $ionicSlideBoxDelegate._instances.length > 0) {
+                // delete $ionicSlideBoxDelegate._instances[0];
+                $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
+                $ionicSlideBoxDelegate.update();
             }
         });
 

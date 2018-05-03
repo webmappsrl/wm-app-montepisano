@@ -37,6 +37,12 @@
                     </div>
 
                     <div class="details-image-route">
+                        <span
+                            class="image-expand"
+                            ng-if="!vm.isAreaDetail && vm.imageGallery.length > 1"
+                            ng-click="vm.openImageModal()">
+                            <i class="icon wm-icon-ios7-more"></i>
+                        </span>
                         <img ng-if="!vm.isAreaDetail" ng-click="vm.openImageModal()" ng-src="{{vm.featureImage}}">
                         <img ng-if="vm.isAreaDetail" style="max-height: 125px; margin-left: 20%;" ng-src="{{vm.featureImage}}">
                     </div>

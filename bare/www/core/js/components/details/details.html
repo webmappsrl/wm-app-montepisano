@@ -132,12 +132,12 @@
                   class="details-rows"
                   ng-if="vm.feature.image">
                     <div class="details-image">
-                        <!-- <a
-                            class="btn-expand image-expand"
-                            href=""
+                        <span
+                            class="image-expand"
+                            ng-if="!vm.isAreaDetail && vm.imageGallery.length > 1"
                             ng-click="vm.openImageModal()">
-                            <i class="icon ion-arrow-expand"></i>
-                        </a> -->
+                            <i class="icon wm-icon-ios7-more"></i>
+                        </span>
                         <img
                           ng-if="!vm.isAreaDetail"
                           ng-click="vm.openImageModal()"

@@ -310,15 +310,18 @@
 
 .image-expand {
   width: 44px;
-  height: 44px;
-  margin-top: -22px;
+  height: 22px;
   margin-left: -22px;
-  line-height: 42px;
   position: absolute;
-  top: 50%;
+  bottom: 16px;
   left: 50%;
+  background: transparentize($color-brown, .3);
   .icon {
-    font-size: 28px;
+    font-size: 34px;
+    color: $color-light-03;
+    position: absolute;
+    top: -5px;
+    left: calc(50% - 10px);
   }
 }
 

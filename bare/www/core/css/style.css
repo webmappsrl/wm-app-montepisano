@@ -591,6 +591,7 @@ div.detailRoute-footer {
   div.detailRoute-footer button.login-button.button {
     height: 54px;
     width: auto;
+    max-width: initial;
     font-size: 20px; }
     div.detailRoute-footer button.login-button.button.left {
       float: left; }
@@ -944,15 +945,18 @@ div.detailRoute-footer {
 
 .image-expand {
   width: 44px;
-  height: 44px;
-  margin-top: -22px;
+  height: 22px;
   margin-left: -22px;
-  line-height: 42px;
   position: absolute;
-  top: 50%;
-  left: 50%; }
+  bottom: 16px;
+  left: 50%;
+  background: rgba(96, 88, 70, 0.7); }
   .image-expand .icon {
-    font-size: 28px; }
+    font-size: 34px;
+    color: #f7f9f1;
+    position: absolute;
+    top: -5px;
+    left: calc(50% - 10px); }
 
 /* Details table */
 .table-details {

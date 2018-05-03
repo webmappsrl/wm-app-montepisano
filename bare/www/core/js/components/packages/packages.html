@@ -91,7 +91,7 @@
                 <div class="details-reduced">
                     <div class="packages-title-reduced" ng-if="item.packageTitle[vm.currentLang]" ng-bind-html="vm.truncateTitle(item.packageTitle[vm.currentLang])">
                     </div>
-                    <div class="packages-title-reduced" ng-if="!item.packageTitle[vm.currentLang]" ng-bind-html="vm.truncateTitle(item.packageTitle['it'])">
+                    <div class="packages-title-reduced" ng-if="!item.packageTitle[vm.currentLang]" ng-bind-html="vm.truncateTitle(item.title.rendered)">
                     </div>
 
                     <div class="content-reduced">
