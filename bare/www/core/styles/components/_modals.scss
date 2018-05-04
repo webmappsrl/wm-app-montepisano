@@ -256,6 +256,16 @@
       //height: 100%;
       //max-height: 100%;
     }
+
+    .image-caption {
+      color: $color-light-03;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: auto;
+      padding: 5px 5%;
+      background: transparentize(#000, 0.5);
+    }
   }
   .modal-image-container {
 

@@ -3114,6 +3114,14 @@ button.popup-close {
   position: absolute;
   top: 50%;
   transform: translateY(-50%); }
+  .modal-details-gallery .modal-image-element .image-caption {
+    color: #f7f9f1;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    padding: 5px 5%;
+    background: rgba(0, 0, 0, 0.5); }
 
 .modal-details-gallery .modal-image-container .button-arrow {
   display: inline-block;

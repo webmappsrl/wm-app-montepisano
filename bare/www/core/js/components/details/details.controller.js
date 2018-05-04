@@ -618,7 +618,7 @@ angular.module('webmapp')
         if ($ionicSlideBoxDelegate._instances &&
             $ionicSlideBoxDelegate._instances.length > 0) {
             // delete $ionicSlideBoxDelegate._instances[0];
-            $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
+            // $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
             $ionicSlideBoxDelegate.update();
         }
     });
