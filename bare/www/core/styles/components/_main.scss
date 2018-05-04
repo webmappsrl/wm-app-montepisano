@@ -106,11 +106,15 @@
   color: inherit !important;
   border-color: transparent !important;
 
+  &.bar.bar-positive {
+    box-shadow: 0 -13px 15px -10px #E5E5E5 inset;
+  }
+
   .bar.bar-header {
     padding-right: 2%;
     padding-left: 2%;
     //background: $color-white;
-    @include box-shadow(0 0 1px transparentize($color-box-shadow,0.5));
+    // @include box-shadow(0 0 1px transparentize($color-box-shadow,0.5));
     text-transform: uppercase;
 
     .title {

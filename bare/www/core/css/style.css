@@ -1889,12 +1889,11 @@ button.login-button.skip-login {
   background: inherit !important;
   color: inherit !important;
   border-color: transparent !important; }
+  .nav-title-slide-ios7.bar.bar-positive {
+    box-shadow: 0 -13px 15px -10px #E5E5E5 inset; }
   .nav-title-slide-ios7 .bar.bar-header {
     padding-right: 2%;
     padding-left: 2%;
-    -webkit-box-shadow: 0 0 1px rgba(18, 16, 11, 0.5);
-    -moz-box-shadow: 0 0 1px rgba(18, 16, 11, 0.5);
-    box-shadow: 0 0 1px rgba(18, 16, 11, 0.5);
     text-transform: uppercase; }
     .nav-title-slide-ios7 .bar.bar-header .title {
       right: 50px !important;
