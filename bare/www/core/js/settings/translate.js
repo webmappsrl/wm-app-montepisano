@@ -53,4 +53,5 @@ angular.module('webmapp')
 	});
 
 	$translateProvider.preferredLanguage(lang);
+	$window.localStorage.language = JSON.stringify(lang);
 });
