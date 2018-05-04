@@ -22,7 +22,7 @@ angular.module('webmapp')
 
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.isListExpanded = false,
-            vm.layersMap = Model.getLayersMap();
+        vm.layersMap = Model.getLayersMap();
         vm.goTo = Utils.goTo;
 
         MapService.activateUtfGrid();
@@ -115,6 +115,14 @@ angular.module('webmapp')
                         vm.subGroupMenu = getMenuByState(realState);
                     } else {
                         if (MapService.isReady()) {
+                            vm.layersMap[realState].items.sort(function compare(a,b) {
+                                if (a.properties.name < b.properties.name)
+                                  return -1;
+                                if (a.properties.name > b.properties.name)
+                                  return 1;
+                                return 0;
+                            });
+
                             vm.subMenu = [];
                             Utils.slowAdd(angular.extend([], vm.layersMap[realState].items), vm.subMenu, true);
                         } else {

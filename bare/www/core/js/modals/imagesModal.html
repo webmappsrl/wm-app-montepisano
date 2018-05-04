@@ -19,23 +19,19 @@
             <ion-slide-box>
                 <ion-slide ng-repeat="image in parent.imageGallery">
                     <div>
-                        <!-- <img
-                            style="margin:auto;display:block"
-                            ng-src="{{image}}"> -->
-
-                        <ion-scroll zooming="true"
+                        <!-- <ion-scroll zooming="true"
                             direction="xy" 
                             delegate-handle="zoom-pane" 
                             class="zoom-pane" 
                             min-zoom="1" 
                             scrollbar-x="false" 
                             scrollbar-y="false" 
-                            overflow-scroll="false">
+                            overflow-scroll="false"> -->
                             <img ng-src="{{image}}">
 
                             <!-- <div class="image-caption">{{image}}</div> -->
 
-                        </ion-scroll>
+                        <!-- </ion-scroll> -->
                     </div>
                 </ion-slide>
             </ion-slide-box>
