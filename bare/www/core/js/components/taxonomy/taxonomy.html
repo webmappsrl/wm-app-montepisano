@@ -46,9 +46,9 @@
                         <!-- <br> {{item.title}} -->
                     </span>
                     <div class="activity-icons">
-                        <i class="icon wm-icon-hiking-15 activity-icon"></i>
-                        <i class="icon wm-icon-car-15 activity-icon"></i>
-                        <i class="icon wm-icon-bicycle-15 activity-icon"></i>
+                        <i ng-repeat="icon in item.icons" class="icon activity-icon" ng-class="icon"></i>
+                        <!-- <i class="icon wm-icon-car-15 activity-icon"></i>
+                        <i class="icon wm-icon-bicycle-15 activity-icon"></i> -->
                     </div>
                 </div>
             </div>

@@ -169,7 +169,6 @@ angular.module('webmapp')
                     asyncTranslations--;
                     if (asyncTranslations === 0) {
                         $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
-                        $ionicLoading.hide();
                         localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
                     }
                 })
@@ -177,7 +176,6 @@ angular.module('webmapp')
                     asyncTranslations--;
                     if (asyncTranslations === 0) {
                         $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
-                        $ionicLoading.hide();
                     }
                 });
         };
@@ -197,9 +195,7 @@ angular.module('webmapp')
                 return;
             }
 
-            if (!packages) {
-                $ionicLoading.show();
-            } else {
+            if (packages) {
                 $rootScope.$emit('packages-updated', packages);
             }
 
@@ -222,14 +218,11 @@ angular.module('webmapp')
                             $rootScope.$emit('packages-updated', packages);
                         }
                         localStorage.$wm_packages = JSON.stringify(packages);
-
-                        $ionicLoading.hide();
                     },
                     function (err) {
                         if (!packages) {
                             console.warn("No routes available. Restart the app with an open connection. Shutting down the app...");
                         }
-                        $ionicLoading.hide();
                     });
         };
 
@@ -243,9 +236,7 @@ angular.module('webmapp')
          *      the type of taxonomy to update
          */
         packageService.getTaxonomy = function (taxonomyType) {
-            if (!taxonomy[taxonomyType]) {
-                $ionicLoading.show();
-            } else {
+            if (taxonomy[taxonomyType]) {
                 $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
             }
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')
@@ -278,13 +269,11 @@ angular.module('webmapp')
 
                     if (asyncTranslations === 0) {
                         $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
-                        $ionicLoading.hide();
                     }
                     localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
                 })
                 .catch(function (err) {
                     if (!taxonomy[taxonomyType]) {
-                        $ionicLoading.hide();
                         //Popup connection not available
                         console.warn("No taxonomy " + taxonomyType);
                         return;
@@ -305,9 +294,7 @@ angular.module('webmapp')
                 return;
             }
 
-            if (!userPackagesId) {
-                $ionicLoading.show();
-            } else {
+            if (userPackagesId) {
                 $rootScope.$emit('userPackagesId-updated', userPackagesId);
             }
             Communication.getJSON(communicationConf.baseUrl + communicationConf.endpoint + 'route_id/' + userData.ID)
@@ -319,14 +306,12 @@ angular.module('webmapp')
                         }
 
                         $rootScope.$emit('userPackagesId-updated', userPackagesId);
-                        $ionicLoading.hide();
                         localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
                     },
                     function (err) {
                         if (!userPackagesId) {
                             console.warn("No userPackagesId available. Shutting down...");
                         }
-                        $ionicLoading.hide();
                     });
         };
 
