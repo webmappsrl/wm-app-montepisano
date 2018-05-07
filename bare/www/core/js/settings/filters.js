@@ -78,3 +78,31 @@ angular.module('webmapp')
             return results;
         };
     });
+
+angular.module('webmapp')
+    .filter('taxonomySearchFilter', function (
+    ) {
+        return function (input, search) {
+            var results = [],
+                pattern = new RegExp(search.toLowerCase());
+
+            if (search === "") {
+                return input;
+            }
+
+            for (var id in input) {
+                if (typeof(input[id].name) === String && pattern.test(input[id].name.toLowerCase())) {
+                    results.push(input[id]);
+                }
+                else {
+                    for (var lang in input[id].name) {
+                        if (pattern.test(input[id].name[lang].toLowerCase())) {
+                            results.push(input[id]);
+                            break;
+                        }
+                    }
+                }
+            }
+            return results;
+        };
+    });

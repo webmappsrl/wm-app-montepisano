@@ -6,7 +6,9 @@
         'color': vm.colors.mainBar.color
     }">
     <ion-nav-title>
-        <span ng-bind-html="vm.mapTitle">
+        <span ng-bind-html="vm.mapTitle" ng-style="{
+            'color': vm.itemColor 
+        }">
             {{ vm.mapTitle }}
         </span>
     </ion-nav-title>

@@ -76,3 +76,61 @@
     }
   }
 }
+
+.animate-top-in {
+  position: relative;
+  animation: animateTopIn 0.4s forwards;
+}
+
+.animate-top-out {
+  position: relative;
+  animation: animateTopOut 0.4s forwards;
+}
+
+.animate-expand-height {
+  animation: animateExpandHeight 0.4s forwards;
+}
+
+.animate-collapse-height {
+  animation: animateCollapseHeight 0.4s forwards;
+}
+
+@keyframes animateTopIn {
+  from {
+    top: -50px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes animateTopOut {
+  from {
+    top: 0;
+    opacity: 1;
+  }
+  to {
+    top: -50px;
+    opacity: 0;
+  }
+}
+
+@keyframes animateExpandHeight {
+  from {
+    height: 0;
+  }
+  to {
+    height: 45px;
+  }
+}
+
+@keyframes animateCollapseHeight {
+  from {
+    height: 45px;
+  }
+  to {
+    height: 0;
+  }
+}

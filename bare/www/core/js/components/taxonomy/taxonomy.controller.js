@@ -17,9 +17,15 @@ angular.module('webmapp')
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
         vm.defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';
         vm.taxonomy = {};
+        vm.search = "";
+        vm.searchActive = false;
 
         vm.goTo = function(id) {
             Utils.goTo('taxonomy/' + $state.params.id + '/' + id);
+        };
+
+        vm.toggleSearch = function() {
+            vm.searchActive = !vm.searchActive;
         };
 
         $rootScope.$on('taxonomy-' + $state.params.id + '-updated', function (e, value) {

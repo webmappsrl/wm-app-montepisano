@@ -34,6 +34,7 @@ angular.module('webmapp')
     MapService.activateUtfGrid();
     modalScope.vm = {};
 
+    vm.itemColor = localStorage.$wm_itemColor ? JSON.parse(localStorage.$wm_itemColor) : 'inherit';
     vm.mapTitle = CONFIG.OPTIONS.title;
     vm.filterIcon = CONFIG.OPTIONS.filterIcon;
     vm.showFilers = !CONFIG.OPTIONS.hideFiltersInMap;

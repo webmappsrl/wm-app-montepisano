@@ -62,6 +62,7 @@ angular.module('webmapp')
 
         vm.openOrDownloadPack = function (packId) {
             if (vm.userDownloadedPackages[packId]) {
+                localStorage.$wm_itemColor = JSON.stringify(vm.item.color);
                 PackageService.openPackage(packId);
             } else {
                 PackageService.downloadPack(packId);

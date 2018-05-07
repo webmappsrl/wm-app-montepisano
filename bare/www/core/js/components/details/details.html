@@ -33,7 +33,10 @@
 
             <span
                 class="title-right event-title"
-                ng-click="vm.openTextModal()" ng-bind-html="vm.mainTitle">
+                ng-click="vm.openTextModal()" ng-bind-html="vm.mainTitle"
+                ng-style="{
+                    'color': vm.itemColor 
+                }">
 
             </span>
         </span>

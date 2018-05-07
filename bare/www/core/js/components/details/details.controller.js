@@ -355,6 +355,8 @@ angular.module('webmapp')
         modalFeatures && modalFeatures.hide();
     };
 
+    vm.itemColor = localStorage.$wm_itemColor ? JSON.parse(localStorage.$wm_itemColor) : 'inherit';
+
     if (current.name === 'app.main.detaillayer') {
         MapService.getFeatureById(params.id, params.parentId.replace(/_/g, ' '))
             .then(buildDetail, function() {

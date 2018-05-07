@@ -7,11 +7,25 @@
     <ion-nav-buttons side="left">
         <button class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button class="no-animate button button-icon icon wm-icon-ios7-search-strong" ng-click="vm.toggleSearch()"></button>
+    </ion-nav-buttons>
 
-    <ion-content style="color: black;" ng-style="{
+    <div id="search-fixed" ng-class="{
+        'animate-top-in': vm.searchActive,
+        'animate-top-out': !vm.searchActive
+    }">
+        <input type="search" placeholder="{{::'Cerca' | translate}}" ng-model="vm.search" />
+    </div>
+
+    <ion-content class="withSearchBar" style="color: black;" ng-style="{
         'background': COLORS.global.background
     }">
-        <div ng-repeat="item in vm.taxonomy" class="taxonomy-button" ng-click="vm.goTo(item.id)" ng-style="{
+        <div id="whitespace" ng-class="{
+            'animate-expand-height': vm.searchActive,
+            'animate-collapse-height': !vm.searchActive
+        }"></div>
+        <div ng-repeat="item in vm.taxonomy | taxonomySearchFilter : vm.search" class="taxonomy-button" ng-click="vm.goTo(item.id)" ng-style="{
                 'background-color': item.color
             }">
             <div class="taxonomy-content">

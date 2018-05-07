@@ -446,6 +446,23 @@ ion-slide.slider-slide {
 /* ------------------------------------ *\
    #TABLE
 \* ------------------------------------ */
+#search-fixed {
+  width: 90%;
+  margin: 10px 5%;
+  height: 30px;
+  position: fixed;
+  z-index: 2;
+  box-shadow: 0 2px 5px #aaaaaa; }
+  #search-fixed input {
+    position: fixed;
+    width: calc(90% - 30px);
+    height: inherit;
+    padding: 0 15px;
+    background-color: #FFFFFF; }
+
+ion-content ion-content.withSearchBar.scroll-content div#whitespace {
+  height: 45px; }
+
 /*
  * ATTRIBUTION PAGE
  *
@@ -3297,23 +3314,6 @@ ion-modal-view.modal-download {
 button.no-animate.button.button-icon.icon.wm-icon-funnel-wm {
   font-weight: 500; }
 
-#search-fixed {
-  width: 90%;
-  margin: 10px 5%;
-  height: 30px;
-  position: fixed;
-  z-index: 2;
-  box-shadow: 0 2px 5px #aaaaaa; }
-  #search-fixed input {
-    position: fixed;
-    width: calc(90% - 30px);
-    height: inherit;
-    padding: 0 15px;
-    background-color: #FCFDF7; }
-
-ion-content ion-content.withSearchBar.scroll-content div#whitespace {
-  height: 55px; }
-
 .packages-title {
   margin: 10px 0;
   font-size: 20px;
@@ -3588,6 +3588,48 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
             color: #D80000;
             border: 1px solid #D80000;
             border-radius: 50%; }
+
+.animate-top-in {
+  position: relative;
+  animation: animateTopIn 0.4s forwards; }
+
+.animate-top-out {
+  position: relative;
+  animation: animateTopOut 0.4s forwards; }
+
+.animate-expand-height {
+  animation: animateExpandHeight 0.4s forwards; }
+
+.animate-collapse-height {
+  animation: animateCollapseHeight 0.4s forwards; }
+
+@keyframes animateTopIn {
+  from {
+    top: -50px;
+    opacity: 0; }
+  to {
+    top: 0;
+    opacity: 1; } }
+
+@keyframes animateTopOut {
+  from {
+    top: 0;
+    opacity: 1; }
+  to {
+    top: -50px;
+    opacity: 0; } }
+
+@keyframes animateExpandHeight {
+  from {
+    height: 0; }
+  to {
+    height: 45px; } }
+
+@keyframes animateCollapseHeight {
+  from {
+    height: 45px; }
+  to {
+    height: 0; } }
 
 /*
  * WEBMAPP PAGE
