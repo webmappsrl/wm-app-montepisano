@@ -3,7 +3,7 @@ angular.module('webmapp')
     .controller('MainController', function MainController(
         $cordovaDeviceOrientation,
         $cordovaGeolocation,
-        $cordovaSocialSharing,        
+        $cordovaSocialSharing,
         $interval,
         $ionicLoading,
         $ionicPlatform,
@@ -44,9 +44,9 @@ angular.module('webmapp')
                 dLat = (lat2 - lat1) * Math.PI / 180, // deg2rad below
                 dLon = (lon2 - lon1) * Math.PI / 180,
                 a = 0.5 - Math.cos(dLat) / 2 +
-                Math.cos(lat1 * Math.PI / 180) *
-                Math.cos(lat2 * Math.PI / 180) *
-                (1 - Math.cos(dLon)) / 2;
+                    Math.cos(lat1 * Math.PI / 180) *
+                    Math.cos(lat2 * Math.PI / 180) *
+                    (1 - Math.cos(dLon)) / 2;
 
             return (R * 2 * Math.asin(Math.sqrt(a))) * 1000;
         };
@@ -75,9 +75,9 @@ angular.module('webmapp')
                     vm.centerOnMe();
                 } else {
                     return $ionicPopup.confirm({
-                            title: $translate.instant("ATTENZIONE"),
-                            template: $translate.instant("Sembra che tu abbia il GPS disattivato. Per accedere a tutte le funzionalità dell'app occorre attivarlo. Vuoi farlo ora?")
-                        })
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Sembra che tu abbia il GPS disattivato. Per accedere a tutte le funzionalità dell'app occorre attivarlo. Vuoi farlo ora?")
+                    })
                         .then(function (res) {
                             if (res) {
                                 if (window.cordova.platformId === "ios") {
@@ -129,55 +129,55 @@ angular.module('webmapp')
                         }
 
                         return cordova.plugins.diagnostic.requestLocationAuthorization(function (status) {
-                                switch (status) {
-                                    case cordova.plugins.diagnostic.permissionStatus.GRANTED:
-                                    case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
-                                        if (window.cordova.platformId === "ios") {
-                                            return cordova.plugins.diagnostic.isLocationEnabled(
-                                                onSuccess,
-                                                onError
-                                            );
-                                        } else {
-                                            return cordova.plugins.diagnostic.isGpsLocationEnabled(
-                                                onSuccess,
-                                                onError
-                                            );
-                                        }
-                                        break;
-                                    case cordova.plugins.diagnostic.permissionStatus.DENIED:
-                                        if (window.cordova.platformId === "ios") {
-                                            localStorage.$wm_ios_location_permission_denied = true;
-                                            $ionicPopup.alert({
-                                                title: $translate.instant("ATTENZIONE"),
-                                                template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo"),
-                                                buttons: [{
-                                                    text: 'Ok',
-                                                    type: 'button-positive'
-                                                }]
-                                            });
-                                        } else {
-                                            $ionicPopup.alert({
-                                                title: $translate.instant("ATTENZIONE"),
-                                                template: $translate.instant("Alcune funzionalità funzionano solo se hai abilitato la geolocalizzazione"),
-                                                buttons: [{
-                                                    text: 'Ok',
-                                                    type: 'button-positive'
-                                                }]
-                                            });
-                                        }
-                                        break;
-                                    case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
+                            switch (status) {
+                                case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+                                case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
+                                    if (window.cordova.platformId === "ios") {
+                                        return cordova.plugins.diagnostic.isLocationEnabled(
+                                            onSuccess,
+                                            onError
+                                        );
+                                    } else {
+                                        return cordova.plugins.diagnostic.isGpsLocationEnabled(
+                                            onSuccess,
+                                            onError
+                                        );
+                                    }
+                                    break;
+                                case cordova.plugins.diagnostic.permissionStatus.DENIED:
+                                    if (window.cordova.platformId === "ios") {
+                                        localStorage.$wm_ios_location_permission_denied = true;
                                         $ionicPopup.alert({
                                             title: $translate.instant("ATTENZIONE"),
-                                            template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi attivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo"),
+                                            template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo"),
                                             buttons: [{
                                                 text: 'Ok',
                                                 type: 'button-positive'
                                             }]
                                         });
-                                        break;
-                                }
-                            },
+                                    } else {
+                                        $ionicPopup.alert({
+                                            title: $translate.instant("ATTENZIONE"),
+                                            template: $translate.instant("Alcune funzionalità funzionano solo se hai abilitato la geolocalizzazione"),
+                                            buttons: [{
+                                                text: 'Ok',
+                                                type: 'button-positive'
+                                            }]
+                                        });
+                                    }
+                                    break;
+                                case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
+                                    $ionicPopup.alert({
+                                        title: $translate.instant("ATTENZIONE"),
+                                        template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi attivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo"),
+                                        buttons: [{
+                                            text: 'Ok',
+                                            type: 'button-positive'
+                                        }]
+                                    });
+                                    break;
+                            }
+                        },
                             onError,
                             cordova.plugins.diagnostic.locationAuthorizationMode.ALWAYS);
                     }
@@ -186,9 +186,9 @@ angular.module('webmapp')
         }
 
         Utils.createModal('core/js/modals/shareModal.html', {
-                backdropClickToClose: true,
-                hardwareBackButtonClose: true
-            }, shareScope)
+            backdropClickToClose: true,
+            hardwareBackButtonClose: true
+        }, shareScope)
             .then(function (modal) {
                 shareModal = modal;
             });
@@ -229,13 +229,13 @@ angular.module('webmapp')
 
                 currentRequest
                     .then(function () {
-                            shareScope.vm.sendInProgress = false;
-                            shareScope.vm.sendSuccess = true;
+                        shareScope.vm.sendInProgress = false;
+                        shareScope.vm.sendSuccess = true;
 
-                            setTimeout(function () {
-                                shareModal.hide();
-                            }, 1000);
-                        },
+                        setTimeout(function () {
+                            shareModal.hide();
+                        }, 1000);
+                    },
                         function (error) {
                             $ionicPopup.alert({
                                 title: $translate.instant("ATTENZIONE"),
@@ -298,7 +298,7 @@ angular.module('webmapp')
         realTimeTracking.positionsToSend = [];
         realTimeTracking.minPositionsToSend = 1;
         realTimeTracking.appUrl = CONFIG.COMMUNICATION.baseUrl;
-                        
+
         vm.routeId = CONFIG.routeID ? CONFIG.routeID : 0;
 
         if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.realTimeTrackingUrl) {
@@ -351,6 +351,19 @@ angular.module('webmapp')
             (CONFIG.MAIN && CONFIG.MAIN.REPORT && (
                 (CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl && CONFIG.MAIN.REPORT.email.default) ||
                 (CONFIG.MAIN.REPORT.sms && CONFIG.MAIN.REPORT.sms.default)));
+
+        var hexToRgbA = function (hex) {
+            var c;
+            if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+                c = hex.substring(1).split('');
+                if (c.length == 3) {
+                    c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+                }
+                c = '0x' + c.join('');
+                return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',0.8)';
+            }
+            return ('rgba(0,0,0,0.8)');
+        }
 
         vm.shareCurrentPosition = function ($event) {
             $event.stopPropagation();
@@ -456,9 +469,9 @@ angular.module('webmapp')
 
             if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) {
                 $ionicPopup.confirm({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
-                    })
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                })
                     .then(function (res) {
                         if (res) {
                             var emailTo = '',
@@ -495,8 +508,8 @@ angular.module('webmapp')
 
                                 currentRequest
                                     .then(function () {
-                                            return;
-                                        },
+                                        return;
+                                    },
                                         function (error) {
                                             return;
                                         });
@@ -506,9 +519,9 @@ angular.module('webmapp')
                     });
             } else {
                 $ionicPopup.confirm({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
-                    })
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                })
                     .then(function (res) {
                         if (res) {
                             sendSMS(text);
@@ -638,9 +651,9 @@ angular.module('webmapp')
 
                             currentRequest
                                 .then(function () {
-                                        realTimeTracking.positionsToSend = [];
-                                        return;
-                                    },
+                                    realTimeTracking.positionsToSend = [];
+                                    return;
+                                },
                                     function (error) {
                                         return;
                                     });
@@ -837,7 +850,7 @@ angular.module('webmapp')
 
                             if (Utils.isBrowser()) {
                                 MapService.setZoom(maxZoom);
-                            } else  {
+                            } else {
                                 vm.canFollow = true;
                                 vm.followActive = true;
 
@@ -1129,9 +1142,14 @@ angular.module('webmapp')
         };
 
         $scope.$on('$stateChangeStart', function (e, dest) {
+            if (vm.taxonomyName) {
+                delete vm.taxonomyName;
+                delete vm.itemColor;
+            }
+
             if ((dest.name === 'app.main.detaillayer' ||
-                    dest.name === 'app.main.detailevent' ||
-                    dest.name === 'app.main.detailulayer') &&
+                dest.name === 'app.main.detailevent' ||
+                dest.name === 'app.main.detailulayer') &&
                 previousBounds === null) {
                 previousBounds = MapService.getBounds();
             }
@@ -1250,7 +1268,7 @@ angular.module('webmapp')
                 // }
 
                 vm.hideExpander = hideExpanderInDetails;
-            } else if (currentState === 'app.main.detailtaxonomy'){
+            } else if (currentState === 'app.main.detailtaxonomy') {
                 vm.hideExpander = true;
                 vm.detail = true;
                 vm.hasShadow = true;
@@ -1312,6 +1330,11 @@ angular.module('webmapp')
 
         $rootScope.$on('item-navigable', function (e, value) {
             vm.isNavigable = value;
+        });
+
+        $rootScope.$on('taxonomy-details', function (e, value) {
+            vm.taxonomyName = value.name;
+            vm.itemColor = hexToRgbA(value.color);
         });
 
         window.addEventListener('orientationchange', function () {

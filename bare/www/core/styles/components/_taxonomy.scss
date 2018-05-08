@@ -74,6 +74,30 @@
         }
       }
     }
+    .footer-space {
+      height: 70px;
+    }
+  }
+  .footer-menu {
+    position: fixed;
+    bottom: 0px;
+    padding: 4px;
+    height: 70px;
+    width: 100%;
+    box-shadow: 0 -3px 20px -5px #999;
+    background: #F2F2F2;
+    div {
+      width: calc(100% / 3);
+      padding: 3px;
+      float: left;
+      text-align: center;
+      text-transform: uppercase;
+      font-size: 80%;
+      font-weight: 700;
+      i {
+        font-size: 30px;
+      }
+    }
   }
 }
 

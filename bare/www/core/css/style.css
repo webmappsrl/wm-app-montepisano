@@ -53,7 +53,7 @@
  * Basic style for tag and general classes
  */
 body.fontsloaded {
-  font-family: "Abel", sans-serif !important; }
+  font-family: "Josefin Sans", sans-serif !important; }
 
 body {
   min-height: 100%;
@@ -88,7 +88,7 @@ html {
 
 html, body, .ionic-body {
   height: 100%;
-  font-family: "Abel", sans-serif !important; }
+  font-family: "Josefin Sans", sans-serif !important; }
 
 img {
   max-width: 100%;
@@ -101,10 +101,10 @@ a {
   text-decoration: none; }
 
 p, a {
-  font-family: "Abel", sans-serif; }
+  font-family: "Josefin Sans", sans-serif; }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Abel", sans-serif; }
+  font-family: "Josefin Sans", sans-serif; }
 
 h1, h2, h3, h4 {
   font-size: 16px !important; }
@@ -113,7 +113,7 @@ h1, h2, h3, h4 {
   text-align: center !important; }
 
 button {
-  font-family: "Abel", sans-serif; }
+  font-family: "Josefin Sans", sans-serif; }
 
 .button:hover {
   color: inherit; }
@@ -1007,7 +1007,7 @@ div.detailRoute-footer {
   .itinerario-details-tappe .itinerario-tappe-title {
     display: inline-block;
     width: 100%;
-    font-family: "Abel", sans-serif;
+    font-family: "Josefin Sans", sans-serif;
     margin: 0;
     padding: 8px;
     color: #605846;
@@ -1051,7 +1051,7 @@ div.detailRoute-footer {
   .route-related-details .route-related-title {
     display: inline-block;
     width: 100%;
-    font-family: "Abel", sans-serif;
+    font-family: "Josefin Sans", sans-serif;
     margin: 0;
     padding: 8px;
     color: #605846;
@@ -1745,7 +1745,7 @@ button.login-button.skip-login {
     padding-top: 10px;
     padding-bottom: 10px;
     color: #918f75;
-    font-family: "Abel", sans-serif !important;
+    font-family: "Josefin Sans", sans-serif !important;
     font-size: 0.7em; }
     .omb_login button .icon {
       display: block; }
@@ -1924,7 +1924,7 @@ button.login-button.skip-login {
 
 /* Long title and date */
 .details-page .bar.bar-header .title {
-  font-family: "Abel", sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   font-size: 20px;
   height: 100%;
   margin: 0;
@@ -1977,6 +1977,25 @@ button.login-button.skip-login {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap; }
+
+.footer-taxonomy-name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  padding: 25px 10px;
+  z-index: 1000; }
+  .footer-taxonomy-name div {
+    font-size: 26px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 26px;
+    line-height: 27px; }
 
 /*
 .title-right {
@@ -2749,7 +2768,7 @@ ion-side-menus.navigation-interface .show-start-navigation .start-navigation {
   padding-right: 13px;
   width: 310px; }
   .leaflet-popup-content-wrapper .leaflet-popup-content {
-    font-family: "Abel", sans-serif;
+    font-family: "Josefin Sans", sans-serif;
     font-weight: 700;
     margin: 0;
     padding: 0;
@@ -3052,7 +3071,7 @@ button.popup-close {
 .modal-details .modal-title {
   font-size: 22px;
   color: #80181e;
-  font-family: "Abel", sans-serif; }
+  font-family: "Josefin Sans", sans-serif; }
 
 .modal-details.modal-details-gallery .modal-title {
   display: none; }
@@ -3077,7 +3096,7 @@ button.popup-close {
 .modal-content-title {
   margin: 10px 0;
   font-size: 18px;
-  font-family: "Abel", sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   line-height: 1.2; }
   .modal-details-gallery .modal-content-title {
     display: none; }
@@ -3589,6 +3608,27 @@ button.no-animate.button.button-icon.icon.wm-icon-funnel-wm {
             color: #D80000;
             border: 1px solid #D80000;
             border-radius: 50%; }
+  .taxonomy-page ion-content .footer-space {
+    height: 70px; }
+
+.taxonomy-page .footer-menu {
+  position: fixed;
+  bottom: 0px;
+  padding: 4px;
+  height: 70px;
+  width: 100%;
+  box-shadow: 0 -3px 20px -5px #999;
+  background: #F2F2F2; }
+  .taxonomy-page .footer-menu div {
+    width: calc(100% / 3);
+    padding: 3px;
+    float: left;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 80%;
+    font-weight: 700; }
+    .taxonomy-page .footer-menu div i {
+      font-size: 30px; }
 
 .animate-top-in {
   position: relative;

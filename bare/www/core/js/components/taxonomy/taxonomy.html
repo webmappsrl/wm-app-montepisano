@@ -25,7 +25,7 @@
             'animate-expand-height': vm.searchActive,
             'animate-collapse-height': !vm.searchActive
         }"></div>
-        <div ng-repeat="item in vm.taxonomy | taxonomySearchFilter : vm.search" class="taxonomy-button" ng-click="vm.goTo(item.id)" ng-style="{
+        <div ng-repeat="item in vm.taxonomy | taxonomySearchFilter : vm.search" class="taxonomy-button" ng-click="vm.goToTaxonomy(item.id)" ng-style="{
                 'background-color': item.color
             }">
             <div class="taxonomy-content">
@@ -53,5 +53,20 @@
                 </div>
             </div>
         </div>
+        <div class="footer-space"></div>
     </ion-content>
+    <div class="footer-menu">
+        <div ng-click="vm.goTo('/')">
+            <i class="icon wm-icon-map"></i><br/>
+            Mappa
+        </div>
+        <div ng-click="vm.goTo('sos')">
+            <i class="icon wm-icon-ios7-medkit"></i><br/>
+            SOS
+        </div>
+        <div ng-click="vm.goTo('infopoint')">
+            <i class="icon wm-icon-informatcircled"></i><br/>
+            Infopoint
+        </div>
+    </div>
 </ion-view>

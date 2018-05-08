@@ -53,9 +53,11 @@ angular.module('webmapp')
             }
         };
 
-        vm.goTo = function(id) {
+        vm.goToTaxonomy = function(id) {
             Utils.goTo('taxonomy/' + $state.params.id + '/' + id);
         };
+
+        vm.goTo = Utils.goTo;
 
         vm.toggleSearch = function() {
             vm.searchActive = !vm.searchActive;
