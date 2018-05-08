@@ -958,6 +958,19 @@ div.detailRoute-footer {
     top: -5px;
     left: calc(50% - 10px); }
 
+.disability-buttons-container {
+  width: calc(100% - 10px);
+  margin: 5px; }
+  .disability-buttons-container a {
+    width: calc(20vw - 6px - 10px);
+    padding: 4px;
+    margin: 3px;
+    position: relative; }
+    .disability-buttons-container a i {
+      color: #f7f9f1;
+      font-size: 40px;
+      padding: calc((20vw - 6px - 15px - 40px)/2); }
+
 /* Details table */
 .table-details {
   width: 100%;
@@ -2999,6 +3012,19 @@ button.popup-close {
   font-size: 16px;
   font-weight: 700;
   color: #918f75; }
+  .modal-title i {
+    font-size: 50px;
+    color: #f7f9f1;
+    padding: 5px; }
+
+.modal-content div .modal-subtitle {
+  font-size: 30px;
+  position: relative;
+  top: 20px; }
+
+.modal-content div p {
+  position: relative;
+  top: 35px; }
 
 .modal-footer {
   height: 35px;

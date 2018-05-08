@@ -148,6 +148,24 @@
                           ng-src="{{vm.feature.image}}">
                     </div>
 
+                    <div class="disability-buttons-container" ng-if="vm.showDisabilityButtons">
+                        <a href="" ng-click="vm.openDisabilityModal()">
+                            <i class="icon wm-icon-wheelchair-15" style="background-color: {{vm.colors.mainBar.background}}"></i>
+                        </a>
+                        <a href="" ng-click="vm.openDisabilityModal()">
+                            <i class="icon wm-icon-hearing-impared" style="background-color: {{vm.colors.mainBar.background}}"></i>
+                        </a>
+                        <a href="" ng-click="vm.openDisabilityModal()">
+                            <i class="icon wm-icon-visually-impaired" style="background-color: {{vm.colors.mainBar.background}}"></i>
+                        </a>
+                        <a href="" ng-click="vm.openDisabilityModal()">
+                            <i class="icon wm-icon-dialysis" style="background-color: #cccccc"></i>
+                        </a>
+                        <a href="" ng-click="vm.openDisabilityModal()">
+                            <i class="icon wm-icon-food-intolerance" style="background-color: {{vm.colors.mainBar.background}}"></i>
+                        </a>
+                    </div>
+
                     <ul
                       class="details-related">
                         <li

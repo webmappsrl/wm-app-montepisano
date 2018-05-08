@@ -25,7 +25,8 @@ angular.module('webmapp')
         modalEvent = {},
         modalTable = {},
         modalCoupons = {},
-        modalFeatures = {};
+        modalFeatures = {},
+        modalDisability = {};
 
     var isOnline = false,
         isBrowser = vm.isBrowser = Utils.isBrowser();
@@ -45,6 +46,7 @@ angular.module('webmapp')
     vm.additionalLinks = {};
     vm.isNavigable = false;
     vm.fullDescription = false;
+    vm.showDisabilityButtons = CONFIG.OPTIONS.showDisabilityButtons;
 
     vm.hideSubMenu = true;
 
@@ -105,6 +107,13 @@ angular.module('webmapp')
         animation: 'slide-in-up'
     }).then(function(modalObj) {
         modal = modalObj;
+    });
+
+    $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/disabilityModal.html', {
+        scope: modalScope,
+        animation: 'slide-in-up'
+    }).then(function(modalObj) {
+        modalDisability = modalObj;
     });
 
     var buildDetail = function(data) {
@@ -202,12 +211,10 @@ angular.module('webmapp')
             if (feature.phone) {
                 var regExp = /\+(\d{2,4})\s+(\d{2,5}\s\d+)/g;
                 phoneMatch = regExp.exec(feature.phone);
-                console.log("Phone: ", phoneMatch);
 
                 if (phoneMatch) {
                     var localPhone = phoneMatch[2].replace(/\s/g, '');
                     vm.availablePhoneNumber = phoneMatch[1] + '-' + localPhone.replace(/(\d\d\d)(\d\d\d)(\d\d\d)/, '$1-$2-$3');
-                    console.log("asdas", vm.availablePhoneNumber);
                 }
             }
 
@@ -353,6 +360,7 @@ angular.module('webmapp')
         modalTable && modalTable.hide();
         modalCoupons && modalCoupons.hide();
         modalFeatures && modalFeatures.hide();
+        modalDisability && modalDisability.hide();
     };
 
     if (current.name === 'app.main.detaillayer') {
@@ -556,6 +564,10 @@ angular.module('webmapp')
 
     vm.openModal = function() {
         modal.show();
+    };
+
+    vm.openDisabilityModal = function() {
+        modalDisability.show();
     };
 
     vm.toggleMap = function() {
