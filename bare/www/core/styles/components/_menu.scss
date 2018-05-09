@@ -39,11 +39,6 @@ a.item {
     text-transform: uppercase;
     font-weight: $font-weight-bold;
     z-index: 300;
-
-    &:hover,
-    &:focus {
-      // background: darken($color-green, 10%);
-    }
   }
 
   &.item-icon-heart {
@@ -55,6 +50,41 @@ a.item {
     background: transparent;
     color: $color-green;
     font-weight: $font-weight-bold;
+  }
+}
+
+ion-side-menus {
+  &.navigation-interface {
+    ion-nav-bar {
+      display: none;
+    }
+    .map-page ion-footer-bar.bar.bar-assertive.bar-footer {
+      height: 100%;
+    }
+
+    .bar.bar-assertive.bar-footer {
+      @include calc(height, '100% - 60%');
+    }
+
+    ion-view ion-content.has-header,
+    .platform-ios.platform-cordova:not(.fullscreen) & ion-view ion-content.has-header {
+      top: 0;
+    }
+    .show-start-navigation .start-navigation {
+      display: none;
+    }
+  }
+
+  &.hide-main-bar {
+    ion-nav-bar {
+      display: none;
+    }
+
+    ion-nav-view.view-container > ion-view.hide-map > ion-content.content-pane.scroll-content {
+      top: 0;
+      bottom: 0;
+      height: 100%;
+    }
   }
 }
 

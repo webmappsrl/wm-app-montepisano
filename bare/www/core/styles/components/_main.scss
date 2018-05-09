@@ -15,20 +15,20 @@
     http://forum.ionicframework.com/t/flickering-when-navigating-via-tabs-on-android/27281/2
 */
 
-.header-item {
-  &.title,
-  &.buttons {
-    transition-duration: 0ms !important;
-  }
-}
+// .header-item {
+//   &.title,
+//   &.buttons {
+//     transition-duration: 0ms !important;
+//   }
+// }
 
-.buttons-left {
-  transition-duration: 0ms !important;
-}
+// .buttons-left {
+//   transition-duration: 0ms !important;
+// }
 
-.buttons-right {
-  transition-duration: 0ms !important;
-}
+// .buttons-right {
+//   transition-duration: 0ms !important;
+// }
 
 /* Hide/show elements on mobile or desktop */
 
@@ -136,8 +136,6 @@
     }
   }
 }
-
-
 
 /* Long title and date */
 

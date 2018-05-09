@@ -570,6 +570,59 @@ ion-content div.static-content.card-content {
   .card-text-title {
     margin-bottom: 5px; } }
 
+/*
+ * HOMEPAGE for CHIANTI
+ *
+ * Styles for Chianti home page
+ */
+/* ------------------------------------ *\
+   #CHIANTI HOMEPAGE
+\* ------------------------------------ */
+.chianti-home-page {
+  position: absolute;
+  overflow: hidden; }
+  .chianti-home-page img {
+    max-height: 100%;
+    max-width: initial;
+    position: absolute;
+    top: -9999px;
+    bottom: -9999px;
+    left: -9999px;
+    right: -9999px;
+    margin: auto;
+    z-index: 10; }
+  .chianti-home-page div.chianti-home-content {
+    width: 100%;
+    z-index: 30;
+    position: absolute;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    height: 15%;
+    bottom: -1px; }
+    .chianti-home-page div.chianti-home-content div.language-selector {
+      padding: 0 10px;
+      margin: 45px 0;
+      width: 50%;
+      float: left;
+      color: #fff;
+      font-size: 41px;
+      text-align: center;
+      text-transform: uppercase;
+      font-weight: 700;
+      line-height: 50px; }
+      .chianti-home-page div.chianti-home-content div.language-selector:first-of-type {
+        border-right: 2px solid #BB261A; }
+      .chianti-home-page div.chianti-home-content div.language-selector:last-of-type {
+        border-left: 2px solid #BB261A; }
+      .chianti-home-page div.chianti-home-content div.language-selector div.language-text {
+        width: 43%;
+        margin: 0 auto;
+        font-size: 18px;
+        line-height: 9px;
+        padding: 18px 15px 8px;
+        background: #C42820;
+        border-radius: 30px; }
+
 /**
  * CUSTOM PAGE
  *
@@ -1842,15 +1895,6 @@ button.login-button.skip-login {
     CSS styles to eliminate the annoying flickering header when changing tabs in an Ionic app on Android:
     http://forum.ionicframework.com/t/flickering-when-navigating-via-tabs-on-android/27281/2
 */
-.header-item.title, .header-item.buttons {
-  transition-duration: 0ms !important; }
-
-.buttons-left {
-  transition-duration: 0ms !important; }
-
-.buttons-right {
-  transition-duration: 0ms !important; }
-
 /* Hide/show elements on mobile or desktop */
 .desktop-visible {
   display: none; }
@@ -2223,6 +2267,32 @@ a.item {
     background: transparent;
     color: #4a6e23;
     font-weight: 700; }
+
+ion-side-menus.navigation-interface ion-nav-bar {
+  display: none; }
+
+ion-side-menus.navigation-interface .map-page ion-footer-bar.bar.bar-assertive.bar-footer {
+  height: 100%; }
+
+ion-side-menus.navigation-interface .bar.bar-assertive.bar-footer {
+  height: -webkit-calc(100% - 60%);
+  height: -moz-calc(100% - 60%);
+  height: calc(100% - 60%); }
+
+ion-side-menus.navigation-interface ion-view ion-content.has-header,
+.platform-ios.platform-cordova:not(.fullscreen) ion-side-menus.navigation-interface ion-view ion-content.has-header {
+  top: 0; }
+
+ion-side-menus.navigation-interface .show-start-navigation .start-navigation {
+  display: none; }
+
+ion-side-menus.hide-main-bar ion-nav-bar {
+  display: none; }
+
+ion-side-menus.hide-main-bar ion-nav-view.view-container > ion-view.hide-map > ion-content.content-pane.scroll-content {
+  top: 0;
+  bottom: 0;
+  height: 100%; }
 
 /* ------------------------------------ *\
    #ADVANCED MENU
@@ -2728,24 +2798,6 @@ div.leaflet-top.leaflet-right {
     .navigator-div-controller div.content-div div.stop-navigation {
       background-color: #FF4108;
       margin: 12px 8% 13px 2%; }
-
-ion-side-menus.navigation-interface ion-nav-bar {
-  display: none; }
-
-ion-side-menus.navigation-interface .map-page ion-footer-bar.bar.bar-assertive.bar-footer {
-  height: 100%; }
-
-ion-side-menus.navigation-interface .bar.bar-assertive.bar-footer {
-  height: -webkit-calc(100% - 60%);
-  height: -moz-calc(100% - 60%);
-  height: calc(100% - 60%); }
-
-ion-side-menus.navigation-interface ion-view ion-content.has-header,
-.platform-ios.platform-cordova:not(.fullscreen) ion-side-menus.navigation-interface ion-view ion-content.has-header {
-  top: 0; }
-
-ion-side-menus.navigation-interface .show-start-navigation .start-navigation {
-  display: none; }
 
 /* ------------------------------------ *\
    #MAP POPOVER
@@ -3620,7 +3672,7 @@ button.no-animate.button.button-icon.icon.wm-icon-funnel-wm {
   box-shadow: 0 -3px 20px -5px #999;
   background: #F2F2F2; }
   .taxonomy-page .footer-menu div {
-    width: calc(100% / 3);
+    width: calc(100% / 2);
     padding: 3px;
     float: left;
     text-align: center;

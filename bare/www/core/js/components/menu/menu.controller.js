@@ -549,6 +549,7 @@ angular.module('webmapp')
         vm.isDetailPage = currentState === 'app.main.detaillayer' || currentState === 'app.main.detailevent';
         vm.isEventDetailPage = currentState === 'app.main.detailevent';
         vm.isWelcomePage = currentState === 'app.main.welcome';
+        vm.hideMainBar = false;
 
         if (currentState === 'app.main.detaillayer' ||
             currentState === 'app.main.detailulayer' ||
@@ -571,10 +572,15 @@ angular.module('webmapp')
         } else {
             vm.isAPOI = false;
         }
+
+        if (currentState === 'app.main.chiantiHome') {
+            vm.hideMainBar = true;
+        }
     });
 
     $rootScope.$on('is-navigating', function(e, value) {
         vm.isNavigating = value;
     });
+
     return vm;
 });

@@ -2125,11 +2125,11 @@ angular.module('webmapp')
 
         mapService.disableInteractions = function () {
             if (map) {
-                map.dragging.disable();
-                map.touchZoom.disable();
-                map.doubleClickZoom.disable();
-                map.scrollWheelZoom.disable();
-                map.boxZoom.disable();
+                // map.dragging.disable();
+                // map.touchZoom.disable();
+                // map.doubleClickZoom.disable();
+                // map.scrollWheelZoom.disable();
+                // map.boxZoom.disable();
                 map.keyboard.disable();
                 if (map.tap) map.tap.disable();
                 document.getElementById('map').style.cursor = 'default';
@@ -2139,11 +2139,11 @@ angular.module('webmapp')
 
         mapService.enableInteractions = function () {
             if (map) {
-                map.dragging.enable();
-                map.touchZoom.enable();
-                map.doubleClickZoom.enable();
-                map.scrollWheelZoom.enable();
-                map.boxZoom.enable();
+                // map.dragging.enable();
+                // map.touchZoom.enable();
+                // map.doubleClickZoom.enable();
+                // map.scrollWheelZoom.enable();
+                // map.boxZoom.enable();
                 map.keyboard.enable();
                 if (map.tap) map.tap.enable();
                 document.getElementById('map').style.cursor = 'grab';

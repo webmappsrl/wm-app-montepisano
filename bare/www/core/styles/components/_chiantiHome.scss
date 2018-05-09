@@ -1,0 +1,62 @@
+/*
+ * HOMEPAGE for CHIANTI
+ *
+ * Styles for Chianti home page
+ */
+
+/* ------------------------------------ *\
+   #CHIANTI HOMEPAGE
+\* ------------------------------------ */
+
+.chianti-home-page {
+    position: absolute;
+    overflow: hidden;
+    img {
+        max-height: 100%;
+        max-width: initial;
+        position: absolute;
+        top: -9999px;
+        bottom: -9999px;
+        left: -9999px;
+        right: -9999px;
+        margin: auto;
+        z-index: 10;
+    }
+
+    div.chianti-home-content {
+        width: 100%;
+        z-index: 30;
+        position: absolute;
+        left: 0;
+        background: rgba(0, 0, 0, 0.5);
+        height: 15%;
+        bottom: -1px;
+        div.language-selector {
+            padding: 0 10px;
+            margin: 45px 0;
+            width: 50%;
+            float: left;
+            color: #fff;
+            font-size: 41px;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: 700;
+            line-height: 50px;
+            &:first-of-type {
+                border-right: 2px solid #BB261A;
+            }
+            &:last-of-type {
+                border-left: 2px solid #BB261A;
+            }
+            div.language-text {
+                width: 43%;
+                margin: 0 auto;
+                font-size: 18px;
+                line-height: 9px;
+                padding: 18px 15px 8px;
+                background: #C42820;
+                border-radius: 30px;
+            }
+        }
+    }
+}

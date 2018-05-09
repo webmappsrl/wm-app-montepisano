@@ -98,7 +98,7 @@ angular.module('webmapp')
                 console.log("Error: ", e);
             };
 
-            if (window.cordova && vm.showLocate && ($state.current.name === "app.main.map" || vm.isNavigable)) {
+            if (window.cordova && vm.showLocate && ($state.current.name === "app.main.map" || $state.current.name === "app.main.detailtaxonomy" || vm.isNavigable)) {
                 return cordova.plugins.diagnostic.isLocationAuthorized(function (authorized) {
                     if (authorized) {
                         if (window.cordova.platformId === "ios") {
@@ -1221,6 +1221,7 @@ angular.module('webmapp')
 
             vm.hideMap = false;
             vm.mapView = false;
+            $rootScope.$emit('hide-main-bar', false);
 
 
             if (currentState === 'app.main.map') {
@@ -1292,6 +1293,10 @@ angular.module('webmapp')
                 currentState === 'app.main.search' ||
                 Model.isAPage(currentState)) {
                 vm.hideMap = true;
+            } else if (currentState === 'app.main.chiantiHome') {
+                vm.hideMap = true;
+                vm.hasShadow = true;
+                vm.extendShadow = true;
             }
 
             setTimeout(function () {
@@ -1335,6 +1340,11 @@ angular.module('webmapp')
         $rootScope.$on('taxonomy-details', function (e, value) {
             vm.taxonomyName = value.name;
             vm.itemColor = hexToRgbA(value.color);
+        });
+
+        $rootScope.$on('geolocate', function () {
+            vm.dragged = true;
+            vm.centerOnMe();
         });
 
         window.addEventListener('orientationchange', function () {

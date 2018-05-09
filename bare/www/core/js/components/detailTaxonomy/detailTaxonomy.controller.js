@@ -95,6 +95,7 @@ angular.module('webmapp')
                 }
             }
             MapService.createGeojsonLayer(toAdd);
+            $rootScope.$emit('geolocate');
         };
 
         var getTrack = function (url, packId, pos) {

@@ -99,6 +99,14 @@ angular.module('webmapp')
                         templateUrl: basePath + 'js/components/attribution/attribution.html'
                     }
                 }
+            })
+            .state('app.main.chiantiHome', {
+                url: '/chiantiHome',
+                views: {
+                    'inception-top': {
+                        templateUrl: basePath + 'js/components/chiantiHome/chiantiHome.html'
+                    }
+                }
             });
 
         if (CONFIGProvider.PAGES) {

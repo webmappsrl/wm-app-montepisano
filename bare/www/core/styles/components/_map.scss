@@ -149,10 +149,6 @@
   .vector-marker {
     margin-left: -18px!important;
     margin-top: -43px!important;
-    svg {
-      //width: 50px !important;
-      //height: 70px !important;
-    }
 
     &.vector-marker-shadow {
       &::before {
@@ -165,10 +161,6 @@
       stroke: $color-white;
       stroke-width: 2px;
       // fill: $color-orange;
-    }
-
-    .wm.icon {
-      //width: 50px !important;
     }
   }
 
@@ -193,10 +185,6 @@
   z-index: 401;
   font-size: 48px;
   color: transparentize($color-brown, 0.3);
-
-  .map-page & {
-    //display: none;
-  }
 }
 
 /* ------------------------------------ *\
@@ -391,9 +379,6 @@ div.leaflet-top.leaflet-right {
 
       &.fa-spinner {
         font-family: 'webmapp' !important;
-
-        &::after {
-        }
       }
     }
   }
@@ -621,27 +606,6 @@ div.leaflet-top.leaflet-right {
       background-color: #FF4108;
       margin: 12px 8% 13px 2%;
     }
-  }
-}
-
-ion-side-menus.navigation-interface {
-  ion-nav-bar {
-    display: none;
-  }
-  .map-page ion-footer-bar.bar.bar-assertive.bar-footer {
-    height: 100%;
-  }
-
-  .bar.bar-assertive.bar-footer {
-    @include calc(height, '100% - 60%');
-  }
-
-  ion-view ion-content.has-header,
-  .platform-ios.platform-cordova:not(.fullscreen) & ion-view ion-content.has-header {
-    top: 0;
-  }
-  .show-start-navigation .start-navigation {
-    display: none;
   }
 }
 
@@ -902,9 +866,6 @@ button.popup-close {
 }
 
 .is-a-poi {
-  path {
-    // fill: #605846 !important;
-  }
   .vector-marker {
     cursor: default !important;
   }
