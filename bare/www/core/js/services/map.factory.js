@@ -1989,6 +1989,19 @@ angular.module('webmapp')
             return features;
         };
 
+        mapService.getRelatedTrackByFeatureId = function (featureId) {
+            for (var id in featureMapById) {
+                if (featureMapById[id].geometry.type === 'LineString') {
+                    for (var i in featureMapById[id].properties.id_pois) {
+                        if (featureMapById[id].properties.id_pois[i] === featureId) {
+                            return angular.copy(featureMapById[id]);
+                        }
+                    }
+                }
+            }
+            return null;
+        };
+
         mapService.getAreaById = function (id) {
             var defer = $q.defer();
 

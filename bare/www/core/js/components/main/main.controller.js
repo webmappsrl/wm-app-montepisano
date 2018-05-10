@@ -38,6 +38,7 @@ angular.module('webmapp')
             shareModal;
 
         vm.userData = {};
+        vm.goTo = Utils.goTo;
 
         var distanceInMeters = function (lat1, lon1, lat2, lon2) {
             var R = 6371, // Radius of the earth in km
@@ -1215,14 +1216,8 @@ angular.module('webmapp')
                 }, 650);
             }, 650);
 
-            // setTimeout(function() {
-            //     MapService.adjust();
-            // }, $rootScope.stateCounter === 1 ? 4500 : 1000);
-
             vm.hideMap = false;
             vm.mapView = false;
-            $rootScope.$emit('hide-main-bar', false);
-
 
             if (currentState === 'app.main.map') {
                 vm.mapView = true;
@@ -1262,6 +1257,7 @@ angular.module('webmapp')
             } else if (currentState === 'app.main.detaillayer') {
                 if (MapService.isAPOILayer($rootScope.currentParams.parentId.replace(/_/g, ' '))) {
                     vm.detail = true;
+
                 }
                 // TODO: check the shadow
                 // else {
@@ -1338,8 +1334,42 @@ angular.module('webmapp')
         });
 
         $rootScope.$on('taxonomy-details', function (e, value) {
+            vm.isAPoi = false;
             vm.taxonomyName = value.name;
             vm.itemColor = hexToRgbA(value.color);
+            if (MapService.isAPOILayer($rootScope.currentParams.parentId.replace(/_/g, ' '))) {
+                MapService.getFeatureById($rootScope.currentParams.id, $rootScope.currentParams.parentId.replace(/_/g, ' '))
+                    .then(function (feature) {
+                        if (feature === null) {
+                            vm.isAPoi = false;
+                        }
+                        else {
+                            var track = MapService.getRelatedTrackByFeatureId(feature.properties.id);
+                            var features = MapService.getRelatedFeaturesById(track.properties.id_pois);
+                            console.log(track, features)
+                            vm.parentTrackName = track.properties.name;
+                            for (var pos in features) {
+                                if (features[pos].properties.id * 1 === $rootScope.currentParams.id * 1) {
+                                    if (pos === 0) {
+                                        vm.prevUrl = 'layer/' + features[features.length - 1].parent.label.replace(/ /g, '_') + '/' + features[features.length - 1].properties.id;
+                                    }
+                                    else {
+                                        vm.prevUrl = 'layer/' + features[pos - 1].parent.label.replace(/ /g, '_') + '/' + features[pos - 1].properties.id;
+                                    }
+
+                                    if (pos === features.length - 1) {
+                                        vm.nextUrl = 'layer/' + features[0].parent.label.replace(/ /g, '_') + '/' + features[0].properties.id;
+                                    }
+                                    else {
+                                        vm.nextUrl = 'layer/' + features[pos + 1].parent.label.replace(/ /g, '_') + '/' + features[pos + 1].properties.id;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                vm.isAPoi = true;
+            }
         });
 
         $rootScope.$on('geolocate', function () {

@@ -202,12 +202,10 @@ angular.module('webmapp')
                 if (feature.phone) {
                     var regExp = /\+(\d{2,4})\s+(\d{2,5}\s\d+)/g;
                     phoneMatch = regExp.exec(feature.phone);
-                    console.log("Phone: ", phoneMatch);
 
                     if (phoneMatch) {
                         var localPhone = phoneMatch[2].replace(/\s/g, '');
                         vm.availablePhoneNumber = phoneMatch[1] + '-' + localPhone.replace(/(\d\d\d)(\d\d\d)(\d\d\d)/, '$1-$2-$3');
-                        console.log("asdas", vm.availablePhoneNumber);
                     }
                 }
 
@@ -285,11 +283,11 @@ angular.module('webmapp')
                 if (vm.geometry.type === "LineString") {
                     vm.isNavigable = true;
                     $rootScope.$emit('item-navigable', vm.isNavigable);
-                    $rootScope.$emit('taxonomy-details', {
-                        name: vm.taxonomyName,
-                        color: vm.itemColor
-                    });
                 }
+                $rootScope.$emit('taxonomy-details', {
+                    name: vm.taxonomyName,
+                    color: vm.itemColor
+                });
             }
 
             setTimeout(function () {
