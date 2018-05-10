@@ -272,7 +272,9 @@ angular.module('webmapp')
                     $rootScope.track = data;
                     track = undefined;
                 } else {
-                    feature.description.expandable = false;
+                    if (feature.description && feature.description.expandable) {
+                        feature.description.expandable = false;
+                    }
                 }
 
                 vm.relatedItinerary = MapService.getItineraryRefByFeatureIdMap()[feature.id] || [];
