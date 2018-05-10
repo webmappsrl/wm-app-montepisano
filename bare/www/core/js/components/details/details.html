@@ -150,19 +150,19 @@
 
                     <div class="disability-buttons-container" ng-if="vm.showDisabilityButtons">
                         <a href="" ng-click="vm.openDisabilityModal()">
-                            <i class="icon wm-icon-wheelchair-15" style="background-color: {{vm.colors.mainBar.background}}"></i>
+                            <i class="icon wm-icon-wheelchair-15" ng-style="{'background-color': vm.colors.mainBar.background}"></i>
                         </a>
                         <a href="" ng-click="vm.openDisabilityModal()">
-                            <i class="icon wm-icon-hearing-impared" style="background-color: {{vm.colors.mainBar.background}}"></i>
+                            <i class="icon wm-icon-hearing-impared" ng-style="{'background-color': vm.colors.mainBar.background}"></i>
                         </a>
                         <a href="" ng-click="vm.openDisabilityModal()">
-                            <i class="icon wm-icon-visually-impaired" style="background-color: {{vm.colors.mainBar.background}}"></i>
+                            <i class="icon wm-icon-visually-impaired" ng-style="{'background-color': vm.colors.mainBar.background}"></i>
                         </a>
                         <a href="" ng-click="vm.openDisabilityModal()">
                             <i class="icon wm-icon-dialysis" style="background-color: #cccccc"></i>
                         </a>
                         <a href="" ng-click="vm.openDisabilityModal()">
-                            <i class="icon wm-icon-food-intolerance" style="background-color: {{vm.colors.mainBar.background}}"></i>
+                            <i class="icon wm-icon-food-intolerance" ng-style="{'background-color': vm.colors.mainBar.background}"></i>
                         </a>
                     </div>
 
@@ -263,7 +263,7 @@
                             !vm.fullDescription ? {
                                 'background': 'linear-gradient(to bottom, transparent 0%, ' + vm.colors.details.background + ' 75%, ' + vm.colors.details.background + ' 100%)'
                             } : {
-                                'background-image': 'linear-gradient(transparent, transparent)'
+                                'background': 'transparent'
                             }">
                             <span ng-click="vm.toggleDescription()">
                                 {{vm.fullDescription ? "nascondi" : "leggi tutto" | translate}}

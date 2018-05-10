@@ -49,6 +49,8 @@ angular.module('webmapp')
         vm.isLoggedIn = Auth.isLoggedIn();
         vm.isPublic = false;
         vm.id = params.id;
+        vm.openInAppBrowser = Utils.openInAppBrowser;
+        vm.openInExternalBrowser = Utils.openInExternalBrowser;
 
         vm.voucherAvailable = CONFIG.MULTIMAP.purchaseType ? CONFIG.MULTIMAP.purchaseType.includes('voucher') : false;
         vm.purchaseAvailable = CONFIG.MULTIMAP.purchaseType ? CONFIG.MULTIMAP.purchaseType.includes('purchase') : false;
@@ -140,6 +142,8 @@ angular.module('webmapp')
             return $.getJSON(CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.wordPressEndpoint + 'route/' + id, function (data) {
                 vm.title = data.title.rendered;
                 vm.description = data.content.rendered;
+                vm.description = vm.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'href="" onclick="window.open(\'$1\', \'_system\', \'\')"');
+                vm.description = $sce.trustAsHtml(vm.description);
                 vm.gallery = data.n7webmap_route_media_gallery;
                 $ionicLoading.hide();
                 return data;
@@ -159,6 +163,8 @@ angular.module('webmapp')
             if (routeDetail) {
                 vm.title = routeDetail.title.rendered;
                 vm.description = routeDetail.content.rendered;
+                vm.description = vm.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'href="" onclick="window.open(\'$1\', \'_system\', \'\')"');
+                vm.description = $sce.trustAsHtml(vm.description);
                 vm.gallery = routeDetail.n7webmap_route_media_gallery;
                 if (vm.gallery && vm.gallery[0] && vm.gallery[0].sizes) {
                     vm.featureImage = vm.gallery[0].sizes.medium_large;

@@ -3022,7 +3022,7 @@ button.popup-close {
   position: relative;
   top: 20px; }
 
-.modal-content div p {
+.modal-content div .modal-p {
   position: relative;
   top: 35px; }
 
