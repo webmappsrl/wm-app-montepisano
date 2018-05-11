@@ -38,6 +38,7 @@ angular.module('webmapp')
         shareModal;
 
     vm.userData = {};
+    vm.outOfTrackDate = {};
 
     var distanceInMeters = function(lat1, lon1, lat2, lon2) {
         var R = 6371, // Radius of the earth in km
@@ -583,17 +584,7 @@ angular.module('webmapp')
             doCenter = false;
 
 
-        if (vm.stopNavigationUrlParams && vm.stopNavigationUrlParams.id &&
-            vm.stopNavigationUrlParams.parentId) {
-            var distFromTrack = MapService.getFeatureById(vm.stopNavigationUrlParams.id,
-                vm.stopNavigationUrlParams.parentId.replace(/_/g, ' ')).then(function(feature) {
-                var dist = turf.pointToLineDistance.default([lat, long], feature);
 
-                return dist;
-            });
-
-            console.log("La distanza " + distFromTrack);
-        }
 
 
         if (!prevLatLong) {
@@ -609,6 +600,38 @@ angular.module('webmapp')
             }
 
             if (vm.isNavigating && !vm.isPaused) {
+
+                if (vm.stopNavigationUrlParams && vm.stopNavigationUrlParams.id &&
+                    vm.stopNavigationUrlParams.parentId) {
+
+                    var distFromTrack = MapService.getFeatureById(vm.stopNavigationUrlParams.id,
+                        vm.stopNavigationUrlParams.parentId.replace(/_/g, ' ')).then(function(feature) {
+                        var dist = turf.pointToLineDistance.default([long, lat], feature);
+                        return dist;
+                    });
+
+                    var currTime = Date.now;
+                    if (!vm.outOfTrackDate) {
+                        vm.outOfTrackDate = currTime;
+                    } else {
+                        distFromTrack.then(function(d) {
+                            if ((d * 1000) < 1000) {
+                                vm.outOfTrackDate = {};
+                            } else {
+                                var diffTime = currTime - outOfTrackDate;
+                                var diffDays = Math.floor(diffTime / 86400000); // days
+                                var diffHrs = Math.floor((diffTime % 86400000) / 3600000); // hours
+                                var diffMins = Math.round(((diffTime % 86400000) % 3600000) / 60000); // minutes
+                                if (!diffDays && !diffHrs && diffMins > 15) {
+                                    console.log("Sei fuori dal percorso!");
+                                    vm.outOfTrackDate = {};
+                                }
+                            }
+                        })
+
+                    }
+                }
+
                 if (realTimeTracking.enabled && vm.userData.ID) {
                     // vm.positionsToSend.push({
                     //     lat: lat,
