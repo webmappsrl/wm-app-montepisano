@@ -69,12 +69,16 @@ angular.module('webmapp')
         };
 
         var checkGPS = function () {
+            var showPopups = CONFIG.MAIN ? true : false;
             var onSuccess = function (e) {
                 if (e) {
                     vm.dragged = true;
                     vm.gpsActive = true;
                     vm.centerOnMe();
                 } else {
+                    if (!showPopups) {
+                        return;
+                    }
                     return $ionicPopup.confirm({
                         title: $translate.instant("ATTENZIONE"),
                         template: $translate.instant("Sembra che tu abbia il GPS disattivato. Per accedere a tutte le funzionalità dell'app occorre attivarlo. Vuoi farlo ora?")
@@ -114,6 +118,9 @@ angular.module('webmapp')
                             );
                         }
                     } else {
+                        if (!showPopups) {
+                            return;
+                        }
                         if (window.cordova.platformId === "ios") {
                             var permissionDenied = localStorage.$wm_ios_location_permission_denied ? true : false;
                             if (permissionDenied) {
@@ -721,6 +728,10 @@ angular.module('webmapp')
                                 var sw, ne;
                                 if (!MapService.isInBoundingBox(posLat, posLong)) {
                                     vm.outsideBoundingBox = true;
+                                    var showPopups = CONFIG.MAIN ? true : false;
+                                    if (!showPopups) {
+                                        return;
+                                    }
                                     $ionicPopup.alert({
                                         title: $translate.instant("ATTENZIONE"),
                                         template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
@@ -836,6 +847,10 @@ angular.module('webmapp')
 
                             if (!MapService.isInBoundingBox(lat, long)) {
                                 vm.isOutsideBoundingBox = true;
+                                var showPopups = CONFIG.MAIN ? true : false;
+                                if (!showPopups) {
+                                    return;
+                                }
                                 $ionicPopup.alert({
                                     title: $translate.instant("ATTENZIONE"),
                                     template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
@@ -1034,6 +1049,10 @@ angular.module('webmapp')
             }
 
             if (vm.isOutsideBoundingBox) {
+                var showPopups = CONFIG.MAIN ? true : false;
+                if (!showPopups) {
+                    return;
+                }
                 $ionicPopup.alert({
                     title: $translate.instant("ATTENZIONE"),
                     template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
