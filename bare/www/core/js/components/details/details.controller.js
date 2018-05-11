@@ -1,18 +1,19 @@
 angular.module('webmapp')
 
     .controller('DetailController', function DetailController(
-        $state,
-        $scope,
-        $rootScope,
-        $sce,
         $ionicModal,
         $ionicSlideBoxDelegate,
+        $rootScope,
+        $sce,
+        $scope,
+        $state,
+        $translate,
+        CONFIG,
         MapService,
         Model,
         Offline,
-        Utils,
-        CONFIG,
-        $translate
+        Search,
+        Utils
     ) {
         var vm = {},
             current = $state.current || {},
@@ -55,6 +56,12 @@ angular.module('webmapp')
             }
             Utils.goBack();
         }
+
+        vm.goToSearch = function () {
+            Search.setActiveAllLayers();
+
+            Utils.goTo('search');
+        };
 
         MapService.resetUtfGridLayers();
 
