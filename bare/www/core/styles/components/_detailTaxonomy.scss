@@ -81,7 +81,8 @@
           padding: 4px;
         }
         i.download-icon,
-        i.open-icon {
+        i.open-icon,
+        i.update-icon {
           position: absolute;
           top: 4px;
           left: 0;
@@ -91,6 +92,10 @@
         i.open-icon {
           color: #13BC00;
           padding: 0;
+        }
+        i.update-icon {
+          color: #ff9900;
+          padding: 0 2px 0 0;
         }
         i.download-icon {
           padding: 0 2px 0 0;

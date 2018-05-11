@@ -748,7 +748,8 @@ div.detailRoute-footer {
         border-radius: 50%;
         padding: 4px; }
       .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.download-icon,
-      .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.open-icon {
+      .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.open-icon,
+      .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.update-icon {
         position: absolute;
         top: 4px;
         left: 0;
@@ -756,6 +757,9 @@ div.detailRoute-footer {
       .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.open-icon {
         color: #13BC00;
         padding: 0; }
+      .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.update-icon {
+        color: #ff9900;
+        padding: 0 2px 0 0; }
       .detailTaxonomy-page ion-content .detailTaxonomy-routes .detailTaxonomy-route i.download-icon {
         padding: 0 2px 0 0; }
   .detailTaxonomy-page ion-content .detailTaxonomy-map {

@@ -1,12 +1,13 @@
 angular.module('webmapp')
 
     .controller('DetailTaxonomyController', function DetailTaxonomyController(
-        Communication,
-        CONFIG,
         $ionicLoading,
+        $ionicPopup,
         $rootScope,
         $state,
         $translate,
+        Communication,
+        CONFIG,
         MapService,
         PackageService,
         Utils
@@ -66,25 +67,36 @@ angular.module('webmapp')
                 if (vm.item.name[vm.currentLang]) {
                     localStorage.$wm_taxonomyName = JSON.stringify(vm.item.name[vm.currentLang]);
                 }
-                else if (typeof(vm.item.name) === String) {
+                else if (typeof (vm.item.name) === String) {
                     localStorage.$wm_taxonomyName = JSON.stringify(vm.item.name);
                 }
                 else {
                     localStorage.$wm_taxonomyName = JSON.stringify(vm.item.name[Object.keys(vm.item.name)[0]]);
                 }
-                
-                PackageService.openPackage(packId);
+
+                $ionicPopup.confirm({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("È disponibile un update dell'itinerario, vuoi scaricarlo ora?")
+                })
+                    .then(function (res) {
+                        if (res) {
+                            PackageService.updatePack(packId);
+                        }
+                        else {
+                            PackageService.openPackage(packId);
+                        }
+                    });
             } else {
                 PackageService.downloadPack(packId);
             }
         };
 
-        vm.toggleList = function() {
+        vm.toggleList = function () {
             vm.isListExpanded = !vm.isListExpanded;
             $rootScope.$emit('toggle-list', vm.isListExpanded);
         };
-        
-        var updateMapView = function() {
+
+        var updateMapView = function () {
             MapService.disableInteractions();
             var toAdd = [],
                 i = 0;
@@ -101,24 +113,24 @@ angular.module('webmapp')
         var getTrack = function (url, packId, pos) {
             Communication.getJSON(url)
                 .then(function (data) {
-                        if (!vm.routes[packId].tracks) {
-                            vm.routes[packId].tracks = {};
-                        }
-                        vm.routes[packId].tracks[pos] = data;
-                        if (!vm.tracks) {
-                            vm.tracks = {};
-                            vm.tracks[packId] = {};
-                        }
-                        else if (!vm.tracks[packId]) {
-                            vm.tracks[packId] = {};
-                        }
+                    if (!vm.routes[packId].tracks) {
+                        vm.routes[packId].tracks = {};
+                    }
+                    vm.routes[packId].tracks[pos] = data;
+                    if (!vm.tracks) {
+                        vm.tracks = {};
+                        vm.tracks[packId] = {};
+                    }
+                    else if (!vm.tracks[packId]) {
+                        vm.tracks[packId] = {};
+                    }
 
-                        vm.tracks[packId][pos] = data;
+                    vm.tracks[packId][pos] = data;
 
-                        localStorage.$wm_taxonomy_tracks = JSON.stringify(vm.tracks);
+                    localStorage.$wm_taxonomy_tracks = JSON.stringify(vm.tracks);
 
-                        updateMapView();
-                    },
+                    updateMapView();
+                },
                     function (error) {
                         console.error("DetailTaxonommy.getTrack() ", error);
                     });
@@ -127,10 +139,10 @@ angular.module('webmapp')
         var getTracksForPack = function (packId) {
             Communication.getJSON(communicationConf.downloadJSONUrl + packId + '/app.json')
                 .then(function (data) {
-                        for (var i in data.routes) {
-                            getTrack(data.routes[i], packId, i);
-                        }
-                    },
+                    for (var i in data.routes) {
+                        getTrack(data.routes[i], packId, i);
+                    }
+                },
                     function (error) {
                         console.error("DetailTaxonommy.getTracksForPack() ", error);
                     });
@@ -138,6 +150,7 @@ angular.module('webmapp')
 
         $rootScope.$on('taxonomy-' + taxonomyType + '-updated', function (e, value) {
             $ionicLoading.hide();
+            console.log(value)
             vm.taxonomy = value;
             vm.item = value[id];
             vm.title = vm.item.name;
