@@ -1350,18 +1350,20 @@ angular.module('webmapp')
                             vm.parentTrackName = track.properties.name;
                             for (var pos in features) {
                                 if (features[pos].properties.id * 1 === $rootScope.currentParams.id * 1) {
-                                    if (pos === 0) {
+                                    console.log(pos, features.length);
+                                    var intPos = pos * 1;
+                                    if (intPos === 0) {
                                         vm.prevUrl = 'layer/' + features[features.length - 1].parent.label.replace(/ /g, '_') + '/' + features[features.length - 1].properties.id;
                                     }
                                     else {
-                                        vm.prevUrl = 'layer/' + features[pos - 1].parent.label.replace(/ /g, '_') + '/' + features[pos - 1].properties.id;
+                                        vm.prevUrl = 'layer/' + features[intPos - 1].parent.label.replace(/ /g, '_') + '/' + features[intPos - 1].properties.id;
                                     }
 
-                                    if (pos === features.length - 1) {
+                                    if (intPos === features.length - 1) {
                                         vm.nextUrl = 'layer/' + features[0].parent.label.replace(/ /g, '_') + '/' + features[0].properties.id;
                                     }
                                     else {
-                                        vm.nextUrl = 'layer/' + features[pos + 1].parent.label.replace(/ /g, '_') + '/' + features[pos + 1].properties.id;
+                                        vm.nextUrl = 'layer/' + features[intPos + 1].parent.label.replace(/ /g, '_') + '/' + features[intPos + 1].properties.id;
                                     }
                                     break;
                                 }
