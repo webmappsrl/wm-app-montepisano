@@ -175,7 +175,7 @@ angular.module('webmapp')
 
             vm.imageGallery = [];
             for (var g = 0; g < vm.gallery.length; g++) {
-                vm.imageGallery.push(vm.gallery[g].sizes.medium_large);
+                vm.imageGallery.push({src: vm.gallery[g].sizes.medium_large});
             }
 
             vm.hasGallery = vm.imageGallery.length > 0;
