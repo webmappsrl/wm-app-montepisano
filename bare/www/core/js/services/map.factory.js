@@ -2338,5 +2338,23 @@ angular.module('webmapp')
             mapService.adjust();
         }, 3600);
 
+        var redirectToFirstStage = function() {
+            if (mapService.isReady()) {
+                for (var id in featureMapById) {
+                    if (featureMapById[id].parent.label.toLowerCase() === 'tappe') {
+                        Utils.goTo('layer/Tappe/' + id);
+                        break;
+                    }
+                }
+            }
+            else {
+                setTimeout(redirectToFirstStage, 200);
+            }
+        };
+
+        if (CONFIG.MAIN) {
+            redirectToFirstStage();
+        }
+
         return mapService;
     });

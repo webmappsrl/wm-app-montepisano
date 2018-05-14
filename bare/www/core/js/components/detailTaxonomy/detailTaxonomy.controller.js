@@ -150,7 +150,6 @@ angular.module('webmapp')
 
         $rootScope.$on('taxonomy-' + taxonomyType + '-updated', function (e, value) {
             $ionicLoading.hide();
-            console.log(value)
             vm.taxonomy = value;
             vm.item = value[id];
             vm.title = vm.item.name;
