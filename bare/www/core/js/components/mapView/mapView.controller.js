@@ -118,7 +118,10 @@ angular.module('webmapp')
         for (var i in CONFIG.OVERLAY_LAYERS) {
             var nameTranslated = CONFIG.OVERLAY_LAYERS[i].label;
 
-            if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[lang]) {
+            if (nameTranslated.toLowerCase() === 'tappe' || nameTranslated.toLowerCase() === 'stages') {
+                nameTranslated = $translate.instant('Tappe');
+            }
+            else if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[lang]) {
                 nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[lang];
             }
 

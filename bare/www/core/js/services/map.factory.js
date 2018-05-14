@@ -430,7 +430,10 @@ angular.module('webmapp')
                     }
                     var category = e.layer.feature.parent.label;
 
-                    if (e.layer.feature.parent.languages && e.layer.feature.parent.languages[currentLang]) {
+                    if (category.toLowerCase() === 'tappe' || category.toLowerCase() === 'stages') {
+                        category = $translate.instant('Tappe');
+                    }
+                    else if (e.layer.feature.parent.languages && e.layer.feature.parent.languages[currentLang]) {
                         category = e.layer.feature.parent.languages[currentLang];
                     }
 
