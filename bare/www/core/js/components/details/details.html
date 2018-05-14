@@ -148,7 +148,7 @@
                           ng-src="{{vm.feature.image}}">
                     </div>
 
-                    <div class="disability-buttons-container" ng-if="vm.showDisabilityButtons">
+                    <div class="disability-buttons-container" ng-if="vm.showDisabilityButtons || true">
                         <a href="" ng-click="vm.openDisabilityModal()">
                             <i class="icon wm-icon-wheelchair-15" ng-style="{'background-color': vm.colors.mainBar.background}"></i>
                         </a>

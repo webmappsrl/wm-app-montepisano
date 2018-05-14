@@ -183,7 +183,7 @@ angular.module('webmapp')
 
             for (var g in feature.imageGallery) {
                 //vm.imageGallery.push(feature.imageGallery[g].src);
-                vm.imageGallery.push(Offline.getRealImageUrl(feature.imageGallery[g].src));
+                vm.imageGallery.push(Offline.getRealImageUrl(feature.imageGallery[g]));
             }
 
             vm.hasGallery = vm.imageGallery.length > 0;
@@ -330,6 +330,7 @@ angular.module('webmapp')
 
         // console.log(vm["feature"]);
         // vm.feature.description = "ciao <a href=\"http://www.google.com\">ciaociao</a> ciao";
+        console.log(feature, vm)
     };
 
     modalScope.vm.openFeature = function(feature) {
@@ -549,6 +550,7 @@ angular.module('webmapp')
     vm.openImageModal = function() {
         if (vm.imageGallery.length > 1) {
             modalImage.show();
+            console.log
         }
     };
 

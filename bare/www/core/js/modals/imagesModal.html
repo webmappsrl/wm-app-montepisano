@@ -17,7 +17,7 @@
             ng-if="parent.hasGallery">
             
             <ion-slide-box>
-                <ion-slide ng-repeat="image in parent.imageGallery">
+                <ion-slide ng-repeat="imageData in parent.imageGallery">
                     <div>
                         <!-- <ion-scroll zooming="true"
                             direction="xy" 
@@ -27,9 +27,9 @@
                             scrollbar-x="false" 
                             scrollbar-y="false" 
                             overflow-scroll="false"> -->
-                            <img ng-src="{{image}}">
+                            <img ng-src="{{imageData.src}}">
 
-                            <!-- <div class="image-caption">{{image}}</div> -->
+                            <div class="image-caption" ng-if="imageData.caption && imageData.caption !== ''">{{imageData.caption}}</div>
 
                         <!-- </ion-scroll> -->
                     </div>
