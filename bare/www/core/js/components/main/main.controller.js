@@ -21,7 +21,6 @@ angular.module('webmapp')
     Utils
 ) {
     var vm = {};
-
     var overlaysGroupMap = Model.getOverlaysGroupMap(),
         overlayMap = Model.getOverlaysMap();
 
@@ -38,7 +37,14 @@ angular.module('webmapp')
         shareModal;
 
     vm.userData = {};
-    vm.outOfTrackDate = {};
+    vm.outOfTrackDate = 0;
+    vm.maxOutOfTrack = 200;
+    if (CONFIG && CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) {
+        vm.maxOutOfTrack = CONFIG.MAIN.NAVIGATION.trackBoundsDistance;
+    }
+    if (CONFIG && CONFIG.NAVIGATION && CONFIG.NAVIGATION.trackBoundsDistance) {
+        vm.maxOutOfTrack = CONFIG.NAVIGATION.trackBoundsDistance;
+    }
 
     var distanceInMeters = function(lat1, lon1, lat2, lon2) {
         var R = 6371, // Radius of the earth in km
@@ -610,26 +616,35 @@ angular.module('webmapp')
                         return dist;
                     });
 
-                    var currTime = Date.now;
-                    if (!vm.outOfTrackDate) {
-                        vm.outOfTrackDate = currTime;
-                    } else {
-                        distFromTrack.then(function(d) {
-                            if ((d * 1000) < 1000) {
-                                vm.outOfTrackDate = {};
-                            } else {
-                                var diffTime = currTime - outOfTrackDate;
-                                var diffDays = Math.floor(diffTime / 86400000); // days
-                                var diffHrs = Math.floor((diffTime % 86400000) / 3600000); // hours
-                                var diffMins = Math.round(((diffTime % 86400000) % 3600000) / 60000); // minutes
-                                if (!diffDays && !diffHrs && diffMins > 15) {
-                                    console.log("Sei fuori dal percorso!");
-                                    vm.outOfTrackDate = {};
+                    var currTime = Date.now();
+                    distFromTrack.then(function(d) {
+                        if ((d * 1000) >= vm.maxOutOfTrack) {
+                            if (!vm.outOfTrackDate) {
+                                vm.outOfTrackDate = currTime;
+                                $ionicPopup.alert({
+                                    title: $translate.instant("ATTENZIONE"),
+                                    template: 'Sei fuori dal percorso!',
+                                    buttons: [{
+                                        text: 'Ok',
+                                        type: 'button-positive'
+                                    }]
+                                });
+                                makeNotificationSound();
+                            }
+                        } else {
+                            if (vm.outOfTrackDate) {
+                                var diffMs = (currTime - vm.outOfTrackDate);
+                                var diffDays = Math.floor(diffMs / 86400000); // days
+                                var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+                                var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+                                if (!diffDays && !diffHrs && diffMins >= 5) {
+                                    vm.outOfTrackDate = 0;
+
                                 }
                             }
-                        })
+                        }
+                    })
 
-                    }
                 }
 
                 if (realTimeTracking.enabled && vm.userData.ID) {
@@ -1386,38 +1401,10 @@ angular.module('webmapp')
         }
     });
 
-    // function turftest() {
-    //     var pt = {
-    //         "type": "Feature",
-    //         "properties": {},
-    //         "geometry": {
-    //             "type": "Point",
-    //             "coordinates": [
-    //                 0,
-    //                 0
-    //             ]
-    //         }
-    //     };
-    //     var line = {
-    //         "type": "Feature",
-    //         "properties": {},
-    //         "geometry": {
-    //             "type": "LineString",
-    //             "coordinates": [
-    //                 [1, 1],
-    //                 [-1, 1]
-    //             ]
-    //         }
-    //     };
+    var makeNotificationSound = function() {
+        var audio = new Audio('core/audio/alertNotificationSound.mp3');
+        audio.play();
+    };
 
-    //     var distturf = turf.pointToLineDistance.default(pt, line, { units: 'miles' });
-    //     // 69.11854715938406
-
-
-    //     console.log($state);
-    //     console.log($rootScope);
-    // }
-
-    // turftest();
     return vm;
 });
