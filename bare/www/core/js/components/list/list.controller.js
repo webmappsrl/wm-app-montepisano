@@ -99,7 +99,7 @@ angular.module('webmapp')
 
                 if (!isAnOverlayGroup && typeof layersReferences[realState] === 'undefined') {
                     $ionicLoading.show({
-                        template: 'Loading...'
+                        template: '<ion-spinner></ion-spinner>'
                     });
                 }
 

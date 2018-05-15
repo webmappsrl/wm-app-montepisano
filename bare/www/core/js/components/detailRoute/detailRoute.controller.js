@@ -27,6 +27,8 @@ angular.module('webmapp')
             isOnline = false,
             isBrowser = vm.isBrowser = Utils.isBrowser();
 
+        var registeredEvents = [];
+
         var modalScope = $rootScope.$new(),
             modal = {},
             modalImage = {};
@@ -125,9 +127,9 @@ angular.module('webmapp')
 
         var notLoggedIn = function () {
             $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Devi eseguire l'accesso per poter usufruire di questa funzionalità")
-                })
+                title: $translate.instant("ATTENZIONE"),
+                template: $translate.instant("Devi eseguire l'accesso per poter usufruire di questa funzionalità")
+            })
                 .then(function (res) {
                     if (res) {
                         showLogin();
@@ -137,91 +139,20 @@ angular.module('webmapp')
 
         var getTranslatedContent = function (id) {
             $ionicLoading.show({
-                template: 'Loading...'
+                template: '<ion-spinner></ion-spinner>'
             });
-            return $.getJSON(CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.wordPressEndpoint + 'route/' + id, function (data) {
+            $.getJSON(CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.wordPressEndpoint + 'route/' + id, function (data) {
                 vm.title = data.title.rendered;
                 vm.description = data.content.rendered;
                 vm.description = vm.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'href="" onclick="window.open(\'$1\', \'_system\', \'\')"');
                 vm.description = $sce.trustAsHtml(vm.description);
                 vm.gallery = data.n7webmap_route_media_gallery;
                 $ionicLoading.hide();
-                return data;
             }).fail(function () {
                 $ionicLoading.hide();
                 console.error('translation retrive error');
-                return 'translation retrive error';
             });
         };
-
-        $rootScope.$on('packages-updated', function (e, value) {
-            routeDetail = value[vm.id];
-
-            vm.isPublic = routeDetail.wm_route_public;
-            vm.skipLogin = CONFIG.OPTIONS.skipLoginPublicRoutesDownload ? CONFIG.OPTIONS.skipLoginPublicRoutesDownload : false;
-
-            if (routeDetail) {
-                vm.title = routeDetail.title.rendered;
-                vm.description = routeDetail.content.rendered;
-                vm.description = vm.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'href="" onclick="window.open(\'$1\', \'_system\', \'\')"');
-                vm.description = $sce.trustAsHtml(vm.description);
-                vm.gallery = routeDetail.n7webmap_route_media_gallery;
-                if (vm.gallery && vm.gallery[0] && vm.gallery[0].sizes) {
-                    vm.featureImage = vm.gallery[0].sizes.medium_large;
-                }
-                vm.codeRoute = routeDetail.n7webmapp_route_cod;
-                vm.difficulty = routeDetail.n7webmapp_route_difficulty;
-            }
-
-            vm.imageGallery = [];
-            for (var g = 0; g < vm.gallery.length; g++) {
-                vm.imageGallery.push({src: vm.gallery[g].sizes.medium_large});
-            }
-
-            vm.hasGallery = vm.imageGallery.length > 0;
-
-            for (var lang in routeDetail.wpml_translations) {
-                if (routeDetail.wpml_translations[lang].locale.substring(0, 2) === vm.currentLang) {
-                    getTranslatedContent(routeDetail.wpml_translations[lang].id);
-                    break;
-                }
-            }
-        });
-
-        $rootScope.$on('userPackagesId-updated', function (e, value) {
-            vm.userPackagesId = value;
-            Utils.forceDigest();
-        });
-
-        $rootScope.$on('userDownloadedPackages-updated', function (e, value) {
-            vm.userDownloadedPackages = value;
-            Utils.forceDigest();
-        });
-
-        $rootScope.$on('userPackagesIdRquested-updated', function (e, value) {
-            vm.userPackagesIdRquested = value;
-            Utils.forceDigest();
-        });
-
-        $rootScope.$on('logged-in', function () {
-            if (Auth.isLoggedIn()) {
-                userData = Auth.getUserData();
-                vm.isLoggedIn = true;
-
-                PackageService.getPackagesIdByUserId();
-
-                Utils.forceDigest();
-            }
-        });
-
-        $scope.$on('$destroy', function () {
-            if ($ionicSlideBoxDelegate._instances &&
-                $ionicSlideBoxDelegate._instances.length > 0) {
-                // delete $ionicSlideBoxDelegate._instances[0];
-                $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
-                $ionicSlideBoxDelegate.update();
-            }
-        });
 
         vm.openVoucherModal = function () {
             if (vm.isLoggedIn) {
@@ -260,21 +191,110 @@ angular.module('webmapp')
             PackageService.removePack(routeDetail.id);
         };
 
-        var initialize = function () {
-            PackageService.getRoutes();
-            PackageService.getDownloadedPackages();
+        registeredEvents.push(
+            $rootScope.$on('packages-updated', function (e, value) {
+                routeDetail = value[vm.id];
 
-            if (Auth.isLoggedIn()) {
-                userData = Auth.getUserData();
-                vm.isLoggedIn = true;
+                vm.isPublic = routeDetail.wm_route_public;
+                vm.skipLogin = CONFIG.OPTIONS.skipLoginPublicRoutesDownload ? CONFIG.OPTIONS.skipLoginPublicRoutesDownload : false;
 
-                PackageService.getPackagesIdByUserId();
+                if (routeDetail) {
+                    vm.title = routeDetail.title.rendered;
+                    vm.description = routeDetail.content.rendered;
+                    vm.description = vm.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'href="" onclick="window.open(\'$1\', \'_system\', \'\')"');
+                    vm.description = $sce.trustAsHtml(vm.description);
+                    vm.gallery = routeDetail.n7webmap_route_media_gallery;
+                    if (vm.gallery && vm.gallery[0] && vm.gallery[0].sizes) {
+                        vm.featureImage = vm.gallery[0].sizes.medium_large;
+                    }
+                    vm.codeRoute = routeDetail.n7webmapp_route_cod;
+                    vm.difficulty = routeDetail.n7webmapp_route_difficulty;
+                }
 
+                vm.imageGallery = [];
+                for (var g = 0; g < vm.gallery.length; g++) {
+                    vm.imageGallery.push({ src: vm.gallery[g].sizes.medium_large });
+                }
+
+                vm.hasGallery = vm.imageGallery.length > 0;
+
+                for (var lang in routeDetail.wpml_translations) {
+                    if (routeDetail.wpml_translations[lang].locale.substring(0, 2) === vm.currentLang) {
+                        getTranslatedContent(routeDetail.wpml_translations[lang].id);
+                        break;
+                    }
+                }
+            })
+        );
+
+        registeredEvents.push(
+            $rootScope.$on('userPackagesId-updated', function (e, value) {
+                vm.userPackagesId = value;
                 Utils.forceDigest();
-            }
-        }
+            })
+        );
 
-        initialize();
+        registeredEvents.push(
+            $rootScope.$on('userDownloadedPackages-updated', function (e, value) {
+                vm.userDownloadedPackages = value;
+                Utils.forceDigest();
+            })
+        );
+
+        registeredEvents.push(
+            $rootScope.$on('userPackagesIdRquested-updated', function (e, value) {
+                vm.userPackagesIdRquested = value;
+                Utils.forceDigest();
+            })
+        );
+
+        registeredEvents.push(
+            $rootScope.$on('logged-in', function () {
+                if (Auth.isLoggedIn()) {
+                    userData = Auth.getUserData();
+                    vm.isLoggedIn = true;
+
+                    PackageService.getPackagesIdByUserId();
+
+                    Utils.forceDigest();
+                }
+            })
+        );
+
+        registeredEvents.push(
+            $scope.$on('$ionicView.enter', function () {
+                PackageService.getRoutes();
+                PackageService.getDownloadedPackages();
+
+                if (Auth.isLoggedIn()) {
+                    userData = Auth.getUserData();
+                    vm.isLoggedIn = true;
+
+                    PackageService.getPackagesIdByUserId();
+
+                    Utils.forceDigest();
+                }
+            })
+        );
+
+        registeredEvents.push(
+            $scope.$on('$destroy', function () {
+                if ($ionicSlideBoxDelegate._instances &&
+                    $ionicSlideBoxDelegate._instances.length > 0) {
+                    $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
+                    $ionicSlideBoxDelegate.update();
+                }
+            })
+        );
+
+        registeredEvents.push(
+            $scope.$on('$ionicView.beforeLeave', function () {
+                for (var i in registeredEvents) {
+                    registeredEvents[i]();
+                }
+                delete registeredEvents;
+            })
+        );
 
         return vm;
     });

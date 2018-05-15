@@ -23,6 +23,8 @@ angular.module('webmapp')
         var vm = {},
             userData = {};
 
+        var registeredEvents = [];
+
         var modalFiltersScope = $rootScope.$new(),
             modalFilters = {};
 
@@ -47,7 +49,7 @@ angular.module('webmapp')
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
 
         vm.userDownloadedPackages = PackageService.getDownloadedPackages();
-        vm.packages = {};
+        vm.packages = null;
         vm.userPackagesId = {};
         vm.userPackagesIdRquested = {};
         vm.skipLoginPublicRoutesDownload = CONFIG.OPTIONS.skipLoginPublicRoutesDownload;
@@ -61,7 +63,7 @@ angular.module('webmapp')
 
         vm.isMultilanguage = false;
 
-        if (CONFIG.LANGUAGES){
+        if (CONFIG.LANGUAGES) {
             var actualInAvailable = false;
             if (CONFIG.LANGUAGES.actual && CONFIG.LANGUAGES.available) {
                 for (var i in CONFIG.LANGUAGES.available) {
@@ -110,14 +112,20 @@ angular.module('webmapp')
             return allActive;
         };
 
+        var closeLoading = function () {
+            if (vm.packages && vm.activities) {
+                $ionicLoading.hide();
+            }
+        };
+
         vm.setFilters = function () {
             vm.filters = {};
             if (CONFIG.MULTIMAP && CONFIG.MULTIMAP.categoryFiltersOn) {
-                for (var categoryId in vm.categories) {
+                for (var categoryId in vm.activities) {
                     var tmp = {};
                     tmp[categoryId] = {
-                        name: vm.categories[categoryId].name[vm.currentLang],
-                        icon: vm.categories[categoryId].icon,
+                        name: vm.activities[categoryId].name[vm.currentLang],
+                        icon: vm.activities[categoryId].icon,
                         value: true
                     };
                     vm.filters = angular.extend(tmp, vm.filters);
@@ -180,47 +188,6 @@ angular.module('webmapp')
             return ret;
         }
 
-        $rootScope.$on('logged-in', function () {
-            if (Auth.isLoggedIn()) {
-                userData = Auth.getUserData();
-                vm.isLoggedIn = true;
-                vm.userDownloadedPackages = {};
-
-                PackageService.getDownloadedPackages();
-                PackageService.getPackagesIdByUserId();
-                Utils.forceDigest();
-
-                if (!vm.packages) {
-                    $ionicLoading.show();
-                }
-            }
-        });
-
-        $rootScope.$on('userPackagesId-updated', function (e, value) {
-            vm.userPackagesId = value;
-            setTimeout(function () {
-                $scope.$broadcast('scroll.refreshComplete');
-                Utils.forceDigest();
-            }, 2000);
-            Utils.forceDigest();
-        });
-
-        $rootScope.$on('packages-updated', function (e, value) {
-            vm.packages = value;
-            Utils.forceDigest();
-        });
-
-        $rootScope.$on('taxonomy-activity-updated', function (e, value) {
-            vm.categories = value;
-            vm.setFilters();
-            Utils.forceDigest();
-        });
-
-        $rootScope.$on('userDownloadedPackages-updated', function (e, value) {
-            vm.userDownloadedPackages = value;
-            Utils.forceDigest();
-        });
-
         vm.downloadPack = function (pack) {
             PackageService.downloadPack(pack.id)
         };
@@ -263,17 +230,77 @@ angular.module('webmapp')
             // location.reload();
         };
 
-        if (Auth.isLoggedIn()) {
-            if (!vm.packages) {
-                $ionicLoading.show();
-            }
+        registeredEvents.push(
+            $rootScope.$on('logged-in', function () {
+                if (Auth.isLoggedIn()) {
+                    userData = Auth.getUserData();
+                    vm.isLoggedIn = true;
+                    vm.userDownloadedPackages = {};
 
-            userData = Auth.getUserData();
-            PackageService.getPackagesIdByUserId();
-        }
+                    PackageService.getDownloadedPackages();
+                    PackageService.getPackagesIdByUserId();
+                    Utils.forceDigest();
+                }
+            })
+        );
 
-        PackageService.getTaxonomy('activity');
-        PackageService.getRoutes();
+        registeredEvents.push(
+            $rootScope.$on('userPackagesId-updated', function (e, value) {
+                vm.userPackagesId = value;
+                setTimeout(function () {
+                    $scope.$broadcast('scroll.refreshComplete');
+                    Utils.forceDigest();
+                }, 2000);
+                Utils.forceDigest();
+            })
+        );
+
+        registeredEvents.push(
+            $rootScope.$on('packages-updated', function (e, value) {
+                vm.packages = value;
+                closeLoading();
+                Utils.forceDigest();
+            })
+        );
+
+        registeredEvents.push(
+            $rootScope.$on('taxonomy-activity-updated', function (e, value) {
+                vm.activities = value;
+                vm.setFilters();
+                closeLoading();
+                Utils.forceDigest();
+            })
+        );
+
+        registeredEvents.push(
+            $rootScope.$on('userDownloadedPackages-updated', function (e, value) {
+                vm.userDownloadedPackages = value;
+                Utils.forceDigest();
+            })
+        );
+
+        registeredEvents.push(
+            $scope.$on('$ionicView.enter', function () {
+                if (Auth.isLoggedIn()) {
+                    userData = Auth.getUserData();
+                    PackageService.getPackagesIdByUserId();
+                }
+                $ionicLoading.show({
+                    template: '<ion-spinner></ion-spinner>'
+                });
+                PackageService.getTaxonomy('activity');
+                PackageService.getRoutes();
+            })
+        );
+
+        registeredEvents.push(
+            $scope.$on('$ionicView.beforeLeave', function () {
+                for (var i in registeredEvents) {
+                    registeredEvents[i]();
+                }
+                delete registeredEvents;
+            })
+        );
 
         return vm;
     });

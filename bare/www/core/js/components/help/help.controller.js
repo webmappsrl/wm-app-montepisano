@@ -5,8 +5,7 @@ angular.module('webmapp')
         Offline,
         Utils,
         CONFIG,
-        $translate,
-        $ionicLoading
+        $translate
     ) {
         var vm = {};
 

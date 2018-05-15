@@ -5,7 +5,6 @@ angular.module('webmapp')
         $cordovaGeolocation,
         $cordovaSocialSharing,        
         $interval,
-        $ionicLoading,
         $ionicPlatform,
         $ionicPopup,
         $ionicScrollDelegate,
