@@ -1274,7 +1274,8 @@ ion-content div.home-title {
 
 ion-content div.home-content {
   width: 100%;
-  height: calc(100vh - 44px - 25px - 8vh); }
+  height: calc(100vh - 44px - 25px - 8vh);
+  position: relative; }
   ion-content div.home-content div.width-1 {
     width: 100%; }
   ion-content div.home-content div.width-2 {
@@ -1292,28 +1293,24 @@ ion-content div.home-content {
   ion-content div.home-content div.height-4 {
     height: 25%; }
   ion-content div.home-content div.home-button {
+    position: relative;
     font-size: 20px;
     text-align: center;
     margin: 0 auto;
     color: #63625d; }
     ion-content div.home-content div.home-button div.home-icon {
-      padding: 14% 0 3% 0; }
+      padding: 3% 0 3% 0; }
       ion-content div.home-content div.home-button div.home-icon .icon:before {
         font-size: 40px; }
-  ion-content div.home-content div.home-button.height-1.width-1 div.home-icon,
-  ion-content div.home-content div.home-button.height-1.width-2 div.home-icon,
-  ion-content div.home-content div.home-button.height-2.width-1 div.home-icon,
-  ion-content div.home-content div.home-button.height-2.width-2 div.home-icon,
-  ion-content div.home-content div.home-button.height-3.width-1 div.home-icon,
-  ion-content div.home-content div.home-button.height-3.width-2 div.home-icon {
-    padding: 20% 0 3% 0; }
-    ion-content div.home-content div.home-button.height-1.width-1 div.home-icon .icon:before,
-    ion-content div.home-content div.home-button.height-1.width-2 div.home-icon .icon:before,
-    ion-content div.home-content div.home-button.height-2.width-1 div.home-icon .icon:before,
-    ion-content div.home-content div.home-button.height-2.width-2 div.home-icon .icon:before,
-    ion-content div.home-content div.home-button.height-3.width-1 div.home-icon .icon:before,
-    ion-content div.home-content div.home-button.height-3.width-2 div.home-icon .icon:before {
-      font-size: 60px; }
+  ion-content div.home-content div.home-button.height-1 div.home-icon .icon:before {
+    font-size: 80px; }
+  ion-content div.home-content div.home-button.height-2 div.home-icon .icon:before {
+    font-size: 70px; }
+  ion-content div.home-content div.home-button.height-3 div.home-icon .icon:before {
+    font-size: 60px; }
+  ion-content div.home-content div.home-button-content {
+    position: relative;
+    top: calc(50% - 75px); }
   ion-content div.home-content div.home-button:active {
     color: #444040;
     background: #dddddd; }
