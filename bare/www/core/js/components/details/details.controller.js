@@ -183,7 +183,10 @@ angular.module('webmapp')
 
             for (var g in feature.imageGallery) {
                 //vm.imageGallery.push(feature.imageGallery[g].src);
-                vm.imageGallery.push(Offline.getRealImageUrl(feature.imageGallery[g]));
+                vm.imageGallery.push({
+                        src: Offline.getRealImageUrl(feature.imageGallery[g].src),
+                        caption: feature.imageGallery[g].caption ? feature.imageGallery[g].caption : ""
+                });
             }
 
             vm.hasGallery = vm.imageGallery.length > 0;
