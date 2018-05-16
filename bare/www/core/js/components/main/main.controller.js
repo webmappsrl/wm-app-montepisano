@@ -609,38 +609,7 @@ angular.module('webmapp')
 
             if (vm.isNavigating && !vm.isPaused) {
 
-                if (vm.stopNavigationUrlParams && vm.stopNavigationUrlParams.id &&
-                    vm.stopNavigationUrlParams.parentId) {
-
-                    var distFromTrack = MapService.getFeatureById(vm.stopNavigationUrlParams.id,
-                        vm.stopNavigationUrlParams.parentId.replace(/_/g, ' ')).then(function(feature) {
-                        var dist = turf.pointToLineDistance.default([long, lat], feature);
-                        return dist;
-                    });
-
-                    var currTime = Date.now();
-                    distFromTrack.then(function(distance) {
-                        if ((distance * 1000) >= vm.maxOutOfTrack) {
-                            if (!vm.outOfTrackDate) {
-                                vm.outOfTrackDate = currTime;
-                                showOutOfTrackToast();
-                                makeNotificationSound();
-                            }
-                        } else {
-                            if (vm.outOfTrackDate) {
-                                var diffMs = (currTime - vm.outOfTrackDate);
-                                var diffDays = Math.floor(diffMs / 86400000); // days
-                                var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
-                                var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
-                                if (!diffDays && !diffHrs && diffMins >= 5) {
-                                    vm.outOfTrackDate = 0;
-
-                                }
-                            }
-                        }
-                    })
-
-                }
+                vm.checkOutOfTrack(lat, long);
 
                 if (realTimeTracking.enabled && vm.userData.ID) {
                     // vm.positionsToSend.push({
@@ -1410,6 +1379,44 @@ angular.module('webmapp')
 
     function hideOutOfTrackToast() {
         ionicToast.hide();
+    }
+
+    vm.checkOutOfTrack = function(lat, long) {
+
+        if (vm.stopNavigationUrlParams && vm.stopNavigationUrlParams.id &&
+            vm.stopNavigationUrlParams.parentId) {
+
+            var distFromTrack = MapService.getFeatureById(
+                    vm.stopNavigationUrlParams.id,
+                    vm.stopNavigationUrlParams.parentId.replace(/_/g, ' '))
+                .then(function(feature) {
+                    var dist = turf.pointToLineDistance.default([long, lat], feature);
+                    return dist;
+                });
+
+            var currTime = Date.now();
+            distFromTrack.then(function(distance) {
+                if ((distance * 1000) >= vm.maxOutOfTrack) {
+                    if (!vm.outOfTrackDate) {
+                        vm.outOfTrackDate = currTime;
+                        showOutOfTrackToast();
+                        makeNotificationSound();
+                    }
+                } else {
+                    if (vm.outOfTrackDate) {
+                        var diffMs = (currTime - vm.outOfTrackDate);
+                        var diffDays = Math.floor(diffMs / 86400000); // days
+                        var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+                        var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+                        if (!diffDays && !diffHrs && diffMins >= 5) {
+                            vm.outOfTrackDate = 0;
+
+                        }
+                    }
+                }
+            })
+
+        }
     }
 
     return vm;

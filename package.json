@@ -20,6 +20,7 @@
     "gulp-replace": "^0.6.1",
     "gulp-streamify": "^1.0.2",
     "gulp-symlink": "^2.1.4",
+    "ionic-toast": "^0.4.1",
     "replace": "^0.3.0",
     "request": "^2.81.0",
     "require": "^2.4.20",
