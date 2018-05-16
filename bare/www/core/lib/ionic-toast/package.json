@@ -1,0 +1,44 @@
+{
+  "_from": "ionic-toast",
+  "_id": "ionic-toast@0.4.1",
+  "_inBundle": false,
+  "_integrity": "sha1-E828zTP2CkPJU/PtotieJFIv/mU=",
+  "_location": "/ionic-toast",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "ionic-toast",
+    "name": "ionic-toast",
+    "escapedName": "ionic-toast",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/ionic-toast/-/ionic-toast-0.4.1.tgz",
+  "_shasum": "13cdbccd33f60a43c953f3eda2d89e24522ffe65",
+  "_spec": "ionic-toast",
+  "_where": "C:\\Users\\Marco\\webmapp-generator",
+  "author": {
+    "name": "https://github.com/rajeshwarpatlolla, rajeshwar.patlolla@gmail.com"
+  },
+  "bundleDependencies": false,
+  "dependencies": {},
+  "deprecated": false,
+  "description": "A toast for IONIC framework",
+  "devDependencies": {
+    "del": "^2.2.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-css2js": "^1.0.2",
+    "gulp-uglify": "^1.5.3"
+  },
+  "license": "MIT",
+  "main": "./dist/ionic-toast.bundle.min.js",
+  "name": "ionic-toast",
+  "scripts": {},
+  "version": "0.4.1"
+}

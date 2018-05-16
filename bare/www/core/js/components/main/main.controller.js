@@ -3,6 +3,7 @@ angular.module('webmapp')
 .controller('MainController', function MainController(
     $cordovaDeviceOrientation,
     $cordovaGeolocation,
+    ionicToast,
     $cordovaSocialSharing,
     $interval,
     $ionicLoading,
@@ -13,6 +14,7 @@ angular.module('webmapp')
     $scope,
     $state,
     $translate,
+    $cordovaToast,
     Auth,
     Communication,
     CONFIG,
@@ -617,18 +619,11 @@ angular.module('webmapp')
                     });
 
                     var currTime = Date.now();
-                    distFromTrack.then(function(d) {
-                        if ((d * 1000) >= vm.maxOutOfTrack) {
+                    distFromTrack.then(function(distance) {
+                        if ((distance * 1000) >= vm.maxOutOfTrack) {
                             if (!vm.outOfTrackDate) {
                                 vm.outOfTrackDate = currTime;
-                                $ionicPopup.alert({
-                                    title: $translate.instant("ATTENZIONE"),
-                                    template: 'Sei fuori dal percorso!',
-                                    buttons: [{
-                                        text: 'Ok',
-                                        type: 'button-positive'
-                                    }]
-                                });
+                                showOutOfTrackToast();
                                 makeNotificationSound();
                             }
                         } else {
@@ -1146,6 +1141,8 @@ angular.module('webmapp')
     vm.stopNavigation = function() {
         vm.isPaused = false;
         vm.isNavigating = false;
+        vm.outOfTrackDate = 0;
+        hideOutOfTrackToast();
         clearInterval(vm.navigationInterval);
         cleanNavigationValues();
         $rootScope.$emit('is-navigating', vm.isNavigating);
@@ -1157,6 +1154,7 @@ angular.module('webmapp')
             };
             Utils.goTo(url);
         }
+
     };
 
     var showPathAndRelated = function(params) {
@@ -1405,6 +1403,14 @@ angular.module('webmapp')
         var audio = new Audio('core/audio/alertNotificationSound.mp3');
         audio.play();
     };
+
+    function showOutOfTrackToast() {
+        ionicToast.show('Attenzione! Sei fuori dal percorso.', 'top', true, 5000);
+    };
+
+    function hideOutOfTrackToast() {
+        ionicToast.hide();
+    }
 
     return vm;
 });

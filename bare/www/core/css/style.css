@@ -3862,3 +3862,7 @@ ion-content div.static-content.card-content {
     font-size: 16px; }
     .submenu-item .icon {
       font-size: 45px; } }
+
+/* custom style goes here */
+.ionic_toast_close {
+  left: 4px; }
