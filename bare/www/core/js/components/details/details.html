@@ -261,7 +261,9 @@
                         <p ng-bind-html="vm.feature.description || vm.feature.title"></p>
                         <div class="details-no-modal-read-more" ng-style="
                             !vm.fullDescription ? {
-                                'background': 'linear-gradient(to bottom, transparent 0%, ' + vm.colors.details.background + ' 75%, ' + vm.colors.details.background + ' 100%)'
+                                'background': 'linear-gradient(to bottom, transparent 0%, ' + vm.colors.details.background + ' 75%, ' + vm.colors.details.background + ' 100%)',
+                                'background': '-moz-linear-gradient(top, transparent 0%, ' + vm.colors.details.background + ' 75%, ' + vm.colors.details.background + ' 100%)',
+                                'background': '-webkit-linear-gradient(top, transparent 0%, ' + vm.colors.details.background + ' 75%, ' + vm.colors.details.background + ' 100%)'
                             } : {
                                 'background': 'transparent'
                             }">
