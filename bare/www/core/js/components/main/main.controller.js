@@ -1379,7 +1379,7 @@ angular.module('webmapp')
 
     function hideOutOfTrackToast() {
         ionicToast.hide();
-    }
+    };
 
     vm.checkOutOfTrack = function(lat, long) {
 
@@ -1417,7 +1417,7 @@ angular.module('webmapp')
             })
 
         }
-    }
+    };
 
     return vm;
 });
