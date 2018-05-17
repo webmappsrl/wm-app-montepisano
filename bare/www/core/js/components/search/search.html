@@ -3,7 +3,7 @@
     ng-controller="SearchController as vm">
     <ion-nav-title>
         <span>
-            {{::"Ricerca" | translate}} <span ng-if="vm.searchReady">({{vm.results.length}})</span>
+            {{"Ricerca" | translate}} <span ng-if="vm.searchReady">({{vm.results.length}})</span>
         </span>
     </ion-nav-title>
     <ion-nav-buttons 
@@ -27,17 +27,17 @@
                     'color': vm.colors.search.color
                 }">
                 <i class="icon wm-icon-arrow-down-b"></i>
-                <span class="label-select-search">{{::"cerca in" | translate}}</span>
+                <span class="label-select-search">{{"cerca in" | translate}}</span>
                 {{vm.activeLayers.length}}
                 <span 
                     class="label-select-name"
                     ng-if="vm.filtersList.length === 0">
-                    {{::"Almeno una categoria" | translate}}
+                    {{"Almeno una categoria" | translate}}
                 </span>
                 <span 
                     class="label-select-name"
                     ng-if="vm.areAllActive">
-                    {{::"Tutte le categorie" | translate}}
+                    {{"Tutte le categorie" | translate}}
                 </span>
                 <span 
                     class="label-select-name"
@@ -46,10 +46,10 @@
                     <span 
                         class="label-select-others">
                         <span ng-if="vm.othersCount !== '0' && vm.othersCount === '1'">
-                            {{::"+ 1 altra categoria" | translate}}
+                            {{"+ 1 altra categoria" | translate}}
                         </span>
                         <span ng-if="vm.othersCount !== '0' && vm.othersCount !== '1'">
-                            {{::"+ altre " | translate}}{{vm.othersCount + " "}}{{::"categorie" | translate}}
+                            {{"+ altre " | translate}}{{vm.othersCount + " "}}{{"categorie" | translate}}
                         </span>
                     <span>
                 </span>
@@ -78,7 +78,7 @@
                     id="search"
                     class="input search-input"
                     name="search"
-                    placeholder="{{::'cerca un punto d interesse' | translate}}"
+                    placeholder="{{'cerca un punto d interesse' | translate}}"
                     autocorrect="off"
                     autocomplete="off"
                     spellcheck="false" 
@@ -92,7 +92,7 @@
                 ng-style="{
                     'color': vm.colors.search.color
                 }">
-                {{::"Cerca" | translate}}
+                {{"Cerca" | translate}}
             </button>
 
         </div>
@@ -156,7 +156,7 @@
                     <span 
                         class="list-info-title"
                         style="text-align: center">
-                        {{::"Nessun risultato trovato" | translate}}
+                        {{"Nessun risultato trovato" | translate}}
                     </span>
                 </ion-item>
             </ion-list>

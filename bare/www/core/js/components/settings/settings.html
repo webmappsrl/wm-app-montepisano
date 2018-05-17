@@ -4,7 +4,7 @@
     ng-controller="SettingsController as vm">
     <ion-nav-title>
         <span>
-            {{::"MAPPA OFFLINE" | translate}}
+            {{"MAPPA OFFLINE" | translate}}
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">
@@ -25,7 +25,7 @@
             </div>
 
             <div class="card-title">
-                <span class="card-title-inner">{{::"Scarica la mappa e abilita la funzione di navigazione offline" | translate}}</span>
+                <span class="card-title-inner">{{"Scarica la mappa e abilita la funzione di navigazione offline" | translate}}</span>
             </div>
             <button
                 ng-style="{
@@ -34,7 +34,7 @@
                 }"
                 class="button-download button button-block button-half"
                 ng-click="vm.openOfflinePage()">
-                {{::"OFFLINE" | translate}}
+                {{"OFFLINE" | translate}}
             </button>
             <br/>
         </div>

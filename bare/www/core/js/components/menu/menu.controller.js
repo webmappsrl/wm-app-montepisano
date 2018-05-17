@@ -45,6 +45,7 @@ angular.module('webmapp')
     vm.isBrowser = Utils.isBrowser();
 
     vm.menuWidth = Math.min(window.innerWidth - 50, 400);
+    vm.privacyUrl = 'http://www.webmapp.it/privacy/';
 
     if (!CONFIG.OPTIONS.mainMenuHideWebmappPage) {
         mainMenuItems[mainMenuItems.length] = {
@@ -58,6 +59,21 @@ angular.module('webmapp')
             type: 'attributionInternal',
             label: 'Attribution'
         };
+    }
+
+    if (CONFIG.COMMUNICATION.privacy) {
+        if (CONFIG.COMMUNICATION.privacy[vm.currentLang]) {
+            vm.privacyUrl = CONFIG.COMMUNICATION.privacy[vm.currentLang];
+        }
+        else if (CONFIG.COMMUNICATION.privacy[vm.defaultLang]) {
+            vm.privacyUrl = CONFIG.COMMUNICATION.privacy[vm.defaultLang];
+        }
+        else if (typeof CONFIG.COMMUNICATION.privacy !== 'string') {
+            vm.privacyUrl = CONFIG.COMMUNICATION.privacy[Object.keys(CONFIG.COMMUNICATION.privacy)[0]];
+        }
+        else {
+            vm.privacyUrl = CONFIG.COMMUNICATION.privacy;
+        }
     }
 
     for (var i in mainMenuItems) {
@@ -123,7 +139,7 @@ angular.module('webmapp')
 
         loginScope.loginMode = '';
         loginScope.registrationMode = false;
-        loginScope.urlPrivacy = CONFIG.COMMUNICATION.privacy;
+        loginScope.urlPrivacy = vm.privacyUrl;
         loginScope.urlRecoveryPassword = CONFIG.LOGIN.passwordRecoveryURL ? CONFIG.LOGIN.passwordRecoveryURL : false;
 
         loginScope.facebook = typeof CONFIG.COMMUNICATION.facebookId !== 'undefined';

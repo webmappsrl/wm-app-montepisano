@@ -102,7 +102,7 @@
                         class="contacts-list__element"
                         ng-if="vm.feature.email">
                         <a href="mailto:{{vm.feature.email}}?subject=informazioni">
-                            <i class="icon ion-ios-email-outline"></i> {{::"Contattaci" | translate}}
+                            <i class="icon ion-ios-email-outline"></i> {{"Contattaci" | translate}}
                         </a>
                     </li>
                 </ul>
@@ -220,7 +220,7 @@
                         class="opening-hours"
                         ng-if="vm.featureDetails.opening_hours">
                         <i class="icon ion-clock"></i>
-                        <span class="label">{{::"Orari di Apertura" | translate}}</span>
+                        <span class="label">{{"Orari di Apertura" | translate}}</span>
                         {{vm.featureDetails.opening_hours}}
                     </div>
 
@@ -234,7 +234,7 @@
                             class="details-read-more"
                             ng-if="vm.mainDescription.more"
                             ng-click="vm.openTextModal()">
-                            {{::"leggi tutto" | translate}} <i class="icon ion-ios-arrow-thin-right"></i>
+                            {{"leggi tutto" | translate}} <i class="icon ion-ios-arrow-thin-right"></i>
                         </a>
 
                         <a
@@ -242,7 +242,7 @@
                             class="details-read-more"
                             ng-if="vm.hasTable && !vm.onlyTable"
                             ng-click="vm.openTableModal()">
-                            {{::"dettagli" | translate}} <i class="icon ion-ios-arrow-thin-right"></i>
+                            {{"dettagli" | translate}} <i class="icon ion-ios-arrow-thin-right"></i>
                         </a>
                     </div>
                 </div>
@@ -253,7 +253,7 @@
                         class="opening-hours"
                         ng-if="vm.featureDetails.opening_hours">
                         <i class="icon ion-clock"></i>
-                        <span class="label">{{::"Orari di Apertura:" | translate}}</span>
+                        <span class="label">{{"Orari di Apertura:" | translate}}</span>
                         {{vm.featureDetails.opening_hours}}
                     </div>
                     <div class="details-description-expandable" ng-class="{'show-full': vm.fullDescription}"
@@ -281,7 +281,7 @@
                             class="details-read-more"
                             ng-if="vm.hasTable && !vm.onlyTable"
                             ng-click="vm.openTableModal()">
-                            {{::"dettagli" | translate}} <i class="icon ion-ios-arrow-thin-right"></i>
+                            {{"dettagli" | translate}} <i class="icon ion-ios-arrow-thin-right"></i>
                         </a>
                     </div>
                 </div>
@@ -372,7 +372,7 @@
             <div
                 class="itinerario-details-tappe"
                 ng-if="vm.stages">
-                <h2 class="itinerario-tappe-title">{{::"TAPPE" | translate}}</h2>
+                <h2 class="itinerario-tappe-title">{{"TAPPE" | translate}}</h2>
 
                 <ul class="list itinerario-tappe-list">
                     <li

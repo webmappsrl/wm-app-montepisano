@@ -4,7 +4,7 @@
     ng-controller="LanguagesController as vm">
     <ion-nav-title>
         <span>
-            {{::"Impostazioni" | translate}}
+            {{"Impostazioni" | translate}}
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">
@@ -17,19 +17,7 @@
         'background': COLORS.global.background
     }">
         <div class="modal-content">
-            <span class="modal-title" ng-if="vm.languages">{{::"SELEZIONA LA LINGUA" | translate}}</span>
-            <!-- <ion-list>
-                <label 
-                    class="item item-checkbox ng-not-empty" 
-                    ng-repeat="language in vm.languages"
-                    ng-model="obj.value" 
-                    ng-class="{
-                        'is-selected': obj.value,
-                        'is-not-selected': !obj.value
-                    }">
-                </label>
-            </ion-list> -->
-            
+            <span class="modal-title" ng-if="vm.languages">{{"SELEZIONA LA LINGUA" | translate}}</span>
             <div class="section" ng-if="vm.languages">
                 <label
                     class="item item-radio ng-not-empty" 
@@ -50,22 +38,22 @@
                     </div>
                 </label>
             </div>
-            <span class="modal-title">{{::"PRIVACY" | translate}}</span>
-            <div class="section">
+            <span ng-if="vm.privacyUrl" class="modal-title">{{"PRIVACY" | translate}}</span>
+            <div ng-if="vm.privacyUrl" class="section">
                 <p>
-                    {{::"Leggi la" | translate}} <a href="" ng-click="vm.openInAppBrowser(vm.privacyUrl)" target="_blank">{{::"normativa sulla privacy" | translate}}</a>
+                    {{"Leggi la" | translate}} <a href="" ng-click="vm.openInExternalBrowser(vm.privacyUrl)" target="_blank">{{"normativa sulla privacy" | translate}}</a>
                 </p>
             </div>
-            <span class="modal-title">{{::"APP" | translate}}</span>
+            <span class="modal-title">{{"APP" | translate}}</span>
             <div class="section">
                 <p>
-                    {{::"App sviluppata da Webmapp Srl" | translate}}
+                    {{"App sviluppata da Webmapp Srl" | translate}}
                 </p>
                 <p>
-                    {{::"Versione" | translate}} {{vm.version}}
+                    {{"Versione" | translate}} {{vm.version}}
                 </p>
                 <p>
-                    <a href="" ng-click="vm.openInAppBrowser('http://www.webmapp.it/')" target="_blank">www.webmapp.it</a>
+                    <a href="" ng-click="vm.openInExternalBrowser('http://www.webmapp.it/')" target="_blank">www.webmapp.it</a>
                 </p>
             </div>
         </div>
