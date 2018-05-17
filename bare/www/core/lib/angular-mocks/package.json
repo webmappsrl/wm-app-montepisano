@@ -1,0 +1,56 @@
+{
+  "_from": "angular-mocks@1.5.3",
+  "_id": "angular-mocks@1.5.3",
+  "_inBundle": false,
+  "_integrity": "sha1-t0rdtcN3PGvGVhIOXqVQi37aP8I=",
+  "_location": "/angular-mocks",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "angular-mocks@1.5.3",
+    "name": "angular-mocks",
+    "escapedName": "angular-mocks",
+    "rawSpec": "1.5.3",
+    "saveSpec": null,
+    "fetchSpec": "1.5.3"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/angular-mocks/-/angular-mocks-1.5.3.tgz",
+  "_shasum": "b74addb5c3773c6bc656120e5ea5508b7eda3fc2",
+  "_spec": "angular-mocks@1.5.3",
+  "_where": "/Users/webmapps.r.l./Documents/webmapp-generator/bare",
+  "author": {
+    "name": "Angular Core Team",
+    "email": "angular-core+npm@google.com"
+  },
+  "bugs": {
+    "url": "https://github.com/angular/angular.js/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "AngularJS mocks for testing",
+  "homepage": "http://angularjs.org",
+  "keywords": [
+    "angular",
+    "framework",
+    "browser",
+    "mocks",
+    "testing",
+    "client-side"
+  ],
+  "license": "MIT",
+  "main": "angular-mocks.js",
+  "name": "angular-mocks",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angular/angular.js.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.5.3"
+}

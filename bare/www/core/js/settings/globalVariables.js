@@ -1,0 +1,2 @@
+var templateBasePath = 'core/',
+    templateCustomPath = '';

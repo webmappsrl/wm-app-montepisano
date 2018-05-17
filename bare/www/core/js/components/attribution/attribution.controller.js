@@ -1,10 +1,7 @@
 angular.module('webmapp')
 
     .controller('AttributionController', function AttributionController(
-        $rootScope,
-        $templateCache,
         Utils,
-        $ionicPopup,
         CONFIG
     ) {
         var vm = {};
