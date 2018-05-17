@@ -44,6 +44,7 @@ angular.module('webmapp')
         vm.imageUrl = CONFIG.OFFLINE.imagesUrl;
         vm.goBack = Utils.goBack;
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+        vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
         vm.packages = {};
         vm.userPackagesId = {};
         vm.userDownloadedPackages = {};
@@ -137,23 +138,6 @@ angular.module('webmapp')
                 });
         };
 
-        var getTranslatedContent = function (id) {
-            $ionicLoading.show({
-                template: '<ion-spinner></ion-spinner>'
-            });
-            $.getJSON(CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.wordPressEndpoint + 'route/' + id, function (data) {
-                vm.title = data.title.rendered;
-                vm.description = data.content.rendered;
-                vm.description = vm.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'href="" onclick="window.open(\'$1\', \'_system\', \'\')"');
-                vm.description = $sce.trustAsHtml(vm.description);
-                vm.gallery = data.n7webmap_route_media_gallery;
-                $ionicLoading.hide();
-            }).fail(function () {
-                $ionicLoading.hide();
-                console.error('translation retrive error');
-            });
-        };
-
         vm.openVoucherModal = function () {
             if (vm.isLoggedIn) {
                 PackageService.requestPackageWithVoucher(routeDetail.id);
@@ -200,7 +184,30 @@ angular.module('webmapp')
 
                 if (routeDetail) {
                     vm.title = routeDetail.title.rendered;
-                    vm.description = routeDetail.content.rendered;
+                    if (routeDetail.packageTitle) {
+                        if (routeDetail.packageTitle[vm.currentLang]) {
+                            vm.title = routeDetail.packageTitle[vm.currentLang];
+                        }
+                        else if (routeDetail.packageTitle[vm.defaultLang]) {
+                            vm.title = routeDetail.packageTitle[vm.defaultLang];
+                        }
+                        else if (typeof routeDetail.packageTitle !== 'string') {
+                            vm.title = routeDetail.packageTitle[Object.keys(routeDetail.packageTitle)[0]];
+                        }
+                    }
+
+                    if (routeDetail.packageDescription) {
+                        if (routeDetail.packageDescription[vm.currentLang]) {
+                            vm.description = routeDetail.packageDescription[vm.currentLang];
+                        }
+                        else if (routeDetail.packageDescription[vm.defaultLang]) {
+                            vm.description = routeDetail.packageDescription[vm.defaultLang];
+                        }
+                        else if (typeof routeDetail.packageDescription !== 'string') {
+                            vm.description = routeDetail.packageDescription[Object.keys(routeDetail.packageDescription)[0]];
+                        }
+                    }
+
                     vm.description = vm.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'href="" onclick="window.open(\'$1\', \'_system\', \'\')"');
                     vm.description = $sce.trustAsHtml(vm.description);
                     vm.gallery = routeDetail.n7webmap_route_media_gallery;
@@ -218,12 +225,7 @@ angular.module('webmapp')
 
                 vm.hasGallery = vm.imageGallery.length > 0;
 
-                for (var lang in routeDetail.wpml_translations) {
-                    if (routeDetail.wpml_translations[lang].locale.substring(0, 2) === vm.currentLang) {
-                        getTranslatedContent(routeDetail.wpml_translations[lang].id);
-                        break;
-                    }
-                }
+                $ionicLoading.hide();
             })
         );
 
@@ -262,7 +264,10 @@ angular.module('webmapp')
         );
 
         registeredEvents.push(
-            $scope.$on('$ionicView.enter', function () {
+            $scope.$on('$ionicView.beforeEnter', function () {
+                $ionicLoading.show({
+                    template: '<ion-spinner></ion-spinner>'
+                });
                 PackageService.getRoutes();
                 PackageService.getDownloadedPackages();
 

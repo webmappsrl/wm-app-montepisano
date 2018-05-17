@@ -36,7 +36,7 @@ angular.module('webmapp')
 
         var communicationConf = CONFIG.COMMUNICATION,
             currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : 'it',
-            defaultLang = (CONFIG.LANGUAGE && CONFIG.LANGUAGE.actual) ? CONFIG.LANGUAGE.actual.substring(0, 2) : 'it';
+            defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
 
         var packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : null,
             userPackagesId = localStorage.$wm_userPackagesId ? JSON.parse(localStorage.$wm_userPackagesId) : null,
@@ -53,7 +53,8 @@ angular.module('webmapp')
 
         var userData = Auth.isLoggedIn() ? Auth.getUserData() : null,
             asyncTranslations = 0,
-            asyncRoutes = 0;
+            asyncRoutes = 0,
+            asyncRouteTranslations = 0;
 
         var modalScope = $rootScope.$new(),
             modal = {},
@@ -95,7 +96,9 @@ angular.module('webmapp')
                     }
                 }
 
-                result[packId].packageTitle = {};
+                if (!result[packId].packageTitle) {
+                    result[packId].packageTitle = {};
+                }
                 result[packId].packageTitle[defaultLang] = result[packId].title.rendered;
 
                 if (result[packId].wpml_translations) {
@@ -104,6 +107,14 @@ angular.module('webmapp')
                         result[packId].packageTitle[lang] = result[packId].wpml_translations[p].post_title;
                     }
                 }
+
+                if (!result[packId].packageDescription) {
+                    result[packId].packageDescription = {};
+                }
+                if (packages[packId] && packages[packId].packageDescription) {
+                    result[packId].packageDescription = packages[packId].packageDescription;
+                }
+                result[packId].packageDescription[defaultLang] = result[packId].content.rendered;
             }
 
             packages = result;
@@ -156,6 +167,25 @@ angular.module('webmapp')
                     });
         };
 
+        var getTranslatedRoute = function (id, apiId, lang) {
+            $.getJSON(CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.wordPressEndpoint + 'route/' + apiId, function (data) {
+                packages[id].packageTitle[lang] = data.title.rendered;
+                packages[id].packageDescription[lang] = data.content.rendered;
+
+                asyncRouteTranslations--;
+                if (asyncRouteTranslations === 0 && asyncRoutes === 0) {
+                    $rootScope.$emit('packages-updated', packages);
+                }
+                localStorage.$wm_packages = JSON.stringify(packages);
+            }).fail(function () {
+                asyncRouteTranslations--;
+                if (asyncRouteTranslations === 0 && asyncRoutes === 0) {
+                    $rootScope.$emit('packages-updated', packages);
+                }
+                console.error('Route translation retrive error');
+            });
+        };
+
         var getTaxonomyTranslated = function (taxonomyType, id, lang) {
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '/' + id + '?lang=' + lang)
                 .then(function (data) {
@@ -187,7 +217,8 @@ angular.module('webmapp')
          */
         packageService.getRoutes = function () {
             //Prevent multiple requests
-            if (asyncRoutes > 0) {
+            if (asyncRoutes > 0 || asyncTranslations > 0) {
+                $rootScope.$emit('packages-updated', packages);
                 return;
             }
 
@@ -204,10 +235,15 @@ angular.module('webmapp')
                     mergePackages(data);
 
                     asyncRoutes = 0;
+                    asyncRouteTranslations = 0;
 
                     for (var i in packages) {
                         asyncRoutes++;
                         getImage(i);
+                        for (var j in packages[i].wpml_translations) {
+                            asyncRouteTranslations++;
+                            getTranslatedRoute(i, packages[i].wpml_translations[j].id, packages[i].wpml_translations[j].locale.substring(0, 2));
+                        }
                     }
 
                     if (asyncRoutes === 0) {
