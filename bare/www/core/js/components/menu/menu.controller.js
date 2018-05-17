@@ -87,7 +87,7 @@ angular.module('webmapp')
         }
 
         vm.advancedMenuItems.push({
-            label: $translate.instant(mainMenuItems[i].label),
+            label: mainMenuItems[i].label,
             url: currentUrl,
             icon: mainMenuItems[i].icon,
             color: mainMenuItems[i].color,
