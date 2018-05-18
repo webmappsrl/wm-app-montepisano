@@ -257,7 +257,8 @@
                         {{vm.featureDetails.opening_hours}}
                     </div>
                     <div class="details-description-expandable" ng-class="{'show-full': vm.fullDescription}"
-                        ng-if="vm.feature.description && vm.feature.description.expandable">
+                        ng-if="vm.feature.description && vm.feature.description.expandable"
+                        ng-click="vm.toggleDescription()">
                         <p ng-bind-html="vm.feature.description || vm.feature.title"></p>
                         <div class="details-no-modal-read-more" ng-style="
                             !vm.fullDescription ? {
@@ -267,7 +268,7 @@
                             } : {
                                 'background': 'transparent'
                             }">
-                            <span ng-click="vm.toggleDescription()">
+                            <span>
                                 {{vm.fullDescription ? "nascondi" : "leggi tutto" | translate}}
                             </span>
                         </div>

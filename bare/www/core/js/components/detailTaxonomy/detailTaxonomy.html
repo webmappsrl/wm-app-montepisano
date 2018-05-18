@@ -26,7 +26,8 @@
         <div class="detailTaxonomy-image">
             <img ng-src="{{vm.item.featured_image.sizes.medium}}">
         </div>
-        <div class="detailTaxonomy-description" ng-class="{'show-full': vm.fullDescription}">
+        <div class="detailTaxonomy-description" ng-class="{'show-full': vm.fullDescription}"
+            ng-click="vm.toggleDescription()">
             <span ng-if="vm.item.description[vm.currentLang]">{{vm.item.description[vm.currentLang]}}</span>
             <span ng-if="vm.item.description[vm.defaultLang] && !vm.item.description[vm.currentLang]">{{vm.item.description[vm.defaultLang]}}</span>
             <span ng-if="vm.item.description && !vm.item.description[vm.defaultLang] && !vm.item.description[vm.currentLang]">{{vm.item.description}}</span>
@@ -38,7 +39,7 @@
             } : {
                 'background': 'transparent'
             }">
-                <span ng-click="vm.toggleDescription()">
+                <span>
                     {{vm.fullDescription ? "nascondi" : "leggi tutto" | translate}}
                 </span>
             </div>
