@@ -53,6 +53,7 @@ angular.module('webmapp')
             $window.localStorage.language = JSON.stringify(lang.substring(0, 2));
             vm.currentLang = lang.substring(0, 2);
             updatePrivacyUrl();
+            $rootScope.$emit('changed-language', lang.substring(0, 2));
             Utils.forceDigest();
         };
 
