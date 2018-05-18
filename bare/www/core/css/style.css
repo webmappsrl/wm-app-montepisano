@@ -3864,6 +3864,45 @@ ion-content div.static-content.card-content {
       font-size: 45px; } }
 
 /* custom style goes here */
-.ionic_toast_close {
+/* ------------------------------------ *\
+   #TOAST
+\* ------------------------------------ */
+.ionic_toast_sticky .ionic_toast_close {
   left: 4px;
-  visibility: hidden; }
+  overflow: hidden;
+  width: 0;
+  height: 0; }
+
+.ionic_toast > .toast_section {
+  padding: 10px;
+  background: rgba(96, 88, 70, 0.9); }
+
+.toast-container .toast-alert-icon {
+  display: none; }
+  .toast-container .toast-alert-icon i {
+    color: #ff1500;
+    font-size: 40px;
+    float: left;
+    padding: 15px 15px; }
+
+.toast-container .toast-content {
+  float: left;
+  text-align: center;
+  width: 100%; }
+  .toast-container .toast-content .toast-message {
+    font-weight: 700;
+    font-size: 20px;
+    height: 45px; }
+  .toast-container .toast-content .toast-buttons {
+    padding: 3px 20px; }
+    .toast-container .toast-content .toast-buttons div {
+      float: left;
+      margin: 0 20px;
+      width: calc((100% / 2) - 40px);
+      text-transform: uppercase;
+      padding: 4px 0;
+      background: #aaa; }
+      .toast-container .toast-content .toast-buttons div.pause-button {
+        background: #ECBE41; }
+      .toast-container .toast-content .toast-buttons div.stop-button {
+        background: #FF4108; }
