@@ -1,34 +1,34 @@
 {
-  "name": "webmapp-starter",
-  "version": "1.0.0",
-  "description": "Webmapp Starter Kit",
-  "main": "gulpfile.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "gulp set && cd bare && npm install"
-  },
-  "keywords": [
-    "webmapp"
-  ],
-  "dependencies": {
-    "del": "^3.0.0",
-    "fs": "~0.0.1-security",
-    "gulp": "^3.9.1",
-    "gulp-cheerio": "^0.6.2",
-    "gulp-json-editor": "^2.2.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-replace": "^0.6.1",
-    "gulp-streamify": "^1.0.2",
-    "gulp-symlink": "^2.1.4",
-    "ionic-toast": "^0.4.1",
-    "replace": "^0.3.0",
-    "request": "^2.81.0",
-    "require": "^2.4.20",
-    "shelljs": "^0.7.8",
-    "vinyl-source-stream": "^1.1.0",
-    "yargs": "^8.0.2"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {}
+    "name": "webmapp-starter",
+    "version": "1.0.0",
+    "description": "Webmapp Starter Kit",
+    "main": "gulpfile.js",
+    "scripts": {
+        "test": "cd bare && karma start karma.conf.js",
+        "postinstall": "gulp set && cd bare && npm install"
+    },
+    "keywords": [
+        "webmapp"
+    ],
+    "dependencies": {
+        "del": "^3.0.0",
+        "fs": "~0.0.1-security",
+        "gulp": "^3.9.1",
+        "gulp-cheerio": "^0.6.2",
+        "gulp-json-editor": "^2.2.1",
+        "gulp-rename": "^1.2.2",
+        "gulp-replace": "^0.6.1",
+        "gulp-streamify": "^1.0.2",
+        "gulp-symlink": "^2.1.4",
+        "ionic-toast": "^0.4.1",
+        "replace": "^0.3.0",
+        "request": "^2.81.0",
+        "require": "^2.4.20",
+        "shelljs": "^0.7.8",
+        "vinyl-source-stream": "^1.1.0",
+        "yargs": "^8.0.2"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {}
 }

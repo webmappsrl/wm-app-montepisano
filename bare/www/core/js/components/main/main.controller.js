@@ -40,7 +40,10 @@ angular.module('webmapp')
 
     vm.userData = {};
     vm.outOfTrackDate = 0;
+    vm.inTrackDate = 0;
     vm.maxOutOfTrack = 200;
+    vm.showToast = false;
+
     if (CONFIG && CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) {
         vm.maxOutOfTrack = CONFIG.MAIN.NAVIGATION.trackBoundsDistance;
     }
@@ -609,7 +612,7 @@ angular.module('webmapp')
 
             if (vm.isNavigating && !vm.isPaused) {
 
-                vm.checkOutOfTrack(lat, long);
+
 
                 if (realTimeTracking.enabled && vm.userData.ID) {
                     // vm.positionsToSend.push({
@@ -1039,6 +1042,7 @@ angular.module('webmapp')
         }
 
 
+
         if (vm.isOutsideBoundingBox) {
             $ionicPopup.alert({
                 title: $translate.instant("ATTENZIONE"),
@@ -1050,6 +1054,9 @@ angular.module('webmapp')
             });
             return;
         }
+
+
+
 
         vm.dragged = false;
 
@@ -1079,6 +1086,7 @@ angular.module('webmapp')
         vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
         $rootScope.$emit('is-navigating', vm.isNavigating);
         $rootScope.$emit('navigation-path', vm.stopNavigationUrlParams);
+        vm.outOfTrackInterval = setInterval(function() { vm.checkOutOfTrack(prevLatLong) }, 1000);
 
         setTimeout(function() {
             if (prevLatLong) {
@@ -1096,7 +1104,10 @@ angular.module('webmapp')
         vm.isPaused = true;
         vm.timeInMotionBeforePause = Date.now() - vm.navigationStartTime + vm.timeInMotionBeforePause;
         vm.distanceTravelledBeforePause = vm.distanceTravelled;
-        clearInterval(vm.navigationInterval);
+        clearInterval(vm.outOfTrackInterval)
+        vm.outOfTrackDate = 0;
+        vm.inTrackDate = 0;
+        hideOutOfTrackToast();
     };
 
     vm.resumeNavigation = function() {
@@ -1105,12 +1116,16 @@ angular.module('webmapp')
         vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
         vm.distanceTravelled = 0;
         vm.firstPositionSet = false;
+        vm.outOfTrackInterval = setInterval(function() { vm.checkOutOfTrack(prevLatLong) }, 1000);
     };
 
     vm.stopNavigation = function() {
+
         vm.isPaused = false;
         vm.isNavigating = false;
+        clearInterval(vm.outOfTrackInterval)
         vm.outOfTrackDate = 0;
+        vm.inTrackDate = 0;
         hideOutOfTrackToast();
         clearInterval(vm.navigationInterval);
         cleanNavigationValues();
@@ -1373,16 +1388,20 @@ angular.module('webmapp')
         audio.play();
     };
 
-    function showOutOfTrackToast() {
-        ionicToast.show('Attenzione! Sei fuori dal percorso.', 'top', true, 5000);
+    function showOutOfTrackToast(distance) {
+        ionicToast.show('Attenzione! Sei fuori dal percorso. ' + distance.toFixed(0) + ' m', 'top', true, 5000);
+        vm.showToast = true;
     };
 
     function hideOutOfTrackToast() {
         ionicToast.hide();
+        vm.showToast = false;
     };
 
-    vm.checkOutOfTrack = function(lat, long) {
+    vm.checkOutOfTrack = function(latLong) {
 
+        var lat = latLong.lat;
+        var long = latLong.long;
         if (vm.stopNavigationUrlParams && vm.stopNavigationUrlParams.id &&
             vm.stopNavigationUrlParams.parentId) {
 
@@ -1392,31 +1411,51 @@ angular.module('webmapp')
                 .then(function(feature) {
                     var dist = turf.pointToLineDistance.default([long, lat], feature);
                     return dist;
-                });
+                })
+                .then(function(distance) {
+                    var currTime = Date.now();
+                    if ((distance * 1000) <= vm.maxOutOfTrack) {
 
-            var currTime = Date.now();
-            distFromTrack.then(function(distance) {
-                if ((distance * 1000) >= vm.maxOutOfTrack) {
-                    if (!vm.outOfTrackDate) {
-                        vm.outOfTrackDate = currTime;
-                        showOutOfTrackToast();
-                        makeNotificationSound();
-                    }
-                } else {
-                    if (vm.outOfTrackDate) {
-                        var diffMs = (currTime - vm.outOfTrackDate);
-                        var diffDays = Math.floor(diffMs / 86400000); // days
-                        var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
-                        var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
-                        if (!diffDays && !diffHrs && diffMins >= 5) {
+                        if (vm.outOfTrackDate) {
                             vm.outOfTrackDate = 0;
+                        }
 
+                        if (!vm.inTrackDate) {
+                            vm.inTrackDate = currTime;
+                        } else {
+                            var diffMs = (currTime - vm.inTrackDate);
+                            var diffSecs = diffMs / 1000;
+                            if (diffSecs >= 5) {
+                                hideOutOfTrackToast();
+                            } else {
+                                if (vm.showToast)
+                                    showOutOfTrackToast((distance * 1000));
+                            }
+                        }
+
+                    } else {
+                        if (vm.inTrackDate) {
+                            vm.inTrackDate = 0;
+                        }
+
+                        if (!vm.outOfTrackDate) {
+                            vm.outOfTrackDate = currTime;
+                        } else {
+                            var diffMs = (currTime - vm.outOfTrackDate);
+                            var diffSecs = diffMs / 1000;
+                            if (diffSecs >= 5) {
+                                if (!vm.showToast)
+                                    makeNotificationSound();
+                                showOutOfTrackToast((distance * 1000));
+                            }
                         }
                     }
-                }
-            })
+                });
 
+        } else {
+            console.log('At least one of vm.stopNavigationUrlParams is undefined');
         }
+
     };
 
     return vm;
