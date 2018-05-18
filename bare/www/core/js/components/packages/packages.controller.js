@@ -221,7 +221,7 @@ angular.module('webmapp')
         vm.doRefresh = function (refresher) {
             console.log('Begin refresh');
 
-            PackageService.getRoutes();
+            PackageService.getRoutes(true);
 
             if (Auth.isLoggedIn()) {
                 PackageService.getPackagesIdByUserId();
@@ -289,7 +289,7 @@ angular.module('webmapp')
                     template: '<ion-spinner></ion-spinner>'
                 });
                 PackageService.getTaxonomy('activity');
-                PackageService.getRoutes();
+                PackageService.getRoutes(true);
             })
         );
 

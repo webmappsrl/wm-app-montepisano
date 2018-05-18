@@ -551,9 +551,8 @@ angular.module('webmapp')
     };
 
     vm.openImageModal = function() {
-        if (vm.imageGallery.length > 1) {
+        if (vm.imageGallery.length > 1 || (vm.imageGallery.length === 1 && vm.imageGallery[0].caption && vm.imageGallery[0].caption !== "")) {
             modalImage.show();
-            console.log
         }
     };
 

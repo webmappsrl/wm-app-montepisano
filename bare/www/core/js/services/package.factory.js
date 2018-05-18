@@ -215,7 +215,7 @@ angular.module('webmapp')
          * @event packages-updated
          * @event categories-updated
          */
-        packageService.getRoutes = function () {
+        packageService.getRoutes = function (updateValues) {
             //Prevent multiple requests
             if (asyncRoutes > 0 || asyncTranslations > 0) {
                 $rootScope.$emit('packages-updated', packages);
@@ -224,6 +224,10 @@ angular.module('webmapp')
 
             if (packages) {
                 $rootScope.$emit('packages-updated', packages);
+            }
+
+            if (!updateValues) {
+                return;
             }
 
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/?per_page=100')

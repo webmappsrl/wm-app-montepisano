@@ -134,7 +134,7 @@
                     <div class="details-image">
                         <span
                             class="image-expand"
-                            ng-if="!vm.isAreaDetail && vm.imageGallery.length > 1"
+                            ng-if="!vm.isAreaDetail && (vm.imageGallery.length > 1 || (vm.imageGallery.length === 1 && vm.imageGallery[0].caption && vm.imageGallery[0].caption !== ''))"
                             ng-click="vm.openImageModal()">
                             <i class="icon wm-icon-ios7-more"></i>
                         </span>
