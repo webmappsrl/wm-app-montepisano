@@ -3,46 +3,57 @@ describe('MainController', function() {
     beforeEach(module('webmapp'));
 
 
-    describe('test controller', function() {
-        var scope, vm;
+    describe('MainController', function() {
+        var scope, rootScope, vm;
         var MapService;
         var CONFIG;
+        var $q;
+        var deferred;
+        var $httpBackend;
 
-        beforeEach(inject(function($rootScope, $controller, _MapService_) {
-            scope = $rootScope.$new();
-            vm = $controller('MainController', { $scope: scope });
+        beforeEach(inject(function(_$httpBackend_, _$rootScope_, $controller, _$q_, _MapService_) {
+
+            rootScope = _$rootScope_;
+            scope = _$rootScope_.$new();
             MapService = _MapService_;
-            // spyOn(MapService, 'getFeatureById');
+            $httpBackend = _$httpBackend_;
+            vm = $controller('MainController', { $scope: scope });
+
+            $q = _$q_;
+
         }));
 
-        it('It shoud be definbed', function() {
-
-            expect(vm).toBeDefined();
-        });
-        it('Function and variables shoud be be defined', function() {
 
 
-            expect(vm.checkOutOfTrack).toBeDefined();
-            expect(vm.stopNavigationUrlParams).toBeDefined();
-            expect(vm.maxOutOfTrack).toBeDefined();
-            // expect(vm.maxOutOfTrack).toBe(100);
-            expect(vm.outOfTrackDate).toBeDefined();
-            expect(vm.inTrackDate).toBeDefined();
+        it('Call checkOutOfTrack successfully  ', function() {
 
 
-        });
-
-        it('Map service has been called.', function() {
-
-            spyOn(vm, 'checkOutOfTrack');
-            spyOn(MapService, 'getFeatureById');
-            vm.checkOutOfTrack();
-            vm.stopNavigationUrlParams.parentId = "Tappe";
+            spyOn(window.turf.pointToLineDistance, 'default').and.returnValue(10);
+            vm.stopNavigationUrlParams.parentId = 'Tappe';
             vm.stopNavigationUrlParams.id = 170;
+            deferred = $q.defer();
 
-            expect(vm.checkOutOfTrack).toHaveBeenCalled();
+            var feature = {
+                type: "Feature",
+                geometry: {
+                    type: "LineString",
+                    coordinates: [
+                        [125.6, 10.1],
+                        [1, 1]
+                    ]
+                }
+            };
+            spyOn(MapService, 'getFeatureById').and.returnValue(deferred.promise);
+            spyOn(vm, 'handleDistanceToast').and.callThrough();
+            $httpBackend.whenGET(function(url) { return true; }).respond(200);
+            vm.checkOutOfTrack([47.718, 10.4]);
+            deferred.resolve(feature);
+
+            rootScope.$digest();
+
             expect(MapService.getFeatureById).toHaveBeenCalled();
-
+            expect(window.turf.pointToLineDistance.default).toHaveBeenCalled();
+            expect(vm.handleDistanceToast).toHaveBeenCalledWith(10);
 
         });
 

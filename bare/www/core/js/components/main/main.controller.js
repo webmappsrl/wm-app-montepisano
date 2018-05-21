@@ -1400,6 +1400,7 @@ angular.module('webmapp')
 
     vm.checkOutOfTrack = function(latLong) {
 
+
         var lat = latLong.lat;
         var long = latLong.long;
         if (vm.stopNavigationUrlParams && vm.stopNavigationUrlParams.id &&
@@ -1413,50 +1414,56 @@ angular.module('webmapp')
                     return dist;
                 })
                 .then(function(distance) {
-                    var currTime = Date.now();
-                    if ((distance * 1000) <= vm.maxOutOfTrack) {
-
-                        if (vm.outOfTrackDate) {
-                            vm.outOfTrackDate = 0;
-                        }
-
-                        if (!vm.inTrackDate) {
-                            vm.inTrackDate = currTime;
-                        } else {
-                            var diffMs = (currTime - vm.inTrackDate);
-                            var diffSecs = diffMs / 1000;
-                            if (diffSecs >= 5) {
-                                hideOutOfTrackToast();
-                            } else {
-                                if (vm.showToast)
-                                    showOutOfTrackToast((distance * 1000));
-                            }
-                        }
-
-                    } else {
-                        if (vm.inTrackDate) {
-                            vm.inTrackDate = 0;
-                        }
-
-                        if (!vm.outOfTrackDate) {
-                            vm.outOfTrackDate = currTime;
-                        } else {
-                            var diffMs = (currTime - vm.outOfTrackDate);
-                            var diffSecs = diffMs / 1000;
-                            if (diffSecs >= 5) {
-                                if (!vm.showToast)
-                                    makeNotificationSound();
-                                showOutOfTrackToast((distance * 1000));
-                            }
-                        }
+                        vm.handleDistanceToast(distance);
                     }
-                });
 
+                )
         } else {
             console.log('At least one of vm.stopNavigationUrlParams is undefined');
         }
 
     };
+
+    vm.handleDistanceToast = function(distance) {
+        var currTime = Date.now();
+        if ((distance * 1000) <= vm.maxOutOfTrack) {
+
+            if (vm.outOfTrackDate) {
+                vm.outOfTrackDate = 0;
+            }
+
+            if (!vm.inTrackDate) {
+                vm.inTrackDate = currTime;
+            } else {
+                var diffMs = (currTime - vm.inTrackDate);
+                var diffSecs = diffMs / 1000;
+                if (diffSecs >= 5) {
+                    hideOutOfTrackToast();
+                } else {
+                    if (vm.showToast)
+                        showOutOfTrackToast((distance * 1000));
+                }
+            }
+
+        } else {
+            if (vm.inTrackDate) {
+                vm.inTrackDate = 0;
+            }
+
+            if (!vm.outOfTrackDate) {
+                vm.outOfTrackDate = currTime;
+            } else {
+                var diffMs = (currTime - vm.outOfTrackDate);
+                var diffSecs = diffMs / 1000;
+                if (diffSecs >= 5) {
+                    if (!vm.showToast)
+                        makeNotificationSound();
+                    showOutOfTrackToast((distance * 1000));
+                }
+            }
+        }
+    };
+
 
     return vm;
 });
