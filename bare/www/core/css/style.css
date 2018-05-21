@@ -963,18 +963,18 @@ div.detailRoute-footer {
   width: calc(100% - 10px);
   margin: 5px;
   position: relative;
-  height: calc(20vw - 6px - 10px); }
+  height: 70px;
+  text-align: center; }
   .accessibility-buttons-container a {
     display: block;
     float: left;
-    width: calc(20vw - 6px - 10px);
-    padding: 4px;
-    margin: 5.25px;
-    position: relative; }
+    width: calc(100% / 5);
+    position: relative;
+    top: 10px; }
     .accessibility-buttons-container a i {
       color: #f7f9f1;
       font-size: 40px;
-      padding: calc((20vw - 6px - 15px - 40px)/2); }
+      padding: 10px; }
 
 /* Details table */
 .table-details {
@@ -1115,6 +1115,13 @@ div.detailRoute-footer {
    #MEDIA QUERIES
 \* ------------------------------------ */
 /* TODO: use mixin? */
+@media only screen and (max-width: 350px) {
+  .accessibility-buttons-container {
+    height: 50px; }
+    .accessibility-buttons-container a i {
+      font-size: 30px;
+      padding: 5px; } }
+
 @media only screen and (max-height: 567px) and (max-width: 768px) {
   .details-description p {
     font-size: 2rem; } }

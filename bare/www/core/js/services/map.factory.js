@@ -1415,7 +1415,7 @@ angular.module('webmapp')
                 rotate: true
             });
 
-            if (CONFIG.MAP.activateZoomControl || (CONFIG.MAIN && CONFIG.MAIN.MAP.activateZoomControl)) {
+            if (CONFIG.OPTIONS.activateZoomControl || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.activateZoomControl)) {
                 L.control.zoom({
                     position: 'topright'
                 }).addTo(map);
