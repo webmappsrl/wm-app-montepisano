@@ -208,7 +208,7 @@ angular.module('webmapp')
                         }
                     }
 
-                    vm.description = vm.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'href="" onclick="window.open(\'$1\', \'_system\', \'\')"');
+                    vm.description = vm.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'onclick="window.open(\'$1\', \'_system\', \'\')"');
                     vm.description = $sce.trustAsHtml(vm.description);
                     vm.gallery = routeDetail.n7webmap_route_media_gallery;
                     if (vm.gallery && vm.gallery[0] && vm.gallery[0].sizes) {

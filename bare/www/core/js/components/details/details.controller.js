@@ -199,7 +199,7 @@ angular.module('webmapp')
                     feature.description = feature.description.replace(new RegExp(/src="\//g), 'src="' + CONFIG.COMMUNICATION.baseUrl);
                     // feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), '');
                     // feature.description = feature.description.replace(new RegExp(/href="\//g), 'href="' + CONFIG.COMMUNICATION.baseUrl);
-                    feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'href="" onclick="window.open(\'$1\', \'_system\', \'\')"');
+                    feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'onclick="window.open(\'$1\', \'_system\', \'\')"');
                     // feature.description = feature.description.replace(new RegExp(/window.open\(\'#\', \'_system\', \'\'\)/g), '');
 
                     vm.mainDescription = Utils.trimHtml(feature.description, {
@@ -348,7 +348,7 @@ angular.module('webmapp')
                 }
             }
 
-            console.log(feature, vm)
+            // console.log(feature, vm)
         };
 
         modalScope.vm.openFeature = function (feature) {
