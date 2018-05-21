@@ -151,6 +151,7 @@
 .details-image {
   padding: 5px;
   position: relative;
+  min-height: 50px;
   img {
     border: 2px solid #f2f5e8;
     display: block;
@@ -325,15 +326,17 @@
   }
 }
 
-.disability-buttons-container {
+.accessibility-buttons-container {
   width: calc(100% - 10px);
   margin: 5px;
+  position: relative;
+  height: calc(20vw - 6px - 10px);
   a {
-    // display: block;
-    // float: left;
+    display: block;
+    float: left;
     width: calc(20vw - 6px - 10px);
     padding: 4px;
-    margin: 3px;
+    margin: 5.25px;
     position: relative;
     i {
       color: $color-light-03;

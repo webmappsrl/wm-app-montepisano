@@ -73,6 +73,9 @@
 
 .modal-content {
   padding: 15px;
+  .modal-description {
+    margin: 15px 0;
+  }
 }
 
 .modal-title {
@@ -142,9 +145,6 @@
 
     &:last-child {
       border-bottom: none;
-    }
-    &.is-selected {
-      // color: #BF410E;
     }
   }
 }

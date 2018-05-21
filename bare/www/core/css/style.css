@@ -827,7 +827,8 @@ div.detailRoute-footer {
 
 .details-image {
   padding: 5px;
-  position: relative; }
+  position: relative;
+  min-height: 50px; }
   .details-image img {
     border: 2px solid #f2f5e8;
     display: block;
@@ -958,15 +959,19 @@ div.detailRoute-footer {
     top: -5px;
     left: calc(50% - 10px); }
 
-.disability-buttons-container {
+.accessibility-buttons-container {
   width: calc(100% - 10px);
-  margin: 5px; }
-  .disability-buttons-container a {
+  margin: 5px;
+  position: relative;
+  height: calc(20vw - 6px - 10px); }
+  .accessibility-buttons-container a {
+    display: block;
+    float: left;
     width: calc(20vw - 6px - 10px);
     padding: 4px;
-    margin: 3px;
+    margin: 5.25px;
     position: relative; }
-    .disability-buttons-container a i {
+    .accessibility-buttons-container a i {
       color: #f7f9f1;
       font-size: 40px;
       padding: calc((20vw - 6px - 15px - 40px)/2); }
@@ -3002,6 +3007,8 @@ button.popup-close {
 
 .modal-content {
   padding: 15px; }
+  .modal-content .modal-description {
+    margin: 15px 0; }
 
 .modal-title {
   display: block;

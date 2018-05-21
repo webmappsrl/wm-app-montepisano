@@ -148,24 +148,6 @@
                           ng-src="{{vm.feature.image}}">
                     </div>
 
-                    <div class="disability-buttons-container" ng-if="vm.showDisabilityButtons">
-                        <a href="" ng-click="vm.openDisabilityModal()">
-                            <i class="icon wm-icon-wheelchair-15" ng-style="{'background-color': vm.colors.mainBar.background}"></i>
-                        </a>
-                        <a href="" ng-click="vm.openDisabilityModal()">
-                            <i class="icon wm-icon-hearing-impared" ng-style="{'background-color': vm.colors.mainBar.background}"></i>
-                        </a>
-                        <a href="" ng-click="vm.openDisabilityModal()">
-                            <i class="icon wm-icon-visually-impaired" ng-style="{'background-color': vm.colors.mainBar.background}"></i>
-                        </a>
-                        <a href="" ng-click="vm.openDisabilityModal()">
-                            <i class="icon wm-icon-cognitive-impared" style="background-color: #cccccc"></i>
-                        </a>
-                        <a href="" ng-click="vm.openDisabilityModal()">
-                            <i class="icon wm-icon-food-intolerance" ng-style="{'background-color': vm.colors.mainBar.background}"></i>
-                        </a>
-                    </div>
-
                     <ul
                       class="details-related">
                         <li
@@ -210,6 +192,24 @@
                             </a>
                         </li>
                     </ul>
+                </div>
+
+                <div class="accessibility-buttons-container" ng-if="vm.showAccessibilityButtons">
+                    <a href="" ng-click="vm.openAccessibilityModal('mobility')">
+                        <i class="icon wm-icon-wheelchair-15" ng-style="{'background': vm.feature.accessibility.mobility.check ? vm.colors.mainBar.background : '#cccccc'}"></i>
+                    </a>
+                    <a href="" ng-click="vm.openAccessibilityModal('hearing')">
+                        <i class="icon wm-icon-hearing-impared" ng-style="{'background': vm.feature.accessibility.hearing.check ? vm.colors.mainBar.background : '#cccccc'}"></i>
+                    </a>
+                    <a href="" ng-click="vm.openAccessibilityModal('vision')">
+                        <i class="icon wm-icon-visually-impaired" ng-style="{'background': vm.feature.accessibility.vision.check ? vm.colors.mainBar.background : '#cccccc'}"></i>
+                    </a>
+                    <a href="" ng-click="vm.openAccessibilityModal('cognitive')">
+                        <i class="icon wm-icon-cognitive-impared" ng-style="{'background': vm.feature.accessibility.cognitive.check ? vm.colors.mainBar.background : '#cccccc'}"></i>
+                    </a>
+                    <a href="" ng-click="vm.openAccessibilityModal('food')">
+                        <i class="icon wm-icon-food-intolerance" ng-style="{'background': vm.feature.accessibility.food.check ? vm.colors.mainBar.background : '#cccccc'}"></i>
+                    </a>
                 </div>
 
                 <div

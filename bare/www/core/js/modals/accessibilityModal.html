@@ -1,0 +1,19 @@
+<!-- TODO: For image only, add class  modal-details-gallery - for table only add modal-details-table -->
+<ion-modal-view class="modal-mappalo modal-accessibility">
+   <a
+       class="modal-close"
+       ng-click="vm.hide()">
+       <i class="icon wm-icon-android-close"></i>
+   </a>
+   <ion-content ng-style="{
+       'background': COLORS.global.background
+    }">
+       <div class="modal-content">
+            <span class="modal-title">
+                <i class="icon {{vm.accessibility.icon}}" ng-style="{'background': vm.accessibility.check ? COLORS.mainBar.background : '#cccccc'}"></i>
+            </span>
+            <div class="modal-description" ng-bind-html="vm.accessibility.description">
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

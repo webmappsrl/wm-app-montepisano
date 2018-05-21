@@ -26,7 +26,7 @@ angular.module('webmapp')
         modalTable = {},
         modalCoupons = {},
         modalFeatures = {},
-        modalDisability = {};
+        modalAccessibility = {};
 
     var isOnline = false,
         isBrowser = vm.isBrowser = Utils.isBrowser();
@@ -46,7 +46,7 @@ angular.module('webmapp')
     vm.additionalLinks = {};
     vm.isNavigable = false;
     vm.fullDescription = false;
-    vm.showDisabilityButtons = CONFIG.OPTIONS.showDisabilityButtons;
+    vm.showAccessibilityButtons = CONFIG.OPTIONS.showAccessibilityButtons;
 
     vm.hideSubMenu = true;
 
@@ -109,11 +109,11 @@ angular.module('webmapp')
         modal = modalObj;
     });
 
-    $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/disabilityModal.html', {
+    $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/accessibilityModal.html', {
         scope: modalScope,
         animation: 'slide-in-up'
     }).then(function(modalObj) {
-        modalDisability = modalObj;
+        modalAccessibility = modalObj;
     });
 
     var buildDetail = function(data) {
@@ -331,8 +331,18 @@ angular.module('webmapp')
             }, 2500);
         }, 1000);
 
-        // console.log(vm["feature"]);
-        // vm.feature.description = "ciao <a href=\"http://www.google.com\">ciaociao</a> ciao";
+        vm.feature.accessibility.mobility.icon = 'wm-icon-wheelchair-15';
+        vm.feature.accessibility.hearing.icon = 'wm-icon-hearing-impared';
+        vm.feature.accessibility.vision.icon = 'wm-icon-visually-impaired';
+        vm.feature.accessibility.cognitive.icon = 'wm-icon-cognitive-impared';
+        vm.feature.accessibility.food.icon = 'wm-icon-food-intolerance';
+
+        for (var i in vm.feature.accessibility) {
+            if (!vm.feature.accessibility[i].description || vm.feature.accessibility[i].description === "") {
+                vm.feature.accessibility[i].description = "Questa descrizione non è ancora stata inserita e sarà disponibile a breve.";
+            }
+        }
+
         console.log(feature, vm)
     };
 
@@ -366,7 +376,7 @@ angular.module('webmapp')
         modalTable && modalTable.hide();
         modalCoupons && modalCoupons.hide();
         modalFeatures && modalFeatures.hide();
-        modalDisability && modalDisability.hide();
+        modalAccessibility && modalAccessibility.hide();
     };
 
     if (current.name === 'app.main.detaillayer') {
@@ -572,8 +582,10 @@ angular.module('webmapp')
         modal.show();
     };
 
-    vm.openDisabilityModal = function() {
-        modalDisability.show();
+    vm.openAccessibilityModal = function(type) {
+
+        modalScope.vm.accessibility = vm.feature.accessibility[type];
+        modalAccessibility.show();
     };
 
     vm.toggleMap = function() {
