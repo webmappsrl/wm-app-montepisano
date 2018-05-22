@@ -1389,7 +1389,27 @@ angular.module('webmapp')
     };
 
     function showOutOfTrackToast(distance) {
-        ionicToast.show('Attenzione! Sei fuori dal percorso. ' + distance.toFixed(0) + ' m', 'top', true, 5000);
+        var content = '',
+            message = 'Attento, ti sei allontanato dal percorso di' + ' ' + distance + 'm';
+
+        content = content + '<div class="toast-container">';
+        content = content + '<div class="toast-alert-icon">';
+        content = content + '<i class="icon wm-icon-alert"></i>';
+        content = content + '</div>';
+        content = content + '<div class="toast-content">';
+        content = content + '<div class="toast-message">';
+        content = content + message;
+        content = content + '</div>';
+        content = content + '<div class="toast-buttons">';
+
+        content = content + '<div class="stop-button">Interrompi</div>';
+        content = content + '<div class="pause-button">Pausa</div>';
+
+        content = content + '</div>';
+        content = content + '</div>';
+        content = content + '</div>';
+
+        ionicToast.show(content, 'top', true);
         vm.showToast = true;
     };
 
