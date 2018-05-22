@@ -1391,7 +1391,7 @@ angular.module('webmapp')
 
     function showOutOfTrackToast(distance) {
         var content = '',
-            message = 'Attento, ti sei allontanato dal percorso di' + ' ' + distance + 'm';
+            message = 'Attento, ti sei allontanato dal percorso di' + ' ' + distance.toFixed() + 'm';
 
         content = content + '<div class="toast-container">';
         content = content + '<div class="toast-alert-icon">';
@@ -1401,12 +1401,12 @@ angular.module('webmapp')
         content = content + '<div class="toast-message">';
         content = content + message;
         content = content + '</div>';
-        content = content + '<div class="toast-buttons">';
+        // content = content + '<div class="toast-buttons">';
 
-        content = content + '<div class="stop-button">Interrompi</div>';
-        content = content + '<div class="pause-button">Pausa</div>';
+        // content = content + '<div class="stop-button">Interrompi</div>';
+        // content = content + '<div class="pause-button">Pausa</div>';
 
-        content = content + '</div>';
+        // content = content + '</div>';
         content = content + '</div>';
         content = content + '</div>';
 
