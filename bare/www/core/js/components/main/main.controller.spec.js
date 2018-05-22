@@ -3,7 +3,7 @@ describe('MainController', function() {
     beforeEach(module('webmapp'));
 
 
-    describe('MainController', function() {
+    describe('MainController.checkOutOfTrack', function() {
         var scope, rootScope, vm;
         var MapService;
         var CONFIG;
@@ -24,9 +24,7 @@ describe('MainController', function() {
         }));
 
 
-
-        it('Call checkOutOfTrack successfully  ', function() {
-
+        it('Params defined=> should call function sucessfully', function() {
 
             spyOn(window.turf.pointToLineDistance, 'default').and.returnValue(10);
             vm.stopNavigationUrlParams.parentId = 'Tappe';
@@ -57,6 +55,135 @@ describe('MainController', function() {
 
         });
 
+
+        it('Params undefined => Shoud not call MapService.getFeature.', function() {
+
+            spyOn(MapService, 'getFeatureById');
+            expect(vm.stopNavigationUrlParams.parentId).toBe(null);
+            expect(vm.stopNavigationUrlParams.id).toBe(null);
+            expect(MapService.getFeatureById).not.toHaveBeenCalled();
+        });
+
+
+        it('MapService.getfeatureById return rejected promise => Shoud go in catch block', function() {
+
+
+            vm.stopNavigationUrlParams.parentId = 'Tappe';
+            vm.stopNavigationUrlParams.id = 170;
+            deferred = $q.defer();
+
+
+            spyOn(MapService, 'getFeatureById').and.returnValue(deferred.promise);
+            spyOn(vm, 'handleDistanceToast');
+            spyOn(console, 'log');
+            $httpBackend.whenGET(function(url) { return true; }).respond(200);
+            vm.checkOutOfTrack([47.718, 10.4]);
+            deferred.reject(vm.stopNavigationUrlParams);
+
+            rootScope.$digest();
+
+            expect(MapService.getFeatureById).toHaveBeenCalled();
+            expect(vm.handleDistanceToast).not.toHaveBeenCalled();
+            expect(console.log).toHaveBeenCalledWith(vm.stopNavigationUrlParams);
+
+        });
+
+    });
+
+    describe('MainController.handleDistanceToast', function() {
+
+
+        var vm, scope;
+        beforeEach(inject(function(_$rootScope_, $controller) {
+
+            scope = _$rootScope_.$new();
+            vm = $controller('MainController', { $scope: scope });
+
+        }));
+
+
+        it('Never gone outside track => it shoud not show toast.', function() {
+
+            var distance = (vm.maxOutOfTrack) / 1000;
+            var baseTime = new Date(2013, 9, 23, 0, 0, 0, 0);
+            vm.inTrackDate = 0;
+            vm.outOfTrackDate = 0;
+            jasmine.clock().mockDate(baseTime);
+
+            vm.handleDistanceToast(distance);
+
+            expect(vm.outOfTrackDate).toBe(0);
+            // expect(vm.inTrackDate).toBe(baseTime.getTime());
+            expect(vm.showToast).toBe(false);
+
+
+        });
+
+        it('Back in from outside track from 2 sec => it shoud show toast ', function() {
+
+            var distance = (vm.maxOutOfTrack) / 1000;
+
+            var baseTime = new Date(2013, 9, 23, 0, 0, 2, 0);
+            vm.inTrackDate = new Date(2013, 9, 23, 0, 0, 0, 0);
+            vm.showToast = true;
+            jasmine.clock().mockDate(baseTime);
+
+            vm.handleDistanceToast(distance);
+
+            expect(vm.outOfTrackDate).toBe(0);
+            expect(vm.showToast).toBe(true);
+
+
+        });
+
+        it('Back in from outside track from 6 sec => it shoud not show(hide if open) toast ', function() {
+
+            var distance = (vm.maxOutOfTrack) / 1000;
+            var baseTime = new Date(2013, 9, 23, 0, 0, 6, 0);
+            vm.inTrackDate = new Date(2013, 9, 23, 0, 0, 0, 0);
+            vm.showToast = true;
+            jasmine.clock().mockDate(baseTime);
+
+            vm.handleDistanceToast(distance);
+
+            expect(vm.outOfTrackDate).toBe(0);
+            expect(vm.showToast).toBe(false);
+
+
+        });
+
+        it('Ouf of track from 2 sec => it shoud not show toast ', function() {
+
+            var distance = (vm.maxOutOfTrack + 1) / 1000;
+            var baseTime = new Date(2013, 9, 23, 0, 0, 2, 0);
+            vm.inTrackDate = 0;
+            vm.outOfTrackDate = new Date(2013, 9, 23, 0, 0, 0, 0);;
+            vm.showToast = false;
+            jasmine.clock().mockDate(baseTime);
+
+            vm.handleDistanceToast(distance);
+
+            expect(vm.inTrackDate).toBe(0);
+            expect(vm.showToast).toBe(false);
+
+
+        });
+
+        it('Ouf of track from 6 sec => it shoud show toast ', function() {
+
+            var distance = (vm.maxOutOfTrack + 1) / 1000;
+            var baseTime = new Date(2013, 9, 23, 0, 0, 6, 0);
+            vm.inTrackDate = 0;
+            vm.outOfTrackDate = new Date(2013, 9, 23, 0, 0, 0, 0);;
+            vm.showToast = false;
+            jasmine.clock().mockDate(baseTime);
+
+            vm.handleDistanceToast(distance);
+
+            expect(vm.inTrackDate).toBe(0);
+            expect(vm.showToast).toBe(true);
+
+        });
 
     });
 

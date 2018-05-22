@@ -42,6 +42,7 @@ angular.module('webmapp')
     vm.outOfTrackDate = 0;
     vm.inTrackDate = 0;
     vm.maxOutOfTrack = 200;
+    vm.toastTime = 5;
     vm.showToast = false;
 
     if (CONFIG && CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) {
@@ -1434,10 +1435,10 @@ angular.module('webmapp')
                     return dist;
                 })
                 .then(function(distance) {
-                        vm.handleDistanceToast(distance);
-                    }
-
-                )
+                    vm.handleDistanceToast(distance);
+                }).catch(function(e) {
+                    console.log(e);
+                });
         } else {
             console.log('At least one of vm.stopNavigationUrlParams is undefined');
         }
@@ -1457,7 +1458,7 @@ angular.module('webmapp')
             } else {
                 var diffMs = (currTime - vm.inTrackDate);
                 var diffSecs = diffMs / 1000;
-                if (diffSecs >= 5) {
+                if (diffSecs >= vm.toastTime) {
                     hideOutOfTrackToast();
                 } else {
                     if (vm.showToast)
@@ -1475,7 +1476,7 @@ angular.module('webmapp')
             } else {
                 var diffMs = (currTime - vm.outOfTrackDate);
                 var diffSecs = diffMs / 1000;
-                if (diffSecs >= 5) {
+                if (diffSecs >= vm.toastTime) {
                     if (!vm.showToast)
                         makeNotificationSound();
                     showOutOfTrackToast((distance * 1000));

@@ -3,30 +3,25 @@ describe('Auth.Factory Test', function() {
 
     beforeEach(module('webmapp'));
 
-    var vm;
+    var authService;
 
     describe('Auth.Factory.setUserData', function() {
 
-
-
-        beforeEach(inject(function(_Auth_) {
-
-
-            vm = Auth;
+        beforeEach(inject(function(Auth) {
+            authService = Auth;
         }));
+
         it('Should set user data successfully', function() {
-
-
-            // var data = {
-            //     user: email,
-            //     pass: password,
-            //     mail: email,
-            //     appname: config.OPTIONS.title,
-            //     first_name: firstName,
-            //     last_name: lastName,
-            //     newsletter: newsl,
-            //     country: country
-            // };
+            var data = {
+                user: 'user',
+                pass: 'passowrd',
+                mail: 'user',
+                appname: 'appname',
+                first_name: 'first_name',
+                last_name: 'last_name',
+                newsletter: 'newsletter',
+                country: 'country'
+            };
 
         });
 
