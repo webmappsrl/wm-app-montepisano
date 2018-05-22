@@ -113,7 +113,7 @@ angular.module('webmapp')
             };
 
             var isEmailValid = function (email) {
-                var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/;
                 return email.match(mailformat);
             };
 
