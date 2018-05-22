@@ -146,6 +146,7 @@ angular.module('webmapp')
                 vm.viewTitle = realState;
                 vm.subGroupMenu = getPagesByState(currentName);
             }
+            console.log(vm)
         };
 
         init();
