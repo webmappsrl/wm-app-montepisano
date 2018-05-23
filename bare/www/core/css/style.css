@@ -539,7 +539,7 @@ ion-content div.static-content.card-content {
 
 @media screen and (min-width: 768px) {
   .card-content {
-    width: 500px; }
+    width: 428px; }
     .card-content button.button-block {
       width: 336px;
       margin: 0 auto 10px; }
@@ -827,7 +827,8 @@ div.detailRoute-footer {
 
 .details-image {
   padding: 5px;
-  position: relative; }
+  position: relative;
+  min-height: 50px; }
   .details-image img {
     border: 2px solid #f2f5e8;
     display: block;
@@ -957,6 +958,23 @@ div.detailRoute-footer {
     position: absolute;
     top: -5px;
     left: calc(50% - 10px); }
+
+.accessibility-buttons-container {
+  width: calc(100% - 10px);
+  margin: 5px;
+  position: relative;
+  height: 70px;
+  text-align: center; }
+  .accessibility-buttons-container a {
+    display: block;
+    float: left;
+    width: calc(100% / 5);
+    position: relative;
+    top: 10px; }
+    .accessibility-buttons-container a i {
+      color: #f7f9f1;
+      font-size: 40px;
+      padding: 10px; }
 
 /* Details table */
 .table-details {
@@ -1097,6 +1115,13 @@ div.detailRoute-footer {
    #MEDIA QUERIES
 \* ------------------------------------ */
 /* TODO: use mixin? */
+@media only screen and (max-width: 350px) {
+  .accessibility-buttons-container {
+    height: 50px; }
+    .accessibility-buttons-container a i {
+      font-size: 30px;
+      padding: 5px; } }
+
 @media only screen and (max-height: 567px) and (max-width: 768px) {
   .details-description p {
     font-size: 2rem; } }
@@ -1261,7 +1286,8 @@ ion-content div.home-title {
 
 ion-content div.home-content {
   width: 100%;
-  height: calc(100vh - 44px - 25px - 8vh); }
+  height: calc(100vh - 44px - 25px - 8vh);
+  position: relative; }
   ion-content div.home-content div.width-1 {
     width: 100%; }
   ion-content div.home-content div.width-2 {
@@ -1279,28 +1305,24 @@ ion-content div.home-content {
   ion-content div.home-content div.height-4 {
     height: 25%; }
   ion-content div.home-content div.home-button {
+    position: relative;
     font-size: 20px;
     text-align: center;
     margin: 0 auto;
     color: #63625d; }
     ion-content div.home-content div.home-button div.home-icon {
-      padding: 14% 0 3% 0; }
+      padding: 3% 0 3% 0; }
       ion-content div.home-content div.home-button div.home-icon .icon:before {
         font-size: 40px; }
-  ion-content div.home-content div.home-button.height-1.width-1 div.home-icon,
-  ion-content div.home-content div.home-button.height-1.width-2 div.home-icon,
-  ion-content div.home-content div.home-button.height-2.width-1 div.home-icon,
-  ion-content div.home-content div.home-button.height-2.width-2 div.home-icon,
-  ion-content div.home-content div.home-button.height-3.width-1 div.home-icon,
-  ion-content div.home-content div.home-button.height-3.width-2 div.home-icon {
-    padding: 20% 0 3% 0; }
-    ion-content div.home-content div.home-button.height-1.width-1 div.home-icon .icon:before,
-    ion-content div.home-content div.home-button.height-1.width-2 div.home-icon .icon:before,
-    ion-content div.home-content div.home-button.height-2.width-1 div.home-icon .icon:before,
-    ion-content div.home-content div.home-button.height-2.width-2 div.home-icon .icon:before,
-    ion-content div.home-content div.home-button.height-3.width-1 div.home-icon .icon:before,
-    ion-content div.home-content div.home-button.height-3.width-2 div.home-icon .icon:before {
-      font-size: 60px; }
+  ion-content div.home-content div.home-button.height-1 div.home-icon .icon:before {
+    font-size: 80px; }
+  ion-content div.home-content div.home-button.height-2 div.home-icon .icon:before {
+    font-size: 70px; }
+  ion-content div.home-content div.home-button.height-3 div.home-icon .icon:before {
+    font-size: 60px; }
+  ion-content div.home-content div.home-button-content {
+    position: relative;
+    top: calc(50% - 75px); }
   ion-content div.home-content div.home-button:active {
     color: #444040;
     background: #dddddd; }
@@ -2992,6 +3014,8 @@ button.popup-close {
 
 .modal-content {
   padding: 15px; }
+  .modal-content .modal-description {
+    margin: 15px 0; }
 
 .modal-title {
   display: block;
@@ -2999,6 +3023,19 @@ button.popup-close {
   font-size: 16px;
   font-weight: 700;
   color: #918f75; }
+  .modal-title i {
+    font-size: 50px;
+    color: #f7f9f1;
+    padding: 5px; }
+
+.modal-content div .modal-subtitle {
+  font-size: 30px;
+  position: relative;
+  top: 20px; }
+
+.modal-content div .modal-p {
+  position: relative;
+  top: 35px; }
 
 .modal-footer {
   height: 35px;
@@ -3338,7 +3375,8 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
   margin-bottom: 15px;
   background-color: #FCFDF7;
   border-bottom: 0;
-  height: calc(90vw * 35 / 100); }
+  height: calc(90vw * 35 / 100);
+  max-height: 150px; }
 
 .details-image-reduced {
   position: relative;
@@ -3385,7 +3423,10 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
       vertical-align: middle; }
   .content-reduced .code-reduced {
     float: right;
-    text-align: right; }
+    text-align: right;
+    font-size: 140%;
+    font-style: italic;
+    font-weight: 700; }
 
 .button-reduced {
   width: 50%;

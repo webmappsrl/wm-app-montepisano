@@ -37,16 +37,16 @@ yargs.usage('Usage: $0 <command> [options]')
     .epilog('(c) Webmapp 2017');
 
 var argv = yargs.argv,
-    config_xml = '';
-instance_name = 'default';
+    config_xml = '',
+    instance_name = 'default';
 
-gulp.task('build', ['create', 'update' /*, 'post-install'*/ ]);
+gulp.task('build', ['create', 'update' /*, 'post-install'*/]);
 
 gulp.task('node_modules_link', function () {
     return gulp.src('bare/node_modules')
         .pipe(symlink('instances/' + instance_name + '/node_modules', {
             force: true
-        })) // Write to the destination folder 
+        }));
 });
 
 gulp.task('create', function () {
@@ -73,8 +73,6 @@ gulp.task('create', function () {
 
 /// TODO: aggiorna solo il core
 gulp.task('update', ['create'], function () {
-    console.log('lancio update...');
-
     if (argv.instance) {
         instance_name = argv.instance;
     }
@@ -87,11 +85,11 @@ gulp.task('update', ['create'], function () {
         resources = argv.url + '/resources/';;
         // estraggo le info
         request({
-                url: info,
-                headers: {
-                    'User-Agent': 'request'
-                }
-            })
+            url: info,
+            headers: {
+                'User-Agent': 'request'
+            }
+        })
             .pipe(source(info))
             // .pipe(fs.access(info))
             .pipe(streamify(jeditor(function (repositories) {
@@ -103,26 +101,27 @@ gulp.task('update', ['create'], function () {
                     version: version["version"]
                 };
 
-                gulp.updateConfigXML(config_xml);
+                gulp.getUrlFile('config.js', config, dir + '/www/config/')
+                    .on('end', function() {
+                        gulp.updateConfigXML(config_xml);
+                    });
+
+                gulp.setFont('Abel');
+
+                gulp.getUrlFile('icon.png', resources + 'icon.png', dir + '/resources/');
+                gulp.getUrlFile('splash.png', resources + 'splash.png', dir + '/resources/');
+
+                sh.exec('ionic cordova resources', {
+                    cwd: dir
+                })
 
                 return repositories;
 
             })));
-
-        gulp.getUrlFile('config.js', config, dir + '/www/config/');
-
-        gulp.setFont('Abel');
-
-        gulp.getUrlFile('icon.png', resources + 'icon.png', dir + '/resources/');
-        gulp.getUrlFile('splash.png', resources + 'splash.png', dir + '/resources/');
-
-        // gulp.start('add-resources');
-        sh.exec('ionic cordova resources', {
-            cwd: dir
-        })
     } else {
         console.warn('[WARN] instance doesn\'t exits. Create first.');
     }
+    console.log('end update')
 });
 
 gulp.task('set', function () {
@@ -245,30 +244,24 @@ gulp.task('complete-update', function () {
     });
     sh.exec("gulp update-instance -i " + instance_name);
     sh.exec("gulp update -i " + instance_name + " -u " + url);
-
-    // sh.exec("gulp sass", {
-    //     cwd: 'instances/' + instance_name
-    // });
 });
 
 gulp.copy = function (src, dest) {
 
-    var result = gulp.src([src + '/**', '!' + src + '/node_modules', '!' + src + '/node_modules/**', '!' + src + '/platforms', '!' + src + '/platforms/**'])
-        .pipe(gulp.dest(dest));
-
     gulp.start('node_modules_link');
 
-    return result;
+    return gulp.src([src + '/**', '!' + src + '/node_modules', '!' + src + '/node_modules/**', '!' + src + '/platforms', '!' + src + '/platforms/**'])
+        .pipe(gulp.dest(dest));
 
 };
 
 gulp.getUrlFile = function (file, src, dest) {
     return request({
-            url: src,
-            headers: {
-                'User-Agent': 'request'
-            }
-        })
+        url: src,
+        headers: {
+            'User-Agent': 'request'
+        }
+    })
         .pipe(source(file))
         .pipe(gulp.dest(dest));
 };

@@ -36,7 +36,7 @@ angular.module('webmapp')
 
         var communicationConf = CONFIG.COMMUNICATION,
             currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : 'it',
-            defaultLang = (CONFIG.LANGUAGE && CONFIG.LANGUAGE.actual) ? CONFIG.LANGUAGE.actual.substring(0, 2) : 'it';
+            defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
 
         var packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : null,
             userPackagesId = localStorage.$wm_userPackagesId ? JSON.parse(localStorage.$wm_userPackagesId) : null,
@@ -53,7 +53,8 @@ angular.module('webmapp')
 
         var userData = Auth.isLoggedIn() ? Auth.getUserData() : null,
             asyncTranslations = 0,
-            asyncRoutes = 0;
+            asyncRoutes = 0,
+            asyncRouteTranslations = 0;
 
         var modalScope = $rootScope.$new(),
             modal = {},
@@ -95,7 +96,9 @@ angular.module('webmapp')
                     }
                 }
 
-                result[packId].packageTitle = {};
+                if (!result[packId].packageTitle) {
+                    result[packId].packageTitle = {};
+                }
                 result[packId].packageTitle[defaultLang] = result[packId].title.rendered;
 
                 if (result[packId].wpml_translations) {
@@ -104,6 +107,14 @@ angular.module('webmapp')
                         result[packId].packageTitle[lang] = result[packId].wpml_translations[p].post_title;
                     }
                 }
+
+                if (!result[packId].packageDescription) {
+                    result[packId].packageDescription = {};
+                }
+                if (packages[packId] && packages[packId].packageDescription) {
+                    result[packId].packageDescription = packages[packId].packageDescription;
+                }
+                result[packId].packageDescription[defaultLang] = result[packId].content.rendered;
             }
 
             packages = result;
@@ -112,52 +123,67 @@ angular.module('webmapp')
         var getImage = function (packId) {
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'media/' + packages[packId].featured_media)
                 .then(function (data) {
-                        if (packages[packId].imgUrl !== data.media_details.sizes.thumbnail.source_url) {
-                            packages[packId].imgUrl = data.media_details.sizes.thumbnail.source_url;
-                        }
+                    if (packages[packId].imgUrl !== data.media_details.sizes.thumbnail.source_url) {
+                        packages[packId].imgUrl = data.media_details.sizes.thumbnail.source_url;
+                    }
 
-                        Communication.get(packages[packId].imgUrl)
-                            .then(function (response) {
-                                    var imageDownloaded = response;
-                                    var urlCreator = window.URL || window.webkitURL;
+                    Communication.get(packages[packId].imgUrl)
+                        .then(function (response) {
+                            var imageDownloaded = response;
+                            var urlCreator = window.URL || window.webkitURL;
 
-                                    packages[packId].localImageUrl = urlCreator.createObjectURL(imageDownloaded);
+                            packages[packId].localImageUrl = urlCreator.createObjectURL(imageDownloaded);
 
-                                    var reader = new FileReader();
-                                    reader.readAsDataURL(imageDownloaded);
-                                    reader.onloadend = function () {
-                                        base64data = reader.result;
+                            var reader = new FileReader();
+                            reader.readAsDataURL(imageDownloaded);
+                            reader.onloadend = function () {
+                                base64data = reader.result;
 
-                                        packages[packId].localImageUrl = base64data;
+                                packages[packId].localImageUrl = base64data;
 
-                                        asyncRoutes--;
-                                        if (asyncRoutes === 0) {
-                                            $rootScope.$emit('packages-updated', packages);
-                                        }
-                                        localStorage.$wm_packages = JSON.stringify(packages);
-                                    }
-                                },
-                                function (err) {
-                                    asyncRoutes--;
-                                    if (asyncRoutes === 0) {
-                                        $rootScope.$emit('packages-updated', packages);
-                                    }
-                                    console.log("Error downloading image for " + packId)
-                                });
+                                asyncRoutes--;
+                                if (asyncRoutes === 0) {
+                                    $rootScope.$emit('packages-updated', packages);
+                                }
+                                localStorage.$wm_packages = JSON.stringify(packages);
+                            }
+                        },
+                            function (err) {
+                                asyncRoutes--;
+                                if (asyncRoutes === 0) {
+                                    $rootScope.$emit('packages-updated', packages);
+                                }
+                                console.warn("Error downloading image for " + packId)
+                            });
 
-                        // asyncRoutes--;
-                        // if (asyncRoutes === 0) {
-                        //     $rootScope.$emit('packages-updated', packages);
-                        // }
-                        localStorage.$wm_packages = JSON.stringify(packages);
-                    },
+                    localStorage.$wm_packages = JSON.stringify(packages);
+                },
                     function (err) {
                         asyncRoutes--;
                         if (asyncRoutes === 0) {
                             $rootScope.$emit('packages-updated', packages);
                         }
-                        console.error('images retrive error');
+                        console.error('Unable to download images');
                     });
+        };
+
+        var getTranslatedRoute = function (id, apiId, lang) {
+            $.getJSON(CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.wordPressEndpoint + 'route/' + apiId, function (data) {
+                packages[id].packageTitle[lang] = data.title.rendered;
+                packages[id].packageDescription[lang] = data.content.rendered;
+
+                asyncRouteTranslations--;
+                if (asyncRouteTranslations === 0 && asyncRoutes === 0) {
+                    $rootScope.$emit('packages-updated', packages);
+                }
+                localStorage.$wm_packages = JSON.stringify(packages);
+            }).fail(function () {
+                asyncRouteTranslations--;
+                if (asyncRouteTranslations === 0 && asyncRoutes === 0) {
+                    $rootScope.$emit('packages-updated', packages);
+                }
+                console.error('Route translation retrive error');
+            });
         };
 
         var getTaxonomyTranslated = function (taxonomyType, id, lang) {
@@ -169,7 +195,6 @@ angular.module('webmapp')
                     asyncTranslations--;
                     if (asyncTranslations === 0) {
                         $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
-                        $ionicLoading.hide();
                         localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
                     }
                 })
@@ -177,8 +202,8 @@ angular.module('webmapp')
                     asyncTranslations--;
                     if (asyncTranslations === 0) {
                         $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
-                        $ionicLoading.hide();
                     }
+                    console.warn("Unable to update taxonomy. Using local data")
                 });
         };
 
@@ -190,46 +215,50 @@ angular.module('webmapp')
          * @event packages-updated
          * @event categories-updated
          */
-        packageService.getRoutes = function () {
+        packageService.getRoutes = function (updateValues) {
             //Prevent multiple requests
-            if (asyncRoutes > 0) {
+            if (asyncRoutes > 0 || asyncTranslations > 0) {
                 $rootScope.$emit('packages-updated', packages);
                 return;
             }
 
-            if (!packages) {
-                $ionicLoading.show();
-            } else {
+            if (packages) {
                 $rootScope.$emit('packages-updated', packages);
+            }
+
+            if (!updateValues) {
+                return;
             }
 
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/?per_page=100')
                 .then(function (data) {
-                        if (!packages) {
-                            packages = {};
+                    if (!packages) {
+                        packages = {};
+                    }
+
+                    mergePackages(data);
+
+                    asyncRoutes = 0;
+                    asyncRouteTranslations = 0;
+
+                    for (var i in packages) {
+                        asyncRoutes++;
+                        getImage(i);
+                        for (var j in packages[i].wpml_translations) {
+                            asyncRouteTranslations++;
+                            getTranslatedRoute(i, packages[i].wpml_translations[j].id, packages[i].wpml_translations[j].locale.substring(0, 2));
                         }
+                    }
 
-                        mergePackages(data);
-
-                        asyncRoutes = 0;
-
-                        for (var i in packages) {
-                            asyncRoutes++;
-                            getImage(i);
-                        }
-
-                        if (asyncRoutes === 0) {
-                            $rootScope.$emit('packages-updated', packages);
-                        }
-                        localStorage.$wm_packages = JSON.stringify(packages);
-
-                        $ionicLoading.hide();
-                    },
+                    if (asyncRoutes === 0) {
+                        $rootScope.$emit('packages-updated', packages);
+                    }
+                    localStorage.$wm_packages = JSON.stringify(packages);
+                },
                     function (err) {
                         if (!packages) {
-                            console.warn("No routes available. Restart the app with an open connection. Shutting down the app...");
+                            console.warn("No routes available. Restart the app with an open connection");
                         }
-                        $ionicLoading.hide();
                     });
         };
 
@@ -243,9 +272,7 @@ angular.module('webmapp')
          *      the type of taxonomy to update
          */
         packageService.getTaxonomy = function (taxonomyType) {
-            if (!taxonomy[taxonomyType]) {
-                $ionicLoading.show();
-            } else {
+            if (taxonomy[taxonomyType]) {
                 $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
             }
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')
@@ -277,15 +304,13 @@ angular.module('webmapp')
                     }
 
                     if (asyncTranslations === 0) {
+                        console.log("emit")
                         $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
-                        $ionicLoading.hide();
                     }
                     localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
                 })
                 .catch(function (err) {
                     if (!taxonomy[taxonomyType]) {
-                        $ionicLoading.hide();
-                        //Popup connection not available
                         console.warn("No taxonomy " + taxonomyType);
                         return;
                     }
@@ -305,28 +330,24 @@ angular.module('webmapp')
                 return;
             }
 
-            if (!userPackagesId) {
-                $ionicLoading.show();
-            } else {
+            if (userPackagesId) {
                 $rootScope.$emit('userPackagesId-updated', userPackagesId);
             }
             Communication.getJSON(communicationConf.baseUrl + communicationConf.endpoint + 'route_id/' + userData.ID)
                 .then(function (data) {
-                        userPackagesId = {};
+                    userPackagesId = {};
 
-                        for (var key in data) {
-                            userPackagesId[key] = true;
-                        }
+                    for (var key in data) {
+                        userPackagesId[key] = true;
+                    }
 
-                        $rootScope.$emit('userPackagesId-updated', userPackagesId);
-                        $ionicLoading.hide();
-                        localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
-                    },
+                    $rootScope.$emit('userPackagesId-updated', userPackagesId);
+                    localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
+                },
                     function (err) {
                         if (!userPackagesId) {
                             console.warn("No userPackagesId available. Shutting down...");
                         }
-                        $ionicLoading.hide();
                     });
         };
 
@@ -357,7 +378,9 @@ angular.module('webmapp')
                             appname: CONFIG.OPTIONS.title
                         };
 
-                        $ionicLoading.show();
+                        $ionicLoading.show({
+                            template: '<ion-spinner></ion-spinner>'
+                        });
 
                         $http({
                             method: 'POST',
@@ -404,11 +427,11 @@ angular.module('webmapp')
             }
 
             $ionicPopup.prompt({
-                    title: $translate.instant('Voucher'),
-                    subTitle: $translate.instant('Inserisci il voucher da attivare'),
-                    inputType: 'text',
-                    inputPlaceholder: $translate.instant('Voucher')
-                })
+                title: $translate.instant('Voucher'),
+                subTitle: $translate.instant('Inserisci il voucher da attivare'),
+                inputType: 'text',
+                inputPlaceholder: $translate.instant('Voucher')
+            })
                 .then(function (res) {
                     if (res) {
                         var data = $.param({
@@ -423,13 +446,15 @@ angular.module('webmapp')
                             }
                         }
 
-                        $ionicLoading.show();
+                        $ionicLoading.show({
+                            template: '<ion-spinner></ion-spinner>'
+                        });
 
                         $http.post(
-                                CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
-                                data,
-                                config
-                            )
+                            CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
+                            data,
+                            config
+                        )
                             .success(function (data, status, headers, config) {
                                 $ionicLoading.hide();
                                 ///Update offline data
@@ -464,9 +489,9 @@ angular.module('webmapp')
          */
         packageService.downloadPack = function (packId) {
             $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Stai per scaricare l'itinerario sul dispositivo, vuoi procedere?")
-                })
+                title: $translate.instant("ATTENZIONE"),
+                template: $translate.instant("Stai per scaricare l'itinerario sul dispositivo, vuoi procedere?")
+            })
                 .then(function (res) {
                     if (res) {
                         $.ajaxSetup({
@@ -475,39 +500,39 @@ angular.module('webmapp')
                         modalDownload.show();
                         Communication.getJSON(communicationConf.downloadJSONUrl + packId + '/app.json')
                             .then(function (data) {
-                                    var arrayLink = [];
+                                var arrayLink = [];
 
-                                    var downloadSuccess = function () {
-                                        modalDownload.hide();
-                                        userDownloadedPackages[packId] = true;
-                                        $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
-                                        localStorage.$wm_userDownloadedPackages = JSON.stringify(userDownloadedPackages);
-                                    };
+                                var downloadSuccess = function () {
+                                    modalDownload.hide();
+                                    userDownloadedPackages[packId] = true;
+                                    $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
+                                    localStorage.$wm_userDownloadedPackages = JSON.stringify(userDownloadedPackages);
+                                };
 
-                                    var downloadFail = function () {
-                                        // TODO: add ionic alert
-                                        // TODO: rimuovere cartella, verificare interuzzione altri dowload
-                                        alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, riprova"));
-                                        modalDownload.hide();
-                                        // updateDownloadedPackagesInStorage();
-                                    };
+                                var downloadFail = function () {
+                                    // TODO: add ionic alert
+                                    // TODO: rimuovere cartella, verificare interuzzione altri dowload
+                                    alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, riprova"));
+                                    modalDownload.hide();
+                                    // updateDownloadedPackagesInStorage();
+                                };
 
-                                    for (var i in data) {
-                                        if (typeof data[i] === 'string') {
-                                            arrayLink.push(data[i]);
-                                        } else if (typeof data[i] === 'object') {
-                                            for (var j in data[i]) {
-                                                arrayLink.push(data[i][j]);
-                                            }
+                                for (var i in data) {
+                                    if (typeof data[i] === 'string') {
+                                        arrayLink.push(data[i]);
+                                    } else if (typeof data[i] === 'object') {
+                                        for (var j in data[i]) {
+                                            arrayLink.push(data[i][j]);
                                         }
                                     }
+                                }
 
-                                    Offline
-                                        .downloadUserMap(packId, arrayLink, modalDownloadScope.vm)
-                                        .then(downloadSuccess, downloadFail);
+                                Offline
+                                    .downloadUserMap(packId, arrayLink, modalDownloadScope.vm)
+                                    .then(downloadSuccess, downloadFail);
 
-                                    $.ajaxSetup();
-                                },
+                                $.ajaxSetup();
+                            },
                                 function () {
                                     // TODO: add ionic alert
                                     modalDownload.hide();
@@ -535,7 +560,9 @@ angular.module('webmapp')
 
                     sessionStorage.$wm_doBack = 'allowed';
 
-                    $ionicLoading.show();
+                    $ionicLoading.show({
+                        template: '<ion-spinner></ion-spinner>'
+                    });
 
                     location.reload();
                     Utils.forceDigest();
@@ -554,9 +581,9 @@ angular.module('webmapp')
          */
         packageService.removePack = function (packId) {
             $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Stai per rimuovere l'itinerario dal dispositivo, vuoi procedere?<br />") + $translate.instant("Questo itinerario è riservato ai clienti Verde Natura che hanno acquistato questo viaggio. Terminata la fase di sperimentazione, gli itinerari saranno disponibili a tutti")
-                })
+                title: $translate.instant("ATTENZIONE"),
+                template: $translate.instant("Stai per rimuovere l'itinerario dal dispositivo, vuoi procedere?<br />") + $translate.instant("Questo itinerario è riservato ai clienti Verde Natura che hanno acquistato questo viaggio. Terminata la fase di sperimentazione, gli itinerari saranno disponibili a tutti")
+            })
                 .then(function (res) {
                     if (res) {
                         Offline.removePackById(packId);

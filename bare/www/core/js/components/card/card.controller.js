@@ -40,7 +40,7 @@ angular.module('webmapp')
     var setLoading = function(active) {
         if (active) {
             $ionicLoading.show({
-                template: 'Loading...'
+                template: '<ion-spinner></ion-spinner>'
             });
         } else {
             $ionicLoading.hide();

@@ -27,6 +27,8 @@ angular.module('webmapp')
             isOnline = false,
             isBrowser = vm.isBrowser = Utils.isBrowser();
 
+        var registeredEvents = [];
+
         var modalScope = $rootScope.$new(),
             modal = {},
             modalImage = {};
@@ -42,6 +44,7 @@ angular.module('webmapp')
         vm.imageUrl = CONFIG.OFFLINE.imagesUrl;
         vm.goBack = Utils.goBack;
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+        vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
         vm.packages = {};
         vm.userPackagesId = {};
         vm.userDownloadedPackages = {};
@@ -49,6 +52,8 @@ angular.module('webmapp')
         vm.isLoggedIn = Auth.isLoggedIn();
         vm.isPublic = false;
         vm.id = params.id;
+        vm.openInAppBrowser = Utils.openInAppBrowser;
+        vm.openInExternalBrowser = Utils.openInExternalBrowser;
 
         vm.voucherAvailable = CONFIG.MULTIMAP.purchaseType ? CONFIG.MULTIMAP.purchaseType.includes('voucher') : false;
         vm.purchaseAvailable = CONFIG.MULTIMAP.purchaseType ? CONFIG.MULTIMAP.purchaseType.includes('purchase') : false;
@@ -68,7 +73,7 @@ angular.module('webmapp')
         });
 
         vm.openImageModal = function () {
-            if (vm.imageGallery.length > 1) {
+            if (vm.imageGallery.length > 1 || (vm.imageGallery.length === 1 && vm.imageGallery[0].caption && vm.imageGallery[0].caption !== "")) {
                 modalImage.show();
             }
         };
@@ -123,99 +128,15 @@ angular.module('webmapp')
 
         var notLoggedIn = function () {
             $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Devi eseguire l'accesso per poter usufruire di questa funzionalità")
-                })
+                title: $translate.instant("ATTENZIONE"),
+                template: $translate.instant("Devi eseguire l'accesso per poter usufruire di questa funzionalità")
+            })
                 .then(function (res) {
                     if (res) {
                         showLogin();
                     }
                 });
         };
-
-        var getTranslatedContent = function (id) {
-            $ionicLoading.show({
-                template: 'Loading...'
-            });
-            return $.getJSON(CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.wordPressEndpoint + 'route/' + id, function (data) {
-                vm.title = data.title.rendered;
-                vm.description = data.content.rendered;
-                vm.gallery = data.n7webmap_route_media_gallery;
-                $ionicLoading.hide();
-                return data;
-            }).fail(function () {
-                $ionicLoading.hide();
-                console.error('translation retrive error');
-                return 'translation retrive error';
-            });
-        };
-
-        $rootScope.$on('packages-updated', function (e, value) {
-            routeDetail = value[vm.id];
-
-            vm.isPublic = routeDetail.wm_route_public;
-            vm.skipLogin = CONFIG.OPTIONS.skipLoginPublicRoutesDownload ? CONFIG.OPTIONS.skipLoginPublicRoutesDownload : false;
-
-            if (routeDetail) {
-                vm.title = routeDetail.title.rendered;
-                vm.description = routeDetail.content.rendered;
-                vm.gallery = routeDetail.n7webmap_route_media_gallery;
-                if (vm.gallery && vm.gallery[0] && vm.gallery[0].sizes) {
-                    vm.featureImage = vm.gallery[0].sizes.medium_large;
-                }
-                vm.codeRoute = routeDetail.n7webmapp_route_cod;
-                vm.difficulty = routeDetail.n7webmapp_route_difficulty;
-            }
-
-            vm.imageGallery = [];
-            for (var g = 0; g < vm.gallery.length; g++) {
-                vm.imageGallery.push(vm.gallery[g].sizes.medium_large);
-            }
-
-            vm.hasGallery = vm.imageGallery.length > 0;
-
-            for (var lang in routeDetail.wpml_translations) {
-                if (routeDetail.wpml_translations[lang].locale.substring(0, 2) === vm.currentLang) {
-                    getTranslatedContent(routeDetail.wpml_translations[lang].id);
-                    break;
-                }
-            }
-        });
-
-        $rootScope.$on('userPackagesId-updated', function (e, value) {
-            vm.userPackagesId = value;
-            Utils.forceDigest();
-        });
-
-        $rootScope.$on('userDownloadedPackages-updated', function (e, value) {
-            vm.userDownloadedPackages = value;
-            Utils.forceDigest();
-        });
-
-        $rootScope.$on('userPackagesIdRquested-updated', function (e, value) {
-            vm.userPackagesIdRquested = value;
-            Utils.forceDigest();
-        });
-
-        $rootScope.$on('logged-in', function () {
-            if (Auth.isLoggedIn()) {
-                userData = Auth.getUserData();
-                vm.isLoggedIn = true;
-
-                PackageService.getPackagesIdByUserId();
-
-                Utils.forceDigest();
-            }
-        });
-
-        $scope.$on('$destroy', function () {
-            if ($ionicSlideBoxDelegate._instances &&
-                $ionicSlideBoxDelegate._instances.length > 0) {
-                // delete $ionicSlideBoxDelegate._instances[0];
-                $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
-                $ionicSlideBoxDelegate.update();
-            }
-        });
 
         vm.openVoucherModal = function () {
             if (vm.isLoggedIn) {
@@ -254,21 +175,131 @@ angular.module('webmapp')
             PackageService.removePack(routeDetail.id);
         };
 
-        var initialize = function () {
-            PackageService.getRoutes();
-            PackageService.getDownloadedPackages();
+        registeredEvents.push(
+            $rootScope.$on('packages-updated', function (e, value) {
+                routeDetail = value[vm.id];
 
-            if (Auth.isLoggedIn()) {
-                userData = Auth.getUserData();
-                vm.isLoggedIn = true;
+                vm.isPublic = routeDetail.wm_route_public;
+                vm.skipLogin = CONFIG.OPTIONS.skipLoginPublicRoutesDownload ? CONFIG.OPTIONS.skipLoginPublicRoutesDownload : false;
 
-                PackageService.getPackagesIdByUserId();
+                if (routeDetail) {
+                    vm.title = routeDetail.title.rendered;
+                    if (routeDetail.packageTitle) {
+                        if (routeDetail.packageTitle[vm.currentLang]) {
+                            vm.title = routeDetail.packageTitle[vm.currentLang];
+                        }
+                        else if (routeDetail.packageTitle[vm.defaultLang]) {
+                            vm.title = routeDetail.packageTitle[vm.defaultLang];
+                        }
+                        else if (typeof routeDetail.packageTitle !== 'string') {
+                            vm.title = routeDetail.packageTitle[Object.keys(routeDetail.packageTitle)[0]];
+                        }
+                    }
 
+                    if (routeDetail.packageDescription) {
+                        if (routeDetail.packageDescription[vm.currentLang]) {
+                            vm.description = routeDetail.packageDescription[vm.currentLang];
+                        }
+                        else if (routeDetail.packageDescription[vm.defaultLang]) {
+                            vm.description = routeDetail.packageDescription[vm.defaultLang];
+                        }
+                        else if (typeof routeDetail.packageDescription !== 'string') {
+                            vm.description = routeDetail.packageDescription[Object.keys(routeDetail.packageDescription)[0]];
+                        }
+                    }
+
+                    vm.description = vm.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'onclick="window.open(\'$1\', \'_system\', \'\')"');
+                    vm.description = $sce.trustAsHtml(vm.description);
+                    vm.gallery = routeDetail.n7webmap_route_media_gallery;
+                    if (vm.gallery && vm.gallery[0] && vm.gallery[0].sizes) {
+                        vm.featureImage = vm.gallery[0].sizes.medium_large;
+                    }
+                    vm.codeRoute = routeDetail.n7webmapp_route_cod;
+                    vm.difficulty = routeDetail.n7webmapp_route_difficulty;
+                }
+
+                vm.imageGallery = [];
+                for (var g = 0; g < vm.gallery.length; g++) {
+                    vm.imageGallery.push({ src: vm.gallery[g].sizes.medium_large });
+                }
+
+                vm.hasGallery = vm.imageGallery.length > 0;
+
+                $ionicLoading.hide();
+            })
+        );
+
+        registeredEvents.push(
+            $rootScope.$on('userPackagesId-updated', function (e, value) {
+                vm.userPackagesId = value;
                 Utils.forceDigest();
-            }
-        }
+            })
+        );
 
-        initialize();
+        registeredEvents.push(
+            $rootScope.$on('userDownloadedPackages-updated', function (e, value) {
+                vm.userDownloadedPackages = value;
+                Utils.forceDigest();
+            })
+        );
+
+        registeredEvents.push(
+            $rootScope.$on('userPackagesIdRquested-updated', function (e, value) {
+                vm.userPackagesIdRquested = value;
+                Utils.forceDigest();
+            })
+        );
+
+        registeredEvents.push(
+            $rootScope.$on('logged-in', function () {
+                if (Auth.isLoggedIn()) {
+                    userData = Auth.getUserData();
+                    vm.isLoggedIn = true;
+
+                    PackageService.getPackagesIdByUserId();
+
+                    Utils.forceDigest();
+                }
+            })
+        );
+
+        registeredEvents.push(
+            $scope.$on('$ionicView.beforeEnter', function () {
+                $ionicLoading.show({
+                    template: '<ion-spinner></ion-spinner>'
+                });
+                PackageService.getRoutes();
+                PackageService.getDownloadedPackages();
+
+                if (Auth.isLoggedIn()) {
+                    userData = Auth.getUserData();
+                    vm.isLoggedIn = true;
+
+                    PackageService.getPackagesIdByUserId();
+
+                    Utils.forceDigest();
+                }
+            })
+        );
+
+        registeredEvents.push(
+            $scope.$on('$destroy', function () {
+                if ($ionicSlideBoxDelegate._instances &&
+                    $ionicSlideBoxDelegate._instances.length > 0) {
+                    $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
+                    $ionicSlideBoxDelegate.update();
+                }
+            })
+        );
+
+        registeredEvents.push(
+            $scope.$on('$ionicView.beforeLeave', function () {
+                for (var i in registeredEvents) {
+                    registeredEvents[i]();
+                }
+                delete registeredEvents;
+            })
+        );
 
         return vm;
     });

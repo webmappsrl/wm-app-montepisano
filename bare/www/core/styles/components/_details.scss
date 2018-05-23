@@ -151,6 +151,7 @@
 .details-image {
   padding: 5px;
   position: relative;
+  min-height: 50px;
   img {
     border: 2px solid #f2f5e8;
     display: block;
@@ -322,6 +323,26 @@
     position: absolute;
     top: -5px;
     left: calc(50% - 10px);
+  }
+}
+
+.accessibility-buttons-container {
+  width: calc(100% - 10px);
+  margin: 5px;
+  position: relative;
+  height: 70px;
+  text-align: center;
+  a {
+    display: block;
+    float: left;
+    width: calc(100% / 5);
+    position: relative;
+    top: 10px;
+    i {
+      color: $color-light-03;
+      font-size: 40px;
+      padding: 10px;
+    }
   }
 }
 
@@ -509,6 +530,18 @@
 \* ------------------------------------ */
 
 /* TODO: use mixin? */
+
+@media only screen and (max-width: 350px) {
+  .accessibility-buttons-container {
+    height: 50px;
+    a {
+      i {
+        font-size: 30px;
+        padding: 5px;
+      }
+    }
+  }
+}
 
 @media only screen and (max-height: 567px) and (max-width: 768px) {
   .details-description p {

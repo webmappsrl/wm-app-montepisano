@@ -15,7 +15,7 @@
     </ion-nav-buttons>
 
     <div id="search-fixed">
-        <input type="search" placeholder="{{::'Cerca' | translate}}" ng-model="vm.search" />
+        <input type="search" placeholder="{{'Cerca' | translate}}" ng-model="vm.search" />
     </div>
 
     <ion-content class="withSearchBar" ng-style="{
@@ -47,20 +47,20 @@
                         'background': COLORS.global.buttonsBackground,
                         'color': COLORS.global.buttonsColor
                     }" ng-if="vm.userDownloadedPackages[item.id]" ng-click="vm.openPackage(item)">
-                        {{::"Apri" | translate}}
+                        {{"Apri" | translate}}
                     </button>
                     <button class="button-download button button-block button-half" ng-style="{
                         'background': COLORS.global.buttonsBackground,
                         'color': COLORS.global.buttonsColor
                     }" ng-if="vm.userDownloadedPackages[item.id]" ng-click="vm.removePack(item)">
-                        {{::"Rimuovi" | translate}}
+                        {{"Rimuovi" | translate}}
                     </button>
                     <button class="button-download button button-block button-half" ng-style="{
                         'background': COLORS.global.buttonsBackground,
                         'color': COLORS.global.buttonsColor
                     }" ng-if="(vm.userPackagesId[item.id] || item.wm_route_public) && !vm.userDownloadedPackages[item.id]"
                         ng-click="vm.downloadPack(item)">
-                        {{::"Scarica" | translate}}
+                        {{"Scarica" | translate}}
                     </button>
                     <button class="button-block button button-download button-half" ng-style="{
                         'background': COLORS.global.buttonsBackground,
@@ -74,7 +74,7 @@
                         'background': COLORS.global.buttonsBackground,
                         'color': COLORS.global.buttonsColor
                     }" ng-click="vm.openDetailsRoute(item.id);">
-                        {{::"Dettagli" | translate}}
+                        {{"Dettagli" | translate}}
                     </button>
                 </div>
 
@@ -95,7 +95,7 @@
                     </div>
 
                     <div class="content-reduced">
-                        <div ng-repeat="category in item.activity" class="icons-reduced icon {{vm.categories[category].icon}}">
+                        <div ng-repeat="category in item.activity" class="icons-reduced icon {{vm.activities[category].icon}}">
                         </div>
 
                         <div class="stars-reduced" ng-if="item.n7webmapp_route_difficulty !== '0'">
@@ -114,7 +114,7 @@
                             'color': COLORS.global.buttonsColor
                         }" ng-if="!item.wm_route_public && (!vm.isLoggedIn || !vm.userPackagesId[item.id])" ng-click="vm.openDetailsRoute(item.id)">
                             <!-- ITINERARIO NON COMPRATO oppure NON LOGGATO e ITINERARIO A PAGAMENTO-->
-                            {{::"Ottieni" | translate}}
+                            {{"Ottieni" | translate}}
                         </button>
                         <button ng-style="{
                             'background': COLORS.global.buttonsBackground,
@@ -122,7 +122,7 @@
                         }" class="login-button button button-block" ng-if="(vm.isLoggedIn && vm.userPackagesId[item.id]) || item.wm_route_public"
                             ng-click="vm.getPack(item, $event)">
                             <!-- LOGGATO e ITINERARIO COMPRATO (se non scaricato alert e scarica)-->
-                            {{::"Apri" | translate}}
+                            {{"Apri" | translate}}
                         </button>
                     </div>
                     <div class="route-languages-reduced" ng-if="vm.isMultilanguage">

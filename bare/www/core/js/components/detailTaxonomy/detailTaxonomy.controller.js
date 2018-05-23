@@ -5,6 +5,7 @@ angular.module('webmapp')
         CONFIG,
         $ionicLoading,
         $rootScope,
+        $scope,
         $state,
         $translate,
         MapService,
@@ -13,11 +14,12 @@ angular.module('webmapp')
     ) {
         var vm = {};
 
-        vm.title = CONFIG.OPTIONS.title;
+        var registeredEvents = [];
+
         var communicationConf = CONFIG.COMMUNICATION;
 
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
-
+        vm.title = CONFIG.OPTIONS.title;
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
         vm.defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';
         vm.taxonomy = {};
@@ -28,22 +30,6 @@ angular.module('webmapp')
         vm.userDownloadedPackages = {};
 
         vm.fullDescription = false;
-
-        if (CONFIG.MAIN) {
-            Utils.goTo("/");
-            var timeoutFunction = function () {
-                if (MapService.isReady()) {
-                    $ionicLoading.hide();
-                    // Utils.goTo("layer/Tappe/801");
-                    Utils.goTo(CONFIG.OPTIONS.startUrl);
-                } else {
-                    setTimeout(timeoutFunction, 300);
-                }
-            };
-            $ionicLoading.show();
-            timeoutFunction();
-            return vm;
-        }
 
         var taxonomyType = $state.params.parentId,
             id = $state.params.id * 1; // * 1 is to make id integrer
@@ -68,12 +54,12 @@ angular.module('webmapp')
             }
         };
 
-        vm.toggleList = function() {
+        vm.toggleList = function () {
             vm.isListExpanded = !vm.isListExpanded;
             $rootScope.$emit('toggle-list', vm.isListExpanded);
         };
-        
-        var updateMapView = function() {
+
+        var updateMapView = function () {
             MapService.disableInteractions();
             var toAdd = [],
                 i = 0;
@@ -89,24 +75,24 @@ angular.module('webmapp')
         var getTrack = function (url, packId, pos) {
             Communication.getJSON(url)
                 .then(function (data) {
-                        if (!vm.routes[packId].tracks) {
-                            vm.routes[packId].tracks = {};
-                        }
-                        vm.routes[packId].tracks[pos] = data;
-                        if (!vm.tracks) {
-                            vm.tracks = {};
-                            vm.tracks[packId] = {};
-                        }
-                        else if (!vm.tracks[packId]) {
-                            vm.tracks[packId] = {};
-                        }
+                    if (!vm.routes[packId].tracks) {
+                        vm.routes[packId].tracks = {};
+                    }
+                    vm.routes[packId].tracks[pos] = data;
+                    if (!vm.tracks) {
+                        vm.tracks = {};
+                        vm.tracks[packId] = {};
+                    }
+                    else if (!vm.tracks[packId]) {
+                        vm.tracks[packId] = {};
+                    }
 
-                        vm.tracks[packId][pos] = data;
+                    vm.tracks[packId][pos] = data;
 
-                        localStorage.$wm_taxonomy_tracks = JSON.stringify(vm.tracks);
+                    localStorage.$wm_taxonomy_tracks = JSON.stringify(vm.tracks);
 
-                        updateMapView();
-                    },
+                    updateMapView();
+                },
                     function (error) {
                         console.error("DetailTaxonommy.getTrack() ", error);
                     });
@@ -115,64 +101,87 @@ angular.module('webmapp')
         var getTracksForPack = function (packId) {
             Communication.getJSON(communicationConf.downloadJSONUrl + packId + '/app.json')
                 .then(function (data) {
-                        for (var i in data.routes) {
-                            getTrack(data.routes[i], packId, i);
-                        }
-                    },
+                    for (var i in data.routes) {
+                        getTrack(data.routes[i], packId, i);
+                    }
+                },
                     function (error) {
                         console.error("DetailTaxonommy.getTracksForPack() ", error);
                     });
         };
 
-        $rootScope.$on('taxonomy-' + taxonomyType + '-updated', function (e, value) {
-            $ionicLoading.hide();
-            vm.taxonomy = value;
-            vm.item = value[id];
-            vm.title = vm.item.name;
-            forceDigest();
-        });
+        registeredEvents.push(
+            $rootScope.$on('taxonomy-' + taxonomyType + '-updated', function (e, value) {
+                $ionicLoading.hide();
+                vm.taxonomy = value;
+                vm.item = value[id];
+                vm.title = vm.item.name;
+                forceDigest();
+            })
+        );
 
-        $rootScope.$on('taxonomy-activity-updated', function (e, value) {
-            $ionicLoading.hide();
-            vm.activities = value;
-            for (var i in vm.activities) {
-                if (!vm.activities[i].icon) {
-                    vm.activities[i].icon = 'wm-icon-help-circled';
+        registeredEvents.push(
+            $rootScope.$on('taxonomy-activity-updated', function (e, value) {
+                $ionicLoading.hide();
+                vm.activities = value;
+                for (var i in vm.activities) {
+                    if (!vm.activities[i].icon) {
+                        vm.activities[i].icon = 'wm-icon-help-circled';
+                    }
                 }
-            }
-            forceDigest();
-        });
+                forceDigest();
+            })
+        );
 
-        $rootScope.$on('packages-updated', function (e, value) {
-            $ionicLoading.hide();
-            vm.routes = {};
-            for (var i in value) {
-                if (value[i][taxonomyType]) {
-                    for (var j in value[i][taxonomyType]) {
-                        if (value[i][taxonomyType][j] === id) {
-                            vm.routes[i] = value[i];
-                            vm.routes[i].tracks = vm.tracks[i];
-                            getTracksForPack(i);
-                            break;
+        registeredEvents.push(
+            $rootScope.$on('packages-updated', function (e, value) {
+                $ionicLoading.hide();
+                vm.routes = {};
+                for (var i in value) {
+                    if (value[i][taxonomyType]) {
+                        for (var j in value[i][taxonomyType]) {
+                            if (value[i][taxonomyType][j] === id) {
+                                vm.routes[i] = value[i];
+                                vm.routes[i].tracks = vm.tracks[i];
+                                getTracksForPack(i);
+                                break;
+                            }
                         }
                     }
                 }
-            }
 
-            forceDigest();
-        });
+                forceDigest();
+            })
+        );
 
-        $rootScope.$on('userDownloadedPackages-updated', function (e, value) {
-            vm.userDownloadedPackages = value;
-            Utils.forceDigest();
-        });
+        registeredEvents.push(
+            $rootScope.$on('userDownloadedPackages-updated', function (e, value) {
+                vm.userDownloadedPackages = value;
+                Utils.forceDigest();
+            })
+        );
 
-        $ionicLoading.show();
-        PackageService.getRoutes();
-        PackageService.getDownloadedPackages();
-        PackageService.getTaxonomy('activity');
-        PackageService.getTaxonomy(taxonomyType);
-        MapService.resetView();
+        registeredEvents.push(
+            $scope.$on('$ionicView.enter', function () {
+                $ionicLoading.show({
+                    template: '<ion-spinner></ion-spinner>'
+                });
+                PackageService.getRoutes(true);
+                PackageService.getDownloadedPackages();
+                PackageService.getTaxonomy('activity');
+                PackageService.getTaxonomy(taxonomyType);
+                MapService.resetView();
+            })
+        );
+
+        registeredEvents.push(
+            $scope.$on('$ionicView.beforeLeave', function () {
+                for (var i in registeredEvents) {
+                    registeredEvents[i]();
+                }
+                delete registeredEvents;
+            })
+        );
 
         return vm;
     });

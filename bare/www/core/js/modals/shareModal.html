@@ -7,7 +7,7 @@
        </a>
         <h1 class="title">
             <span class="title-inner-header">
-                {{::"SEGNALA" | translate}}
+                {{"SEGNALA" | translate}}
             </span>
         </h1>
     </ion-header-bar>
@@ -15,7 +15,7 @@
     <ion-content class="offline-page">
         <div class="static-content offline-content">
             <div class="static-description offline-description">
-                <h2 class="offline-desc-title">{{::"SEGNALA LA TUA POSIZIONE" | translate}}</h2>
+                <h2 class="offline-desc-title">{{"SEGNALA LA TUA POSIZIONE" | translate}}</h2>
             </div>
 
             <div 
@@ -24,7 +24,7 @@
                 <input 
                     style="padding-left: 17px; width: 100%;" 
                     type="text" 
-                    placeholder="{{::'Inserisci la tua email' | translate}}"
+                    placeholder="{{'Inserisci la tua email' | translate}}"
                     autocorrect="off"
                     autocomplete="off"
                     spellcheck="false"
@@ -32,7 +32,7 @@
                 <input
                     style="padding-left: 17px; width: 100%;" 
                     type="text"
-                    placeholder="{{::'Inserisci il tuo numero di telefono (opzionale)' | translate}}"
+                    placeholder="{{'Inserisci il tuo numero di telefono (opzionale)' | translate}}"
                     autocorrect="off"
                     autocomplete="off"
                     spellcheck="false"
@@ -40,7 +40,7 @@
                 <label class="item item-input item-stacked-label label-segnalazione">
                     <!-- <span class="input-label">Titolo text area</span> -->
                     <textarea 
-                        placeholder="{{::'Inserisci il testo della tua segnalazione (opzionale)' | translate}}"
+                        placeholder="{{'Inserisci il testo della tua segnalazione (opzionale)' | translate}}"
                         ng-model="vm.textblock"
                         style="height: 30vh">
                     </textarea>
@@ -49,7 +49,7 @@
 
             <div style="color: black;" ng-if="vm.sendInProgress">
                 <p class="offline-text offline-download">
-                    {{::"Invio in corso" | translate}}
+                    {{"Invio in corso" | translate}}
                 </p>
                 <div
                     style="border-top: 16px solid {{COLORS.global.buttonsBackground}};"
@@ -59,7 +59,7 @@
 
             <div style="color: black;" ng-if="vm.sendSuccess">
                 <p class="offline-text offline-download">
-                    {{::"Segnalazione inviata" | translate}}
+                    {{"Segnalazione inviata" | translate}}
                 </p>
             </div>
 
@@ -72,7 +72,7 @@
                 ng-if="!vm.sendInProgress && !vm.sendSuccess"
                 ng-click="vm.sendText()">
                 <span>
-                    {{::"INVIA" | translate}}
+                    {{"INVIA" | translate}}
                 </span>
             </button>
         </div>

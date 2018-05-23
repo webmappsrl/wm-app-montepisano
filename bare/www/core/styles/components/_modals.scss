@@ -73,6 +73,9 @@
 
 .modal-content {
   padding: 15px;
+  .modal-description {
+    margin: 15px 0;
+  }
 }
 
 .modal-title {
@@ -81,6 +84,25 @@
   font-size: 16px;
   font-weight: $font-weight-bold;
   color: $color-light-02;
+  i {
+    font-size: 50px;
+    color: $color-light-03;
+    padding: 5px;
+  }
+}
+
+.modal-content {
+  div {
+    .modal-subtitle {
+      font-size: 30px;
+      position: relative;
+      top: 20px;
+    }
+    .modal-p {
+      position: relative;
+      top: 35px;
+    }
+  }
 }
 
 .modal-footer {
@@ -123,9 +145,6 @@
 
     &:last-child {
       border-bottom: none;
-    }
-    &.is-selected {
-      // color: #BF410E;
     }
   }
 }

@@ -46,8 +46,8 @@
                     ng-click="vm.goTo(item.url, item.type)"
                     ng-if="(vm.isBrowser && !item.hideInBrowser) || !vm.isBrowser"
                     ng-repeat="item in vm.advancedMenuItems">
-                    <!--<i class="icon {{item.icon}}"></i> -->{{item.label}}
-                </a> <!-- item-icon-left -->
+                    {{item.label | translate}}
+                </a>
             </div>
 
         </ion-content>

@@ -24,6 +24,12 @@ angular.module('webmapp')
 
         var resetMapView = function () {};
 
+        if (!Date.now) {
+            Date.now = function () {
+                return new Date().getTime();
+            };
+        }
+
         offline.state = _state;
         offline.options = CONFIG.OFFLINE || {};
 
@@ -290,6 +296,10 @@ angular.module('webmapp')
 
             vmReset();
 
+            $.ajaxSetup({
+                cache: false
+            });
+
             var destDirectory = offline.getOfflineMhildBasePathById(id),
                 transferPromises = [],
                 promises = [],
@@ -313,7 +323,8 @@ angular.module('webmapp')
 
                 promises.push(currentDefer.promise);
 
-                currentTransfert = $cordovaFileTransfer.download(encodeURI(item), encodeURI(targetPath), {}, true);
+                // + '?ts=' + Date.now() is added to prevent cached data making the download url different
+                currentTransfert = $cordovaFileTransfer.download(encodeURI(item + '?ts=' + Date.now()), encodeURI(targetPath), {}, true);
                 transferPromises.push(currentTransfert);
 
                 currentTransfert
@@ -363,6 +374,8 @@ angular.module('webmapp')
                         });
             });
 
+            $.ajaxSetup();
+
             return $q.all(promises);
         };
 
@@ -379,7 +392,7 @@ angular.module('webmapp')
             location.href = 'index.html';
 
             $ionicLoading.show({
-                template: 'Loading...'
+                template: '<ion-spinner></ion-spinner>'
             });
 
             Utils.forceDigest();
