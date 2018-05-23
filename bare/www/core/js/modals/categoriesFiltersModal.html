@@ -6,7 +6,7 @@
         'background': COLORS.global.background
     }">
         <div class="modal-content">
-            <span class="modal-title">{{::"VISUALIZZA/NASCONDI CATEGORIE" | translate}}</span>
+            <span class="modal-title">{{"VISUALIZZA/NASCONDI CATEGORIE" | translate}}</span>
 
             <ion-list>
                 <label class="item item-checkbox ng-not-empty" ng-repeat="(key, obj) in vm.filters" ng-init="currentFilter = obj.value" ng-model="obj.value"

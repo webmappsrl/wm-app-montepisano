@@ -6,13 +6,13 @@
             class="nav-link login-link"
             ng-show="!$root.isLoggedIn"
             ng-click="vm.openLoginOrRegistration()">
-            {{::"Login" | translate}}
+            {{"Login" | translate}}
         </a>
         <a 
             class="nav-link register-link"
             ng-show="!$root.isLoggedIn"
             ng-click="vm.openLoginOrRegistration(true)">
-            {{::"Registrati" | translate}}
+            {{"Registrati" | translate}}
         </a>
     </ion-nav-title>
     <div class="list card welcome-list">
@@ -35,13 +35,13 @@
                     ng-click="vm.goToSubLayer('layer/Accoglienza', $event)"
                     class="submenu-item item-ospitality">
                     <i class="icon wm-icon-lodging"></i> 
-                    <span class="submenu-item-label">{{::"Accoglienza" | translate}}</span>
+                    <span class="submenu-item-label">{{"Accoglienza" | translate}}</span>
                 </span>
                 <span 
                     ng-click="vm.goToSubLayer('layer/Mangiare_e_bere', $event)"
                     class="submenu-item item-eat">
                     <i class="icon wm-icon-restaurant"></i>
-                    <span class="submenu-item-label">{{::"Mangiare e bere" | translate}}</span>
+                    <span class="submenu-item-label">{{"Mangiare e bere" | translate}}</span>
                 </span>
                 <!-- <span 
                     ng-click="vm.goToSubLayer('layer/Servizi_per_il_turista', $event)"
@@ -59,24 +59,24 @@
                     ng-click="vm.goToSubLayer('layer/Siti_di_interesse', $event)"
                     class="submenu-item item-interesse">
                     <i class="icon wm-icon-siti-interesse"></i> 
-                    <span class="submenu-item-label">{{::"Siti di interesse" | translate}}</span>
+                    <span class="submenu-item-label">{{"Siti di interesse" | translate}}</span>
                 </span>
                 <span 
                     ng-click="vm.goToSubLayer('layer/Tempo_libero', $event)"
                     class="submenu-item item-spare-time">
                     <i class="icon wm-icon-vc-tempolibero"></i> 
-                    <span class="submenu-item-label">{{::"Tempo libero" | translate}}</span>
+                    <span class="submenu-item-label">{{"Tempo libero" | translate}}</span>
                 </span>
                 <span 
                     ng-click="vm.goToSubLayer('layer/Terme_e_spa', $event)"
                     class="submenu-item item-spa">
                     <i class="icon wm-icon-vc-terme"></i> 
-                    <span class="submenu-item-label">{{::"Terme e spa" | translate}}</span>
+                    <span class="submenu-item-label">{{"Terme e spa" | translate}}</span>
                 </span>
                 <span 
                     class="submenu-item item-show-more">
                     <i class="icon wm-icon-ios7-arrow-forward"></i> 
-                        {{::"vedi tutti" | translate}}
+                        {{"vedi tutti" | translate}}
                 </span>
             </div>
 

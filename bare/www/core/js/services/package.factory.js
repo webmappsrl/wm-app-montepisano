@@ -239,6 +239,12 @@ angular.module('webmapp')
             if (taxonomy[taxonomyType]) {
                 $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
             }
+            else {
+                taxonomy[taxonomyType] = localStorage.$wm_taxonomy ? JSON.parse(localStorage.$wm_taxonomy)[taxonomyType] : null;
+                if (taxonomy[taxonomyType]) {
+                    $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                }
+            }
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')
                 .then(function (data) {
                     asyncTranslations = 0;

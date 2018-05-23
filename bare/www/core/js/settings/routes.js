@@ -5,8 +5,10 @@ angular.module('webmapp')
         $httpProvider,
         $urlRouterProvider,
         $ionicConfigProvider,
+        $windowProvider,
         CONFIGProvider) {
         var basePath = templateBasePath || '';
+        var $window = $windowProvider.$get();
 
         // Cache each view in DOM
         // $ionicConfigProvider.views.forwardCache(true);
@@ -215,7 +217,12 @@ angular.module('webmapp')
             }
         }
 
-        $urlRouterProvider.otherwise(CONFIGProvider.OPTIONS.startUrl);
-
-        // $locationProvider.html5Mode(true); Aggiungere $locationProvider ai parametri
+        var redirectHomeToThemes = $window.localStorage.$wm_closedMap ? JSON.parse($window.localStorage.$wm_closedMap) : false;
+        if (redirectHomeToThemes) {
+            delete $window.localStorage.$wm_closedMap;
+            $urlRouterProvider.otherwise('taxonomy/theme');
+        }
+        else {
+            $urlRouterProvider.otherwise(CONFIGProvider.OPTIONS.startUrl);
+        }
     });

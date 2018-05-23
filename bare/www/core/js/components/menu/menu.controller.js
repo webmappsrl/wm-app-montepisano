@@ -71,7 +71,7 @@ angular.module('webmapp')
         }
 
         vm.advancedMenuItems.push({
-            label: $translate.instant(mainMenuItems[i].label),
+            label: mainMenuItems[i].label,
             url: currentUrl,
             icon: mainMenuItems[i].icon,
             color: mainMenuItems[i].color,
@@ -532,6 +532,7 @@ angular.module('webmapp')
         if (type === 'internalLink') {
             location.href = url;
         } else if (type === 'closeMap') {
+            localStorage.$wm_closedMap = JSON.stringify(true);
             Offline.resetCurrentMapAndGoBack();
         } else {
             Utils.goTo(url);

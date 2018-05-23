@@ -1356,6 +1356,7 @@ angular.module('webmapp')
             vm.isAPoi = false;
             vm.taxonomyName = value.name;
             vm.itemColor = hexToRgbA(value.color);
+            vm.activityIcon = value.icon;
             if (MapService.isAPOILayer($rootScope.currentParams.parentId.replace(/_/g, ' '))) {
                 MapService.getFeatureById($rootScope.currentParams.id, $rootScope.currentParams.parentId.replace(/_/g, ' '))
                     .then(function (feature) {
@@ -1365,11 +1366,9 @@ angular.module('webmapp')
                         else {
                             var track = MapService.getRelatedTrackByFeatureId(feature.properties.id);
                             var features = MapService.getRelatedFeaturesById(track.properties.id_pois);
-                            console.log(track, features)
                             vm.parentTrackName = track.properties.name;
                             for (var pos in features) {
                                 if (features[pos].properties.id * 1 === $rootScope.currentParams.id * 1) {
-                                    console.log(pos, features.length);
                                     var intPos = pos * 1;
                                     if (intPos === 0) {
                                         vm.prevUrl = 'layer/' + features[features.length - 1].parent.label.replace(/ /g, '_') + '/' + features[features.length - 1].properties.id;

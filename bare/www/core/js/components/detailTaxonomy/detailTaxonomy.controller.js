@@ -64,6 +64,8 @@ angular.module('webmapp')
         vm.openOrDownloadPack = function (packId) {
             if (vm.userDownloadedPackages[packId]) {
                 localStorage.$wm_itemColor = JSON.stringify(vm.item.color);
+                localStorage.$wm_activityIcon = JSON.stringify(vm.activities[vm.routes[packId].activity[0]].icon);
+                
                 if (vm.item.name[vm.currentLang]) {
                     localStorage.$wm_taxonomyName = JSON.stringify(vm.item.name[vm.currentLang]);
                 }

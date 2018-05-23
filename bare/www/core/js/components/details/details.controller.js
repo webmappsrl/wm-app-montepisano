@@ -293,7 +293,8 @@ angular.module('webmapp')
                 }
                 $rootScope.$emit('taxonomy-details', {
                     name: vm.taxonomyName,
-                    color: vm.itemColor
+                    color: vm.itemColor,
+                    icon: vm.activityIcon
                 });
             }
 
@@ -367,6 +368,7 @@ angular.module('webmapp')
 
         vm.itemColor = localStorage.$wm_itemColor ? JSON.parse(localStorage.$wm_itemColor) : 'inherit';
         vm.taxonomyName = localStorage.$wm_taxonomyName ? JSON.parse(localStorage.$wm_taxonomyName) : '';
+        vm.activityIcon = localStorage.$wm_activityIcon ? JSON.parse(localStorage.$wm_activityIcon) : 'wm-icon-generic';
 
         if (current.name === 'app.main.detaillayer') {
             MapService.getFeatureById(params.id, params.parentId.replace(/_/g, ' '))
