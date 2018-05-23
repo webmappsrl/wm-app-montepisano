@@ -1117,7 +1117,6 @@ angular.module('webmapp')
         };
 
         vm.stopNavigation = function () {
-
             vm.isPaused = false;
             vm.isNavigating = false;
             clearInterval(vm.outOfTrackInterval)
@@ -1135,7 +1134,6 @@ angular.module('webmapp')
                 };
                 Utils.goTo(url);
             }
-
         };
 
         var showPathAndRelated = function (params) {

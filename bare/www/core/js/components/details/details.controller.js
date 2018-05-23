@@ -336,15 +336,17 @@ angular.module('webmapp')
                 }, 2500);
             }, 1000);
 
-            vm.feature.accessibility.mobility.icon = 'wm-icon-wheelchair-15';
-            vm.feature.accessibility.hearing.icon = 'wm-icon-hearing-impared';
-            vm.feature.accessibility.vision.icon = 'wm-icon-visually-impaired';
-            vm.feature.accessibility.cognitive.icon = 'wm-icon-cognitive-impared';
-            vm.feature.accessibility.food.icon = 'wm-icon-food-intolerance';
+            if (vm.feature.accessibility) {
+                vm.feature.accessibility.mobility.icon = 'wm-icon-wheelchair-15';
+                vm.feature.accessibility.hearing.icon = 'wm-icon-hearing-impared';
+                vm.feature.accessibility.vision.icon = 'wm-icon-visually-impaired';
+                vm.feature.accessibility.cognitive.icon = 'wm-icon-cognitive-impared';
+                vm.feature.accessibility.food.icon = 'wm-icon-food-intolerance';
 
-            for (var i in vm.feature.accessibility) {
-                if (!vm.feature.accessibility[i].description || vm.feature.accessibility[i].description === "") {
-                    vm.feature.accessibility[i].description = "Questa descrizione non è ancora stata inserita e sarà disponibile a breve.";
+                for (var i in vm.feature.accessibility) {
+                    if (!vm.feature.accessibility[i].description || vm.feature.accessibility[i].description === "") {
+                        vm.feature.accessibility[i].description = "Questa descrizione non è ancora stata inserita e sarà disponibile a breve.";
+                    }
                 }
             }
 

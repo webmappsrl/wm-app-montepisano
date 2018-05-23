@@ -195,6 +195,7 @@ angular.module('webmapp')
                             vm.title = routeDetail.packageTitle[Object.keys(routeDetail.packageTitle)[0]];
                         }
                     }
+                    vm.description = "";
 
                     if (routeDetail.packageDescription) {
                         if (routeDetail.packageDescription[vm.currentLang]) {
