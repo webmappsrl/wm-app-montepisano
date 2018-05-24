@@ -1372,8 +1372,11 @@ angular.module('webmapp')
     };
 
     function showOutOfTrackToast(distance) {
+        var currentDistance = distance > 500 ? (distance / 1000).toFixed(1) : (distance - (distance % 10)).toFixed();
         var content = '',
-            message = 'Attento, ti sei allontanato dal percorso di' + ' ' + distance.toFixed() + 'm';
+            message = 'Attento, ti sei allontanato dal percorso di' + ' ' + currentDistance + ' ';
+
+        var unit = distance > 500 ? 'km' : 'm';
 
         content = content + '<div class="toast-container">';
         content = content + '<div class="toast-alert-icon">';
@@ -1381,7 +1384,7 @@ angular.module('webmapp')
         content = content + '</div>';
         content = content + '<div class="toast-content">';
         content = content + '<div class="toast-message">';
-        content = content + message;
+        content = content + message + unit;
         content = content + '</div>';
         // content = content + '<div class="toast-buttons">';
 
