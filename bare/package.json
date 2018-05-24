@@ -18,6 +18,7 @@
     "cordova-plugin-file-transfer": "~1.4.0",
     "cordova-plugin-geolocation": "~2.4.0",
     "cordova-plugin-inappbrowser": "~1.5.0",
+    "cordova-plugin-insomnia": "git+https://github.com/EddyVerbruggen/Insomnia-PhoneGap-Plugin.git",
     "cordova-plugin-network-information": "~1.2.1",
     "cordova-plugin-splashscreen": "~2.1.0",
     "cordova-plugin-statusbar": "~2.2.0",
@@ -75,7 +76,8 @@
       "phonegap-plugin-barcodescanner": {},
       "uk.co.workingedge.phonegap.plugin.launchnavigator": {},
       "cordova-plugin-x-socialsharing": {},
-      "cordova.plugins.diagnostic": {}
+      "cordova.plugins.diagnostic": {},
+      "cordova-plugin-insomnia": {}
     },
     "platforms": [
       "android",
