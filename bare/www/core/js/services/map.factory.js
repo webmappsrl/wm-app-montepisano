@@ -413,12 +413,12 @@ angular.module('webmapp')
                     if (e.layer.feature.properties.picture_url) {
                         content = content +
                             '<div class="popup-img">' +
-                            '<img src="' + e.layer.feature.properties.picture_url + '" />' +
+                            '<img src="' + Offline.getRealImageUrl(e.layer.feature.properties.picture_url) + '" />' +
                             '</div>';
                     } else if (e.layer.feature.properties.imageGallery) {
                         content = content +
                             '<div class="popup-img">' +
-                            '<img src="' + e.layer.feature.properties.imageGallery[0].src + '" />' +
+                            '<img src="' + Offline.getRealImageUrl(e.layer.feature.properties.imageGallery[0].src) + '" />' +
                             '</div>';
                     } else {
                         content = content +
