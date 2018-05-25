@@ -1846,6 +1846,15 @@ angular.module('webmapp')
             }
         };
 
+        mapService.removePosition = function () {
+            if (!circleLocation.position === null){
+                map.removeLayer(circleLocation.position);
+            }
+            if (!circleLocation.accuracy === null) {
+                map.removeLayer(circleLocation.accuracy);
+            }
+        };
+
         mapService.isInBoundingBox = function (lat, long) {
             var bounds = new L.latLngBounds(
                 new L.latLng(mapConf.bounds.southWest),
