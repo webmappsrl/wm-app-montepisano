@@ -73,7 +73,9 @@
                 </ul>
                 <div class="contacts-list__element" style="width: 100%" ng-if="vm.feature.address">
                     <a href="geo:{{vm.coordinates}}" style="cursor: default" ng-click="vm.openExternalMap()">
-                        <i class="icon wm-icon-navigate"></i> {{vm.feature.address}}
+                        <i class="icon wm-icon-navigate"></i>
+                         <!-- {{vm.feature.address}} -->
+                         {{"Portami qui" | translate}}
                     </a>
                 </div>
             </div>
