@@ -3686,8 +3686,8 @@ button.no-animate.button.button-icon.icon.wm-icon-funnel-wm {
             font-size: 25px;
             margin: 12.5px 3px;
             padding: 3px;
-            color: #D80000;
-            border: 1px solid #D80000;
+            color: #000000;
+            border: 1px solid #000000;
             border-radius: 50%; }
   .taxonomy-page ion-content .footer-space {
     height: 70px; }

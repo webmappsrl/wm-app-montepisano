@@ -110,6 +110,7 @@ angular.module('webmapp')
             }
             MapService.createGeojsonLayer(toAdd);
             $rootScope.$emit('geolocate');
+            console.log(vm.routes);
         };
 
         var getTrack = function (url, packId, pos) {
@@ -128,6 +129,16 @@ angular.module('webmapp')
                     }
 
                     vm.tracks[packId][pos] = data;
+
+                    if (+pos === 0) {
+                        if (data.features && data.features[0] && data.features[0].properties && data.features[0].properties.color) {
+                            vm.routes[packId].color = data.features[0].properties.color;
+                        }
+                        else {
+                            vm.routes[packId].color = '#000000';
+                        }
+                        
+                    }
 
                     localStorage.$wm_taxonomy_tracks = JSON.stringify(vm.tracks);
 

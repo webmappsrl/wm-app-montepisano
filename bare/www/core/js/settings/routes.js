@@ -217,12 +217,13 @@ angular.module('webmapp')
             }
         }
 
-        var redirectHomeToThemes = $window.localStorage.$wm_closedMap ? JSON.parse($window.localStorage.$wm_closedMap) : false;
-        if (redirectHomeToThemes) {
-            delete $window.localStorage.$wm_closedMap;
+        var redirectHomeToThemes = $window.localStorage.$wm_redirectToThemes ? JSON.parse($window.localStorage.$wm_redirectToThemes) : false;
+        var internalMap = $window.localStorage.$wm_mhildId ? true : false;
+        if (redirectHomeToThemes && !internalMap) {
             $urlRouterProvider.otherwise('taxonomy/theme');
         }
         else {
             $urlRouterProvider.otherwise(CONFIGProvider.OPTIONS.startUrl);
+            $window.localStorage.$wm_redirectToThemes = JSON.stringify(true);
         }
     });

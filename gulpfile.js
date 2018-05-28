@@ -40,7 +40,7 @@ var argv = yargs.argv,
     config_xml = '';
 instance_name = 'default';
 
-gulp.task('build', ['create', 'update' /*, 'post-install'*/ ]);
+gulp.task('build', ['create', 'update' /*, 'post-install'*/]);
 
 gulp.task('node_modules_link', function () {
     return gulp.src('bare/node_modules')
@@ -87,11 +87,11 @@ gulp.task('update', ['create'], function () {
         resources = argv.url + '/resources/';;
         // estraggo le info
         request({
-                url: info,
-                headers: {
-                    'User-Agent': 'request'
-                }
-            })
+            url: info,
+            headers: {
+                'User-Agent': 'request'
+            }
+        })
             .pipe(source(info))
             // .pipe(fs.access(info))
             .pipe(streamify(jeditor(function (repositories) {
@@ -105,21 +105,21 @@ gulp.task('update', ['create'], function () {
 
                 gulp.updateConfigXML(config_xml);
 
+                gulp.getUrlFile('config.js', config, dir + '/www/config/');
+
+                gulp.setFont('Abel');
+
+                gulp.getUrlFile('icon.png', resources + 'icon.png', dir + '/resources/');
+                gulp.getUrlFile('splash.png', resources + 'splash.png', dir + '/resources/');
+
+                // gulp.start('add-resources');
+                sh.exec('ionic cordova resources', {
+                    cwd: dir
+                });
+
                 return repositories;
 
             })));
-
-        gulp.getUrlFile('config.js', config, dir + '/www/config/');
-
-        gulp.setFont('Abel');
-
-        gulp.getUrlFile('icon.png', resources + 'icon.png', dir + '/resources/');
-        gulp.getUrlFile('splash.png', resources + 'splash.png', dir + '/resources/');
-
-        // gulp.start('add-resources');
-        sh.exec('ionic cordova resources', {
-            cwd: dir
-        })
     } else {
         console.warn('[WARN] instance doesn\'t exits. Create first.');
     }
@@ -264,11 +264,11 @@ gulp.copy = function (src, dest) {
 
 gulp.getUrlFile = function (file, src, dest) {
     return request({
-            url: src,
-            headers: {
-                'User-Agent': 'request'
-            }
-        })
+        url: src,
+        headers: {
+            'User-Agent': 'request'
+        }
+    })
         .pipe(source(file))
         .pipe(gulp.dest(dest));
 };

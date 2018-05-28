@@ -532,7 +532,6 @@ angular.module('webmapp')
         if (type === 'internalLink') {
             location.href = url;
         } else if (type === 'closeMap') {
-            localStorage.$wm_closedMap = JSON.stringify(true);
             Offline.resetCurrentMapAndGoBack();
         } else {
             Utils.goTo(url);
