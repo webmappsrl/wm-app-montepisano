@@ -5,6 +5,7 @@ var gulp = require('gulp'),
     jeditor = require('gulp-json-editor'),
     request = require('request'),
     replace = require('gulp-replace'),
+    header = require('gulp-header'),
     source = require('vinyl-source-stream'),
     streamify = require('gulp-streamify'),
     rename = require('gulp-rename'),
@@ -34,6 +35,9 @@ yargs.usage('Usage: $0 <command> [options]')
     .alias('c', 'config')
     .nargs('c', 1)
     .describe('c', 'file used for config')
+    .alias('v', 'versionType')
+    .nargs('v', 1)
+    .describe('v', 'Type of version to build (internal, beta, minor, major)')
     .epilog('(c) Webmapp 2017');
 
 var argv = yargs.argv,
@@ -102,7 +106,7 @@ gulp.task('update', ['create'], function () {
                 };
 
                 gulp.getUrlFile('config.js', config, dir + '/www/config/')
-                    .on('end', function() {
+                    .on('end', function () {
                         gulp.updateConfigXML(config_xml);
                     });
 
@@ -298,3 +302,89 @@ gulp.setFont = function (fontFamily) {
         .pipe(replace(/\$title-font-family: '(.*)', sans-serif;/g, "$title-font-family: '" + fontFamily + "', sans-serif;"))
         .pipe(gulp.dest(dir));
 };
+
+gulp.getChanges = function (oldVersion, newVersion) {
+    sh.exec('git log --pretty=oneline --abbrev-commit BETA_' + oldVersion + '...BETA_' + newVersion + ' > tmp.txt');
+    return gulp.src('tmp.txt')
+        .pipe(replace(/^(.{7} )/gm, ""))
+        .pipe(replace(/^[^F].*$\n/gm, ""))
+        .pipe(gulp.dest('./'));
+};
+
+gulp.task('push-version', function () {
+    /*
+     * DONE - Update version number
+     * Commit and push version WITH TAG
+     * Take all commit's messages between this and last version
+     *     git log --pretty=oneline TAG_FROM...TAG_TO
+     * Create new part of changelog
+     * Update changelog file
+     */
+
+    var versionType = 'internal'
+    if (argv.versionType) {
+        versionType = argv.versionType;
+    }
+
+    var oldVersion = JSON.parse(fs.readFileSync('./version.json')).version;
+    var versionArray = oldVersion.split('.');
+
+    switch (versionType) {
+        case 'internal':
+            versionArray[2] = +versionArray[2] + 1;
+            break;
+        case 'beta':
+            versionArray[2] = +versionArray[2] + 100;
+            versionArray[2] = versionArray[2] - (versionArray[2] % 100);
+            break;
+        case 'minor':
+            versionArray[1] = +versionArray[1] + 1;
+            versionArray[2] = 0;
+            break;
+        case 'major':
+            versionArray[0] = +versionArray[0] + 1;
+            versionArray[1] = 0;
+            versionArray[2] = 0;
+            break;
+        default:
+            console.error("Wrong build type: use 'internal', 'beta', 'minor' or 'major'");
+            return;
+            break;
+    }
+
+    var newVersion = versionArray[0] + '.' + versionArray[1] + '.' + versionArray[2];
+
+    // TODO Write new version and push
+
+    // TODO select only commits that start with PROD:
+
+    return Promise.all([
+        new Promise(function (resolve, reject) {
+            sh.exec('git log --pretty=oneline --abbrev-commit BETA_' + oldVersion + '..HEAD > tmp.txt');
+            return gulp.src('tmp.txt')
+                .pipe(replace(/^(.{1,6} )(.*)\n/gm, ""))   // Remove all multiline messages
+                .pipe(replace(/^([^ ]{8,})(.*)\n/gm, ""))  // Remove all multiline messages
+                .pipe(replace(/^(.{7} )/gm, ""))           // Remove commit id
+                .pipe(replace(/^[^A].*$\n/gm, ""))         // Select only commit that start with A TODO CHANGE TO PROD
+                .pipe(replace(/^(.{1})/gm, ""))            // Remove start of commit (char A) TODO CHANGE TO PROD
+                .on('error', reject)
+                .pipe(gulp.dest('./'))
+                .on('end', resolve);
+        })
+    ]).then(function () {
+        return Promise.all([
+            new Promise(function (resolve, reject) {
+                return gulp.src('changelog.txt')
+                .pipe(header(fs.readFileSync('tmp.txt')))
+                .pipe(header('Version ' + newVersion + '\n'))
+                .on('error', reject)
+                .pipe(gulp.dest('./'))
+                .on('end', resolve);
+            })
+        ])
+        .then(function () {
+            //GIT ADD COMMIT PUSH TAG
+            sh.exec()
+        });
+    });
+});
