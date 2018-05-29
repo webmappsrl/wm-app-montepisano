@@ -384,7 +384,11 @@ gulp.task('push-version', function () {
         ])
         .then(function () {
             //GIT ADD COMMIT PUSH TAG
-            sh.exec()
+            sh.exec('git add -A');
+            sh.exec('git commit -m "Ready for ' + newVersion + '"');
+            sh.exec('git push origin automated-changelog');
+            sh.exec('git tag BETA_' + newVersion);
+            sh.exec('git push origin BETA_' + newVersion);
         });
     });
 });
