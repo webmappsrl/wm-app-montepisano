@@ -365,8 +365,8 @@ gulp.task('push-version', function () {
                 .pipe(replace(/^(.{1,6} )(.*)\n/gm, ""))   // Remove all multiline messages
                 .pipe(replace(/^([^ ]{8,})(.*)\n/gm, ""))  // Remove all multiline messages
                 .pipe(replace(/^(.{7} )/gm, ""))           // Remove commit id
-                .pipe(replace(/^[^A].*$\n/gm, ""))         // Select only commit that start with A TODO CHANGE TO PROD
-                .pipe(replace(/^(.{1})/gm, ""))            // Remove start of commit (char A) TODO CHANGE TO PROD
+                .pipe(replace(/^[^PROD: ].*$\n/gm, ""))         // Select only commit that start with A TODO CHANGE TO PROD
+                .pipe(replace(/^(.{6})/gm, ""))            // Remove start of commit (char A) TODO CHANGE TO PROD
                 .on('error', reject)
                 .pipe(gulp.dest('./'))
                 .on('end', resolve);
@@ -374,21 +374,33 @@ gulp.task('push-version', function () {
     ]).then(function () {
         return Promise.all([
             new Promise(function (resolve, reject) {
+                sh.exec('touch changelog.txt');
                 return gulp.src('changelog.txt')
-                .pipe(header(fs.readFileSync('tmp.txt')))
-                .pipe(header('Version ' + newVersion + '\n'))
-                .on('error', reject)
-                .pipe(gulp.dest('./'))
-                .on('end', resolve);
+                    .pipe(header(fs.readFileSync('tmp.txt')))
+                    .pipe(header('Version ' + newVersion + '\n'))
+                    .on('error', reject)
+                    .pipe(gulp.dest('./'))
+                    .on('end', resolve);
             })
         ])
-        .then(function () {
-            //GIT ADD COMMIT PUSH TAG
-            sh.exec('git add -A');
-            sh.exec('git commit -m "Ready for ' + newVersion + '"');
-            sh.exec('git push origin automated-changelog');
-            sh.exec('git tag BETA_' + newVersion);
-            sh.exec('git push origin BETA_' + newVersion);
-        });
+            .then(function () {
+                return Promise.all([
+                    new Promise(function (resolve, reject) {
+                        return gulp.src('version.json')
+                            .pipe(replace(/"version": "(.{5,10})"/gm, '"version": "' + newVersion + '"'))
+                            .on('error', reject)
+                            .pipe(gulp.dest('./'))
+                            .on('end', resolve);
+                    })
+                ])
+                    .then(function () {
+                        //GIT ADD COMMIT PUSH TAG
+                        sh.exec('git add -A');
+                        sh.exec('git commit -m "Ready for ' + newVersion + '"');
+                        sh.exec('git push origin automated-changelog');
+                        sh.exec('git tag BETA_' + newVersion);
+                        sh.exec('git push origin BETA_' + newVersion);
+                    });
+            });
     });
 });
