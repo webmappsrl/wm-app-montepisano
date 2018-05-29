@@ -360,8 +360,8 @@ gulp.task('push-version', function () {
 
     return Promise.all([
         new Promise(function (resolve, reject) {
-            sh.exec('git log --pretty=oneline --abbrev-commit BETA_' + oldVersion + '..HEAD > tmp.txt');
-            return gulp.src('tmp.txt')
+            sh.exec('git log --pretty=oneline --abbrev-commit BETA_' + oldVersion + '..HEAD > lastChanges.txt');
+            return gulp.src('lastChanges.txt')
                 .pipe(replace(/^(.{1,6} )(.*)\n/gm, ""))   // Remove all multiline messages
                 .pipe(replace(/^([^ ]{8,})(.*)\n/gm, ""))  // Remove all multiline messages
                 .pipe(replace(/^(.{7} )/gm, ""))           // Remove commit id
@@ -376,7 +376,7 @@ gulp.task('push-version', function () {
             new Promise(function (resolve, reject) {
                 sh.exec('touch changelog.txt');
                 return gulp.src('changelog.txt')
-                    .pipe(header(fs.readFileSync('tmp.txt')))
+                    .pipe(header(fs.readFileSync('lastChanges.txt')))
                     .pipe(header('Version ' + newVersion + '\n'))
                     .on('error', reject)
                     .pipe(gulp.dest('./'))
