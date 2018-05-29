@@ -311,16 +311,24 @@ gulp.getChanges = function (oldVersion, newVersion) {
         .pipe(gulp.dest('./'));
 };
 
+/**
+ * @description
+ * Update the version number, takes all the changes from previous version and create
+ * changelog.txt and lastChanges.txt, push all the changes to remote and tag the new
+ * version
+ * 
+ * @param {string} -v [optional]
+ *      allow to choose the type of version update:
+ *          - internal: increments by 0.0.0001, max x.x.xx99
+ *          - beta    : increments by 0.0.0100, max x.x.99xx
+ *          - minor   : increments by 0.1.0000
+ *          - major   : increments by 1.0.0
+ *      In every case the previous values become 0
+ *      e.g.
+ *      version  | internal |   beta   | minor | major
+ *      0.1.1603   0.1.1604   0.1.1700   0.2.0   1.0.0
+ */
 gulp.task('push-version', function () {
-    /*
-     * DONE - Update version number
-     * Commit and push version WITH TAG
-     * Take all commit's messages between this and last version
-     *     git log --pretty=oneline TAG_FROM...TAG_TO
-     * Create new part of changelog
-     * Update changelog file
-     */
-
     var versionType = 'internal'
     if (argv.versionType) {
         versionType = argv.versionType;
@@ -331,9 +339,17 @@ gulp.task('push-version', function () {
 
     switch (versionType) {
         case 'internal':
+            if ((+versionArray[2]) % 100 === 99) {
+                console.log("Maximum internal version reached")
+                return;
+            }
             versionArray[2] = +versionArray[2] + 1;
             break;
         case 'beta':
+            if (+versionArray[2] >= 9900) {
+                console.log("Maximum beta version reached")
+                return;
+            }
             versionArray[2] = +versionArray[2] + 100;
             versionArray[2] = versionArray[2] - (versionArray[2] % 100);
             break;
@@ -347,16 +363,11 @@ gulp.task('push-version', function () {
             versionArray[2] = 0;
             break;
         default:
-            console.error("Wrong build type: use 'internal', 'beta', 'minor' or 'major'");
-            return;
+            versionArray[2] = +versionArray[2] + 1;
             break;
     }
 
     var newVersion = versionArray[0] + '.' + versionArray[1] + '.' + versionArray[2];
-
-    // TODO Write new version and push
-
-    // TODO select only commits that start with PROD:
 
     return Promise.all([
         new Promise(function (resolve, reject) {
@@ -365,7 +376,7 @@ gulp.task('push-version', function () {
                 .pipe(replace(/^(.{1,6} )(.*)\n/gm, ""))   // Remove all multiline messages
                 .pipe(replace(/^([^ ]{8,})(.*)\n/gm, ""))  // Remove all multiline messages
                 .pipe(replace(/^(.{7} )/gm, ""))           // Remove commit id
-                .pipe(replace(/^[^PROD: ].*$\n/gm, ""))         // Select only commit that start with A TODO CHANGE TO PROD
+                .pipe(replace(/^[^PROD: ].*$\n/gm, ""))    // Select only commit that start with A TODO CHANGE TO PROD
                 .pipe(replace(/^(.{6})/gm, ""))            // Remove start of commit (char A) TODO CHANGE TO PROD
                 .on('error', reject)
                 .pipe(gulp.dest('./'))
@@ -395,11 +406,11 @@ gulp.task('push-version', function () {
                 ])
                     .then(function () {
                         //GIT ADD COMMIT PUSH TAG
-                        sh.exec('git add -A');
-                        sh.exec('git commit -m "Ready for ' + newVersion + '"');
-                        sh.exec('git push origin automated-changelog');
-                        sh.exec('git tag BETA_' + newVersion);
-                        sh.exec('git push origin BETA_' + newVersion);
+                        // sh.exec('git add -A');
+                        // sh.exec('git commit -m "Ready for ' + newVersion + '"');
+                        // sh.exec('git push origin master');
+                        // sh.exec('git tag BETA_' + newVersion);
+                        // sh.exec('git push origin BETA_' + newVersion);
                     });
             });
     });
