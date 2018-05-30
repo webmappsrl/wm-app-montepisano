@@ -54,7 +54,16 @@ angular.module('webmapp')
                 vm.isNavigable = false;
                 $rootScope.$emit('item-navigable', vm.isNavigable);
             }
-            Utils.goBack();
+            var trackHistoryPosition = localStorage.$wm_track_history ? JSON.parse(localStorage.$wm_track_history) : 1;
+            delete localStorage.$wm_track_history;
+            console.log(trackHistoryPosition);
+            if (trackHistoryPosition <= 0) {
+                console.log(trackHistoryPosition);
+                history.go(trackHistoryPosition);
+            }
+            else {
+                Utils.goBack();
+            }
         }
 
         vm.goToSearch = function () {
@@ -494,6 +503,7 @@ angular.module('webmapp')
         };
 
         vm.openRelated = function (item) {
+            localStorage.$wm_track_history = JSON.stringify(-1);
             Utils.goTo('layer/' + item.parent.label.replace(/ /g, '_') + '/' + item.properties.id);
         };
 

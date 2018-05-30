@@ -40,6 +40,14 @@ angular.module('webmapp')
         vm.userData = {};
         vm.goTo = Utils.goTo;
 
+        vm.goToPoi = function (url) {
+            var trackHistoryPosition = localStorage.$wm_track_history ? JSON.parse(localStorage.$wm_track_history) : null;
+            if (trackHistoryPosition <= 0) {
+                localStorage.$wm_track_history = JSON.stringify(trackHistoryPosition - 1);
+            }
+            vm.goTo(url);
+        };
+
         var distanceInMeters = function (lat1, lon1, lat2, lon2) {
             var R = 6371, // Radius of the earth in km
                 dLat = (lat2 - lat1) * Math.PI / 180, // deg2rad below
@@ -917,6 +925,7 @@ angular.module('webmapp')
         };
 
         vm.returnToMap = function () {
+            delete localStorage.$wm_track_history;
             vm.isNavigable = false;
             if ($state.params.parentId) {
                 MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
@@ -954,6 +963,7 @@ angular.module('webmapp')
         };
 
         vm.toggleMap = function () {
+            delete localStorage.$wm_track_history;
             vm.isMapPage = !vm.isMapPage;
             vm.mapView = vm.isMapPage;
             vm.isNavigable = false;

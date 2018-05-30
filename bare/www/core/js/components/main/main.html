@@ -183,7 +183,7 @@
         <div class="footer-taxonomy-name" ng-if="vm.taxonomyName" ng-style="{
             'background': vm.itemColor
             }">
-            <div ng-if="vm.isAPoi" class="poi-navigator" ng-click="vm.goTo(vm.prevUrl)"><i class="icon wm-icon-ios7-arrow-back"></i>PREV</div>
+            <div ng-if="vm.isAPoi" class="poi-navigator" ng-click="vm.goToPoi(vm.prevUrl)"><i class="icon wm-icon-ios7-arrow-back"></i>PREV</div>
             <div class="main-navigator" ng-class="{
                 'navigator-name': vm.isAPoi
             }">
@@ -191,7 +191,7 @@
                 <div class="navigator-track-name" ng-if="vm.isAPoi && vm.parentTrackName && !vm.activityIcon">{{vm.parentTrackName}}</div>
                 <div class="taxonomy-name">{{vm.taxonomyName}}</div>
             </div>
-            <div ng-if="vm.isAPoi" class="poi-navigator" ng-click="vm.goTo(vm.nextUrl)">NEXT<i class="icon wm-icon-ios7-arrow-forward"></i></div>
+            <div ng-if="vm.isAPoi" class="poi-navigator" ng-click="vm.goToPoi(vm.nextUrl)">NEXT<i class="icon wm-icon-ios7-arrow-forward"></i></div>
         </div>
     </ion-footer-bar>
 </ion-view>
