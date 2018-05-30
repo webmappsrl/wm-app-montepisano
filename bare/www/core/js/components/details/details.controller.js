@@ -56,9 +56,7 @@ angular.module('webmapp')
             }
             var trackHistoryPosition = localStorage.$wm_track_history ? JSON.parse(localStorage.$wm_track_history) : 1;
             delete localStorage.$wm_track_history;
-            console.log(trackHistoryPosition);
             if (trackHistoryPosition <= 0) {
-                console.log(trackHistoryPosition);
                 history.go(trackHistoryPosition);
             }
             else {
@@ -133,15 +131,8 @@ angular.module('webmapp')
                 mappingTable = mapping ? mapping.table : {},
                 mappingUrls = mapping ? mapping.urls : {},
                 mappingFields = mapping ? mapping.fields : {},
-                phoneMatch;
-
-
-            var track = undefined;
-
-            if ($rootScope.track) {
-                track = angular.copy($rootScope.track);
-                delete $rootScope.track;
-            }
+                phoneMatch,
+                track = null;
 
             vm.hasTable = false;
             vm.detailTable = {};
@@ -283,9 +274,13 @@ angular.module('webmapp')
 
                 if (data.geometry.type === 'LineString' && feature.id_pois && feature.id_pois.length) {
                     vm.related = MapService.getRelatedFeaturesById(feature.id_pois);
-                    $rootScope.track = data;
-                    track = undefined;
                 } else {
+                    //Find related track
+                    track = MapService.getRelatedTrackByFeatureId(feature.id);
+                    if (track && track.properties.id_pois && track.properties.id_pois.length) {
+                        vm.related = MapService.getRelatedFeaturesById(track.properties.id_pois);
+                        console.log(vm.related)
+                    }
                     if (feature.description && feature.description.expandable) {
                         feature.description.expandable = false;
                     }
@@ -312,16 +307,24 @@ angular.module('webmapp')
                 var objData = {
                     'detail': [data]
                 };
+                var arrayOfRelatedPois = null;
 
                 if (vm.related) {
-                    var array = angular.copy(vm.related);
-                    array.push(data);
+                    console.log(vm.related)
+                    var arrayOfRelatedPois = angular.copy(vm.related);
+                    arrayOfRelatedPois.push(data);
 
-                    objData['detail'] = array;
+                    objData['detail'] = arrayOfRelatedPois;
                 }
 
                 if (track) {
-                    objData['detail'] = [track, data];
+                    if (arrayOfRelatedPois) {
+                        arrayOfRelatedPois.push(track);
+                        objData['detail'] = arrayOfRelatedPois;
+                    }
+                    else {
+                        objData['detail'] = [track, data];
+                    }
                     centerOnPoint = true;
                 }
 
@@ -334,6 +337,7 @@ angular.module('webmapp')
                 if (centerOnPoint) {
                     MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
                 }
+                
                 setTimeout(function () {
                     MapService.adjust();
                 }, 2500);

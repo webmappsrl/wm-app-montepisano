@@ -1196,6 +1196,7 @@ angular.module('webmapp')
                 vm.turnOffRotationAndFollow();
             }
             MapService.removePositionMarker();
+            // MapService.enableClustering();
 
             if (currentState !== 'app.main.detaillayer' &&
                 currentState !== 'app.main.detailevent' &&
@@ -1205,10 +1206,6 @@ angular.module('webmapp')
                     // MapService.fitBounds(previousBounds);
                     previousBounds = null;
                 }, 1250);
-            }
-
-            if (currentState !== 'app.main.detaillayer' && $rootScope.track) {
-                delete $rootScope.track;
             }
 
             if (!$rootScope.stateCounter) {
@@ -1288,6 +1285,7 @@ angular.module('webmapp')
                     vm.detail = true;
 
                 }
+                // MapService.disableClustering();
                 // TODO: check the shadow
                 // else {
                 //     vm.hasShadow = true;
