@@ -99,7 +99,7 @@ angular.module('webmapp')
                 if (!result[packId].packageTitle) {
                     result[packId].packageTitle = {};
                 }
-                result[packId].packageTitle[defaultLang] = result[packId].title.rendered;
+                result[packId].packageTitle[result[packId].wpml_current_locale.substring(0, 2)] = result[packId].title.rendered;
 
                 if (result[packId].wpml_translations) {
                     for (var p in result[packId].wpml_translations) {
@@ -114,7 +114,7 @@ angular.module('webmapp')
                 if (packages[packId] && packages[packId].packageDescription) {
                     result[packId].packageDescription = packages[packId].packageDescription;
                 }
-                result[packId].packageDescription[defaultLang] = result[packId].content.rendered;
+                result[packId].packageDescription[result[packId].wpml_current_locale.substring(0, 2)] = result[packId].content.rendered;
             }
 
             packages = result;
