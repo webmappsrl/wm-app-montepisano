@@ -1510,7 +1510,7 @@ angular.module('webmapp')
                 showCoverageOnHover: mapConf.markerClustersOptions.showCoverageOnHover,
                 zoomToBoundsOnClick: false, // used markerClusters.on clusterclick instead
                 maxClusterRadius: function (zoom) {
-                    return (zoom < mapConf.markerClustersOptions.disableClusteringAtZoom) ? mapConf.markerClustersOptions.maxClusterRadius : 1;
+                    return (zoom < +mapConf.maxZoom) ? mapConf.markerClustersOptions.maxClusterRadius : 1;
                 }
                 // disableClusteringAtZoom: mapConf.markerClustersOptions.disableClusteringAtZoom
             });
