@@ -41,7 +41,7 @@ angular.module('webmapp')
         vm.goTo = Utils.goTo;
 
         vm.goToPoi = function (url) {
-            var trackHistoryPosition = localStorage.$wm_track_history ? JSON.parse(localStorage.$wm_track_history) : null;
+            var trackHistoryPosition = localStorage.$wm_track_history ? JSON.parse(localStorage.$wm_track_history) : 1;
             if (trackHistoryPosition <= 0) {
                 localStorage.$wm_track_history = JSON.stringify(trackHistoryPosition - 1);
             }

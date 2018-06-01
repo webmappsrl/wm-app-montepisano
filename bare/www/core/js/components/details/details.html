@@ -267,7 +267,7 @@
             </div>
 
             <!-- RELATED OBJECTS -->
-            <div class="route-related-details" ng-if="vm.related">
+            <div class="route-related-details" ng-if="vm.related && vm.geometry.type === 'LineString'">
 
                 <ul class="list route-related-list">
                     <li class="item item-icon-left route-related-item" ng-repeat="item in vm.related" ng-click="vm.openRelated(item)">

@@ -71,7 +71,8 @@ angular.module('webmapp')
 
         var polylineDecoratorLayers = {},
             startPointLayer = {},
-            geojsonLayer = null;
+            geojsonLayer = null,
+            highlightedPoi = null;
 
         var activatedPopup = null,
             mapIsRotating = false,
@@ -943,7 +944,7 @@ angular.module('webmapp')
                             startPointLayer[currentOverlay.label] = {};
                         }
 
-                        var tmpFeat = { 
+                        var tmpFeat = {
                             properties: {
                                 icon: "wm-icon-play",
                                 color: feature.properties.color
@@ -1509,11 +1510,8 @@ angular.module('webmapp')
                 spiderfyOnMaxZoom: mapConf.markerClustersOptions.spiderfyOnMaxZoom,
                 showCoverageOnHover: mapConf.markerClustersOptions.showCoverageOnHover,
                 zoomToBoundsOnClick: false, // used markerClusters.on clusterclick instead
-                maxClusterRadius: function (zoom) {
-                    return (zoom < mapConf.maxZoom) ? mapConf.markerClustersOptions.maxClusterRadius : 1;
-                    // return mapConf.markerClustersOptions.maxClusterRadius;
-                }
-                // disableClusteringAtZoom: mapConf.maxZoom
+                maxClusterRadius: mapConf.markerClustersOptions.maxClusterRadius,
+                disableClusteringAtZoom: mapConf.maxZoom
             });
 
             markerClusters.addTo(map);
@@ -2304,6 +2302,51 @@ angular.module('webmapp')
             }
         };
 
+        mapService.highlightPoi = function (toHighlight) {
+            if (highlightedPoi) {
+            }
+            else {
+                highlightedPoi = {
+                    layer: null,
+                    highlight: null
+                };
+            }
+
+            for (var i in map._layers) {
+                if (map._layers[i].feature && map._layers[i].feature.properties && map._layers[i].feature.properties.id === toHighlight.properties.id) {
+                    if (map._layers[i].feature.properties.id === toHighlight.properties.id) {
+                        map._layers[i].fire('mouseover');
+                        break;
+                    }
+                }
+            }
+
+            if (highlightedPoi.highlight) {
+                highlightedPoi.highlight.setLatLng([toHighlight.geometry.coordinates[1], toHighlight.geometry.coordinates[0]]);
+                highlightedPoi.highlight.bringToFront();
+            }
+            else {
+                highlightedPoi.highlight = L.circle([toHighlight.geometry.coordinates[1], toHighlight.geometry.coordinates[0]], {
+                    weight: 1,
+                    color: '#3E82F7',
+                    opacity: 0,
+                    fillColor: '#3E82F7',
+                    fillOpacity: 0.8,
+                    radius: 15,
+                    className: "poi-highlight-circle",
+                    pane: "markerPane"
+                }).addTo(map);
+            }
+        };
+
+        mapService.clearHighlightedPoi = function () {
+            if (highlightedPoi) {
+                map.removeLayer(highlightedPoi.highlight);
+                highlightedPoi.highlight.remove();
+                highlightedPoi = null;
+            }
+        };
+
         window.closePopup = mapService.closePopup = function (e) {
             map && map.closePopup();
             try {
@@ -2349,7 +2392,7 @@ angular.module('webmapp')
             mapService.adjust();
         }, 3600);
 
-        var redirectToFirstStage = function() {
+        var redirectToFirstStage = function () {
             if (mapService.isReady()) {
                 for (var id in featureMapById) {
                     if (featureMapById[id].parent.label.toLowerCase() === 'tappe') {

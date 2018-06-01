@@ -36,6 +36,8 @@ angular.module('webmapp')
         modalScope.vm = {};
         modalScope.parent = vm;
 
+        var selectedPoi = null;
+
         vm.avoidModal = CONFIG.OPTIONS.avoidModalInDetails;
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.imageUrl = CONFIG.OFFLINE.imagesUrl;
@@ -49,6 +51,13 @@ angular.module('webmapp')
 
         vm.hideSubMenu = true;
 
+        var handlePoiHighlight = function (newPoi) {
+            MapService.clearHighlightedPoi();
+            if (newPoi !== null) {
+                MapService.highlightPoi(newPoi);
+            }
+        };
+
         vm.goBack = function () {
             if (vm.isNavigable) {
                 vm.isNavigable = false;
@@ -60,7 +69,7 @@ angular.module('webmapp')
                 history.go(trackHistoryPosition);
             }
             else {
-                Utils.goBack();
+                Utils.goTo('/');
             }
         }
 
@@ -279,7 +288,6 @@ angular.module('webmapp')
                     track = MapService.getRelatedTrackByFeatureId(feature.id);
                     if (track && track.properties.id_pois && track.properties.id_pois.length) {
                         vm.related = MapService.getRelatedFeaturesById(track.properties.id_pois);
-                        console.log(vm.related)
                     }
                     if (feature.description && feature.description.expandable) {
                         feature.description.expandable = false;
@@ -303,14 +311,12 @@ angular.module('webmapp')
             }
 
             setTimeout(function () {
-                var centerOnPoint = false;
                 var objData = {
                     'detail': [data]
                 };
                 var arrayOfRelatedPois = null;
 
                 if (vm.related) {
-                    console.log(vm.related)
                     var arrayOfRelatedPois = angular.copy(vm.related);
                     arrayOfRelatedPois.push(data);
 
@@ -325,19 +331,26 @@ angular.module('webmapp')
                     else {
                         objData['detail'] = [track, data];
                     }
-                    centerOnPoint = true;
                 }
 
                 if (extras.length > 0) {
                     objData.extras = extras;
                 }
 
-                MapService.addFeaturesToFilteredLayer(objData, true);
-
-                if (centerOnPoint) {
-                    MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
+                if (data.geometry.type === 'LineString') {
+                    MapService.addFeaturesToFilteredLayer(objData, true);
+                    selectedPoi = null;
+                    handlePoiHighlight(selectedPoi);
+                    console.log("clear linestring")
                 }
-                
+                else {
+                    MapService.addFeaturesToFilteredLayer(objData, false);
+                    MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
+                    selectedPoi = data;
+                    handlePoiHighlight(selectedPoi);
+                    console.log("Add ", data)
+                }
+
                 setTimeout(function () {
                     MapService.adjust();
                 }, 2500);
@@ -650,6 +663,10 @@ angular.module('webmapp')
                 // $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
                 $ionicSlideBoxDelegate.update();
             }
+
+            console.log("clear destroy")
+            selectedPoi = null;
+            handlePoiHighlight(selectedPoi);
         });
 
         document.addEventListener('deviceready', function () {

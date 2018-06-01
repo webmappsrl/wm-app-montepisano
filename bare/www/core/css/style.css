@@ -1205,6 +1205,11 @@ div.detailRoute-footer {
   .desktop-full-map .details-shadow {
     z-index: 1; } }
 
+.leaflet-map-pane svg {
+  z-index: 500; }
+  .leaflet-map-pane svg .poi-highlight-circle {
+    z-index: 1000; }
+
 /**
  * HELP PAGE
  *
