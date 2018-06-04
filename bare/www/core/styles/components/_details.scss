@@ -564,8 +564,8 @@
 }
 
 .leaflet-map-pane svg {
-  z-index: 500;
-  .poi-highlight-circle {
-    z-index: 1000;
-  }
+  // z-index: 1000;
+  // .poi-highlight-circle {
+  //   z-index: 1000;
+  // }
 }

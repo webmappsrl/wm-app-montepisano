@@ -364,7 +364,8 @@ angular.module('webmapp')
             var marker = L.marker(latlng, {
                 title: feature.properties.name,
                 icon: iconMarker,
-                riseOnHover: true
+                riseOnHover: true,
+                riseOffset: 2000
             });
 
             return marker;
@@ -597,9 +598,9 @@ angular.module('webmapp')
 
         var activatePOIHandlers = function (pointsLayer) {
             pointsLayer.on('click', function (e) {
-                if (isPOILayerDetail()) {
-                    return;
-                }
+                // if (isPOILayerDetail()) {
+                //     return;
+                // }
 
                 activatePopup(e, true);
             });
@@ -2303,48 +2304,51 @@ angular.module('webmapp')
         };
 
         mapService.highlightPoi = function (toHighlight) {
-            if (highlightedPoi) {
-            }
-            else {
-                highlightedPoi = {
-                    layer: null,
-                    highlight: null
-                };
+            // if (!highlightedPoi) {
+            //     highlightedPoi = {
+            //         layer: null,
+            //         highlight: null
+            //     };
+            // }
+
+            if (!(toHighlight && toHighlight.geometry && toHighlight.geometry.coordinates)) {
+                console.warn("wrong poi to highlight", toHighlight);
+                return;
             }
 
             for (var i in map._layers) {
                 if (map._layers[i].feature && map._layers[i].feature.properties && map._layers[i].feature.properties.id === toHighlight.properties.id) {
                     if (map._layers[i].feature.properties.id === toHighlight.properties.id) {
                         map._layers[i].fire('mouseover');
+                        map._layers[i].fire('click');
                         break;
                     }
                 }
             }
 
-            if (highlightedPoi.highlight) {
-                highlightedPoi.highlight.setLatLng([toHighlight.geometry.coordinates[1], toHighlight.geometry.coordinates[0]]);
-                highlightedPoi.highlight.bringToFront();
-            }
-            else {
-                highlightedPoi.highlight = L.circle([toHighlight.geometry.coordinates[1], toHighlight.geometry.coordinates[0]], {
-                    weight: 1,
-                    color: '#3E82F7',
-                    opacity: 0,
-                    fillColor: '#3E82F7',
-                    fillOpacity: 0.8,
-                    radius: 15,
-                    className: "poi-highlight-circle",
-                    pane: "markerPane"
-                }).addTo(map);
-            }
+            // if (highlightedPoi.highlight) {
+            //     highlightedPoi.highlight.setLatLng([toHighlight.geometry.coordinates[1], toHighlight.geometry.coordinates[0]]);
+            // }
+            // else {
+            //     highlightedPoi.highlight = L.circle([toHighlight.geometry.coordinates[1], toHighlight.geometry.coordinates[0]], {
+            //         weight: 1,
+            //         color: '#3E82F7',
+            //         opacity: 0,
+            //         fillColor: '#3E82F7',
+            //         fillOpacity: 0.8,
+            //         radius: 15,
+            //         className: "poi-highlight-circle",
+            //         pane: "markerPane"
+            //     }).addTo(map);
+            // }
         };
 
         mapService.clearHighlightedPoi = function () {
-            if (highlightedPoi) {
-                map.removeLayer(highlightedPoi.highlight);
-                highlightedPoi.highlight.remove();
-                highlightedPoi = null;
-            }
+            // if (highlightedPoi) {
+            //     // map.removeLayer(highlightedPoi.highlight);
+            //     // highlightedPoi.highlight.remove();
+            //     highlightedPoi = null;
+            // }
         };
 
         window.closePopup = mapService.closePopup = function (e) {

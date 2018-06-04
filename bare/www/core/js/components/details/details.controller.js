@@ -317,6 +317,11 @@ angular.module('webmapp')
                 var arrayOfRelatedPois = null;
 
                 if (vm.related) {
+                    for (var i in vm.related) {
+                        if (vm.related[i].properties.image) {
+                            vm.related[i].properties.image = Offline.getRealImageUrl(vm.related[i].properties.image);
+                        }
+                    }
                     var arrayOfRelatedPois = angular.copy(vm.related);
                     arrayOfRelatedPois.push(data);
 
@@ -341,20 +346,18 @@ angular.module('webmapp')
                     MapService.addFeaturesToFilteredLayer(objData, true);
                     selectedPoi = null;
                     handlePoiHighlight(selectedPoi);
-                    console.log("clear linestring")
                 }
                 else {
                     MapService.addFeaturesToFilteredLayer(objData, false);
                     MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
                     selectedPoi = data;
                     handlePoiHighlight(selectedPoi);
-                    console.log("Add ", data)
                 }
 
                 setTimeout(function () {
                     MapService.adjust();
-                }, 2500);
-            }, 1000);
+                }, 1000);
+            }, 100);
 
             // console.log(vm["feature"]);
             // vm.feature.description = "ciao <a href=\"http://www.google.com\">ciaociao</a> ciao";
@@ -663,11 +666,15 @@ angular.module('webmapp')
                 // $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
                 $ionicSlideBoxDelegate.update();
             }
+        });
 
-            console.log("clear destroy")
+        var beforeLeaveHandler = $rootScope.$on('$ionicView.beforeLeave', function () {
             selectedPoi = null;
             handlePoiHighlight(selectedPoi);
+            beforeLeaveHandler();
         });
+
+
 
         document.addEventListener('deviceready', function () {
             isOnline = Connection && navigator.network.connection.type !== Connection.NONE;
