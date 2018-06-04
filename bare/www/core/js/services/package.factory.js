@@ -18,137 +18,137 @@
 
 angular.module('webmapp')
 
-    .factory('PackageService', function PackageService(
-        $http,
-        $q,
-        $rootScope,
-        $ionicLoading,
-        $ionicModal,
-        $ionicPopup,
-        $translate,
-        CONFIG,
-        Auth,
-        Communication,
-        Offline,
-        Utils
-    ) {
-        var packageService = {};
+.factory('PackageService', function PackageService(
+    $http,
+    $q,
+    $rootScope,
+    $ionicLoading,
+    $ionicModal,
+    $ionicPopup,
+    $translate,
+    CONFIG,
+    Auth,
+    Communication,
+    Offline,
+    Utils
+) {
+    var packageService = {};
 
-        var communicationConf = CONFIG.COMMUNICATION,
-            currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : 'it',
-            defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
+    var communicationConf = CONFIG.COMMUNICATION,
+        currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : 'it',
+        defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
 
-        var packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : null,
-            userPackagesId = localStorage.$wm_userPackagesId ? JSON.parse(localStorage.$wm_userPackagesId) : null,
-            userDownloadedPackages = localStorage.$wm_userDownloadedPackages ? JSON.parse(localStorage.$wm_userDownloadedPackages) : {},
-            userPackagesIdRquested = localStorage.$wm_userPackagesIdRquested ? JSON.parse(localStorage.$wm_userPackagesIdRquested) : {},
-            categories = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : null,
-            taxonomy = localStorage.$wm_taxonomy ? JSON.parse(localStorage.$wm_taxonomy) : {
-                activity: null,
-                theme: null,
-                when: null,
-                where: null,
-                who: null
-            };
-
-        var userData = Auth.isLoggedIn() ? Auth.getUserData() : null,
-            asyncTranslations = 0,
-            asyncRoutes = 0,
-            asyncRouteTranslations = 0;
-
-        var modalScope = $rootScope.$new(),
-            modal = {},
-            modalDownloadScope = $rootScope.$new(),
-            modalDownload = {};
-
-        modalDownloadScope.vm = {};
-        modalDownloadScope.vm.hide = function () {
-            modalDownload && modalDownload.hide();
+    var packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : null,
+        userPackagesId = localStorage.$wm_userPackagesId ? JSON.parse(localStorage.$wm_userPackagesId) : null,
+        userDownloadedPackages = localStorage.$wm_userDownloadedPackages ? JSON.parse(localStorage.$wm_userDownloadedPackages) : {},
+        userPackagesIdRquested = localStorage.$wm_userPackagesIdRquested ? JSON.parse(localStorage.$wm_userPackagesIdRquested) : {},
+        categories = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : null,
+        taxonomy = localStorage.$wm_taxonomy ? JSON.parse(localStorage.$wm_taxonomy) : {
+            activity: null,
+            theme: null,
+            when: null,
+            where: null,
+            who: null
         };
 
-        $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/downloadModal.html', {
-            scope: modalDownloadScope,
-            animation: 'slide-in-up'
-        }).then(function (modalObj) {
-            modalDownload = modalObj;
-        });
+    var userData = Auth.isLoggedIn() ? Auth.getUserData() : null,
+        asyncTranslations = 0,
+        asyncRoutes = 0,
+        asyncRouteTranslations = 0;
 
-        //Keep userData updated
-        $rootScope.$on('logged-in', function () {
-            if (Auth.isLoggedIn()) {
-                userData = Auth.getUserData();
-            } else {
-                userData = null;
-            }
-        });
+    var modalScope = $rootScope.$new(),
+        modal = {},
+        modalDownloadScope = $rootScope.$new(),
+        modalDownload = {};
 
-        var mergePackages = function (newPackages) {
-            var result = {};
-            var packId = 0;
-            for (var i in newPackages) {
-                var packId = newPackages[i].id;
-                result[packId] = newPackages[i];
-                if (packages[packId]) {
-                    result[packId].imgUrl = packages[packId].imgUrl ? packages[packId].imgUrl : "core/images/image-loading.gif";
+    modalDownloadScope.vm = {};
+    modalDownloadScope.vm.hide = function() {
+        modalDownload && modalDownload.hide();
+    };
 
-                    if (packages[packId].localImageUrl) {
-                        result[packId].localImageUrl = packages[packId].localImageUrl;
-                    }
+    $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/downloadModal.html', {
+        scope: modalDownloadScope,
+        animation: 'slide-in-up'
+    }).then(function(modalObj) {
+        modalDownload = modalObj;
+    });
+
+    //Keep userData updated
+    $rootScope.$on('logged-in', function() {
+        if (Auth.isLoggedIn()) {
+            userData = Auth.getUserData();
+        } else {
+            userData = null;
+        }
+    });
+
+    var mergePackages = function(newPackages) {
+        var result = {};
+        var packId = 0;
+        for (var i in newPackages) {
+            var packId = newPackages[i].id;
+            result[packId] = newPackages[i];
+            if (packages[packId]) {
+                result[packId].imgUrl = packages[packId].imgUrl ? packages[packId].imgUrl : "core/images/image-loading.gif";
+
+                if (packages[packId].localImageUrl) {
+                    result[packId].localImageUrl = packages[packId].localImageUrl;
                 }
-
-                if (!result[packId].packageTitle) {
-                    result[packId].packageTitle = {};
-                }
-                result[packId].packageTitle[result[packId].wpml_current_locale.substring(0, 2)] = result[packId].title.rendered;
-
-                if (result[packId].wpml_translations) {
-                    for (var p in result[packId].wpml_translations) {
-                        var lang = result[packId].wpml_translations[p].locale.substring(0, 2);
-                        result[packId].packageTitle[lang] = result[packId].wpml_translations[p].post_title;
-                    }
-                }
-
-                if (!result[packId].packageDescription) {
-                    result[packId].packageDescription = {};
-                }
-                if (packages[packId] && packages[packId].packageDescription) {
-                    result[packId].packageDescription = packages[packId].packageDescription;
-                }
-                result[packId].packageDescription[result[packId].wpml_current_locale.substring(0, 2)] = result[packId].content.rendered;
             }
 
-            packages = result;
-        };
+            if (!result[packId].packageTitle) {
+                result[packId].packageTitle = {};
+            }
+            result[packId].packageTitle[result[packId].wpml_current_locale.substring(0, 2)] = result[packId].title.rendered;
 
-        var getImage = function (packId) {
-            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'media/' + packages[packId].featured_media)
-                .then(function (data) {
+            if (result[packId].wpml_translations) {
+                for (var p in result[packId].wpml_translations) {
+                    var lang = result[packId].wpml_translations[p].locale.substring(0, 2);
+                    result[packId].packageTitle[lang] = result[packId].wpml_translations[p].post_title;
+                }
+            }
+
+            if (!result[packId].packageDescription) {
+                result[packId].packageDescription = {};
+            }
+            if (packages[packId] && packages[packId].packageDescription) {
+                result[packId].packageDescription = packages[packId].packageDescription;
+            }
+            result[packId].packageDescription[result[packId].wpml_current_locale.substring(0, 2)] = result[packId].content.rendered;
+        }
+
+        packages = result;
+    };
+
+    var getImage = function(packId) {
+        Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'media/' + packages[packId].featured_media)
+            .then(function(data) {
                     if (packages[packId].imgUrl !== data.media_details.sizes.thumbnail.source_url) {
                         packages[packId].imgUrl = data.media_details.sizes.thumbnail.source_url;
                     }
 
                     Communication.get(packages[packId].imgUrl)
-                        .then(function (response) {
-                            var imageDownloaded = response;
-                            var urlCreator = window.URL || window.webkitURL;
+                        .then(function(response) {
+                                var imageDownloaded = response;
+                                var urlCreator = window.URL || window.webkitURL;
 
-                            packages[packId].localImageUrl = urlCreator.createObjectURL(imageDownloaded);
+                                packages[packId].localImageUrl = urlCreator.createObjectURL(imageDownloaded);
 
-                            var reader = new FileReader();
-                            reader.readAsDataURL(imageDownloaded);
-                            reader.onloadend = function () {
-                                base64data = reader.result;
+                                var reader = new FileReader();
+                                reader.readAsDataURL(imageDownloaded);
+                                reader.onloadend = function() {
+                                    base64data = reader.result;
 
-                                packages[packId].localImageUrl = base64data;
+                                    packages[packId].localImageUrl = base64data;
 
-                                asyncRoutes--;
-                                if (asyncRoutes === 0) {
-                                    $rootScope.$emit('packages-updated', packages);
+                                    asyncRoutes--;
+                                    if (asyncRoutes === 0) {
+                                        $rootScope.$emit('packages-updated', packages);
+                                    }
+                                    localStorage.$wm_packages = JSON.stringify(packages);
                                 }
-                                localStorage.$wm_packages = JSON.stringify(packages);
-                            }
-                        },
-                            function (err) {
+                            },
+                            function(err) {
                                 asyncRoutes--;
                                 if (asyncRoutes === 0) {
                                     $rootScope.$emit('packages-updated', packages);
@@ -158,80 +158,80 @@ angular.module('webmapp')
 
                     localStorage.$wm_packages = JSON.stringify(packages);
                 },
-                    function (err) {
-                        asyncRoutes--;
-                        if (asyncRoutes === 0) {
-                            $rootScope.$emit('packages-updated', packages);
-                        }
-                        console.error('Unable to download images');
-                    });
-        };
-
-        var getTranslatedRoute = function (id, apiId, lang) {
-            $.getJSON(CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.wordPressEndpoint + 'route/' + apiId, function (data) {
-                packages[id].packageTitle[lang] = data.title.rendered;
-                packages[id].packageDescription[lang] = data.content.rendered;
-
-                asyncRouteTranslations--;
-                if (asyncRouteTranslations === 0 && asyncRoutes === 0) {
-                    $rootScope.$emit('packages-updated', packages);
-                }
-                localStorage.$wm_packages = JSON.stringify(packages);
-            }).fail(function () {
-                asyncRouteTranslations--;
-                if (asyncRouteTranslations === 0 && asyncRoutes === 0) {
-                    $rootScope.$emit('packages-updated', packages);
-                }
-                console.error('Route translation retrive error');
-            });
-        };
-
-        var getTaxonomyTranslated = function (taxonomyType, id, lang) {
-            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '/' + id + '?lang=' + lang)
-                .then(function (data) {
-                    taxonomy[taxonomyType][id].name[lang] = data.name;
-                    taxonomy[taxonomyType][id].description[lang] = data.description;
-
-                    asyncTranslations--;
-                    if (asyncTranslations === 0) {
-                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
-                        localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
+                function(err) {
+                    asyncRoutes--;
+                    if (asyncRoutes === 0) {
+                        $rootScope.$emit('packages-updated', packages);
                     }
-                })
-                .catch(function (err) {
-                    asyncTranslations--;
-                    if (asyncTranslations === 0) {
-                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
-                    }
-                    console.warn("Unable to update taxonomy. Using local data")
+                    console.error('Unable to download images');
                 });
-        };
+    };
 
-        /**
-         * @description
-         * Update the packages and the categories list and
-         * Emit the updated lists
-         * 
-         * @event packages-updated
-         * @event categories-updated
-         */
-        packageService.getRoutes = function (updateValues) {
-            //Prevent multiple requests
-            if (asyncRoutes > 0 || asyncTranslations > 0) {
-                $rootScope.$emit('packages-updated', packages);
-                return;
-            }
+    var getTranslatedRoute = function(id, apiId, lang) {
+        $.getJSON(CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.wordPressEndpoint + 'route/' + apiId, function(data) {
+            packages[id].packageTitle[lang] = data.title.rendered;
+            packages[id].packageDescription[lang] = data.content.rendered;
 
-            if (packages) {
+            asyncRouteTranslations--;
+            if (asyncRouteTranslations === 0 && asyncRoutes === 0) {
                 $rootScope.$emit('packages-updated', packages);
             }
-
-            if (!updateValues) {
-                return;
+            localStorage.$wm_packages = JSON.stringify(packages);
+        }).fail(function() {
+            asyncRouteTranslations--;
+            if (asyncRouteTranslations === 0 && asyncRoutes === 0) {
+                $rootScope.$emit('packages-updated', packages);
             }
+            console.error('Route translation retrive error');
+        });
+    };
 
-            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/?per_page=100')
-                .then(function (data) {
+    var getTaxonomyTranslated = function(taxonomyType, id, lang) {
+        Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '/' + id + '?lang=' + lang)
+            .then(function(data) {
+                taxonomy[taxonomyType][id].name[lang] = data.name;
+                taxonomy[taxonomyType][id].description[lang] = data.description;
+
+                asyncTranslations--;
+                if (asyncTranslations === 0) {
+                    $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                    localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
+                }
+            })
+            .catch(function(err) {
+                asyncTranslations--;
+                if (asyncTranslations === 0) {
+                    $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                }
+                console.warn("Unable to update taxonomy. Using local data")
+            });
+    };
+
+    /**
+     * @description
+     * Update the packages and the categories list and
+     * Emit the updated lists
+     * 
+     * @event packages-updated
+     * @event categories-updated
+     */
+    packageService.getRoutes = function(updateValues) {
+        //Prevent multiple requests
+        if (asyncRoutes > 0 || asyncTranslations > 0) {
+            $rootScope.$emit('packages-updated', packages);
+            return;
+        }
+
+        if (packages) {
+            $rootScope.$emit('packages-updated', packages);
+        }
+
+        if (!updateValues) {
+            return;
+        }
+
+        Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/?per_page=100')
+            .then(function(data) {
                     if (!packages) {
                         packages = {};
                     }
@@ -255,86 +255,86 @@ angular.module('webmapp')
                     }
                     localStorage.$wm_packages = JSON.stringify(packages);
                 },
-                    function (err) {
-                        if (!packages) {
-                            console.warn("No routes available. Restart the app with an open connection");
-                        }
-                    });
-        };
+                function(err) {
+                    if (!packages) {
+                        console.warn("No routes available. Restart the app with an open connection");
+                    }
+                });
+    };
 
-        /**
-         * @description
-         * Emit taxonomy of type [taxonomyType] updated
-         * 
-         * @event taxonomy-[taxonomyType]-updated
-         * 
-         * @param {string} taxonomyType
-         *      the type of taxonomy to update
-         */
-        packageService.getTaxonomy = function (taxonomyType) {
-            if (taxonomy[taxonomyType]) {
-                $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
-            }
-            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')
-                .then(function (data) {
-                    asyncTranslations = 0;
-                    taxonomy[taxonomyType] = {};
-                    for (var i in data) {
-                        if (data[i].count > 0) {
-                            taxonomy[taxonomyType][data[i].id] = data[i];
-                            if (CONFIG.LANGUAGES) {
-                                var tmpName = taxonomy[taxonomyType][data[i].id].name;
-                                taxonomy[taxonomyType][data[i].id].name = {};
-                                taxonomy[taxonomyType][data[i].id].name[defaultLang] = tmpName;
-                                delete tmpName;
+    /**
+     * @description
+     * Emit taxonomy of type [taxonomyType] updated
+     * 
+     * @event taxonomy-[taxonomyType]-updated
+     * 
+     * @param {string} taxonomyType
+     *      the type of taxonomy to update
+     */
+    packageService.getTaxonomy = function(taxonomyType) {
+        if (taxonomy[taxonomyType]) {
+            $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+        }
+        Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')
+            .then(function(data) {
+                asyncTranslations = 0;
+                taxonomy[taxonomyType] = {};
+                for (var i in data) {
+                    if (data[i].count > 0) {
+                        taxonomy[taxonomyType][data[i].id] = data[i];
+                        if (CONFIG.LANGUAGES) {
+                            var tmpName = taxonomy[taxonomyType][data[i].id].name;
+                            taxonomy[taxonomyType][data[i].id].name = {};
+                            taxonomy[taxonomyType][data[i].id].name[defaultLang] = tmpName;
+                            delete tmpName;
 
-                                var tmpDescription = taxonomy[taxonomyType][data[i].id].description;
-                                taxonomy[taxonomyType][data[i].id].description = {};
-                                taxonomy[taxonomyType][data[i].id].description[defaultLang] = tmpDescription;
-                                delete tmpDescription;
+                            var tmpDescription = taxonomy[taxonomyType][data[i].id].description;
+                            taxonomy[taxonomyType][data[i].id].description = {};
+                            taxonomy[taxonomyType][data[i].id].description[defaultLang] = tmpDescription;
+                            delete tmpDescription;
 
-                                if (CONFIG.LANGUAGES.available) {
-                                    for (var langId in CONFIG.LANGUAGES.available) {
-                                        asyncTranslations++;
-                                        getTaxonomyTranslated(taxonomyType, data[i].id, CONFIG.LANGUAGES.available[langId]);
-                                    }
+                            if (CONFIG.LANGUAGES.available) {
+                                for (var langId in CONFIG.LANGUAGES.available) {
+                                    asyncTranslations++;
+                                    getTaxonomyTranslated(taxonomyType, data[i].id, CONFIG.LANGUAGES.available[langId]);
                                 }
                             }
                         }
                     }
+                }
 
-                    if (asyncTranslations === 0) {
-                        console.log("emit")
-                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
-                    }
-                    localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
-                })
-                .catch(function (err) {
-                    if (!taxonomy[taxonomyType]) {
-                        console.warn("No taxonomy " + taxonomyType);
-                        return;
-                    }
-                });
-        };
+                if (asyncTranslations === 0) {
+                    console.log("emit")
+                    $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                }
+                localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
+            })
+            .catch(function(err) {
+                if (!taxonomy[taxonomyType]) {
+                    console.warn("No taxonomy " + taxonomyType);
+                    return;
+                }
+            });
+    };
 
-        /**
-         * @description
-         * Get the list of packages allowed to a specific user and
-         * Emit the updated list of available packages
-         * 
-         * @event userPackagesId-updated
-         * 
-         */
-        packageService.getPackagesIdByUserId = function () {
-            if (!userData || !userData.ID) {
-                return;
-            }
+    /**
+     * @description
+     * Get the list of packages allowed to a specific user and
+     * Emit the updated list of available packages
+     * 
+     * @event userPackagesId-updated
+     * 
+     */
+    packageService.getPackagesIdByUserId = function() {
+        if (!userData || !userData.ID) {
+            return;
+        }
 
-            if (userPackagesId) {
-                $rootScope.$emit('userPackagesId-updated', userPackagesId);
-            }
-            Communication.getJSON(communicationConf.baseUrl + communicationConf.endpoint + 'route_id/' + userData.ID)
-                .then(function (data) {
+        if (userPackagesId) {
+            $rootScope.$emit('userPackagesId-updated', userPackagesId);
+        }
+        Communication.getJSON(communicationConf.baseUrl + communicationConf.endpoint + 'route_id/' + userData.ID)
+            .then(function(data) {
                     userPackagesId = {};
 
                     for (var key in data) {
@@ -344,172 +344,172 @@ angular.module('webmapp')
                     $rootScope.$emit('userPackagesId-updated', userPackagesId);
                     localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
                 },
-                    function (err) {
-                        if (!userPackagesId) {
-                            console.warn("No userPackagesId available. Shutting down...");
-                        }
-                    });
-        };
-
-        /**
-         * @description
-         * Request the package and
-         * Emit the new list of requested packages
-         * 
-         * @event userPackagesIdRquested-updated
-         * 
-         * @param {number} packId 
-         *      the id of the pack to request
-         */
-        packageService.requestPack = function (packId) {
-            if (!userData || !userData.ID || userPackagesIdRquested[packId]) {
-                return;
-            }
-            $ionicPopup
-                .confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Stai per richiedere l'accesso al download dell'itinerario, riceverai una e-mail con le istruzioni per procedere all'acquisto. Vuoi procedere?")
-                })
-                .then(function (res) {
-                    if (res) {
-                        var data = {
-                            email: userData.user_email,
-                            pack: packId,
-                            appname: CONFIG.OPTIONS.title
-                        };
-
-                        $ionicLoading.show({
-                            template: '<ion-spinner></ion-spinner>'
-                        });
-
-                        $http({
-                            method: 'POST',
-                            url: communicationConf.baseUrl + communicationConf.endpoint + 'mail',
-                            dataType: 'json',
-                            crossDomain: true,
-                            data: data,
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        }).success(function (data) {
-                            $ionicPopup.alert({
-                                template: $translate.instant("La richiesta è stata inviata, ti è stata spedita una e-mail con le istruzioni per procedere con l'acquisto.")
-                            });
-                            userPackagesIdRquested[packId] = true;
-                            $rootScope.$emit('userPackagesIdRquested-updated', userPackagesIdRquested);
-                            localStorage.$wm_userPackagesIdRquested = JSON.stringify(userPackagesIdRquested);
-                            $ionicLoading.hide();
-                        }).error(function (error) {
-                            $ionicPopup.alert({
-                                template: $translate.instant("Si è verificato un errore durante la richiesta, riprova")
-                            });
-                            $ionicLoading.hide();
-                            console.error(error);
-                        });
+                function(err) {
+                    if (!userPackagesId) {
+                        console.warn("No userPackagesId available. Shutting down...");
                     }
                 });
-        };
+    };
 
-        /**
-         * @description
-         * Use a voucher to get permission to download a route and
-         * Emit the new list of available packages
-         * 
-         * @event userPackagesId-updated
-         * 
-         * @param {number} packId 
-         *      the id of the pack to request
-         * 
-         */
-        packageService.requestPackageWithVoucher = function (packId) {
-            if (!userData || !userData.ID) {
-                return;
-            }
+    /**
+     * @description
+     * Request the package and
+     * Emit the new list of requested packages
+     * 
+     * @event userPackagesIdRquested-updated
+     * 
+     * @param {number} packId 
+     *      the id of the pack to request
+     */
+    packageService.requestPack = function(packId) {
+        if (!userData || !userData.ID || userPackagesIdRquested[packId]) {
+            return;
+        }
+        $ionicPopup
+            .confirm({
+                title: $translate.instant("ATTENZIONE"),
+                template: $translate.instant("Stai per richiedere l'accesso al download dell'itinerario, riceverai una e-mail con le istruzioni per procedere all'acquisto. Vuoi procedere?")
+            })
+            .then(function(res) {
+                if (res) {
+                    var data = {
+                        email: userData.user_email,
+                        pack: packId,
+                        appname: CONFIG.OPTIONS.title
+                    };
 
-            $ionicPopup.prompt({
+                    $ionicLoading.show({
+                        template: '<ion-spinner></ion-spinner>'
+                    });
+
+                    $http({
+                        method: 'POST',
+                        url: communicationConf.baseUrl + communicationConf.endpoint + 'mail',
+                        dataType: 'json',
+                        crossDomain: true,
+                        data: data,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).success(function(data) {
+                        $ionicPopup.alert({
+                            template: $translate.instant("La richiesta è stata inviata, ti è stata spedita una e-mail con le istruzioni per procedere con l'acquisto.")
+                        });
+                        userPackagesIdRquested[packId] = true;
+                        $rootScope.$emit('userPackagesIdRquested-updated', userPackagesIdRquested);
+                        localStorage.$wm_userPackagesIdRquested = JSON.stringify(userPackagesIdRquested);
+                        $ionicLoading.hide();
+                    }).error(function(error) {
+                        $ionicPopup.alert({
+                            template: $translate.instant("Si è verificato un errore durante la richiesta, riprova")
+                        });
+                        $ionicLoading.hide();
+                        console.error(error);
+                    });
+                }
+            });
+    };
+
+    /**
+     * @description
+     * Use a voucher to get permission to download a route and
+     * Emit the new list of available packages
+     * 
+     * @event userPackagesId-updated
+     * 
+     * @param {number} packId 
+     *      the id of the pack to request
+     * 
+     */
+    packageService.requestPackageWithVoucher = function(packId) {
+        if (!userData || !userData.ID) {
+            return;
+        }
+
+        $ionicPopup.prompt({
                 title: $translate.instant('Voucher'),
                 subTitle: $translate.instant('Inserisci il voucher da attivare'),
                 inputType: 'text',
                 inputPlaceholder: $translate.instant('Voucher')
             })
-                .then(function (res) {
-                    if (res) {
-                        var data = $.param({
-                            route_id: packId,
-                            user_id: userData.ID,
-                            code: res
-                        });
+            .then(function(res) {
+                if (res) {
+                    var data = $.param({
+                        route_id: packId,
+                        user_id: userData.ID,
+                        code: res
+                    });
 
-                        var config = {
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-                            }
+                    var config = {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
                         }
+                    }
 
-                        $ionicLoading.show({
-                            template: '<ion-spinner></ion-spinner>'
-                        });
+                    $ionicLoading.show({
+                        template: '<ion-spinner></ion-spinner>'
+                    });
 
-                        $http.post(
+                    $http.post(
                             CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
                             data,
                             config
                         )
-                            .success(function (data, status, headers, config) {
-                                $ionicLoading.hide();
-                                ///Update offline data
-                                userPackagesId[packId] = true;
-                                localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
-                            })
-                            .error(function (data, status, header, config) {
-                                $ionicLoading.hide();
-                                if (data.error === "Voucher Expired") {
-                                    $ionicPopup.alert({
-                                        template: $translate.instant("Il voucher che hai utilizzato è scaduto")
-                                    });
-                                } else {
-                                    $ionicPopup.alert({
-                                        template: $translate.instant("Il voucher che hai inserito non è valido. Controlla di averlo inserito correttamente e inseriscilo nuovamente.")
-                                    });
-                                }
-                            });
-                    }
-                });
-        };
+                        .success(function(data, status, headers, config) {
+                            $ionicLoading.hide();
+                            ///Update offline data
+                            userPackagesId[packId] = true;
+                            localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
+                        })
+                        .error(function(data, status, header, config) {
+                            $ionicLoading.hide();
+                            if (data.error === "Voucher Expired") {
+                                $ionicPopup.alert({
+                                    template: $translate.instant("Il voucher che hai utilizzato è scaduto")
+                                });
+                            } else {
+                                $ionicPopup.alert({
+                                    template: $translate.instant("Il voucher che hai inserito non è valido. Controlla di averlo inserito correttamente e inseriscilo nuovamente.")
+                                });
+                            }
+                        });
+                }
+            });
+    };
 
-        /**
-         * @description
-         * Download the requested package and
-         * emit the new list of downloaded packages
-         * 
-         * @event userDownloadedPackages-updated
-         * 
-         * @param {number} packId 
-         *      the id of the pack to download
-         */
-        packageService.downloadPack = function (packId) {
-            $ionicPopup.confirm({
+    /**
+     * @description
+     * Download the requested package and
+     * emit the new list of downloaded packages
+     * 
+     * @event userDownloadedPackages-updated
+     * 
+     * @param {number} packId 
+     *      the id of the pack to download
+     */
+    packageService.downloadPack = function(packId) {
+        $ionicPopup.confirm({
                 title: $translate.instant("ATTENZIONE"),
                 template: $translate.instant("Stai per scaricare l'itinerario sul dispositivo, vuoi procedere?")
             })
-                .then(function (res) {
-                    if (res) {
-                        $.ajaxSetup({
-                            cache: false
-                        });
-                        modalDownload.show();
-                        Communication.getJSON(communicationConf.downloadJSONUrl + packId + '/app.json')
-                            .then(function (data) {
+            .then(function(res) {
+                if (res) {
+                    $.ajaxSetup({
+                        cache: false
+                    });
+                    modalDownload.show();
+                    Communication.getJSON(communicationConf.downloadJSONUrl + packId + '/app.json')
+                        .then(function(data) {
                                 var arrayLink = [];
 
-                                var downloadSuccess = function () {
+                                var downloadSuccess = function() {
                                     modalDownload.hide();
                                     userDownloadedPackages[packId] = true;
                                     $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
                                     localStorage.$wm_userDownloadedPackages = JSON.stringify(userDownloadedPackages);
                                 };
 
-                                var downloadFail = function () {
+                                var downloadFail = function() {
                                     // TODO: add ionic alert
                                     // TODO: rimuovere cartella, verificare interuzzione altri dowload
                                     alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, riprova"));
@@ -533,79 +533,90 @@ angular.module('webmapp')
 
                                 $.ajaxSetup();
                             },
-                                function () {
-                                    // TODO: add ionic alert
-                                    modalDownload.hide();
-                                    alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova"));
-                                });
-                    }
+                            function() {
+                                // TODO: add ionic alert
+                                modalDownload.hide();
+                                alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova"));
+                            });
+                }
+            });
+    };
+
+    /**
+     * @description
+     * Method to open a package already downloaded
+     * 
+     * @param {number} packId 
+     *      the id of the pack to open
+     */
+    packageService.openPackage = function(packId) {
+        var basePackUrl = Offline.getOfflineMhildBasePathById(packId);
+
+        Communication.getLocalFile(basePackUrl + 'config.json')
+            .then(function(data) {
+                localStorage.$wm_mhildConf = data;
+                localStorage.$wm_mhildBaseUrl = Offline.getOfflineMhildBasePathById(packId);
+                localStorage.$wm_mhildId = packId;
+
+                sessionStorage.$wm_doBack = 'allowed';
+
+                $ionicLoading.show({
+                    template: '<ion-spinner></ion-spinner>'
                 });
-        };
 
-        /**
-         * @description
-         * Method to open a package already downloaded
-         * 
-         * @param {number} packId 
-         *      the id of the pack to open
-         */
-        packageService.openPackage = function (packId) {
-            var basePackUrl = Offline.getOfflineMhildBasePathById(packId);
+                location.reload();
+                Utils.forceDigest();
+            });
+    };
 
-            Communication.getLocalFile(basePackUrl + 'config.json')
-                .then(function (data) {
-                    localStorage.$wm_mhildConf = data;
-                    localStorage.$wm_mhildBaseUrl = Offline.getOfflineMhildBasePathById(packId);
-                    localStorage.$wm_mhildId = packId;
-
-                    sessionStorage.$wm_doBack = 'allowed';
-
-                    $ionicLoading.show({
-                        template: '<ion-spinner></ion-spinner>'
-                    });
-
-                    location.reload();
-                    Utils.forceDigest();
-                });
-        };
-
-        /**
-         * @description
-         * Delete a package already downloaded and
-         * Emit the updated list of downloaded packages
-         * 
-         * @event userDownloadedPackages-updated
-         * 
-         * @param {number} packId 
-         *      the id of the pack to remove from storage
-         */
-        packageService.removePack = function (packId) {
-            $ionicPopup.confirm({
+    /**
+     * @description
+     * Delete a package already downloaded and
+     * Emit the updated list of downloaded packages
+     * 
+     * @event userDownloadedPackages-updated
+     * 
+     * @param {number} packId 
+     *      the id of the pack to remove from storage
+     */
+    packageService.removePack = function(packId) {
+        $ionicPopup.confirm({
                 title: $translate.instant("ATTENZIONE"),
                 template: $translate.instant("Stai per rimuovere l'itinerario dal dispositivo, vuoi procedere?<br />") + $translate.instant("Questo itinerario è riservato ai clienti Verde Natura che hanno acquistato questo viaggio. Terminata la fase di sperimentazione, gli itinerari saranno disponibili a tutti")
             })
-                .then(function (res) {
-                    if (res) {
-                        Offline.removePackById(packId);
-                        delete userDownloadedPackages[packId];
-                        $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
-                        localStorage.$wm_userDownloadedPackages = JSON.stringify(userDownloadedPackages);
-                    }
-                });
-        };
+            .then(function(res) {
+                if (res) {
+                    Offline.removePackById(packId);
+                    delete userDownloadedPackages[packId];
+                    $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
+                    localStorage.$wm_userDownloadedPackages = JSON.stringify(userDownloadedPackages);
+                }
+            });
+    };
 
-        /**
-         * @description
-         * Emit the updated list of downloaded packages
-         * and return it
-         * 
-         * @event userDownloadedPackages-updated
-         * 
-         */
-        packageService.getDownloadedPackages = function () {
-            $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
-            return userDownloadedPackages;
-        };
+    /**
+     * @description
+     * Emit the updated list of downloaded packages
+     * and return it
+     * 
+     * @event userDownloadedPackages-updated
+     * 
+     */
+    packageService.getDownloadedPackages = function() {
+        $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
+        return userDownloadedPackages;
+    };
 
-        return packageService;
-    });
+
+    packageService.getRouteById = function(routeID) {
+
+        if (packages) {
+            return packages[routeID];
+        } else {
+            return null;
+        }
+
+    }
+
+    return packageService;
+});

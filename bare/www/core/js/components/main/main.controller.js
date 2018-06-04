@@ -19,6 +19,7 @@ angular.module('webmapp')
     Communication,
     CONFIG,
     MapService,
+    PackageService,
     Model,
     Utils
 ) {
@@ -47,29 +48,35 @@ angular.module('webmapp')
 
     vm.userTrack = true;
 
-    vm.userFeature = {
-        "type": "Feature",
-        "geometry": {
-            "type": "LineString",
-            "coordinates": [
-                [
-                    10.398945808410645,
-                    43.71848139642108
-                ],
-                [
-                    10.401842594146729,
-                    43.718186735920234
-                ]
-            ]
+    vm.userLatLngs = [];
+    vm.trackLabel = "";
+    vm.packageTitle = {};
+    if (PackageService.getRouteById(CONFIG.routeID) && PackageService.getRouteById(CONFIG.routeID).packageTitle) {
+        vm.packageTitle = PackageService.getRouteById(CONFIG.routeID).packageTitle;
+    }
+
+    vm.updateUserTrack = function(latLng) {
+
+        if (latLng && latLng.length == 2 && latLng[0] && latLng[1]) {
+            if (vm.userLatLngs.length == 0) {
+                MapService.createUserPolyline([latLng]);
+            } else {
+                MapService.updateUserPolyline(latLng);
+            }
+            vm.userLatLngs.push(latLng);
         }
 
-    };
+    }
 
-    vm.updateUserFeature = function(lat, long) {
+    vm.resetUserTrack = function() {
+        vm.userLatLngs = [];
+        MapService.removeUserPolyline();
 
-        console.log("I'm inside");
-        MapService.createGeojsonLayer(vm.userFeature);
-        console.log("I'm outside");
+    }
+
+    vm.saveUserTrack = function(info) {
+
+        MapService.saveUserPolyline(info);
 
     }
 
@@ -617,12 +624,13 @@ angular.module('webmapp')
     };
 
     var posCallback = function(position) {
-        vm.updateUserFeature();
+
         var lat = position.coords.latitude ? position.coords.latitude : 0,
             long = position.coords.longitude ? position.coords.longitude : 0,
             altitude = position.coords.altitude ? position.coords.altitude : 0,
             locateLoading = false,
             doCenter = false;
+
 
         if (!MapService.isInBoundingBox(lat, long) && !vm.isOutsideBoundingBox) {
             vm.isOutsideBoundingBox = true;
@@ -655,6 +663,9 @@ angular.module('webmapp')
             }
 
             if (vm.isNavigating && !vm.isPaused) {
+
+                vm.updateUserTrack([lat, long]);
+
                 if (realTimeTracking.enabled && vm.userData.ID) {
                     // vm.positionsToSend.push({
                     //     lat: lat,
@@ -1071,6 +1082,7 @@ angular.module('webmapp')
             }
         }, 1000);
 
+
         Utils.goTo('/');
     };
 
@@ -1106,6 +1118,16 @@ angular.module('webmapp')
         cleanNavigationValues();
         $rootScope.$emit('is-navigating', vm.isNavigating);
         window.plugins.insomnia.allowSleepAgain();
+        vm.saveUserTrack({
+            RouteInfo: {
+                RouteID: CONFIG.routeID,
+                TrackID: vm.stopNavigationUrlParams.id,
+                RouteName: vm.packageTitle,
+                TrackLabel: vm.TrackLabel,
+                Timestamp: Date.now()
+            }
+        });
+        vm.resetUserTrack();
         if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
             var url = 'layer/' + vm.stopNavigationUrlParams.parentId + '/' + vm.stopNavigationUrlParams.id;
             vm.stopNavigationUrlParams = {
@@ -1124,7 +1146,7 @@ angular.module('webmapp')
         MapService.getFeatureById(id, parentId.replace(/_/g, ' '))
             .then(function(data) {
                 var featuresToShow = [data];
-
+                vm.trackLabel = data.properties.name;
                 if (data.properties.id_pois) {
                     var related = MapService.getRelatedFeaturesById(data.properties.id_pois);
                     for (var i in related) {

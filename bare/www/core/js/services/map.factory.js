@@ -2303,10 +2303,53 @@ angular.module('webmapp')
     mapService.createUserPolyline = function(coordsArray) {
 
         if (userTrackPolyline) {
+            map.removeLayer(userTrackPolyline);
+        }
+        userTrackPolyline = L.polyline(coordsArray).addTo(map);
 
+    }
+
+    mapService.updateUserPolyline = function(latLng) {
+
+        if (userTrackPolyline) {
+            userTrackPolyline.addLatLng(latLng);
+            userTrackPolyline.redraw();
+        } else {
+            userTrackPolyline = L.polyline(latLng).addTo(map);
         }
 
     }
+
+    mapService.removeUserPolyline = function() {
+
+        if (userTrackPolyline) {
+            map.removeLayer(userTrackPolyline);
+            delete userTrackPolyline;
+        }
+
+    }
+
+
+    mapService.saveUserPolyline = function(info) {
+
+        if (userTrackPolyline) {
+
+            var geoUserTrack = userTrackPolyline.toGeoJSON();
+            geoUserTrack.properties = info;
+
+            var tmp;
+            if (!localStorage.$vm_userTracks) {
+                localStorage.$vm_userTracks = JSON.stringify([]);
+            }
+            tmp = JSON.parse(localStorage.$vm_userTracks);
+            tmp.push(geoUserTrack);
+            localStorage.$vm_userTracks = JSON.stringify(tmp);
+        }
+
+
+    }
+
+
 
     window.closePopup = mapService.closePopup = function(e) {
         map && map.closePopup();
