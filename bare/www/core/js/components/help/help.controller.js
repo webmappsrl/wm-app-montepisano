@@ -90,9 +90,9 @@ angular.module('webmapp')
                 startY,
                 distX,
                 distY,
-                threshold = 70, //required min distance traveled to be considered swipe
+                threshold = 50, //required min distance traveled to be considered swipe
                 restraint = 100, // maximum distance allowed at the same time in perpendicular direction
-                allowedTime = 300, // maximum time allowed to travel that distance
+                allowedTime = 500, // maximum time allowed to travel that distance
                 elapsedTime,
                 startTime,
                 handleswipe = callback || function (swipedir) {}
@@ -141,5 +141,6 @@ angular.module('webmapp')
                     break;
             }
         });
+        
         return vm;
     });
