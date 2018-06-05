@@ -1,1 +1,3 @@
+Version 0.1.1605
+Temporarily removed purchase option
 Version 0.1.1604
