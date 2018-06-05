@@ -598,7 +598,7 @@ ion-content div.static-content.card-content {
     left: 0;
     background: rgba(0, 0, 0, 0.5);
     height: 15%;
-    bottom: -1px; }
+    bottom: 0px; }
     .chianti-home-page div.chianti-home-content div.language-selector {
       padding: 0 10px;
       margin: 45px 0;
@@ -2321,7 +2321,7 @@ ion-side-menus.hide-main-bar ion-nav-bar {
 ion-side-menus.hide-main-bar ion-nav-view.view-container > ion-view.hide-map > ion-content.content-pane.scroll-content {
   top: 0;
   bottom: 0;
-  height: 100%; }
+  height: calc(100% + 1px); }
 
 /* ------------------------------------ *\
    #ADVANCED MENU

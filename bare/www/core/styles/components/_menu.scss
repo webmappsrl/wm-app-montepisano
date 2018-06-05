@@ -83,7 +83,7 @@ ion-side-menus {
     ion-nav-view.view-container > ion-view.hide-map > ion-content.content-pane.scroll-content {
       top: 0;
       bottom: 0;
-      height: 100%;
+      height: calc(100% + 1px);
     }
   }
 }
