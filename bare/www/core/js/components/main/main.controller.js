@@ -47,16 +47,17 @@ angular.module('webmapp')
     vm.showToast = false;
 
     vm.userTrack = true;
-
     vm.userLatLngs = [];
     vm.trackLabel = "";
     vm.packageTitle = {};
+    vm.activeRecordTrack = false;
+    vm.pauseRecordTrack = false;
+
     if (PackageService.getRouteById(CONFIG.routeID) && PackageService.getRouteById(CONFIG.routeID).packageTitle) {
         vm.packageTitle = PackageService.getRouteById(CONFIG.routeID).packageTitle;
     }
 
     vm.updateUserTrack = function(latLng) {
-
         if (latLng && latLng.length == 2 && latLng[0] && latLng[1]) {
             if (vm.userLatLngs.length == 0) {
                 MapService.createUserPolyline([latLng]);
@@ -65,19 +66,28 @@ angular.module('webmapp')
             }
             vm.userLatLngs.push(latLng);
         }
+    };
 
-    }
+    vm.recordUserTrack = function(lat, long) {
+        if (vm.activeRecordTrack && !vm.pauseRecordTrack) {
+            if (vm.userLatLngs.length == 0) {
+                if (prevLatLong && prevLatLong.lat && prevLatLong.long) {
+                    vm.updateUserTrack([prevLatLong.lat, prevLatLong.long]);
+                }
+                vm.updateUserTrack([lat, long]);
+            } else {
+                vm.updateUserTrack([lat, long]);
+            }
+        }
+    };
 
     vm.resetUserTrack = function() {
         vm.userLatLngs = [];
         MapService.removeUserPolyline();
-
     }
 
     vm.saveUserTrack = function(info) {
-
         MapService.saveUserPolyline(info);
-
     }
 
     if (CONFIG && CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) {
@@ -662,17 +672,9 @@ angular.module('webmapp')
                 MapService.centerOnCoords(lat, long);
             }
 
+            vm.recordUserTrack(lat, long);
+
             if (vm.isNavigating && !vm.isPaused) {
-
-                if (vm.userLatLngs.length == 0) {
-                    if (prevLatLong && prevLatLong.lat && prevLatLong.long) {
-                        vm.updateUserTrack([prevLatLong.lat, prevLatLong.long]);
-                    }
-                    vm.updateUserTrack([lat, long]);
-                } else {
-                    vm.updateUserTrack([lat, long]);
-                }
-
                 if (realTimeTracking.enabled && vm.userData.ID) {
                     // vm.positionsToSend.push({
                     //     lat: lat,
@@ -1077,8 +1079,12 @@ angular.module('webmapp')
         vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
         $rootScope.$emit('is-navigating', vm.isNavigating);
         $rootScope.$emit('navigation-path', vm.stopNavigationUrlParams);
+        //outOftrack
         vm.outOfTrackInterval = setInterval(function() { vm.checkOutOfTrack(prevLatLong) }, 1000);
 
+        //record track
+        vm.activeRecordTrack = true;
+        vm.pauseRecordTrack = false;
         window.plugins.insomnia.keepAwake();
         setTimeout(function() {
             if (prevLatLong) {
@@ -1102,6 +1108,8 @@ angular.module('webmapp')
         vm.inTrackDate = 0;
         hideOutOfTrackToast();
         window.plugins.insomnia.allowSleepAgain();
+        vm.activeRecordTrack = true;
+        vm.pauseRecordTrack = true;
     };
 
     vm.resumeNavigation = function() {
@@ -1112,6 +1120,8 @@ angular.module('webmapp')
         vm.firstPositionSet = false;
         vm.outOfTrackInterval = setInterval(function() { vm.checkOutOfTrack(prevLatLong) }, 1000);
         window.plugins.insomnia.keepAwake();
+        vm.activeRecordTrack = true;
+        vm.pauseRecordTrack = false;
     };
 
     vm.stopNavigation = function() {
@@ -1125,6 +1135,8 @@ angular.module('webmapp')
         cleanNavigationValues();
         $rootScope.$emit('is-navigating', vm.isNavigating);
         window.plugins.insomnia.allowSleepAgain();
+        vm.activeRecordTrack = false;
+        vm.pauseRecordTrack = false
         vm.saveUserTrack({
             RouteInfo: {
                 RouteID: CONFIG.routeID,
@@ -1134,7 +1146,7 @@ angular.module('webmapp')
                 Timestamp: Date.now()
             }
         });
-        vm.resetUserTrack();
+        vm.resetUserTrack();;
         if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
             var url = 'layer/' + vm.stopNavigationUrlParams.parentId + '/' + vm.stopNavigationUrlParams.id;
             vm.stopNavigationUrlParams = {
