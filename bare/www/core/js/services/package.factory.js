@@ -427,10 +427,10 @@ angular.module('webmapp')
             }
 
             $ionicPopup.prompt({
-                title: $translate.instant('Voucher'),
-                subTitle: $translate.instant('Inserisci il voucher da attivare'),
+                title: $translate.instant('Codice Viaggio'),
+                subTitle: $translate.instant('Inserisci il codice del tuo pacchetto di viaggio'),
                 inputType: 'text',
-                inputPlaceholder: $translate.instant('Voucher')
+                inputPlaceholder: $translate.instant('Codice Viaggio')
             })
                 .then(function (res) {
                     if (res) {
@@ -465,11 +465,11 @@ angular.module('webmapp')
                                 $ionicLoading.hide();
                                 if (data.error === "Voucher Expired") {
                                     $ionicPopup.alert({
-                                        template: $translate.instant("Il voucher che hai utilizzato è scaduto")
+                                        template: $translate.instant("Il codice di viaggio che hai utilizzato è scaduto")
                                     });
                                 } else {
                                     $ionicPopup.alert({
-                                        template: $translate.instant("Il voucher che hai inserito non è valido. Controlla di averlo inserito correttamente e inseriscilo nuovamente.")
+                                        template: $translate.instant("Il codice di viaggio che hai inserito non è valido. Controlla di averlo inserito correttamente e inseriscilo nuovamente.")
                                     });
                                 }
                             });
