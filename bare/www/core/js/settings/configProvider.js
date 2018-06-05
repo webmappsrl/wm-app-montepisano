@@ -6,8 +6,8 @@ angular.module('webmapp')
     ) {
         var config = angular.extend(this, GENERAL_CONFIG);
 
-        var redirectHomeToThemes = localStorage.$wm_redirectToThemes ? JSON.parse(localStorage.$wm_redirectToThemes) : false;
-        if (redirectHomeToThemes) {
+        var redirectHomeToThemes = localStorage.$wm_redirectToThemes ? JSON.parse(localStorage.$wm_redirectToThemes) : 0;
+        if (+redirectHomeToThemes === 1) {
             delete localStorage.$wm_mhildConf;
             delete localStorage.$wm_mhildBaseUrl;
             delete localStorage.$wm_mhildId;
@@ -17,7 +17,7 @@ angular.module('webmapp')
             delete localStorage.activeFilters;
 
             delete sessionStorage.$wm_doBack;
-            delete localStorage.$wm_redirectToThemes;
+            localStorage.$wm_redirectToThemes = JSON.stringify(3);
             location.href = 'index.html';
             return;
         }

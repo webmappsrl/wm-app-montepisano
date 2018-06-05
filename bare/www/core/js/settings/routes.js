@@ -218,9 +218,17 @@ angular.module('webmapp')
         }
 
         var internalMap = $window.localStorage.$wm_mhildId ? true : false;
+        var redirectHomeToThemes = $window.localStorage.$wm_redirectToThemes ? JSON.parse($window.localStorage.$wm_redirectToThemes) : 0;
 
         if (internalMap) {
-            $window.localStorage.$wm_redirectToThemes = JSON.stringify(true);
+            $window.localStorage.$wm_redirectToThemes = JSON.stringify(1);
         }
-        $urlRouterProvider.otherwise(CONFIGProvider.OPTIONS.startUrl);
+
+        if (+redirectHomeToThemes === 2) {
+            delete $window.localStorage.$wm_redirectToThemes;
+            $urlRouterProvider.otherwise('taxonomy/theme');
+        }
+        else {
+            $urlRouterProvider.otherwise(CONFIGProvider.OPTIONS.startUrl);
+        }
     });

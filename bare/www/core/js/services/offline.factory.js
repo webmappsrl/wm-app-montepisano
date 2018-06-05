@@ -367,6 +367,7 @@ angular.module('webmapp')
         };
 
         offline.resetCurrentMapAndGoBack = function () {
+            localStorage.$wm_redirectToThemes = JSON.stringify(2);
             delete localStorage.$wm_mhildConf;
             delete localStorage.$wm_mhildBaseUrl;
             delete localStorage.$wm_mhildId;
