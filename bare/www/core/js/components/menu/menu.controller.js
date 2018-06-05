@@ -98,6 +98,21 @@ angular.module('webmapp')
 
             loginScope.state = {};
 
+            var optionalFieldsConf = (CONFIG.LOGIN && CONFIG.LOGIN.optionalFields) ? CONFIG.LOGIN.optionalFields : [];
+
+            loginScope.optionalFields = {
+                    firstName: false,
+                    lastName: false
+                };
+
+            for (var i in optionalFieldsConf) {
+                if (optionalFieldsConf[i] === 'firstName') {
+                    loginScope.optionalFields.firstName = true;
+                } else if (optionalFieldsConf[i] === 'lastName') {
+                    loginScope.optionalFields.lastName = true;
+                }
+            }
+
             var resetFields = function () {
                 loginScope.ud = {};
                 loginScope.ud.firstName = '';
@@ -203,7 +218,17 @@ angular.module('webmapp')
                     $cordovaKeyboard.close();
                 }
 
-                if (email && password && checkEmail && checkPassword && firstName && lastName) {
+                var validOptionalFields = firstName && lastName;
+                if (!validOptionalFields) {
+                    validOptionalFields = true;
+                    if (!((!loginScope.optionalFields.firstName && firstName) || loginScope.optionalFields.firstName)) {
+                        validOptionalFields = false;
+                    } else if (!((!loginScope.optionalFields.lastName && lastName) || loginScope.optionalFields.lastName)) {
+                        validOptionalFields = false;
+                    }
+                }
+
+                if (email && password && checkEmail && checkPassword && validOptionalFields) {
                     if (!isEmailValid(email)) {
                         $ionicPopup.alert({
                             title: $translate.instant("ATTENZIONE"),
