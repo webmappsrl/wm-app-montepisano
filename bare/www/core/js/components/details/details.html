@@ -74,8 +74,8 @@
                 <div class="contacts-list__element" style="width: 100%" ng-if="vm.feature.address">
                     <a href="geo:{{vm.coordinates}}" style="cursor: default" ng-click="vm.openExternalMap()">
                         <i class="icon wm-icon-navigate"></i>
-                         <!-- {{vm.feature.address}} -->
-                         {{"Portami qui" | translate}}
+                        <!-- {{vm.feature.address}} -->
+                        {{"Portami qui" | translate}}
                     </a>
                 </div>
             </div>
@@ -270,12 +270,16 @@
             <div class="route-related-details" ng-if="vm.related && vm.geometry.type === 'LineString'">
 
                 <ul class="list route-related-list">
-                    <li class="item item-icon-left route-related-item" ng-repeat="item in vm.related" ng-click="vm.openRelated(item)">
+                    <li class="item item-icon-left route-related-item" ng-repeat="(key, item) in vm.related" ng-click="vm.openRelated(item)">
                         <div class="route-related-image">
                             <img ng-if="item.properties.image" ng-src="{{item.properties.image}}">
                             <i ng-if="!item.properties.image" class="icon {{item.properties.icon}}"></i>
                         </div>
                         <div class="route-related-name">
+                            <div ng-if="key === 0" class="details-start-poi" ng-style="{ 'color': vm.itemColor }">
+                                <i class="icon wm-icon-ios7-arrow-forward" ng-style="{ 'color': '#ffffff', 'background': vm.itemColor }"></i>
+                                {{"Inizio del percorso" | translate}}
+                            </div>
                             {{item.properties.name}}
                         </div>
                         <!-- <i class="icon wm-icon-flag"></i> -->

@@ -51,6 +51,11 @@ angular.module('webmapp')
 
         vm.hideSubMenu = true;
 
+        vm.itemColor = '#000000';
+        $rootScope.$on('taxonomy-details', function (e, value) {
+            vm.itemColor = value.color;
+        });
+
         var handlePoiHighlight = function (newPoi) {
             MapService.clearHighlightedPoi();
             if (newPoi !== null) {

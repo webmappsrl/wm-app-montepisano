@@ -1145,7 +1145,25 @@ div.detailRoute-footer {
       padding: 20px 15px;
       overflow: hidden;
       text-overflow: ellipsis;
-      float: left; }
+      float: left;
+      position: relative; }
+      .route-related-details .route-related-list .route-related-item .route-related-name .details-start-poi {
+        text-transform: uppercase;
+        font-size: 12px;
+        position: absolute;
+        top: 0;
+        left: 15px; }
+        .route-related-details .route-related-list .route-related-item .route-related-name .details-start-poi i {
+          border-radius: 50%;
+          position: static;
+          height: auto;
+          font-size: 12px;
+          padding: 1px;
+          text-align: center;
+          display: inline-block;
+          left: 0; }
+          .route-related-details .route-related-list .route-related-item .route-related-name .details-start-poi i::before {
+            width: auto; }
 
 /* DETAILS ROUTE */
 .details-image-route {
