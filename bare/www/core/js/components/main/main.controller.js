@@ -664,7 +664,14 @@ angular.module('webmapp')
 
             if (vm.isNavigating && !vm.isPaused) {
 
-                vm.updateUserTrack([lat, long]);
+                if (vm.userLatLngs.length == 0) {
+                    if (prevLatLong && prevLatLong.lat && prevLatLong.long) {
+                        vm.updateUserTrack([prevLatLong.lat, prevLatLong.long]);
+                    }
+                    vm.updateUserTrack([lat, long]);
+                } else {
+                    vm.updateUserTrack([lat, long]);
+                }
 
                 if (realTimeTracking.enabled && vm.userData.ID) {
                     // vm.positionsToSend.push({

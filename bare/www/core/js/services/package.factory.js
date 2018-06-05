@@ -607,11 +607,16 @@ angular.module('webmapp')
         return userDownloadedPackages;
     };
 
-
-    packageService.getRouteById = function(routeID) {
+    /**
+     * @description
+     * Return the pack with the given packId. If the variable packages does not exist return null;
+     * 
+     * @param {number} packID 
+     */
+    packageService.getRouteById = function(packId) {
 
         if (packages) {
-            return packages[routeID];
+            return packages[packId];
         } else {
             return null;
         }
