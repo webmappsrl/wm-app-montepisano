@@ -68,6 +68,7 @@ angular.module('webmapp')
         }
     };
 
+
     vm.recordUserTrack = function(lat, long) {
         if (vm.activeRecordTrack && !vm.pauseRecordTrack) {
             if (vm.userLatLngs.length == 0) {
@@ -81,14 +82,26 @@ angular.module('webmapp')
         }
     };
 
-    vm.resetUserTrack = function() {
+    vm.stopRecordTrackAndSave = function(save) {
+
+        vm.activeRecordTrack = false;
+        vm.pauseRecordTrack = false;
+        if (save && vm.userLatLngs.length >= 1) {
+            MapService.saveUserPolyline({
+                RouteInfo: {
+                    RouteID: CONFIG.routeID,
+                    TrackID: vm.stopNavigationUrlParams.id,
+                    RouteName: vm.packageTitle,
+                    TrackLabel: vm.TrackLabel,
+                    Timestamp: Date.now()
+                }
+            });
+        }
         vm.userLatLngs = [];
         MapService.removeUserPolyline();
     }
 
-    vm.saveUserTrack = function(info) {
-        MapService.saveUserPolyline(info);
-    }
+
 
     if (CONFIG && CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) {
         vm.maxOutOfTrack = CONFIG.MAIN.NAVIGATION.trackBoundsDistance;
@@ -1135,18 +1148,9 @@ angular.module('webmapp')
         cleanNavigationValues();
         $rootScope.$emit('is-navigating', vm.isNavigating);
         window.plugins.insomnia.allowSleepAgain();
-        vm.activeRecordTrack = false;
-        vm.pauseRecordTrack = false
-        vm.saveUserTrack({
-            RouteInfo: {
-                RouteID: CONFIG.routeID,
-                TrackID: vm.stopNavigationUrlParams.id,
-                RouteName: vm.packageTitle,
-                TrackLabel: vm.TrackLabel,
-                Timestamp: Date.now()
-            }
-        });
-        vm.resetUserTrack();;
+
+        vm.stopRecordTrackAndSave(true);
+
         if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
             var url = 'layer/' + vm.stopNavigationUrlParams.parentId + '/' + vm.stopNavigationUrlParams.id;
             vm.stopNavigationUrlParams = {

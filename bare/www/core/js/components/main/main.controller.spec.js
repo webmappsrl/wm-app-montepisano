@@ -205,4 +205,270 @@ describe('MainController', function() {
 
     });
 
+    describe('updateUserTrack', function() {
+
+        var vm, scope;
+        var MapService;
+        beforeEach(inject(function(_$rootScope_, $controller, _MapService_) {
+
+            scope = _$rootScope_.$new();
+            vm = $controller('MainController', { $scope: scope });
+            MapService = _MapService_;
+
+        }));
+
+
+        it('latlng is valid  && vm.userLatLngs is empty => createUserPolyline must be called && latlng is inserted on vm.userLatLngs ', function() {
+
+            var latlng = [43.718, 10.4];
+
+            vm.userLatLngs = [];
+
+            spyOn(MapService, 'createUserPolyline').and.stub();
+
+            vm.updateUserTrack(latlng);
+
+            expect(MapService.createUserPolyline).toHaveBeenCalled();
+            expect(vm.userLatLngs.length).toBe(1);
+            expect(vm.userLatLngs[0]).toEqual(latlng);
+
+        });
+
+
+        it('latlng is valid  && vm.userLatLngs is not empty => updateUserPolyline must be called && latlng is inserted on top of vm.userLatLngs ', function() {
+
+            var latlng = [43.718, 10.4];
+
+            vm.userLatLngs = [];
+            vm.userLatLngs.push(latlng);
+            var l = vm.userLatLngs.length;
+
+            latlng = [43.72, 10.4];
+            spyOn(MapService, 'updateUserPolyline').and.stub();
+
+
+            vm.updateUserTrack(latlng);
+
+            expect(MapService.updateUserPolyline).toHaveBeenCalled();
+            expect(vm.userLatLngs.length).toBe(l + 1);
+            expect(vm.userLatLngs[l]).toEqual(latlng);
+
+        });
+
+
+        it('latlng is valid   => nothing happen ', function() {
+
+            var c = vm.userLatLngs;
+            vm.updateUserTrack(null);
+            expect(vm.userLatLngs).toEqual(c);
+
+        });
+
+
+    });
+
+    describe('recordUserTrack', function() {
+
+        var vm, scope;
+        var MapService;
+        beforeEach(inject(function(_$rootScope_, $controller, _MapService_) {
+
+            scope = _$rootScope_.$new();
+
+
+            vm = $controller('MainController', { $scope: scope });
+
+
+            MapService = _MapService_;
+
+        }));
+
+
+        it('(vm.activeRecordTrack && !vm.pauseRecordTrack) && vm.userLatLongs.length==0  && prevLatLng is undefined => updateUserTrack must be called once.',
+            function() {
+
+                vm.activeRecordTrack = true;
+                vm.pauseRecordTrack = false;
+
+                var lat = 43.718;
+                var lng = 10.4;
+
+                spyOn(vm, 'updateUserTrack').and.stub();
+
+                vm.recordUserTrack(lat, lng);
+
+                expect(vm).toBeDefined();
+                // expect(vm.updateUserTrack.calls.count()).toBe(2);
+
+
+            });
+
+        it('(vm.activeRecordTrack && !vm.pauseRecordTrack) && vm.userLatLongs.length==1  && prevLatLng is undefined => updateUserTrack must be called once.',
+            function() {
+
+                vm.activeRecordTrack = true;
+                vm.pauseRecordTrack = false;
+
+                var lat = 43.718;
+                var lng = 10.4;
+
+                spyOn(vm, 'updateUserTrack').and.stub();
+
+                vm.recordUserTrack(lat, lng);
+
+                expect(vm).toBeDefined();
+                // expect(vm.updateUserTrack.calls.count()).toBe(2);
+
+            });
+
+        it('(vm.activeRecordTrack && !vm.pauseRecordTrack) && vm.userLatLongs.length==0  && prevLatLng is undefined => updateUserTrack must be called once.',
+            function() {
+
+                vm.activeRecordTrack = true;
+                vm.pauseRecordTrack = false;
+
+                var lat = 43.718;
+                var lng = 10.4;
+
+                vm.userLatLngs = [43.716, 10.4];
+                spyOn(vm, 'updateUserTrack').and.stub();
+
+                vm.recordUserTrack(lat, lng);
+
+                expect(vm.updateUserTrack.calls.count()).toBe(1);
+
+            });
+
+
+        it('vm.activeRecordTrack is false  => updateUserTrack is not called', function() {
+
+            vm.activeRecordTrack = false;
+
+            var lat = 43.718;
+            var lng = 10.4;
+
+            vm.userLatLngs = [43.716, 10.4];
+            spyOn(vm, 'updateUserTrack').and.stub();
+
+            vm.recordUserTrack(lat, lng);
+
+            expect(vm.updateUserTrack).not.toHaveBeenCalled();
+
+        });
+
+
+        it('vm.activeRecordTrack is true  => updateUserTrack is not called', function() {
+
+            vm.activeRecordTrack = true;
+            vm.pauseRecordTrack = true;
+
+            var lat = 43.718;
+            var lng = 10.4;
+
+            vm.userLatLngs = [43.716, 10.4];
+            spyOn(vm, 'updateUserTrack').and.stub();
+
+            vm.recordUserTrack(lat, lng);
+
+            expect(vm.updateUserTrack).not.toHaveBeenCalled();
+
+        });
+
+    });
+
+
+    describe('stopRecordTrackAndSave', function() {
+
+        var vm, scope;
+        var MapService;
+        var callOrder;
+        beforeEach(inject(function(_$rootScope_, $controller, _MapService_) {
+
+            scope = _$rootScope_.$new();
+
+
+            vm = $controller('MainController', { $scope: scope });
+
+
+            MapService = _MapService_;
+            callOrder = [];
+            spyOn(MapService, 'saveUserPolyline').and.callFake(function() {
+                callOrder.push('save');
+            });
+            spyOn(MapService, 'removeUserPolyline').and.callFake(function() {
+                callOrder.push('remove');
+            });
+
+        }));
+
+
+
+        it('function parameter is true and vm.userLatLngs.length>0 => should call saveUserPolyline and removeUserPolyline', function() {
+
+
+            vm.userLatLngs = [
+                [43.718, 10.4],
+                [43.716, 10.4]
+            ];
+
+
+            vm.activeRecordTrack = true;
+            vm.pauseRecordTrack = true;
+
+            vm.stopRecordTrackAndSave(true);
+
+            expect(vm.activeRecordTrack).toBe(false);
+            expect(vm.pauseRecordTrack).toBe(false);
+            expect(MapService.saveUserPolyline).toHaveBeenCalled();
+            expect(MapService.removeUserPolyline).toHaveBeenCalled();
+            expect(callOrder).toEqual(['save', 'remove']);
+            expect(vm.userLatLngs.length).toEqual(0);
+
+
+        });
+
+        it('function parameter is true and vm.userLatLngs.length=0 => should call only removeUserPolyline ', function() {
+
+
+
+            vm.activeRecordTrack = true;
+            vm.pauseRecordTrack = true;
+
+            vm.stopRecordTrackAndSave(true);
+
+            expect(vm.activeRecordTrack).toBe(false);
+            expect(vm.pauseRecordTrack).toBe(false);
+            expect(MapService.saveUserPolyline).not.toHaveBeenCalled();
+            expect(MapService.removeUserPolyline).toHaveBeenCalled();
+            expect(callOrder).toEqual(['remove']);
+            expect(vm.userLatLngs.length).toEqual(0);
+
+
+        });
+
+
+        it('function parameter is false => should call onlyUserPolyline', function() {
+
+            vm.userLatLngs = [
+                [43.718, 10.4],
+                [43.716, 10.4]
+            ];
+
+            vm.activeRecordTrack = true;
+            vm.pauseRecordTrack = true;
+
+            vm.stopRecordTrackAndSave(false);
+
+            expect(vm.activeRecordTrack).toBe(false);
+            expect(vm.pauseRecordTrack).toBe(false);
+            expect(MapService.saveUserPolyline).not.toHaveBeenCalled();
+            expect(MapService.removeUserPolyline).toHaveBeenCalled();
+            expect(callOrder).toEqual(['remove']);
+            expect(vm.userLatLngs.length).toEqual(0);
+
+
+        });
+
+    });
+
 });
