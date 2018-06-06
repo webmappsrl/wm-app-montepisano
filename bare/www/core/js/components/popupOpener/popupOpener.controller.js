@@ -18,6 +18,7 @@ angular.module('webmapp')
                         setTimeout(function () {
                             if (features[id]) {
                                 MapService.centerOnFeature(features[id]);
+                                MapService.setFilter(features[id].parent.label, true);
                                 if (zoom) {
                                     setTimeout(function () {
                                         MapService.setZoom(zoom);
