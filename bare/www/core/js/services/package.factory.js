@@ -2,10 +2,10 @@
  * PACKAGE FACTORY
  * PackageService
  * 
- * Provide all the function and the metadata for the routes and
- * packages
- * Every function does not return directly a value but emit an
- * event to notify the update of the specified data
+ * Provide all the function and the metadata for the routes,
+ * packages and taxonomies
+ * Almost every function does not return directly a value but
+ * emit an event to notify the update of the specified data
  * Make sure to listen to the specific event to update your data
  * The data will be emitted twice, one for the instant data (not
  * yet updated) and one for the final updated data (that are

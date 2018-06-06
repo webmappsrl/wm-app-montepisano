@@ -51,11 +51,6 @@ angular.module('webmapp')
 
         vm.hideSubMenu = true;
 
-        vm.itemColor = '#000000';
-        $rootScope.$on('taxonomy-details', function (e, value) {
-            vm.itemColor = value.color;
-        });
-
         var handlePoiHighlight = function (newPoi) {
             MapService.clearHighlightedPoi();
             if (newPoi !== null) {
@@ -68,13 +63,13 @@ angular.module('webmapp')
                 vm.isNavigable = false;
                 $rootScope.$emit('item-navigable', vm.isNavigable);
             }
-            var trackHistoryPosition = localStorage.$wm_track_history ? JSON.parse(localStorage.$wm_track_history) : 1;
-            delete localStorage.$wm_track_history;
-            if (trackHistoryPosition <= 0) {
-                history.go(trackHistoryPosition);
+            
+            if (vm.geometry.type === "LineString") {
+                Utils.goTo('/'); //Should not enter here
             }
             else {
-                Utils.goTo('/');
+                ////gototrack
+                Utils.goTo('layer/' + vm.track.parent.label.replace(/ /g, '_') + '/' + vm.track.properties.id);
             }
         }
 
@@ -145,8 +140,9 @@ angular.module('webmapp')
                 mappingTable = mapping ? mapping.table : {},
                 mappingUrls = mapping ? mapping.urls : {},
                 mappingFields = mapping ? mapping.fields : {},
-                phoneMatch,
-                track = null;
+                phoneMatch;
+
+            vm.track = null;
 
             vm.hasTable = false;
             vm.detailTable = {};
@@ -290,9 +286,9 @@ angular.module('webmapp')
                     vm.related = MapService.getRelatedFeaturesById(feature.id_pois);
                 } else {
                     //Find related track
-                    track = MapService.getRelatedTrackByFeatureId(feature.id);
-                    if (track && track.properties.id_pois && track.properties.id_pois.length) {
-                        vm.related = MapService.getRelatedFeaturesById(track.properties.id_pois);
+                    vm.track = MapService.getRelatedTrackByFeatureId(feature.id);
+                    if (vm.track && vm.track.properties.id_pois && vm.track.properties.id_pois.length) {
+                        vm.related = MapService.getRelatedFeaturesById(vm.track.properties.id_pois);
                     }
                     if (feature.description && feature.description.expandable) {
                         feature.description.expandable = false;
@@ -333,13 +329,13 @@ angular.module('webmapp')
                     objData['detail'] = arrayOfRelatedPois;
                 }
 
-                if (track) {
+                if (vm.track) {
                     if (arrayOfRelatedPois) {
-                        arrayOfRelatedPois.push(track);
+                        arrayOfRelatedPois.push(vm.track);
                         objData['detail'] = arrayOfRelatedPois;
                     }
                     else {
-                        objData['detail'] = [track, data];
+                        objData['detail'] = [vm.track, data];
                     }
                 }
 
@@ -359,6 +355,7 @@ angular.module('webmapp')
                     handlePoiHighlight(selectedPoi);
                 }
 
+                console.log(vm)
                 setTimeout(function () {
                     MapService.adjust();
                 }, 1000);
@@ -528,7 +525,6 @@ angular.module('webmapp')
         };
 
         vm.openRelated = function (item) {
-            localStorage.$wm_track_history = JSON.stringify(-1);
             Utils.goTo('layer/' + item.parent.label.replace(/ /g, '_') + '/' + item.properties.id);
         };
 
@@ -678,8 +674,6 @@ angular.module('webmapp')
             handlePoiHighlight(selectedPoi);
             beforeLeaveHandler();
         });
-
-
 
         document.addEventListener('deviceready', function () {
             isOnline = Connection && navigator.network.connection.type !== Connection.NONE;

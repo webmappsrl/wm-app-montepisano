@@ -1359,7 +1359,6 @@ angular.module('webmapp')
 
         var initialize = function () {
 
-            //
             initializeLanguages();
 
             if (typeof localStorage.$wm_mhildConf === 'undefined') {
@@ -2065,6 +2064,14 @@ angular.module('webmapp')
             return defer.promise;
         };
 
+        mapService.getTheOnlyTrack = function () {
+            for (var i in featureMapById) {
+                if (featureMapById[i].geoetry.type === 'LineString') {
+                    return angular.copy(featureMapById[i]);
+                }
+            }
+        };
+
         mapService.getItineraryRefByFeatureIdMap = function () {
             return itineraryRefByFeatureId;
         };
@@ -2400,6 +2407,7 @@ angular.module('webmapp')
             if (mapService.isReady()) {
                 for (var id in featureMapById) {
                     if (featureMapById[id].parent.label.toLowerCase() === 'tappe') {
+                        $rootScope.$emit('track-loaded', angular.copy(featureMapById[id]));
                         Utils.goTo('layer/Tappe/' + id);
                         break;
                     }

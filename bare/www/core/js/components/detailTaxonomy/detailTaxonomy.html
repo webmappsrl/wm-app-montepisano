@@ -24,7 +24,7 @@
             }">
         </div>
         <div class="detailTaxonomy-image">
-            <img ng-src="{{vm.item.featured_image.sizes.medium}}">
+            <img ng-src="{{vm.item.featured_image.sizes.large}}">
         </div>
         <div class="detailTaxonomy-description" ng-class="{'show-full': vm.fullDescription}"
             ng-click="vm.toggleDescription()">
@@ -51,12 +51,12 @@
                 <i ng-if="vm.userDownloadedPackages[route.id]" class="icon wm-icon-ios7-refresh-empty update-icon" ng-style="{'background': vm.colors.details.background}"></i>
                 <i class="icon {{vm.activities[route.activity[0]].icon}} activity-icon"></i>
                 <span ng-if="route.packageTitle[vm.currentLang]"
-                    ng-style="{'color': route.color}">
-                    {{route.packageTitle[vm.currentLang]}}
+                    ng-style="{'color': route.color}"
+                    ng-bind-html="route.packageTitle[vm.currentLang]">
                 </span>
                 <span ng-if="!route.packageTitle[vm.currentLang]"
-                    ng-style="{'color': route.color}">
-                    {{route.packageTitle[vm.defaultLang]}}
+                    ng-style="{'color': route.color}",
+                    ng-bind-html="route.packageTitle[vm.defaultLang]">
                 </span>
             </div>
         </div>

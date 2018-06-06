@@ -490,6 +490,8 @@
             display: inline-block;
             left: 0;
             width: 14px;
+            color: #fff;
+            background: #0b7b39;
             &::before {
               width: auto;
             }
@@ -583,11 +585,4 @@
       z-index: 1;
     }
   }
-}
-
-.leaflet-map-pane svg {
-  // z-index: 1000;
-  // .poi-highlight-circle {
-  //   z-index: 1000;
-  // }
 }

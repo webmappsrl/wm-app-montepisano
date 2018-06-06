@@ -188,8 +188,8 @@
                 'navigator-name': vm.isAPoi
             }">
                 <div class="navigator-track-name" ng-if="vm.isAPoi && vm.activityIcon"><i class="icon {{vm.activityIcon}}"></i></div>
-                <div class="navigator-track-name" ng-if="vm.isAPoi && vm.parentTrackName && !vm.activityIcon">{{vm.parentTrackName}}</div>
-                <div class="taxonomy-name">{{vm.taxonomyName}}</div>
+                <div class="navigator-track-name" ng-if="vm.isAPoi && vm.parentTrackName && !vm.activityIcon" ng-bind-html="vm.parentTrackName"></div>
+                <div class="taxonomy-name" ng-bind-html="vm.taxonomyName"></div>
             </div>
             <div ng-if="vm.isAPoi" class="poi-navigator" ng-click="vm.goToPoi(vm.nextUrl)">NEXT<i class="icon wm-icon-ios7-arrow-forward"></i></div>
         </div>

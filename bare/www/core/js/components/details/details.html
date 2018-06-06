@@ -27,7 +27,9 @@
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left" class="no-animate">
-        <button class="no-animate button button-icon icon ion-navicon" ng-if="!vm.hideBack" ng-click="vm.goBack()">
+        <button class="no-animate button button-icon icon ion-navicon" ng-if="vm.geometry.type === 'LineString'" menu-toggle="left">
+        </button>
+        <button class="no-animate button button-icon icon ion-navicon" ng-if="vm.geometry.type !== 'LineString'" ng-click="vm.goBack()">
         </button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
@@ -277,10 +279,10 @@
                         </div>
                         <div class="route-related-name">
                             <div ng-if="key === 0" class="details-start-poi" ng-style="{ 'color': vm.itemColor }">
-                                <i class="icon wm-icon-ios7-arrow-forward" ng-style="{ 'color': '#ffffff', 'background': vm.itemColor }"></i>
+                                <i class="icon wm-icon-ios7-arrow-forward"></i>
                                 {{"Inizio del percorso" | translate}}
                             </div>
-                            {{item.properties.name}}
+                            <div ng-bind-html="item.properties.name"></div>
                         </div>
                         <!-- <i class="icon wm-icon-flag"></i> -->
                     </li>

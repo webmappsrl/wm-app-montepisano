@@ -1161,7 +1161,10 @@ div.detailRoute-footer {
           padding: 1px;
           text-align: center;
           display: inline-block;
-          left: 0; }
+          left: 0;
+          width: 14px;
+          color: #fff;
+          background: #0b7b39; }
           .route-related-details .route-related-list .route-related-item .route-related-name .details-start-poi i::before {
             width: auto; }
 

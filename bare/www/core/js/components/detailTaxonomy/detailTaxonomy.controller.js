@@ -110,7 +110,6 @@ angular.module('webmapp')
             }
             MapService.createGeojsonLayer(toAdd);
             $rootScope.$emit('geolocate');
-            console.log(vm.routes);
         };
 
         var getTrack = function (url, packId, pos) {

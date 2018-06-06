@@ -41,10 +41,6 @@ angular.module('webmapp')
         vm.goTo = Utils.goTo;
 
         vm.goToPoi = function (url) {
-            var trackHistoryPosition = localStorage.$wm_track_history ? JSON.parse(localStorage.$wm_track_history) : 1;
-            if (trackHistoryPosition <= 0) {
-                localStorage.$wm_track_history = JSON.stringify(trackHistoryPosition - 1);
-            }
             vm.goTo(url);
         };
 
@@ -925,7 +921,6 @@ angular.module('webmapp')
         };
 
         vm.returnToMap = function () {
-            delete localStorage.$wm_track_history;
             vm.isNavigable = false;
             if ($state.params.parentId) {
                 MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
@@ -963,7 +958,6 @@ angular.module('webmapp')
         };
 
         vm.toggleMap = function () {
-            delete localStorage.$wm_track_history;
             vm.isMapPage = !vm.isMapPage;
             vm.mapView = vm.isMapPage;
             vm.isNavigable = false;
