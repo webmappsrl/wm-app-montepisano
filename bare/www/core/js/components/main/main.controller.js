@@ -391,23 +391,45 @@ angular.module('webmapp')
         };
 
 
-
-        $cordovaSocialSharing
-            .share(
-                shareOptions.message,
-                shareOptions.mailSubject,
-                undefined,
-                shareOptions.baseUrl +
-                // '/#/?map=' +
-                // MapService.getZoom() + '/' +
-                vm.centerCoords.lat + ',' +
-                vm.centerCoords.lng)
-            .then(function(result) {
-                // Success!
-            }, function(err) {
-                // An error occured. Show a message to the user
+        if (prevLatLong && (distanceInMeters(prevLatLong.lat, prevLatLong.long, vm.centerCoords.lat, vm.centerCoords.lng) > 100)) {
+            $ionicPopup.alert({
+                title: $translate.instant("ATTENZIONE"),
+                template: $translate.instant("Questa funzionalità è disponibile solo con una connessione attiva. Controlla la tua connessione e riprova"),
+                buttons: [{
+                    text: 'Ok',
+                    type: 'button-positive'
+                }]
+            }).then(function() {
+                $cordovaSocialSharing
+                    .share(
+                        shareOptions.message,
+                        shareOptions.mailSubject,
+                        undefined,
+                        shareOptions.baseUrl +
+                        vm.centerCoords.lat + ',' +
+                        vm.centerCoords.lng)
+                    .then(function(result) {
+                        // Success!
+                    }, function(err) {
+                        console.log(err);
+                    });
             });
 
+        } else {
+            $cordovaSocialSharing
+                .share(
+                    shareOptions.message,
+                    shareOptions.mailSubject,
+                    undefined,
+                    shareOptions.baseUrl +
+                    vm.centerCoords.lat + ',' +
+                    vm.centerCoords.lng)
+                .then(function(result) {
+                    // Success!
+                }, function(err) {
+                    console.log(err);
+                });
+        }
     };
 
     var sendSMS = function(text) {
