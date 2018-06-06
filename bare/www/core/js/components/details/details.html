@@ -408,10 +408,9 @@
                             <img ng-if="item.properties.image" ng-src="{{item.properties.image}}">
                             <i ng-if="!item.properties.image" class="icon {{item.properties.icon}}"></i>
                         </div>
-                        <div class="route-related-name">
-                            {{item.properties.name}}
+                        <div class="route-related-name"
+                            ng-bind-html="item.properties.name">
                         </div>
-                        <!-- <i class="icon wm-icon-flag"></i> -->
                     </li>
                 </ul>
             </div>

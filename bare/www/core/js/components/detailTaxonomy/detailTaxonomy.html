@@ -49,11 +49,11 @@
                 <i ng-if="!vm.userDownloadedPackages[route.id]" class="icon wm-icon-arrow-down-c download-icon" ng-style="{'background': vm.colors.details.background}"></i>
                 <i ng-if="vm.userDownloadedPackages[route.id]" class="icon wm-icon-checkmark-round open-icon" ng-style="{'background': vm.colors.details.background}"></i>
                 <i class="icon {{vm.activities[route.activity[0]].icon}} activity-icon"></i>
-                <span ng-if="route.packageTitle[vm.currentLang]">
-                    {{route.packageTitle[vm.currentLang]}}
+                <span ng-if="route.packageTitle[vm.currentLang]"
+                    ng-bind-html="route.packageTitle[vm.currentLang]">
                 </span>
-                <span ng-if="!route.packageTitle[vm.currentLang]">
-                    {{route.packageTitle[vm.defaultLang]}}
+                <span ng-if="!route.packageTitle[vm.currentLang]"
+                    ng-bind-html="route.packageTitle[vm.defaultLang]">
                 </span>
             </div>
         </div>

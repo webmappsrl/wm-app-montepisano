@@ -59,10 +59,14 @@ angular.module('webmapp')
 
 angular.module('webmapp')
     .filter('packagesSearchFilter', function (
+        $translate,
+        CONFIG
     ) {
         return function (input, search) {
             var results = [],
-                pattern = new RegExp(search.toLowerCase());
+                pattern = new RegExp(search.toLowerCase()),
+                currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
+                defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
 
             if (search === "") {
                 return input;
@@ -70,8 +74,14 @@ angular.module('webmapp')
 
             for (var id in input) {
                 if (pattern.test(input[id].title.rendered.toLowerCase()) ||
-                    pattern.test(input[id].n7webmapp_route_cod.toLowerCase()) ||
-                    pattern.test(input[id].packageTitle.toLowerCase())) {
+                    pattern.test(input[id].n7webmapp_route_cod.toLowerCase()) || (
+                        input[id].packageTitle[currentLang] &&
+                        pattern.test(input[id].packageTitle[currentLang].toLowerCase()) ||
+                        input[id].packageTitle[defaultLang] &&
+                        pattern.test(input[id].packageTitle[defaultLang].toLowerCase()) ||
+                        input[id].packageTitle[Object.keys(input[id].packageTitle)[0]] &&
+                        pattern.test(input[id].packageTitle[Object.keys(input[id].packageTitle)[0]].toLowerCase())
+                    )) {
                     results.push(input[id]);
                 }
             }
