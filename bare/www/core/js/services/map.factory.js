@@ -1196,6 +1196,8 @@ angular.module('webmapp')
 
                 dataReady = true;
                 $rootScope.$$phase || $rootScope.$digest();
+            }, function(err) {
+                dataReady = true;
             });
         };
 
@@ -1792,7 +1794,7 @@ angular.module('webmapp')
             var latlngs = [],
                 coord;
 
-            if (feature.geometry.type == 'LineString' || feature.geometry.type == 'MultiLineString') {
+            if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString') {
                 for (var i in feature.geometry.coordinates) {
                     if (feature.geometry.type == 'MultiLineString') {
                         for (var j in feature.geometry.coordinates[i]) {
@@ -1805,7 +1807,8 @@ angular.module('webmapp')
                     }
                 }
 
-                fitBounds(latlngs);
+                var bounds = new L.LatLngBounds(latlngs);
+                fitBounds(bounds);
             } else {
                 map.setView({
                     lat: feature.geometry.coordinates[1],
@@ -2276,8 +2279,13 @@ angular.module('webmapp')
                         lng: feature.geometry.coordinates[0]
                     }
                 };
+                if (feature.geometry.type === 'LineString') {
+                    obj.latlng.lat = feature.geometry.coordinates[0][1];
+                    obj.latlng.lng = feature.geometry.coordinates[0][0];
+
+                }
                 setTimeout(function () {
-                    activatePopup(obj, true);
+                    activatePopup(obj, feature.geometry.type === 'LineString' ? false : true);
                 }, 1000);
             }
         };

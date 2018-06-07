@@ -44,8 +44,16 @@ angular.module('webmapp')
                     }
                 }
             })
-            .state('app.main.popup', {
+            .state('app.main.poipopup', {
                 url: '/poi/:id/:zoom',
+                views: {
+                    'inception-top': {
+                        templateUrl: basePath + 'js/components/popupOpener/popupOpener.html'
+                    }
+                }
+            })
+            .state('app.main.trackpopup', {
+                url: '/track/:id',
                 views: {
                     'inception-top': {
                         templateUrl: basePath + 'js/components/popupOpener/popupOpener.html'

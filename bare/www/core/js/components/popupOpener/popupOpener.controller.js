@@ -6,8 +6,12 @@ angular.module('webmapp')
         MapService,
         Utils
     ) {
-        var id = $state.params.id;
-        var zoom = $state.params.zoom;
+        var id = $state.params.id,
+            zoom = null;
+
+        if ($state.params.zoom) {
+            zoom = $state.params.zoom;
+        }
 
         $ionicPlatform.ready(function () {
             setTimeout(function() {
