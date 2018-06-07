@@ -2320,6 +2320,10 @@ angular.module('webmapp')
 
     }
 
+    mapService.getUserPolyline = function(latLng) {
+        return userTrackPolyline;
+    }
+
     mapService.removeUserPolyline = function() {
 
         if (userTrackPolyline) {
@@ -2345,8 +2349,6 @@ angular.module('webmapp')
             tmp.push(geoUserTrack);
             localStorage.$vm_userTracks = JSON.stringify(tmp);
         }
-
-
     }
 
 

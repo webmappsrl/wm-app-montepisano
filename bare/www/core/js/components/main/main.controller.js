@@ -57,29 +57,29 @@ angular.module('webmapp')
         vm.packageTitle = PackageService.getRouteById(CONFIG.routeID).packageTitle;
     }
 
-    vm.updateUserTrack = function(latLng) {
-        if (latLng && latLng.length == 2 && latLng[0] && latLng[1]) {
-            if (vm.userLatLngs.length == 0) {
-                MapService.createUserPolyline([latLng]);
-            } else {
-                MapService.updateUserPolyline(latLng);
-            }
-            vm.userLatLngs.push(latLng);
-        }
-    };
-
-
     vm.recordUserTrack = function(lat, long) {
-        if (vm.activeRecordTrack && !vm.pauseRecordTrack) {
+
+
+        if (lat && long && vm.activeRecordTrack && !vm.pauseRecordTrack) {
             if (vm.userLatLngs.length == 0) {
                 if (prevLatLong && prevLatLong.lat && prevLatLong.long) {
-                    vm.updateUserTrack([prevLatLong.lat, prevLatLong.long]);
+                    MapService.createUserPolyline([
+                        [prevLatLong.lat, prevLatLong.long]
+                    ]);
+                    vm.userLatLngs.push([prevLatLong.lat, prevLatLong.long]);
+                    MapService.updateUserPolyline([lat, long]);
+                } else {
+                    MapService.createUserPolyline([
+                        [lat, long]
+                    ]);
                 }
-                vm.updateUserTrack([lat, long]);
+
             } else {
-                vm.updateUserTrack([lat, long]);
+                MapService.updateUserPolyline([lat, long]);
             }
+            vm.userLatLngs.push([lat, long]);
         }
+
     };
 
     vm.stopRecordTrackAndSave = function(save) {
