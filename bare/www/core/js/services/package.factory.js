@@ -356,7 +356,7 @@ angular.module('webmapp')
          * Request the package and
          * Emit the new list of requested packages
          * 
-         * @event userPackagesIdRquested-updated
+         * @event userPackagesIdRequested-updated
          * 
          * @param {number} packId 
          *      the id of the pack to request
@@ -372,40 +372,49 @@ angular.module('webmapp')
                 })
                 .then(function (res) {
                     if (res) {
-                        var data = {
-                            email: userData.user_email,
-                            pack: packId,
-                            appname: CONFIG.OPTIONS.title
-                        };
+                        // var data = {
+                        //     email: userData.user_email,
+                        //     pack: packId,
+                        //     appname: CONFIG.OPTIONS.title
+                        // };
 
-                        $ionicLoading.show({
-                            template: '<ion-spinner></ion-spinner>'
-                        });
+                        // $ionicLoading.show({
+                        //     template: '<ion-spinner></ion-spinner>'
+                        // });
 
-                        $http({
-                            method: 'POST',
-                            url: communicationConf.baseUrl + communicationConf.endpoint + 'mail',
-                            dataType: 'json',
-                            crossDomain: true,
-                            data: data,
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        }).success(function (data) {
-                            $ionicPopup.alert({
-                                template: $translate.instant("La richiesta è stata inviata, ti è stata spedita una e-mail con le istruzioni per procedere con l'acquisto.")
-                            });
-                            userPackagesIdRquested[packId] = true;
-                            $rootScope.$emit('userPackagesIdRquested-updated', userPackagesIdRquested);
-                            localStorage.$wm_userPackagesIdRquested = JSON.stringify(userPackagesIdRquested);
-                            $ionicLoading.hide();
-                        }).error(function (error) {
-                            $ionicPopup.alert({
-                                template: $translate.instant("Si è verificato un errore durante la richiesta, riprova")
-                            });
-                            $ionicLoading.hide();
-                            console.error(error);
-                        });
+                        // $http({
+                        //     method: 'POST',
+                        //     url: communicationConf.baseUrl + communicationConf.endpoint + 'mail',
+                        //     dataType: 'json',
+                        //     crossDomain: true,
+                        //     data: data,
+                        //     headers: {
+                        //         'Content-Type': 'application/json'
+                        //     }
+                        // }).success(function (data) {
+                        //     $ionicPopup.alert({
+                        //         template: $translate.instant("La richiesta è stata inviata, ti è stata spedita una e-mail con le istruzioni per procedere con l'acquisto.")
+                        //     });
+                        //     userPackagesIdRquested[packId] = true;
+                        //     $rootScope.$emit('userPackagesIdRquested-updated', userPackagesIdRquested);
+                        //     localStorage.$wm_userPackagesIdRquested = JSON.stringify(userPackagesIdRquested);
+                        //     $ionicLoading.hide();
+                        // }).error(function (error) {
+                        //     $ionicPopup.alert({
+                        //         template: $translate.instant("Si è verificato un errore durante la richiesta, riprova")
+                        //     });
+                        //     $ionicLoading.hide();
+                        //     console.error(error);
+                        // });
+                        var productId = 'it.webmapp.' + packId;
+                        inAppPurchase.buy(productId)
+                            .then((res) => {
+                                //communicate purchase to server
+                                console.log('purchase completed!');
+                                // unlock level 1
+                            })
+                            .catch(err => console.log(err) );
+
                     }
                 });
         };
