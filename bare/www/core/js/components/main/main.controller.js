@@ -83,7 +83,8 @@ angular.module('webmapp')
     var checkGPS = function() {
         var onSuccess = function(e) {
             if (e) {
-                vm.dragged = true;
+                ////
+                vm.dragged = false;
                 vm.gpsActive = true;
                 vm.centerOnMe();
             } else {
@@ -631,6 +632,8 @@ angular.module('webmapp')
             watchInterval.clearWatch();
             vm.dragged = true;
             MapService.removePosition();
+            prevLatLong = null;
+
             return;
         } else {
             vm.isOutsideBoundingBox = false;
@@ -819,6 +822,7 @@ angular.module('webmapp')
                         if (!MapService.isInBoundingBox(lat, long)) {
                             vm.isOutsideBoundingBox = true;
                             MapService.removePosition();
+                            prevLatLong = null;
                             $ionicPopup.alert({
                                 title: $translate.instant("ATTENZIONE"),
                                 template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
@@ -981,6 +985,7 @@ angular.module('webmapp')
     };
 
     var navigationIntervalFunction = function() {
+        vm.checkOutOfTrack(prevLatLong)
         vm.timeInMotion = Date.now() - vm.navigationStartTime + vm.timeInMotionBeforePause;
         vm.timeInMotionText = getTimeText(vm.timeInMotion);
         Utils.forceDigest();
@@ -1016,6 +1021,8 @@ angular.module('webmapp')
 
         if (vm.isOutsideBoundingBox) {
             MapService.removePosition();
+            prevLatLong = null;
+
             $ionicPopup.alert({
                 title: $translate.instant("ATTENZIONE"),
                 template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
@@ -1053,7 +1060,6 @@ angular.module('webmapp')
         vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
         $rootScope.$emit('is-navigating', vm.isNavigating);
         $rootScope.$emit('navigation-path', vm.stopNavigationUrlParams);
-        vm.outOfTrackInterval = setInterval(function() { vm.checkOutOfTrack(prevLatLong) }, 1000);
 
         window.plugins.insomnia.keepAwake();
         setTimeout(function() {
@@ -1072,7 +1078,6 @@ angular.module('webmapp')
         vm.isPaused = true;
         vm.timeInMotionBeforePause = Date.now() - vm.navigationStartTime + vm.timeInMotionBeforePause;
         vm.distanceTravelledBeforePause = vm.distanceTravelled;
-        clearInterval(vm.outOfTrackInterval)
         vm.outOfTrackDate = 0;
         vm.inTrackDate = 0;
         hideOutOfTrackToast();
@@ -1080,19 +1085,17 @@ angular.module('webmapp')
     };
 
     vm.resumeNavigation = function() {
-        vm.isPaused = false;
         vm.navigationStartTime = Date.now();
         vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
         vm.distanceTravelled = 0;
         vm.firstPositionSet = false;
-        vm.outOfTrackInterval = setInterval(function() { vm.checkOutOfTrack(prevLatLong) }, 1000);
         window.plugins.insomnia.keepAwake();
+        vm.isPaused = false;
     };
 
     vm.stopNavigation = function() {
         vm.isPaused = false;
         vm.isNavigating = false;
-        clearInterval(vm.outOfTrackInterval)
         vm.outOfTrackDate = 0;
         vm.inTrackDate = 0;
         hideOutOfTrackToast();
@@ -1155,7 +1158,8 @@ angular.module('webmapp')
             // vm.turnOffGeolocationAndRotion();
             vm.turnOffRotationAndFollow();
         }
-        MapService.removePositionMarker();
+        MapService.removePosition();
+        prevLatLong = null;
 
         if (currentState !== 'app.main.detaillayer' &&
             currentState !== 'app.main.detailevent' &&
@@ -1384,8 +1388,8 @@ angular.module('webmapp')
 
     vm.handleDistanceToast = function(distance) {
         var currTime = Date.now();
-        if ((distance * 1000) <= vm.maxOutOfTrack) {
 
+        if ((distance * 1000) <= vm.maxOutOfTrack) {
             if (vm.outOfTrackDate) {
                 vm.outOfTrackDate = 0;
             }
@@ -1398,11 +1402,11 @@ angular.module('webmapp')
                 if (diffSecs >= vm.toastTime) {
                     hideOutOfTrackToast();
                 } else {
-                    if (vm.showToast)
+                    if (vm.showToast) {
                         showOutOfTrackToast((distance * 1000));
+                    }
                 }
             }
-
         } else {
             if (vm.inTrackDate) {
                 vm.inTrackDate = 0;
@@ -1414,64 +1418,14 @@ angular.module('webmapp')
                 var diffMs = (currTime - vm.outOfTrackDate);
                 var diffSecs = diffMs / 1000;
                 if (diffSecs >= vm.toastTime) {
-                    if (!vm.showToast)
+                    if (!vm.showToast) {
                         makeNotificationSound();
+                    }
                     showOutOfTrackToast((distance * 1000));
                 }
             }
         }
     };
-
-    // $scope.$on('$ionicView.beforeEnter', function () {
-    //     //Restoring navigation state
-    //     var navigationState = localStorage.$wm_navigastionState ? JSON.parse(localStorage.$wm_navigastionState) : null;
-
-    //     if (navigationState && navigationState.isNavigating) {
-    //         vm.isNavigating = navigationState.isNavigating;
-    //         vm.isNavigable = navigationState.isNavigable;
-
-    //         vm.isPaused = navigationState.isPaused;
-    //         vm.stopNavigationUrlParams.parentId = navigationState.stopNavigationUrlParams.parentId;
-    //         vm.stopNavigationUrlParams.id = navigationState.stopNavigationUrlParams.id;
-
-    //         vm.navigationStartTime = navigationState.navigationStartTime;
-
-    //         vm.timeInMotionBeforePause = navigationState.timeInMotionBeforePause;
-    //         vm.distanceTravelledBeforePause = navigationState.distanceTravelledBeforePause;
-
-    //         if (vm.isPaused) {
-    //             navigationIntervalFunction();
-    //         }
-    //         else {
-    //             //restart navigation
-    //             vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
-    //         }
-    //     }
-
-    //     delete localStorage.$wm_navigastionState;
-    //     delete navigationState;
-    // });
-
-    // $scope.$on('$ionicView.beforeLeave', function () {
-    //     //Saving navigation state
-    //     if (vm.isNavigating) {
-    //         var navigationState = {};
-
-    //         navigationState.isNavigating = vm.isNavigating;
-    //         navigationState.isNavigable = vm.isNavigable;
-
-    //         navigationState.isPaused = vm.isPaused;
-    //         navigationState.stopNavigationUrlParams.parentId = vm.stopNavigationUrlParams.parentId;
-    //         navigationState.stopNavigationUrlParams.id = vm.stopNavigationUrlParams.id;
-
-    //         navigationState.navigationStartTime = vm.navigationStartTime;
-
-    //         navigationState.timeInMotionBeforePause = vm.timeInMotionBeforePause;
-    //         navigationState.distanceTravelledBeforePause = vm.distanceTravelledBeforePause;
-
-    //         localStorage.$wm_navigastionState = JSON.stringify(navigationState);
-    //     }
-    // });
 
     $ionicPlatform.ready(function() {
         vm.userData = Auth.getUserData();

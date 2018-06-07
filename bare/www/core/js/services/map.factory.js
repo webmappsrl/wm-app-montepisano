@@ -1847,11 +1847,13 @@ angular.module('webmapp')
         };
 
         mapService.removePosition = function () {
-            if (!circleLocation.position === null){
+            if (circleLocation.position !== null){
                 map.removeLayer(circleLocation.position);
+                circleLocation.position = null;
             }
-            if (!circleLocation.accuracy === null) {
+            if (circleLocation.accuracy !== null) {
                 map.removeLayer(circleLocation.accuracy);
+                circleLocation.accuracy = null;
             }
         };
 
