@@ -887,7 +887,7 @@ angular.module('webmapp')
     };
 
     vm.returnToMap = function() {
-        vm.isNavigable = false;
+        // vm.isNavigable = false;
         if ($state.params.parentId) {
             MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
         }
@@ -1319,6 +1319,7 @@ angular.module('webmapp')
 
     $rootScope.$on('item-navigable', function(e, value) {
         vm.isNavigable = value;
+        Utils.forceDigest();
     });
 
     window.addEventListener('orientationchange', function() {

@@ -44,11 +44,6 @@
             ng-if="!vm.hideBack"
             ng-click="vm.goBack()">
         </button>
-        <!-- <button
-            class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left"
-            ng-if="vm.hideBack"
-            ng-click="vm.toggleMap()">
-        </button> -->
     </ion-nav-buttons>
 
     <ion-content class="has-show-more"
@@ -56,7 +51,6 @@
                      'background': vm.colors.details.background
                     }">
         <div class="details-container">
-            <!-- TODO: for single back to category element add details-subnav-single - for two elements add details-subnav-rows -->
             <div
                 class="details-subnav details-subnav-single"
                 ng-style="{

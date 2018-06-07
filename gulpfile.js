@@ -125,7 +125,6 @@ gulp.task('update', ['create'], function () {
     } else {
         console.warn('[WARN] instance doesn\'t exits. Create first.');
     }
-    console.log('end update')
 });
 
 gulp.task('set', function () {

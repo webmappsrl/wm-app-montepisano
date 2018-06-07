@@ -53,6 +53,7 @@ angular.module('webmapp')
         vm.goBack = function () {
             if (vm.isNavigable) {
                 vm.isNavigable = false;
+                $rootScope.isNavigable = false;
                 $rootScope.$emit('item-navigable', vm.isNavigable);
             }
             Utils.goBack();
@@ -300,6 +301,7 @@ angular.module('webmapp')
 
                 if (vm.geometry.type === "LineString") {
                     vm.isNavigable = true;
+                    $rootScope.isNavigable = true;
                     $rootScope.$emit('item-navigable', vm.isNavigable);
                 }
             }
@@ -597,8 +599,8 @@ angular.module('webmapp')
 
         vm.toggleMap = function () {
             $rootScope.$emit('toggle-map-from-detail');
-            vm.isNavigable = false;
-            $rootScope.$emit('item-navigable', vm.isNavigable);
+            // vm.isNavigable = false;
+            // $rootScope.$emit('item-navigable', vm.isNavigable);
         };
 
         vm.renderDate = function (date) {

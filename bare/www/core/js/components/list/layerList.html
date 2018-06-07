@@ -78,9 +78,9 @@
                     ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
                     ng-repeat="item in vm.layersMap[vm.subMenuLabel].items | filter:search"
                     ng-style="{
-                        'color': vm.colors.list.color ? vm.colors.list.color : vm.color
+                        'color': vm.colors.list.color ? vm.colors.list.color : '#605846'
                     }">
-                    <i class="icon {{item.properties.icon}}" ng-style="{'color': item.color}"></i>
+                    <i class="icon {{item.properties.icon}}" ng-style="{'color': item.color ? item.color : '#605846'}"></i>
                     <!-- TODO: add following markup for subtitle -->
                     <span class="list-info-title" ng-bind-html="item.properties.name"></span>
                     <!-- <span class="list-info-subtitle">Via Nazionale 144 25052 Piancogno, BS</span> -->
@@ -95,13 +95,11 @@
                     class="item item-icon-left"
                     ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
                     collection-repeat="item in vm.subMenu | filter:search">
-                    <i class="icon {{item.properties.icon}}" ng-style="{'color': item.properties.color}"></i>
+                    <i class="icon {{item.properties.icon}}" ng-style="{'color': item.properties.color ? item.properties.color : '#605846'}"></i>
                     <!-- TODO: add following markup for subtitle -->
                             <span
                                 class="list-info-title"
-                                ng-style="{
-                                    'color': vm.colors.list.color ? vm.colors.list.color : vm.color
-                                }"
+                                style="color: #605846"
                                 ng-bind-html="item.properties.name">
                             </span>
                             <!-- <span class="list-info-subtitle">Via Nazionale 144 25052 Piancogno, BS</span> -->

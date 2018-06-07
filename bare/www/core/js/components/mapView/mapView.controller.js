@@ -8,7 +8,8 @@ angular.module('webmapp')
     $state,
     $translate,
     CONFIG,
-    MapService
+    MapService,
+    Utils
 ) {
     var vm = {};
 
@@ -37,6 +38,8 @@ angular.module('webmapp')
     vm.mapTitle = CONFIG.OPTIONS.title;
     vm.filterIcon = CONFIG.OPTIONS.filterIcon;
     vm.showFilers = !CONFIG.OPTIONS.hideFiltersInMap;
+    vm.isNavigable = $rootScope.isNavigable ? $rootScope.isNavigable : false;
+    vm.goBack = Utils.goBack;
 
     vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
 
@@ -145,6 +148,11 @@ angular.module('webmapp')
 
     $scope.$on('$destroy', function() {
         modal.hide();
+    });
+
+    $rootScope.$on('item-navigable', function (e, value) {
+        vm.isNavigable = value;
+        Utils.forceDigest();
     });
 
     return vm;
