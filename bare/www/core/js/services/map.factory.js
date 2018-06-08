@@ -2280,9 +2280,15 @@ angular.module('webmapp')
                     }
                 };
                 if (feature.geometry.type === 'LineString') {
-                    obj.latlng.lat = feature.geometry.coordinates[0][1];
-                    obj.latlng.lng = feature.geometry.coordinates[0][0];
-
+                    var pos = 0;
+                    if (feature.geometry.coordinates.length % 2 === 1) {
+                        pos = (feature.geometry.coordinates.length - 1) / 2;
+                    }
+                    else {
+                        pos = feature.geometry.coordinates.length / 2;
+                    }
+                    obj.latlng.lat = feature.geometry.coordinates[pos][1];
+                    obj.latlng.lng = feature.geometry.coordinates[pos][0];
                 }
                 setTimeout(function () {
                     activatePopup(obj, feature.geometry.type === 'LineString' ? false : true);
