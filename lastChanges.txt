@@ -1,1 +1,1 @@
-Temporarily removed purchase option
+When geolocating the first time the position will follow you
