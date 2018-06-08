@@ -399,6 +399,10 @@ angular.module('webmapp')
             for (var j in extraLayersByLabel) {
                 removeLayer(j);
             }
+
+            if (geojsonLayer) {
+                map.removeLayer(geojsonLayer);
+            }
         };
 
         var activatePopup = function (e, isPOI) {
@@ -2300,6 +2304,7 @@ angular.module('webmapp')
                 if (geojsonLayer) {
                     map.removeLayer(geojsonLayer);
                 }
+                console.log(geojsonLayer);
 
                 geojsonLayer = L.geoJSON(geojsonArray).addTo(map);
                 setTimeout(function () {

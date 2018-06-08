@@ -4,6 +4,7 @@ angular.module('webmapp')
         $ionicLoading,
         $ionicPopup,
         $rootScope,
+        $scope,
         $state,
         $translate,
         Communication,
@@ -24,11 +25,13 @@ angular.module('webmapp')
         vm.taxonomy = {};
         vm.item = {};
         vm.routes = {};
-        vm.tracks = localStorage.$wm_taxonomy_tracks ? JSON.parse(localStorage.$wm_taxonomy_tracks) : {};
+        vm.tracks = {};
         vm.activities = {};
         vm.userDownloadedPackages = {};
 
         vm.fullDescription = false;
+
+        var registeredEvents = [];
 
         if (CONFIG.MAIN) {
             Utils.goTo("/");
@@ -65,7 +68,7 @@ angular.module('webmapp')
             if (vm.userDownloadedPackages[packId]) {
                 localStorage.$wm_itemColor = JSON.stringify(vm.item.color);
                 localStorage.$wm_activityIcon = JSON.stringify(vm.activities[vm.routes[packId].activity[0]].icon);
-                
+
                 if (vm.item.name[vm.currentLang]) {
                     localStorage.$wm_taxonomyName = JSON.stringify(vm.item.name[vm.currentLang]);
                 }
@@ -99,6 +102,7 @@ angular.module('webmapp')
         };
 
         var updateMapView = function () {
+            MapService.resetLayers();
             MapService.disableInteractions();
             var toAdd = [],
                 i = 0;
@@ -109,7 +113,6 @@ angular.module('webmapp')
                 }
             }
             MapService.createGeojsonLayer(toAdd);
-            $rootScope.$emit('geolocate');
         };
 
         var getTrack = function (url, packId, pos) {
@@ -136,10 +139,10 @@ angular.module('webmapp')
                         else {
                             vm.routes[packId].color = '#000000';
                         }
-                        
+
                     }
 
-                    localStorage.$wm_taxonomy_tracks = JSON.stringify(vm.tracks);
+                    // localStorage.$wm_taxonomy_tracks = JSON.stringify(vm.tracks);
 
                     updateMapView();
                 },
@@ -160,55 +163,74 @@ angular.module('webmapp')
                     });
         };
 
-        $rootScope.$on('taxonomy-' + taxonomyType + '-updated', function (e, value) {
-            $ionicLoading.hide();
-            vm.taxonomy = value;
-            vm.item = value[id];
-            vm.title = vm.item.name;
-            forceDigest();
-        });
+        registeredEvents.push(
+            $rootScope.$on('taxonomy-' + taxonomyType + '-updated', function (e, value) {
+                $ionicLoading.hide();
+                vm.taxonomy = value;
+                vm.item = value[id];
+                vm.title = vm.item.name;
+                forceDigest();
+            })
+        );
 
-        $rootScope.$on('taxonomy-activity-updated', function (e, value) {
-            $ionicLoading.hide();
-            vm.activities = value;
-            for (var i in vm.activities) {
-                if (!vm.activities[i].icon) {
-                    vm.activities[i].icon = 'wm-icon-help-circled';
+        registeredEvents.push(
+            $rootScope.$on('taxonomy-activity-updated', function (e, value) {
+                $ionicLoading.hide();
+                vm.activities = value;
+                for (var i in vm.activities) {
+                    if (!vm.activities[i].icon) {
+                        vm.activities[i].icon = 'wm-icon-help-circled';
+                    }
                 }
-            }
-            forceDigest();
-        });
+                forceDigest();
+            })
+        );
 
-        $rootScope.$on('packages-updated', function (e, value) {
-            $ionicLoading.hide();
-            vm.routes = {};
-            for (var i in value) {
-                if (value[i][taxonomyType]) {
-                    for (var j in value[i][taxonomyType]) {
-                        if (value[i][taxonomyType][j] === id) {
-                            vm.routes[i] = value[i];
-                            vm.routes[i].tracks = vm.tracks[i];
-                            getTracksForPack(i);
-                            break;
+        registeredEvents.push(
+            $rootScope.$on('packages-updated', function (e, value) {
+                $ionicLoading.hide();
+                vm.routes = {};
+                for (var i in value) {
+                    if (value[i][taxonomyType]) {
+                        for (var j in value[i][taxonomyType]) {
+                            if (value[i][taxonomyType][j] === id) {
+                                vm.routes[i] = value[i];
+                                vm.routes[i].tracks = vm.tracks[i];
+                                getTracksForPack(i);
+                                break;
+                            }
                         }
                     }
                 }
-            }
 
-            forceDigest();
-        });
+                forceDigest();
+            })
+        );
 
-        $rootScope.$on('userDownloadedPackages-updated', function (e, value) {
-            vm.userDownloadedPackages = value;
-            Utils.forceDigest();
-        });
+        registeredEvents.push(
+            $rootScope.$on('userDownloadedPackages-updated', function (e, value) {
+                vm.userDownloadedPackages = value;
+                Utils.forceDigest();
+            })
+        );
+
+        registeredEvents.push(
+            $rootScope.$on('$ionicView.beforeLeave', function () {
+                MapService.resetLayers();
+                for (var i in registeredEvents) {
+                    registeredEvents[i]();
+                }
+            })
+        );
 
         $ionicLoading.show();
+        MapService.resetView();
+        $rootScope.$emit('geolocate');
         PackageService.getRoutes();
         PackageService.getDownloadedPackages();
         PackageService.getTaxonomy('activity');
         PackageService.getTaxonomy(taxonomyType);
-        MapService.resetView();
+        MapService.resetLayers();
 
         return vm;
     });
