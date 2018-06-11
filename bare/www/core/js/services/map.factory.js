@@ -97,12 +97,6 @@ angular.module('webmapp')
 
         var db = new PouchDB('webmapp');
 
-        // for (var i in overlayLayersConf) {
-        //     if (overlayLayersConf[i].skipRendering) {
-        //         delete overlayLayersConf[i];
-        //     }
-        // }
-
         var overlayLayersConfMap = overlayLayersConf.reduce(function (prev, curr) {
             prev[curr.label] = curr;
             return prev;
@@ -405,15 +399,12 @@ angular.module('webmapp')
                 var interaction = !e.layer.feature.properties.noInteraction;
 
                 if (interaction) {
-                    var content = '<div class="popup-div" onclick="goToDetail(\'' + e.layer.feature.properties.id + '\', \'' + e.layer.feature.parent.label + '\', \'' + isPOI + '\', \'' + goToDetails + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">'
-                    // (!Utils.isBrowser() ? '<button class="popup-close" onclick="closePopup()">' +
-                    //     '<i class="icon wm-icon-android-close"></i></button>' : '') +
-                    ;
+                    var content = '<div class="popup-div" onclick="goToDetail(\'' + e.layer.feature.properties.id + '\', \'' + e.layer.feature.parent.label + '\', \'' + isPOI + '\', \'' + goToDetails + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">';
 
                     if (e.layer.feature.properties.picture_url) {
                         content = content +
                             '<div class="popup-img">' +
-                            '<img src="' + Offline.getRealImageUrl(e.layer.feature.properties.picture_url) + '" />' +
+                            '<img src="' + Offline.getRealImageUrl(e.layer.feature.properties.image) + '" />' +
                             '</div>';
                     } else if (e.layer.feature.properties.imageGallery) {
                         content = content +
@@ -464,26 +455,14 @@ angular.module('webmapp')
                         .openOn(map);
                 }
             } else if (e && e.data && e.latlng) {
-                var content = '<div class="popup-div" onclick="goToTileUtfGridDetail(\'' + e.data.id + '\', \'' + e.parent.label + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">'
-                // (!Utils.isBrowser() ? '<button class="popup-close" onclick="closePopup()">' +
-                //     '<i class="icon wm-icon-android-close"></i></button>' : '') +
-                ;
+                var content = '<div class="popup-div" onclick="goToTileUtfGridDetail(\'' + e.data.id + '\', \'' + e.parent.label + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">';
 
-                // console.log(e);
-
-                // Check for pictures linked
-                // if (false) {
-                //     content  = content +
-                //         '<img class="popup-img" src="' + e.layer.feature.properties.picture_url + '" />';
-                // }
-                // else {
                 content = content +
                     '<div class="popup-img">' +
                     '<div>' +
                     '<i class="icon wm-icon-trail"></i>' +
                     '</div>' +
                     '</div>';
-                // }
 
                 content = content +
                     '<div class="popup-content-img">' +
@@ -495,8 +474,7 @@ angular.module('webmapp')
                     '</div>' +
                     '</div>' +
                     '<button class="popup-button"><i class="icon wm-icon-ios7-arrow-forward"></i></button>' +
-                    '</div>'
-
+                    '</div>';
 
                 L.popup()
                     .setLatLng({
@@ -505,14 +483,6 @@ angular.module('webmapp')
                     })
                     .setContent(
                         content
-                        // '<div class="popup-div-margin" onclick="goToTileUtfGridDetail(\'' + e.data.id + '\', \'' + e.parent.label + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">' +
-                        // // '<button class="popup-close" onclick="closePopup()">' +
-                        // // '<i class="icon wm-icon-android-close"></i></button>' +
-                        // '<span class="popup-title">' +
-                        // e.data.name +
-                        // '</span>' +
-                        // '<button class="popup-button"><i class="icon wm-icon-ios7-arrow-forward"></i></button>' +
-                        // '</div>'
                     )
                     .openOn(map);
             }
@@ -559,8 +529,6 @@ angular.module('webmapp')
             layerCliked = true;
             activateHighlight(layer, styleConf.line.highlight);
             activatePopup(e);
-
-            // console.log('layer click', e);
         };
 
         var activateLineHandlers = function (linesLayer) {
@@ -597,8 +565,6 @@ angular.module('webmapp')
 
         var activatePOIHandlers = function (pointsLayer) {
             pointsLayer.on('click', function (e) {
-                // console.log('Clicked on a POI!', e);
-
                 if (isPOILayerDetail()) {
                     return;
                 }
@@ -860,17 +826,7 @@ angular.module('webmapp')
                 available = false;
 
             if (CONFIG.LANGUAGES) {
-                // if (CONFIG.LANGUAGES.available) {
-                //     for (var i in CONFIG.LANGUAGES.available) {
-                //         if (currentLang === CONFIG.LANGUAGES.available[i].substring(0, 2)) {
-                // if (!CONFIG.LANGUAGES.actual ||
-                //     (CONFIG.LANGUAGES.actual && currentLang !== CONFIG.LANGUAGES.actual.substring(0, 2))) {
                 available = true;
-                // }
-                //             break;
-                //         }
-                //     }
-                // }
             }
             var currentLangGeojsonUrl = "";
 
@@ -919,18 +875,6 @@ angular.module('webmapp')
                                     polylineDecoratorLayers[currentOverlay.label] = {};
                                 }
 
-                                // polylineDecoratorLayers[currentOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
-                                //     patterns: [{
-                                //         offset: 20,
-                                //         repeat: 100,
-                                //         symbol: L.Symbol.marker({
-                                //             markerOptions: {
-                                //                 icon: arrowIcon
-                                //             },
-                                //             rotate: true
-                                //         })
-                                //     }]
-                                // });
                                 polylineDecoratorLayers[currentOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
                                     patterns: [{
                                         offset: 20,
@@ -982,7 +926,6 @@ angular.module('webmapp')
                     db.get(geojsonUrl).then(function (e) {
                         lineCallback(e.data, currentOverlay);
                     });
-                    //lineCallback(JSON.parse(currentFromLocalStorage), currentOverlay);
                 } else if (currentOverlay.type === 'poi_geojson') {
                     poiCallback(JSON.parse(currentFromLocalStorage), currentOverlay);
                 }
@@ -1008,8 +951,9 @@ angular.module('webmapp')
                         }
                         setItemInLocalStorage(geojsonUrl, data);
                         delete overlayLayersQueueByLabel[currentOverlay.label];
-                    }).fail(function () {
-                        defer.reject();
+                    }).fail(function (err) {
+                        console.warn('An error has occurred downloading geojson \'' + currentOverlay.geojsonUrl + '\'. This file could miss in the server or the app is offline, and will be skipped', err);
+                        defer.resolve();
                     });
                 });
             }
@@ -1113,13 +1057,6 @@ angular.module('webmapp')
                 }, currentOverlay));
             };
 
-            // layerControl.addOverlay(layerGroup);
-            // tileLayer.addTo(map);
-
-            // utfGrid.on('click', function(e) {
-            //     console.log('sentieriSatGrid click', e.data);
-            // });
-
             if (useLocalCaching && currentFromLocalStorage) {
                 utfgridCallback(JSON.parse(currentFromLocalStorage), currentOverlay, tileLayer);
 
@@ -1146,7 +1083,6 @@ angular.module('webmapp')
         var initializeLayers = function () {
             var promises = [];
 
-            // console.log(overlayLayersConf);
             for (var i = overlayLayersConf.length - 1; i >= 0; i--) {
                 if (!overlayLayersConf[i]) {
                     continue;
@@ -1160,19 +1096,17 @@ angular.module('webmapp')
                         }),
                         layerGroup = L.layerGroup([utfGridmap]);
 
-                    // layerGroup.addTo(map);
-                    // TODO: test it
                     layerControl.addOverlay(layerGroup);
 
                     utfGridmap.on('click', function (e) {
                         console.log('utfgrid click', e.data);
                     });
                 } else {
+                    //TODO control promise resolve/rejection of utfgrid
                     if (overlayLayersConf[i].type === 'poi_geojson' ||
                         overlayLayersConf[i].type === 'line_geojson') {
                         promises.push(initializeLayer(overlayLayersConf[i]));
                     } else if (overlayLayersConf[i].type === 'tile_utfgrid_geojson') {
-                        // alert('support work in progress')
                         promises.push(initializeUtfGridGeojson(overlayLayersConf[i]));
                     }
                 }
@@ -1181,7 +1115,7 @@ angular.module('webmapp')
             eventsPromise = initializeEvents();
             couponsPromise = initializeOffers();
 
-            $q.all(promises).then(function () {
+            var promiseCallback = function () {
                 $ionicLoading.hide();
 
                 if (queueLayerToActivate !== null) {
@@ -1196,8 +1130,17 @@ angular.module('webmapp')
 
                 dataReady = true;
                 $rootScope.$$phase || $rootScope.$digest();
+            }
+
+            $q.all(promises).then(function () {
+                promiseCallback();
             }, function(err) {
-                dataReady = true;
+                // TODO find a way to wait until all promises responded
+                console.warn('An error has occurred in utfgrid geojson files', err);
+                setTimeout(function() {
+                    dataReady = true;
+                    promiseCallback();
+                }, 2000);
             });
         };
 
@@ -1248,7 +1191,6 @@ angular.module('webmapp')
                 if (!baseLayersByLabel[localStorage.currentMapLayer]) {
                     localStorage.currentMapLayer = baseMap.label;
                 }
-                // baseLayer.addTo(map);
             }
 
             baseLayersByLabel[baseMap.label] = baseLayer;
@@ -1368,8 +1310,6 @@ angular.module('webmapp')
         }
 
         var initialize = function () {
-
-            //
             initializeLanguages();
 
             if (typeof localStorage.$wm_mhildConf === 'undefined') {
@@ -1498,7 +1438,6 @@ angular.module('webmapp')
                         setView: false
                     },
                     onLocationOutsideMapBounds: function () {
-                        // TODO: add language and message in settings
                         $ionicPopup.alert({
                             template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa!"),
                             title: $translate.instant("ATTENZIONE")
@@ -1763,7 +1702,6 @@ angular.module('webmapp')
         };
 
         mapService.resetLayers = function () {
-            // mapService.resetUtfGridLayers();
             resetLayers();
         };
 

@@ -83,7 +83,6 @@ angular.module('webmapp')
     var checkGPS = function() {
         var onSuccess = function(e) {
             if (e) {
-                ////
                 vm.dragged = false;
                 vm.gpsActive = true;
                 vm.centerOnMe();
@@ -385,23 +384,23 @@ angular.module('webmapp')
             return;
         }
 
+        var title = CONFIG.MAIN ? CONFIG.MAIN.OPTIONS.title + ' ' + CONFIG.OPTIONS.title : CONFIG.OPTIONS.title;
+        title = Utils.decodeHtml(title);
+        
+        //Add app name
         shareOptions = {
-            message: "",
-            mailSubject: "",
+            message: $translate.instant('Ciao. Sto usando') + ' ' + title + '. ' + $translate.instant("Dai un'occhiata a questo posto"),
+            mailSubject: title,
             baseUrl: "http://www.google.com/maps/place/"
         };
 
-
-        if (prevLatLong && (distanceInMeters(prevLatLong.lat, prevLatLong.long, vm.centerCoords.lat, vm.centerCoords.lng) > 100)) {
-            $ionicPopup.alert({
+        if (prevLatLong && (distanceInMeters(prevLatLong.lat, prevLatLong.long, vm.centerCoords.lat, vm.centerCoords.lng) > 40)) {
+            $ionicPopup.confirm({
                 title: $translate.instant("ATTENZIONE"),
-                template: $translate.instant("Questa funzionalità è disponibile solo con una connessione attiva. Controlla la tua connessione e riprova"),
-                buttons: [{
-                    text: 'Ok',
-                    type: 'button-positive'
-                }]
-            }).then(function() {
-                $cordovaSocialSharing
+                template: $translate.instant("La posizione che stai per condividere non è la tua posizione attuale ma la posizione segnata dalla croce nel centro della mappa. Per condividere la tua posizione attuale assicurati di avere il centro della mappa vicino alla tua posizione. Vuoi condividere comunque queste coordinate?")
+            }).then(function(res) {
+                if (res) {
+                    $cordovaSocialSharing
                     .share(
                         shareOptions.message,
                         shareOptions.mailSubject,
@@ -412,10 +411,10 @@ angular.module('webmapp')
                     .then(function(result) {
                         // Success!
                     }, function(err) {
-                        console.log(err);
+                        console.err(err);
                     });
+                }
             });
-
         } else {
             $cordovaSocialSharing
                 .share(
@@ -428,7 +427,7 @@ angular.module('webmapp')
                 .then(function(result) {
                     // Success!
                 }, function(err) {
-                    console.log(err);
+                    console.err(err);
                 });
         }
     };
