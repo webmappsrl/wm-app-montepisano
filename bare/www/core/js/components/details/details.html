@@ -71,34 +71,57 @@
             <!-- TODO: for single back to category element add details-contact-single - for two elements add details-contact-rows -->
             <div
                 class="details-contacts details-contact-rows"
-                ng-if="vm.feature.email || vm.feature.phone || vm.feature.address">
+                ng-if="vm.feature.email || vm.feature.phone || vm.feature.address || vm.feature.related_url">
                 <ul
                     class="details-contacts__list">
                     <li
-                        class="contacts-list__element"
+                        class="contacts-list__element center"
                         ng-if="vm.feature.phone">
                         <a
                             href=""
                             style="cursor: default"
                             ng-if="!vm.availablePhoneNumber">
-                            <i class="icon ion-ios-telephone-outline"></i> {{vm.feature.phone}}
+                            <i class="icon ion-ios-telephone-outline"></i>
+                            <!-- {{vm.feature.phone}} -->
+                            {{"Telefono" | translate}}
                         </a>
                         <a
                             href="tel://{{vm.availablePhoneNumber}}"
                             ng-click="vm.chiama(vm.feature.phone)"
                             style="cursor: default"
                             ng-if="vm.availablePhoneNumber">
-                            <i class="icon ion-ios-telephone-outline"></i> {{vm.feature.phone}}
+                            <i class="icon ion-ios-telephone-outline"></i>
+                            <!-- {{vm.feature.phone}} -->
+                            {{"Telefono" | translate}}
                         </a>
                     </li>
                     <!-- Hidden for event detail -->
                     <li
-                        class="contacts-list__element"
+                        class="contacts-list__element center"
                         ng-if="vm.feature.email">
                         <a href="mailto:{{vm.feature.email}}?subject=informazioni">
-                            <i class="icon ion-ios-email-outline"></i> {{"Contattaci" | translate}}
+                            <i class="icon ion-ios-email-outline"></i> {{"email" | translate}}
                         </a>
                     </li>
+                    <li
+                        class="contacts-list__element center"
+                        ng-if="vm.feature.related_url">
+                        <a href="" ng-click="vm.openRelatedUrlPopup()">
+                            <i class="icon wm-icon-ios7-world-outline"></i> {{"web" | translate}}
+                        </a>
+                    </li>
+                    <div ng-if="(vm.feature.related_url) && vm.relatedUrlPopupOpened"
+                        class="related-url-div">
+                        <div class="related-url-content">
+                            <span class="related-url-arrow" ng-style="{
+                                'left': vm.relatedUrlLeftValue + 'vw'
+                            }"></span>
+                            <a href="" class="related-url-links" ng-repeat="link in vm.feature.related_url" ng-click="vm.openLink(link)">
+                                <i class="icon wm-icon-ios7-world-outline"></i>
+                                {{vm.printUrl(link)}}
+                            </a>
+                        </div>
+                    </div>
                 </ul>
                 <div
                     class="contacts-list__element"
