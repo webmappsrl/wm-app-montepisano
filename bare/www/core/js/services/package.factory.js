@@ -304,7 +304,6 @@ angular.module('webmapp')
                     }
 
                     if (asyncTranslations === 0) {
-                        console.log("emit")
                         $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
                     }
                     localStorage.$wm_taxonomy = JSON.stringify(taxonomy);

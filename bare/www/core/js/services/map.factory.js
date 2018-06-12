@@ -401,7 +401,7 @@ angular.module('webmapp')
                 if (interaction) {
                     var content = '<div class="popup-div" onclick="goToDetail(\'' + e.layer.feature.properties.id + '\', \'' + e.layer.feature.parent.label + '\', \'' + isPOI + '\', \'' + goToDetails + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">';
 
-                    if (e.layer.feature.properties.picture_url) {
+                    if (e.layer.feature.properties.image) {
                         content = content +
                             '<div class="popup-img">' +
                             '<img src="' + Offline.getRealImageUrl(e.layer.feature.properties.image) + '" />' +

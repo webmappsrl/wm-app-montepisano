@@ -99,7 +99,7 @@ angular.module('webmapp')
         };
 
         offline.downloadMap = function (vm) {
-            console.log(vm);
+            // console.log(vm);
 
             var arrayLink = [offline.options.urlMbtiles, offline.options.urlImages];
 

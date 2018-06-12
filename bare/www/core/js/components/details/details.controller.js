@@ -366,7 +366,7 @@ angular.module('webmapp')
                 }
             }
 
-            console.log(feature, vm)
+            // console.log(feature, vm)
         };
 
         modalScope.vm.openFeature = function (feature) {

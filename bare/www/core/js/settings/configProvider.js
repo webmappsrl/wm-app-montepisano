@@ -15,7 +15,7 @@ angular.module('webmapp')
             }
             var mainInclude = localStorage.getItem(this.MAIN.INCLUDE.url) ? JSON.parse(localStorage.getItem(this.MAIN.INCLUDE.url)) : {};
             this.MAIN = angular.extend(this.MAIN, mainInclude);
-            console.log(this.MAIN, mainInclude);
+            // console.log(this.MAIN, mainInclude);
         }
         config = angular.extend(this, JSON.parse(localStorage.$wm_mhildConf));
     }

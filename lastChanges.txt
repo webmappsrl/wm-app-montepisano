@@ -1,1 +1,2 @@
-When geolocating the first time the position will follow you
+Added share button to share coordinates of the map to social
+Added related url in details of poi and tracks when available
