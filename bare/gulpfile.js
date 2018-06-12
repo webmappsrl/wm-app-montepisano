@@ -15,23 +15,23 @@ var paths = {
     cssDest: './www/core/css/'
 };
 
-gulp.task('serve:before', ['sass','watch']);
+gulp.task('serve:before', ['sass', 'watch']);
 
 gulp.task('sass', function(done) {
     gulp.src(paths.sassRoot)
-    // .pipe(sourcemaps.init())
-    .pipe(sass())
-    .on('error', sass.logError)
-    .pipe(gulp.dest(paths.cssDest))
-    .pipe(minifyCss({
-        keepSpecialComments: 0
-    }))
-    .pipe(rename({
-        extname: '.min.css'
-    }))
-    // .pipe(sourcemaps.write())
-    .pipe(gulp.dest(paths.cssDest))
-    .on('end', done);
+        // .pipe(sourcemaps.init())
+        .pipe(sass())
+        .on('error', sass.logError)
+        .pipe(gulp.dest(paths.cssDest))
+        .pipe(minifyCss({
+            keepSpecialComments: 0
+        }))
+        .pipe(rename({
+            extname: '.min.css'
+        }))
+        // .pipe(sourcemaps.write())
+        .pipe(gulp.dest(paths.cssDest))
+        .on('end', done);
 });
 
 gulp.task('watch', function() {
@@ -40,9 +40,15 @@ gulp.task('watch', function() {
 
 gulp.task('install', ['git-check'], function() {
     return bower.commands.install()
-    .on('log', function(data) {
-        gutil.log('bower', gutil.colors.cyan(data.id), data.message);
-    });
+        .on('log', function(data) {
+            gutil.log('bower', gutil.colors.cyan(data.id), data.message);
+        });
+});
+
+gulp.task('test-prepare', function() {
+    sh.exec("npm install -g protractor");
+    sh.exec("webdriver-manager update");
+    sh.exec("npm install -g appium --chromedriver_version=\"2.28\"");
 });
 
 gulp.task('git-check', function(done) {
