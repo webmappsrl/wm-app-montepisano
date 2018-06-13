@@ -173,6 +173,14 @@ angular.module('webmapp')
 
     vm.updateSearch = function(query) {
         vm.results = vm.translateOverlayInArray(Search.getByLayersWithDivider(query, Search.getActiveLayers()));
+        vm.results.realLength = 0;
+
+        for (var i in vm.results) {
+            if (vm.results[i].id) {
+                vm.results.realLength = vm.results.realLength + 1;
+            }
+        }
+
         MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(query, Search.getActiveLayers()));
         $ionicScrollDelegate.scrollTop();
         lastQuery = query;
