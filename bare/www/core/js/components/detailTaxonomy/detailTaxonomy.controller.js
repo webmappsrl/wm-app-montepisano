@@ -79,18 +79,23 @@ angular.module('webmapp')
                     localStorage.$wm_taxonomyName = JSON.stringify(vm.item.name[Object.keys(vm.item.name)[0]]);
                 }
 
-                $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("È disponibile un update dell'itinerario, vuoi scaricarlo ora?")
-                })
-                    .then(function (res) {
-                        if (res) {
-                            PackageService.updatePack(packId);
-                        }
-                        else {
-                            PackageService.openPackage(packId);
-                        }
-                    });
+                if (!vm.routes[packId].lastDownload || vm.routes[packId].lastDownload !== vm.routes[packId].modified) {
+                    $ionicPopup.confirm({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("È disponibile un update dell'itinerario, vuoi scaricarlo ora?")
+                    })
+                        .then(function (res) {
+                            if (res) {
+                                PackageService.updatePack(packId);
+                            }
+                            else {
+                                PackageService.openPackage(packId);
+                            }
+                        });
+                }
+                else {
+                    PackageService.openPackage(packId);
+                }
             } else {
                 PackageService.downloadPack(packId);
             }

@@ -93,6 +93,10 @@ angular.module('webmapp')
                     if (packages[packId].localImageUrl) {
                         result[packId].localImageUrl = packages[packId].localImageUrl;
                     }
+
+                    if (packages[packId].lastDownload) {
+                        result[packId].lastDownload = lastDownload;
+                    }
                 }
 
                 result[packId].packageTitle = {};
@@ -186,7 +190,6 @@ angular.module('webmapp')
          * Emit the updated lists
          * 
          * @event packages-updated
-         * @event categories-updated
          */
         packageService.getRoutes = function () {
             //Prevent multiple requests
@@ -449,6 +452,7 @@ angular.module('webmapp')
          * emit the new list of downloaded packages
          * 
          * @event userDownloadedPackages-updated
+         * @event packages-updated
          * 
          * @param {number} packId 
          *      the id of the pack to download
@@ -471,8 +475,11 @@ angular.module('webmapp')
                                 var downloadSuccess = function () {
                                     modalDownload.hide();
                                     userDownloadedPackages[packId] = true;
+                                    packages[packId].lastDownload = packages[packId].modified;
                                     $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
+                                    $rootScope.$emit('packages-updated', packages);
                                     localStorage.$wm_userDownloadedPackages = JSON.stringify(userDownloadedPackages);
+                                    localStorage.$wm_packages = JSON.stringify(packages);
                                 };
 
                                 var downloadFail = function () {
@@ -583,8 +590,11 @@ angular.module('webmapp')
                     var downloadSuccess = function () {
                         modalDownload.hide();
                         userDownloadedPackages[packId] = true;
+                        packages[packId].lastDownload = packages[packId].modified;
                         $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
+                        $rootScope.$emit('packages-updated', packages);
                         localStorage.$wm_userDownloadedPackages = JSON.stringify(userDownloadedPackages);
+                        localStorage.$wm_packages = JSON.stringify(packages);
                     };
 
                     var downloadFail = function () {

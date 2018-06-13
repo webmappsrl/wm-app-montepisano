@@ -278,13 +278,12 @@
                             <i ng-if="!item.properties.image" class="icon {{item.properties.icon}}"></i>
                         </div>
                         <div class="route-related-name">
-                            <div ng-if="key === 0" class="details-start-poi" ng-style="{ 'color': vm.itemColor }">
+                            <div ng-if="key === 0" class="details-start-poi">
                                 <i class="icon wm-icon-ios7-arrow-forward"></i>
                                 {{"Inizio del percorso" | translate}}
                             </div>
                             <div ng-bind-html="item.properties.name"></div>
                         </div>
-                        <!-- <i class="icon wm-icon-flag"></i> -->
                     </li>
                 </ul>
             </div>

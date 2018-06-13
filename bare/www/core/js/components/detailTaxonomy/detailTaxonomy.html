@@ -47,8 +47,8 @@
                 ng-repeat="route in vm.routes"
                 ng-click="vm.openOrDownloadPack(route.id)">
                 <i ng-if="!vm.userDownloadedPackages[route.id]" class="icon wm-icon-arrow-down-c download-icon" ng-style="{'background': vm.colors.details.background}"></i>
-                <!-- <i ng-if="vm.userDownloadedPackages[route.id]" class="icon wm-icon-checkmark-round open-icon" ng-style="{'background': vm.colors.details.background}"></i> -->
-                <i ng-if="vm.userDownloadedPackages[route.id]" class="icon wm-icon-ios7-refresh-empty update-icon" ng-style="{'background': vm.colors.details.background}"></i>
+                <i ng-if="vm.userDownloadedPackages[route.id] && (!route.lastDownload || route.lastDownload !== route.modified)" class="icon wm-icon-ios7-refresh-empty update-icon" ng-style="{'background': vm.colors.details.background}"></i>
+                <i ng-if="vm.userDownloadedPackages[route.id] && (route.lastDownload === route.modified)" class="icon wm-icon-checkmark-round open-icon" ng-style="{'background': vm.colors.details.background}"></i>
                 <i class="icon {{vm.activities[route.activity[0]].icon}} activity-icon"></i>
                 <span ng-if="route.packageTitle[vm.currentLang]"
                     ng-style="{'color': route.color}"

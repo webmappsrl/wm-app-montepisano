@@ -1148,6 +1148,7 @@ div.detailRoute-footer {
       float: left;
       position: relative; }
       .route-related-details .route-related-list .route-related-item .route-related-name .details-start-poi {
+        color: #0b7b39;
         text-transform: uppercase;
         font-size: 12px;
         position: absolute;
