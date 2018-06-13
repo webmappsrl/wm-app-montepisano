@@ -138,10 +138,10 @@ describe('Go to Routes then filter packages', function() {
                 }
             });
 
-            filters.each(function(ele, index) {
-                var checkbox = ele.$('.ion-android-checkbox-outline');
-                expect(checkbox.isPresent()).toBe(true);
-            });
+            // filters.each(function(ele, index) {
+            //     var checkbox = ele.$('.ion-android-checkbox-outline');
+            //     expect(checkbox.isPresent()).toBe(true);
+            // });
 
         });
 
@@ -154,6 +154,9 @@ describe('Go to Routes then filter packages', function() {
                 if (index < (count - 1)) {
 
                     ele.click();
+                    expect($('ion-modal-view').isPresent()).toBe(true);
+                    modalClose = $('ion-modal-view > a.modal-close');
+                    expect(modalClose.isPresent()).toBe(true);
                     modalClose.click();
 
                     var filteredPackages = element.all(by.repeater('item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search'));
@@ -177,16 +180,25 @@ describe('Go to Routes then filter packages', function() {
 
                     });
 
-
+                    filterButton = $('div.buttons.buttons-right > span > button');
+                    expect(filterButton.isPresent()).toBe(true);
                     filterButton.click();
+
                     ele.click();
                 } else {
                     ele.click();
+                    expect($('ion-modal-view').isPresent()).toBe(true);
+                    modalClose = $('ion-modal-view > a.modal-close');
+                    expect(modalClose.isPresent()).toBe(true);
                     modalClose.click();
                     var fp = element.all(by.repeater('item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search'));
                     expect(fp.count()).toEqual(0);
+                    filterButton = $('div.buttons.buttons-right > span > button');
+                    expect(filterButton.isPresent()).toBe(true);
                     filterButton.click();
                     ele.click();
+                    modalClose = $('ion-modal-view > a.modal-close');
+                    expect(modalClose.isPresent()).toBe(true);
                     modalClose.click();
                 }
             });
