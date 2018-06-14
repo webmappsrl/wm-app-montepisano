@@ -1,8 +1,7 @@
-describe('Account.Factory Test', function() {
+describe('Account.Factory', function() {
 
 
     beforeEach(module('webmapp'));
-
 
     var accountService;
     var $httpBackend;

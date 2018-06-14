@@ -50,58 +50,62 @@ angular.module('webmapp')
     vm.userLatLngs = [];
     vm.trackLabel = "";
     vm.packageTitle = {};
-    vm.activeRecordTrack = false;
-    vm.pauseRecordTrack = false;
+
+
+    vm.isRecordingTrack = false;
+    vm.isPausedRecordTrack = false;
 
     if (PackageService.getRouteById(CONFIG.routeID) && PackageService.getRouteById(CONFIG.routeID).packageTitle) {
         vm.packageTitle = PackageService.getRouteById(CONFIG.routeID).packageTitle;
     }
 
-    vm.recordUserTrack = function(lat, long) {
+    vm.recordUserTrack = function(lat, long, altitude) {
 
-
-        if (lat && long && vm.activeRecordTrack && !vm.pauseRecordTrack) {
+        if (lat && long && vm.isRecordingTrack && !vm.isPausedRecordTrack) {
             if (vm.userLatLngs.length == 0) {
                 if (prevLatLong && prevLatLong.lat && prevLatLong.long) {
                     MapService.createUserPolyline([
-                        [prevLatLong.lat, prevLatLong.long]
+                        [prevLatLong.lat, prevLatLong.long, prevLatLong.alt]
                     ]);
-                    vm.userLatLngs.push([prevLatLong.lat, prevLatLong.long]);
-                    MapService.updateUserPolyline([lat, long]);
+                    vm.userLatLngs.push([prevLatLong.lat, prevLatLong.long, prevLatLong.alt]);
+                    MapService.updateUserPolyline([lat, long, altitude]);
                 } else {
                     MapService.createUserPolyline([
-                        [lat, long]
+                        [lat, long, altitude]
                     ]);
                 }
 
             } else {
-                MapService.updateUserPolyline([lat, long]);
+                MapService.updateUserPolyline([lat, long, altitude]);
             }
-            vm.userLatLngs.push([lat, long]);
+            vm.userLatLngs.push([lat, long, altitude]);
         }
 
     };
 
     vm.stopRecordTrackAndSave = function(save) {
 
-        vm.activeRecordTrack = false;
-        vm.pauseRecordTrack = false;
+        vm.isRecordingTrack = false;
+        vm.isPausedRecordTrack = false;
         if (save && vm.userLatLngs.length >= 1) {
+            var currentTime = new Date();
+            var date = currentTime.getFullYear() + "-" + currentTime.getMonth() + "-" + currentTime.getDay();
             MapService.saveUserPolyline({
-                RouteInfo: {
-                    RouteID: CONFIG.routeID,
-                    TrackID: vm.stopNavigationUrlParams.id,
-                    RouteName: vm.packageTitle,
-                    TrackLabel: vm.TrackLabel,
-                    Timestamp: Date.now()
+                routeInfo: {
+                    name: "Track name " + new Date(),
+                    notes: date,
+                    routeId: CONFIG.routeID,
+                    trackId: vm.stopNavigationUrlParams.id,
+                    routeName: vm.packageTitle,
+                    trackLabel: vm.TrackLabel,
+                    timestamp: currentTime
                 }
             });
         }
+
         vm.userLatLngs = [];
         MapService.removeUserPolyline();
     }
-
-
 
     if (CONFIG && CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) {
         vm.maxOutOfTrack = CONFIG.MAIN.NAVIGATION.trackBoundsDistance;
@@ -650,7 +654,7 @@ angular.module('webmapp')
 
         var lat = position.coords.latitude ? position.coords.latitude : 0,
             long = position.coords.longitude ? position.coords.longitude : 0,
-            altitude = position.coords.altitude ? position.coords.altitude : 0,
+            altitude = position.coords.altitude ? position.coords.altitude : null,
             locateLoading = false,
             doCenter = false;
 
@@ -685,7 +689,8 @@ angular.module('webmapp')
                 MapService.centerOnCoords(lat, long);
             }
 
-            vm.recordUserTrack(lat, long);
+
+            vm.recordUserTrack(lat, long, altitude);
 
             if (vm.isNavigating && !vm.isPaused) {
                 if (realTimeTracking.enabled && vm.userData.ID) {
@@ -762,7 +767,8 @@ angular.module('webmapp')
 
             prevLatLong = {
                 lat: lat,
-                long: long
+                long: long,
+                alt: altitude
             };
         } else {
             MapService.drawAccuracy(position.coords.accuracy);
@@ -1096,8 +1102,8 @@ angular.module('webmapp')
         vm.outOfTrackInterval = setInterval(function() { vm.checkOutOfTrack(prevLatLong) }, 1000);
 
         //record track
-        vm.activeRecordTrack = true;
-        vm.pauseRecordTrack = false;
+        vm.isRecordingTrack = true;
+        vm.isPausedTrack = false;
         window.plugins.insomnia.keepAwake();
         setTimeout(function() {
             if (prevLatLong) {
@@ -1121,8 +1127,8 @@ angular.module('webmapp')
         vm.inTrackDate = 0;
         hideOutOfTrackToast();
         window.plugins.insomnia.allowSleepAgain();
-        vm.activeRecordTrack = true;
-        vm.pauseRecordTrack = true;
+        vm.isRecordingTrack = true;
+        vm.isPausedRecordTrack = true;
     };
 
     vm.resumeNavigation = function() {
@@ -1133,8 +1139,8 @@ angular.module('webmapp')
         vm.firstPositionSet = false;
         vm.outOfTrackInterval = setInterval(function() { vm.checkOutOfTrack(prevLatLong) }, 1000);
         window.plugins.insomnia.keepAwake();
-        vm.activeRecordTrack = true;
-        vm.pauseRecordTrack = false;
+        vm.isRecordingTrack = true;
+        vm.isPausedRecordTrack = false;
     };
 
     vm.stopNavigation = function() {

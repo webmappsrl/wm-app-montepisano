@@ -37,8 +37,6 @@ describe('Auth.Factory Test', function() {
 
     describe('Auth.Factory.resetUserData', function() {
 
-
-
         it('Should reset user data successfully', function() {
 
             authService.resetUserData();
@@ -87,8 +85,6 @@ describe('Auth.Factory Test', function() {
                 country: 'country'
             };
             localStorage.user = JSON.stringify(udata);
-
-
             expect(authService.isLoggedIn()).toBe(false);
         });
 
@@ -106,7 +102,6 @@ describe('Auth.Factory Test', function() {
                 ID: '0'
             };
             localStorage.user = JSON.stringify(udata);
-
 
             expect(authService.isLoggedIn()).toBe(true);
         });

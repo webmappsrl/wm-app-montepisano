@@ -2302,6 +2302,7 @@ angular.module('webmapp')
 
     mapService.createUserPolyline = function(coordsArray) {
 
+
         if (userTrackPolyline) {
             map.removeLayer(userTrackPolyline);
         }
@@ -2317,7 +2318,6 @@ angular.module('webmapp')
         } else {
             userTrackPolyline = L.polyline(latLng).addTo(map);
         }
-
     }
 
     mapService.getUserPolyline = function(latLng) {
@@ -2328,9 +2328,8 @@ angular.module('webmapp')
 
         if (userTrackPolyline) {
             map.removeLayer(userTrackPolyline);
-            delete userTrackPolyline;
+            userTrackPolyline = null;
         }
-
     }
 
 
@@ -2364,7 +2363,6 @@ angular.module('webmapp')
         if (goToDetails === 'false') {
             return;
         }
-
         if (isPOI === 'true') {
             map.setView({
                 lat: lat,

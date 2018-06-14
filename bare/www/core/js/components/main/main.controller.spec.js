@@ -186,7 +186,6 @@ describe('MainController', function() {
                 expect(vm.showToast).toBe(true);
 
             });
-
         });
 
         describe('recordUserTrack', function() {
@@ -204,8 +203,6 @@ describe('MainController', function() {
                 MapService = _MapService_;
 
             }));
-
-
 
             it('invalid lat  => nothing happens ', function() {
 
@@ -237,12 +234,12 @@ describe('MainController', function() {
                 expect(len).toBe(vm.userLatLngs.length);
             });
 
-            it(' (vm.activeRecordTrack && !vm.pauseRecordTrack) && vm.userLatLongs.length==0  && prev pos is undefined =>  ' +
+            it('(vm.isRecordingTrack && !vm.isPausedRecordTrack) && vm.userLatLongs.length==0  && prev pos is undefined =>  ' +
                 'MapService.createUserPolyline is called and vm.userLatLongs.length==1.',
                 function() {
 
-                    vm.activeRecordTrack = true;
-                    vm.pauseRecordTrack = false;
+                    vm.isRecordingTrack = true;
+                    vm.isPausedRecordTrack = false;
 
                     var lat = 43.718;
                     var lng = 10.4;
@@ -257,11 +254,11 @@ describe('MainController', function() {
                     expect(vm.userLatLngs.length).toBe(len + 1);
                 });
 
-            it('(vm.activeRecordTrack && !vm.pauseRecordTrack) && vm.userLatLongs.length==1  => MapService.updateUserPolyline is called. ',
+            it('(vm.isRecordingTrack && !vm.isPausedRecordTrack) && vm.userLatLongs.length==1  => MapService.updateUserPolyline is called. ',
                 function() {
 
-                    vm.activeRecordTrack = true;
-                    vm.pauseRecordTrack = false;
+                    vm.isRecordingTrack = true;
+                    vm.isPausedRecordTrack = false;
 
                     var lat = 43.718;
                     var lng = 10.4;
@@ -276,9 +273,9 @@ describe('MainController', function() {
                     expect(vm.userLatLngs.length).toBe(len + 1);
                 });
 
-            it(' !vm.activeRecordTrack  => MapService.createUSerPolyline or MapService.updateUserPolyline are not called', function() {
+            it(' !vm.isRecordingTrack   => MapService.createUSerPolyline or MapService.updateUserPolyline are not called', function() {
+                vm.isRecordingTrack = false;
 
-                vm.activeRecordTrack = false;
 
                 var lat = 43.718;
                 var lng = 10.4;
@@ -296,10 +293,11 @@ describe('MainController', function() {
             });
 
 
-            it('vm.activeRecordTrack  &&  vm.pauseRecordpause => MapService.createUSerPolyline or MapService.updateUserPolyline are not called', function() {
+            it('(vm.isRecordingTrack && vm.isPausedRecordTrack => MapService.createUSerPolyline or MapService.updateUserPolyline are not called', function() {
 
-                vm.activeRecordTrack = true;
-                vm.pauseRecordTrack = true;
+
+                vm.isRecordingTrack = true;
+                vm.isPausedRecordTrack = true;
 
                 var lat = 43.718;
                 var lng = 10.4;
@@ -348,13 +346,13 @@ describe('MainController', function() {
                     [43.716, 10.4]
                 ];
 
-                vm.activeRecordTrack = true;
-                vm.pauseRecordTrack = true;
+                vm.isRecordingTrack = true;
+                vm.isPausedRecordTrack = true;
 
                 vm.stopRecordTrackAndSave(true);
 
-                expect(vm.activeRecordTrack).toBe(false);
-                expect(vm.pauseRecordTrack).toBe(false);
+                expect(vm.isRecordingTrack).toBe(false);
+                expect(vm.isPausedRecordTrack).toBe(false);
                 expect(MapService.saveUserPolyline).toHaveBeenCalled();
                 expect(MapService.removeUserPolyline).toHaveBeenCalled();
                 expect(callOrder).toEqual(['save', 'remove']);
@@ -363,13 +361,13 @@ describe('MainController', function() {
 
             it('function parameter is true and vm.userLatLngs.length=0 => should call only removeUserPolyline ', function() {
 
-                vm.activeRecordTrack = true;
-                vm.pauseRecordTrack = true;
+                vm.isRecordingTrack = true;
+                vm.isPausedRecordTrack = true;
 
                 vm.stopRecordTrackAndSave(true);
 
-                expect(vm.activeRecordTrack).toBe(false);
-                expect(vm.pauseRecordTrack).toBe(false);
+                expect(vm.isRecordingTrack).toBe(false);
+                expect(vm.isPausedRecordTrack).toBe(false);
                 expect(MapService.saveUserPolyline).not.toHaveBeenCalled();
                 expect(MapService.removeUserPolyline).toHaveBeenCalled();
                 expect(callOrder).toEqual(['remove']);
@@ -384,13 +382,13 @@ describe('MainController', function() {
                     [43.716, 10.4]
                 ];
 
-                vm.activeRecordTrack = true;
-                vm.pauseRecordTrack = true;
+                vm.isRecordingTrack = true;
+                vm.isPausedRecordTrack = true;
 
                 vm.stopRecordTrackAndSave(false);
 
-                expect(vm.activeRecordTrack).toBe(false);
-                expect(vm.pauseRecordTrack).toBe(false);
+                expect(vm.isRecordingTrack).toBe(false);
+                expect(vm.isPausedRecordTrack).toBe(false);
                 expect(MapService.saveUserPolyline).not.toHaveBeenCalled();
                 expect(MapService.removeUserPolyline).toHaveBeenCalled();
                 expect(callOrder).toEqual(['remove']);
