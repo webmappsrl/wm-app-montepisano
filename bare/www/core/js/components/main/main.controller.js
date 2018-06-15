@@ -1433,6 +1433,32 @@ angular.module('webmapp')
         if (window !== top) {
             MapService.disableWheelZoom();
         }
+
+        // Note: route's first argument can take any kind of object as its data,
+        // and will send along the matching object if the route matches the deeplink
+
+        //ionic cordova plugin add ionic-plugin-deeplinks --variable URL_SCHEME=test --variable DEEPLINK_SCHEME=https --variable DEEPLINK_HOST=api.webmapp.it --variable ANDROID_PATH_PREFIX=/
+        $cordovaDeeplinks.route({
+            '/languages': { target: 'languages' },
+            '/home': { target: 'home' },
+            '/packages': { target: 'packages' },
+            '/route/:id': { target: 'route/', parent: 'packages' }
+        }).subscribe(function (match) {
+            setTimeout(function () {
+                if (match.$route.parent) {
+                    Utils.goTo(match.$route.parent);
+                    setTimeout(function() {
+                        Utils.goTo(match.$route.target + match.$args.id);
+                    }, 100);
+                }
+                else {
+                    Utils.goTo(match.$route.target);
+                }
+            }, 50);
+        }, function (nomatch) {
+            console.warn('No match', nomatch);
+            Utils.goTo(CONFIG.OPTIONS.startUrl);
+        });
     });
 
     return vm;
