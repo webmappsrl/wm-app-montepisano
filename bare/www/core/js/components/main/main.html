@@ -155,15 +155,16 @@
                         {{"percorsi" | translate}}
                     </span>
                 </div>
-                <div class="speed-section">
+                <div class="speed-section" ng-click="vm.toggleSpeedText()">
                     <div>
                         <i class="wm-icon-speedometer"></i>
                     </div>
-                    <!--<span class="navigation-value">
+                    <span class="navigation-value" ng-if="vm.speedTextType === 'current'">
                         {{vm.currentSpeedText}}
-                    </span>-->
-                    <span class="navigation-value">
-                        {{vm.averageSpeedText}}
+                    </span>
+                    <span class="navigation-value" ng-if="vm.speedTextType === 'average'">
+                        {{vm.averageSpeedText}}<br>
+                        {{"di media" | translate}}
                     </span>
                 </div>
             </div>

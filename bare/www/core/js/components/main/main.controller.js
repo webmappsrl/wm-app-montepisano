@@ -45,10 +45,22 @@ angular.module('webmapp')
     vm.toastTime = 5;
     vm.showToast = false;
 
-    if (CONFIG && CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) {
+    vm.speedTextType = 'average';
+
+    if (CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.detaultSpeedType && !CONFIG.MAIN.NAVIGATION.defaultSpeedType.includes('average') && CONFIG.MAIN.NAVIGATION.defaultSpeedType.includes('current')) {
+        vm.speedTextType = 'current';
+    }
+    if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.detaultSpeedType && !CONFIG.NAVIGATION.defaultSpeedType.includes('average') && CONFIG.NAVIGATION.defaultSpeedType.includes('current')) {
+        vm.speedTextType = 'current';
+    }
+    else {
+        vm.speedTextType = 'average';
+    }
+
+    if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) {
         vm.maxOutOfTrack = CONFIG.MAIN.NAVIGATION.trackBoundsDistance;
     }
-    if (CONFIG && CONFIG.NAVIGATION && CONFIG.NAVIGATION.trackBoundsDistance) {
+    if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.trackBoundsDistance) {
         vm.maxOutOfTrack = CONFIG.NAVIGATION.trackBoundsDistance;
     }
 
@@ -955,22 +967,35 @@ angular.module('webmapp')
     };
 
     var updateNavigationValues = function(position, prevPosition) {
-        var distance = distanceInMeters(position.coords.latitude, position.coords.longitude, prevPosition.lat, prevPosition.long)
-        vm.distanceTravelled = distance + vm.distanceTravelled;
-        if (vm.distanceTravelledBeforePause > 0) {
-            vm.distanceTravelled = vm.distanceTravelled + vm.distanceTravelledBeforePause;
-            vm.distanceTravelledBeforePause = 0;
+        var distance = 0;
+        if (position && prevPosition) {
+            var distance = distanceInMeters(position.coords.latitude, position.coords.longitude, prevPosition.lat, prevPosition.long)
+            vm.distanceTravelled = distance + vm.distanceTravelled;
+            if (vm.distanceTravelledBeforePause > 0) {
+                vm.distanceTravelled = vm.distanceTravelled + vm.distanceTravelledBeforePause;
+                vm.distanceTravelledBeforePause = 0;
+            }
+            vm.distanceTravelledText = getDistanceText(vm.distanceTravelled);
         }
-        vm.distanceTravelledText = getDistanceText(vm.distanceTravelled);
 
-        var timeElapsedBetweenPositions = Date.now() - vm.lastPositionRecordTime;
+        var timeElapsedBetweenPositions = 0;
+        if (vm.lastPositionRecordTime) {
+            timeElapsedBetweenPositions = Date.now() - vm.lastPositionRecordTime;
+        }
 
         if (vm.isNotMoving) {
             vm.startMovingTime = Date.now();
             vm.isNotMoving = false;
         }
 
-        vm.averageSpeedText = (vm.distanceTravelled / ((Date.now() - vm.startMovingTime + vm.movingTime) / 1000) * 3.6).toFixed(0) + ' km/h';
+        if (!vm.distanceTravelled) {
+            vm.distanceTravelled = 0;
+            vm.distanceTravelledText = getDistanceText(vm.distanceTravelled);
+            vm.averageSpeedText = "0 km/h";
+        }
+        else {
+            vm.averageSpeedText = (vm.distanceTravelled / ((Date.now() - vm.startMovingTime + vm.movingTime) / 1000) * 3.6).toFixed(0) + ' km/h';
+        }
 
         vm.currentSpeedText = (distance / (timeElapsedBetweenPositions / 1000) * 3.6).toFixed(0) + ' km/h';
         clearTimeout(vm.currentSpeedExpireTimeout);
@@ -987,6 +1012,13 @@ angular.module('webmapp')
         vm.checkOutOfTrack(prevLatLong)
         vm.timeInMotion = Date.now() - vm.navigationStartTime + vm.timeInMotionBeforePause;
         vm.timeInMotionText = getTimeText(vm.timeInMotion);
+        if (!vm.distanceTravelled) {
+            vm.distanceTravelled = 0;
+            vm.averageSpeedText = '0 km/h';
+        }
+        else {
+            vm.averageSpeedText = (vm.distanceTravelled / ((Date.now() - vm.startMovingTime + vm.movingTime) / 1000) * 3.6).toFixed(0) + ' km/h';
+        }
         Utils.forceDigest();
     };
 
@@ -1112,6 +1144,20 @@ angular.module('webmapp')
         }
     };
 
+    vm.toggleSpeedText = function() {
+        switch (vm.speedTextType) {
+            case 'current':
+                vm.speedTextType = 'average';
+                break;
+            case 'average':
+            default:
+                vm.speedTextType = 'current';
+                break;
+        }
+
+        Utils.forceDigest();
+    }
+
     var showPathAndRelated = function(params) {
         var parentId = params.parentId,
             id = params.id;
@@ -1157,7 +1203,6 @@ angular.module('webmapp')
             // vm.turnOffGeolocationAndRotion();
             vm.turnOffRotationAndFollow();
         }
-        MapService.removePosition();
         prevLatLong = null;
 
         if (currentState !== 'app.main.detaillayer' &&
@@ -1316,6 +1361,13 @@ angular.module('webmapp')
         vm.dragged = true;
     });
 
+    $rootScope.$on('map-zoomend', function(e, value) {
+        if (vm.isRotating) {
+            vm.turnOffRotationAndFollow();
+        }
+        vm.dragged = true;
+    });
+
     $rootScope.$on('item-navigable', function(e, value) {
         vm.isNavigable = value;
         Utils.forceDigest();
@@ -1333,7 +1385,7 @@ angular.module('webmapp')
     function showOutOfTrackToast(distance) {
         var currentDistance = distance > 500 ? (distance / 1000).toFixed(1) : (distance - (distance % 10)).toFixed();
         var content = '',
-            message = 'Attento, ti sei allontanato dal percorso di' + ' ' + currentDistance + ' ';
+            message = $translate.instant('Attento, ti sei allontanato dal percorso di') + ' ' + currentDistance + ' ';
 
         var unit = distance > 500 ? 'km' : 'm';
 
@@ -1345,12 +1397,6 @@ angular.module('webmapp')
         content = content + '<div class="toast-message">';
         content = content + message + unit;
         content = content + '</div>';
-        // content = content + '<div class="toast-buttons">';
-
-        // content = content + '<div class="stop-button">Interrompi</div>';
-        // content = content + '<div class="pause-button">Pausa</div>';
-
-        // content = content + '</div>';
         content = content + '</div>';
         content = content + '</div>';
 
@@ -1364,25 +1410,27 @@ angular.module('webmapp')
     };
 
     vm.checkOutOfTrack = function(latLong) {
-        var lat = latLong.lat;
-        var long = latLong.long;
-        if (vm.stopNavigationUrlParams && vm.stopNavigationUrlParams.id &&
-            vm.stopNavigationUrlParams.parentId) {
+        if (latLong && latLong.lat && latLong.lng) {
+            var lat = latLong.lat;
+            var long = latLong.long;
+            if (vm.stopNavigationUrlParams && vm.stopNavigationUrlParams.id &&
+                vm.stopNavigationUrlParams.parentId) {
 
-            var distFromTrack = MapService.getFeatureById(
-                    vm.stopNavigationUrlParams.id,
-                    vm.stopNavigationUrlParams.parentId.replace(/_/g, ' '))
-                .then(function(feature) {
-                    var dist = turf.pointToLineDistance.default([long, lat], feature);
-                    return dist;
-                })
-                .then(function(distance) {
-                    vm.handleDistanceToast(distance);
-                }).catch(function(e) {
-                    console.log(e);
-                });
-        } else {
-            console.log('At least one of vm.stopNavigationUrlParams is undefined');
+                var distFromTrack = MapService.getFeatureById(
+                        vm.stopNavigationUrlParams.id,
+                        vm.stopNavigationUrlParams.parentId.replace(/_/g, ' '))
+                    .then(function(feature) {
+                        var dist = turf.pointToLineDistance.default([long, lat], feature);
+                        return dist;
+                    })
+                    .then(function(distance) {
+                        vm.handleDistanceToast(distance);
+                    }).catch(function(e) {
+                        console.log(e);
+                    });
+            } else {
+                console.log('At least one of vm.stopNavigationUrlParams is undefined');
+            }
         }
     };
 
