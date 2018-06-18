@@ -47,7 +47,7 @@ angular.module('webmapp')
 
     vm.speedTextType = 'average';
 
-    if (CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.detaultSpeedType && !CONFIG.MAIN.NAVIGATION.defaultSpeedType.includes('average') && CONFIG.MAIN.NAVIGATION.defaultSpeedType.includes('current')) {
+    if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.detaultSpeedType && !CONFIG.MAIN.NAVIGATION.defaultSpeedType.includes('average') && CONFIG.MAIN.NAVIGATION.defaultSpeedType.includes('current')) {
         vm.speedTextType = 'current';
     }
     if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.detaultSpeedType && !CONFIG.NAVIGATION.defaultSpeedType.includes('average') && CONFIG.NAVIGATION.defaultSpeedType.includes('current')) {
@@ -284,7 +284,6 @@ angular.module('webmapp')
     vm.dragged = false;
     vm.isCoordsBlockExpanded = true;
     vm.gpsActive = false;
-    vm.outsideBoundingBox = false;
     vm.isOutsideBoundingBox = false;
 
     vm.navigationAvailable = false;
@@ -627,11 +626,15 @@ angular.module('webmapp')
         var lat = position.coords.latitude ? position.coords.latitude : 0,
             long = position.coords.longitude ? position.coords.longitude : 0,
             altitude = position.coords.altitude ? position.coords.altitude : 0,
-            locateLoading = false,
             doCenter = false;
+
+        vm.locateLoading = false;
 
         if (!MapService.isInBoundingBox(lat, long) && !vm.isOutsideBoundingBox) {
             vm.isOutsideBoundingBox = true;
+            prevLatLong = null;
+            vm.dragged = true;
+
             $ionicPopup.alert({
                 title: $translate.instant("ATTENZIONE"),
                 template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
@@ -640,11 +643,9 @@ angular.module('webmapp')
                     type: 'button-positive'
                 }]
             });
-            watchInterval.clearWatch();
-            vm.dragged = true;
-            MapService.removePosition();
-            prevLatLong = null;
 
+            watchInterval.clearWatch();
+            MapService.removePosition();
             return;
         } else {
             vm.isOutsideBoundingBox = false;
@@ -832,8 +833,8 @@ angular.module('webmapp')
 
                         if (!MapService.isInBoundingBox(lat, long)) {
                             vm.isOutsideBoundingBox = true;
-                            MapService.removePosition();
                             prevLatLong = null;
+                            MapService.removePosition();
                             $ionicPopup.alert({
                                 title: $translate.instant("ATTENZIONE"),
                                 template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),

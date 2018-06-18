@@ -56,13 +56,7 @@
 
         <div class="locate-custom-control" ng-if="vm.showLocate">
             <div class="leaflet-control-locate leaflet-bar leaflet-control">
-                <a class="leaflet-bar-part leaflet-bar-part-single" href="" title="Show me where I am" ng-click="vm.centerOnMe()">
-                    <!-- ng-class="{
-                            'wm-icon-mappalo': vm.isRotating,
-                            'wm-icon-android-locate': !vm.isRotating && !vm.canFollow,
-                            'wm-icon-android-locate-full': !vm.isRotating && vm.canFollow,
-                            'fa-spin': vm.locateLoading
-                    }" -->
+                <a class="leaflet-bar-part leaflet-bar-part-single" href="" ng-click="vm.centerOnMe()">
                     <span class="icon" ng-class="{
                             'wm-icon-android-locate-full': !vm.followActive || vm.dragged || (vm.followActive && !vm.isRotating && !vm.dragged),
                             'fa-spin': vm.locateLoading && !vm.followActive,
@@ -74,10 +68,6 @@
                             '-webkit-transform': 'rotate(' + (30 - vm.deg) + 'deg)',
                             'transform': 'rotate(' + (30 - vm.deg) + 'deg)'
                         }">
-                        <!-- <i
-                            class="icon wm-icon-android-locate-full"
-                            ng-if="vm.followActive && !vm.isRotating && !vm.dragged">
-                        </i> -->
                         <img style="margin: 5px" src="core/images/compass.svg" ng-if="vm.followActive && vm.isRotating && !vm.dragged">
                     </span>
                 </a>
