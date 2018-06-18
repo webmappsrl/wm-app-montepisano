@@ -1376,6 +1376,10 @@ angular.module('webmapp')
                 $rootScope.$emit('map-dragstart');
             });
 
+            map.on('zoomend', function() {
+                $rootScope.$emit('map-zoomend');
+            });
+
             if (generalConf.useAlmostOver) {
                 map.on('almost:click', function (e) {
                     lineClick(e);
@@ -2121,62 +2125,6 @@ angular.module('webmapp')
 
         mapService.centerOnScreen = function (location) {
             map.panTo(new L.LatLng(location.latlng.lat, location.latlng.lng));
-        };
-
-        mapService.createPositionMarkerAt = function (lat, long) {
-            var getIncrement = function (n) {
-                var value = 19.6618;
-
-                for (var i = 2; i <= n; i++) {
-                    value = value / 2;
-                }
-                return value;
-            };
-
-            var radius = 35,
-                styleCircle = {
-                    color: '#136AEC',
-                    fillColor: '#136AEC',
-                    fillOpacity: 0.15,
-                    weight: 2,
-                    opacity: 0.5
-                },
-                styleMarker = {
-                    color: '#136AEC',
-                    fillColor: '#2A93EE',
-                    fillOpacity: 0.7,
-                    weight: 2,
-                    opacity: 0.9,
-                    radius: 5
-                };
-
-            positionCircle = L.circle({
-                lat: lat,
-                lng: long
-            }, radius, styleCircle).addTo(map);
-            positionMarker = new L.CircleMarker({
-                lat: lat,
-                lng: long
-            }, styleMarker).addTo(map);
-
-            positionMarker.on('click', function (e) {
-                L.popup()
-                    .setLatLng({
-                        lat: e.latlng.lat,
-                        lng: e.latlng.lng
-                    })
-                    .setContent($translate.instant("La tua posizione"))
-                    .openOn(map);
-            });
-        };
-
-        mapService.removePositionMarker = function () {
-            if (positionMarker) {
-                map.removeLayer(positionMarker);
-                map.removeLayer(positionCircle);
-                positionMarker = null;
-                positionCircle = null;
-            }
         };
 
         mapService.triggerNearestPopup = function (latLong) {

@@ -361,6 +361,12 @@ angular.module('webmapp')
          *      the id of the pack to request
          */
         packageService.requestPack = function (packId) {
+            $ionicPopup
+                .alert({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Questa funzionalità sarà disponibile dai prossimi update")
+                });
+            return;
             if (!userData || !userData.ID || userPackagesIdRquested[packId]) {
                 return;
             }
