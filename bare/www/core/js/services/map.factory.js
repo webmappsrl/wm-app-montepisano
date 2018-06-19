@@ -981,7 +981,8 @@ angular.module('webmapp')
 
             var options = {
                 minZoom: mapConf.minZoom,
-                maxZoom: mapConf.maxZoom
+                maxZoom: mapConf.maxZoom,
+                bounds: getMaxBounds()
             };
 
             if (!currentOverlay.geojsonUrl ||
@@ -1143,6 +1144,13 @@ angular.module('webmapp')
             });
         };
 
+        var getMaxBounds = function () {
+            var southWest = L.latLng(mapConf.bounds.southWest),
+                northEast = L.latLng(mapConf.bounds.northEast);
+
+            return L.latLngBounds(southWest, northEast);
+        };
+
         var readLocalMbTiles = function (fileEntry, options) {
             return $q(function (resolve, reject) {
                 if (fileEntry !== void 0 && fileEntry.isFile) {
@@ -1188,7 +1196,7 @@ angular.module('webmapp')
             baseLayersByLabel[baseMap.label] = baseLayer;
         }
 
-        var buildBaseLayer = function (i) {
+        var buildBaseLayer = function (maxBounds, i) {
             return $q(function (resolve, reject) {
                 var baseMap = mapConf.layers[i],
                     options = {},
@@ -1200,7 +1208,8 @@ angular.module('webmapp')
                     options = {
                         minZoom: mapConf.minZoom,
                         maxZoom: mapConf.maxZoom,
-                        // reuseTiles: true
+                        // reuseTiles: true,
+                        bounds: maxBounds
                     };
 
                     if (typeof baseMap.tms !== undefined && baseMap.tms) {
@@ -1277,7 +1286,8 @@ angular.module('webmapp')
                     options = {
                         minZoom: mapConf.minZoom,
                         maxZoom: mapConf.maxZoom,
-                        // reuseTiles: true
+                        // reuseTiles: true,
+                        bounds: maxBounds
                     };
 
                     if (Offline.isActive()) {
@@ -1314,10 +1324,19 @@ angular.module('webmapp')
                 return;
             }
 
-            var mapCenter = null,
+            var maxBounds = null,
+                mapCenter = null,
                 defZoom = mapConf.defZoom,
                 minZoom = mapConf.minZoom,
                 maxZoom = mapConf.maxZoom;
+
+            if (mapConf.bounds) {
+                var southWest = L.latLng(mapConf.bounds.southWest),
+                    northEast = L.latLng(mapConf.bounds.northEast);
+
+                maxBounds = L.latLngBounds(southWest, northEast);
+                // mapCenter = maxBounds.getCenter();
+            }
 
             mapCenter = L.latLng(mapConf.center.lat, mapConf.center.lng);
 
@@ -1333,6 +1352,7 @@ angular.module('webmapp')
                 maxZoom: maxZoom,
                 zoom: defZoom,
                 center: mapCenter,
+                maxBounds: maxBounds,
                 zoomControl: false,
                 rotate: true
             });
@@ -1420,6 +1440,12 @@ angular.module('webmapp')
                         enableHighAccuracy: true,
                         watch: false,
                         setView: false
+                    },
+                    onLocationOutsideMapBounds: function () {
+                        $ionicPopup.alert({
+                            template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa!"),
+                            title: $translate.instant("ATTENZIONE")
+                        });
                     }
                 }).addTo(map);
             }
@@ -1455,7 +1481,7 @@ angular.module('webmapp')
 
             var baseLayersPromises = [];
             for (var i = 0; i < mapConf.layers.length; i++) {
-                baseLayersPromises.push(buildBaseLayer(i));
+                baseLayersPromises.push(buildBaseLayer(maxBounds, i));
             }
 
             $q.all(baseLayersPromises)

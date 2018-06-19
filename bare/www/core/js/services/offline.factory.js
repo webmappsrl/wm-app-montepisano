@@ -102,13 +102,7 @@ angular.module('webmapp')
         };
 
         offline.downloadMap = function (vm) {
-
-            console.log(cordova.file.dataDirectory);
-            // console.log(vm);
-
             var arrayLink = [offline.options.urlMbtiles, offline.options.urlImages];
-
-            //offline.reset();
 
             var vmReset = function () {
                 vm.downloadProgress = 0;
@@ -141,15 +135,6 @@ angular.module('webmapp')
                 transferPromises = [],
                 promises = [],
                 aborted = false;
-
-            /*
-            cordova.exec(function(result) {
-                var diskSizeInMB = result/1024;
-                console.log(diskSizeInMB)
-            }, function(error) {
-                alert("Error: " + error);
-            }, "File", "getFreeDiskSpace", []);
-            */
 
             arrayLink.forEach(function (item) {
                 var filename = item.split('/').pop(),
