@@ -152,9 +152,14 @@
                     <span class="navigation-value" ng-if="vm.speedTextType === 'current'">
                         {{vm.currentSpeedText}}
                     </span>
+                    <span class="navigation-text" ng-if="vm.speedTextType === 'current'">
+                        {{"velocità" | translate}}
+                    </span>
                     <span class="navigation-value" ng-if="vm.speedTextType === 'average'">
-                        {{vm.averageSpeedText}}<br>
-                        {{"di media" | translate}}
+                        {{vm.averageSpeedText}}
+                    </span>
+                    <span class="navigation-text" ng-if="vm.speedTextType === 'average'">
+                        {{"v. media" | translate}}
                     </span>
                 </div>
             </div>

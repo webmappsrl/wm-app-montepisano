@@ -309,7 +309,7 @@
                             ng-repeat="(key, value) in vm.detailTable"
                             ng-if="vm.featureDetails[key] && vm.featureDetails[key] !== ''">
                             <th class="table-row-header">
-                              {{value}}
+                              {{value | translate}}
                             </th>
                             <td class="table-row-desc">
                               {{vm.featureDetails[key]}}
