@@ -1406,6 +1406,16 @@ angular.module('webmapp')
                 mapService.closePopup();
             });
 
+            map.on('zoomend', function () {
+                var zoom = map.getZoom();
+                if (zoom === +CONFIG.MAP.maxZoom) {
+                    map.doubleClickZoom.disable();
+                }
+                else {
+                    map.doubleClickZoom.enable();
+                }
+            });
+
             map.on('locationfound', function (location) {
                 $rootScope.$emit('map-location-found', location);
                 mapService.centerOnScreen(location);
