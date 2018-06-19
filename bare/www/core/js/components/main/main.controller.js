@@ -30,7 +30,7 @@ angular.module('webmapp')
         heading = 0,
         watchInterval, orientationWatchRef,
         prevHeating, prevLatLong, lpf,
-        geolocationTimeoutTime = 30000;
+        geolocationTimeoutTime = 60000;
 
     var maxZoom = CONFIG.MAP.maxZoom,
         hideExpanderInDetails = CONFIG.OPTIONS.hideExpanderInDetails;
@@ -630,24 +630,30 @@ angular.module('webmapp')
 
         vm.locateLoading = false;
 
-        if (!MapService.isInBoundingBox(lat, long) && !vm.isOutsideBoundingBox) {
+        if (!MapService.isInBoundingBox(lat, long)) {
             vm.isOutsideBoundingBox = true;
             prevLatLong = null;
             vm.dragged = true;
 
-            $ionicPopup.alert({
-                title: $translate.instant("ATTENZIONE"),
-                template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
-                buttons: [{
-                    text: 'Ok',
-                    type: 'button-positive'
-                }]
-            });
+            // if (!vm.isOutsideBoundingBox) {
+                $ionicPopup.alert({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa")
+                });
+            // }
 
             watchInterval.clearWatch();
             MapService.removePosition();
             return;
-        } else {
+        }
+        // else if (!MapService.isInBoundingBox(lat, long) && vm.isOutsideBoundingBox) {
+        //     prevLatLong = null;
+        //     vm.dragged = true;
+        //     watchInterval.clearWatch();
+        //     MapService.removePosition();
+        //     return;
+        // }
+        else {
             vm.isOutsideBoundingBox = false;
         }
 

@@ -15,14 +15,15 @@ angular.module('webmapp')
 
         var _defaultLayer = '',
             _onlineUrl = '',
-            _offlineUrl = localStorage.getItem('offlineUrl') || '',
             _tmsBase = false,
             _state = {
                 active: JSON.parse(localStorage.getItem('offlineMode')) || false,
                 available: JSON.parse(localStorage.getItem('offlineAvailable')) || false
             };
 
-        var resetMapView = function () {};
+        var _offlineUrl = localStorage.getItem('offlineUrl') || '';
+
+        var resetMapView = function () { };
 
         if (!Date.now) {
             Date.now = function () {
@@ -51,6 +52,8 @@ angular.module('webmapp')
         };
 
         offline.getOfflineUrl = function () {
+            _offlineUrl = _offlineUrl.replace(/^(.*)map\/([a-zA-Z0-9-_]*\.[a-zA-Z0-9-_]*)/g, cordova.file.dataDirectory + 'map/$2');
+            localStorage.setItem('offlineUrl', _offlineUrl);
             return _offlineUrl;
         };
 
@@ -99,6 +102,8 @@ angular.module('webmapp')
         };
 
         offline.downloadMap = function (vm) {
+
+            console.log(cordova.file.dataDirectory);
             // console.log(vm);
 
             var arrayLink = [offline.options.urlMbtiles, offline.options.urlImages];
@@ -160,35 +165,36 @@ angular.module('webmapp')
 
                 currentTransfert
                     .then(function (result) {
-                            if (aborted) {
-                                return;
-                            }
+                        if (aborted) {
+                            return;
+                        }
+                        vm.unzipInProgress = true;
+                        if (format === 'zip') {
                             vm.unzipInProgress = true;
-                            if (format === 'zip') {
-                                vm.unzipInProgress = true;
-                                currentDefer.resolve();
-                                $cordovaZip.unzip(targetPath, destDirectory)
-                                    .then(function () {
-                                            console.log('finito l\'unzip');
-                                            vm.unzipInProgress = false;
-                                            $cordovaFile.removeFile(destDirectory, filename);
-                                            currentDefer.resolve();
-                                        }, function () {
-                                            currentDefer.reject('Si è verificato un errore nell\'installazione, riprova ');
-                                            console.error('Si è verificato un errore nell\'unzip delle immagini');
-                                        },
-                                        function (progress) {
-                                            //console.log(progress);
-                                            vm.unzipInProgress = true;
-                                        });
-                            } else if (format === 'mbtiles') {
-                                currentDefer.resolve();
-                                _offlineUrl = destDirectory + filename;
-                                localStorage.setItem('offlineUrl', _offlineUrl);
-                            }
-                            console.log(result);
-                            console.log('scaricato ' + format);
-                        },
+                            currentDefer.resolve();
+                            $cordovaZip.unzip(targetPath, destDirectory)
+                                .then(function () {
+                                    console.log('finito l\'unzip');
+                                    vm.unzipInProgress = false;
+                                    $cordovaFile.removeFile(destDirectory, filename);
+                                    currentDefer.resolve();
+                                }, function () {
+                                    currentDefer.reject('Si è verificato un errore nell\'installazione, riprova ');
+                                    console.error('Si è verificato un errore nell\'unzip delle immagini');
+                                },
+                                    function (progress) {
+                                        //console.log(progress);
+                                        vm.unzipInProgress = true;
+                                    });
+                        } else if (format === 'mbtiles') {
+                            currentDefer.resolve();
+                            _offlineUrl = destDirectory + filename;
+                            console.log(_offlineUrl);
+                            localStorage.setItem('offlineUrl', _offlineUrl);
+                        }
+                        console.log(result);
+                        console.log('scaricato ' + format);
+                    },
                         function (error) {
                             currentDefer.reject('Si è verificato un errore nel download, riprova ');
                             console.error('Si è verificato un errore nel download, riprova ', JSON.stringify(error));
@@ -329,34 +335,34 @@ angular.module('webmapp')
 
                 currentTransfert
                     .then(function () {
-                            if (aborted) {
-                                return;
-                            }
+                        if (aborted) {
+                            return;
+                        }
 
-                            vm.unzipInProgress = true;
-                            if (format === 'zip') {
-                                $cordovaZip.unzip(targetPath, destDirectory)
-                                    .then(function () {
-                                            vm.unzipInProgress = false;
-                                            $cordovaFile.removeFile(destDirectory, filename);
-                                            currentDefer.resolve();
-                                        }, function (error) {
-                                            currentDefer.reject('Si è verificato un errore nell\'installazione, riprova ');
-                                            abortAll();
-                                            console.error('Si è verificato un errore nell\'installazione, riprova ', JSON.stringify(error));
-                                        },
-                                        function (progress) {
-                                            vm.unzipInProgress = true;
-                                        });
-                            } else {
-                                currentDefer.resolve();
+                        vm.unzipInProgress = true;
+                        if (format === 'zip') {
+                            $cordovaZip.unzip(targetPath, destDirectory)
+                                .then(function () {
+                                    vm.unzipInProgress = false;
+                                    $cordovaFile.removeFile(destDirectory, filename);
+                                    currentDefer.resolve();
+                                }, function (error) {
+                                    currentDefer.reject('Si è verificato un errore nell\'installazione, riprova ');
+                                    abortAll();
+                                    console.error('Si è verificato un errore nell\'installazione, riprova ', JSON.stringify(error));
+                                },
+                                    function (progress) {
+                                        vm.unzipInProgress = true;
+                                    });
+                        } else {
+                            currentDefer.resolve();
 
-                                // TODO: test a better flow
-                                // if (format !== 'mbtiles') {
-                                //     vm.downloadProgress++;
-                                // }
-                            }
-                        },
+                            // TODO: test a better flow
+                            // if (format !== 'mbtiles') {
+                            //     vm.downloadProgress++;
+                            // }
+                        }
+                    },
                         function (error) {
                             currentDefer.reject('Si è verificato un errore nel download, riprova ');
                             abortAll();
