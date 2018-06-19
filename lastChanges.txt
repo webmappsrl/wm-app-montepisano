@@ -1,2 +1,4 @@
-Added share button to share coordinates of the map to social
-Added related url in details of poi and tracks when available
+d double tap zoom at max zoom
+d bounds and small code clean
+d bounding box in map
+Added current speed as stat during navigation
