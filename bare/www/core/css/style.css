@@ -708,17 +708,22 @@ div.detailRoute-footer {
 .subnav-list__element,
 .contacts-list__element {
   display: inline-block;
-  width: 49%;
+  width: 32%;
   margin: 0;
   padding: 0;
   text-align: left;
   text-transform: uppercase; }
+  .subnav-list__element.center,
+  .contacts-list__element.center {
+    text-align: center; }
   .subnav-list__element a,
   .contacts-list__element a {
+    border: 0;
+    border-image-width: 0;
     display: inline-block;
     width: 100%;
     height: 40px;
-    padding: 0 15px;
+    padding: 0 0 0 15px;
     text-decoration: none;
     line-height: 40px;
     vertical-align: top; }
@@ -727,6 +732,40 @@ div.detailRoute-footer {
       margin-right: 5px;
       font-size: 25px;
       vertical-align: middle; }
+    .subnav-list__element a:last-child,
+    .contacts-list__element a:last-child {
+      padding: 0 15px; }
+
+.related-url-div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000; }
+  .related-url-div .related-url-content {
+    width: 90vw;
+    left: 5vw;
+    top: 45px;
+    position: absolute;
+    color: #ffffff;
+    background: #878474;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-transform: uppercase; }
+    .related-url-div .related-url-content a.related-url-links {
+      color: #ffffff;
+      display: block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
+      .related-url-div .related-url-content a.related-url-links i {
+        margin-right: 5px; }
+    .related-url-div .related-url-content .related-url-arrow {
+      position: absolute;
+      border-bottom: 10px solid #878474;
+      border-right: 10px solid transparent;
+      border-left: 10px solid transparent;
+      top: -10px; }
 
 .subnav-list__element a {
   color: inherit;
@@ -2603,7 +2642,8 @@ div.leaflet-top.leaflet-right {
   .coords-block .coords-share-button {
     width: 32px;
     min-height: 20px;
-    margin-right: -12px;
+    margin-right: 6px;
+    margin-left: -6px;
     padding: 0;
     background: transparent;
     border: none;

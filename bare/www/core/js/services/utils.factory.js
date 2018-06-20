@@ -305,5 +305,11 @@ angular.module('webmapp')
             };
         };
 
+        utils.decodeHtml = function (html) {
+            var e = document.createElement('div');
+            e.innerHTML = html;
+            return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+        };
+
         return utils;
     });

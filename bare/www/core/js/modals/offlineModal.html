@@ -38,7 +38,9 @@
                     {{"Download della mappa in corso" | translate}}
                 </p>
                 <div
-                    style="border-top: 16px solid {{COLORS.global.buttonsBackground}};"
+                    ng-style="{
+                        'border-top': '16px solid ' + COLORS.global.buttonsBackground
+                    }"
                     class="loader">
                 </div>
                 <!-- TODO: use proper class -->

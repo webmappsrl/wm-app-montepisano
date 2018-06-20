@@ -17,16 +17,21 @@
 .subnav-list__element,
 .contacts-list__element {
   display: inline-block;
-  width: 49%;
+  width: 32%;
   margin: 0;
   padding: 0;
   text-align: left;
   text-transform: uppercase;
+  &.center {
+    text-align: center;
+  }
   a {
+    border: 0;
+    border-image-width: 0;
     display: inline-block;
     width: 100%;
     height: 40px;
-    padding: 0 15px;
+    padding: 0 0 0 15px;
     text-decoration: none;
     line-height: 40px;
     vertical-align: top;
@@ -34,6 +39,43 @@
       margin-right: 5px;
       font-size: 25px;
       vertical-align: middle;
+    }
+    &:last-child {
+      padding: 0 15px;
+    }
+  }
+}
+
+.related-url-div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  .related-url-content {
+    width: 90vw;
+    left: 5vw;
+    top: 45px;
+    position: absolute;
+    color: #ffffff;
+    background: #878474;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    a.related-url-links {
+      color: #ffffff;
+      display: block;
+      max-width: 100%;
+      @include text-ellipsis;
+      i {
+        margin-right: 5px;
+      }
+    }
+    .related-url-arrow {
+      position: absolute;
+      border-bottom: 10px solid #878474;
+      border-right: 10px solid transparent;
+      border-left: 10px solid transparent;
+      top: -10px;
     }
   }
 }

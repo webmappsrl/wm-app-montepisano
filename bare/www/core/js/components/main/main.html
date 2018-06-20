@@ -56,29 +56,19 @@
 
         <div class="locate-custom-control" ng-if="vm.showLocate">
             <div class="leaflet-control-locate leaflet-bar leaflet-control">
-                <a class="leaflet-bar-part leaflet-bar-part-single" href="" title="Show me where I am" ng-click="vm.centerOnMe()">
-                    <!-- ng-class="{
-                            'wm-icon-mappalo': vm.isRotating,
-                            'wm-icon-android-locate': !vm.isRotating && !vm.canFollow,
-                            'wm-icon-android-locate-full': !vm.isRotating && vm.canFollow,
-                            'fa-spin': vm.locateLoading
-                    }" -->
+                <a class="leaflet-bar-part leaflet-bar-part-single" href="" ng-click="vm.centerOnMe()">
                     <span class="icon" ng-class="{
-                            'wm-icon-android-locate-full': !vm.followActive || vm.dragged || (vm.followActive && !vm.isRotating && !vm.dragged),
+                            'wm-icon-android-locate-full': !vm.followActive || (vm.followActive && !vm.isRotating),
                             'fa-spin': vm.locateLoading && !vm.followActive,
-                            'blu-icon': vm.followActive && !vm.isRotating && !vm.dragged
+                            'blu-icon': vm.followActive && !vm.isRotating
                         }" ng-style="!vm.isRotating ? {
                             '-webkit-transform': 'rotate(0deg)',
                             'transform': 'rotate(0deg)'
                         } : {
-                            '-webkit-transform': 'rotate(' + (30 - vm.deg) + 'deg)',
-                            'transform': 'rotate(' + (30 - vm.deg) + 'deg)'
+                            '-webkit-transform': 'rotate(' + (0 - vm.deg) + 'deg)',
+                            'transform': 'rotate(' + (0 - vm.deg) + 'deg)'
                         }">
-                        <!-- <i
-                            class="icon wm-icon-android-locate-full"
-                            ng-if="vm.followActive && !vm.isRotating && !vm.dragged">
-                        </i> -->
-                        <img style="margin: 5px" src="core/images/compass.svg" ng-if="vm.followActive && vm.isRotating && !vm.dragged">
+                        <img style="margin: 5px" src="core/images/compass.svg" ng-if="vm.followActive && vm.isRotating">
                     </span>
                 </a>
             </div>
@@ -96,16 +86,16 @@
                 'animate-rightout': !vm.isCoordsBlockExpanded
             }" ng-if="vm.centerCoords" ng-click="vm.switchCoords()">
             <span ng-if="vm.useUTM32">
-                {{vm.centerCoordsUTM32.lat}}, {{vm.centerCoordsUTM32.lng}}
                 <button class="coords-share-button" ng-click="vm.shareCurrentPosition($event)" ng-if="vm.useShare">
                     <i class="icon wm-icon-android-share"></i>
                 </button>
+                {{vm.centerCoordsUTM32.lat}}, {{vm.centerCoordsUTM32.lng}}
             </span>
             <span ng-if="!vm.useUTM32">
-                {{vm.centerCoords.lat}}, {{vm.centerCoords.lng}}
                 <button class="coords-share-button" ng-click="vm.shareCurrentPosition($event)" ng-if="vm.useShare">
                     <i class="icon wm-icon-android-share"></i>
                 </button>
+                {{vm.centerCoords.lat}}, {{vm.centerCoords.lng}}
             </span>
         </div>
 
@@ -155,15 +145,21 @@
                         {{"percorsi" | translate}}
                     </span>
                 </div>
-                <div class="speed-section">
+                <div class="speed-section" ng-click="vm.toggleSpeedText()">
                     <div>
                         <i class="wm-icon-speedometer"></i>
                     </div>
-                    <!--<span class="navigation-value">
+                    <span class="navigation-value" ng-if="vm.speedTextType === 'current'">
                         {{vm.currentSpeedText}}
-                    </span>-->
-                    <span class="navigation-value">
+                    </span>
+                    <span class="navigation-text" ng-if="vm.speedTextType === 'current'">
+                        {{"velocità" | translate}}
+                    </span>
+                    <span class="navigation-value" ng-if="vm.speedTextType === 'average'">
                         {{vm.averageSpeedText}}
+                    </span>
+                    <span class="navigation-text" ng-if="vm.speedTextType === 'average'">
+                        {{"v. media" | translate}}
                     </span>
                 </div>
             </div>
@@ -172,7 +168,7 @@
                     <a href="" ng-click="vm.resumeNavigation()">
                         {{"Riprendi" | translate}}
                     </a>
-                </div> 
+                </div>
                 <div class="stop-navigation">
                     <a href="" ng-click="vm.stopNavigation()">
                         {{"Interrompi" | translate}}

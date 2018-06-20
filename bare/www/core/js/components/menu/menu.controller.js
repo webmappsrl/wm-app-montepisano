@@ -85,12 +85,8 @@ angular.module('webmapp')
 
         if (Auth.isLoggedIn()) {
             $rootScope.isLoggedIn = true;
-            ionic.Platform.ready(function () {
-                Tracking.enable();
-            });
         } else {
             $rootScope.isLoggedIn = false;
-            // Tracking.disable();
         }
 
         if (loginConf.useLogin) {
@@ -368,7 +364,6 @@ angular.module('webmapp')
 
                         //Set the loggedIn flag to 'true'
                         $rootScope.isLoggedIn = true;
-                        Tracking.enable();
 
                         login.modal.hide();
 
@@ -400,7 +395,6 @@ angular.module('webmapp')
             };
 
             loginScope.skipLogin = function () {
-                Tracking.enable();
                 login.modal.hide();
             };
 
@@ -460,7 +454,6 @@ angular.module('webmapp')
 
                         //Set the loggedIn flag to 'true'
                         $rootScope.isLoggedIn = true;
-                        Tracking.enable();
 
                         login.modal.hide();
 
