@@ -58,17 +58,17 @@
             <div class="leaflet-control-locate leaflet-bar leaflet-control">
                 <a class="leaflet-bar-part leaflet-bar-part-single" href="" ng-click="vm.centerOnMe()">
                     <span class="icon" ng-class="{
-                            'wm-icon-android-locate-full': !vm.followActive || vm.dragged || (vm.followActive && !vm.isRotating && !vm.dragged),
+                            'wm-icon-android-locate-full': !vm.followActive || (vm.followActive && !vm.isRotating),
                             'fa-spin': vm.locateLoading && !vm.followActive,
-                            'blu-icon': vm.followActive && !vm.isRotating && !vm.dragged
+                            'blu-icon': vm.followActive && !vm.isRotating
                         }" ng-style="!vm.isRotating ? {
                             '-webkit-transform': 'rotate(0deg)',
                             'transform': 'rotate(0deg)'
                         } : {
-                            '-webkit-transform': 'rotate(' + (30 - vm.deg) + 'deg)',
-                            'transform': 'rotate(' + (30 - vm.deg) + 'deg)'
+                            '-webkit-transform': 'rotate(' + (0 - vm.deg) + 'deg)',
+                            'transform': 'rotate(' + (0 - vm.deg) + 'deg)'
                         }">
-                        <img style="margin: 5px" src="core/images/compass.svg" ng-if="vm.followActive && vm.isRotating && !vm.dragged">
+                        <img style="margin: 5px" src="core/images/compass.svg" ng-if="vm.followActive && vm.isRotating">
                     </span>
                 </a>
             </div>
