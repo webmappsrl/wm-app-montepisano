@@ -79,6 +79,7 @@ angular.module('webmapp')
         switch (window.orientation) {
             case -90:
             case 90:
+                result = true;
                 break;
             default:
                 result = false;
@@ -91,6 +92,7 @@ angular.module('webmapp')
     var checkGPS = function() {
         var onSuccess = function(e) {
             if (e) {
+                vm.gpsActive = true
                 vm.canFollow = true;
                 vm.followActive = false;
                 vm.isRotating = false;
@@ -136,6 +138,7 @@ angular.module('webmapp')
                     }
                 } else {
                     if (window.cordova.platformId === "ios") {
+                        var permissionDenied = localStorage.$wm_ios_location_permission_denied ? true : false;
                         if (permissionDenied) {
                             $ionicPopup.alert({
                                 title: $translate.instant("ATTENZIONE"),
@@ -163,6 +166,7 @@ angular.module('webmapp')
                                     break;
                                 case cordova.plugins.diagnostic.permissionStatus.DENIED:
                                     if (window.cordova.platformId === "ios") {
+                                        localStorage.$wm_ios_location_permission_denied = true;
                                         $ionicPopup.alert({
                                             title: $translate.instant("ATTENZIONE"),
                                             template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
@@ -190,6 +194,8 @@ angular.module('webmapp')
     }
 
     Utils.createModal('core/js/modals/shareModal.html', {
+            backdropClickToClose: true,
+            hardwareBackButtonClose: true
         }, shareScope)
         .then(function(modal) {
             shareModal = modal;
@@ -214,6 +220,7 @@ angular.module('webmapp')
                 template: $translate.instant("Inserisci un'email valida per continuare")
             });
         } else {
+            shareScope.vm.sendInProgress = true;
             currentRequest = Communication.post(CONFIG.REPORT.apiUrl, {
                 email: shareScope.vm.emailblock,
                 to: CONFIG.REPORT.defaultEmail,
@@ -227,6 +234,7 @@ angular.module('webmapp')
             currentRequest
                 .then(function() {
                         shareScope.vm.sendInProgress = false;
+                        shareScope.vm.sendSuccess = true;
 
                         setTimeout(function() {
                             shareModal.hide();
@@ -246,12 +254,17 @@ angular.module('webmapp')
     vm.hideDeactiveCentralPointer = CONFIG.OPTIONS.hideDeactiveCentralPointer;
 
     /* Define the state of the geolocation:
-     * skipZoomEvent - true to prevent the zoom event to stop centering (if the zoom event is triggered programmatically)
+     * canFollow     - true if the next state is a state where the user location is centered in the map view
+     * followActive  - true if the user is localized and is kept in the center of the map
+     * isRotating    - true if the map orientation change following the compass (followActive must be true)
+     * skipZoomEvent - true to prevent the zoom event to stop centering (if the zoom event is triggered programmatically
      */
+    vm.canFollow = true;
     vm.followActive = false;
     vm.isRotating = false;
     vm.skipZoomEvent = false;
     
+    vm.isCoordsBlockExpanded = true;
     vm.gpsActive = false;
     vm.isOutsideBoundingBox = false;
 
@@ -322,6 +335,7 @@ angular.module('webmapp')
     }
 
     if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.activate && !Utils.isBrowser()) {
+        vm.navigationAvailable = true;
     }
 
     vm.deg = 0;
@@ -526,6 +540,7 @@ angular.module('webmapp')
             MapService.mapIsRotating(vm.isRotating);
         }
 
+        vm.canFollow = true;
         vm.followActive = false;
 
         setTimeout(function() {
@@ -540,6 +555,7 @@ angular.module('webmapp')
         console.log("Restarting geolocalization");
         watchInterval = $cordovaGeolocation.watchPosition({
             timeout: geolocationTimeoutTime,
+            enableHighAccuracy: true
         });
         watchInterval.then(
             null,
@@ -556,6 +572,7 @@ angular.module('webmapp')
         vm.locateLoading = false;
 
         if (!MapService.isInBoundingBox(lat, long)) {
+            vm.isOutsideBoundingBox = true;
             prevLatLong = null;
             vm.turnOffRotationAndFollow();
 
@@ -573,7 +590,9 @@ angular.module('webmapp')
         }
 
         if (!prevLatLong) {
+            doCenter = true;
         } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 6) {
+            doCenter = true;
         }
 
         if (doCenter) {
@@ -638,11 +657,13 @@ angular.module('webmapp')
                 if (vm.firstPositionSet) {
                     updateNavigationValues(position, prevLatLong);
                 } else {
+                    vm.firstPositionSet = true;
                     vm.lastPositionRecordTime = Date.now();
                     vm.isNotMoving = false;
                     vm.startMovingTime = Date.now();
                     vm.currentSpeedExpireTimeout = setTimeout(function() {
                         vm.currentSpeedText = '0 km/h';
+                        vm.isNotMoving = true;
                         vm.movingTime = vm.movingTime + Date.now() - vm.startMovingTime;
                     }, 5000);
                 }
@@ -673,7 +694,14 @@ angular.module('webmapp')
         }
 
         if (prevLatLong && vm.canFollow && !vm.followActive) {
+            vm.followActive = true;
+            vm.skipZoomEvent = true;
             MapService.centerOnCoords(prevLatLong.lat, prevLatLong.long);
+            setTimeout(() => {
+                if (vm.skipZoomEvent) {
+                    vm.skipZoomEvent = false;
+                }
+            }, 1000);
             return;
         }
 
@@ -685,10 +713,12 @@ angular.module('webmapp')
             lpf = new LPF(0.5);
 
             vm.canFollow = false;
+            vm.isRotating = true;
             MapService.mapIsRotating(vm.isRotating);
 
             orientationWatchRef = $cordovaDeviceOrientation.watchHeading({
                 frequency: 80,
+                // filter: true // when true, the frequecy is ignored
             });
             orientationWatchRef.then(
                 null,
@@ -701,6 +731,7 @@ angular.module('webmapp')
                 },
                 function(result) {
                     if (!vm.isRotating) {
+                        vm.isRotating = true;
                         MapService.mapIsRotating(vm.isRotating);
                     }
 
@@ -717,9 +748,11 @@ angular.module('webmapp')
                 });
         }
         else if (vm.canFollow && !vm.followActive && !vm.isRotating) {
+            vm.locateLoading = true;
             $cordovaGeolocation
                 .getCurrentPosition({
                     timeout: geolocationTimeoutTime,
+                    enableHighAccuracy: Utils.isBrowser() ? true : false
                 })
                 .then(function(position) {
                     var lat = position.coords.latitude,
@@ -728,6 +761,7 @@ angular.module('webmapp')
                     vm.locateLoading = false;
 
                     if (!MapService.isInBoundingBox(lat, long)) {
+                        vm.isOutsideBoundingBox = true;
                         prevLatLong = null;
                         MapService.removePosition();
                         $ionicPopup.alert({
@@ -737,20 +771,30 @@ angular.module('webmapp')
                         return;
                     }
 
+                    vm.skipZoomEvent = true;
+                    setTimeout(() => {
+                        if (vm.skipZoomEvent) {
+                            vm.skipZoomEvent = false;
+                        }
+                    }, 1000);
                     MapService.centerOnCoords(lat, long);
 
+                    vm.canFollow = true;
+                    vm.followActive = true;
 
                     if (CONFIG.OPTIONS.useIntervalInsteadOfWatch) {
                         watchInterval = setInterval(function() {
                             $cordovaGeolocation
                                 .getCurrentPosition({
                                     timeout: geolocationTimeoutTime,
+                                    enableHighAccuracy: true
                                 })
                                 .then(posCallback);
                         }, CONFIG.OPTIONS.intervalUpdateMs);
                     } else {
                         watchInterval = $cordovaGeolocation.watchPosition({
                             timeout: geolocationTimeoutTime,
+                            enableHighAccuracy: true
                         });
                         watchInterval.then(
                             null,
@@ -778,6 +822,7 @@ angular.module('webmapp')
     vm.returnToMap = function() {
         // vm.isNavigable = false;
         if ($state.params.parentId) {
+            MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
         }
 
         vm.goToMap();
@@ -878,6 +923,7 @@ angular.module('webmapp')
         clearTimeout(vm.currentSpeedExpireTimeout);
         vm.currentSpeedExpireTimeout = setTimeout(function() {
             vm.currentSpeedText = '0 km/h';
+            vm.isNotMoving = true;
             vm.movingTime = vm.movingTime + Date.now() - vm.startMovingTime;
         }, 5000);
 
@@ -946,7 +992,9 @@ angular.module('webmapp')
         }
         else {
             vm.turnOffRotationAndFollow();
+            vm.canFollow = true;
             vm.isRotating = false;
+            vm.followActive = true;
             vm.centerOnMe();
         }
 
@@ -954,6 +1002,7 @@ angular.module('webmapp')
         vm.isNavigable = false;
 
         //Start recording
+        vm.isNavigating = true;
         vm.isPaused = false;
         vm.stopNavigationUrlParams.parentId = $rootScope.currentParams.parentId;
         vm.stopNavigationUrlParams.id = $rootScope.currentParams.id;
@@ -978,6 +1027,7 @@ angular.module('webmapp')
     };
 
     vm.pauseNavigation = function() {
+        vm.isPaused = true;
         vm.timeInMotionBeforePause = Date.now() - vm.navigationStartTime + vm.timeInMotionBeforePause;
         vm.distanceTravelledBeforePause = vm.distanceTravelled;
         vm.outOfTrackDate = 0;
@@ -1104,8 +1154,10 @@ angular.module('webmapp')
         vm.detail = false;
 
         if (!$rootScope.first) {
+            $rootScope.first = true;
         } else {
             if (!$rootScope.backAllowed) {
+                $rootScope.backAllowed = true;
             }
         }
 
@@ -1125,18 +1177,25 @@ angular.module('webmapp')
         vm.mapView = false;
 
         if (currentState === 'app.main.map') {
+            vm.mapView = true;
+            vm.hideExpander = true;
             setTimeout(function() {
                 if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
                     showPathAndRelated(vm.stopNavigationUrlParams);
                 }
             }, 50);
         } else if (currentState === 'app.main.popup') {
+            vm.mapView = true;
+            vm.hideExpander = true;
         } else if (currentState === 'app.main.events') {
             MapService.showEventsLayer();
+            vm.hasShadow = true;
         } else if (currentState === 'app.main.welcome') {
             // TODO: show nothing on the map
         } else if (currentState === 'app.main.layer') {
             realState = $rootScope.currentParams.id.replace(/_/g, ' ');
+            layerState = true;
+            // vm.hideExpander = true;
 
             if (typeof overlayMap[realState] !== 'undefined' ||
                 typeof overlaysGroupMap[realState] !== 'undefined') {
@@ -1148,20 +1207,30 @@ angular.module('webmapp')
                 }, 50);
             } else {
                 // TODO: go to map? 
+                // vm.hideMap = true;
             }
 
+            // vm.hasShadow = true;
         } else if (currentState === 'app.main.detaillayer') {
             if (MapService.isAPOILayer($rootScope.currentParams.parentId.replace(/_/g, ' '))) {
+                vm.detail = true;
             }
             // TODO: check the shadow
             // else {
+            //     vm.hasShadow = true;
             // }
 
             vm.hideExpander = hideExpanderInDetails;
         } else if (currentState === 'app.main.detailtaxonomy') {
+            vm.hideExpander = true;
+            vm.detail = true;
+            vm.hasShadow = true;
+            vm.extendShadow = true;
         } else if (currentState === 'app.main.detailevent') {
+            vm.hasShadow = true;
         } else if (currentState === 'app.main.detailulayer') {
             MapService.resetUtfGridLayers();
+            vm.hideExpander = true;
         } else if (currentState === 'app.main.coupons' ||
             currentState === 'app.main.packages' ||
             currentState === 'app.main.route' ||
@@ -1169,9 +1238,13 @@ angular.module('webmapp')
             currentState === 'app.main.languages' ||
             currentState === 'app.main.webmappInternal' ||
             currentState === 'app.main.attributionInternal') {
+            vm.hideMap = true;
+            vm.hasShadow = true;
+            vm.extendShadow = true;
         } else if (currentState === 'app.main.offline' ||
             currentState === 'app.main.search' ||
             Model.isAPage(currentState)) {
+            vm.hideMap = true;
         }
 
         setTimeout(function() {
@@ -1205,6 +1278,7 @@ angular.module('webmapp')
         if (vm.isRotating) {
             vm.turnOffRotationAndFollow();
         }
+        vm.canFollow = true;
         vm.followActive = false;
     });
 
@@ -1213,6 +1287,7 @@ angular.module('webmapp')
             if (vm.isRotating) {
                 vm.turnOffRotationAndFollow();
             }
+            vm.canFollow = true;
             vm.followActive = false;
         }
         else {
@@ -1252,6 +1327,8 @@ angular.module('webmapp')
         content = content + '</div>';
         content = content + '</div>';
 
+        ionicToast.show(content, 'top', true);
+        vm.showToast = true;
     };
 
     function hideOutOfTrackToast() {

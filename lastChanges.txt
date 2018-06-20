@@ -1,4 +1,0 @@
-d double tap zoom at max zoom
-d bounds and small code clean
-d bounding box in map
-Added current speed as stat during navigation
