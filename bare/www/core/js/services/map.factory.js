@@ -1376,8 +1376,8 @@ angular.module('webmapp')
                 $rootScope.$emit('map-dragstart');
             });
 
-            map.on('zoomend', function() {
-                $rootScope.$emit('map-zoomend');
+            map.on('zoomstart', function() {
+                $rootScope.$emit('map-zoomstart');
             });
 
             if (generalConf.useAlmostOver) {

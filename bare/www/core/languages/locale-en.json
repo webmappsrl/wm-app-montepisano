@@ -173,6 +173,7 @@
   "Siti di interesse": "Points of interest",
   "Si è verificato un errore di comunicazione che non permette il corretto caricamento dell'APP. Controlla di essere online e riprova più tardi": "There has been a fatal communication problem. Check your connection and try again later",  
   "Si è verificato un errore di connessione, riprova più tardi": "There was a connection error, please try again later",
+  "Si è verificato un errore durante la geolocalizzazione, riprova": "An error has occurred while geolocating. Please try again",
   "Si è verificato un errore durante la richiesta, riprova": "An error occurred during the request, please try again",
   "Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova": "There was an error downloading the package, please be sure to be online and try again",
   "Si è verificato un errore nello scaricamento del pacchetto, riprova": "There was an error downloading the package, please try again",
