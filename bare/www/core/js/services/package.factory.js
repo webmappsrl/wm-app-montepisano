@@ -361,22 +361,24 @@ angular.module('webmapp')
          *      the id of the pack to request
          */
         packageService.requestPack = function (packId) {
-            $ionicPopup
-                .alert({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Questa funzionalità sarà disponibile dai prossimi update")
-                });
-            return;
+            if (packId !== 198) {
+                $ionicPopup
+                    .alert({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: "This route is not available yet"
+                    });
+                return;
+            }
             if (!userData || !userData.ID || userPackagesIdRquested[packId]) {
                 return;
             }
-            $ionicPopup
-                .confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Stai per richiedere l'accesso al download dell'itinerario, riceverai una e-mail con le istruzioni per procedere all'acquisto. Vuoi procedere?")
-                })
-                .then(function (res) {
-                    if (res) {
+            // $ionicPopup
+            //     .confirm({
+            //         title: $translate.instant("ATTENZIONE"),
+            //         template: $translate.instant("Stai per richiedere l'accesso al download dell'itinerario, riceverai una e-mail con le istruzioni per procedere all'acquisto. Vuoi procedere?")
+            //     })
+            //     .then(function (res) {
+            //         if (res) {
                         // var data = {
                         //     email: userData.user_email,
                         //     pack: packId,
@@ -411,17 +413,21 @@ angular.module('webmapp')
                         //     $ionicLoading.hide();
                         //     console.error(error);
                         // });
-                        var productId = 'it.webmapp.' + packId;
+                        var productId = 'it.webmapp.198';
                         inAppPurchase.buy(productId)
                             .then((res) => {
                                 //communicate purchase to server
                                 console.log('purchase completed!');
-                                // unlock level 1
+                                $ionicPopup.alert({
+                                    title: "GOOD JOB",
+                                    template: "You just earned this new Route"
+                                });
+                                userPackagesId[198] = true;
                             })
                             .catch(err => console.log(err) );
 
-                    }
-                });
+                    // }
+                // });
         };
 
         /**
