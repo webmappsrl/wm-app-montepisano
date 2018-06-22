@@ -181,6 +181,7 @@ angular.module('webmapp')
                 hideModal();
             } else if (editTrackModalScope.vm.operation === "edit" && editTrackModalScope.vm.id) {
                 MapService.editUserTrack(editTrackModalScope.vm.id, title, descr);
+                $rootScope.$emit("trackModified", editTrackModalScope.vm.id);
                 hideModal();
             } else {
                 hideModal();
@@ -204,16 +205,28 @@ angular.module('webmapp')
 
     vm.record.start = function() {
         if (!vm.record.isRecording) {
+            vm.record.cleanValues();
             vm.record.isRecording = true;
             vm.record.isPaused = false;
+            vm.record.startTime = Date.now();
+            vm.record.updateTimeInterval = setInterval(updateRecordTime, 1000);
         }
+    }
 
+    updateRecordTime = function() {
+        vm.record.timeInMotion = Date.now() - vm.record.startTime + vm.record.timeInMotionBeforePause;
+        vm.record.timeInMotionText = getTimeText(vm.record.timeInMotion);
+        Utils.forceDigest();
     }
 
     vm.record.pause = function() {
         if (vm.record.isRecording && !vm.record.isPaused) {
             vm.record.isRecording = true;
             vm.record.isPaused = true;
+            vm.record.timeInMotionBeforePause = Date.now() - vm.record.startTime + vm.record.timeInMotionBeforePause;
+            clearInterval(vm.record.updateTimeInterval);
+            vm.record.distanceTravelledBeforePause = vm.record.distanceTravelled;
+
         }
     }
 
@@ -221,6 +234,10 @@ angular.module('webmapp')
         if (vm.record.isRecording && vm.record.isPaused) {
             vm.record.isRecording = true;
             vm.record.isPaused = false;
+            vm.record.startTime = Date.now();
+            vm.record.updateTimeInterval = setInterval(updateRecordTime, 1000);
+            vm.record.distanceTravelled = 0;
+            vm.record.firstPositionSet = false;
         }
     }
 
@@ -252,6 +269,8 @@ angular.module('webmapp')
 
         vm.record.isRecording = false;
         vm.record.isPaused = false;
+        clearInterval(vm.record.updateTimeInterval);
+
         if (save && vm.record.userLatLngs.length >= 1) {
             var currentTime = new Date();
             MapService.saveUserPolyline({
@@ -267,11 +286,85 @@ angular.module('webmapp')
             });
         }
 
-        vm.record.userLatLngs = [];
+        vm.record.cleanValues();
         MapService.removeUserPolyline();
     }
 
+    vm.record.cleanValues = function() {
+        //coords
+        vm.record.userLatLngs = [];
+        //time
+        vm.record.startTime = 0;
+        vm.record.timeInMotion = 0;
+        vm.record.timeInMotionBeforePause = 0;
+        vm.record.timeInMotionText = '00:00';
+        vm.record.updateTimeInterval = null;
 
+
+        //speed and distance
+        vm.record.firstPositionSet = false;
+        vm.record.lastPositionRecordTime = 0;
+
+        vm.record.distanceTravelled = 0;
+        vm.record.distanceTravelledBeforePause = 0;
+        vm.record.distanceTravelledText = '0.0 km';
+
+        vm.record.currentSpeedExpireTimeout = null;
+        vm.record.currentSpeedText = '0 km/h';
+        vm.record.averageSpeedText = '0 km/h';
+        vm.record.movingTime = 0;
+        vm.record.isNotMoving = false;
+
+    }
+
+    //da rifare creare una classe timer per il tempo e una classe per la misurazione dello spazio percroso e della velocità.
+    vm.record.updateMotionValues = function(position, prevPosition) {
+
+        if (vm.record.isRecording && !vm.record.isPaused) {
+
+            if (vm.record.firstPositionSet) {
+
+                var distance = distanceInMeters(position.coords.latitude, position.coords.longitude, prevPosition.lat, prevPosition.long)
+                vm.record.distanceTravelled = distance + vm.record.distanceTravelled;
+                if (vm.record.distanceTravelledBeforePause > 0) {
+                    vm.record.distanceTravelled = vm.record.distanceTravelled + vm.record.distanceTravelledBeforePause;
+                    vm.record.distanceTravelledBeforePause = 0;
+                }
+                vm.record.distanceTravelledText = getDistanceText(vm.record.distanceTravelled);
+
+                var timeElapsedBetweenPositions = Date.now() - vm.record.lastPositionRecordTime;
+
+                if (vm.record.isNotMoving) {
+                    vm.record.startMovingTime = Date.now();
+                    vm.record.isNotMoving = false;
+                }
+
+                vm.record.averageSpeedText = (vm.record.distanceTravelled / ((Date.now() - vm.record.startMovingTime + vm.record.movingTime) / 1000) * 3.6).toFixed(0) + ' km/h';
+
+                vm.record.currentSpeedText = (distance / (timeElapsedBetweenPositions / 1000) * 3.6).toFixed(0) + ' km/h';
+                clearTimeout(vm.record.currentSpeedExpireTimeout);
+                vm.record.currentSpeedExpireTimeout = setTimeout(function() {
+                    vm.record.currentSpeedText = '0 km/h';
+                    vm.record.isNotMoving = true;
+                    vm.record.movingTime = vm.record.movingTime + Date.now() - vm.record.startMovingTime;
+                }, 5000);
+
+                vm.record.lastPositionRecordTime = Date.now();
+            } else {
+                vm.record.firstPositionSet = true;
+                vm.record.lastPositionRecordTime = Date.now();
+                vm.record.isNotMoving = false;
+                vm.record.startMovingTime = Date.now();
+                vm.record.currentSpeedExpireTimeout = setTimeout(function() {
+                    vm.record.currentSpeedText = '0 km/h';
+                    vm.record.isNotMoving = true;
+                    vm.record.movingTime = vm.record.movingTime + Date.now() - vm.record.startMovingTime;
+                }, 5000);
+            }
+
+        }
+
+    }
 
 
     if (CONFIG && CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) {
@@ -857,8 +950,10 @@ angular.module('webmapp')
             }
 
 
-            if (vm.record && vm.record.isEnabled)
+            if (vm.record && vm.record.isEnabled) {
                 vm.record.record(lat, long, altitude);
+                vm.record.updateMotionValues(position, prevLatLong);
+            }
 
             if (vm.isNavigating && !vm.isPaused) {
                 if (realTimeTracking.enabled && vm.userData.ID) {
@@ -1328,7 +1423,7 @@ angular.module('webmapp')
         if (vm.record && vm.record.userLatLngs && vm.record.userLatLngs.length >= 1)
             openModal();
         else {
-            vm.record.stopAndSaves(true);
+            vm.record.stopAndSave(false);
             if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
                 var url = 'layer/' + vm.stopNavigationUrlParams.parentId + '/' + vm.stopNavigationUrlParams.id;
                 vm.stopNavigationUrlParams = {

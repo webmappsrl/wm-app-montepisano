@@ -137,8 +137,19 @@ angular.module('webmapp')
         if (params.id) {
             $rootScope.$emit("openEditModal", params.id);
         }
-
     }
+
+    var trackModified = $rootScope.$on("trackModified", function(event, id) {
+        MapService.getFeatureById(id, "userTracks")
+            .then(buildDetail, function() {
+                console.error('Retrive feature error');
+                // TODO: go to the start url
+                Utils.goTo('map');
+            });
+    });
+
+
+
 
     var buildDetail = function(data) {
         var parent = data ? angular.extend({}, data.parent) : undefined,
@@ -680,6 +691,7 @@ angular.module('webmapp')
             // $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
             $ionicSlideBoxDelegate.update();
         }
+        trackModified();
     });
 
     document.addEventListener('deviceready', function() {
