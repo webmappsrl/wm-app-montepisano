@@ -1,0 +1,64 @@
+/* SAVE TRACK MODAL */
+
+.save-page {
+    background: $color-login-bg;
+    input {
+        padding-right: 0 !important;
+    }
+}
+
+.save-header {
+    text-transform: uppercase;
+    background: #fff;
+    background-size: 48px 41px;
+    color: $color-brown;
+    font-weight: 700;
+    padding: 12px;
+    font-size: 1.1em;
+    text-align: center;
+    @include box-shadow(0 0 1px transparentize($color-box-shadow, 0.5));
+    .icon {
+        color: $color-red-heart;
+    }
+}
+
+.save-form {
+    max-width: 80%;
+    margin: 0 auto;
+    .item {
+        padding: 7px 0;
+        border: 0 !important;
+        background: transparent !important;
+        input {
+            height: 65px;
+            padding: 0;
+            border-bottom: 1px solid transparentize($color-light-02, 0.3);
+            font-size: 20px;
+            background: none !important;
+            line-height: 2.2em;
+            text-align: center;
+            @include placeholder {
+                color: transparentize($color-brown, 0.4);
+            }
+        }
+    }
+    .login-button {
+        color: #918f75;
+        margin: 0 auto;
+        height: auto;
+        padding: 5px 30px;
+        text-transform: uppercase;
+    }
+}
+
+@media only screen and (min-width: 481px) {
+    .login-form,
+    {
+        .item {
+            padding: 1em 0;
+            input {
+                height: 2.2em;
+            }
+        }
+    }
+}

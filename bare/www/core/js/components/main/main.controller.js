@@ -5,16 +5,15 @@ angular.module('webmapp')
     $cordovaGeolocation,
     ionicToast,
     $cordovaSocialSharing,
-    $interval,
-    $ionicLoading,
+    $ionicModal,
     $ionicPlatform,
     $ionicPopup,
     $ionicScrollDelegate,
+    $ionicSideMenuDelegate,
     $rootScope,
     $scope,
     $state,
     $translate,
-    $cordovaToast,
     Auth,
     Communication,
     CONFIG,
@@ -36,6 +35,8 @@ angular.module('webmapp')
     var maxZoom = CONFIG.MAP.maxZoom,
         hideExpanderInDetails = CONFIG.OPTIONS.hideExpanderInDetails;
 
+    vm.filterIcon = CONFIG.OPTIONS.filterIcon;
+
     var shareScope = $rootScope.$new(),
         shareModal;
 
@@ -46,28 +47,192 @@ angular.module('webmapp')
     vm.toastTime = 5;
     vm.showToast = false;
 
-    vm.userTrack = true;
-    vm.userLatLngs = [];
-    vm.trackLabel = "";
+
     vm.packageTitle = {};
 
 
-    vm.isRecordingTrack = false;
-    vm.isPausedRecordTrack = false;
+    vm.record = {};
+
+    vm.record.isEnabled = true;
+
+    vm.record.userLatLngs = [];
+    vm.record.isRecording = false;
+    vm.record.isPaused = false;
+
+
+    var editTrackModal;
+    var editTrackModalScope = $rootScope.$new();
+
+    editTrackModalScope.COLORS = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
+
+    editTrackModalScope.vm = {
+        title: "",
+        descr: ""
+    };
+
+    var resetModalFields = function() {
+        editTrackModalScope.vm = {
+            title: "",
+            descr: "",
+            id: "",
+            operation: ""
+        };
+    }
+
+    vm.startRecord = function() {
+        if (!vm.gpsActive) {
+            checkGPS();
+            return;
+        }
+
+        if (vm.isOutsideBoundingBox) {
+            MapService.removePosition();
+            $ionicPopup.alert({
+                title: $translate.instant("ATTENZIONE"),
+                template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
+                buttons: [{
+                    text: 'Ok',
+                    type: 'button-positive'
+                }]
+            });
+            return;
+        }
+
+        if (!prevLatLong) {
+            $ionicPopup.alert({
+                title: $translate.instant("ATTENZIONE"),
+                template: "Devi essere localizzato per poter registrare un percorso!",
+                buttons: [{
+                    text: 'Ok',
+                    type: 'button-positive'
+                }]
+            });
+            return;
+        }
+
+        vm.dragged = false;
+
+        if (!prevLatLong && !vm.locateLoading) {
+            vm.centerOnMe();
+        }
+
+        if (!vm.isRotating) {
+            vm.canFollow = true;
+            vm.followActive = true;
+            vm.centerOnMe();
+        }
+        vm.showRightMenu = false;
+        vm.record.start();
+
+    }
+
+    vm.openModal = function(id, title, descr) {
+
+        resetModalFields();
+        if (id && title) {
+            editTrackModalScope.vm.operation = "edit";
+            editTrackModalScope.vm.id = id;
+            editTrackModalScope.vm.title = title;
+            editTrackModalScope.vm.descr = descr;
+        } else {
+            editTrackModalScope.vm.operation = "save";
+        }
+        editTrackModal.show();
+    };
+
+    var hideModal = function() {
+
+        editTrackModal.hide();
+
+    }
+
+
+    var openModalListener = $rootScope.$on("openEditModal", function(event, data) {
+
+        if (data) {
+            MapService.getFeatureById(data, "userTracks").then(function(feature) {
+                vm.openModal(feature.properties.id, feature.properties.name, feature.properties.description);
+            });
+        }
+
+    });
+
+    vm.openFilters = function() {
+        vm.showRightMenu = false;
+        $rootScope.$emit("openFilters");
+    }
+
+    editTrackModalScope.submitData = function(title, descr) {
+
+        if (typeof title !== 'string' || title.length <= 3) {
+            $ionicPopup.alert({
+                title: $translate.instant("ATTENZIONE"),
+                template: "Il titolo deve contenere almeno 3 caratteri",
+                buttons: [{
+                    text: 'Ok',
+                    type: 'button-positive'
+                }]
+            });
+
+        } else {
+
+            if (editTrackModalScope.vm.operation === "save") {
+                vm.record.stopAndSave(true, title, descr);
+                hideModal();
+            } else if (editTrackModalScope.vm.operation === "edit" && editTrackModalScope.vm.id) {
+                MapService.editUserTrack(editTrackModalScope.vm.id, title, descr);
+                hideModal();
+            } else {
+                hideModal();
+            }
+
+        }
+
+
+    };
+
+    editTrackModalScope.reject = function() {
+        vm.record.stopAndSave(false);
+        hideModal();
+    };
+
 
     if (PackageService.getRouteById(CONFIG.routeID) && PackageService.getRouteById(CONFIG.routeID).packageTitle) {
         vm.packageTitle = PackageService.getRouteById(CONFIG.routeID).packageTitle;
     }
 
-    vm.recordUserTrack = function(lat, long, altitude) {
 
-        if (lat && long && vm.isRecordingTrack && !vm.isPausedRecordTrack) {
-            if (vm.userLatLngs.length == 0) {
+    vm.record.start = function() {
+        if (!vm.record.isRecording) {
+            vm.record.isRecording = true;
+            vm.record.isPaused = false;
+        }
+
+    }
+
+    vm.record.pause = function() {
+        if (vm.record.isRecording && !vm.record.isPaused) {
+            vm.record.isRecording = true;
+            vm.record.isPaused = true;
+        }
+    }
+
+    vm.record.resume = function() {
+        if (vm.record.isRecording && vm.record.isPaused) {
+            vm.record.isRecording = true;
+            vm.record.isPaused = false;
+        }
+    }
+
+    vm.record.record = function(lat, long, altitude) {
+
+        if (lat && long && vm.record.isRecording && !vm.record.isPaused) {
+            if (vm.record.userLatLngs.length == 0) {
                 if (prevLatLong && prevLatLong.lat && prevLatLong.long) {
                     MapService.createUserPolyline([
                         [prevLatLong.lat, prevLatLong.long, prevLatLong.alt]
                     ]);
-                    vm.userLatLngs.push([prevLatLong.lat, prevLatLong.long, prevLatLong.alt]);
+                    vm.record.userLatLngs.push([prevLatLong.lat, prevLatLong.long, prevLatLong.alt]);
                     MapService.updateUserPolyline([lat, long, altitude]);
                 } else {
                     MapService.createUserPolyline([
@@ -78,22 +243,21 @@ angular.module('webmapp')
             } else {
                 MapService.updateUserPolyline([lat, long, altitude]);
             }
-            vm.userLatLngs.push([lat, long, altitude]);
+            vm.record.userLatLngs.push([lat, long, altitude]);
         }
 
     };
 
-    vm.stopRecordTrackAndSave = function(save) {
+    vm.record.stopAndSave = function(save, title, descr) {
 
-        vm.isRecordingTrack = false;
-        vm.isPausedRecordTrack = false;
-        if (save && vm.userLatLngs.length >= 1) {
+        vm.record.isRecording = false;
+        vm.record.isPaused = false;
+        if (save && vm.record.userLatLngs.length >= 1) {
             var currentTime = new Date();
-            var date = currentTime.getFullYear() + "-" + currentTime.getMonth() + "-" + currentTime.getDay();
             MapService.saveUserPolyline({
+                name: title,
+                description: descr,
                 routeInfo: {
-                    name: "Track name " + new Date(),
-                    notes: date,
                     routeId: CONFIG.routeID,
                     trackId: vm.stopNavigationUrlParams.id,
                     routeName: vm.packageTitle,
@@ -103,9 +267,12 @@ angular.module('webmapp')
             });
         }
 
-        vm.userLatLngs = [];
+        vm.record.userLatLngs = [];
         MapService.removeUserPolyline();
     }
+
+
+
 
     if (CONFIG && CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) {
         vm.maxOutOfTrack = CONFIG.MAIN.NAVIGATION.trackBoundsDistance;
@@ -690,7 +857,8 @@ angular.module('webmapp')
             }
 
 
-            vm.recordUserTrack(lat, long, altitude);
+            if (vm.record && vm.record.isEnabled)
+                vm.record.record(lat, long, altitude);
 
             if (vm.isNavigating && !vm.isPaused) {
                 if (realTimeTracking.enabled && vm.userData.ID) {
@@ -1087,7 +1255,6 @@ angular.module('webmapp')
         //Hide start button
         vm.isNavigable = false;
 
-        //Start recording
         vm.isNavigating = true;
         vm.isPaused = false;
         vm.stopNavigationUrlParams.parentId = $rootScope.currentParams.parentId;
@@ -1102,8 +1269,8 @@ angular.module('webmapp')
         vm.outOfTrackInterval = setInterval(function() { vm.checkOutOfTrack(prevLatLong) }, 1000);
 
         //record track
-        vm.isRecordingTrack = true;
-        vm.isPausedTrack = false;
+        vm.record.start();
+
         window.plugins.insomnia.keepAwake();
         setTimeout(function() {
             if (prevLatLong) {
@@ -1115,8 +1282,11 @@ angular.module('webmapp')
         }, 1000);
 
 
+
         Utils.goTo('/');
     };
+
+
 
     vm.pauseNavigation = function() {
         vm.isPaused = true;
@@ -1127,8 +1297,7 @@ angular.module('webmapp')
         vm.inTrackDate = 0;
         hideOutOfTrackToast();
         window.plugins.insomnia.allowSleepAgain();
-        vm.isRecordingTrack = true;
-        vm.isPausedRecordTrack = true;
+        vm.record.pause();
     };
 
     vm.resumeNavigation = function() {
@@ -1139,8 +1308,8 @@ angular.module('webmapp')
         vm.firstPositionSet = false;
         vm.outOfTrackInterval = setInterval(function() { vm.checkOutOfTrack(prevLatLong) }, 1000);
         window.plugins.insomnia.keepAwake();
-        vm.isRecordingTrack = true;
-        vm.isPausedRecordTrack = false;
+
+        vm.record.resume();
     };
 
     vm.stopNavigation = function() {
@@ -1155,17 +1324,22 @@ angular.module('webmapp')
         $rootScope.$emit('is-navigating', vm.isNavigating);
         window.plugins.insomnia.allowSleepAgain();
 
-        vm.stopRecordTrackAndSave(true);
 
-        if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
-            var url = 'layer/' + vm.stopNavigationUrlParams.parentId + '/' + vm.stopNavigationUrlParams.id;
-            vm.stopNavigationUrlParams = {
-                parentId: null,
-                id: null
-            };
-            Utils.goTo(url);
+        if (vm.record && vm.record.userLatLngs && vm.record.userLatLngs.length >= 1)
+            openModal();
+        else {
+            vm.record.stopAndSaves(true);
+            if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
+                var url = 'layer/' + vm.stopNavigationUrlParams.parentId + '/' + vm.stopNavigationUrlParams.id;
+                vm.stopNavigationUrlParams = {
+                    parentId: null,
+                    id: null
+                };
+                Utils.goTo(url);
+            }
         }
-    };
+    }
+
 
     var showPathAndRelated = function(params) {
         var parentId = params.parentId,
@@ -1210,6 +1384,7 @@ angular.module('webmapp')
 
         if (currentState !== 'app.main.map') {
             // vm.turnOffGeolocationAndRotion();
+            vm.showRightMenu = false;
             vm.turnOffRotationAndFollow();
         }
         MapService.removePositionMarker();
@@ -1233,6 +1408,7 @@ angular.module('webmapp')
         } else {
             $rootScope.stateCounter++;
         }
+
 
         vm.isWelcomePage = currentState === 'app.main.welcome';
         vm.isSearchPage = currentState === 'app.main.search';
@@ -1479,6 +1655,7 @@ angular.module('webmapp')
         }
     };
 
+
     // $scope.$on('$ionicView.beforeEnter', function () {
     //     //Restoring navigation state
     //     var navigationState = localStorage.$wm_navigastionState ? JSON.parse(localStorage.$wm_navigastionState) : null;
@@ -1539,6 +1716,39 @@ angular.module('webmapp')
     });
 
 
+    $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/saveRecordModal.html', {
+        scope: editTrackModalScope,
+        animation: 'slide-in-up',
+        backdropClickToClose: false,
+        hardwareBackButtonClose: false
+    }).then(function(modal) {
+        editTrackModal = modal;
+    });
+
+    vm.showRightMenu = false;
+    var rightMenuListener = $rootScope.$on('rightMenuClick', function() {
+        vm.showRightMenu = !vm.showRightMenu;
+    });
+
+
+
+    $scope.$watch(function() {
+            return $ionicSideMenuDelegate.isOpenLeft();
+        },
+        function(isOpen) {
+            if (isOpen) {
+                vm.showRightMenu = false;
+            }
+        });
+
+
+
+
+
+    $scope.$on('$destroy', function() {
+        rightMenuListener();
+        openModalListener();
+    });
 
     return vm;
 });

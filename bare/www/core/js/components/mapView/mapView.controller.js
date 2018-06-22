@@ -133,9 +133,15 @@ angular.module('webmapp')
             };
         }
 
+        activeFilters["userTracks"] = {
+            name: "I miei percorsi",
+            value: filt["userTracks"]
+                // icon: CONFIG.OVERLAY_LAYERS[i].icon,
+                // color: CONFIG.OVERLAY_LAYERS[i].color
+        };
         activeFilters = angular.extend(tmp, activeFilters);
         allActive = areAllActive(activeFilters);
-        
+
         activeFilters["Tutte"].value = allActive;
         modalScope.vm.filters = activeFilters;
         modalScope.vm.currentMapLayer = MapService.getCurrentMapLayerName();
@@ -144,8 +150,20 @@ angular.module('webmapp')
     };
 
     $scope.$on('$destroy', function() {
+        openFiltersListener();
         modal.hide();
     });
+
+    vm.clickRightMenu = function() {
+        $rootScope.$emit("rightMenuClick");
+    }
+
+
+    var openFiltersListener = $rootScope.$on("openFilters", function() {
+        vm.openFilters();
+
+    })
+
 
     return vm;
 });

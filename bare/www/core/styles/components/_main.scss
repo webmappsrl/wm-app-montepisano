@@ -4,11 +4,13 @@
  * Main elements and layout style
 */
 
+
 /* Transition managing helpers  - TODO: to put where?*/
 
 .no-animate {
-  @include transition(none !important);
+    @include transition(none !important);
 }
+
 
 /*
     CSS styles to eliminate the annoying flickering header when changing tabs in an Ionic app on Android:
@@ -16,193 +18,181 @@
 */
 
 .header-item {
-  &.title,
-  &.buttons {
-    transition-duration: 0ms !important;
-  }
+    &.title,
+    &.buttons {
+        transition-duration: 0ms !important;
+    }
 }
 
 .buttons-left {
-  transition-duration: 0ms !important;
+    transition-duration: 0ms !important;
 }
 
 .buttons-right {
-  transition-duration: 0ms !important;
+    transition-duration: 0ms !important;
 }
+
 
 /* Hide/show elements on mobile or desktop */
 
-
 .desktop-visible {
-  display: none;
+    display: none;
 }
 
 .xs-visible {
-  display: none;
+    display: none;
 }
+
 
 /* ------------------------------------ *\
    #BARS - TOPBAR AND FOOTER
 \* ------------------------------------ */
 
+
 /* Top menu container - set in pane? */
 
 .menu-content {
-  background: inherit;
-  color: inherit;
+    background: inherit;
+    color: inherit;
 }
 
 .nav-bar-block,
 .bar {
-  background-color: inherit !important;
-  border-color: inherit !important;
+    background-color: inherit !important;
+    border-color: inherit !important;
 }
+
 
 /* Top bar */
 
 .bar {
-  .title {
-    font-weight: 700;
-    font-size: 1.1em;
-  }
-
-  .title-center{
-    font-size: 22px!important
-  }
-
-  &.bar-assertive.bar-footer {
-    /* There's 2px pixel bottom overflowing - why?*/
-    @include calc(height, '(100% - 43px) - 60%');
-    padding: 0;
-    background-image: none;
-    border: none;
-    // transition: all 0.2s ease-out;
-
-    .welcome-page & {
-      height: 45%;
+    .title {
+        font-weight: 700;
+        font-size: 1.1em;
     }
-
-    .hide-map & {
-      z-index: 0;
-      height: 20%;
+    .title-center {
+        font-size: 22px!important
     }
-
-    .map-search & {
-      @include calc(height, '100% - 186px');
-      //@include calc(height, '100% - 214px'); for selected category
-      z-index: 200;
+    &.bar-assertive.bar-footer {
+        /* There's 2px pixel bottom overflowing - why?*/
+        @include calc(height, '(100% - 43px) - 60%');
+        padding: 0;
+        background-image: none;
+        border: none;
+        // transition: all 0.2s ease-out;
+        .welcome-page & {
+            height: 45%;
+        }
+        .hide-map & {
+            z-index: 0;
+            height: 20%;
+        }
+        .map-search & {
+            @include calc(height, '100% - 186px');
+            //@include calc(height, '100% - 214px'); for selected category
+            z-index: 200;
+        }
+        .map-page & {
+            @include calc(height, '100% - 44px');
+            //top: 44px;
+            z-index: 200;
+        }
     }
-
-    .map-page & {
-      @include calc(height, '100% - 44px');
-      //top: 44px;
-      z-index: 200;
-    }
-  }
 }
 
 .nav-title-slide-ios7 {
-  background: inherit !important; // #BF410E
-  color: inherit !important;
-  border-color: transparent !important;
-
-  .bar.bar-header {
-    padding-right: 2%;
-    padding-left: 2%;
-    //background: $color-white;
-    @include box-shadow(0 0 1px transparentize($color-box-shadow,0.5));
-    text-transform: uppercase;
-
-    .title {
-      right: 50px!important;
-      left: 50px!important;
-    }
-
-    .button {
-      color: inherit;
-    }
-  }
-
-  &.welcome-nav{
-    .bar.bar-positive  {
-      .title {
+    background: inherit !important; // #BF410E
+    color: inherit !important;
+    border-color: transparent !important;
+    .bar.bar-header {
         padding-right: 2%;
         padding-left: 2%;
-      }
+        //background: $color-white;
+        @include box-shadow(0 0 1px transparentize($color-box-shadow, 0.5));
+        text-transform: uppercase;
+        .title {
+            right: 50px!important;
+            left: 50px!important;
+        }
+        .button {
+            color: inherit;
+        }
     }
-  }
+    &.welcome-nav {
+        .bar.bar-positive {
+            .title {
+                padding-right: 2%;
+                padding-left: 2%;
+            }
+        }
+    }
 }
-
 
 
 /* Long title and date */
 
 .details-page {
-  .bar.bar-header {
-    .title {
-      font-family: $title-font-family;
-      font-size: $title-size;
-      height: 100%;
-      margin: 0;
-      right: 15px!important; /* TODO: Temporary - fix in js for this case */
-      left: 50px !important; /* TODO: Temporary - fix in js for this case */
-      line-height: 2.5;
+    .bar.bar-header {
+        .title {
+            font-family: $title-font-family;
+            font-size: $title-size;
+            height: 100%;
+            margin: 0;
+            right: 15px!important;
+            /* TODO: Temporary - fix in js for this case */
+            left: 50px !important;
+            /* TODO: Temporary - fix in js for this case */
+            line-height: 2.5;
+        }
     }
-  }
-
-  .nav-bar-title {
-    display: block;
-    height: 100%;
-    padding: 4px 0;
-  }
-
-  .title-inner {
-    @include text-ellipsis;
-  }
+    .nav-bar-title {
+        display: block;
+        height: 100%;
+        padding: 4px 0;
+    }
+    .title-inner {
+        @include text-ellipsis;
+    }
 }
 
 .title-inner {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  height: 100%;
-  /*justify-content: center;*/
-
-  .title-right {
-    width: 95%;
-    @include text-ellipsis;
-    font-size: 20px;
-  }
-
-  &.has-date {
-    line-height: 1;
-    .title-left,
+    display: flex;
+    width: 100%;
+    align-items: center;
+    height: 100%;
+    /*justify-content: center;*/
     .title-right {
-      display: inline-block;
+        width: 95%;
+        @include text-ellipsis;
+        font-size: 20px;
     }
-
-    .title-left {
-      width: 25%;
-      padding-right: 10px;
-      text-align: right;
-      vertical-align: top;
-      font-size: 15px;
-      [class^="event-title"] {
-        display: block;
-      }
+    &.has-date {
+        line-height: 1;
+        .title-left,
+        .title-right {
+            display: inline-block;
+        }
+        .title-left {
+            width: 25%;
+            padding-right: 10px;
+            text-align: right;
+            vertical-align: top;
+            font-size: 15px;
+            [class^="event-title"] {
+                display: block;
+            }
+        }
+        .title-right {
+            width: 75%;
+            height: 32px;
+            line-height: 32px;
+            text-align: left;
+            @include text-ellipsis;
+        }
     }
-
-    .title-right {
-      width: 75%;
-      height: 32px;
-      line-height: 32px;
-      text-align: left;
-      @include text-ellipsis;
-    }
-
-
-  }
 }
+
+
 /*
 .title-right {
   display: inline-block;
@@ -218,138 +208,142 @@
 
 }
 */
+
+
 /* ------------------------------------ *\
    #VIEW
 \* ------------------------------------ */
 
 .view-container {
-
-  .welcome-page & {
-    background-color: transparent;
-  }
+    .welcome-page & {
+        background-color: transparent;
+    }
 }
+
 
 /* ------------------------------------ *\
    #CONTENT & SCROLLING ELEMENT
 \* ------------------------------------ */
 
 .pane {
-  // top: -1px;
-  // &.menu-content {
-  //   // ..
-  // }
+    // top: -1px;
+    // &.menu-content {
+    //   // ..
+    // }
 }
 
 .scroll-content {
-  background: inherit;
+    background: inherit;
 }
 
 .content-pane {
-  height: 60%;
-  z-index: 20;
-
-  .keyboard-open & {
-    height: 60% !important;
-    overflow: hidden !important;
-  }
-
-  .keyboard-open .hide-map & {
-    height: calc(100% - 42px) !important;
-  }
-
-  .hide-map &,
-  .login-page &,
-  .menu-left & {
-    @include calc(height, '100% - 42px'); /* 2 pixel? */
-  }
-
-  .welcome-page & {
-   // z-index: 10;
-  }
-
-  .map-page & {
-    z-index: 0;
-  }
-
-  .has-howtoreach & {
-    margin-bottom: 30px;
-    height: calc(60% - 45px);
-  }
-
-  .details-page & {
-
-    &::before {
-      // TODO: solve android bug
-      // content: '';
-      // display: block;
-      // height: 18px;
-      // background: transparent url('../images/shadow-details.png') left top no-repeat;
-      // background-size: cover;
-      // position: absolute;
-      // right: 0;
-      // bottom: 0;
-      // left: 0;
-      // z-index: 10;
-      // opacity: 0.8;
-
+    height: 60%;
+    z-index: 20;
+    .keyboard-open & {
+        height: 60% !important;
+        overflow: hidden !important;
     }
-  }
+    .keyboard-open .hide-map & {
+        height: calc(100% - 42px) !important;
+    }
+    .hide-map &,
+    .login-page &,
+    .menu-left & {
+        @include calc(height, '100% - 42px');
+        /* 2 pixel? */
+    }
+    .welcome-page & {
+        // z-index: 10;
+    }
+    .map-page & {
+        z-index: 0;
+    }
+    .has-howtoreach & {
+        margin-bottom: 30px;
+        height: calc(60% - 45px);
+    }
+    .details-page & {
+        &::before {
+            // TODO: solve android bug
+            // content: '';
+            // display: block;
+            // height: 18px;
+            // background: transparent url('../images/shadow-details.png') left top no-repeat;
+            // background-size: cover;
+            // position: absolute;
+            // right: 0;
+            // bottom: 0;
+            // left: 0;
+            // z-index: 10;
+            // opacity: 0.8;
+        }
+    }
 }
 
 .view-container {
-  .scroll {
-    height: 100%;
-  }
+    .scroll {
+        height: 100%;
+    }
 }
 
 .scroll {
-  .has-filter > & {
-    margin-top: 55px;
-  }
+    .has-filter>& {
+        margin-top: 55px;
+    }
 }
 
 .scroll-content {
-
-  &.has-back-btn  {
-    top: 52px; /* Back button height */
-  }
-
-  &.has-search-filters {
-    top: 140px;
-    //174px if selected more than one category
-
-  }
-
-  &.has-show-more {
-    margin-bottom: 35px; /* .arrow-show-more height */
-  }
-
-  .menu-content & {
-    //background: $color-light-green;
-  }
+    &.has-back-btn {
+        top: 52px;
+        /* Back button height */
+    }
+    &.has-search-filters {
+        top: 140px;
+        //174px if selected more than one category
+    }
+    &.has-show-more {
+        margin-bottom: 35px;
+        /* .arrow-show-more height */
+    }
+    .menu-content & {
+        //background: $color-light-green;
+    }
 }
+
+
 /* Scrolling pane for details */
+
 .layer-details {
-  overflow: visible;
+    overflow: visible;
 }
+
+.map-menu {
+    position: relative;
+    top: 42px;
+    z-index: 999;
+}
+
 
 /* ------------------------------------ *\
    #MAP
 \* ------------------------------------ */
 
+
 /* TODO: for Raffa, testare su mobile */
 
-.platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) > * {
-  margin-top: 0;
+.platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader)>* {
+    margin-top: 0;
 }
 
 .platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) {
-  height: 43px;
+    height: 43px;
 }
 
-.platform-ios.platform-cordova:not(.fullscreen) .has-header, .platform-ios.platform-cordova:not(.fullscreen) .bar-subheader {
-  top: 43px;
+.platform-ios.platform-cordova:not(.fullscreen) .has-header,
+.platform-ios.platform-cordova:not(.fullscreen) .bar-subheader {
+    top: 43px;
 }
+
 
 /* testare su mobile END */
 
@@ -358,180 +352,154 @@
    #MEDIA QUERIES
 \* ------------------------------------ */
 
+
 /* TODO: use mixin? */
 
 @media only screen and (max-height: 666px) and (max-width: 768px) {
-  .welcome-page {
-
-    .content-pane {
-      height: 65%;
+    .welcome-page {
+        .content-pane {
+            height: 65%;
+        }
+        .bar.bar-assertive.bar-footer {
+            height: 35%;
+        }
     }
-
-    .bar.bar-assertive.bar-footer {
-      height: 35%;
-    }
-  }
 }
 
-
 @media only screen and (min-width: 768px) {
-
-  .details-page {
-    .bar.bar-header {
-      .title {
-        left: 60px !important;
-      }
-    }
-
-    .nav-bar-title {
-    }
-  }
-
-  .title-inner {
-    line-height: 32px;
-    text-align: center;
-
-    &.has-date {
-      line-height: 32px;
-
-      .title-left {
-
-        font-size: 16px;
-        [class^="event-title"] {
-          display: inline-block;
-          margin-right: 10px;
+    .details-page {
+        .bar.bar-header {
+            .title {
+                left: 60px !important;
+            }
         }
-      }
-
-      .title-right {
-        font-size: 16px;
-
-      }
+        .nav-bar-title {}
     }
-  }
-
-  .nav-title-slide-ios7 {
-
-    .bar.bar-header {
-      padding-right: 10px;
-      padding-left: 10px;
-    }
-
-    &.welcome-nav {
-      .bar.bar-positive {
-        .title {
-          padding-right: 10px;
-          padding-left: 10px;
+    .title-inner {
+        line-height: 32px;
+        text-align: center;
+        &.has-date {
+            line-height: 32px;
+            .title-left {
+                font-size: 16px;
+                [class^="event-title"] {
+                    display: inline-block;
+                    margin-right: 10px;
+                }
+            }
+            .title-right {
+                font-size: 16px;
+            }
         }
-      }
     }
-  }
-  .desktop-visible {
-    display: block;
-  }
+    .nav-title-slide-ios7 {
+        .bar.bar-header {
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+        &.welcome-nav {
+            .bar.bar-positive {
+                .title {
+                    padding-right: 10px;
+                    padding-left: 10px;
+                }
+            }
+        }
+    }
+    .desktop-visible {
+        display: block;
+    }
 }
 
 @media only screen and (min-width: 992px) {
-  .welcome-page {
-    &,
-    &.desktop-half-map {
-      .content-pane.has-footer {
-        height: 50%;
-        top: 45px;
-        right: 0;
-        left: 0;
-        bottom: 0;
-      }
-
-
-      .bar-assertive.bar.bar-footer {
-        width: 100%;
-        height: 50%;
-        top: initial; //temporary
-        left: 0;
-        right: 0;
-        bottom: 0;
-      }
+    .welcome-page {
+        &,
+        &.desktop-half-map {
+            .content-pane.has-footer {
+                height: 50%;
+                top: 45px;
+                right: 0;
+                left: 0;
+                bottom: 0;
+            }
+            .bar-assertive.bar.bar-footer {
+                width: 100%;
+                height: 50%;
+                top: initial; //temporary
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+        }
     }
-  }
 }
 
 @media only screen and (min-width: 1025px) {
-
-  .content-pane.has-footer {
-    @include calc(height, '100% - 43px');
-  }
-
-  .bar-assertive.bar.bar-footer {
-    @include calc(height, '100% - 44px');
-  }
-
-  .desktop-half-map {
     .content-pane.has-footer {
-      top: 45px;
-      right: 50%;
-      left: 0;
-      bottom: 0;
+        @include calc(height, '100% - 43px');
     }
-
-    .view-container {
-      height: 100% !important;
-    }
-
     .bar-assertive.bar.bar-footer {
-      width: 50%;
-      top: 45px; /* for header */
-      left: 50%;
-      right: 0;
-      bottom: 0;
+        @include calc(height, '100% - 44px');
     }
-  }
-
-  .map-search  {
-    .bar-assertive.bar.bar-footer {
-      @include calc(height, '100% - 187px');
-      z-index: 200;
-      width: 100%;
-      //top: 197px; /* for header */
-      left: 0;
-      right: 0;
-      bottom: 0;
+    .desktop-half-map {
+        .content-pane.has-footer {
+            top: 45px;
+            right: 50%;
+            left: 0;
+            bottom: 0;
+        }
+        .view-container {
+            height: 100% !important;
+        }
+        .bar-assertive.bar.bar-footer {
+            width: 50%;
+            top: 45px;
+            /* for header */
+            left: 50%;
+            right: 0;
+            bottom: 0;
+        }
     }
-  }
-
-  .desktop-full-map {
-    .content-pane.has-footer {
-      @include calc(height, '100% - 45px');
-      z-index: 0;
-      top: 45px;
-      right: 50%;
-      left: 0;
-      bottom: 0;
+    .map-search {
+        .bar-assertive.bar.bar-footer {
+            @include calc(height, '100% - 187px');
+            z-index: 200;
+            width: 100%;
+            //top: 197px; /* for header */
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
     }
-
-    .view-container {
-      height: 100% !important;
+    .desktop-full-map {
+        .content-pane.has-footer {
+            @include calc(height, '100% - 45px');
+            z-index: 0;
+            top: 45px;
+            right: 50%;
+            left: 0;
+            bottom: 0;
+        }
+        .view-container {
+            height: 100% !important;
+        }
+        .bar-assertive.bar.bar-footer {
+            width: 100%;
+            @include calc(height, '100% - 45px');
+            //top: 45px; /* for header */
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 20;
+        }
     }
-
-    .bar-assertive.bar.bar-footer {
-      width: 100%;
-      @include calc(height, '100% - 45px');
-      //top: 45px; /* for header */
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 20;
+    .hide-map {
+        .content-pane.has-footer {
+            top: 45px;
+            right: 0;
+        }
     }
-  }
-
-  .hide-map {
-    .content-pane.has-footer {
-      top: 45px;
-      right: 0;
+    .scroll-content.has-show-more {
+        margin-bottom: 0;
     }
-  }
-
-  .scroll-content.has-show-more {
-    margin-bottom: 0;
-  }
 }

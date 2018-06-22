@@ -1,0 +1,68 @@
+<ion-modal-view id="save-modal" class="save-page">
+
+    <ion-content ng-style="{
+        'background': COLORS.global.background
+    }">
+
+        <div class="save-header" ng-style="{
+        'background': COLORS.mainBar.background,
+        'color': COLORS.mainBar.color
+    }">
+            {{vm.operation | translate}}
+        </div>
+
+        <form class="save-form" ng-submit="submitData(vm.title,vm.descr)">
+            <div class="list">
+                <label class="item item-input">
+                        <input type="text" class="input-email input-ph" 
+                        autocorrect="off"
+                        ng-model="vm.title"
+                        autocapitalize="none"
+                        spellcheck="false"
+                        autocomplete="off"
+                        placeholder="Titolo">
+                    </label>
+                <label class="item item-input">
+                            <input type="text" class="input-ph"
+                            autocorrect="off"
+                            ng-model="vm.descr"
+                            autocapitalize="none"
+                            spellcheck="false"
+                            autocomplete="off"
+                            placeholder="Descrizione"
+                            >
+                    </label>
+
+                <label class="item">
+                        <button
+                            ng-style="{
+                                'background': COLORS.global.buttonsBackground,
+                                'color': COLORS.global.buttonsColor
+                            }"
+                            class="login-button button button-block" 
+                            type="submit">
+                            {{logging ? "(Loading..)" : 'salva' | translate}}
+                            
+                        </button>
+                    </label>
+
+                <label class="item">
+                        <button
+                            ng-style="{
+                                'background': COLORS.global.buttonsBackground,
+                                'color': COLORS.global.buttonsColor
+                            }"
+                            class="login-button button button-block" 
+                            ng-click="reject()" type="button">
+                            <!-- {{logging ? "(Loading..)" : 'annulla' | translate}} -->
+                            annulla
+                        </button>
+                    </label>
+            </div>
+        </form>
+
+
+
+    </ion-content>
+
+</ion-modal-view>

@@ -124,6 +124,7 @@ angular.module('webmapp')
             return prev;
         }, {});
 
+
     var userTrackPolyline = null;
 
     var isAPOILayer = function(layerName) {
@@ -138,6 +139,7 @@ angular.module('webmapp')
                 overlayLayersConfMap[layerName].type === 'line_geojson') ||
             (extraLayersByLabel[layerName] &&
                 extraLayersByLabel[layerName].type === 'line_geojson');
+
     };
 
     var getParentGroup = function(layerName) {
@@ -175,7 +177,7 @@ angular.module('webmapp')
         if (layer) {
             if (isAPOILayer(layerName)) {
                 markerClusters.addLayer(layer);
-            } else if (isALineLayer(layerName)) {
+            } else if (isALineLayer(layerName) || layerName === "userTracks") {
                 map.addLayer(layer);
 
                 if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
@@ -203,10 +205,12 @@ angular.module('webmapp')
     var removeLayer = function(layerName) {
         var layer = getLayerByName(layerName);
 
+
+
         if (layer) {
             if (isAPOILayer(layerName)) {
                 markerClusters.removeLayer(layer);
-            } else if (isALineLayer(layerName)) {
+            } else if (isALineLayer(layerName) || layerName === "userTracks") {
                 map.removeLayer(layer);
 
                 if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
@@ -1550,7 +1554,13 @@ angular.module('webmapp')
         layerControl = L.control.groupedLayers();
         layerControl.addTo(map);
 
+
+
         initializeLayers();
+        if (localStorage.$vm_userTracks) {
+            var coll = JSON.parse(localStorage.$vm_userTracks);
+            initializeUserTracksLayer(coll);
+        }
 
         return map;
     };
@@ -1671,7 +1681,6 @@ angular.module('webmapp')
         if (map === null) {
             return;
         }
-
         removeLayer(layerName);
     };
 
@@ -2302,7 +2311,6 @@ angular.module('webmapp')
 
     mapService.createUserPolyline = function(coordsArray) {
 
-
         if (userTrackPolyline) {
             map.removeLayer(userTrackPolyline);
         }
@@ -2318,6 +2326,7 @@ angular.module('webmapp')
         } else {
             userTrackPolyline = L.polyline(latLng).addTo(map);
         }
+
     }
 
     mapService.getUserPolyline = function(latLng) {
@@ -2332,21 +2341,102 @@ angular.module('webmapp')
         }
     }
 
-
     mapService.saveUserPolyline = function(info) {
 
         if (userTrackPolyline) {
 
             var geoUserTrack = userTrackPolyline.toGeoJSON();
             geoUserTrack.properties = info;
+            geoUserTrack.properties.isCustom = true;
 
             var tmp;
             if (!localStorage.$vm_userTracks) {
-                localStorage.$vm_userTracks = JSON.stringify([]);
+                geoUserTrack.properties.id = 1000000;
+                tmp = [];
+
+            } else {
+                var coll = JSON.parse(localStorage.$vm_userTracks);
+                tmp = coll.features;
+                var lastElement = tmp[tmp.length - 1];
+                if (lastElement && lastElement.properties && lastElement.properties.id) {
+                    geoUserTrack.properties.id = lastElement.properties.id + 1;
+                }
+
             }
-            tmp = JSON.parse(localStorage.$vm_userTracks);
             tmp.push(geoUserTrack);
-            localStorage.$vm_userTracks = JSON.stringify(tmp);
+            var featureColl = {
+                type: "FeatureCollection",
+                features: tmp
+            }
+            localStorage.$vm_userTracks = JSON.stringify(featureColl);
+
+            removeLayer("userTracks");
+            initializeUserTracksLayer(featureColl);
+        }
+    }
+
+
+    mapService.deleteUserTrack = function(id) {
+
+        if (localStorage.$vm_userTracks) {
+
+            var coll = JSON.parse(localStorage.$vm_userTracks);
+            var tmp = coll.features;
+            var find = false;
+            for (let i = 0; i < tmp.length; i++) {
+                var feature = tmp[i];
+                if (feature.properties.id == id) {
+                    tmp.splice(i, 1);
+                    find = true;
+                    break;
+                }
+
+            }
+            if (find) {
+                var featureColl = {
+                    type: "FeatureCollection",
+                    features: tmp
+                }
+                localStorage.$vm_userTracks = JSON.stringify(featureColl);
+
+                removeLayer("userTracks");
+                initializeUserTracksLayer(featureColl);
+            }
+        }
+
+    }
+
+
+    mapService.editUserTrack = function(id, name, descr) {
+
+        if (localStorage.$vm_userTracks) {
+
+            var coll = JSON.parse(localStorage.$vm_userTracks);
+            var tmp = coll.features;
+
+            var find = false;
+            for (let i = 0; i < tmp.length; i++) {
+                var feature = tmp[i];
+
+                if (feature.properties.id == id) {
+                    feature.properties.name = name;
+                    feature.properties.description = descr;
+                    find = true;
+                    break;
+                }
+
+            }
+            if (find) {
+                var featureColl = {
+                    type: "FeatureCollection",
+                    features: tmp
+                }
+
+                localStorage.$vm_userTracks = JSON.stringify(featureColl);
+
+                removeLayer("userTracks");
+                initializeUserTracksLayer(featureColl);
+            }
         }
     }
 
@@ -2395,6 +2485,71 @@ angular.module('webmapp')
     setTimeout(function() {
         mapService.adjust();
     }, 3600);
+
+
+    var initializeUserTracksLayer = function(data) {
+
+        var currentOverlay = {
+            label: "userTracks",
+            color: "#FF3812",
+            icon: "wm-icon-generic",
+            showByDefault: true,
+            type: "line_geojson"
+        };
+        overlayLayersConfMap[currentOverlay.label] = currentOverlay;
+        var geoJsonOptions = {
+                onEachFeature: function(feature, layer) {
+                    if (!feature.parent) {
+                        feature.parent = currentOverlay;
+                    }
+                    globalOnEachLine(feature, layer);
+
+                    if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
+                        if (!polylineDecoratorLayers[currentOverlay.label]) {
+                            polylineDecoratorLayers[currentOverlay.label] = {};
+                        }
+
+                        polylineDecoratorLayers[currentOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
+                            patterns: [{
+                                offset: 20,
+                                repeat: 100,
+                                symbol: L.Symbol.arrowHead({
+                                    polygon: true,
+                                    pixelSize: 16,
+                                    headAngle: 30,
+                                    pathOptions: {
+                                        color: '#fff',
+                                        opacity: 0,
+                                        fillColor: '#000',
+                                        fillOpacity: 0.8,
+                                        stroke: true,
+                                        weight: 1
+                                    }
+                                })
+                            }]
+                        });
+
+                        polylineDecoratorLayers[currentOverlay.label][feature.properties.id].addTo(map);
+                    }
+                },
+                style: function(feature) {
+                    if (!feature.parent) {
+                        feature.parent = currentOverlay;
+                    }
+                    return globalLineApplyStyle(feature);
+                }
+            },
+            linesLayer = L.geoJson(data, geoJsonOptions);
+
+        overlayLayersByLabel[currentOverlay.label] = linesLayer;
+
+        activateLineHandlers(linesLayer);
+        mapService.activateLayer(currentOverlay.label, true, true, true);
+
+    };
+
+
+
 
     return mapService;
 });
