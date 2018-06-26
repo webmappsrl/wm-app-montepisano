@@ -30,6 +30,14 @@ angular.module('webmapp')
         offlineConf = CONFIG.OFFLINE,
         currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
 
+    // overlayLayersConf.push({
+    //     label: "userTracks",
+    //     color: "#FF3812",
+    //     icon: "wm-icon-generic",
+    //     showByDefault: true,
+    //     type: "line_geojson"
+    // });
+
     if (!Utils.isBrowser()) {
         generalConf.useAlmostOver = true;
     } else {
@@ -102,6 +110,7 @@ angular.module('webmapp')
     //         delete overlayLayersConf[i];
     //     }
     // }
+
 
     var overlayLayersConfMap = overlayLayersConf.reduce(function(prev, curr) {
         prev[curr.label] = curr;
@@ -177,7 +186,7 @@ angular.module('webmapp')
         if (layer) {
             if (isAPOILayer(layerName)) {
                 markerClusters.addLayer(layer);
-            } else if (isALineLayer(layerName) || layerName === "userTracks") {
+            } else if (isALineLayer(layerName)) {
                 map.addLayer(layer);
 
                 if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
@@ -210,7 +219,7 @@ angular.module('webmapp')
         if (layer) {
             if (isAPOILayer(layerName)) {
                 markerClusters.removeLayer(layer);
-            } else if (isALineLayer(layerName) || layerName === "userTracks") {
+            } else if (isALineLayer(layerName)) {
                 map.removeLayer(layer);
 
                 if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
@@ -257,6 +266,7 @@ angular.module('webmapp')
         feature.properties.color = feature.properties.color || overlayConf.color;
         featureMapById[feature.properties.id] = feature;
 
+
         Model.addItemToLayer(feature, overlayConf);
     };
 
@@ -264,7 +274,6 @@ angular.module('webmapp')
         if (typeof feature.properties === 'undefined') {
             return;
         }
-
         var overlayConf = feature.parent || {},
             currentRelatedPOIs;
 
@@ -1157,6 +1166,10 @@ angular.module('webmapp')
                 continue;
             }
 
+            if (overlayLayersConf[i].label === "userTracks") {
+                continue;
+            }
+
             if (overlayLayersConf[i].type === 'utfgrid') {
                 var utfGridmap = new L.UtfGrid(overlayLayersConf[i].url, {
                         useJsonP: false,
@@ -1557,8 +1570,10 @@ angular.module('webmapp')
 
 
         initializeLayers();
+
         if (localStorage.$vm_userTracks) {
             var coll = JSON.parse(localStorage.$vm_userTracks);
+            Model.removeLayerItems({ label: "userTracks" });
             initializeUserTracksLayer(coll);
         }
 
@@ -2371,6 +2386,7 @@ angular.module('webmapp')
             localStorage.$vm_userTracks = JSON.stringify(featureColl);
 
             removeLayer("userTracks");
+            Model.removeLayerItems({ label: "userTracks" });
             initializeUserTracksLayer(featureColl);
         }
     }
@@ -2400,6 +2416,7 @@ angular.module('webmapp')
                 localStorage.$vm_userTracks = JSON.stringify(featureColl);
 
                 removeLayer("userTracks");
+                Model.removeLayerItems({ label: "userTracks" });
                 initializeUserTracksLayer(featureColl);
             }
         }
@@ -2435,6 +2452,7 @@ angular.module('webmapp')
                 localStorage.$vm_userTracks = JSON.stringify(featureColl);
 
                 removeLayer("userTracks");
+                Model.removeLayerItems({ label: "userTracks" });
                 initializeUserTracksLayer(featureColl);
             }
         }
@@ -2489,66 +2507,60 @@ angular.module('webmapp')
 
     var initializeUserTracksLayer = function(data) {
 
-        var currentOverlay = {
-            label: "userTracks",
-            color: "#FF3812",
-            icon: "wm-icon-generic",
-            showByDefault: true,
-            type: "line_geojson"
-        };
-        overlayLayersConfMap[currentOverlay.label] = currentOverlay;
-        var geoJsonOptions = {
-                onEachFeature: function(feature, layer) {
-                    if (!feature.parent) {
-                        feature.parent = currentOverlay;
-                    }
-                    globalOnEachLine(feature, layer);
+        var userOverlay = overlayLayersConfMap["userTracks"];
 
-                    if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
-                        if (!polylineDecoratorLayers[currentOverlay.label]) {
-                            polylineDecoratorLayers[currentOverlay.label] = {};
+        if (userOverlay) {
+
+            var geoJsonOptions = {
+                    onEachFeature: function(feature, layer) {
+                        if (!feature.parent) {
+                            feature.parent = userOverlay;
                         }
+                        globalOnEachLine(feature, layer);
 
-                        polylineDecoratorLayers[currentOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
-                            patterns: [{
-                                offset: 20,
-                                repeat: 100,
-                                symbol: L.Symbol.arrowHead({
-                                    polygon: true,
-                                    pixelSize: 16,
-                                    headAngle: 30,
-                                    pathOptions: {
-                                        color: '#fff',
-                                        opacity: 0,
-                                        fillColor: '#000',
-                                        fillOpacity: 0.8,
-                                        stroke: true,
-                                        weight: 1
-                                    }
-                                })
-                            }]
-                        });
+                        if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
+                            if (!polylineDecoratorLayers[userOverlay.label]) {
+                                polylineDecoratorLayers[userOverlay.label] = {};
+                            }
 
-                        polylineDecoratorLayers[currentOverlay.label][feature.properties.id].addTo(map);
+                            polylineDecoratorLayers[userOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
+                                patterns: [{
+                                    offset: 20,
+                                    repeat: 100,
+                                    symbol: L.Symbol.arrowHead({
+                                        polygon: true,
+                                        pixelSize: 16,
+                                        headAngle: 30,
+                                        pathOptions: {
+                                            color: '#fff',
+                                            opacity: 0,
+                                            fillColor: '#000',
+                                            fillOpacity: 0.8,
+                                            stroke: true,
+                                            weight: 1
+                                        }
+                                    })
+                                }]
+                            });
+
+                            polylineDecoratorLayers[userOverlay.label][feature.properties.id].addTo(map);
+                        }
+                    },
+                    style: function(feature) {
+                        if (!feature.parent) {
+                            feature.parent = userOverlay;
+                        }
+                        return globalLineApplyStyle(feature);
                     }
                 },
-                style: function(feature) {
-                    if (!feature.parent) {
-                        feature.parent = currentOverlay;
-                    }
-                    return globalLineApplyStyle(feature);
-                }
-            },
-            linesLayer = L.geoJson(data, geoJsonOptions);
+                linesLayer = L.geoJson(data, geoJsonOptions);
 
-        overlayLayersByLabel[currentOverlay.label] = linesLayer;
+            overlayLayersByLabel[userOverlay.label] = linesLayer;
 
-        activateLineHandlers(linesLayer);
-        mapService.activateLayer(currentOverlay.label, true, true, true);
-
+            activateLineHandlers(linesLayer);
+            mapService.activateLayer(userOverlay.label, true, true, true);
+        }
     };
-
-
 
 
     return mapService;

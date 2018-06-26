@@ -1,185 +1,195 @@
 angular.module('webmapp')
 
-    .controller('ListController', function ListController(
-        $scope,
-        $rootScope,
-        $state,
-        $ionicLoading,
-        $ionicScrollDelegate,
-        Utils,
-        MapService,
-        Model,
-        Search,
-        CONFIG
-    ) {
-        var vm = {};
+.controller('ListController', function ListController(
+    $scope,
+    $rootScope,
+    $state,
+    $ionicLoading,
+    $ionicScrollDelegate,
+    Utils,
+    MapService,
+    Model,
+    Search,
+    CONFIG
+) {
+    var vm = {};
 
-        var overlaysGroupMap = Model.getOverlaysGroupMap(),
-            overlayMap = Model.getOverlaysMap();
+    var overlaysGroupMap = Model.getOverlaysGroupMap(),
+        overlayMap = Model.getOverlaysMap();
 
-        var isAnOverlayGroup = false,
-            realState = '';
 
-        vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
-        vm.isListExpanded = false,
+    var isAnOverlayGroup = false,
+        realState = '';
+
+    vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
+    vm.isListExpanded = false,
         vm.layersMap = Model.getLayersMap();
-        vm.goTo = Utils.goTo;
 
-        MapService.activateUtfGrid();
+    vm.goTo = Utils.goTo;
 
-        var getMenuByState = function (state) {
-            var group = Model.isAnOverlayGroup(state),
-                currentOverlay,
-                res = [];
+    MapService.activateUtfGrid();
 
-            if (group) {
-                for (var i in group.items) {
-                    currentOverlay = Model.getOverlay(group.items[i]);
-                    if (currentOverlay) {
-                        currentOverlay.url = currentOverlay.label.replace(/ /g, '_');
-                        res.push(currentOverlay);
-                    }
+    var getMenuByState = function(state) {
+        var group = Model.isAnOverlayGroup(state),
+            currentOverlay,
+            res = [];
+
+        if (group) {
+            for (var i in group.items) {
+                currentOverlay = Model.getOverlay(group.items[i]);
+                if (currentOverlay) {
+                    currentOverlay.url = currentOverlay.label.replace(/ /g, '_');
+                    res.push(currentOverlay);
                 }
             }
+        }
 
-            return res;
-        };
+        return res;
+    };
 
-        var getPagesByState = function (state) {
-            var group = Model.isAPageGroup(state),
-                currentPage,
-                res = [];
+    var getPagesByState = function(state) {
+        var group = Model.isAPageGroup(state),
+            currentPage,
+            res = [];
 
-            if (group) {
-                for (var i in group.items) {
-                    currentPage = Model.getPage(group.items[i]);
-                    if (currentPage) {
-                        currentPage.url = currentPage.label.replace(/ /g, '_');
-                        res.push(currentPage);
-                    }
+        if (group) {
+            for (var i in group.items) {
+                currentPage = Model.getPage(group.items[i]);
+                if (currentPage) {
+                    currentPage.url = currentPage.label.replace(/ /g, '_');
+                    res.push(currentPage);
                 }
             }
+        }
 
-            return res;
-        };
+        return res;
+    };
 
-        var init = function () {
-            var currentState = $rootScope.currentState.name,
-                parentState = {},
-                layersReferences,
-                layerConfMap = {},
-                currentName = '';
+    var init = function() {
 
-            vm.subMenuLabel = null;
-            vm.subGroupMenu = null;
-            vm.subMenu = null;
-            vm.showCategoryBack = null;
-            vm.eventsList = null;
-            vm.backItem = null;
 
-            if ($state && $state.params &&
-                $state.params.id) {
-                currentName = $state.params.id.replace(/_/g, ' ');
+        var currentState = $rootScope.currentState.name,
+            parentState = {},
+            layersReferences,
+            layerConfMap = {},
+            currentName = '';
+
+        vm.subMenuLabel = null;
+        vm.subGroupMenu = null;
+        vm.subMenu = null;
+        vm.showCategoryBack = null;
+        vm.eventsList = null;
+        vm.backItem = null;
+
+        if ($state && $state.params &&
+            $state.params.id) {
+            currentName = $state.params.id.replace(/_/g, ' ');
+        }
+
+        if (currentState === 'app.main.events') {
+            vm.eventsList = MapService.getEventsList();
+        } else if (currentState === 'app.main.layer') {
+            vm.color = Model.getListColor(currentName);
+
+            layersReferences = MapService.getOverlayLayers();
+            console.log(layersReferences);
+            layerConfMap = MapService.overlayLayersConfMap();
+            console.log(layerConfMap);
+            realState = $rootScope.currentParams.id.replace(/_/g, ' ');
+            isAnOverlayGroup = Model.isAnOverlayGroup(realState);
+            console.log(isAnOverlayGroup);
+
+            if (!isAnOverlayGroup && typeof layerConfMap[realState] === 'undefined') {
+
+                Utils.goTo('map/');
+                return;
             }
 
-            if (currentState === 'app.main.events') {
-                vm.eventsList = MapService.getEventsList();
-            } else if (currentState === 'app.main.layer') {
-                vm.color = Model.getListColor(currentName);
+            if (!isAnOverlayGroup && typeof layersReferences[realState] === 'undefined') {
+                $ionicLoading.show({
+                    template: '<ion-spinner></ion-spinner>'
+                });
+            }
 
-                layersReferences = MapService.getOverlayLayers();
-                layerConfMap = MapService.overlayLayersConfMap();
-                realState = $rootScope.currentParams.id.replace(/_/g, ' ');
-                isAnOverlayGroup = Model.isAnOverlayGroup(realState);
+            vm.currentCategory = $rootScope.currentParams.id;
+            vm.viewTitle = realState;
+            vm.showCount = !isAnOverlayGroup;
+            vm.showCategoryBack = Model.isAChild(realState);
 
-                if (!isAnOverlayGroup && typeof layerConfMap[realState] === 'undefined') {
-                    Utils.goTo('map/');
-                    return;
-                }
+            if (typeof overlayMap[realState] !== 'undefined' ||
+                typeof overlaysGroupMap[realState] !== 'undefined') {
 
-                if (!isAnOverlayGroup && typeof layersReferences[realState] === 'undefined') {
-                    $ionicLoading.show({
-                        template: '<ion-spinner></ion-spinner>'
-                    });
-                }
+                if (Model.isAnOverlayGroup(realState)) {
 
-                vm.currentCategory = $rootScope.currentParams.id;
-                vm.viewTitle = realState;
-                vm.showCount = !isAnOverlayGroup;
-                vm.showCategoryBack = Model.isAChild(realState);
+                    vm.subGroupMenu = getMenuByState(realState);
+                    console.log(vm.subGroupMenu);
+                } else {
+                    if (MapService.isReady()) {
+                        vm.layersMap[realState].items.sort(function compare(a, b) {
+                            if (a.properties.name < b.properties.name)
+                                return -1;
+                            if (a.properties.name > b.properties.name)
+                                return 1;
+                            return 0;
+                        });
 
-                if (typeof overlayMap[realState] !== 'undefined' ||
-                    typeof overlaysGroupMap[realState] !== 'undefined') {
-
-                    if (Model.isAnOverlayGroup(realState)) {
-                        vm.subGroupMenu = getMenuByState(realState);
+                        vm.subMenu = [];
+                        Utils.slowAdd(angular.extend([], vm.layersMap[realState].items), vm.subMenu, true);
                     } else {
-                        if (MapService.isReady()) {
-                            vm.layersMap[realState].items.sort(function compare(a,b) {
-                                if (a.properties.name < b.properties.name)
-                                  return -1;
-                                if (a.properties.name > b.properties.name)
-                                  return 1;
-                                return 0;
-                            });
-
-                            vm.subMenu = [];
-                            Utils.slowAdd(angular.extend([], vm.layersMap[realState].items), vm.subMenu, true);
-                        } else {
-                            vm.subMenuLabel = realState;
-                        }
-
-                        parentState = Model.getOverlayParent(realState);
-
-                        if (parentState) {
-                            vm.backItem = {
-                                label: parentState.label,
-                                url: parentState.label.replace(/ /g, '_')
-                            };
-                        }
-
+                        vm.subMenuLabel = realState;
                     }
+
+                    parentState = Model.getOverlayParent(realState);
+
+                    if (parentState) {
+                        vm.backItem = {
+                            label: parentState.label,
+                            url: parentState.label.replace(/ /g, '_')
+                        };
+                    }
+
                 }
-            } else if (Model.isAPageGroup(currentName)) {
-                vm.color = Model.getListColor(currentName);
-                realState = $rootScope.currentParams.id.replace(/_/g, ' ');
-                vm.viewTitle = realState;
-                vm.subGroupMenu = getPagesByState(currentName);
             }
-            console.log(vm)
-        };
+        } else if (Model.isAPageGroup(currentName)) {
+            vm.color = Model.getListColor(currentName);
+            realState = $rootScope.currentParams.id.replace(/_/g, ' ');
+            vm.viewTitle = realState;
+            vm.subGroupMenu = getPagesByState(currentName);
+        }
+        console.log(vm)
+    };
 
-        init();
-        // $scope.$on('$stateChangeSuccess', init);
+    init();
+    // $scope.$on('$stateChangeSuccess', init);
 
-        vm.renderDate = function (date) {
-            var parsedDate,
-                month, year;
+    vm.renderDate = function(date) {
+        var parsedDate,
+            month, year;
 
-            if (date) {
-                parsedDate = new Date(Number(date) * 1000);
-                year = String(parsedDate.getFullYear()).substr(2);
-                month = parsedDate.getMonth() + 1;
-                month = String(month).length === 1 ? '0' + month : month;
-            }
+        if (date) {
+            parsedDate = new Date(Number(date) * 1000);
+            year = String(parsedDate.getFullYear()).substr(2);
+            month = parsedDate.getMonth() + 1;
+            month = String(month).length === 1 ? '0' + month : month;
+        }
 
-            return month + '.' + year;
-        };
+        return month + '.' + year;
+    };
 
-        vm.toggleList = function () {
-            vm.isListExpanded = !vm.isListExpanded;
-            $rootScope.$emit('toggle-list', vm.isListExpanded);
-        };
+    vm.toggleList = function() {
+        vm.isListExpanded = !vm.isListExpanded;
+        $rootScope.$emit('toggle-list', vm.isListExpanded);
+    };
 
-        vm.goToSearch = function () {
-            if (isAnOverlayGroup) {
-                Search.setActiveAllLayers();
-            } else {
-                Search.setActiveLayers(realState);
-            }
+    vm.goToSearch = function() {
+        if (isAnOverlayGroup) {
+            Search.setActiveAllLayers();
+        } else {
+            Search.setActiveLayers(realState);
+        }
 
-            vm.goTo('search');
-        };
+        vm.goTo('search');
+    };
 
-        return vm;
-    });
+    return vm;
+});

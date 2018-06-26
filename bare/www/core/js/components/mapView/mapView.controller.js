@@ -29,7 +29,7 @@ angular.module('webmapp')
 
         return allActive;
     };
-    
+
     MapService.showAllLayers();
     MapService.activateUtfGrid();
     modalScope.vm = {};
@@ -92,8 +92,8 @@ angular.module('webmapp')
             MapService.setFilter(filterName, value);
             modalScope.vm.filters[filterName].value = value;
             modalScope.vm.filters["Tutte"].value = areAllActive(modalScope.vm.filters);
-        } 
-    };    
+        }
+    };
 
     modalScope.vm.updateBaseMap = function(name) {
         if (modalScope.vm.currentMapLayer === name) {
@@ -101,7 +101,7 @@ angular.module('webmapp')
         }
         MapService.activateMapLayer(name);
         modalScope.vm.currentMapLayer = name;
-    }; 
+    };
 
     vm.openFilters = function() {
         var filt = MapService.getActiveFilters(),
@@ -120,8 +120,7 @@ angular.module('webmapp')
 
             if (nameTranslated.toLowerCase() === 'tappe' || nameTranslated.toLowerCase() === 'stages') {
                 nameTranslated = $translate.instant('Tappe');
-            }
-            else if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[lang]) {
+            } else if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[lang]) {
                 nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[lang];
             }
 
@@ -133,12 +132,6 @@ angular.module('webmapp')
             };
         }
 
-        activeFilters["userTracks"] = {
-            name: "I miei percorsi",
-            value: filt["userTracks"]
-                // icon: CONFIG.OVERLAY_LAYERS[i].icon,
-                // color: CONFIG.OVERLAY_LAYERS[i].color
-        };
         activeFilters = angular.extend(tmp, activeFilters);
         allActive = areAllActive(activeFilters);
 
