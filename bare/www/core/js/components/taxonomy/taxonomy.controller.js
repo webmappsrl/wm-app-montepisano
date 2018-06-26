@@ -49,6 +49,5 @@ angular.module('webmapp')
             })
         );
 
-
         return vm;
     });

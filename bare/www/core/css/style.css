@@ -3672,6 +3672,32 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
             border-radius: 50%; }
 
 /*
+ * TRACK TAXONOMY PAGE
+ *
+ */
+.trackTaxonomy-page ion-content {
+  padding: 10px; }
+  .trackTaxonomy-page ion-content div.taxonomy {
+    color: #000;
+    width: 100%;
+    height: 130px;
+    margin-bottom: 10px; }
+    .trackTaxonomy-page ion-content div.taxonomy div.taxonomy-title {
+      height: inherit;
+      font-size: 40px;
+      line-height: 55px;
+      vertical-align: middle;
+      padding: 10px;
+      overflow: hidden;
+      width: 70%;
+      float: left; }
+    .trackTaxonomy-page ion-content div.taxonomy div.taxonomy-button {
+      height: inherit;
+      width: 30%;
+      float: left;
+      color: #fff; }
+
+/*
  * WEBMAPP PAGE
  *
  * Styles for webmapp page

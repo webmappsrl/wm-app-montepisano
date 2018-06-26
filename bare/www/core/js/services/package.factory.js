@@ -20,7 +20,6 @@ angular.module('webmapp')
 
     .factory('PackageService', function PackageService(
         $http,
-        $q,
         $rootScope,
         $ionicLoading,
         $ionicModal,
@@ -42,7 +41,6 @@ angular.module('webmapp')
             userPackagesId = localStorage.$wm_userPackagesId ? JSON.parse(localStorage.$wm_userPackagesId) : null,
             userDownloadedPackages = localStorage.$wm_userDownloadedPackages ? JSON.parse(localStorage.$wm_userDownloadedPackages) : {},
             userPackagesIdRquested = localStorage.$wm_userPackagesIdRquested ? JSON.parse(localStorage.$wm_userPackagesIdRquested) : {},
-            categories = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : null,
             taxonomy = localStorage.$wm_taxonomy ? JSON.parse(localStorage.$wm_taxonomy) : {
                 activity: null,
                 theme: null,
@@ -56,9 +54,7 @@ angular.module('webmapp')
             asyncRoutes = 0,
             asyncRouteTranslations = 0;
 
-        var modalScope = $rootScope.$new(),
-            modal = {},
-            modalDownloadScope = $rootScope.$new(),
+        var modalDownloadScope = $rootScope.$new(),
             modalDownload = {};
 
         modalDownloadScope.vm = {};

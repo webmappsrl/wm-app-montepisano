@@ -1271,7 +1271,8 @@ angular.module('webmapp')
             } else if (currentState === 'app.main.coupons' ||
                 currentState === 'app.main.packages' ||
                 currentState === 'app.main.route' ||
-                currentState === 'app.main.taxonomy' ||
+                currentState === 'app.main.taxonomy' || 
+                currentState === 'app.main.tracktaxonomy' ||
                 currentState === 'app.main.languages' ||
                 currentState === 'app.main.webmappInternal' ||
                 currentState === 'app.main.attributionInternal') {

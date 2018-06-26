@@ -1,0 +1,33 @@
+<ion-view class="trackTaxonomy-page" cache-view="false" ng-controller="TrackTaxonomyController as vm">
+    <ion-nav-title>
+        <span id="pageTitle" ng-if="vm.title">
+            {{vm.title | translate}}
+        </span>
+    </ion-nav-title>
+    <ion-nav-buttons side="left">
+        <button class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left" ng-click="vm.goBack()"></button>
+    </ion-nav-buttons>
+    <ion-content ng-style="{
+        'background': vm.colors.global.background
+    }">
+        <div class="taxonomy-filter">
+            <select>
+                <option value="-1" selected>----</option>
+                <option ng-repeat="item in vm.filter" value="item.id">{{item.id}}</option>
+            </select>
+        </div>
+        <div class="taxonomy" ng-repeat="item in vm.taxonomy">
+            <div class="taxonomy-title">
+                <span ng-if="item.name[vm.currentLang]">{{item.name[vm.currentLang]}}</span>
+                <span ng-if="!item.name[vm.currentLang] && item.name[vm.defaultLang]">{{item.name[vm.defaultLang]}}</span>
+                <span ng-if="!item.name[vm.currentLang] && !item.name[vm.defaultLang]">{{item.name[Object.keys(item.name)[0]]}}</span>
+            </div>
+            <div class="taxonomy-button" ng-style="{
+                'background': item.color
+            }">
+                <i icon="icon wm-icon-ios7-arrow-thin-left"></i>
+                {{item.count}}
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

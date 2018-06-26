@@ -107,6 +107,14 @@ angular.module('webmapp')
                         templateUrl: basePath + 'js/components/attribution/attribution.html'
                     }
                 }
+            })
+            .state('app.main.tracktaxonomy', {
+                url: '/page/trackTaxonomy',
+                views: {
+                    'inception-top': {
+                        templateUrl: basePath + 'js/components/trackTaxonomy/trackTaxonomy.html'
+                    }
+                }
             });
 
         if (CONFIGProvider.PAGES) {

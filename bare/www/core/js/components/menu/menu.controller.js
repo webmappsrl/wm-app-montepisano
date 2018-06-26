@@ -4,21 +4,16 @@ angular.module('webmapp')
         $cordovaKeyboard,
         $ionicModal,
         $ionicPopup,
-        $ionicScrollDelegate,
         $ionicSideMenuDelegate,
-        $location,
         $rootScope,
         $scope,
         $state,
-        $timeout,
         $translate,
         Account,
         Auth,
         CONFIG,
-        MapService,
         Model,
         Offline,
-        Tracking,
         Utils
     ) {
         var vm = {};
@@ -62,6 +57,11 @@ angular.module('webmapp')
                 label: 'Attribution'
             };
         }
+
+        mainMenuItems[mainMenuItems.length] = {
+            type: 'tracktaxonomy',
+            label: 'Pontili di merda'
+        };
 
         for (var i in mainMenuItems) {
             var type = mainMenuItems[i].type,
