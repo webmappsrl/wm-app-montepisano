@@ -1,7 +1,5 @@
 <ion-modal-view class="modal-mappalo modal-filters">
-    <a 
-        class="modal-close"
-        ng-click="vm.hide()">
+    <a class="modal-close" ng-click="vm.hide()">
         <i class="icon wm-icon-android-close"></i>
     </a>
     <ion-content ng-style="{
@@ -10,7 +8,7 @@
         <div class="modal-content">
             <span class="modal-title">{{"VISUALIZZA/NASCONDI CATEGORIE" | translate}}</span>
 
-            <ion-list>
+            <!-- <ion-list>
                 <label 
                     class="item item-checkbox ng-not-empty" 
                     ng-repeat="(key, obj) in vm.filters" 
@@ -73,8 +71,47 @@
                         <span>{{key}}</span>
                     </div>
                 </label>
-            </ion-list>
+            </ion-list> -->
 
+            <div class="accordion-filters">
+                <div class="filters-tab-title-container">
+                    <div ng-repeat="(key, item) in filters.items" ng-click="switchTab(key)" class="filters-tab-title" ng-class="{
+                            'selected': filters.selected === key
+                        }">
+                        {{item.name}}
+                    </div>
+                </div>
+                <div class="filters-tab-content-container">
+                    <div ng-repeat="(key, item) in filters.items" class="filters-tab-content" ng-class="{
+                        'selected': filters.selected === key
+                    }">
+                        <div ng-repeat="(sublayerId, sublayer) in item.sublayers" class="filters-sublayer">
+                            <div>
+                                <i class="left-icon" ng-class="{
+                                    'ion-android-checkbox-outline': layer.selected,
+                                    'ion-android-checkbox-outline-blank': !layer.selected
+                                }"></i>
+                                <div  ng-click="toggleSublayer(sublayerId, key)">
+                                    {{sublayer.name}}
+                                    <i ng-if="sublayerId !== item.open" class="icon wm-icon-ios7-arrow-forward right-icon"></i>
+                                    <i ng-if="sublayerId === item.open" class="icon wm-icon-ios7-arrow-down right-icon"></i>
+                                </div>
+                            </div>
+
+                            <div class="filters-layer" ng-repeat="(layerId, layer) in sublayer.items" ng-class="{
+                                    'animate-show': item.open === sublayerId,
+                                    'animate-hide': item.open !== sublayerId
+                                }" ng-click="toggleLayer(layerId, sublayerId, key)">
+                                <i class="left-icon" ng-if="sublayerId === item.open" ng-class="{
+                                    'ion-android-checkbox-outline': layer.selected,
+                                    'ion-android-checkbox-outline-blank': !layer.selected
+                                }"></i>
+                                {{layer.name}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </ion-content>
 </ion-modal-view>
