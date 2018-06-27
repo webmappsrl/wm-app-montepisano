@@ -26,9 +26,8 @@ angular.module('webmapp')
             var features = MapService.getFeatureIdMap();
 
             for (var id in features) {
-
-                console.log(features[id].properties)
-                if (features[id].geometry.type !== 'LineString') {
+                if (features[id].geometry.type === 'LineString') {
+                    console.log(features[id].properties)
                     for (var i in features[id].properties.activity) {
                         if (!vm.taxonomy.filteredCount) {
                             vm.taxonomy[features[id].properties.activity[i]].filteredCount = 0;

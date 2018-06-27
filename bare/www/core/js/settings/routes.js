@@ -115,6 +115,14 @@ angular.module('webmapp')
                         templateUrl: basePath + 'js/components/trackTaxonomy/trackTaxonomy.html'
                     }
                 }
+            })
+            .state('app.main.portoferraiohome', {
+                url: '/page/portoferraioHome',
+                views: {
+                    'inception-top': {
+                        templateUrl: basePath + 'js/components/portoferraioHome/portoferraioHome.html'
+                    }
+                }
             });
 
         if (CONFIGProvider.PAGES) {

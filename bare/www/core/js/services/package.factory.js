@@ -271,7 +271,8 @@ angular.module('webmapp')
             if (taxonomy[taxonomyType]) {
                 $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
             }
-            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')
+            console.log(taxonomyType)
+            Communication.getJSON(communicationConf.baseUrl + '/wp-json/wp/v2/'/*communicationConf.wordPressEndpoint*/ + taxonomyType + '?per_page=100')
                 .then(function (data) {
                     asyncTranslations = 0;
                     taxonomy[taxonomyType] = {};
@@ -305,6 +306,9 @@ angular.module('webmapp')
                     localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
                 })
                 .catch(function (err) {
+                    if (asyncTranslations === 0) {
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                    }
                     if (!taxonomy[taxonomyType]) {
                         console.warn("No taxonomy " + taxonomyType);
                         return;

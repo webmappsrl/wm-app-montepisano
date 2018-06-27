@@ -62,6 +62,10 @@ angular.module('webmapp')
             type: 'tracktaxonomy',
             label: 'Pontili di merda'
         };
+        mainMenuItems[mainMenuItems.length] = {
+            type: 'portoferraiohome',
+            label: 'Home di merda'
+        };
 
         for (var i in mainMenuItems) {
             var type = mainMenuItems[i].type,

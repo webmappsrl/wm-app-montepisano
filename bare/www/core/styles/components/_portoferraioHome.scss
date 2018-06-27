@@ -1,0 +1,61 @@
+/**
+ * Portoferraio HOME PAGE
+ *
+ * Style for Home page
+ */
+
+/* ------------------------------------ *\
+   #GENERAL
+\* ------------------------------------ */
+.portoferraio-home-page {
+  ion-content {
+    padding: 20px;
+    .home-container {
+      width: 100%;
+      .titles-container {
+        width: 100%;
+        &:after{
+          clear: both;
+          content: "";
+          display: block;
+        }
+        .left-bar {
+          width: 70%;
+          margin-right: 5px;
+          float: left;
+        }
+        .right-bar {
+          width: calc(30% - 5px);
+          float: left;
+        }
+        .left-bar,
+        .right-bar {
+          font-weight: bold;
+          div {
+            background: rgb(73, 165, 223);
+          }
+          .title {
+            padding: 30px;
+            font-size: 35px;
+            margin-bottom: 5px;
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+          .right-button {
+            padding: 38.2px 5px;
+            text-align: center;
+            text-transform: uppercase;
+            &:first-child {
+              margin-bottom: 5px;
+            }
+            i {
+              display: block;
+              margin-bottom: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
