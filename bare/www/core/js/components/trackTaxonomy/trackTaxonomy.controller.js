@@ -27,7 +27,6 @@ angular.module('webmapp')
 
             for (var id in features) {
                 if (features[id].geometry.type === 'LineString') {
-                    console.log(features[id].properties)
                     for (var i in features[id].properties.activity) {
                         if (!vm.taxonomy.filteredCount) {
                             vm.taxonomy[features[id].properties.activity[i]].filteredCount = 0;
@@ -36,21 +35,29 @@ angular.module('webmapp')
                     }
                 }
             }
-
-            console.log(vm.taxonomy)
+            Utils.forceDigest();
         };
 
         vm.updateCounts = function ($event) {
-            console.log($event);
+            getCountForTaxonomy();
         };
 
         registeredEvents.push(
             $rootScope.$on('taxonomy-activity-updated', function (e, value) {
                 $ionicLoading.hide();
                 vm.taxonomy = value;
+
                 vm.filter = [];
                 for (var id in value) {
-                    vm.filter.push(id);
+                    vm.taxonomy[id].filteredCount = 0;
+                    if (!vm.taxonomy[id].color) {
+                        vm.taxonomy[id].color = '#0079BF';
+                    }
+                    var name = value[id].name[vm.currentLang] ? value[id].name[vm.currentLang] : (value[id].name[vm.defaultLang] ? value[id].name[vm.defaultLang] : value[id].name[Object.keys(value[id].name)[0]]);
+                    vm.filter.push({
+                        id: id,
+                        name: name
+                    });
                 }
 
                 vm.selectedItem = vm.filter[0];

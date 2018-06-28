@@ -57,6 +57,13 @@ angular.module('webmapp')
         var modalDownloadScope = $rootScope.$new(),
             modalDownload = {};
 
+        if (communicationConf.baseUrl && communicationConf.baseUrl[communicationConf.baseUrl.length -1] !== '/') {
+            communicationConf.baseUrl = communicationConf.baseUrl + '/';
+        }
+        if (communicationConf.wordPressEndpoint && communicationConf.wordPressEndpoint[communicationConf.wordPressEndpoint.length -1] !== '/') {
+            communicationConf.wordPressEndpoint = communicationConf.wordPressEndpoint + '/';
+        }
+
         modalDownloadScope.vm = {};
         modalDownloadScope.vm.hide = function () {
             modalDownload && modalDownload.hide();
@@ -271,8 +278,7 @@ angular.module('webmapp')
             if (taxonomy[taxonomyType]) {
                 $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
             }
-            console.log(taxonomyType)
-            Communication.getJSON(communicationConf.baseUrl + '/wp-json/wp/v2/'/*communicationConf.wordPressEndpoint*/ + taxonomyType + '?per_page=100')
+            Communication.getJSON(/*communicationConf.baseUrl + communicationConf.wordPressEndpoint*/ 'http://pf.be.webmapp.it/wp-json/wp/v2/' + taxonomyType + '?per_page=100')
                 .then(function (data) {
                     asyncTranslations = 0;
                     taxonomy[taxonomyType] = {};
@@ -306,9 +312,6 @@ angular.module('webmapp')
                     localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
                 })
                 .catch(function (err) {
-                    if (asyncTranslations === 0) {
-                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
-                    }
                     if (!taxonomy[taxonomyType]) {
                         console.warn("No taxonomy " + taxonomyType);
                         return;

@@ -3737,17 +3737,22 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
     .trackTaxonomy-page ion-content div.taxonomy div.taxonomy-title {
       height: inherit;
       font-size: 40px;
-      line-height: 55px;
+      line-height: 45px;
       vertical-align: middle;
-      padding: 10px;
+      padding: 20px 10px;
       overflow: hidden;
-      width: 70%;
-      float: left; }
-    .trackTaxonomy-page ion-content div.taxonomy div.taxonomy-button {
-      height: inherit;
-      width: 30%;
+      width: calc(100% - 100px);
       float: left;
-      color: #fff; }
+      font-weight: 700; }
+    .trackTaxonomy-page ion-content div.taxonomy div.taxonomy-button {
+      -webkit-box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9);
+      -moz-box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9);
+      box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9);
+      height: inherit;
+      width: 100px;
+      float: left;
+      color: #fff;
+      text-align: center; }
 
 /*
  * WEBMAPP PAGE

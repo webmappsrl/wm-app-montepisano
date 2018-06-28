@@ -13,7 +13,7 @@
         <div class="taxonomy-filter">
             <select>
                 <option value="-1" selected>----</option>
-                <option ng-repeat="item in vm.filter" value="item.id">{{item.id}}</option>
+                <option ng-repeat="item in vm.filter" value="item.id">{{item.name}}</option>
             </select>
         </div>
         <div class="taxonomy" ng-repeat="item in vm.taxonomy">
@@ -25,8 +25,8 @@
             <div class="taxonomy-button" ng-style="{
                 'background': item.color
             }">
-                <i icon="icon wm-icon-ios7-arrow-thin-left"></i>
-                {{item.count}}
+                <i class="icon {{item.icon}}" ng-if="item.icon"></i>
+                {{item.filteredCount}}
             </div>
         </div>
     </ion-content>
