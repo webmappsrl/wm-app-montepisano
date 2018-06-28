@@ -24,7 +24,7 @@ describe('MainController', function() {
         }));
 
 
-        it('Params defined=> should call function successfully', function() {
+        it('Params defined => should call function successfully', function() {
 
             spyOn(window.turf.pointToLineDistance, 'default').and.returnValue(10);
             vm.stopNavigationUrlParams.parentId = 'Tappe';
@@ -44,7 +44,10 @@ describe('MainController', function() {
             spyOn(MapService, 'getFeatureById').and.returnValue(deferred.promise);
             spyOn(vm, 'handleDistanceToast').and.callThrough();
             $httpBackend.whenGET(function(url) { return true; }).respond(404, '');
-            vm.checkOutOfTrack([47.718, 10.4]);
+            vm.checkOutOfTrack({
+                lat: 47.718,
+                long: 10.4
+            });
             deferred.resolve(feature);
 
             rootScope.$digest();
@@ -78,7 +81,10 @@ describe('MainController', function() {
             spyOn(vm, 'handleDistanceToast');
             spyOn(console, 'log');
             $httpBackend.whenGET(function(url) { return true; }).respond(404, '');
-            vm.checkOutOfTrack([47.718, 10.4]);
+            vm.checkOutOfTrack({
+                lat: 47.718,
+                long: 10.4
+            });
             deferred.reject(vm.stopNavigationUrlParams);
 
             rootScope.$digest();
