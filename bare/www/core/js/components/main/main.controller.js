@@ -1272,8 +1272,8 @@ angular.module('webmapp')
                 currentState === 'app.main.packages' ||
                 currentState === 'app.main.route' ||
                 currentState === 'app.main.taxonomy' || 
-                currentState === 'app.main.tracktaxonomy' ||
-                currentState === 'app.main.portoferraiohome' ||
+                currentState === 'app.main.trackTaxonomy' ||
+                currentState === 'app.main.portoferraioWelcome' ||
                 currentState === 'app.main.languages' ||
                 currentState === 'app.main.webmappInternal' ||
                 currentState === 'app.main.attributionInternal') {

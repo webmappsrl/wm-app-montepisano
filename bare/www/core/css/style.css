@@ -3509,49 +3509,54 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
 /* ------------------------------------ *\
    #GENERAL
 \* ------------------------------------ */
-.portoferraio-home-page ion-content {
+.portoferraio-welcome-page ion-content {
   padding: 20px; }
-  .portoferraio-home-page ion-content .home-container {
+  .portoferraio-welcome-page ion-content .welcome-container {
     width: 100%; }
-    .portoferraio-home-page ion-content .home-container .titles-container {
+    .portoferraio-welcome-page ion-content .welcome-container .titles-container {
       width: 100%; }
-      .portoferraio-home-page ion-content .home-container .titles-container:after {
+      .portoferraio-welcome-page ion-content .welcome-container .titles-container:after {
         clear: both;
         content: "";
         display: block; }
-      .portoferraio-home-page ion-content .home-container .titles-container .left-bar {
+      .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar {
         width: 70%;
         margin-right: 5px;
         float: left; }
-      .portoferraio-home-page ion-content .home-container .titles-container .right-bar {
+      .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar {
         width: calc(30% - 5px);
         float: left; }
-      .portoferraio-home-page ion-content .home-container .titles-container .left-bar,
-      .portoferraio-home-page ion-content .home-container .titles-container .right-bar {
+      .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar,
+      .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar {
         font-weight: bold; }
-        .portoferraio-home-page ion-content .home-container .titles-container .left-bar div,
-        .portoferraio-home-page ion-content .home-container .titles-container .right-bar div {
+        .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar div,
+        .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar div {
           background: #49a5df; }
-        .portoferraio-home-page ion-content .home-container .titles-container .left-bar .title,
-        .portoferraio-home-page ion-content .home-container .titles-container .right-bar .title {
+        .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar .title,
+        .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar .title {
           padding: 30px;
           font-size: 35px;
           margin-bottom: 5px; }
-          .portoferraio-home-page ion-content .home-container .titles-container .left-bar .title:last-child,
-          .portoferraio-home-page ion-content .home-container .titles-container .right-bar .title:last-child {
+          .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar .title:last-child,
+          .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar .title:last-child {
             margin-bottom: 0; }
-        .portoferraio-home-page ion-content .home-container .titles-container .left-bar .right-button,
-        .portoferraio-home-page ion-content .home-container .titles-container .right-bar .right-button {
+        .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar .right-button,
+        .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar .right-button {
           padding: 38.2px 5px;
           text-align: center;
           text-transform: uppercase; }
-          .portoferraio-home-page ion-content .home-container .titles-container .left-bar .right-button:first-child,
-          .portoferraio-home-page ion-content .home-container .titles-container .right-bar .right-button:first-child {
+          .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar .right-button:first-child,
+          .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar .right-button:first-child {
             margin-bottom: 5px; }
-          .portoferraio-home-page ion-content .home-container .titles-container .left-bar .right-button i,
-          .portoferraio-home-page ion-content .home-container .titles-container .right-bar .right-button i {
+          .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar .right-button i,
+          .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar .right-button i {
             display: block;
             margin-bottom: 10px; }
+    .portoferraio-welcome-page ion-content .welcome-container .logo-container {
+      padding: 20px 10px; }
+      .portoferraio-welcome-page ion-content .welcome-container .logo-container img {
+        width: 100%;
+        height: auto; }
 
 /**
  * SEARCH PAGE

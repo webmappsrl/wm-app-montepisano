@@ -108,7 +108,7 @@ angular.module('webmapp')
                     }
                 }
             })
-            .state('app.main.tracktaxonomy', {
+            .state('app.main.trackTaxonomy', {
                 url: '/page/trackTaxonomy',
                 views: {
                     'inception-top': {
@@ -116,8 +116,16 @@ angular.module('webmapp')
                     }
                 }
             })
-            .state('app.main.portoferraiohome', {
-                url: '/page/portoferraioHome',
+            .state('app.main.portoferraioWelcome', {
+                url: '/page/portoferraioWelcome',
+                views: {
+                    'inception-top': {
+                        templateUrl: basePath + 'js/components/portoferraioWelcome/portoferraioWelcome.html'
+                    }
+                }
+            })
+            .state('app.main.portoferraioHome', {
+                url: '/page/portoferraioHme',
                 views: {
                     'inception-top': {
                         templateUrl: basePath + 'js/components/portoferraioHome/portoferraioHome.html'

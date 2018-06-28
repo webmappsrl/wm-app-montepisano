@@ -7,10 +7,10 @@
 /* ------------------------------------ *\
    #GENERAL
 \* ------------------------------------ */
-.portoferraio-home-page {
+.portoferraio-welcome-page {
   ion-content {
     padding: 20px;
-    .home-container {
+    .welcome-container {
       width: 100%;
       .titles-container {
         width: 100%;
@@ -54,6 +54,13 @@
               margin-bottom: 10px;
             }
           }
+        }
+      }
+      .logo-container {
+        padding: 20px 10px;
+        img {
+          width: 100%;
+          height: auto;
         }
       }
     }

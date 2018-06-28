@@ -58,15 +58,6 @@ angular.module('webmapp')
             };
         }
 
-        mainMenuItems[mainMenuItems.length] = {
-            type: 'tracktaxonomy',
-            label: 'Pontili di merda'
-        };
-        mainMenuItems[mainMenuItems.length] = {
-            type: 'portoferraiohome',
-            label: 'Home di merda'
-        };
-
         for (var i in mainMenuItems) {
             var type = mainMenuItems[i].type,
                 currentUrl = Model.buildItemUrl(mainMenuItems[i]);

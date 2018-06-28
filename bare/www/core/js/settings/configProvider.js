@@ -46,7 +46,6 @@ angular.module('webmapp')
 
     this.$get = function(
         $ionicPopup,
-        $ionicPlatform,
         $translate
     ) {
         var mhildBaseUrl;
@@ -140,7 +139,32 @@ angular.module('webmapp')
             }
         }
 
-        // console.log(config);
+        config.PAGES.push({
+            label: 'Home di merda',
+            type: 'portoferraioHome'
+        });
+        config.PAGES.push({
+            label: 'Welcome di merda',
+            type: 'portoferraioWelcome'
+        });
+        config.PAGES.push({
+            label: 'Pontili di merda',
+            type: 'trackTaxonomy'
+        });
+
+        config.MENU.push({
+            label: 'Home di merda',
+            type: 'portoferraioHome'
+        });
+        config.MENU.push({
+            label: 'Welcome di merda',
+            type: 'portoferraioWelcome'
+        });
+        config.MENU.push({
+            label: 'Pontili di merda',
+            type: 'trackTaxonomy'
+        });
+        console.log(config);
 
         return config;
     };
