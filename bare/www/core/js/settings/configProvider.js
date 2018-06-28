@@ -3,7 +3,7 @@ angular.module('webmapp')
 
 .provider('CONFIG', function(
     GENERAL_CONFIG
-    ) {
+) {
     var config = angular.extend(this, GENERAL_CONFIG);
 
     if (!!localStorage.$wm_mhildConf) {
@@ -42,7 +42,7 @@ angular.module('webmapp')
 
         return retValue;
     };
-        
+
 
     this.$get = function(
         $ionicPopup,
@@ -62,7 +62,7 @@ angular.module('webmapp')
 
         if (config.INCLUDE) {
             var errors = 0;
-                warnings = 0;
+            warnings = 0;
 
             if (config.INCLUDE.url) {
                 var url = config.INCLUDE.url;
@@ -79,17 +79,14 @@ angular.module('webmapp')
                         config = angular.extend(config, tmp);
 
                         warnings++;
-                    }
-                    else {
+                    } else {
                         errors++;
                     }
-                }
-                else {
+                } else {
                     config = angular.extend(config, data);
                     localStorage.setItem(url, JSON.stringify(data));
                 }
-            }
-            else {
+            } else {
                 for (var i in config.INCLUDE) {
                     var url = config.COMMUNICATION.baseUrl + config.INCLUDE[i];
                     var data = getAsyncJSON(url);
@@ -99,14 +96,12 @@ angular.module('webmapp')
                             var tmp = {};
                             tmp[i] = JSON.parse(value);
                             config = angular.extend(config, tmp);
-    
+
                             warnings++;
-                        }
-                        else {
+                        } else {
                             errors++;
                         }
-                    }
-                    else {
+                    } else {
                         var tmp = {};
                         tmp[i] = data;
                         config = angular.extend(config, tmp);
@@ -121,7 +116,7 @@ angular.module('webmapp')
                     template: $translate.instant("Si è verificato un errore di comunicazione che non permette il corretto caricamento dell'APP. Controlla di essere online e riprova più tardi"),
                     buttons: [{
                         text: 'Ok',
-                        onTap: function (e) {
+                        onTap: function(e) {
                             ionic.Platform.exitApp();
                         }
                     }]
@@ -142,6 +137,153 @@ angular.module('webmapp')
 
         console.log(config);
 
+        config.MAP.filters = {
+            base_maps: {
+                label: "Mappe",
+
+
+                items: [{
+                        label: "Satellite"
+                    },
+                    {
+                        label: "Altro"
+                    }
+                ]
+            },
+            pois: {
+
+                label: "Punti",
+                items: [{
+                        label: "primo filtro"
+                    },
+                    {
+                        label: "Secondo filtro"
+                    }
+                ],
+                sublayers: [{
+                        label: "Ristorazione",
+                        items: [{
+                                label: "Ristoranti"
+                            },
+                            {
+                                label: "Bar"
+                            }
+                        ]
+                    },
+                    {
+                        label: "Cultura",
+                        items: [{
+                                label: "Servizi"
+                            },
+                            {
+                                label: "Storia e Cultura"
+                            }
+                        ]
+                    }
+                ]
+            },
+            tracks: {
+                label: "Percorsi",
+                sublayers: [{
+                        label: "Blablabla",
+                        items: [{
+                                label: "Cicloescursionismo"
+                            },
+                            {
+                                label: "Escursionimo"
+                            }
+                        ]
+                    },
+                    {
+                        label: "A piedi",
+                        items: [{
+                                label: "A piedi in città"
+                            },
+                            {
+                                label: "Escursionimo"
+                            }
+                        ]
+                    }
+                ]
+            }
+
+        };
+
         return config;
     };
+
+
+    config.MAP.filters = {
+        base_maps: {
+            label: "Mappe",
+
+
+            items: [{
+                    label: "Satellite"
+                },
+                {
+                    label: "Altro"
+                }
+            ]
+
+        },
+        pois: {
+
+            label: "Punti",
+            items: [{
+                    label: "primo filtro"
+                },
+                {
+                    label: "Secondo filtro"
+                }
+            ],
+            sublayers: [{
+                    label: "Ristorazione",
+                    items: [{
+                            label: "Ristoranti"
+                        },
+                        {
+                            label: "Bar"
+                        }
+                    ]
+                },
+                {
+                    label: "Cultura",
+                    items: [{
+                            label: "Servizi"
+                        },
+                        {
+                            label: "Storia e Cultura"
+                        }
+                    ]
+                }
+            ]
+        },
+        tracks: {
+            label: "Percorsi",
+            sublayers: [{
+                    label: "Blablabla",
+                    items: [{
+                            label: "Cicloescursionismo"
+                        },
+                        {
+                            label: "Escursionimo"
+                        }
+                    ]
+                },
+                {
+                    label: "A piedi",
+                    items: [{
+                            label: "A piedi in città"
+                        },
+                        {
+                            label: "Escursionimo"
+                        }
+                    ]
+                }
+            ]
+        }
+
+    };
+
 });
