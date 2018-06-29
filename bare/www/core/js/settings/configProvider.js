@@ -138,24 +138,7 @@ angular.module('webmapp')
                 });
             }
         }
-
-        config.PAGES.push({
-            label: 'Home di merda',
-            type: 'portoferraioHome'
-        });
-        config.PAGES.push({
-            label: 'Pontili di merda',
-            type: 'trackTaxonomy'
-        });
-
-        config.MENU.push({
-            label: 'Home di merda',
-            type: 'portoferraioHome'
-        });
-        config.MENU.push({
-            label: 'Pontili di merda',
-            type: 'trackTaxonomy'
-        });
+        
         console.log(config);
 
         return config;

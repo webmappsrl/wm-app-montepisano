@@ -115,30 +115,6 @@ angular.module('webmapp')
                         templateUrl: basePath + 'js/components/attribution/attribution.html'
                     }
                 }
-            })
-            .state('app.main.trackTaxonomy', {
-                url: '/page/trackTaxonomy',
-                views: {
-                    'inception-top': {
-                        templateUrl: basePath + 'js/components/trackTaxonomy/trackTaxonomy.html'
-                    }
-                }
-            })
-            .state('app.main.portoferraioWelcome', {
-                url: '/page/portoferraioWelcome',
-                views: {
-                    'inception-top': {
-                        templateUrl: basePath + 'js/components/portoferraioWelcome/portoferraioWelcome.html'
-                    }
-                }
-            })
-            .state('app.main.portoferraioHome', {
-                url: '/page/portoferraioHme',
-                views: {
-                    'inception-top': {
-                        templateUrl: basePath + 'js/components/portoferraioHome/portoferraioHome.html'
-                    }
-                }
             });
 
         if (CONFIGProvider.PAGES) {
