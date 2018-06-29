@@ -265,25 +265,6 @@ angular.module('webmapp')
         );
 
         registeredEvents.push(
-            $scope.$on('$ionicView.beforeEnter', function () {
-                $ionicLoading.show({
-                    template: '<ion-spinner></ion-spinner>'
-                });
-                PackageService.getRoutes();
-                PackageService.getDownloadedPackages();
-
-                if (Auth.isLoggedIn()) {
-                    userData = Auth.getUserData();
-                    vm.isLoggedIn = true;
-
-                    PackageService.getPackagesIdByUserId();
-
-                    Utils.forceDigest();
-                }
-            })
-        );
-
-        registeredEvents.push(
             $scope.$on('$destroy', function () {
                 if ($ionicSlideBoxDelegate._instances &&
                     $ionicSlideBoxDelegate._instances.length > 0) {
@@ -302,5 +283,20 @@ angular.module('webmapp')
             })
         );
 
+        $ionicLoading.show({
+            template: '<ion-spinner></ion-spinner>'
+        });
+        PackageService.getRoutes();
+        PackageService.getDownloadedPackages();
+
+        if (Auth.isLoggedIn()) {
+            userData = Auth.getUserData();
+            vm.isLoggedIn = true;
+
+            PackageService.getPackagesIdByUserId();
+
+            Utils.forceDigest();
+        }
+        
         return vm;
     });
