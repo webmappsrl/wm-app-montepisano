@@ -1,3 +1,5 @@
+Version 0.1.1610
+Geolocation flow renewed
 Version 0.1.1609
 Version 0.1.1608
 Added current speed as stat during navigation

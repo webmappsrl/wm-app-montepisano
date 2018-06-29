@@ -132,15 +132,15 @@
                 return;
             }
             var parsed = this.parseHash(hash);
-            if (parsed) {
-                this.movingMap = true;
+            // if (parsed) {
+            //     this.movingMap = true;
 
-                this.map.setView(parsed.center, parsed.zoom);
+            //     this.map.setView(parsed.center, parsed.zoom);
 
-                this.movingMap = false;
-            } else {
+            //     this.movingMap = false;
+            // } else {
                 this.onMapMove(this.map);
-            }
+            // }
         },
 
         // defer hash change updates every 100ms
