@@ -15,6 +15,7 @@ angular.module('webmapp')
         var registeredEvents = [];
 
         vm.goBack = Utils.goBack;
+        vm.goTo = Utils.goTo;
         vm.taxonomy = {};
         vm.colors = CONFIG.STYLE;
         vm.selectedFilter = '-1';

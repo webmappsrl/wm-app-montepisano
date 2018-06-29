@@ -120,6 +120,15 @@ angular.module('webmapp')
         vm.othersCount = String(vm.filtersList.length -1);
         vm.areAllActive = modalScope.vm.areAllActive = areAllActive(Search.getActiveLayersMap());
         vm.results = vm.translateOverlayInArray(Search.getByLayersWithDivider(lastQuery, vm.filtersList));
+
+        vm.results.realLength = 0;
+
+        for (var i in vm.results) {
+            if (vm.results[i].id) {
+                vm.results.realLength++;
+            }
+        }
+
         MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery, vm.filtersList));
 
         $ionicScrollDelegate.scrollTop();
@@ -177,13 +186,14 @@ angular.module('webmapp')
 
         for (var i in vm.results) {
             if (vm.results[i].id) {
-                vm.results.realLength = vm.results.realLength + 1;
+                vm.results.realLength++;
             }
         }
 
         MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(query, Search.getActiveLayers()));
         $ionicScrollDelegate.scrollTop();
         lastQuery = query;
+        Utils.forceDigest();
     };
 
     vm.toggleMap = function() {
