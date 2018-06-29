@@ -3,8 +3,6 @@
 angular.module('webmapp')
 
 .factory('Model', function Model(
-    $http,
-    $rootScope,
     CONFIG,
     Utils,
     Search

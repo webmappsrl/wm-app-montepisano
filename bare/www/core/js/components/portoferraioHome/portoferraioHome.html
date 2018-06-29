@@ -1,11 +1,40 @@
 <ion-view class="portoferraio-home-page" cache-view="false" ng-controller="PortoferraioHomeController as vm">
-    <img src="core/images/portoferraio_home_page.png" />
-    <div class="portoferraio-home-content">
-        <div class="language-selector" ng-click="vm.chooseLang('it')">
-            BENVENUTI
+    <ion-nav-title>
+        <span id="pageTitle" ng-if="vm.title">
+            {{vm.title | translate}}
+        </span>
+    </ion-nav-title>
+    <ion-nav-buttons side="left">
+        <button class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
+    </ion-nav-buttons>
+    <ion-content>
+        <div class="home-container">
+            <div class="titles-container">
+                <div class="left-bar">
+                    <div class="title">
+                        Portoferraio
+                    </div>
+                    <div class="title" ng-click="vm.goTo('trackTaxonomy')">
+                        i Pontili
+                    </div>
+                    <div class="title">
+                        gli Eventi
+                    </div>
+                </div>
+                <div class="right-bar">
+                    <div class="right-button">
+                        <i class="icon wm-icon-android-user-menu"></i>
+                        Card
+                    </div>
+                    <div class="right-button" ng-click="vm.goTo('search')">
+                        <i class="icon wm-icon-ios7-search-strong"></i>
+                        Cerca
+                    </div>
+                </div>
+            </div>
+            <div class="logo-container">
+                <img src="core/images/cosmopoli_logo.png">
+            </div>
         </div>
-        <div class="language-selector" ng-click="vm.chooseLang('en')">
-            WELCOME
-        </div>
-    </div>
+    </ion-content>
 </ion-view>

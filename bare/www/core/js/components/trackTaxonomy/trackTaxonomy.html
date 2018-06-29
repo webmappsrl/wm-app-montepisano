@@ -11,12 +11,12 @@
         'background': vm.colors.global.background
     }">
         <div class="taxonomy-filter">
-            <select>
+            <select id="filter-selection" ng-model="vm.selectedFilter" ng-change="vm.updateCounts()">
                 <option value="-1" selected>----</option>
-                <option ng-repeat="item in vm.filter" value="item.id">{{item.name}}</option>
+                <option ng-repeat="item in vm.filter" value="{{item.id}}">{{item.name}}</option>
             </select>
         </div>
-        <div class="taxonomy" ng-repeat="item in vm.taxonomy">
+        <div class="taxonomy" ng-repeat="item in vm.taxonomy" ng-click="vm.goToFilteredTracks(item.id)">
             <div class="taxonomy-title">
                 <span ng-if="item.name[vm.currentLang]">{{item.name[vm.currentLang]}}</span>
                 <span ng-if="!item.name[vm.currentLang] && item.name[vm.defaultLang]">{{item.name[vm.defaultLang]}}</span>
@@ -27,6 +27,21 @@
             }">
                 <i class="icon {{item.icon}}" ng-if="item.icon"></i>
                 {{item.filteredCount}}
+                <i class="icon wm-icon-android-arrow-forward"></i>
+            </div>
+        </div>
+        <div class="taxonomy-footer">
+            <div class="footer-button">
+                <i clacc="icon wm-icon-android-user-menu"></i>
+                {{"Card" | translate}}
+            </div>
+            <div class="footer-button">
+                <i clacc="icon wm-icon-android-user-menu"></i>
+                {{"Mappa" | translate}}
+            </div>
+            <div class="footer-button">
+                <i clacc="icon wm-icon-android-user-menu"></i>
+                {{"Cerca" | translate}}
             </div>
         </div>
     </ion-content>

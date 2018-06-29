@@ -5,7 +5,6 @@ angular.module('webmapp')
         $rootScope,
         $state,
         $ionicLoading,
-        $ionicScrollDelegate,
         Utils,
         MapService,
         Model,
@@ -21,9 +20,12 @@ angular.module('webmapp')
             realState = '';
 
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
-        vm.isListExpanded = false,
+        vm.isListExpanded = false;
         vm.layersMap = Model.getLayersMap();
         vm.goTo = Utils.goTo;
+        vm.goBack = Utils.goBack;
+
+        vm.filterDetails = $state.params;
 
         MapService.activateUtfGrid();
 
@@ -84,7 +86,7 @@ angular.module('webmapp')
 
             if (currentState === 'app.main.events') {
                 vm.eventsList = MapService.getEventsList();
-            } else if (currentState === 'app.main.layer') {
+            } else if (currentState === 'app.main.layer' || currentState === 'app.main.filteredLayer') {
                 vm.color = Model.getListColor(currentName);
 
                 layersReferences = MapService.getOverlayLayers();
@@ -115,11 +117,11 @@ angular.module('webmapp')
                         vm.subGroupMenu = getMenuByState(realState);
                     } else {
                         if (MapService.isReady()) {
-                            vm.layersMap[realState].items.sort(function compare(a,b) {
+                            vm.layersMap[realState].items.sort(function compare(a, b) {
                                 if (a.properties.name < b.properties.name)
-                                  return -1;
+                                    return -1;
                                 if (a.properties.name > b.properties.name)
-                                  return 1;
+                                    return 1;
                                 return 0;
                             });
 
@@ -137,8 +139,11 @@ angular.module('webmapp')
                                 url: parentState.label.replace(/ /g, '_')
                             };
                         }
-
                     }
+                }
+
+                if (currentState === 'app.main.filteredLayer') {
+                    vm.canGoBack = true;
                 }
             } else if (Model.isAPageGroup(currentName)) {
                 vm.color = Model.getListColor(currentName);
@@ -146,11 +151,9 @@ angular.module('webmapp')
                 vm.viewTitle = realState;
                 vm.subGroupMenu = getPagesByState(currentName);
             }
-            // console.log(vm)
         };
 
         init();
-        // $scope.$on('$stateChangeSuccess', init);
 
         vm.renderDate = function (date) {
             var parsedDate,

@@ -88,3 +88,47 @@ angular.module('webmapp')
             return results;
         };
     });
+
+angular.module('webmapp')
+    .filter('layerTaxonomyFilter', function (
+        $rootScope
+    ) {
+        return function (input, filters) {
+            if ($rootScope.currentState.name === 'app.main.filteredLayer') {
+                var activityId = filters.activityId,
+                    themeId = filters.themeId,
+                    result = [];
+
+                for (var pos in input) {
+                    var toFilter = true;
+                    if (input[pos].properties.taxonomy && input[pos].properties.taxonomy.activity) {
+                        for (var i in input[pos].properties.taxonomy.activity) {
+                            if (+input[pos].properties.taxonomy.activity[i] === +activityId) {
+                                if (themeId && input[pos].properties.taxonomy.theme) {
+                                    for (var j in input[pos].properties.taxonomy.theme) {
+                                        if (+input[pos].properties.taxonomy.theme[j] === +themeId) {
+                                            toFilter = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                else {
+                                    toFilter = false;
+                                }
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!toFilter) {
+                        result.push(input[pos]);
+                    }
+                }
+
+                return result;
+            }
+            else {
+                return input;
+            }
+        };
+    });

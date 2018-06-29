@@ -3509,52 +3509,52 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
 /* ------------------------------------ *\
    #GENERAL
 \* ------------------------------------ */
-.portoferraio-welcome-page ion-content {
+.portoferraio-home-page ion-content {
   padding: 20px; }
-  .portoferraio-welcome-page ion-content .welcome-container {
+  .portoferraio-home-page ion-content .home-container {
     width: 100%; }
-    .portoferraio-welcome-page ion-content .welcome-container .titles-container {
+    .portoferraio-home-page ion-content .home-container .titles-container {
       width: 100%; }
-      .portoferraio-welcome-page ion-content .welcome-container .titles-container:after {
+      .portoferraio-home-page ion-content .home-container .titles-container:after {
         clear: both;
         content: "";
         display: block; }
-      .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar {
+      .portoferraio-home-page ion-content .home-container .titles-container .left-bar {
         width: 70%;
         margin-right: 5px;
         float: left; }
-      .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar {
+      .portoferraio-home-page ion-content .home-container .titles-container .right-bar {
         width: calc(30% - 5px);
         float: left; }
-      .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar,
-      .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar {
+      .portoferraio-home-page ion-content .home-container .titles-container .left-bar,
+      .portoferraio-home-page ion-content .home-container .titles-container .right-bar {
         font-weight: bold; }
-        .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar div,
-        .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar div {
+        .portoferraio-home-page ion-content .home-container .titles-container .left-bar div,
+        .portoferraio-home-page ion-content .home-container .titles-container .right-bar div {
           background: #49a5df; }
-        .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar .title,
-        .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar .title {
+        .portoferraio-home-page ion-content .home-container .titles-container .left-bar .title,
+        .portoferraio-home-page ion-content .home-container .titles-container .right-bar .title {
           padding: 30px;
           font-size: 35px;
           margin-bottom: 5px; }
-          .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar .title:last-child,
-          .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar .title:last-child {
+          .portoferraio-home-page ion-content .home-container .titles-container .left-bar .title:last-child,
+          .portoferraio-home-page ion-content .home-container .titles-container .right-bar .title:last-child {
             margin-bottom: 0; }
-        .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar .right-button,
-        .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar .right-button {
+        .portoferraio-home-page ion-content .home-container .titles-container .left-bar .right-button,
+        .portoferraio-home-page ion-content .home-container .titles-container .right-bar .right-button {
           padding: 38.2px 5px;
           text-align: center;
           text-transform: uppercase; }
-          .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar .right-button:first-child,
-          .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar .right-button:first-child {
+          .portoferraio-home-page ion-content .home-container .titles-container .left-bar .right-button:first-child,
+          .portoferraio-home-page ion-content .home-container .titles-container .right-bar .right-button:first-child {
             margin-bottom: 5px; }
-          .portoferraio-welcome-page ion-content .welcome-container .titles-container .left-bar .right-button i,
-          .portoferraio-welcome-page ion-content .welcome-container .titles-container .right-bar .right-button i {
+          .portoferraio-home-page ion-content .home-container .titles-container .left-bar .right-button i,
+          .portoferraio-home-page ion-content .home-container .titles-container .right-bar .right-button i {
             display: block;
             margin-bottom: 10px; }
-    .portoferraio-welcome-page ion-content .welcome-container .logo-container {
+    .portoferraio-home-page ion-content .home-container .logo-container {
       padding: 20px 10px; }
-      .portoferraio-welcome-page ion-content .welcome-container .logo-container img {
+      .portoferraio-home-page ion-content .home-container .logo-container img {
         width: 100%;
         height: auto; }
 
@@ -3734,6 +3734,11 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
  */
 .trackTaxonomy-page ion-content {
   padding: 10px; }
+  .trackTaxonomy-page ion-content .taxonomy-filter #filter-selection {
+    font-size: 20px;
+    margin: 0 15% 15px;
+    width: 70%;
+    background: #fff; }
   .trackTaxonomy-page ion-content div.taxonomy {
     color: #000;
     width: 100%;
@@ -3758,6 +3763,17 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
       float: left;
       color: #fff;
       text-align: center; }
+  .trackTaxonomy-page ion-content .taxonomy-footer {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: auto; }
+    .trackTaxonomy-page ion-content .taxonomy-footer .footer-button {
+      width: calc(100% /3);
+      float: left;
+      font-size: 20px;
+      color: #000; }
 
 /*
  * WEBMAPP PAGE

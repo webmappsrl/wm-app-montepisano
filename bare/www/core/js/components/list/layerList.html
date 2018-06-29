@@ -16,7 +16,12 @@
         class="no-animate">
         <button 
             class="no-animate button button-icon icon ion-navicon" 
-            menu-toggle="left"></button>
+            menu-toggle="left"
+            ng-if="!vm.canGoBack"></button>
+        <button 
+            class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left" 
+            ng-click="vm.goBack()"
+            ng-if="vm.canGoBack"></button>
     </ion-nav-buttons>
     
     <ion-nav-buttons 
@@ -76,7 +81,7 @@
                     class="item item-icon-left"
                     ng-if="vm.subMenuLabel"
                     ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
-                    ng-repeat="item in vm.layersMap[vm.subMenuLabel].items | filter:search"
+                    ng-repeat="item in vm.layersMap[vm.subMenuLabel].items | filter:search | layerTaxonomyFilter : vm.filterDetails"
                     ng-style="{
                         'color': vm.colors.list.color ? vm.colors.list.color : '#605846'
                     }">
@@ -94,7 +99,7 @@
                 <ion-item 
                     class="item item-icon-left"
                     ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
-                    collection-repeat="item in vm.subMenu | filter:search">
+                    collection-repeat="item in vm.subMenu | filter:search | layerTaxonomyFilter : vm.filterDetails">
                     <i class="icon {{item.properties.icon}}" ng-style="{'color': item.properties.color ? item.properties.color : '#605846'}"></i>
                     <!-- TODO: add following markup for subtitle -->
                             <span

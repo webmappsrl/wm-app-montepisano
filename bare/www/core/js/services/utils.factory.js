@@ -68,6 +68,18 @@ angular.module('webmapp')
                     parentId: parentId,
                     id: param
                 });
+            } else if (path.indexOf('filteredLayer') !== -1) {
+                splitted = path.split('/');
+                state = splitted[0];
+                parentId = splitted[1];
+                activityId = splitted[2];
+                themeId = splitted[3];
+
+                $state.go('app.main.filteredLayer', {
+                    id: parentId,
+                    activityId: activityId,
+                    themeId: themeId
+                });
             } else {
                 splitted = path.split('/');
                 state = splitted[0];

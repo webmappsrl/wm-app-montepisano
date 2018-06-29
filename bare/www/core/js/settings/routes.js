@@ -76,6 +76,14 @@ angular.module('webmapp')
                     }
                 }
             })
+            .state('app.main.filteredLayer', {
+                url: '/filteredLayer/:id/:activityId/:themeId',
+                views: {
+                    'inception-top': {
+                        templateUrl: basePath + 'js/components/list/layerList.html'
+                    }
+                }
+            })
             .state('app.main.pages', {
                 url: '/pages/:id',
                 views: {

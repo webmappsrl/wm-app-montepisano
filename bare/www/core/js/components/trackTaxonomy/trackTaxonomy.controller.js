@@ -17,28 +17,47 @@ angular.module('webmapp')
         vm.goBack = Utils.goBack;
         vm.taxonomy = {};
         vm.colors = CONFIG.STYLE;
-        vm.selectedFilter = null;
+        vm.selectedFilter = '-1';
 
         vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
 
+        vm.goToFilteredTracks = function (id) {
+            if (vm.taxonomy[id].filteredCount > 0){
+                Utils.goTo('filteredLayer/Tracks/' + id + '/' + ((+vm.selectedFilter !== -1) ? vm.selectedFilter : ""));
+            }
+        };
+
         var getCountForTaxonomy = function () {
             var features = MapService.getFeatureIdMap();
 
+            for (var id in vm.taxonomy) {
+                vm.taxonomy[id].filteredCount = 0;
+            }
+
             for (var id in features) {
                 if (features[id].geometry.type === 'LineString') {
-                    for (var i in features[id].properties.activity) {
-                        if (!vm.taxonomy.filteredCount) {
-                            vm.taxonomy[features[id].properties.activity[i]].filteredCount = 0;
+                    if (features[id].properties.taxonomy && features[id].properties.taxonomy.activity) {
+                        for (var i in features[id].properties.taxonomy.activity) {
+                            if (+vm.selectedFilter !== -1 && features[id].properties.taxonomy.theme) {
+                                for (var j in features[id].properties.taxonomy.theme) {
+                                    if (+features[id].properties.taxonomy.theme[j] === +vm.selectedFilter) {
+                                        vm.taxonomy[features[id].properties.taxonomy.activity[i]].filteredCount++;
+                                        break;
+                                    }
+                                }
+                            }
+                            else if (+vm.selectedFilter === -1) {
+                                vm.taxonomy[features[id].properties.taxonomy.activity[i]].filteredCount++;
+                            }
                         }
-                        vm.taxonomy[features[id].properties.activity[i]]++;
                     }
                 }
             }
             Utils.forceDigest();
         };
 
-        vm.updateCounts = function ($event) {
+        vm.updateCounts = function () {
             getCountForTaxonomy();
         };
 
@@ -47,12 +66,21 @@ angular.module('webmapp')
                 $ionicLoading.hide();
                 vm.taxonomy = value;
 
-                vm.filter = [];
                 for (var id in value) {
-                    vm.taxonomy[id].filteredCount = 0;
                     if (!vm.taxonomy[id].color) {
                         vm.taxonomy[id].color = '#0079BF';
                     }
+                }
+
+                getCountForTaxonomy();
+                Utils.forceDigest();
+            })
+        );
+
+        registeredEvents.push(
+            $rootScope.$on('taxonomy-theme-updated', function (e, value) {
+                vm.filter = [];
+                for (var id in value) {
                     var name = value[id].name[vm.currentLang] ? value[id].name[vm.currentLang] : (value[id].name[vm.defaultLang] ? value[id].name[vm.defaultLang] : value[id].name[Object.keys(value[id].name)[0]]);
                     vm.filter.push({
                         id: id,
@@ -60,20 +88,20 @@ angular.module('webmapp')
                     });
                 }
 
-                vm.selectedItem = vm.filter[0];
-                getCountForTaxonomy();
+                if (vm.taxonomy) {
+                    getCountForTaxonomy();
+                }
                 Utils.forceDigest();
             })
         );
 
-        registeredEvents.push(
-            $scope.$on('$ionicView.enter', function () {
-                $ionicLoading.show({
-                    template: '<ion-spinner></ion-spinner>'
-                });
-                PackageService.getTaxonomy('activity');
-            })
-        );
+        var init = function () {
+            $ionicLoading.show({
+                template: '<ion-spinner></ion-spinner>'
+            });
+            PackageService.getTaxonomy('activity');
+            PackageService.getTaxonomy('theme');
+        };
 
         registeredEvents.push(
             $scope.$on('$ionicView.beforeLeave', function () {
@@ -83,6 +111,8 @@ angular.module('webmapp')
                 delete registeredEvents;
             })
         );
-        
+
+        init();
+
         return vm;
     });

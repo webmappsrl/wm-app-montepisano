@@ -144,10 +144,6 @@ angular.module('webmapp')
             type: 'portoferraioHome'
         });
         config.PAGES.push({
-            label: 'Welcome di merda',
-            type: 'portoferraioWelcome'
-        });
-        config.PAGES.push({
             label: 'Pontili di merda',
             type: 'trackTaxonomy'
         });
@@ -155,10 +151,6 @@ angular.module('webmapp')
         config.MENU.push({
             label: 'Home di merda',
             type: 'portoferraioHome'
-        });
-        config.MENU.push({
-            label: 'Welcome di merda',
-            type: 'portoferraioWelcome'
         });
         config.MENU.push({
             label: 'Pontili di merda',
