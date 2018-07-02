@@ -321,6 +321,9 @@
     position: relative;
     top: 42px;
     z-index: 999;
+    a {
+        text-transform: capitalize
+    }
 }
 
 

@@ -39,6 +39,7 @@
             text-align: center;
             @include placeholder {
                 color: transparentize($color-brown, 0.4);
+                text-transform: capitalize;
             }
         }
     }

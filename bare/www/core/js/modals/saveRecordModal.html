@@ -20,7 +20,7 @@
                         autocapitalize="none"
                         spellcheck="false"
                         autocomplete="off"
-                        placeholder="Titolo">
+                        placeholder= "{{ 'titolo' | translate }}">
                     </label>
                 <label class="item item-input">
                             <input type="text" class="input-ph"
@@ -29,8 +29,7 @@
                             autocapitalize="none"
                             spellcheck="false"
                             autocomplete="off"
-                            placeholder="Descrizione"
-                            >
+                            placeholder= "{{ 'descrizione' | translate }}">
                     </label>
 
                 <label class="item">
@@ -41,7 +40,7 @@
                             }"
                             class="login-button button button-block" 
                             type="submit">
-                            {{logging ? "(Loading..)" : 'salva' | translate}}
+                            {{ 'salva' | translate }}
                             
                         </button>
                     </label>
@@ -54,8 +53,7 @@
                             }"
                             class="login-button button button-block" 
                             ng-click="reject()" type="button">
-                            <!-- {{logging ? "(Loading..)" : 'annulla' | translate}} -->
-                            annulla
+                            {{ 'annulla' | translate }}
                         </button>
                     </label>
             </div>

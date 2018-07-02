@@ -130,12 +130,12 @@ angular.module('webmapp')
 
         resetModalFields();
         if (id && title) {
-            editTrackModalScope.vm.operation = "edit";
+            editTrackModalScope.vm.operation = "modifica";
             editTrackModalScope.vm.id = id;
             editTrackModalScope.vm.title = title;
             editTrackModalScope.vm.descr = descr;
         } else {
-            editTrackModalScope.vm.operation = "save";
+            editTrackModalScope.vm.operation = "salva";
         }
         editTrackModal.show();
     };
@@ -176,10 +176,10 @@ angular.module('webmapp')
 
         } else {
 
-            if (editTrackModalScope.vm.operation === "save") {
+            if (editTrackModalScope.vm.operation === "salva") {
                 vm.record.stopAndSave(true, title, descr);
                 hideModal();
-            } else if (editTrackModalScope.vm.operation === "edit" && editTrackModalScope.vm.id) {
+            } else if (editTrackModalScope.vm.operation === "modifica" && editTrackModalScope.vm.id) {
                 MapService.editUserTrack(editTrackModalScope.vm.id, title, descr);
                 $rootScope.$emit("trackModified", editTrackModalScope.vm.id);
                 hideModal();
@@ -317,7 +317,7 @@ angular.module('webmapp')
 
     }
 
-    //da rifare creare una classe timer per il tempo e una classe per la misurazione dello spazio percroso e della velocità.
+    //da rifare creare una classe timer per il tempo e una classe per la misurazione dello spazio percroso e della velocità media.
     vm.record.updateMotionValues = function(position, prevPosition) {
 
         if (vm.record.isRecording && !vm.record.isPaused) {
