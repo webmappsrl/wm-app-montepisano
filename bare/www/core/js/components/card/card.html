@@ -3,11 +3,8 @@
     cache-view="false" 
     class="card-page">
     <ion-nav-title class="card-page-header">
-        <span ng-if="!vm.insertMode">
-           <!-- <i class="icon wm-icon-heart-valcamonica"></i>  -->Valle dei Segni Card
-        </span>
-        <span ng-if="vm.insertMode">
-           Completa profilo
+        <span>
+           {{vm.title}}
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">
@@ -15,159 +12,41 @@
             class="no-animate button button-icon icon ion-navicon"
             menu-toggle="left"></button>
     </ion-nav-buttons>
-
     <ion-content>
-        <div ng-if="!vm.insertMode">
-            <div 
-                class="static-content card-content">
-
-                <div class="card-image">
-                    <img src="core/images/card@2x.png">
-                </div>
-
-                <div 
-                    class="card-text card-find-offers"
-                    ng-if="!vm.hasCard">
-                    <h2 class="card-text-title">TROVA LE OFFERTE</h2>
-                    <p>Gli sconti e le promozioni che i migliori operatori turistici
-                        del territorio hanno pensato per te</p>
-                </div>
-
-                <div 
-                    class="card-text card-opportunities"
-                    ng-if="!vm.hasCard">
-                    <h2 class="card-text-title">COGLI LE OPPORTUNITÀ</h2>
-                    <p>Una card, tante iniziative e sorprese esclusive 
-                        solo per gli esploratori della Valle dei Segni</p>
-                </div>
-            </div>
-
-            <div 
-                class="static-content card-content"
-                ng-show="!$root.isLoggedIn">
-                <div class="has-card-yes">
-                    <div class="card-title">
-                        <span class="card-title-inner">Effettua il login per usufruire dei vantaggi connessi alla tua Valle dei Segni Card</span>
-                    </div>
-                    <button
-                        class="login-button button button-block"
-                        ng-click="$root.showLogin()">
-                        Accedi adesso
-                    </button>
-                </div>
-            </div>
-
-            <div
-                ng-show="$root.isLoggedIn"
-                class="static-content card-content">
-                <div class="static-description">
-                    <div ng-if="!vm.hasCard">
-                        <div
-                            class="has-card-yes"
-                            ng-if="!vm.isBrowser">
-                            <div class="card-title"><span class="card-title-inner">Hai una CARD?</span></div>
-                            <button
-                                class="login-button button button-block"
-                                ng-click="vm.scan()">
-                                <i class="icon wm-icon-ios7-barcode-outline"></i>
-                                Collegala alla app
-                            </button>
-                        </div>
-
-                        <div class="has-card-no">
-                            <div class="card-title"><span class="card-title-inner">Non possiedi una CARD?</span></div>
-                            <button
-                                class="button button-block sign-in sign-up-card"
-                                ng-click="vm.generateNewCard()">
-                                GENERA ADESSO LA TUA CARD
-                            </button>
-                        </div>
-                    </div>
-
-                    <div ng-if="vm.hasCard">
-                        <!-- <div class="card-image">
-                            <img src="core/images/card@2x.png">
-                        </div> -->
-                        <div class="card-text card-association">
-                            <h2 class="card-text-title">Grazie per aver associato la Valle dei Segni Card al tuo profilo!</h2>
-                            
-                            <canvas 
-                                id="barcode"
-                                ng-init="vm.barcodeInit()"></canvas>
-                            
-                            <p>Esponila per poter godere degli sconti, offerte e omaggi previsti dagli aderenti all'iniziativa </p>
-
-                        </div>
-
-                        <div class="has-card-no">
-                            <div class="card-title">
-                                <span class="card-title-inner">
-                                    Guadagna punti extra effettuando il check-in
-                                </span>
-                            </div>
-                            <button
-                                class="button button-block sign-in sign-up-card"
-                                ng-click="vm.checkin()">
-                                CHECK-IN
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="card-content" ng-if="!vm.isLoggedIn">
+            <button
+                ng-style="{
+                    'background': COLORS.global.buttonsBackground,
+                    'color': COLORS.global.buttonsColor
+                }"
+                class="login-button button button-block"
+                ng-if="!vm.isLoggedIn"
+                ng-click="vm.login()">
+                {{"LOGIN" | translate}}
+                <i class="wm-icon-android-arrow-forward"></i>
+            </button>
         </div>
-        <div ng-if="vm.insertMode">
-            <form class="registration-form card-form">
-                <div class="list">
-                    <br/>
-                    <label class="item item-input item-floating-label choice-container">
-                        <p class="choice-label">Sesso: </p>
-                        <div class="registration-terms">
-                            <div class="radio-container">
-                                <form>
-                                    <ion-radio ng-model="userGender" ng-value="'M'">Uomo</ion-radio>
-                                    <ion-radio ng-model="userGender" ng-value="'F'">Donna</ion-radio>
-                                    <ion-radio ng-model="userGender" ng-value="'_none'">N/A</ion-radio>
-                                </form>
-                            </div>
-                        </div>
-                    </label>
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">Città</span>
-                        <input 
-                            type="text" 
-                            placeholder="{{'Città' | translate}}"
-                            autocorrect="off"
-                            autocomplete="off"
-                            spellcheck="false" 
-                            ng-model="userCity">
-                    </label>
-
-                    <label class="item item-input item-floating-label">
-                        <input class="input-date" type="date" ng-model="userDate">
-                    </label>
-
-                    <label class="item item-input item-floating-label choice-container">
-                        <p class="choice-label">Tipologia turista: </p>
-                        <div class="registration-terms">
-                            <div class="radio-container">
-                                <form>
-                                    <ion-radio ng-model="userType" ng-value="'192'">Abituale</ion-radio>
-                                    <ion-radio ng-model="userType" ng-value="'191'">Occasionale</ion-radio>
-                                    <ion-radio ng-model="userType" ng-value="'193'">Residente</ion-radio>
-                                </form>
-                            </div>
-                        </div>
-                    </label>
-
-                </div>
-                <button 
-                    class="login-button button button-block info-confirm-button" 
-                    ng-disabled="!userGender || !userCity || !userDate || !userType"
-                    ng-class="{'disabled': !userGender || !userCity || !userDate || !userType}"
-                    ng-click="vm.completeProfile(userGender, userCity, userDate, userType)">
-                    {{vm.loading ? '(Loading..)' : 'CONFERMA'}}
-                </button>
-            </form>
+        <div class="card-content" ng-if="vm.isLoggedIn">
+            <div class="card-image">
+                <img src="" alt="WIP">
+            </div>
+            <div id="settings-button" ng-click="vm.goTo('languages')">
+                <i class="icon wm-icon-android-settings"></i>
+            </div>
+            <button
+                ng-style="{
+                    'background': COLORS.global.buttonsBackground,
+                    'color': COLORS.global.buttonsColor
+                }"
+                class="login-button button button-block"
+                ng-if="vm.isLoggedIn"
+                ng-click="vm.logout()">
+                {{"LOGOUT" | translate}}
+                <i class="wm-icon-android-arrow-forward"></i>
+            </button>
+        </div>
+        <div id="card-footer">
+            <img src="core/images/cosmopoli_logo.png">
         </div>
     </ion-content>
 </ion-view>

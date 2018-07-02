@@ -1,25 +1,22 @@
 angular.module('webmapp')
 
     .controller('LanguagesController', function LanguagesController(
+        $ionicPopup,
         $rootScope,
+        $translate,
         $window,
         Auth,
-        Offline,
-        Utils,
-        $ionicPopup,
         CONFIG,
-        $translate
+        Utils
     ) {
-        var vm = {},
-            offlineModal;
-
-        var offlineScope = $rootScope.$new();
+        var vm = {};
 
         vm.languages = CONFIG.LANGUAGES.available ? CONFIG.LANGUAGES.available : "";
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
         vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : "it";
         vm.version = CONFIG.VERSION;
         vm.privacyUrl = 'http://www.webmapp.it/privacy/';
+        vm.goBack = Utils.goBack;
 
         for (var i in vm.languages) {
             vm.languages[i] = vm.languages[i].substring(0, 2);
@@ -45,7 +42,6 @@ angular.module('webmapp')
         vm.isLoggedIn = false;
 
         vm.useLogin = CONFIG.LOGIN && CONFIG.LOGIN.useLogin;
-        var userData = {};
 
         vm.chooseLang = function (lang) {
             $translate.preferredLanguage(lang.substring(0, 2));

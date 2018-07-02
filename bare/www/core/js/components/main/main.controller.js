@@ -1006,7 +1006,6 @@ angular.module('webmapp')
         };
 
         vm.startNavigation = function () {
-            console.log(vm.canFollow, vm.followActive, vm.isRotating);
             if (!vm.gpsActive) {
                 checkGPS();
                 return;
@@ -1268,7 +1267,8 @@ angular.module('webmapp')
             } else if (currentState === 'app.main.detailulayer') {
                 MapService.resetUtfGridLayers();
                 vm.hideExpander = true;
-            } else if (currentState === 'app.main.coupons' ||
+            } else if (currentState === 'app.main.card' ||
+                currentState === 'app.main.coupons' ||
                 currentState === 'app.main.packages' ||
                 currentState === 'app.main.route' ||
                 currentState === 'app.main.taxonomy' || 

@@ -84,7 +84,7 @@ angular.module('webmapp')
             $rootScope.isLoggedIn = false;
         }
 
-        if (loginConf.useLogin) {
+        if (loginConf.useLogin || true) {
             var loginScope = $rootScope.$new();
 
             loginScope.state = {};
@@ -92,9 +92,9 @@ angular.module('webmapp')
             var optionalFieldsConf = (CONFIG.LOGIN && CONFIG.LOGIN.optionalFields) ? CONFIG.LOGIN.optionalFields : [];
 
             loginScope.optionalFields = {
-                    firstName: false,
-                    lastName: false
-                };
+                firstName: false,
+                lastName: false
+            };
 
             for (var i in optionalFieldsConf) {
                 if (optionalFieldsConf[i] === 'firstName') {
@@ -116,6 +116,44 @@ angular.module('webmapp')
                 loginScope.ud.newsletter = false;
                 loginScope.ud.privacy = '';
                 loginScope.ud.country = '';
+                loginScope.ud.selectedType = '';
+                loginScope.ud.types = [
+                    {
+                        value: '',
+                        name: '----'
+                    },
+                    {
+                        value: 'family',
+                        name: $translate.instant('Famiglia con bambini')
+                    },
+                    {
+                        value: 'couple',
+                        name: $translate.instant('Coppia')
+                    },
+                    {
+                        value: 'friends',
+                        name: $translate.instant('Con amici')
+                    },
+                    {
+                        value: 'alone',
+                        name: $translate.instant('Solitari')
+                    }
+                ];
+                loginScope.ud.selectedGender = '';
+                loginScope.ud.genders = [
+                    {
+                        value: 'm',
+                        name: $translate.instant('Maschio')
+                    },
+                    {
+                        value: 'f',
+                        name: $translate.instant('Femmina')
+                    },
+                    {
+                        value: '',
+                        name: '----'
+                    }
+                ];
             };
 
             var isEmailValid = function (email) {
@@ -128,12 +166,12 @@ angular.module('webmapp')
             loginScope.marginForm = 0;
             loginScope.logging = false;
 
-            loginScope.newsletter = CONFIG.LOGIN.showNewsletterCheckbox;
+            loginScope.newsletter = CONFIG.LOGIN ? CONFIG.LOGIN.showNewsletterCheckbox : false;
 
             loginScope.loginMode = '';
             loginScope.registrationMode = false;
             loginScope.urlPrivacy = vm.privacyUrl;
-            loginScope.urlRecoveryPassword = CONFIG.LOGIN.passwordRecoveryURL ? CONFIG.LOGIN.passwordRecoveryURL : false;
+            loginScope.urlRecoveryPassword = (CONFIG.LOGIN && CONFIG.LOGIN.passwordRecoveryURL) ? CONFIG.LOGIN.passwordRecoveryURL : false;
 
             loginScope.facebook = typeof CONFIG.COMMUNICATION.facebookId !== 'undefined';
             loginScope.google = typeof CONFIG.COMMUNICATION.googleId !== 'undefined';
@@ -152,55 +190,7 @@ angular.module('webmapp')
                 login.modal.hide();
             }
 
-            loginScope.completeRegistration = function (firstName, lastName, email, password) {
-                if (loginScope.logging) {
-                    return;
-                }
-
-                if (!Utils.isBrowser()) {
-                    $cordovaKeyboard.close();
-                }
-
-                if (firstName && lastName && email && password) {
-                    if (!isEmailValid(email)) {
-                        $ionicPopup.alert({
-                            title: $translate.instant("ATTENZIONE"),
-                            template: $translate.instant("Inserisci un'email valida per continuare"),
-                            buttons: [{
-                                text: 'Ok',
-                                type: 'button-positive'
-                            }]
-                        });
-                    } else {
-                        loginScope.logging = true;
-                        Account.createAccount(firstName, lastName, email, password)
-                            .then(function () {
-                                loginScope.doLogin(email, password, true);
-                            }, function () {
-                                loginScope.logging = false;
-                                $ionicPopup.alert({
-                                    title: $translate.instant("ATTENZIONE"),
-                                    template: $translate.instant("C'è stato un errore nella registrazione, riprova più tardi"),
-                                    buttons: [{
-                                        text: 'Ok',
-                                        type: 'button-positive'
-                                    }]
-                                });
-                            });
-                    }
-                } else {
-                    $ionicPopup.alert({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Compila tutti i campi richiesti"),
-                        buttons: [{
-                            text: 'Ok',
-                            type: 'button-positive'
-                        }]
-                    });
-                }
-            };
-
-            loginScope.completeSimpleRegistration = function (firstName, lastName, email, checkEmail, password, checkPassword, country, newsletter, privacy) {
+            loginScope.completeSimpleRegistration = function (firstName, lastName, email, checkEmail, password, checkPassword, country, type, gender, newsletter, privacy) {
                 if (loginScope.logging) {
                     return;
                 }
@@ -258,7 +248,7 @@ angular.module('webmapp')
                         });
                     } else {
                         loginScope.logging = true;
-                        Account.createAccount(firstName, lastName, email, password, country, newsletter, true)
+                        Account.createAccount(firstName, lastName, email, password, country, type, gender, newsletter, true)
                             .then(function (data) {
                                 $ionicPopup.alert({
                                     title: $translate.instant("REGISTRAZIONE"),
@@ -280,6 +270,9 @@ angular.module('webmapp')
                                 $rootScope.$emit('logged-in');
 
                             }, function (error) {
+                                if (!error) {
+                                    error = $translate.instant("Si è verificato un errore, riprova");
+                                }
                                 $ionicPopup.alert({
                                     title: $translate.instant("ATTENZIONE"),
                                     template: error,

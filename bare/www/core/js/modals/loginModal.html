@@ -61,7 +61,7 @@
             <form
                 class="registration-form"
                 ng-if="state.resetMode"
-                ng-submit="completeSimpleRegistration(ud.firstName, ud.lastName, ud.email, ud.checkEmail, ud.password, ud.checkPassword, ud.country, ud.newsletter, ud.privacy)">
+                ng-submit="completeSimpleRegistration(ud.firstName, ud.lastName, ud.email, ud.checkEmail, ud.password, ud.checkPassword, ud.country, ud.selectedType, ud.selectedGender, ud.newsletter, ud.privacy)">
                 <div class="list">
                     <label class="item item-input">
                         <input
@@ -149,6 +149,27 @@
                         <country-select ng-model="ud.country"></country-select>
                     </label>
 
+                    <label class="item item-input">
+                        <select id="type-select" ng-model="ud.selectedType">
+                            <option ng-repeat="item in ud.types" value="{{item.value}}" selected="item.value === ud.selectedType">{{item.name}}</option>
+                        </select>
+                    </label>
+
+                    <div id="gender-radio">
+                        <div ng-repeat="item in ud.genders">
+                            <input
+                                type="radio"
+                                name="genderRadio"
+                                ng-model="ud.selectedGender"
+                                value="{{item.value}}">
+                            <i class="wm-icon-ion-android-checkmark-circle"
+                                ng-class="{
+                                    'wm-icon-ion-android-checkmark-circle': item.value === ud.selectedGender,
+                                    'wm-icon-ion-android-checkmark-circle-empty': item.value !== ud.selectedGender
+                                }"></i>
+                            {{item.name | translate}}
+                        </div>
+                    </div>
                     <div
                         class="privacy"
                         ng-if="newsletter">
