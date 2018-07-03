@@ -141,8 +141,8 @@
                     center.lat = +center.lat.toFixed(precision);
                     center.lng = +center.lng.toFixed(precision);
 
-                    if (Math.abs(center.lat - parsed.center.lat) > Math.exp(1, -(precision - 1)) ||
-                        Math.abs(center.lng - parsed.center.lng) > Math.exp(1, -(precision - 1))) {
+                    if (Math.abs(center.lat - parsed.center.lat) > Math.pow(10, -(precision - 1)) ||
+                        Math.abs(center.lng - parsed.center.lng) > Math.pow(10, -(precision - 1))) {
                         this.movingMap = true;
 
                         this.map.setView(parsed.center, parsed.zoom);
