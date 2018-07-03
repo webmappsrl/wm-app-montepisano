@@ -156,6 +156,24 @@ angular.module('webmapp')
                                     }
                                 }
                             });
+                    } else if (CONFIGProvider.PAGES[i].type === "events") {
+                        $stateProvider
+                            .state('app.main.events', {
+                                url: '/events',
+                                views: {
+                                    'inception-top': {
+                                        templateUrl: basePath + 'js/components/list/eventList.html'
+                                    }
+                                }
+                            })
+                            .state('app.main.detailevent', {
+                                url: '/events/:id',
+                                views: {
+                                    'inception-top': {
+                                        templateUrl: basePath + 'js/components/details/details.html'
+                                    }
+                                }
+                            });
                     } else {
                         $stateProvider
                             .state('app.main.' + CONFIGProvider.PAGES[i].type, {
