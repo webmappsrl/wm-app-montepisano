@@ -361,73 +361,37 @@ angular.module('webmapp')
          *      the id of the pack to request
          */
         packageService.requestPack = function (packId) {
-            if (packId !== 198) {
-                $ionicPopup
-                    .alert({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: "This route is not available yet"
-                    });
+            if (!userData || !userData.ID) {
                 return;
             }
-            if (!userData || !userData.ID || userPackagesIdRquested[packId]) {
-                return;
-            }
-            // $ionicPopup
-            //     .confirm({
-            //         title: $translate.instant("ATTENZIONE"),
-            //         template: $translate.instant("Stai per richiedere l'accesso al download dell'itinerario, riceverai una e-mail con le istruzioni per procedere all'acquisto. Vuoi procedere?")
-            //     })
-            //     .then(function (res) {
-            //         if (res) {
-                        // var data = {
-                        //     email: userData.user_email,
-                        //     pack: packId,
-                        //     appname: CONFIG.OPTIONS.title
-                        // };
+            var productId = 'it.webmapp.' + packId;
+            
+            console.log(productId)
 
-                        // $ionicLoading.show({
-                        //     template: '<ion-spinner></ion-spinner>'
-                        // });
+            inAppPurchase.getProducts([productId])
+                .then(function (product) {
+                    if (product[0]) {
+                        product = product[0];
+                    }
 
-                        // $http({
-                        //     method: 'POST',
-                        //     url: communicationConf.baseUrl + communicationConf.endpoint + 'mail',
-                        //     dataType: 'json',
-                        //     crossDomain: true,
-                        //     data: data,
-                        //     headers: {
-                        //         'Content-Type': 'application/json'
-                        //     }
-                        // }).success(function (data) {
-                        //     $ionicPopup.alert({
-                        //         template: $translate.instant("La richiesta è stata inviata, ti è stata spedita una e-mail con le istruzioni per procedere con l'acquisto.")
-                        //     });
-                        //     userPackagesIdRquested[packId] = true;
-                        //     $rootScope.$emit('userPackagesIdRquested-updated', userPackagesIdRquested);
-                        //     localStorage.$wm_userPackagesIdRquested = JSON.stringify(userPackagesIdRquested);
-                        //     $ionicLoading.hide();
-                        // }).error(function (error) {
-                        //     $ionicPopup.alert({
-                        //         template: $translate.instant("Si è verificato un errore durante la richiesta, riprova")
-                        //     });
-                        //     $ionicLoading.hide();
-                        //     console.error(error);
-                        // });
-                        var productId = 'it.webmapp.198';
-                        inAppPurchase.buy(productId)
+                    if (product.productId) {
+                        inAppPurchase.buy(product.productId)
                             .then((res) => {
                                 //communicate purchase to server
-                                console.log('purchase completed!');
-                                $ionicPopup.alert({
-                                    title: "GOOD JOB",
-                                    template: "You just earned this new Route"
-                                });
-                                userPackagesId[198] = true;
+                                console.log('purchase completed!', res);
+                                // userPackagesId[198] = true;
                             })
-                            .catch(err => console.log(err) );
-
-                    // }
-                // });
+                            .catch(err => console.log(err));
+                    }
+                    else {
+                        $ionicPopup.alert({
+                            template: $translate.instant("Questo prodotto non è al momento disponibile")
+                        });
+                    }
+                })
+                .catch(function (err) {
+                    console.log(err);
+                });
         };
 
         /**
