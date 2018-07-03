@@ -364,9 +364,8 @@ angular.module('webmapp')
             if (!userData || !userData.ID) {
                 return;
             }
-            var productId = 'it.webmapp.' + packId;
+            var productId = CONFIG.appId + '.' + packId;
             
-            console.log(productId)
 
             inAppPurchase.getProducts([productId])
                 .then(function (product) {
