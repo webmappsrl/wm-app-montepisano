@@ -1374,7 +1374,7 @@ angular.module('webmapp')
         };
 
         vm.checkOutOfTrack = function (latLong) {
-            if (latLong && latLong.lat && latLong.lng) {
+            if (latLong && latLong.lat && latLong.long) {
                 var lat = latLong.lat;
                 var long = latLong.long;
                 if (vm.stopNavigationUrlParams && vm.stopNavigationUrlParams.id &&
