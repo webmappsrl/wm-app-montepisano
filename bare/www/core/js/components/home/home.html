@@ -11,11 +11,24 @@
     <ion-content style="color: black;" ng-style="{
         'background': COLORS.global.background
     }">
-        <div class="home-title">
-            {{vm.title | translate}}
+        <div class="home-search"
+            ng-style="{
+                'background': vm.colors.mainBar.background
+            }">
+            <div class="searchbar">
+                <input type="text" placeholder="{{'Cerca' | translate}}...">
+                <i class="icon wm-icon-ios7-search-strong"></i>
+            </div>
+            <img src="">
         </div>
-        <div class="home-content">
-            <div ng-repeat="(key, item) in vm.activities" class="home-button width-{{vm.columns}} height-{{vm.rows}}" ng-click="vm.goTo(key)">
+        <div class="home-content"
+            ng-style="{
+                'color': vm.colors.mainBar.background,
+                'background': vm.colors.mainBar.color
+            }">
+            <div ng-repeat="(key, item) in vm.types"
+                class="home-button width-{{vm.columns}} height-{{vm.rows}}"
+                ng-click="vm.goTo(key)">
                 <div class="home-button-content">
                     <div class="home-icon">
                         <i class="icon {{item.icon}}"></i>

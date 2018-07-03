@@ -1155,7 +1155,6 @@ angular.module('webmapp')
             //     DB.addFeature(id, layer);
             // }
 
-            console.log(window.performance.memory);
             for (let i = 0; i < overlayLayersConf.length; i++) {
 
                 filterSearchMap[overlayLayersConf[i].label] = [];
@@ -1181,9 +1180,6 @@ angular.module('webmapp')
                     }
                 }
             }
-
-            console.log(filterSearchMap);
-            console.log(featureMapById);
 
             $rootScope.$$phase || $rootScope.$digest();
 

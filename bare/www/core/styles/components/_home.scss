@@ -8,16 +8,43 @@
    #GENERAL
 \* ------------------------------------ */
 ion-content {
-  div.home-title {
-    padding: 4vh;
-    font-size: 25px;
-    text-align: center;
-  }
-
-  div.home-content {
+  div.home-search {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
     width: 100%;
-    height: calc(100vh - 44px - 25px - 8vh);
-    position: relative;
+    color: rgb(99, 98, 93);
+    height: 55%;
+    border-bottom-left-radius: 50% 10%;
+    border-bottom-right-radius: 50% 10%;
+    .searchbar {
+      width: 80%;
+      margin: 10px auto;
+      max-width: 500px;
+      position: relative;
+      input {
+        border: 1px solid #aaaaaa;
+        width: 100%;
+        padding: 5px 35px 5px 15px;
+      }
+      i {
+        position: absolute;
+        top: calc(50% - 10px);
+        right: 10px;
+        font-size: 20px;
+      }
+    }
+  }
+  div.home-content {
+    z-index: 5;
+    width: 100%;
+    padding: 50% 10% 0;
+    height: 70%;
+    position: absolute;
+    bottom: 0;
+    text-transform: uppercase;
+    font-weight: 700;
     div.width-1 {
       width: 100%;
     }
@@ -47,7 +74,6 @@ ion-content {
       font-size: 20px;
       text-align: center;
       margin: 0 auto;
-      color: rgb(99, 98, 93);
       div.home-icon {
         padding: 3% 0 3% 0;
         .icon:before {

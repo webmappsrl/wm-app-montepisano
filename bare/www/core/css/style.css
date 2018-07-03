@@ -1318,15 +1318,40 @@ div.detailRoute-footer {
 /* ------------------------------------ *\
    #GENERAL
 \* ------------------------------------ */
-ion-content div.home-title {
-  padding: 4vh;
-  font-size: 25px;
-  text-align: center; }
+ion-content div.home-search {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  color: #63625d;
+  height: 55%;
+  border-bottom-left-radius: 50% 10%;
+  border-bottom-right-radius: 50% 10%; }
+  ion-content div.home-search .searchbar {
+    width: 80%;
+    margin: 10px auto;
+    max-width: 500px;
+    position: relative; }
+    ion-content div.home-search .searchbar input {
+      border: 1px solid #aaaaaa;
+      width: 100%;
+      padding: 5px 35px 5px 15px; }
+    ion-content div.home-search .searchbar i {
+      position: absolute;
+      top: calc(50% - 10px);
+      right: 10px;
+      font-size: 20px; }
 
 ion-content div.home-content {
+  z-index: 5;
   width: 100%;
-  height: calc(100vh - 44px - 25px - 8vh);
-  position: relative; }
+  padding: 50% 10% 0;
+  height: 70%;
+  position: absolute;
+  bottom: 0;
+  text-transform: uppercase;
+  font-weight: 700; }
   ion-content div.home-content div.width-1 {
     width: 100%; }
   ion-content div.home-content div.width-2 {
@@ -1347,8 +1372,7 @@ ion-content div.home-content {
     position: relative;
     font-size: 20px;
     text-align: center;
-    margin: 0 auto;
-    color: #63625d; }
+    margin: 0 auto; }
     ion-content div.home-content div.home-button div.home-icon {
       padding: 3% 0 3% 0; }
       ion-content div.home-content div.home-button div.home-icon .icon:before {
@@ -4003,7 +4027,6 @@ ion-content div.static-content.card-content {
   height: 40px;
   line-height: 30px; }
   .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title {
-    width: calc(100% / 3);
     float: left;
     text-align: center;
     overflow: hidden;
@@ -4012,6 +4035,12 @@ ion-content div.static-content.card-content {
     text-transform: uppercase;
     font-size: 25px;
     padding: 3px 0; }
+    .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title.cols-3 {
+      width: calc(100% / 3); }
+    .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title.cols-2 {
+      width: 50%; }
+    .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title.cols-1 {
+      width: 100%; }
     .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title.selected {
       color: #349912;
       border-bottom: 3px solid #349912; }

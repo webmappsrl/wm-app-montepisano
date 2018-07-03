@@ -32,7 +32,7 @@ angular.module('webmapp')
     MapService.showAllLayers();
     MapService.activateUtfGrid();
     modalScope.vm = {};
-    modalScope.vm.isNewModal = true;
+    modalScope.vm.isNewModal = CONFIG.MAP.filters ? true : false;
 
     vm.mapTitle = CONFIG.OPTIONS.title;
     vm.filterIcon = CONFIG.OPTIONS.filterIcon;
@@ -253,12 +253,7 @@ angular.module('webmapp')
             ['Bar', 'Ristoranti'],
             ['Cicloescursionismo']
         ]);
-
-        console.log(Date.now() - start);
-        console.log(filteredresult);
     };
-
-
 
     var filtersSearchFun = function(binds, type) {
 
