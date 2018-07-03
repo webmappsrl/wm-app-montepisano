@@ -8,7 +8,7 @@
         <div class="modal-content">
             <span class="modal-title">{{"VISUALIZZA/NASCONDI CATEGORIE" | translate}}</span>
 
-            <ion-list ng-if="vm.isOldModal">
+            <ion-list ng-if="!vm.isNewModal">
                 <label class="item item-checkbox ng-not-empty" ng-repeat="(key, obj) in vm.filters" ng-init="currentFilter = obj.value" ng-model="obj.value" ng-class="{
                         'is-selected': obj.value,
                         'is-not-selected': !obj.value
@@ -63,9 +63,9 @@
                 </label>
             </ion-list>
 
-            <div class="accordion-filters" ng-if="!vm.isOldModal">
+            <div class="accordion-filters" ng-if="vm.isNewModal">
                 <div class="filters-tab-title-container">
-                    <div ng-repeat="(key, item) in filters" ng-click="switchTab(key)" class="filters-tab-title" ng-class="{
+                    <div ng-repeat="(key, item) in filters" ng-click="switchTab(key)" class="filters-tab-title cols-{{tabNum}}" ng-class="{
                             'selected': currentTab === key
                         }">
                         {{item.label}}
@@ -78,10 +78,10 @@
                         <div ng-repeat="(sublayerId, sublayer) in item.sublayers" class="filters-sublayer" ng-if="key !=='base_maps'">
                             <div>
                                 <i class="left-icon" ng-class="{
-                                    'ion-android-checkbox-outline':  sublayers[sublayer.label],
-                                    'ion-android-checkbox-outline-blank':  !sublayers[sublayer.label]
-                                }" ng-click="toggleSublayerCheckBox(sublayer.label)"></i>
-                                <div ng-click="toggleSublayerTab(sublayerId, key)">
+                                    'ion-android-checkbox-outline':  item.selectedTab ===sublayerId,
+                                    'ion-android-checkbox-outline-blank':  item.selectedTab !==sublayerId
+                                }" ng-click="toggleSubTabCheckBox(sublayer.label)"></i>
+                                <div ng-click="toggleSubTab(sublayerId, key)">
                                     {{sublayer.label}}
                                     <i ng-if="sublayerId !== subTab[key]" class="icon wm-icon-ios7-arrow-forward right-icon"></i>
                                     <i ng-if="sublayerId === subTab[key]" class="icon wm-icon-ios7-arrow-down right-icon"></i>
@@ -108,8 +108,6 @@
                                     {{mapItem.label}}
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>

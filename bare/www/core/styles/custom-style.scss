@@ -1,5 +1,6 @@
 /* custom style goes here */
 
+
 /* ------------------------------------ *\
    #TOAST
 \* ------------------------------------ */
@@ -11,7 +12,7 @@
     height: 0;
 }
 
-.ionic_toast > .toast_section {
+.ionic_toast>.toast_section {
     padding: 10px;
     background: rgba($color-brown, 0.9);
     // background: rgba($color-light-01, 0.9);
@@ -21,159 +22,161 @@
 }
 
 .toast-container {
-  .toast-alert-icon {
-    display: none;
-    i {
-      // color: #ECBE41;
-      color: #ff1500;
-      font-size: 40px;
-      float: left;
-      padding: 15px 15px;
-    }
-  }
-  .toast-content {
-    float: left;
-    text-align: center;
-    // width: calc(100% - 40px);
-    width: 100%;
-    .toast-message {
-        font-weight: 700;
-        font-size: 20px;
-        height: 45px;
-    }
-    .toast-buttons {
-      padding: 3px 20px;
-      div {
-        float: left;
-        margin: 0 20px;
-        width: calc((100% / 2) - 40px);
-        text-transform: uppercase;
-        padding: 4px 0;
-        background: #aaa;
-        // background: #9C927A;
-        // background: rgba(0, 0, 0, 0.4);
-      
-        
-        &.pause-button {
-          background: #ECBE41;
+    .toast-alert-icon {
+        display: none;
+        i {
+            // color: #ECBE41;
+            color: #ff1500;
+            font-size: 40px;
+            float: left;
+            padding: 15px 15px;
         }
-        &.stop-button {
-          background: #FF4108;
-        }
-      }
     }
-  }
-}
-
-
-.modal-content {
-  .accordion-filters {
-    .left-icon {
-      float: left;
-      margin-right: 10px;
-    }
-    .right-icon {
-      float: right;
-      margin-left: 10px;
-    }
-    .filters-tab-title-container {
-      width: 100%;
-      border-bottom: 1px solid #848484;
-      color: #848484;
-      height: 40px;
-      line-height: 30px;
-      .filters-tab-title {
-        width: calc(100% / 3);
+    .toast-content {
         float: left;
         text-align: center;
-        @include text-ellipsis;
-        text-transform: uppercase;
-        font-size: 25px;
-        padding: 3px 0;
-        &.selected {
-          color: #349912;
-          border-bottom: 3px solid #349912;
+        // width: calc(100% - 40px);
+        width: 100%;
+        .toast-message {
+            font-weight: 700;
+            font-size: 20px;
+            height: 45px;
         }
-      } 
+        .toast-buttons {
+            padding: 3px 20px;
+            div {
+                float: left;
+                margin: 0 20px;
+                width: calc((100% / 2) - 40px);
+                text-transform: uppercase;
+                padding: 4px 0;
+                background: #aaa;
+                // background: #9C927A;
+                // background: rgba(0, 0, 0, 0.4);
+                &.pause-button {
+                    background: #ECBE41;
+                }
+                &.stop-button {
+                    background: #FF4108;
+                }
+            }
+        }
     }
+}
 
-    .filters-tab-content-container {
-      .filters-tab-content {
-        display: none;
-        &.selected {
-          display: block;
-          width: 100%;
+.modal-content {
+    .accordion-filters {
+        .left-icon {
+            float: left;
+            margin-right: 10px;
         }
-        .filters-sublayer {
-          border-bottom: 1px solid $color-brown;
-          padding: 5px 10px;
-          font-size: 20px;
-          line-height: 25px;
-          text-transform: uppercase;
-          text-align: center;
-          font-weight: bold;
-          text-align: left;
-          position: relative;
-          overflow: hidden;
-          // i {
-          //   position: absolute;
-          //   right: 10px;
-          // }
-          .filters-layer {
-            text-transform: capitalize;
-            font-weight: initial;
-          }
+        .right-icon {
+            float: right;
+            margin-left: 10px;
         }
-      }
+        .filters-tab-title-container {
+            width: 100%;
+            border-bottom: 1px solid #848484;
+            color: #848484;
+            height: 40px;
+            line-height: 30px;
+            .filters-tab-title {
+                &.cols-3 {
+                    width: calc(100% / 3);
+                }
+                &.cols-2 {
+                    width: 50%;
+                }
+                &.cols-1 {
+                    width: 100%;
+                }
+                float: left;
+                text-align: center;
+                @include text-ellipsis;
+                text-transform: uppercase;
+                font-size: 25px;
+                padding: 3px 0;
+                &.selected {
+                    color: #349912;
+                    border-bottom: 3px solid #349912;
+                }
+            }
+        }
+        .filters-tab-content-container {
+            .filters-tab-content {
+                display: none;
+                &.selected {
+                    display: block;
+                    width: 100%;
+                }
+                .filters-sublayer {
+                    border-bottom: 1px solid $color-brown;
+                    padding: 5px 10px;
+                    font-size: 20px;
+                    line-height: 25px;
+                    text-transform: uppercase;
+                    text-align: center;
+                    font-weight: bold;
+                    text-align: left;
+                    position: relative;
+                    overflow: hidden;
+                    // i {
+                    //   position: absolute;
+                    //   right: 10px;
+                    // }
+                    .filters-layer {
+                        text-transform: capitalize;
+                        font-weight: initial;
+                    }
+                }
+            }
+        }
+        // .parent {
+        //   width: 100%;
+        //   color: $color-brown;
+        //   .child {
+        //     transition: all 2s linear;
+        //     -webkit-transition: all 2s linear;
+        //     background: transparent;
+        //     width: 100%;
+        //     overflow: hidden;
+        //     height: 0;
+        //     padding: 0;
+        //   }
+        // }
     }
-
-
-
-    // .parent {
-    //   width: 100%;
-    //   color: $color-brown;
-      
-    //   .child {
-    //     transition: all 2s linear;
-    //     -webkit-transition: all 2s linear;
-    //     background: transparent;
-    //     width: 100%;
-    //     overflow: hidden;
-    //     height: 0;
-    //     padding: 0;
-    //   }
-    // }
-  }
 }
 
 .animate-hide {
-  animation: animatehide 0.4s forwards;
+    animation: animatehide 0.4s forwards;
 }
+
 .animate-show {
-  animation: animateshow 0.4s forwards;
+    animation: animateshow 0.4s forwards;
 }
+
 @keyframes animatehide {
-  from {
-    height: 40px;
-    opacity: 1;
-    padding: 10px 20px;
-  }
-  to {
-    height: 0;
-    opacity: 0;
-    padding: 0;
-  }
+    from {
+        height: 40px;
+        opacity: 1;
+        padding: 10px 20px;
+    }
+    to {
+        height: 0;
+        opacity: 0;
+        padding: 0;
+    }
 }
 
 @keyframes animateshow {
-  from {
-    height: 0;
-    opacity: 0;
-    padding: 0;
-  }
-  to {
-    height: 40px;
-    opacity: 1;
-    padding: 10px 20px;
-  }
+    from {
+        height: 0;
+        opacity: 0;
+        padding: 0;
+    }
+    to {
+        height: 40px;
+        opacity: 1;
+        padding: 10px 20px;
+    }
 }

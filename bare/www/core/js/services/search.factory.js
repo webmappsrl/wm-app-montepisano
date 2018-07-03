@@ -48,7 +48,7 @@ angular.module('webmapp')
     var addToIndex = function(item, layerName) {
         var itemModel = {};
 
-        itemModel = angular.extend({id: item.properties.id || Utils.generateUID()}, item);
+        itemModel = angular.extend({ id: item.properties.id || Utils.generateUID() }, item);
         layersEngine[layerName].addDocument(itemModel);
     };
 
@@ -113,7 +113,7 @@ angular.module('webmapp')
                     layers.indexOf(c) !== -1) {
                     currentResult = layersEngine[c].search(query);
                     if (currentResult.length > 0) {
-                        results.push({label: c, divider: true});
+                        results.push({ label: c, divider: true });
                         results = results.concat(currentResult);
                     }
                 }
@@ -122,7 +122,7 @@ angular.module('webmapp')
             for (var l in confLayersMap) {
                 if (typeof layersEngine[l] !== 'undefined' &&
                     layers.indexOf(l) !== -1) {
-                    results.push({label: l, divider: true});
+                    results.push({ label: l, divider: true });
                     results = results.concat(getAllByLayer(l));
                 }
             }
