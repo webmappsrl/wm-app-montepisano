@@ -18,6 +18,7 @@ ion-content {
     height: 55%;
     border-bottom-left-radius: 50% 10%;
     border-bottom-right-radius: 50% 10%;
+    overflow: hidden;
     .searchbar {
       width: 80%;
       margin: 10px auto;
@@ -34,6 +35,14 @@ ion-content {
         right: 10px;
         font-size: 20px;
       }
+    }
+    img {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+      bottom: -9999px;
+      right: -9999px;
+      margin: auto;
     }
   }
   div.home-content {

@@ -1327,7 +1327,8 @@ ion-content div.home-search {
   color: #63625d;
   height: 55%;
   border-bottom-left-radius: 50% 10%;
-  border-bottom-right-radius: 50% 10%; }
+  border-bottom-right-radius: 50% 10%;
+  overflow: hidden; }
   ion-content div.home-search .searchbar {
     width: 80%;
     margin: 10px auto;
@@ -1342,6 +1343,13 @@ ion-content div.home-search {
       top: calc(50% - 10px);
       right: 10px;
       font-size: 20px; }
+  ion-content div.home-search img {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+    bottom: -9999px;
+    right: -9999px;
+    margin: auto; }
 
 ion-content div.home-content {
   z-index: 5;

@@ -16,10 +16,10 @@
                 'background': vm.colors.mainBar.background
             }">
             <div class="searchbar">
-                <input type="text" placeholder="{{'Cerca' | translate}}...">
-                <i class="icon wm-icon-ios7-search-strong"></i>
+                <input type="text" placeholder="{{'Cerca' | translate}}..." ng-model="vm.searchString">
+                <i class="icon wm-icon-ios7-search-strong" ng-click="vm.goToSearch()"></i>
             </div>
-            <img src="">
+            <img src="core/images/logo-vt.png">
         </div>
         <div class="home-content"
             ng-style="{
@@ -28,7 +28,7 @@
             }">
             <div ng-repeat="(key, item) in vm.types"
                 class="home-button width-{{vm.columns}} height-{{vm.rows}}"
-                ng-click="vm.goTo(key)">
+                ng-click="vm.goToSearchByCategory(item.label)">
                 <div class="home-button-content">
                     <div class="home-icon">
                         <i class="icon {{item.icon}}"></i>

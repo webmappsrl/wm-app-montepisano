@@ -19,8 +19,14 @@ angular.module('webmapp')
 
         vm.colors = CONFIG.STYLE;
 
-        vm.search = function (text) {
-            console.log(text);
+        vm.searchString = "";
+
+        vm.goToSearchByString = function () {
+            console.log(vm.searchString);
+        };
+
+        vm.goToSearchByCategory = function (id) {
+            console.log(id)
         };
 
         vm.types = [];
