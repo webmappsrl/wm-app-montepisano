@@ -10,59 +10,97 @@
 .portoferraio-home-page {
   ion-content {
     padding: 20px;
+
     .home-container {
       width: 100%;
+
       .titles-container {
+        @include flexbox;
+
         width: 100%;
-        &:after{
+        height: 35vh;
+
+        &:after {
           clear: both;
           content: "";
           display: block;
         }
+
         .left-bar {
           width: 70%;
           margin-right: 5px;
-          float: left;
         }
+
         .right-bar {
+
           width: calc(30% - 5px);
-          float: left;
         }
+
         .left-bar,
         .right-bar {
+          @include flexbox;
+          @include flex-flow(column nowrap);
           font-weight: bold;
+
           div {
             background: rgb(73, 165, 223);
           }
+
           .title {
-            padding: 30px;
-            font-size: 35px;
+            @include flex(1);
+            @include flexbox;
+            @include align-items(center);
+            padding: 0 20px;
+            font-size: $font-size-l;
             margin-bottom: 5px;
+
             &:last-child {
               margin-bottom: 0;
             }
           }
+
+          .right-button,
+          .left-button {
+            @include flex(1);
+          }
+
           .right-button {
-            padding: 38.2px 5px;
-            text-align: center;
+            @include flexbox;
+            @include flex-flow(column nowrap);
+            @include align-items(center);
+            @include justify-content(center);
+            padding: 0 5px;
             text-transform: uppercase;
+            font-family: $title-font-family;
+            font-size: $font-size-s;
+
             &:first-child {
               margin-bottom: 5px;
             }
+
             i {
               display: block;
               margin-bottom: 10px;
+              font-size: $font-size-xl;
+            }
+
+            &.pf-home-card {
+              background: $color-dark-blue;
             }
           }
+
         }
       }
+
       .logo-container {
         padding: 20px 10px;
+
         img {
           width: 100%;
           height: auto;
         }
       }
+
     }
   }
 }

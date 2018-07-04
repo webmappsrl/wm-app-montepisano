@@ -8,14 +8,18 @@
         <button class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left" ng-click="vm.goBack()"></button>
     </ion-nav-buttons>
     <ion-content ng-style="{
-        'background': vm.colors.global.background
+        'background': vm.colors.mainBar.background
     }">
         <div class="taxonomy-filter">
-            <select id="filter-selection" ng-model="vm.selectedFilter" ng-change="vm.updateCounts()">
-                <option value="-1" selected>----</option>
-                <option ng-repeat="item in vm.filter" value="{{item.id}}">{{item.name}}</option>
-            </select>
+            <div class="pf-taxonomy-filter__select">
+                <select id="filter-selection" ng-model="vm.selectedFilter" ng-change="vm.updateCounts()">
+                    <option value="-1" selected>----</option>
+                    <option ng-repeat="item in vm.filter" value="{{item.id}}">{{item.name}}</option>
+                </select>
+            </div>
+
         </div>
+
         <div class="taxonomy" ng-repeat="item in vm.taxonomy" ng-click="vm.goToFilteredTracks(item.id)">
             <div class="taxonomy-title">
                 <span ng-if="item.name[vm.currentLang]">{{item.name[vm.currentLang]}}</span>
@@ -27,11 +31,11 @@
             }">
                 <i class="icon {{item.icon}}" ng-if="item.icon"></i>
                 {{item.filteredCount}}
-                <i class="icon wm-icon-android-arrow-forward"></i>
+                <i class="icon wm-icon-ios7-arrow-forward"></i>
             </div>
         </div>
         <div class="taxonomy-footer">
-            <div class="footer-button">
+            <div class="footer-button pf-footer-button-card">
                 <i clacc="icon wm-icon-android-user-menu"></i>
                 {{"Card" | translate}}
             </div>

@@ -6,50 +6,132 @@
 .trackTaxonomy-page {
     ion-content {
         padding: 10px;
+
         .taxonomy-filter {
+            height: 10vh;
+            padding: 10px;
+
+            .pf-taxonomy-filter__select {
+                height: 100%;
+                position: relative;
+                overflow: hidden;
+
+                &::before {
+                    width: 45px;
+                    @include inline-flex;
+                    @include align-items(center);
+                    @include justify-content(center);
+                    background: $color-extra-light-blue;
+                    @include webmapp-icon('\f151');
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    color: $color-dark-blue;
+                    font-size: $font-size-l;
+                    @include box-shadow(inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9));
+
+                    
+                }
+            }
+
+            select {
+                width: 120%;
+                height: 100%;
+                padding-right: 10px;
+                padding-left: 10px;
+                -webkit-appearance: none;
+                border: none;
+                border-radius: 0;
+            }
+
             #filter-selection {
                 font-size: 20px;
-                margin: 0 15% 15px;
-                width: 70%;
+
                 background: #fff;
             }
+
+
         }
+
+        //
+        //.pf-taxonomy-wrapper {
+        //    height: 60vh;
+        //    overflow-y: auto;
+        //}
+
         div.taxonomy {
+            @include flexbox;
+            @include justify-content(space-between);
             color: #000;
             width: 100%;
-            height: 130px;
+            height: 15vh;
             margin-bottom: 10px;
+            background: #fff;
+
             div.taxonomy-title {
+                @include flexbox;
+                @include align-items(center);
+                @include flex(0 0 80%);
+                max-width: 80%;
                 height: inherit;
-                font-size: 40px;
-                line-height: 45px;
-                vertical-align: middle;
                 padding: 20px 10px;
                 overflow: hidden;
-                width: calc(100% - 100px);
-                float: left;
-                font-weight: 700;
+                font-weight: $font-weight-bold;
+                font-size: $font-size-xl;
+                line-height: 1.2;
+                color: $colot-text;
+
             }
+
             div.taxonomy-button {
+                @include flexbox;
+                @include align-items(center);
+                @include flex(0 0 20%);
                 @include box-shadow(inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9));
+                max-width: 20%;
                 height: inherit;
-                width: 100px;
-                float: left;
+                padding: 10px;
                 color: #fff;
                 text-align: center;
+                font-family: $title-font-family;
+                font-weight: $font-weight-bold;
+                font-size: $font-size-l;
+
+                .wm-icon-ios7-arrow-forward {
+                    margin-left: 5px;
+                    font-size: 20px;
+                }
             }
         }
+
         .taxonomy-footer {
-            width: 100%;
+            @include flexbox;
+            @include justify-content(space-between);
+            height: 12vh;
+            padding: 10px;
             position: fixed;
-            bottom: 0;
-            left: 0;
-            height: auto;
+            right: -10px;
+            bottom: -10px;
+            left: -10px;
+            background: #ffffff;
+
             .footer-button {
-                width: calc(100% /3);
-                float: left;
-                font-size: 20px;
-                color: #000;
+                @include flexbox;
+                @include justify-content(center);
+                @include align-items(center);
+                @include flex(0 0 32%);
+                max-width: 32%;
+                font-size: $font-size-s;
+                color: #ffffff;
+                background: $color-light-blue;
+                font-family: $title-font-family;
+                font-weight: $font-weight-bold;
+                text-transform: uppercase;
+
+                &.pf-footer-button-card {
+                    background: $color-dark-blue;
+                }
             }
         }
     } 

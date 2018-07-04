@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* Valcamonica color scheme */
 /*
  * TYPOGRAPHY
@@ -10,6 +11,54 @@
 /* cyrillic-ext */
 /* Main font - ALEGREYA SANS */
 /* FONT FACE */
+@font-face {
+  font-family: 'montserrat';
+  src: url("../fonts/montserrat/montserrat-semibold-webfont.woff2") format("woff2"), url("../fonts/montserrat/montserrat-semibold-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'montserrat';
+  src: url("../fonts/montserrat/montserrat-bold-webfont.woff2") format("woff2"), url("../fonts/montserrat/montserrat-bold-webfont.woff") format("woff");
+  font-weight: bold;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'montserrat';
+  src: url("../fonts/montserrat/montserrat-regular-webfont.woff2") format("woff2"), url("../fonts/montserrat/montserrat-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'montserrat';
+  src: url("../fonts/montserrat/montserrat-light-webfont.woff2") format("woff2"), url("../fonts/montserrat/montserrat-light-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'merriweather';
+  src: url("../fonts/merriweather/merriweather-black-webfont.woff2") format("woff2"), url("../fonts/merriweather/merriweather-black-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'merriweather';
+  src: url("../fonts/merriweather/merriweather-bold-webfont.woff2") format("woff2"), url("../fonts/merriweather/merriweather-bold-webfont.woff") format("woff");
+  font-weight: bold;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'merriweather';
+  src: url("../fonts/merriweather/merriweather-light-webfont.woff2") format("woff2"), url("../fonts/merriweather/merriweather-light-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'merriweather';
+  src: url("../fonts/merriweather/merriweather-regular-webfont.woff2") format("woff2"), url("../fonts/merriweather/merriweather-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
 /* ------------------------------------ *\
    #HEADINGS
 \* ------------------------------------ */
@@ -53,7 +102,7 @@
  * Basic style for tag and general classes
  */
 body.fontsloaded {
-  font-family: "Abel", sans-serif !important; }
+  font-family: "merriweather", sans-serif !important; }
 
 body {
   min-height: 100%;
@@ -88,7 +137,7 @@ html {
 
 html, body, .ionic-body {
   height: 100%;
-  font-family: "Abel", sans-serif !important; }
+  font-family: "merriweather", sans-serif !important; }
 
 img {
   max-width: 100%;
@@ -101,10 +150,10 @@ a {
   text-decoration: none; }
 
 p, a {
-  font-family: "Abel", sans-serif; }
+  font-family: "merriweather", sans-serif; }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Abel", sans-serif; }
+  font-family: "merriweather", sans-serif; }
 
 h1, h2, h3, h4 {
   font-size: 16px !important; }
@@ -113,7 +162,7 @@ h1, h2, h3, h4 {
   text-align: center !important; }
 
 button {
-  font-family: "Abel", sans-serif; }
+  font-family: "merriweather", sans-serif; }
 
 .button:hover {
   color: inherit; }
@@ -455,7 +504,7 @@ ion-slide.slider-slide {
    #ATTRIBUTION
 \* ------------------------------------ */
 ion-content div.static-content.card-content {
-  color: #605846; }
+  color: #49a5df; }
   ion-content div.static-content.card-content div.attribution-title {
     font-size: 1.5em;
     padding: 20px 0 10px 0; }
@@ -483,7 +532,7 @@ ion-content div.static-content.card-content {
 /* Header */
 .card-page-header {
   background-size: 48px 41px;
-  color: #605846;
+  color: #49a5df;
   font-weight: 700;
   padding: 12px;
   font-size: 1.1em;
@@ -508,7 +557,7 @@ ion-content div.static-content.card-content {
   margin: 15px 0;
   text-align: center; }
   .card-text p {
-    color: #605846;
+    color: #49a5df;
     font-size: 14px;
     line-height: 1; }
 
@@ -1046,7 +1095,7 @@ div.detailRoute-footer {
   .itinerario-details-tappe .itinerario-tappe-title {
     display: inline-block;
     width: 100%;
-    font-family: "Abel", sans-serif;
+    font-family: "montserrat", sans-serif;
     margin: 0;
     padding: 8px;
     color: #605846;
@@ -1090,7 +1139,7 @@ div.detailRoute-footer {
   .route-related-details .route-related-title {
     display: inline-block;
     width: 100%;
-    font-family: "Abel", sans-serif;
+    font-family: "montserrat", sans-serif;
     margin: 0;
     padding: 8px;
     color: #605846;
@@ -1788,7 +1837,7 @@ button.login-button.skip-login {
     padding-top: 10px;
     padding-bottom: 10px;
     color: #918f75;
-    font-family: "Abel", sans-serif !important;
+    font-family: "merriweather", sans-serif !important;
     font-size: 0.7em; }
     .omb_login button .icon {
       display: block; }
@@ -1968,7 +2017,7 @@ button.login-button.skip-login {
 
 /* Long title and date */
 .details-page .bar.bar-header .title {
-  font-family: "Abel", sans-serif;
+  font-family: "montserrat", sans-serif;
   font-size: 20px;
   height: 100%;
   margin: 0;
@@ -2794,7 +2843,7 @@ ion-side-menus.navigation-interface .show-start-navigation .start-navigation {
   padding-right: 13px;
   width: 310px; }
   .leaflet-popup-content-wrapper .leaflet-popup-content {
-    font-family: "Abel", sans-serif;
+    font-family: "merriweather", sans-serif;
     font-weight: 700;
     margin: 0;
     padding: 0;
@@ -3112,7 +3161,7 @@ button.popup-close {
 .modal-details .modal-title {
   font-size: 22px;
   color: #80181e;
-  font-family: "Abel", sans-serif; }
+  font-family: "montserrat", sans-serif; }
 
 .modal-details.modal-details-gallery .modal-title {
   display: none; }
@@ -3137,7 +3186,7 @@ button.popup-close {
 .modal-content-title {
   margin: 10px 0;
   font-size: 18px;
-  font-family: "Abel", sans-serif;
+  font-family: "montserrat", sans-serif;
   line-height: 1.2; }
   .modal-details-gallery .modal-content-title {
     display: none; }
@@ -3514,44 +3563,99 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
   .portoferraio-home-page ion-content .home-container {
     width: 100%; }
     .portoferraio-home-page ion-content .home-container .titles-container {
-      width: 100%; }
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      width: 100%;
+      height: 35vh; }
       .portoferraio-home-page ion-content .home-container .titles-container:after {
         clear: both;
         content: "";
         display: block; }
       .portoferraio-home-page ion-content .home-container .titles-container .left-bar {
         width: 70%;
-        margin-right: 5px;
-        float: left; }
+        margin-right: 5px; }
       .portoferraio-home-page ion-content .home-container .titles-container .right-bar {
-        width: calc(30% - 5px);
-        float: left; }
+        width: calc(30% - 5px); }
       .portoferraio-home-page ion-content .home-container .titles-container .left-bar,
       .portoferraio-home-page ion-content .home-container .titles-container .right-bar {
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-flow: column nowrap;
+        flex-flow: column nowrap;
         font-weight: bold; }
         .portoferraio-home-page ion-content .home-container .titles-container .left-bar div,
         .portoferraio-home-page ion-content .home-container .titles-container .right-bar div {
           background: #49a5df; }
         .portoferraio-home-page ion-content .home-container .titles-container .left-bar .title,
         .portoferraio-home-page ion-content .home-container .titles-container .right-bar .title {
-          padding: 30px;
-          font-size: 35px;
+          -webkit-box-flex: 1;
+          -moz-box-flex: 1;
+          -webkit-flex: 1;
+          -ms-flex: 1;
+          flex: 1;
+          display: -webkit-box;
+          display: -moz-box;
+          display: -ms-flexbox;
+          display: -webkit-flex;
+          display: flex;
+          -webkit-align-items: center;
+          -moz-align-items: center;
+          -ms-align-items: center;
+          align-items: center;
+          padding: 0 20px;
+          font-size: 24px;
           margin-bottom: 5px; }
           .portoferraio-home-page ion-content .home-container .titles-container .left-bar .title:last-child,
           .portoferraio-home-page ion-content .home-container .titles-container .right-bar .title:last-child {
             margin-bottom: 0; }
         .portoferraio-home-page ion-content .home-container .titles-container .left-bar .right-button,
+        .portoferraio-home-page ion-content .home-container .titles-container .left-bar .left-button,
+        .portoferraio-home-page ion-content .home-container .titles-container .right-bar .right-button,
+        .portoferraio-home-page ion-content .home-container .titles-container .right-bar .left-button {
+          -webkit-box-flex: 1;
+          -moz-box-flex: 1;
+          -webkit-flex: 1;
+          -ms-flex: 1;
+          flex: 1; }
+        .portoferraio-home-page ion-content .home-container .titles-container .left-bar .right-button,
         .portoferraio-home-page ion-content .home-container .titles-container .right-bar .right-button {
-          padding: 38.2px 5px;
-          text-align: center;
-          text-transform: uppercase; }
+          display: -webkit-box;
+          display: -moz-box;
+          display: -ms-flexbox;
+          display: -webkit-flex;
+          display: flex;
+          -webkit-flex-flow: column nowrap;
+          flex-flow: column nowrap;
+          -webkit-align-items: center;
+          -moz-align-items: center;
+          -ms-align-items: center;
+          align-items: center;
+          -webkit-justify-content: center;
+          -moz-justify-content: center;
+          -ms-justify-content: center;
+          justify-content: center;
+          -ms-flex-pack: center;
+          padding: 0 5px;
+          text-transform: uppercase;
+          font-family: "montserrat", sans-serif;
+          font-size: 14px; }
           .portoferraio-home-page ion-content .home-container .titles-container .left-bar .right-button:first-child,
           .portoferraio-home-page ion-content .home-container .titles-container .right-bar .right-button:first-child {
             margin-bottom: 5px; }
           .portoferraio-home-page ion-content .home-container .titles-container .left-bar .right-button i,
           .portoferraio-home-page ion-content .home-container .titles-container .right-bar .right-button i {
             display: block;
-            margin-bottom: 10px; }
+            margin-bottom: 10px;
+            font-size: 28px; }
+          .portoferraio-home-page ion-content .home-container .titles-container .left-bar .right-button.pf-home-card,
+          .portoferraio-home-page ion-content .home-container .titles-container .right-bar .right-button.pf-home-card {
+            background: #1f4651; }
     .portoferraio-home-page ion-content .home-container .logo-container {
       padding: 20px 10px; }
       .portoferraio-home-page ion-content .home-container .logo-container img {
@@ -3734,46 +3838,173 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
  */
 .trackTaxonomy-page ion-content {
   padding: 10px; }
-  .trackTaxonomy-page ion-content .taxonomy-filter #filter-selection {
-    font-size: 20px;
-    margin: 0 15% 15px;
-    width: 70%;
-    background: #fff; }
+  .trackTaxonomy-page ion-content .taxonomy-filter {
+    height: 10vh;
+    padding: 10px; }
+    .trackTaxonomy-page ion-content .taxonomy-filter .pf-taxonomy-filter__select {
+      height: 100%;
+      position: relative;
+      overflow: hidden; }
+      .trackTaxonomy-page ion-content .taxonomy-filter .pf-taxonomy-filter__select::before {
+        width: 45px;
+        display: -webkit-inline-box;
+        display: -ms-inline-flexbox;
+        display: inline-flex;
+        -webkit-align-items: center;
+        -moz-align-items: center;
+        -ms-align-items: center;
+        align-items: center;
+        -webkit-justify-content: center;
+        -moz-justify-content: center;
+        -ms-justify-content: center;
+        justify-content: center;
+        -ms-flex-pack: center;
+        background: #cdeefb;
+        content: "";
+        font-family: 'webmapp' !important;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        color: #1f4651;
+        font-size: 24px;
+        -webkit-box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9);
+        -moz-box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9);
+        box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9); }
+    .trackTaxonomy-page ion-content .taxonomy-filter select {
+      width: 120%;
+      height: 100%;
+      padding-right: 10px;
+      padding-left: 10px;
+      -webkit-appearance: none;
+      border: none;
+      border-radius: 0; }
+    .trackTaxonomy-page ion-content .taxonomy-filter #filter-selection {
+      font-size: 20px;
+      background: #fff; }
   .trackTaxonomy-page ion-content div.taxonomy {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    -ms-justify-content: space-between;
+    justify-content: space-between;
+    -ms-flex-pack: space-between;
     color: #000;
     width: 100%;
-    height: 130px;
-    margin-bottom: 10px; }
+    height: 15vh;
+    margin-bottom: 10px;
+    background: #fff; }
     .trackTaxonomy-page ion-content div.taxonomy div.taxonomy-title {
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-items: center;
+      -moz-align-items: center;
+      -ms-align-items: center;
+      align-items: center;
+      -webkit-box-flex: 0 0 80%;
+      -moz-box-flex: 0 0 80%;
+      -webkit-flex: 0 0 80%;
+      -ms-flex: 0 0 80%;
+      flex: 0 0 80%;
+      max-width: 80%;
       height: inherit;
-      font-size: 40px;
-      line-height: 45px;
-      vertical-align: middle;
       padding: 20px 10px;
       overflow: hidden;
-      width: calc(100% - 100px);
-      float: left;
-      font-weight: 700; }
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 1.2;
+      color: #1f4651; }
     .trackTaxonomy-page ion-content div.taxonomy div.taxonomy-button {
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-items: center;
+      -moz-align-items: center;
+      -ms-align-items: center;
+      align-items: center;
+      -webkit-box-flex: 0 0 20%;
+      -moz-box-flex: 0 0 20%;
+      -webkit-flex: 0 0 20%;
+      -ms-flex: 0 0 20%;
+      flex: 0 0 20%;
       -webkit-box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9);
       -moz-box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9);
       box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9);
+      max-width: 20%;
       height: inherit;
-      width: 100px;
-      float: left;
+      padding: 10px;
       color: #fff;
-      text-align: center; }
+      text-align: center;
+      font-family: "montserrat", sans-serif;
+      font-weight: 700;
+      font-size: 24px; }
+      .trackTaxonomy-page ion-content div.taxonomy div.taxonomy-button .wm-icon-ios7-arrow-forward {
+        margin-left: 5px;
+        font-size: 20px; }
   .trackTaxonomy-page ion-content .taxonomy-footer {
-    width: 100%;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
+    -ms-justify-content: space-between;
+    justify-content: space-between;
+    -ms-flex-pack: space-between;
+    height: 12vh;
+    padding: 10px;
     position: fixed;
-    bottom: 0;
-    left: 0;
-    height: auto; }
+    right: -10px;
+    bottom: -10px;
+    left: -10px;
+    background: #ffffff; }
     .trackTaxonomy-page ion-content .taxonomy-footer .footer-button {
-      width: calc(100% /3);
-      float: left;
-      font-size: 20px;
-      color: #000; }
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-justify-content: center;
+      -moz-justify-content: center;
+      -ms-justify-content: center;
+      justify-content: center;
+      -ms-flex-pack: center;
+      -webkit-align-items: center;
+      -moz-align-items: center;
+      -ms-align-items: center;
+      align-items: center;
+      -webkit-box-flex: 0 0 32%;
+      -moz-box-flex: 0 0 32%;
+      -webkit-flex: 0 0 32%;
+      -ms-flex: 0 0 32%;
+      flex: 0 0 32%;
+      max-width: 32%;
+      font-size: 14px;
+      color: #ffffff;
+      background: #49a5df;
+      font-family: "montserrat", sans-serif;
+      font-weight: 700;
+      text-transform: uppercase; }
+      .trackTaxonomy-page ion-content .taxonomy-footer .footer-button.pf-footer-button-card {
+        background: #1f4651; }
 
 /*
  * WEBMAPP PAGE
