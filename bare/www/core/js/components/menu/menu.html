@@ -41,7 +41,7 @@
                 <a 
                     class="item"
                     ng-style="{
-                        'color': item.color || '#605846'
+                        'color': (vm.colors.menu.overwrite || !item.color) ? vm.colors.menu.color : item.color
                     }" 
                     ng-click="vm.goTo(item.url, item.type)"
                     ng-if="(vm.isBrowser && !item.hideInBrowser) || !vm.isBrowser"

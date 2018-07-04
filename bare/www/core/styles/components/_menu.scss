@@ -73,6 +73,7 @@ a.item {
     font-size: 30px;
     color: $color-brown;
     margin: 0;
+    text-transform: uppercase;
 
     &::before {
       content: '';

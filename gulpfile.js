@@ -249,6 +249,15 @@ gulp.task('complete-update', function () {
     sh.exec("gulp update -i " + instance_name + " -u " + url);
 });
 
+gulp.task('set-font', function () {
+    if (!argv.config) {
+        console.warn("[WARN] Missing font style to set");
+        return;
+    }
+
+    gulp.setFont(argv.config);
+});
+
 gulp.copy = function (src, dest) {
 
     gulp.start('node_modules_link');
@@ -294,7 +303,31 @@ gulp.updateConfigXML = function (config) {
 };
 
 gulp.setFont = function (fontFamily) {
-    var dir = 'instances/' + instance_name + '/www/core/styles/generic';
+    var acceptedFonts = ['Abel', 'Roboto', 'Montserrat', 'Josefin Sans'],
+        validFont = false;
+
+    for (var i in acceptedFonts) {
+        if (acceptedFonts[i] === fontFamily) {
+            validFont = true;
+            break;
+        }
+    }
+
+    if (!validFont) {
+        console.warn("[WARN] The selected font is not valid");
+        return;
+    }
+
+    var dir = '';
+
+    if (!instance_name || instance_name === 'default') {
+        dir = 'bare/www/core/styles/generic';
+    }
+    else {
+        dir = 'instances/' + instance_name + '/www/core/styles/generic';
+    }
+
+    
 
     return gulp.src(dir + "/_variables.scss")
         .pipe(replace(/\$main-font-family: '(.*)', sans-serif;/g, "$main-font-family: '" + fontFamily + "', sans-serif;"))
