@@ -16,9 +16,7 @@
 }
 
 .item-search-form {
-  padding: 3px;
-  padding-top: 2px;
-  padding-bottom: 5px;
+  padding: 10px 19px 2px;
   position: relative;
   z-index: 300;
   border: none;
@@ -27,7 +25,6 @@
 .search-select-box,
 .search-input-box {
   width: 100%;
-
   input {
     width: 100%;
   }
@@ -72,13 +69,14 @@
 }
 
 .search-input-box {
-  padding: 5px;
+  padding: 3px;
   background: $color-white;
   border: 1px solid $color-light-02;
   position: relative;
 
   .search-input {
-    padding: 5px;
+    padding: 3px 8px;
+    font-size: 18px;
   }
 
   .button {
@@ -109,4 +107,21 @@
 .label-input-wrapper {
   display: inline-block;
   width: 100%;
+}
+
+.search-button-container {
+  width: 100%;
+  padding: 4px 10px;
+  .search-button {
+    margin: 5px;
+    width: calc(50% - 10px);
+    padding-top: 8px;
+    padding-bottom: 8px;
+    float: left;
+    font-size: 18px;
+    font-weight: bold;
+    .search-button-label {
+      text-transform: uppercase;
+    }
+  }
 }
