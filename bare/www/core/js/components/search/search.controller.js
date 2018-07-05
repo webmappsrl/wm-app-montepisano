@@ -276,10 +276,11 @@ angular.module('webmapp')
             }
         }
 
-
         Search.setActiveLayers(toUpdate);
         Search.setFacetedFilters(getFiltersMap(), featuresIdArray);
+
         vm.filtersList = Search.getActiveLayers();
+        console.log(vm.filtersList);
         vm.translatedFiltersList = vm.translateOverlayInArray(vm.filtersList);
         vm.othersCount = String(vm.filtersList.length - 1);
         vm.areAllActive = modalScope.vm.areAllActive = areAllActive(Search.getActiveLayersMap());
@@ -298,7 +299,8 @@ angular.module('webmapp')
     };
 
     vm.openFilters = function() {
-
+        modalScope.vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+        modalScope.vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
         if (modalScope.vm.isNewModal) {
             var activeFilters = Search.getActiveLayersMap();
             for (layerId in activeFilters) {

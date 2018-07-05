@@ -22,7 +22,7 @@ angular.module('webmapp')
 
     var activeLayersMap = confLayers.reduce(function(prev, curr) {
         if (!curr.skipSearch) {
-            prev[curr.label] = true;
+            prev[curr.label] = false;
         }
         return prev;
     }, {});
@@ -131,33 +131,51 @@ angular.module('webmapp')
         // }
         var idFilter = [];
         if (facetedFilters.length) {
+            console.log("FILTRI ATTIVI");
+            console.log(facetedFilters);
             idFilter = facetedFilterFun(facetedFilters);
+            console.log(idFilter);
+            console.log("ID DISPONIBILI");
         }
 
         if (query) {
-            for (var c in confLayersMap) {
-                if (typeof layersEngine[c] !== 'undefined' &&
-                    layers.indexOf(c) !== -1) {
-                    currentResult = layersEngine[c].search(query);
-                    currentResult = filterById(currentResult, idFilter);
-                    if (currentResult.length > 0) {
-                        console.log(c);
-                        results.push({ label: c, divider: true });
-                        results = results.concat(currentResult);
+            if (!facetedFilters.length) {
+                for (var c in confLayersMap) {
+                    if (typeof layersEngine[c] !== 'undefined') {
+                        currentResult = layersEngine[c].search(query);
+                        if (currentResult.length > 0) {
+                            results.push({ label: c, divider: true });
+                            results = results.concat(currentResult);
+                        }
+                    }
+                }
+            } else {
+                for (var c in confLayersMap) {
+                    if (typeof layersEngine[c] !== 'undefined' &&
+                        layers.indexOf(c) !== -1) {
+                        currentResult = layersEngine[c].search(query);
+                        if (facetedFilters.length) {
+                            currentResult = filterById(currentResult, idFilter);
+                        }
+                        if (currentResult.length > 0) {
+                            results.push({ label: c, divider: true });
+                            results = results.concat(currentResult);
+                        }
                     }
                 }
             }
-        } else if (searchConf.showAllByDefault) {
+        } else if (searchConf.showAllByDefault || facetedFilters.length) {
             for (var l in confLayersMap) {
                 if (typeof layersEngine[l] !== 'undefined' &&
                     layers.indexOf(l) !== -1) {
                     currentResult = getAllByLayer(l);
-                    currentResult = filterById(currentResult, idFilter);
+                    if (facetedFilters.length) {
+                        currentResult = filterById(currentResult, idFilter);
+                    }
                     if (currentResult.length > 0) {
                         results.push({ label: l, divider: true });
                         results = results.concat(currentResult);
                     }
-
                 }
             }
         }
@@ -200,28 +218,50 @@ angular.module('webmapp')
         }
 
         if (query) {
-            for (var c in confLayersMap) {
-                if (typeof layersEngine[c] !== 'undefined' &&
-                    layers.indexOf(c) !== -1) {
-                    currentResult = layersEngine[c].search(query);
-                    currentResult = layersEngine[c].search(query);
 
-                    var tmp = filterById(currentResult, idFilter);
-                    currentResult = tmp;
-                    if (currentResult.length > 0) {
-                        results[c] = currentResult;
+            if (!facetedFilters.length) {
+                for (var c in confLayersMap) {
+                    if (typeof layersEngine[c] !== 'undefined') {
+                        currentResult = layersEngine[c].search(query);
+                        if (currentResult.length > 0) {
+                            results[c] = currentResult;
+                        }
+                    }
+                }
+            } else {
+                for (var c in confLayersMap) {
+                    if (typeof layersEngine[c] !== 'undefined' &&
+                        layers.indexOf(c) !== -1) {
+                        currentResult = layersEngine[c].search(query);
+                        if (facetedFilters.length) {
+                            currentResult = filterById(currentResult, idFilter);
+                        }
+                        if (currentResult.length > 0) {
+                            results[c] = currentResult;
+                        }
                     }
                 }
             }
-        } else if (searchConf.showAllByDefault) {
+
+        } else if (searchConf.showAllByDefault || facetedFilters.length) {
+            console.log("CHECK");
             for (var l in confLayersMap) {
                 if (typeof layersEngine[l] !== 'undefined' &&
                     layers.indexOf(l) !== -1) {
+                    console.log("LAYER");
+                    console.log(l);
                     currentResult = getAllByLayer(l);
-                    var tmp = filterById(currentResult, idFilter);
-                    currentResult = tmp;
+                    console.log("RISULTATI");
+                    console.log(currentResult);
+                    if (facetedFilters.length) {
+                        console.log("FILTRA");
+                        currentResult = filterById(currentResult, idFilter);
+                    }
+                    console.log("FILTRATI");
+                    console.log(currentResult);
+
                     if (currentResult.length > 0) {
-                        results[c] = currentResult;
+                        results[l] = currentResult;
                     }
                 }
             }
@@ -277,12 +317,13 @@ angular.module('webmapp')
 
         var filter = typeof binds !== "undefined" ? binds : [];
 
-        for (let i = 0; i < filter.length; i++) {
+        for (var i = 0; i < filter.length; i++) {
 
             var arrayOR = [];
-            for (let j = 0; j < filter[i].length; j++) {
+            for (var j = 0; j < filter[i].length; j++) {
                 var layerId = filter[i][j];
                 arrayOR = arrayOR.concat(featuresIdByLayer[layerId]);
+
             }
 
             if (type) {
@@ -292,7 +333,8 @@ angular.module('webmapp')
                     result = result.concat(arrayOR);
                 }
             } else {
-                if (result.length === 0 && i == 0) {
+                if (result.length === 0 && i === 0) {
+
                     result = arrayOR;
                 } else {
                     result = result.filter(function(n) {

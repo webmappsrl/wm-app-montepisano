@@ -29,6 +29,8 @@ angular.module('webmapp')
         return allActive;
     };
 
+
+
     MapService.showAllLayers();
     MapService.activateUtfGrid();
     modalScope.vm = {};
@@ -255,18 +257,6 @@ angular.module('webmapp')
             modalScope.vm.filters[filterName].value = value;
             modalScope.vm.filters["Tutte"].value = areAllActive(modalScope.vm.filters);
         }
-<<<<<<< HEAD
-
-        // var current = getFiltersMap();
-
-        var start = Date.now();
-
-        var filteredresult = filtersSearchFun([
-            ['Bar', 'Ristoranti'],
-            ['Cicloescursionismo']
-        ]);
-=======
->>>>>>> accordion-filters
     };
 
     var filtersSearchFun = function(binds, type) {
@@ -315,7 +305,8 @@ angular.module('webmapp')
     };
 
     vm.openFilters = function() {
-
+        modalScope.vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+        modalScope.vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
         if (modalScope.vm.isNewModal) {
             var activeFilters = MapService.getActiveFilters();
             for (layerId in activeFilters) {
