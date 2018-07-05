@@ -85,7 +85,7 @@ angular.module('webmapp')
 
         modalScope.filters = angular.copy(CONFIG.MAP.filters);
 
-        var layers = {};
+        modalScope.layers = {};
         modalScope.tabNum = 0;
         for (var tabIndex in modalScope.filters) {
 
@@ -95,21 +95,27 @@ angular.module('webmapp')
                 modalScope.tabNum += 1;
                 if (tabIndex === 'pois') {
                     modalScope.filters[tabIndex].label = "Punti";
-                } else {
+                } else if (tabIndex === 'tracks') {
                     modalScope.filters[tabIndex].label = "Traccie";
+                } else {
+                    modalScope.filters[tabIndex].label = "Mappe";
                 }
                 var subTabs = modalScope.filters[tabIndex].sublayers;
                 modalScope.filters[tabIndex].selectedTab = -1;
                 for (var subTabIndex in subTabs) {
                     var subTab = subTabs[subTabIndex];
+                    subTab.checked = false;
+                    if (subTab.label === "custom") {
+                        subTab.label = "altri";
+                    }
                     var tmp = [];
                     for (var index in subTab.items) {
                         var layerId = subTab.items[index];
                         var layer = MapService.getOverlayLayerById(layerId);
                         if (layer) {
-                            var info = { id: layerId, label: layer.label, selected: false };
+                            var info = { id: layerId, label: layer.label, checked: false };
                             tmp.push(info);
-                            layers[layer.label] = info;
+                            modalScope.layers[layer.label] = info;
                         }
                     }
                     subTab.items = tmp;
@@ -118,7 +124,6 @@ angular.module('webmapp')
         }
 
         modalScope.currentTab = Object.keys(modalScope.filters)[0];
-
 
         modalScope.switchTab = function(id) {
             if (modalScope.filters[id])
@@ -130,102 +135,108 @@ angular.module('webmapp')
 
         modalScope.toggleSubTab = function(id, tabId) {
 
-            if (modalScope.subTab[tabId] !== id) {
-                modalScope.subTab[tabId] = id;
+            if (modalScope.filters[tabId].selectedTab !== id) {
+                modalScope.filters[tabId].selectedTab = id;
             } else {
-                modalScope.subTab[tabId] = null;
+                modalScope.filters[tabId].selectedTab = null;
             }
         };
 
-        modalScope.toggleSubTabCheckBox = function(id) {
+        modalScope.toggleSubTabCheckBox = function(id, tabId) {
 
-            for (var tabIndex in modalScope.filters) {
-                var tab = modalScope.filters[tabIndex];
-                for (var subIndex in tab.sublayers) {
-                    var sub = tab.sublayers[subIndex];
-                    if (sub.label === id) {
-                        modalScope.sublayers[id] = !modalScope.sublayers[id];
-                        for (var index in sub.items) {
-                            modalScope.layers[sub.items[index].label] = modalScope.sublayers[id];
-                            modalScope.vm.updateFilter(sub.items[index].label, modalScope.sublayers[id]);
+            if (modalScope.filters[tabId] && modalScope.filters[tabId].sublayers[id]) {
+                if (modalScope.filters[tabId].sublayers[id].checked) {
+
+                    var items = modalScope.filters[tabId].sublayers[id].items;
+                    for (var index in items) {
+                        if (items[index].checked) {
+                            modalScope.vm.updateFilter(items[index].label, false);
+                            items[index].checked = !items[index].checked;
+                        }
+                    }
+                } else {
+                    var items = modalScope.filters[tabId].sublayers[id].items;
+                    for (var index in items) {
+                        if (!items[index].checked) {
+                            modalScope.vm.updateFilter(items[index].label, true);
+                            items[index].checked = !items[index].checked;
                         }
                     }
                 }
+                modalScope.filters[tabId].sublayers[id].checked = !modalScope.filters[tabId].sublayers[id].checked;
             }
         }
 
         modalScope.toggleLayer = function(layerLabel, sublayerId, tabId) {
-            modalScope.layers[layerLabel] = !modalScope.layers[layerLabel];
+            modalScope.layers[layerLabel].checked = !modalScope.layers[layerLabel].checked;
             checkTabState(sublayerId, tabId);
-            modalScope.vm.updateFilter(layerLabel, modalScope.layers[layerLabel]);
+            modalScope.vm.updateFilter(layerLabel, modalScope.layers[layerLabel].checked);
+
         };
 
         var checkTabState = function(sublayerId, tabId) {
 
-            var sublayer = modalScope.filters[tabId].sublayers[sublayerId];
-            var sublabel = sublayer.label;
             var state = true;
+            var sublayer = modalScope.filters[tabId].sublayers[sublayerId];
             for (var index in sublayer.items) {
-                var label = sublayer.items[index].label;
-                if (!modalScope.layers[label]) {
+                var layerChecked = sublayer.items[index].checked;
+                if (!layerChecked) {
                     state = false;
                     break;
                 }
             }
-            modalScope.sublayers[sublabel] = state;
+            sublayer.checked = state;
         }
 
         var checkAllTabsState = function() {
 
-            for (var tabIndex in modalScope.filters) {
-                var tab = modalScope.filters[tabIndex];
+            for (var tabId in modalScope.filters) {
+                var tab = modalScope.filters[tabId];
                 for (var sublayerId in tab.sublayers) {
-                    var sublayer = modalScope.filters[tabIndex].sublayers[sublayerId];
-                    var sublabel = sublayer.label;
-                    var state = true;
-                    for (var index in sublayer.items) {
-                        var label = sublayer.items[index].label;
-                        if (!modalScope.layers[label]) {
-                            state = false;
-                            break;
-                        }
-                    }
-                    modalScope.sublayers[sublabel] = state;
+                    checkTabState(sublayerId, tabId);
                 }
             }
         }
 
 
         var getFiltersMap = function() {
-            var filterAND = [];
 
-            var currentFilters = MapService.getActiveFilters();
-            var poisSublayers = modalScope.filters.pois.sublayers;
-            var tracksSublayers = modalScope.filters.tracks.sublayers;
-            for (let i = 0; i < poisSublayers.length; i++) {
-                var filterOR = [];
-                for (let j = 0; j < poisSublayers[i].items.length; j++) {
-                    var layer = poisSublayers[i].items[j];
-                    if (currentFilters[layer.label]) {;
-                        filterOR.push(layer.label);
+
+            var result = [];
+
+            for (var tabIndex in modalScope.filters) {
+
+                if (tabIndex !== "base_maps") {
+
+                    var tab = modalScope.filters[tabIndex];
+                    for (var subIndex in tab.sublayers) {
+
+                        var sublayer = tab.sublayers[subIndex];
+                        if (sublayer.label === "altri") {
+                            for (var layerId in sublayer.items) {
+                                if (sublayer.items[layerId].checked) {
+                                    result.push([sublayer.items[layerId].id]);
+                                }
+                            }
+                        } else {
+                            var filterOR = [];
+                            for (var layerId in sublayer.items) {
+                                if (sublayer.items[layerId].checked) {
+                                    filterOR.push(sublayer.items[layerId].id);
+                                }
+                            }
+                            if (filterOR.length) {
+                                result.push(filterOR);
+                            }
+                        }
+
                     }
                 }
-                filterAND.push(filterOR);
-            }
-            for (let i = 0; i < tracksSublayers.length; i++) {
-                var filterOR = [];
-                for (let j = 0; j < tracksSublayers[i].items.length; j++) {
-                    var layer = tracksSublayers[i].items[j];
-                    if (currentFilters[layer.label]) {
-                        filterOR.push(layer.label);
-                    }
-
-                }
-                filterAND.push(filterOR);
             }
 
-            return filterAND;
+            return result;
         }
+
     }
 
 
@@ -244,18 +255,6 @@ angular.module('webmapp')
             modalScope.vm.filters[filterName].value = value;
             modalScope.vm.filters["Tutte"].value = areAllActive(modalScope.vm.filters);
         }
-
-        // var current = getFiltersMap();
-
-        var start = Date.now();
-
-        var filteredresult = filtersSearchFun([
-            ['Bar', 'Ristoranti'],
-            ['Cicloescursionismo']
-        ]);
-
-        console.log(Date.now() - start);
-        console.log(filteredresult);
     };
 
 
@@ -264,7 +263,8 @@ angular.module('webmapp')
 
         var result = [];
 
-        var filtersMap = MapService.getFilterSearchMap();
+        var filtersMap = MapService.getFeaturesIdByLayersMap();
+
 
         var filter = typeof binds !== "undefined" ? binds : [];
 
@@ -272,18 +272,18 @@ angular.module('webmapp')
 
             var arrayOR = [];
             for (let j = 0; j < filter[i].length; j++) {
-                var label = filter[i][j];
-                arrayOR = arrayOR.concat(filtersMap[label]);
+                var layerId = filter[i][j];
+                arrayOR = arrayOR.concat(filtersMap[layerId]);
             }
 
             if (type) {
-                if (result.length == 0) {
+                if (result.length === 0 && i === 0) {
                     result = arrayOR;
                 } else {
                     result = result.concat(arrayOR);
                 }
             } else {
-                if (result.length === 0) {
+                if (result.length === 0 && i == 0) {
                     result = arrayOR;
                 } else {
                     result = result.filter(function(n) {
@@ -306,8 +306,13 @@ angular.module('webmapp')
 
     vm.openFilters = function() {
 
-        if (modalScope.vm.isTrueModal) {
-            modalScope.layers = MapService.getActiveFilters();
+        if (modalScope.vm.isNewModal) {
+            var activeFilters = MapService.getActiveFilters();
+            for (layerId in activeFilters) {
+                if (modalScope.layers[layerId]) {
+                    modalScope.layers[layerId].checked = activeFilters[layerId];
+                }
+            }
             checkAllTabsState();
         }
 
