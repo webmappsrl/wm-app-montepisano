@@ -5,7 +5,7 @@
     <ion-content ng-style="{
         'background': vm.COLORS.details.background
     }">
-        <div class="modal-content">
+        <div class="modal-content accordion-filters-modal">
             <span class="modal-title">{{"VISUALIZZA/NASCONDI CATEGORIE" | translate}}</span>
 
             <ion-list ng-if="!vm.isNewModal">
@@ -38,10 +38,9 @@
                 </label>
             </ion-list>
 
-            <br><br>
-            <span class="modal-title" ng-if="vm.isMap">{{"CAMBIA MAPPA DI BASE" | translate}}</span>
+            <span  ng-if="!vm.isNewModal && vm.isMap" class="modal-title">{{"CAMBIA MAPPA DI BASE" | translate}}</span>
 
-            <ion-list class="round-list" ng-if="vm.isMap">
+            <ion-list class="round-list" ng-if="!vm.isNewModal && vm.isMap">
                 <label class="item item-checkbox ng-not-empty is-not-selected" ng-repeat="(key, value) in vm.baseLayers">
                     <div class="checkbox checkbox-input-hidden disable-pointer-events checkbox-circle">
                         <input 
@@ -76,7 +75,7 @@
                         'selected': currentTab === key
                     }">
                         <div ng-repeat="(sublayerId, sublayer) in item.sublayers" class="filters-sublayer" ng-if="key !== 'base_maps'">
-                            <div>
+                            <div class="sublayer-title">
                                 <i class="left-icon" ng-class="{
                                     'ion-android-checkbox-outline':  sublayer.checked,
                                     'ion-android-checkbox-outline-blank': !sublayer.checked
@@ -91,6 +90,9 @@
                             <div class="filters-layer" ng-repeat="(layerId, layer) in sublayer.items" ng-class="{
                                     'animate-show': item.selectedTab === sublayerId,
                                     'animate-hide': item.selectedTab !== sublayerId
+                                }" ng-style="{
+                                    'background': vm.COLORS.details.background,
+                                    'color': layer.checked ? vm.COLORS.search.color : 'inherit'
                                 }" ng-click="toggleLayer(layer.label,sublayerId,key)">
                                 <i class="left-icon" ng-if="item.selectedTab === sublayerId" ng-class="{
                                     'ion-android-checkbox-outline': layer.checked,

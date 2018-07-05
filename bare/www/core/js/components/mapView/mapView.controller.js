@@ -255,18 +255,6 @@ angular.module('webmapp')
             modalScope.vm.filters[filterName].value = value;
             modalScope.vm.filters["Tutte"].value = areAllActive(modalScope.vm.filters);
         }
-<<<<<<< HEAD
-
-        // var current = getFiltersMap();
-
-        var start = Date.now();
-
-        var filteredresult = filtersSearchFun([
-            ['Bar', 'Ristoranti'],
-            ['Cicloescursionismo']
-        ]);
-=======
->>>>>>> accordion-filters
     };
 
     var filtersSearchFun = function(binds, type) {

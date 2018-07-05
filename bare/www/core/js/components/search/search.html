@@ -1,95 +1,26 @@
-<ion-view 
-    cache-view="false" 
-    ng-controller="SearchController as vm">
+<ion-view cache-view="false" ng-controller="SearchController as vm">
     <ion-nav-title>
         <span>
-            {{"Ricerca" | translate}} <span ng-if="vm.searchReady">({{vm.results.realLength}})</span>
+            {{"Ricerca" | translate}}
+            <span ng-if="vm.searchReady">({{vm.results.length}})</span>
         </span>
     </ion-nav-title>
-    <ion-nav-buttons 
-        side="left" 
-        class="no-animate">
-        <button 
-            ng-click="vm.goBack()" 
-            class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left"></button>
+    <ion-nav-buttons side="left" class="no-animate">
+        <button ng-click="vm.goBack()" class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left"></button>
     </ion-nav-buttons>
 
-    <div class="item item-search-filter">
-        <div 
-            class="search-select-box button-search-cat-select"
-            ng-style="{
-                'background': vm.colors.global.background
-            }">
-            <button
-                class="select-category-left button-select button-search-cat-select"
-                ng-click="vm.openFilters()"
-                ng-style="{
-                    'color': vm.colors.search.color
-                }">
-                <i class="icon wm-icon-arrow-down-b"></i>
-                <span class="label-select-search">{{"cerca in" | translate}}</span>
-                {{vm.activeLayers.length}}
-                <span 
-                    class="label-select-name"
-                    ng-if="vm.filtersList.length === 0">
-                    {{"Almeno una categoria" | translate}}
-                </span>
-                <span 
-                    class="label-select-name"
-                    ng-if="vm.areAllActive">
-                    {{"Tutte le categorie" | translate}}
-                </span>
-                <span 
-                    class="label-select-name"
-                    ng-if="!vm.areAllActive && vm.filtersList.length">
-                    {{ vm.translatedFiltersList[0] + " "}} 
-                    <span 
-                        class="label-select-others">
-                        <span ng-if="vm.othersCount !== '0' && vm.othersCount === '1'">
-                            {{"+ 1 altra categoria" | translate}}
-                        </span>
-                        <span ng-if="vm.othersCount !== '0' && vm.othersCount !== '1'">
-                            {{"+ altre " | translate}}{{vm.othersCount + " "}}{{"categorie" | translate}}
-                        </span>
-                    <span>
-                </span>
-            </button>
-            <!--<div class="select-category-right">
-                <button 
-                    class="button button-select button-search-cat-select"
-                    ng-click="vm.openFilters()">
-                    <i class="icon wm-icon-arrow-down-b"></i> SCEGLI CATEGORIA
-                </button>
-            </div>-->
-        </div>
-    </div>
-
-    <form 
-        class="item item-search-form"
-        ng-style="{
+    <form class="item item-search-form" ng-style="{
             'background': vm.colors.global.background
-        }" 
-        ng-submit="vm.closeKeyboard()">
+        }" ng-submit="vm.closeKeyboard()">
 
         <div class="search-input-box">
             <label class="label-input-wrapper">
-                <input
-                    type="text"
-                    id="search"
-                    class="input search-input"
-                    name="search"
-                    placeholder="{{'cerca un punto d interesse' | translate}}"
-                    autocorrect="off"
-                    autocomplete="off"
-                    spellcheck="false" 
-                    ng-model="currentQuery"
-                    ng-model-options="{debounce: 200}"
-                    ng-change="vm.updateSearch(currentQuery)"/>
+                <input type="text" id="search" class="input search-input" name="search" placeholder="{{'Cerca' | translate}}..."
+                    autocorrect="off" autocomplete="off" spellcheck="false" ng-model="currentQuery" ng-model-options="{debounce: 200}"
+                    ng-change="vm.updateSearch(currentQuery)" />
             </label>
 
-            <button 
-                class="button icon-left ion-search button-small"
-                ng-style="{
+            <button class="button icon-left ion-search button-small" ng-style="{
                     'color': vm.colors.search.color
                 }">
                 {{"Cerca" | translate}}
@@ -99,39 +30,46 @@
 
     </form>
 
-    <!-- Keep it as a button? -->
-    <button 
-        ng-if="vm.showInMap"
-        ng-click="vm.toggleMap()"
-        class="button button-search-map"
-        ng-style="{
-            'background-color': vm.colors.global.buttonsBackground || vm.colors.search.color
-        }">
-        <i 
-            class="icon wm-icon-map"
-            ng-if="!vm.isMapView"></i>
-        {{vm.isMapView ? "VISUALIZZA ELENCO" : "CERCA SULLA MAPPA" | translate}}
-    </button>
+    <div class="item item-search-filter">
+        <div class="search-button-container" ng-style="{
+                'background': vm.colors.global.background
+            }">
+            <button ng-click="vm.toggleMap()" class="search-button" ng-style="{
+                    'background': vm.colors.mainBar.background,
+                    'color': vm.colors.mainBar.color,
+                    'border': '2px solid ' + vm.colors.mainBar.color
+                }">
+                <span class="search-button-label">
+                    {{vm.isMapView ? "Risultati" : "Mappa" | translate}}
+                </span>
+                <i class="icon wm-icon-map" ng-if="!vm.isMapView"></i>
+            </button>
+            <button class="search-button" ng-click="vm.openFilters()" ng-style="{
+                    'background': vm.colors.mainBar.color,
+                    'color': vm.colors.mainBar.background,
+                    'border': '2px solid ' + vm.colors.mainBar.color
+                }">
+                <span class="search-button-label">
+                    {{"Filtra" | translate}}
+                </span>
+                <i class="icon wm-icon-filter"></i>
+                <!-- {{vm.activeLayers.length}} -->
+            </button>
+        </div>
+    </div>
 
     <!-- TODO: add class for search list with filters -->
-    <ion-content 
-        class="has-search-filters"
-        ng-style="{
-            'top': !vm.showInMap ? '104px' : '140px'
-        }"
-        ng-style="{
+    <ion-content class="has-search-filters" ng-style="{
+            'top': '122px'
+        }" ng-style="{
             'background': vm.colors.global.background
         }">
-        <div
-            ng-style="{
+        <div ng-style="{
                 'color': vm.colors.search.color
             }">
             <ion-list ng-if="vm.searchReady">
                 <!-- TODO: add class has-subtitle when item has subtitle and remove comment -->
-                <ion-item 
-                    class="item item-icon-left"
-                    ng-class="{'is-divider': item.divider}"
-                    ng-click="vm.goTo('layer/' + item.parent.label + '/' + item.properties.id, item.divider)"
+                <ion-item class="item item-icon-left" ng-class="{'is-divider': item.divider}" ng-click="vm.goTo('layer/' + item.parent.label + '/' + item.properties.id, item.divider)"
                     collection-repeat="item in vm.results">
                     <i class="icon {{item.properties.icon}}" ng-style="{color: item.properties.color}"></i>
 
@@ -141,8 +79,7 @@
                         <br/>
                         {{item.label}}
                     </span> -->
-                    <span 
-                        class="list-info-title" ng-bind-html="item.properties.name || item.label">
+                    <span class="list-info-title" ng-bind-html="item.properties.name || item.label">
                     </span>
                     <!-- <span 
                         class="list-info-subtitle"
@@ -150,12 +87,8 @@
                         &nbsp;{{item.properties.address}}
                     </span> -->
                 </ion-item>
-                <ion-item 
-                    ng-if="vm.results.length === 0"
-                    class="is-divider">
-                    <span 
-                        class="list-info-title"
-                        style="text-align: center">
+                <ion-item ng-if="vm.results.length === 0" class="is-divider">
+                    <span class="list-info-title" style="text-align: center">
                         {{"Nessun risultato trovato" | translate}}
                     </span>
                 </ion-item>
@@ -163,4 +96,3 @@
         </div>
     </ion-content>
 </ion-view>
-

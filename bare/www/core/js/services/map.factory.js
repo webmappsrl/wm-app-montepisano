@@ -1156,41 +1156,8 @@ angular.module('webmapp')
             }
 
             dataReady = true;
-<<<<<<< HEAD
-            // console.log(featureMapById);
-            // for (var feature in featureMapById) {
-            //     var id = featureMapById[feature].properties.id;
-            //     var layer = featureMapById[feature].parent.label;
-            //     DB.addFeature(id, layer);
-            // }
 
-            for (let i = 0; i < overlayLayersConf.length; i++) {
-
-                filterSearchMap[overlayLayersConf[i].label] = [];
-
-            }
-            var pivot = 0;
-            for (let i = 0; i < 10000; i++) {
-
-                var times = Math.floor(Math.random() * 3) + 1;
-
-                pivot = Math.floor(Math.random() * overlayLayersConf.length);
-
-                for (let j = 0; j < times; j++) {
-                    var label = overlayLayersConf[pivot].label;
-                    // DB.addFeature(i, label).then(function() {
-                    //     console.log("Inserting element...");
-                    // });
-                    filterSearchMap[label].push(i);
-
-                    pivot++;
-                    if (pivot >= overlayLayersConf.length) {
-                        pivot = 0;
-                    }
-                }
-            }
-=======
->>>>>>> accordion-filters
+            // $rootScope.$emit("index-layer-list");
 
             $rootScope.$$phase || $rootScope.$digest();
 

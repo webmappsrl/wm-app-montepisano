@@ -324,7 +324,7 @@ button.login-button {
       line-height: 32px; }
 
 .button-search-map {
-  width: 100%;
+  width: 50%;
   height: 40px;
   min-height: 40px;
   text-align: center;
@@ -1980,9 +1980,9 @@ button.login-button.skip-login {
     z-index: 0;
     height: 20%; }
   .map-search .bar.bar-assertive.bar-footer {
-    height: -webkit-calc(100% - 186px);
-    height: -moz-calc(100% - 186px);
-    height: calc(100% - 186px);
+    height: -webkit-calc(100% - 168px);
+    height: -moz-calc(100% - 168px);
+    height: calc(100% - 168px);
     z-index: 200; }
   .map-page .bar.bar-assertive.bar-footer {
     height: -webkit-calc(100% - 44px);
@@ -3561,9 +3561,7 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
   border: none; }
 
 .item-search-form {
-  padding: 3px;
-  padding-top: 2px;
-  padding-bottom: 5px;
+  padding: 10px 19px 2px;
   position: relative;
   z-index: 300;
   border: none; }
@@ -3605,12 +3603,13 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
   text-transform: uppercase; }
 
 .search-input-box {
-  padding: 5px;
+  padding: 3px;
   background: #ffffff;
   border: 1px solid #918f75;
   position: relative; }
   .search-input-box .search-input {
-    padding: 5px; }
+    padding: 3px 8px;
+    font-size: 18px; }
   .search-input-box .button {
     width: 35px;
     height: 35px;
@@ -3642,6 +3641,20 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
 .label-input-wrapper {
   display: inline-block;
   width: 100%; }
+
+.search-button-container {
+  width: 100%;
+  padding: 4px 10px; }
+  .search-button-container .search-button {
+    margin: 5px;
+    width: calc(50% - 10px);
+    padding-top: 8px;
+    padding-bottom: 8px;
+    float: left;
+    font-size: 18px;
+    font-weight: bold; }
+    .search-button-container .search-button .search-button-label {
+      text-transform: uppercase; }
 
 /*
  * SETTINGS PAGE
@@ -4033,58 +4046,70 @@ ion-content div.static-content.card-content {
       .toast-container .toast-content .toast-buttons div.stop-button {
         background: #FF4108; }
 
-.modal-content .accordion-filters .left-icon {
-  float: left;
-  margin-right: 10px; }
-
-.modal-content .accordion-filters .right-icon {
-  float: right;
-  margin-left: 10px; }
-
-.modal-content .accordion-filters .filters-tab-title-container {
-  width: 100%;
-  border-bottom: 1px solid #848484;
-  color: #848484;
-  height: 40px;
-  line-height: 30px; }
-  .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title {
+.modal-content.accordion-filters-modal {
+  padding: 0; }
+  .modal-content.accordion-filters-modal span.modal-title {
+    padding: 20px; }
+  .modal-content.accordion-filters-modal .accordion-filters .left-icon {
     float: left;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    text-transform: uppercase;
-    font-size: 25px;
-    padding: 3px 0; }
-    .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title.cols-3 {
-      width: calc(100% / 3); }
-    .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title.cols-2 {
-      width: 50%; }
-    .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title.cols-1 {
+    margin-right: 10px; }
+  .modal-content.accordion-filters-modal .accordion-filters .right-icon {
+    float: right;
+    margin-left: 10px; }
+  .modal-content.accordion-filters-modal .accordion-filters .filters-tab-title-container {
+    display: none;
+    width: 100%;
+    border-bottom: 1px solid #848484;
+    color: #848484;
+    height: 40px;
+    line-height: 30px; }
+    .modal-content.accordion-filters-modal .accordion-filters .filters-tab-title-container .filters-tab-title {
+      float: left;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-transform: uppercase;
+      font-size: 25px;
+      padding: 3px 0; }
+      .modal-content.accordion-filters-modal .accordion-filters .filters-tab-title-container .filters-tab-title.cols-3 {
+        width: calc(100% / 3); }
+      .modal-content.accordion-filters-modal .accordion-filters .filters-tab-title-container .filters-tab-title.cols-2 {
+        width: 50%; }
+      .modal-content.accordion-filters-modal .accordion-filters .filters-tab-title-container .filters-tab-title.cols-1 {
+        width: 100%; }
+      .modal-content.accordion-filters-modal .accordion-filters .filters-tab-title-container .filters-tab-title.selected {
+        color: #349912;
+        border-bottom: 3px solid #349912; }
+  .modal-content.accordion-filters-modal .accordion-filters .filters-tab-content-container .filters-tab-content {
+    display: none; }
+    .modal-content.accordion-filters-modal .accordion-filters .filters-tab-content-container .filters-tab-content.selected {
+      display: block;
       width: 100%; }
-    .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title.selected {
-      color: #349912;
-      border-bottom: 3px solid #349912; }
-
-.modal-content .accordion-filters .filters-tab-content-container .filters-tab-content {
-  display: none; }
-  .modal-content .accordion-filters .filters-tab-content-container .filters-tab-content.selected {
-    display: block;
-    width: 100%; }
-  .modal-content .accordion-filters .filters-tab-content-container .filters-tab-content .filters-sublayer {
-    border-bottom: 1px solid #605846;
-    padding: 5px 10px;
-    font-size: 20px;
-    line-height: 25px;
-    text-transform: uppercase;
-    text-align: center;
-    font-weight: bold;
-    text-align: left;
-    position: relative;
-    overflow: hidden; }
-    .modal-content .accordion-filters .filters-tab-content-container .filters-tab-content .filters-sublayer .filters-layer {
-      text-transform: capitalize;
-      font-weight: initial; }
+    .modal-content.accordion-filters-modal .accordion-filters .filters-tab-content-container .filters-tab-content .filters-sublayer {
+      background: #fff;
+      border-bottom: 1px solid #a2a2a2;
+      font-size: 20px;
+      line-height: 25px;
+      text-transform: uppercase;
+      text-align: center;
+      font-weight: bold;
+      text-align: left;
+      position: relative;
+      overflow: hidden; }
+      .modal-content.accordion-filters-modal .accordion-filters .filters-tab-content-container .filters-tab-content .filters-sublayer:last-child {
+        border-bottom: 0; }
+      .modal-content.accordion-filters-modal .accordion-filters .filters-tab-content-container .filters-tab-content .filters-sublayer .sublayer-title {
+        padding: 5px;
+        text-align: center; }
+        .modal-content.accordion-filters-modal .accordion-filters .filters-tab-content-container .filters-tab-content .filters-sublayer .sublayer-title i.left-icon {
+          display: none; }
+      .modal-content.accordion-filters-modal .accordion-filters .filters-tab-content-container .filters-tab-content .filters-sublayer .filters-layer {
+        text-transform: capitalize;
+        font-weight: initial;
+        border-bottom: 1px solid #a2a2a2; }
+        .modal-content.accordion-filters-modal .accordion-filters .filters-tab-content-container .filters-tab-content .filters-sublayer .filters-layer:last-child {
+          border-bottom: 0; }
 
 .animate-hide {
   animation: animatehide 0.4s forwards; }

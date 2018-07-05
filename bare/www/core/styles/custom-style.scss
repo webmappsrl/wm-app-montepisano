@@ -64,7 +64,11 @@
     }
 }
 
-.modal-content {
+.modal-content.accordion-filters-modal {
+    padding: 0;
+    span.modal-title {
+        padding: 20px;
+    }
     .accordion-filters {
         .left-icon {
             float: left;
@@ -75,6 +79,7 @@
             margin-left: 10px;
         }
         .filters-tab-title-container {
+            display: none;
             width: 100%;
             border-bottom: 1px solid #848484;
             color: #848484;
@@ -110,8 +115,9 @@
                     width: 100%;
                 }
                 .filters-sublayer {
-                    border-bottom: 1px solid $color-brown;
-                    padding: 5px 10px;
+                    background: #fff;
+                    border-bottom: 1px solid $color-gray;
+                    // padding: 5px 10px;
                     font-size: 20px;
                     line-height: 25px;
                     text-transform: uppercase;
@@ -124,9 +130,23 @@
                     //   position: absolute;
                     //   right: 10px;
                     // }
+                    &:last-child {
+                        border-bottom: 0;
+                    }
+                    .sublayer-title {
+                        padding: 5px;
+                        text-align: center;
+                        i.left-icon {
+                            display: none;
+                        }
+                    }
                     .filters-layer {
                         text-transform: capitalize;
                         font-weight: initial;
+                        border-bottom: 1px solid $color-gray;
+                        &:last-child {
+                            border-bottom: 0;
+                        }
                     }
                 }
             }
