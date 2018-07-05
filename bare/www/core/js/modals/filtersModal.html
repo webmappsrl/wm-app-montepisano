@@ -75,30 +75,30 @@
                     <div ng-repeat="(key, item) in filters" class="filters-tab-content" ng-class="{
                         'selected': currentTab === key
                     }">
-                        <div ng-repeat="(sublayerId, sublayer) in item.sublayers" class="filters-sublayer" ng-if="key !=='base_maps'">
+                        <div ng-repeat="(sublayerId, sublayer) in item.sublayers" class="filters-sublayer" ng-if="key !== 'base_maps'">
                             <div>
                                 <i class="left-icon" ng-class="{
-                                    'ion-android-checkbox-outline':  item.selectedTab ===sublayerId,
-                                    'ion-android-checkbox-outline-blank':  item.selectedTab !==sublayerId
-                                }" ng-click="toggleSubTabCheckBox(sublayer.label)"></i>
+                                    'ion-android-checkbox-outline':  sublayer.checked,
+                                    'ion-android-checkbox-outline-blank': !sublayer.checked
+                                }" ng-click="toggleSubTabCheckBox(sublayerId,key)"></i>
                                 <div ng-click="toggleSubTab(sublayerId, key)">
                                     {{sublayer.label}}
-                                    <i ng-if="sublayerId !== subTab[key]" class="icon wm-icon-ios7-arrow-forward right-icon"></i>
-                                    <i ng-if="sublayerId === subTab[key]" class="icon wm-icon-ios7-arrow-down right-icon"></i>
+                                    <i ng-if="item.selectedTab !== sublayerId" class="icon wm-icon-ios7-arrow-forward right-icon"></i>
+                                    <i ng-if="item.selectedTab === sublayerId" class="icon wm-icon-ios7-arrow-down right-icon"></i>
                                 </div>
                             </div>
 
                             <div class="filters-layer" ng-repeat="(layerId, layer) in sublayer.items" ng-class="{
-                                    'animate-show': subTab[key] === sublayerId,
-                                    'animate-hide': subTab[key] !== sublayerId
+                                    'animate-show': item.selectedTab === sublayerId,
+                                    'animate-hide': item.selectedTab !== sublayerId
                                 }" ng-click="toggleLayer(layer.label,sublayerId,key)">
-                                <i class="left-icon" ng-if="sublayerId === subTab[key]" ng-class="{
-                                    'ion-android-checkbox-outline': layers[layer.label],
-                                    'ion-android-checkbox-outline-blank': !layers[layer.label]
+                                <i class="left-icon" ng-if="item.selectedTab === sublayerId" ng-class="{
+                                    'ion-android-checkbox-outline': layer.checked,
+                                    'ion-android-checkbox-outline-blank': !layer.checked
                                 }"></i> {{layer.label}}
                             </div>
                         </div>
-                        <div ng-repeat="(mapId, mapItem) in item.items" class="filters-sublayer" ng-if="key ==='base_maps'">
+                        <div ng-repeat="(mapId, mapItem) in item.items" class="filters-sublayer" ng-if="key === 'base_maps'">
                             <div>
                                 <i class="left-icon" ng-class="{
                                     'wm-icon-ion-android-checkmark-circle': vm.currentMapLayer == mapItem.label,

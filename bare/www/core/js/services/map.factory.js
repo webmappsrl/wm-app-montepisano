@@ -58,7 +58,8 @@ angular.module('webmapp')
         featureMapById = {},
         areaMapById = {},
         geojsonByLabel = {},
-        itineraryRefByFeatureId = {};
+        itineraryRefByFeatureId = {},
+        featuresIdByLayersMap = {};
 
     var overlayLayersQueueByLabel = {},
         queueLayerToActivate = null,
@@ -120,14 +121,11 @@ angular.module('webmapp')
     }, {});
 
 
-    //TEST PERFORMACE DB: DELETE 
-    var filterSearchMap = [];
+    mapService.getFeaturesIdByLayersMap = function() {
 
-    mapService.getFilterSearchMap = function() {
-
-        return filterSearchMap;
+        return featuresIdByLayersMap;
     };
-    //END
+
 
 
     var activeFilters = localStorage.activeFilters ?
@@ -264,7 +262,11 @@ angular.module('webmapp')
         feature.properties.icon = getFeatureIcon(feature, overlayConf);
         feature.properties.color = feature.properties.color || overlayConf.color;
         featureMapById[feature.properties.id] = feature;
-
+        if (feature.parent && feature.parent.id) {
+            if (!featuresIdByLayersMap[feature.parent.label])
+                featuresIdByLayersMap[feature.parent.label] = [];
+            featuresIdByLayersMap[feature.parent.label].push(feature.properties.id);
+        }
         Model.addItemToLayer(feature, overlayConf);
     };
 
@@ -276,10 +278,16 @@ angular.module('webmapp')
         var overlayConf = feature.parent || {},
             currentRelatedPOIs;
 
+
         feature.properties.id = feature.properties.id || Utils.generateUID();
         feature.properties.icon = getFeatureIcon(feature, overlayConf);
         featureMapById[feature.properties.id] = feature;
+        if (feature.parent && feature.parent.id) {
+            if (!featuresIdByLayersMap[feature.parent.label])
+                featuresIdByLayersMap[feature.parent.label] = [];
+            featuresIdByLayersMap[feature.parent.label].push(feature.properties.id);
 
+        }
         if (feature.properties.stages) {
             for (var i in feature.properties.stages) {
                 for (var j in feature.properties.stages[i].pois) {
@@ -1148,6 +1156,7 @@ angular.module('webmapp')
             }
 
             dataReady = true;
+<<<<<<< HEAD
             // console.log(featureMapById);
             // for (var feature in featureMapById) {
             //     var id = featureMapById[feature].properties.id;
@@ -1180,6 +1189,8 @@ angular.module('webmapp')
                     }
                 }
             }
+=======
+>>>>>>> accordion-filters
 
             $rootScope.$$phase || $rootScope.$digest();
 
