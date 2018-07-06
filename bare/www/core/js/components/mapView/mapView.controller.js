@@ -7,6 +7,7 @@ angular.module('webmapp')
     $translate,
     CONFIG,
     MapService,
+    Search,
     Utils
 ) {
     var vm = {};
@@ -116,6 +117,9 @@ angular.module('webmapp')
                         var layer = MapService.getOverlayLayerById(layerId);
                         if (layer) {
                             var info = { id: layerId, label: layer.label, checked: false };
+                            if (info.id === "1" || info.id === "2" || info.id === "3" || info.id === "4") {
+                                info.checked = true;
+                            }
                             tmp.push(info);
                             modalScope.layers[layer.label] = info;
                         }
@@ -250,20 +254,25 @@ angular.module('webmapp')
         if (filterName === "Tutte") {
             for (var i in modalScope.vm.filters) {
                 modalScope.vm.filters[i].value = value;
-                MapService.setFilter(i, value);
+                // MapService.setFilter(i, value);
             }
         } else {
-            MapService.setFilter(filterName, value);
-            modalScope.vm.filters[filterName].value = value;
-            modalScope.vm.filters["Tutte"].value = areAllActive(modalScope.vm.filters);
-        }
-    };
+            // MapService.setFilter(filterName, value);
 
+
+            // modalScope.vm.filters[filterName].value = value;
+            // modalScope.vm.filters["Tutte"].value = areAllActive(modalScope.vm.filters);
+        }
+        var ids = filtersSearchFun(getFiltersMap(), true);
+
+        var result = Search.getLayersFilteredByIds(ids);
+        MapService.addFeaturesToFilteredLayer(result);
+    };
+    var featuresIdByLayer = MapService.getFeaturesIdByLayersMap();
     var filtersSearchFun = function(binds, type) {
 
-        var result = [];
 
-        var filtersMap = MapService.getFeaturesIdByLayersMap();
+        var result = [];
 
 
         var filter = typeof binds !== "undefined" ? binds : [];
@@ -273,13 +282,19 @@ angular.module('webmapp')
             var arrayOR = [];
             for (let j = 0; j < filter[i].length; j++) {
                 var layerId = filter[i][j];
-                arrayOR = arrayOR.concat(filtersMap[layerId]);
+
+
+                var lay = MapService.getOverlayLayerById(layerId);
+                arrayOR = arrayOR.concat(featuresIdByLayer[lay.label]);
             }
 
             if (type) {
                 if (result.length === 0 && i === 0) {
                     result = arrayOR;
                 } else {
+                    console.log(layerId);
+                    console.log(featuresIdByLayer);
+                    console.log(featuresIdByLayer[lay.label]);
                     result = result.concat(arrayOR);
                 }
             } else {
@@ -305,16 +320,23 @@ angular.module('webmapp')
     };
 
     vm.openFilters = function() {
+
         modalScope.vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
         modalScope.vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
+
+        // for (var i in modalScope.vm.filters) {
+        //     MapService.setFilter(i, false);
+        // }
         if (modalScope.vm.isNewModal) {
-            var activeFilters = MapService.getActiveFilters();
-            for (layerId in activeFilters) {
-                if (modalScope.layers[layerId]) {
-                    modalScope.layers[layerId].checked = activeFilters[layerId];
-                }
-            }
+            // var activeFilters = MapService.getActiveFilters();
+            // for (layerId in activeFilters) {
+            //     if (modalScope.layers[layerId]) {
+            //         modalScope.layers[layerId].checked = activeFilters[layerId];
+            //     }
+            // }
             checkAllTabsState();
+            var ids = filtersSearchFun(getFiltersMap(), true);
+            MapService.addFeaturesToFilteredLayer(Search.getLayersFilteredByIds(ids));
         }
 
         var filt = MapService.getActiveFilters(),

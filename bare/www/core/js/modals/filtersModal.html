@@ -38,7 +38,7 @@
                 </label>
             </ion-list>
 
-            <span  ng-if="!vm.isNewModal && vm.isMap" class="modal-title">{{"CAMBIA MAPPA DI BASE" | translate}}</span>
+            <span ng-if="!vm.isNewModal && vm.isMap" class="modal-title">{{"CAMBIA MAPPA DI BASE" | translate}}</span>
 
             <ion-list class="round-list" ng-if="!vm.isNewModal && vm.isMap">
                 <label class="item item-checkbox ng-not-empty is-not-selected" ng-repeat="(key, value) in vm.baseLayers">
@@ -82,9 +82,9 @@
                                 }" ng-click="toggleSubTabCheckBox(sublayerId,key)"></i>
                                 <div ng-click="toggleSubTab(sublayerId, key)">
 
-                                    <span ng-if="sublayer.languages[vm.currentLang]" ng-bind-html="sublayer.languages[vm.currentLang]">
+                                    <span ng-if="sublayer.label[vm.currentLang]" ng-bind-html="sublayer.label[vm.currentLang]">
                                 </span>
-                                    <span ng-if="!sublayer.languages[vm.currentLang]" ng-bind-html="sublayer.languages[vm.defaultLang]">
+                                    <span ng-if="!sublayer.label[vm.currentLang]" ng-bind-html="sublayer.label[vm.defaultLang]">
                                  </span>
                                     <i ng-if="item.selectedTab !== sublayerId" class="icon wm-icon-ios7-arrow-forward right-icon"></i>
                                     <i ng-if="item.selectedTab === sublayerId" class="icon wm-icon-ios7-arrow-down right-icon"></i>

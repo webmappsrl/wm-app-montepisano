@@ -262,6 +262,7 @@ angular.module('webmapp')
     }
 
     var featuresIdArray = MapService.getFeaturesIdByLayersMap();
+    console.log(featuresIdArray);
 
     modalScope.vm.updateFilter = function(filterName, value) {
 
@@ -276,11 +277,11 @@ angular.module('webmapp')
             }
         }
 
+
         Search.setActiveLayers(toUpdate);
         Search.setFacetedFilters(getFiltersMap(), featuresIdArray);
 
         vm.filtersList = Search.getActiveLayers();
-        console.log(vm.filtersList);
         vm.translatedFiltersList = vm.translateOverlayInArray(vm.filtersList);
         vm.othersCount = String(vm.filtersList.length - 1);
         vm.areAllActive = modalScope.vm.areAllActive = areAllActive(Search.getActiveLayersMap());

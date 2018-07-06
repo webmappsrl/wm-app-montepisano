@@ -263,9 +263,73 @@ angular.module('webmapp')
         feature.properties.color = feature.properties.color || overlayConf.color;
         featureMapById[feature.properties.id] = feature;
         if (feature.parent && feature.parent.id) {
-            if (!featuresIdByLayersMap[feature.parent.label])
+            if (!featuresIdByLayersMap[feature.parent.label]) {
                 featuresIdByLayersMap[feature.parent.label] = [];
+            }
             featuresIdByLayersMap[feature.parent.label].push(feature.properties.id);
+            if (feature.properties.taxonomy) {
+                if (feature.properties.taxonomy.localita.length) {
+                    var categoryId = feature.properties.taxonomy.localita[0];
+                    var category = overlayLayersById[categoryId];
+                    if (category && !featuresIdByLayersMap[category.label]) {
+
+                        featuresIdByLayersMap[category.label] = [];
+                    }
+                    featuresIdByLayersMap[category.label].push(feature.properties.id);
+                } else {
+
+
+                }
+
+                if (feature.properties.taxonomy.specialita.length) {
+                    for (let i = 0; i < feature.properties.taxonomy.specialita.length; i++) {
+                        var categoryId = feature.properties.taxonomy.specialita[i];
+                        var category = overlayLayersById[categoryId];
+                        if (category) {
+                            if (!featuresIdByLayersMap[category.label]) {
+                                featuresIdByLayersMap[category.label] = [];
+                            }
+                            featuresIdByLayersMap[category.label].push(feature.properties.id);
+                        }
+                    }
+                }
+                // } else {
+
+
+                // // }
+            }
+            // } else {
+            //     var categoryids = ["AR", "FI", "GR", "LI", "LU", "MS", "PI", "PT", "PO", "SI"];
+            //     var id = Math.floor(Math.random() * categoryids.length);
+            //     var category = overlayLayersById[categoryids[id]];
+            //     if (!featuresIdByLayersMap[category.label]) {
+
+            //         featuresIdByLayersMap[category.label] = [];
+            //     }
+            //     featuresIdByLayersMap[category.label].push(feature.properties.id);
+
+
+            //     var ids = ["43", "46", "49"];
+            //     var len = Math.floor(Math.random() * (ids.length - 1)) + 1;
+            //     var pivot = Math.floor(Math.random() * ids.length);
+
+            //     for (let i = 0; i < len; i++) {
+            //         if (pivot >= ids.length) {
+            //             pivot = 0;
+            //         }
+            //         var categoryId = ids[pivot];
+            //         var category = overlayLayersById[categoryId];
+            //         if (!featuresIdByLayersMap[category.label]) {
+            //             featuresIdByLayersMap[category.label] = [];
+            //         }
+
+            //         featuresIdByLayersMap[category.label].push(feature.properties.id);
+
+            //         pivot++;
+            //     }
+
+            // }
+
         }
         Model.addItemToLayer(feature, overlayConf);
     };
@@ -1160,7 +1224,7 @@ angular.module('webmapp')
             }
 
             dataReady = true;
-
+            console.log(featuresIdByLayersMap);
             $rootScope.$$phase || $rootScope.$digest();
 
         }
