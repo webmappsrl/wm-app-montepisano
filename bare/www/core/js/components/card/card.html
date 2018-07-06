@@ -27,13 +27,26 @@
             </button>
         </div>
         <div class="card-content" ng-if="vm.isLoggedIn">
-            <div class="card-image">
-                <img src="" alt="WIP">
+            <div class="pf-user-image">
+                <img src="core/images/placeholder.png" alt="User image">
             </div>
-            <div id="settings-button" ng-click="vm.goTo('languages')">
+
+            <div class="pf-user-name">
+                MARIO ROSSI
+            </div>
+
+            <div class="pf-card-code">
+                07-323
+            </div>
+
+            <div class="pf-settings-button" id="settings-button" ng-click="vm.goTo('languages')">
                 <i class="icon wm-icon-android-settings"></i>
             </div>
-            <button
+
+            <div class="pf-card-label">
+                Card
+            </div>
+           <!-- <button
                 ng-style="{
                     'background': COLORS.global.buttonsBackground,
                     'color': COLORS.global.buttonsColor
@@ -43,10 +56,10 @@
                 ng-click="vm.logout()">
                 {{"LOGOUT" | translate}}
                 <i class="wm-icon-android-arrow-forward"></i>
-            </button>
+            </button>-->
         </div>
-        <div id="card-footer">
-            <img src="core/images/cosmopoli_logo.png">
+        <div class="pf-card-footer" id="card-footer">
+            <img src="core/images/logo-pf.png">
         </div>
     </ion-content>
 </ion-view>

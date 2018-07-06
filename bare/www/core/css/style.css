@@ -515,92 +515,59 @@ ion-content div.static-content.card-content {
 /*
  * CARD PAGE
  *
- * Styles for Valle dei segni card
+ * Styles for Cosmopoli card
  */
 /* ------------------------------------ *\
    #CARD
 \* ------------------------------------ */
 .card-page {
-  background: #f8faf3; }
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  color: #1f4651; }
 
-.card-page-title .nav-title-slide-ios7 .bar.bar-header .title {
-  right: 0 !important;
-  left: 0 !important;
-  text-overflow: clip;
-  text-align: center; }
-
-/* Header */
-.card-page-header {
-  background-size: 48px 41px;
-  color: #49a5df;
-  font-weight: 700;
-  padding: 12px;
-  font-size: 1.1em;
-  text-align: center; }
-  .card-page-header .icon {
-    padding-right: 5px;
-    color: #b52125; }
-
-/* Card content */
 .card-content {
-  width: 90%;
-  margin: 0 auto;
-  text-align: center; }
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  padding: 20px 0; }
 
-/* Card image */
-.card-image {
-  width: 187px;
-  height: 140px;
-  margin: 10px auto; }
-
-.card-text {
-  margin: 15px 0;
-  text-align: center; }
-  .card-text p {
-    color: #49a5df;
-    font-size: 14px;
-    line-height: 1; }
-
-.card-text-title {
-  margin-bottom: 5px;
-  color: #80181e;
-  font-size: 18px; }
-
-.card-title {
-  margin: 10px auto;
-  position: relative;
-  text-align: center; }
-
-.card-title-inner {
+.pf-user-image {
   display: inline-block;
-  padding: 10px;
-  position: relative;
-  font-size: 16px;
-  z-index: 10; }
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 2px solid #1f4651;
+  overflow: hidden; }
 
-/* ------------------------------------ *\
-   #MEDIA QUERIES
-\* ------------------------------------ */
-@media screen and (max-height: 480px) {
-  .card-image {
-    width: 146px;
-    height: 109px; } }
+.pf-settings-button {
+  margin-top: 20px;
+  color: #1f4651;
+  font-size: 36px; }
 
-@media screen and (min-width: 768px) {
-  .card-content {
-    width: 428px; }
-    .card-content button.button-block {
-      width: 336px;
-      margin: 0 auto 10px; }
-  .card-image {
-    margin-top: 40px;
-    margin-bottom: 40px; }
-  .card-text {
-    margin: 30px 0; }
-    .card-text p {
-      font-size: 16px; }
-  .card-text-title {
-    margin-bottom: 5px; } }
+.pf-user-name {
+  padding: 20px 0 5px;
+  font-family: "montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 24px; }
+
+.pf-card-code {
+  font-family: "montserrat", sans-serif;
+  font-weight: 700; }
+
+.pf-card-footer {
+  padding: 40px 20px;
+  position: fixed;
+  text-align: center;
+  bottom: 0;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.5); }
+  .pf-card-footer img {
+    width: 80%; }
+
+.pf-card-label {
+  padding: 40px 0 10px;
+  font-size: 60px;
+  font-weight: 900; }
 
 /**
  * CUSTOM PAGE
@@ -1613,7 +1580,7 @@ button.login-button {
   vertical-align: middle; }
   button.login-button i {
     line-height: 42px;
-    font-size: 21px;
+    font-size: 20px;
     position: absolute;
     right: 20px; }
 
@@ -3662,6 +3629,15 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
         width: 100%;
         height: auto; }
 
+.portoferraio-home-page .map-image {
+  height: 33vh;
+  position: relative;
+  overflow: hidden; }
+  .portoferraio-home-page .map-image img {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); }
+
 /**
  * SEARCH PAGE
  *
@@ -3839,10 +3815,13 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
 .trackTaxonomy-page ion-content {
   padding: 10px; }
   .trackTaxonomy-page ion-content .taxonomy-filter {
+    display: flex;
     height: 10vh;
-    padding: 10px; }
+    padding: 10px 0; }
     .trackTaxonomy-page ion-content .taxonomy-filter .pf-taxonomy-filter__select {
+      flex: 1;
       height: 100%;
+      margin: 0 10px 0 0;
       position: relative;
       overflow: hidden; }
       .trackTaxonomy-page ion-content .taxonomy-filter .pf-taxonomy-filter__select::before {
@@ -3879,6 +3858,8 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
         -webkit-box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9);
         -moz-box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9);
         box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9); }
+      .trackTaxonomy-page ion-content .taxonomy-filter .pf-taxonomy-filter__select:last-of-type {
+        margin-right: 0; }
     .trackTaxonomy-page ion-content .taxonomy-filter select {
       width: 120%;
       height: 100%;

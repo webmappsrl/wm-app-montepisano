@@ -1,7 +1,7 @@
 /*
  * CARD PAGE
  *
- * Styles for Valle dei segni card
+ * Styles for Cosmopoli card
  */
 
 
@@ -10,128 +10,60 @@
 \* ------------------------------------ */
 
 .card-page {
-  background: $color-login-bg;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    color: $color-text;
 }
-
-.card-page-title {
-  .nav-title-slide-ios7 .bar.bar-header .title {
-    right: 0 !important;
-    left: 0 !important;
-    text-overflow: clip;
-    text-align: center;
-  }
-}
-
-/* Header */
-.card-page-header {
-  // background: $color-white;
-  background-size: 48px 41px;
-  color: $color-light-blue;
-  font-weight: 700;
-  padding: 12px;
-  font-size: 1.1em;
-  text-align: center;
-
-  .icon {
-    padding-right: 5px;
-    color: $color-red-heart;
-  }
-}
-
-/* Card content */
 
 .card-content {
-  width: 90%;
-  margin: 0 auto;
-  text-align: center;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    padding: 20px 0;
 }
 
-/* Card image */
-
-.card-image {
-  width: 187px;
-  height: 140px;
-  margin: 10px auto;
+.pf-user-image {
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 2px solid $color-text;
+    overflow: hidden;
 }
 
-.card-text {
-  margin: 15px 0;
-  text-align: center;
-
-  p {
-    color: $color-light-blue;
-    font-size: 14px;
-    line-height: 1;
-  }
+.pf-settings-button {
+    margin-top: 20px;
+    color: $color-text;
+    font-size: $font-size-xxl;
 }
 
-.card-text-title {
-  margin-bottom: 5px;
-  color: $color-dark-red;
-  font-size: 18px;
+.pf-user-name {
+    padding: 20px 0 5px;
+    font-family: $title-font-family;
+    font-weight: $font-weight-bold;
+    font-size: $font-size-l;
 }
 
-.card-title {
-  margin: 10px auto;
-  position: relative;
-  text-align: center;
-
-  // &:before {
-  //   content: '';
-  //   display: block;
-  //   height: 1px;
-  //   background: $color-light-02;
-  //   position: absolute;
-  //   top: 50%;
-  //   right: 0;
-  //   left: 0;
-  //   z-index: 2;
-  // }
+.pf-card-code {
+    font-family: $title-font-family;
+    font-weight: $font-weight-bold;
 }
 
-.card-title-inner {
-  display: inline-block;
-  padding: 10px;
-  // background: $color-login-bg;
-  position: relative;
-  font-size: 16px;
-  z-index: 10;
-}
+.pf-card-footer {
+    padding: 40px 20px;
+    position: fixed;
+    text-align: center;
+    bottom: 0;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
 
-/* ------------------------------------ *\
-   #MEDIA QUERIES
-\* ------------------------------------ */
-
-@media screen and (max-height: 480px) {
-  .card-image {
-    width: 146px;
-    height: 109px;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .card-content {
-    width: 428px;
-    button.button-block {
-      width: 336px;
-      margin: 0 auto 10px;
+    img {
+        width: 80%;
     }
-  }
+}
 
-  .card-image {
-    margin-top: 40px;
-    margin-bottom: 40px;
-  }
-
-  .card-text {
-    margin: 30px 0;
-
-    p {
-      font-size: 16px;
-    }
-  }
-
-  .card-text-title {
-    margin-bottom: 5px;
-  }
+.pf-card-label {
+    padding: 40px 0 10px;
+    font-size: 60px;
+    font-weight: $font-weight-black;
 }

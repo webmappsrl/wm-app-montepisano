@@ -18,6 +18,13 @@
                 </select>
             </div>
 
+            <!--<div class="pf-taxonomy-filter__select">
+                <select id="filter-selection" ng-model="vm.selectedFilter" ng-change="vm.updateCounts()">
+                    <option value="-1" selected>&#45;&#45;&#45;&#45;</option>
+                    <option ng-repeat="item in vm.filter" value="{{item.id}}">{{item.name}}</option>
+                </select>
+            </div>
+-->
         </div>
 
         <div class="taxonomy" ng-repeat="item in vm.taxonomy" ng-click="vm.goToFilteredTracks(item.id)">

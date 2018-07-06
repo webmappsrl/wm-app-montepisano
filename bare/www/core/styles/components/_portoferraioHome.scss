@@ -103,4 +103,16 @@
 
     }
   }
+
+  .map-image {
+    height: 33vh;
+    position: relative;
+    overflow: hidden;
+
+    img {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
 }
