@@ -14,26 +14,16 @@
                         'is-not-selected': !obj.value
                     }">
                     <div class="checkbox checkbox-input-hidden disable-pointer-events checkbox-circle">
-                        <input 
-                            type="checkbox" 
-                            ng-model="obj.value" 
-                            ng-change="vm.updateFilter(key, obj.value)" 
-                            class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-not-empty">
-                            <i 
-                                class="ion-android-checkbox-outline"
-                                ng-class="{
-                                    'ion-android-checkbox-outline': obj.value,
-                                    'ion-android-checkbox-outline-blank': !obj.value
-                                }"></i>
+                        <input type="checkbox" ng-model="obj.value" ng-change="vm.updateFilter(key, obj.value)" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-not-empty">
+                        <i class="ion-android-checkbox-outline" ng-class="{
+                                'ion-android-checkbox-outline': obj.value,
+                                'ion-android-checkbox-outline-blank': !obj.value
+                            }"></i>
                     </div>
-                    <div 
-                        class="item-content disable-pointer-events">
+                    <div class="item-content disable-pointer-events">
                         <span ng-if="key !== 'Tutte'">{{obj.name}}</span>
                         <strong ng-if="key === 'Tutte'">{{obj.name}}</strong>
-                        <span ng-if="obj.icon !== 'wm-icon-generic'"
-                            class="icon {{obj.icon}}"
-                            style="float: right"
-                            ng-style="{ 'color': obj.color }"></span>
+                        <span ng-if="obj.icon !== 'wm-icon-generic'" class="icon {{obj.icon}}" style="float: right" ng-style="{ 'color': obj.color }"></span>
                     </div>
                 </label>
             </ion-list>
@@ -43,20 +33,13 @@
             <ion-list class="round-list" ng-if="!vm.isNewModal && vm.isMap">
                 <label class="item item-checkbox ng-not-empty is-not-selected" ng-repeat="(key, value) in vm.baseLayers">
                     <div class="checkbox checkbox-input-hidden disable-pointer-events checkbox-circle">
-                        <input 
-                            type="checkbox" 
-                            ng-model="currentFilter"
-                            ng-change="vm.updateBaseMap(key)" 
-                            class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-not-empty">
-                            <i 
-                                class="wm-icon-ion-android-checkmark-circle-empty"
-                                ng-class="{
+                        <input type="checkbox" ng-model="currentFilter" ng-change="vm.updateBaseMap(key)" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-not-empty">
+                        <i class="wm-icon-ion-android-checkmark-circle-empty" ng-class="{
                                     'wm-icon-ion-android-checkmark-circle': vm.currentMapLayer == key,
                                     'wm-icon-ion-android-checkmark-circle-empty': vm.currentMapLayer != key
                                 }"></i>
                     </div>
-                    <div 
-                        class="item-content disable-pointer-events">
+                    <div class="item-content disable-pointer-events">
                         <span>{{key}}</span>
                     </div>
                 </label>
@@ -83,9 +66,9 @@
                                 <div ng-click="toggleSubTab(sublayerId, key)">
 
                                     <span ng-if="sublayer.label[vm.currentLang]" ng-bind-html="sublayer.label[vm.currentLang]">
-                                </span>
+                                    </span>
                                     <span ng-if="!sublayer.label[vm.currentLang]" ng-bind-html="sublayer.label[vm.defaultLang]">
-                                 </span>
+                                    </span>
                                     <i ng-if="item.selectedTab !== sublayerId" class="icon wm-icon-ios7-arrow-forward right-icon"></i>
                                     <i ng-if="item.selectedTab === sublayerId" class="icon wm-icon-ios7-arrow-down right-icon"></i>
                                 </div>

@@ -4106,8 +4106,7 @@ ion-content div.static-content.card-content {
           display: none; }
       .modal-content.accordion-filters-modal .accordion-filters .filters-tab-content-container .filters-tab-content .filters-sublayer .filters-layer {
         text-transform: capitalize;
-        font-weight: initial;
-        border-bottom: 1px solid #a2a2a2; }
+        font-weight: initial; }
         .modal-content.accordion-filters-modal .accordion-filters .filters-tab-content-container .filters-tab-content .filters-sublayer .filters-layer:last-child {
           border-bottom: 0; }
 
@@ -4121,18 +4120,22 @@ ion-content div.static-content.card-content {
   from {
     height: 40px;
     opacity: 1;
-    padding: 10px 20px; }
+    padding: 10px 20px;
+    border-bottom: 1px solid #a2a2a2; }
   to {
     height: 0;
     opacity: 0;
-    padding: 0; } }
+    padding: 0;
+    border: 0; } }
 
 @keyframes animateshow {
   from {
     height: 0;
     opacity: 0;
-    padding: 0; }
+    padding: 0;
+    border: 0; }
   to {
     height: 40px;
     opacity: 1;
-    padding: 10px 20px; } }
+    padding: 10px 20px;
+    border-bottom: 1px solid #a2a2a2; } }

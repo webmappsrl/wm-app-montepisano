@@ -3,6 +3,7 @@ angular.module('webmapp')
     .controller('HomeController', function HomeController(
         $translate,
         CONFIG,
+        Search,
         Utils
     ) {
         var vm = {};
@@ -26,14 +27,15 @@ angular.module('webmapp')
         };
 
         vm.goToSearchByCategory = function (id) {
-            console.log(id)
+            Search.getActiveLayers([id]);
+            Utils.goTo('search');
         };
 
         vm.types = [];
 
-        for (var i in CONFIG.OVERLAY_LAYERS) {
+        for (var i = 0; i < 4; i++) {
             vm.types.push(CONFIG.OVERLAY_LAYERS[i]);
-            vm.types[vm.types.length - 1].name = vm.types[vm.types.length - 1].languages;
+            vm.types[vm.types.length - 1].name = vm.types[vm.types.length - 1].languages;   
         }
 
         return vm;

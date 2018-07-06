@@ -143,7 +143,6 @@
                     .filters-layer {
                         text-transform: capitalize;
                         font-weight: initial;
-                        border-bottom: 1px solid $color-gray;
                         &:last-child {
                             border-bottom: 0;
                         }
@@ -180,11 +179,13 @@
         height: 40px;
         opacity: 1;
         padding: 10px 20px;
+        border-bottom: 1px solid $color-gray;
     }
     to {
         height: 0;
         opacity: 0;
         padding: 0;
+        border: 0;
     }
 }
 
@@ -193,10 +194,12 @@
         height: 0;
         opacity: 0;
         padding: 0;
+        border: 0;
     }
     to {
         height: 40px;
         opacity: 1;
         padding: 10px 20px;
+        border-bottom: 1px solid $color-gray;
     }
 }
