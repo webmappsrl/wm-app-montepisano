@@ -28,15 +28,15 @@
         </div>
         <div class="card-content" ng-if="vm.isLoggedIn">
             <div class="pf-user-image">
-                <img src="core/images/placeholder.png" alt="User image">
+                <img ng-src="{{vm.userData.image}}" alt="User image">
             </div>
 
             <div class="pf-user-name">
-                MARIO ROSSI
+                {{vm.userData.first_name}} {{vm.userData.last_name}}
             </div>
 
             <div class="pf-card-code">
-                07-323
+                {{vm.userData.voucher}}
             </div>
 
             <div class="pf-settings-button" id="settings-button" ng-click="vm.goTo('languages')">
@@ -44,7 +44,7 @@
             </div>
 
             <div class="pf-card-label">
-                Card
+                {{"Card" | translate}}
             </div>
            <!-- <button
                 ng-style="{

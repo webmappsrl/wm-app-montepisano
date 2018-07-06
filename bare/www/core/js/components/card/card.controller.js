@@ -9,7 +9,7 @@ angular.module('webmapp')
         var vm = {};
 
         vm.isLoggedIn = Auth.isLoggedIn();
-        vm.userData = vm.isLoggedIn ? Auth.getUserData() : {};
+        vm.userData = {};
         vm.goTo = Utils.goTo;
 
         vm.title = "Card";
@@ -39,12 +39,26 @@ angular.module('webmapp')
             });
         };
 
+        var updateUserData = function () {
+            vm.userData = Auth.getUserData();
+            if (!vm.userData.voucher) {
+                vm.userData.voucher = $translate.instant("Nessun codice disponibile");
+            }
+            if (!vm.userData.image) {
+                vm.userData.image = "core/images/placeholder.png";
+            }
+        };
+
         $rootScope.$on('logged-in', function () {
             if (Auth.isLoggedIn()) {
                 vm.isLoggedIn = true;
-                vm.userData = Auth.getUserData();
+                updateUserData();
             }
         });
+
+        if (Auth.isLoggedIn()) {
+            updateUserData();
+        }
 
         return vm;
     });
