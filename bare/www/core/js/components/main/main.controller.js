@@ -264,7 +264,7 @@ angular.module('webmapp')
         vm.isRotating = false;
         vm.skipZoomEvent = false;
 
-        vm.isCoordsBlockExpanded = true;
+        vm.isCoordsBlockExpanded = false;
         vm.gpsActive = false;
         vm.isOutsideBoundingBox = false;
 
