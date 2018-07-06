@@ -146,7 +146,7 @@
                 }">
                 <!--    one columns layout -->
                 <div
-                  class="details-rows"
+                  class="details-rows pf-track-header"
                   ng-if="vm.feature.image">
                     <div class="details-image">
                         <span
@@ -241,9 +241,9 @@
                         {{vm.featureDetails.opening_hours}}
                     </div>
 
-                    <p
+                    <div
                         ng-bind-html="vm.mainDescription.html || vm.feature.title"
-                        ng-click="vm.openTextModal()"></p>
+                        ng-click="vm.openTextModal()"></div>
 
                     <div class="details-expander">
                         <a
