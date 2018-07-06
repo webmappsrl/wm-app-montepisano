@@ -2,7 +2,7 @@
     <ion-nav-title>
         <span>
             {{"Ricerca" | translate}}
-            <span ng-if="vm.searchReady">({{vm.results.length}})</span>
+            <span ng-if="vm.searchReady">({{vm.results.realLength}})</span>
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left" class="no-animate">
@@ -16,7 +16,7 @@
         <div class="search-input-box">
             <label class="label-input-wrapper">
                 <input type="text" id="search" class="input search-input" name="search" placeholder="{{'Cerca' | translate}}..."
-                    autocorrect="off" autocomplete="off" spellcheck="false" ng-model="currentQuery" ng-model-options="{debounce: 200}"
+                    autocorrect="off" autocomplete="off" spellcheck="false" ng-model="currentQuery" ng-init="currentQuery=vm.startingString"  ng-model-options="{debounce: 200}"
                     ng-change="vm.updateSearch(currentQuery)" />
             </label>
 
@@ -69,8 +69,7 @@
             }">
             <ion-list ng-if="vm.searchReady">
                 <!-- TODO: add class has-subtitle when item has subtitle and remove comment -->
-                <ion-item class="item item-icon-left" ng-class="{'is-divider': item.divider}" ng-click="vm.goTo('layer/' + item.parent.label + '/' + item.properties.id, item.divider)"
-                    collection-repeat="item in vm.results">
+                <ion-item class="item item-icon-left" ng-class="{'is-divider': item.divider}" ng-click="vm.goTo('layer/' + item.parent.label + '/' + item.properties.id, item.divider)" collection-repeat="item in vm.results">
                     <i class="icon {{item.properties.icon}}" ng-style="{color: item.properties.color}"></i>
 
                     <!-- <span 

@@ -292,9 +292,6 @@ angular.module('webmapp')
                 if (result.length === 0 && i === 0) {
                     result = arrayOR;
                 } else {
-                    console.log(layerId);
-                    console.log(featuresIdByLayer);
-                    console.log(featuresIdByLayer[lay.label]);
                     result = result.concat(arrayOR);
                 }
             } else {

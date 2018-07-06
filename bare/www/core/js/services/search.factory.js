@@ -27,6 +27,17 @@ angular.module('webmapp')
         return prev;
     }, {});
 
+    var featuresIdByLayerMap = {};
+
+    search.setFeaturesIdByLayerMap = function(newMap) {
+
+        if (typeof newMap === 'undefined') {
+            return;
+        }
+
+        featuresIdByLayerMap = newMap;
+    }
+
     var setupEngine = function(layerName) {
         layersEngine[layerName] = new JsSearch.Search('id');
 
@@ -131,9 +142,7 @@ angular.module('webmapp')
         //     }
         // }
         var idFilter = facetedFilterFun(facetedFilters);
-        console.log(facetedFilters);
 
-        // console.log(idFilter);
         if (query) {
             if (!facetedFilters.length) {
                 for (var c in confLayersMap) {
@@ -306,17 +315,13 @@ angular.module('webmapp')
     };
 
 
-
-    var facetedFilters = [];
-    var featuresIdByLayer = [];
-    search.setFacetedFilters = function(filters, featuresIdMap) {
-        if (typeof filters === 'undefined' || typeof featuresIdByLayer === 'undefined') {
+    var facetedFilters = {};
+    search.setFacetedFilters = function(filters) {
+        if (typeof filters === 'undefined') {
             return;
         }
 
         facetedFilters = filters;
-        featuresIdByLayer = featuresIdMap;
-
     }
 
     var facetedFilterFun = function(binds, type) {
@@ -330,10 +335,7 @@ angular.module('webmapp')
             var arrayOR = [];
             for (var j = 0; j < filter[i].length; j++) {
                 var layerId = filter[i][j];
-                console.log(layerId);
-                console.log(featuresIdByLayer);
-                console.log(featuresIdByLayer[layerId]);
-                arrayOR = arrayOR.concat(featuresIdByLayer[layerId]);
+                arrayOR = arrayOR.concat(featuresIdByLayerMap[layerId]);
 
             }
 

@@ -23,7 +23,7 @@ angular.module('webmapp')
 
     modalScope.vm = {};
 
-    // vm.showInMap = !options.hideShowInMapFromSearch;
+    vm.showInMap = !options.hideShowInMapFromSearch;
     vm.showInMap = true;
     vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
     vm.results = [];
@@ -32,6 +32,8 @@ angular.module('webmapp')
     modalScope.vm.COLORS = vm.colors;
 
     vm.isMapView = false;
+
+    vm.currentQuery = "";
 
     setTimeout(function() {
         MapService.resetView();
@@ -105,6 +107,7 @@ angular.module('webmapp')
 
     if (modalScope.vm.isNewModal) {
 
+        Search.setFeaturesIdByLayerMap(MapService.getFeaturesIdByLayersMap());
         modalScope.filters = angular.copy(CONFIG.MAP.filters);
 
         modalScope.layers = {};
@@ -135,7 +138,7 @@ angular.module('webmapp')
                         var layerId = subTab.items[index];
                         var layer = MapService.getOverlayLayerById(layerId);
                         if (layer) {
-                            var info = { id: layerId, label: layer.label, checked: false };
+                            var info = { id: layerId, label: layer.label, checked: false, clickable: true };
                             tmp.push(info);
                             modalScope.layers[layer.label] = info;
                         }
@@ -190,9 +193,12 @@ angular.module('webmapp')
         }
 
         modalScope.toggleLayer = function(layerLabel, sublayerId, tabId) {
-            modalScope.layers[layerLabel].checked = !modalScope.layers[layerLabel].checked;
-            checkTabState(sublayerId, tabId);
-            modalScope.vm.updateFilter(layerLabel, modalScope.layers[layerLabel].checked);
+            if (modalScope.layers[layerLabel].clickable) {
+                modalScope.layers[layerLabel].checked = !modalScope.layers[layerLabel].checked;
+                checkTabState(sublayerId, tabId);
+                modalScope.vm.updateFilter(layerLabel, modalScope.layers[layerLabel].checked);
+            }
+
 
         };
 
@@ -259,10 +265,30 @@ angular.module('webmapp')
             return result;
         }
 
+        var setSearchState = function(filters, q) {
+
+            var layers = typeof filters === "undefined" ? [] : filters;
+            var query = typeof q === "undefined" ? "" : q;
+            for (var layerId in modalScope.layers) {
+                modalScope.layers[layerId].checked = false;
+            }
+
+            for (let i = 0; i < layers.length; i++) {
+                if (modalScope.layers[layers[i]]) {
+                    modalScope.layers[layers[i]].checked = true;
+                }
+            }
+
+            Search.setFacetedFilters(getFiltersMap());
+            Search.setActiveLayers(layers);
+            vm.updateSearch(query);
+            vm.startingString = query;
+        }
+
+
     }
 
-    var featuresIdArray = MapService.getFeaturesIdByLayersMap();
-    console.log(featuresIdArray);
+
 
     modalScope.vm.updateFilter = function(filterName, value) {
 
@@ -279,7 +305,7 @@ angular.module('webmapp')
 
 
         Search.setActiveLayers(toUpdate);
-        Search.setFacetedFilters(getFiltersMap(), featuresIdArray);
+        Search.setFacetedFilters(getFiltersMap());
 
         vm.filtersList = Search.getActiveLayers();
         vm.translatedFiltersList = vm.translateOverlayInArray(vm.filtersList);
@@ -287,6 +313,8 @@ angular.module('webmapp')
         vm.areAllActive = modalScope.vm.areAllActive = areAllActive(Search.getActiveLayersMap());
         vm.results = vm.translateOverlayInArray(Search.getByLayersWithDivider(lastQuery, vm.filtersList));
         MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery, vm.filtersList));
+
+        updateClickableCheckBoxes(vm.results);
 
         $ionicScrollDelegate.scrollTop();
     };
@@ -304,13 +332,16 @@ angular.module('webmapp')
         modalScope.vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
         if (modalScope.vm.isNewModal) {
             var activeFilters = Search.getActiveLayersMap();
-            for (layerId in activeFilters) {
-                if (modalScope.layers[layerId]) {
+            for (layerId in modalScope.layers) {
+                if (activeFilters[layerId]) {
                     modalScope.layers[layerId].checked = activeFilters[layerId];
+                } else {
+                    modalScope.layers[layerId].checked = false;
                 }
             }
             checkAllTabsState();
         }
+        console.log(activeFilters);
 
         var filt = Search.getActiveLayersMap(),
             lang = $translate.preferredLanguage(),
@@ -363,6 +394,9 @@ angular.module('webmapp')
         MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(query, Search.getActiveLayers()));
         $ionicScrollDelegate.scrollTop();
         lastQuery = query;
+
+        updateClickableCheckBoxes(vm.results);
+
     };
 
     vm.toggleMap = function() {
@@ -370,9 +404,96 @@ angular.module('webmapp')
         $rootScope.$emit('toggle-map-in-search', vm.isMapView);
     };
 
-    setTimeout(function() {
-        vm.updateSearch();
-    }, 10);
+    // setTimeout(function() {
+    //     vm.updateSearch();
+    // }, 10);
+
+
+    var updateClickableCheckBoxes = function(result) {
+
+
+        // if (typeof result === "undefined")
+        //     return;
+
+        // console.log("RISULTATI");
+        // console.log(result);
+
+        // var clickableLayers = {};
+        // for (var id in modalScope.layers) {
+
+        //     modalScope.layers[id].clickable = true;
+        //     clickableLayers[id] = false;
+
+        // }
+
+
+
+        // for (var featureId in result) {
+
+
+        //     var categories = [];
+        //     if (featureId !== "realLenght") {
+
+        //         var feature = result[featureId];
+        //         if (feature.properties && feature.properties.taxonomy) {
+
+        //             if (feature.properties.taxonomy.tipo.length) {
+        //                 categories.push(feature.properties.taxonomy.tipo[0])
+        //             }
+
+        //             if (feature.properties.taxonomy.localita.length) {
+        //                 categories.push(feature.properties.taxonomy.localita[0])
+        //             }
+
+        //             if (feature.properties.taxonomy.specialita.length) {
+        //                 categories = categories.concat[feature.properties.taxonomy.specialita];
+        //             }
+
+        //         }
+
+        //         for (let i = 0; i < categories.length; i++) {
+        //             var layer = MapService.getOverlayLayerById(categories[i]);
+        //             if (layer) {
+        //                 clickableLayers[layer.label] = true;
+        //             }
+        //         }
+
+        //         var allClickable = true;
+        //         for (var id in clickableLayers) {
+        //             if (!clickableLayers[id]) {
+        //                 allClickable = false;
+        //                 break;
+        //             }
+        //         }
+
+        //         if (allClickable) {
+        //             break;
+        //         }
+        //     }
+
+
+        // }
+
+        // for (var layerId in modalScope.layers) {
+        //     var layer = modalScope.layers[layerId];
+        //     layer.clickable = clickableLayers[layer.label];
+        // }
+
+    };
+
+    if ($rootScope.searchQuery || $rootScope.searchLayers) {
+
+        console.log($rootScope.searchQuery);
+        setSearchState($rootScope.searchLayers, $rootScope.searchQuery);
+        delete $rootScope.searchQuery
+        delete $rootScope.searchLayers
+    } else {
+        setTimeout(function() {
+            vm.updateSearch();
+        }, 10);
+
+    }
+
 
     return vm;
 });
