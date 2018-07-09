@@ -95,7 +95,7 @@ angular.module('webmapp')
                     }
 
                     if (packages[packId].lastDownload) {
-                        result[packId].lastDownload = lastDownload;
+                        result[packId].lastDownload = packages[packId].lastDownload;
                     }
                 }
 
