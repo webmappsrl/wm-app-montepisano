@@ -571,14 +571,6 @@ ion-content div.static-content.card-content {
   font-weight: 900;
   line-height: 1.1; }
 
-.button.login-button {
-  height: 40px;
-  line-height: 34px;
-  font-family: "montserrat", sans-serif;
-  font-size: 20px; }
-  .button.login-button i {
-    line-height: 34px; }
-
 /**
  * CUSTOM PAGE
  *
@@ -836,14 +828,17 @@ ion-content.fullView {
     width: 100%;
     text-align: center;
     margin: 0;
-    padding: 10px 20px 0;
+    padding: 10px 0 0;
     text-transform: uppercase;
     color: #49a5df;
     font-family: "montserrat", sans-serif;
     font-weight: 700;
     font-size: 12px; }
     .details-description-expandable .details-no-modal-read-more span {
-      padding: 0 0 0 5px; }
+      display: block;
+      background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.004) 0%, white 33%, white 100%);
+      padding: 5px 0;
+      text-align: center; }
   .details-description-expandable.show-full {
     height: auto;
     max-height: none; }
@@ -1612,28 +1607,39 @@ div.logout {
 /* ------------------------------------ *\
    #LOGIN & CARD
 \* ------------------------------------ */
+button {
+  height: 40px;
+  line-height: 34px; }
+
 button.login-button {
+  height: 40px;
+  line-height: 34px;
   border: 2px solid;
-  font-size: 25px;
   border-radius: 0;
-  line-height: 42px;
-  vertical-align: middle; }
+  vertical-align: middle;
+  font-family: "montserrat", sans-serif;
+  font-size: 20px; }
   button.login-button i {
-    line-height: 42px;
+    line-height: 34px;
     font-size: 20px;
     position: absolute;
     right: 20px; }
+  button.login-button.skip-login {
+    color: #49a5df;
+    margin: 0 auto;
+    height: auto;
+    padding: 5px 30px;
+    text-transform: uppercase;
+    background: transparent !important;
+    font-weight: 900; }
+  .login-form button.login-button {
+    margin-top: 20px !important; }
 
-button.login-button.skip-login {
-  color: #918f75;
-  margin: 0 auto;
-  height: auto;
-  padding: 5px 30px;
-  text-transform: uppercase; }
-
+button.login-button
 .login-page {
   background: #f8faf3; }
-  .login-page input {
+  button.login-button
+.login-page input {
     padding-right: 0 !important; }
 
 .login-header {
@@ -1693,23 +1699,34 @@ button.login-button.skip-login {
     .registration-form .item input {
       height: 65px;
       padding: 0;
-      border-bottom: 1px solid rgba(145, 143, 117, 0.7);
+      border-bottom: 1px solid rgba(31, 70, 81, 0.7);
       font-size: 20px;
       background: none !important;
       line-height: 2.2em;
-      text-align: center; }
+      text-align: center;
+      color: #1f4651;
+      font-family: "montserrat", sans-serif;
+      font-weight: 700; }
       .login-form .item input::-webkit-input-placeholder,
       .registration-form .item input::-webkit-input-placeholder {
-        color: rgba(96, 88, 70, 0.6); }
+        color: #1f4651;
+        font-family: "montserrat", sans-serif;
+        font-weight: 700; }
       .login-form .item input:-moz-placeholder,
       .registration-form .item input:-moz-placeholder {
-        color: rgba(96, 88, 70, 0.6); }
+        color: #1f4651;
+        font-family: "montserrat", sans-serif;
+        font-weight: 700; }
       .login-form .item input::-moz-placeholder,
       .registration-form .item input::-moz-placeholder {
-        color: rgba(96, 88, 70, 0.6); }
+        color: #1f4651;
+        font-family: "montserrat", sans-serif;
+        font-weight: 700; }
       .login-form .item input:-ms-input-placeholder,
       .registration-form .item input:-ms-input-placeholder {
-        color: rgba(96, 88, 70, 0.6); }
+        color: #1f4651;
+        font-family: "montserrat", sans-serif;
+        font-weight: 700; }
   .login-form .privacy,
   .registration-form .privacy {
     width: 100%;

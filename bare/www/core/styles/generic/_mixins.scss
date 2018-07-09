@@ -165,6 +165,29 @@
   }
 }
 
+
+// ------------------------------------ //
+// #INPUT PLACEHOLDER STYLE
+// ------------------------------------ //
+
+@mixin placeholder {
+  &::-webkit-input-placeholder {
+    @content;
+  }
+
+  &:-moz-placeholder {
+    @content;
+  }
+
+  &::-moz-placeholder {
+    @content;
+  }
+
+  &:-ms-input-placeholder {
+    @content;
+  }
+}
+
 // Flexbox
 
 @mixin flexbox() {

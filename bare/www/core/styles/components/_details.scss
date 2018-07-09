@@ -282,7 +282,7 @@
     width: 100%;
     text-align: center;
     margin: 0;
-    padding: 10px 20px 0;
+    padding: 10px 0 0;
     text-transform: uppercase;
     color: $color-light-blue;
     font-family: $title-font-family;
@@ -290,7 +290,10 @@
     font-size: 12px;
 
     span {
-      padding: 0 0 0 5px;
+      display: block;
+      background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.004) 0%, rgb(255, 255, 255) 33%, rgb(255, 255, 255) 100%);
+      padding: 5px 0;
+      text-align: center;
     }
   }
   &.show-full {

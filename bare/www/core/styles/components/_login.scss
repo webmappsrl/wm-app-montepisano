@@ -9,27 +9,48 @@
    #LOGIN & CARD
 \* ------------------------------------ */
 
+button {
+  height: 40px;
+  line-height: 34px;
+
+}
+
 button.login-button {
+  height: 40px;
+  line-height: 34px;
+
   border: 2px solid;
-  font-size: 25px;
   border-radius: 0;
-  line-height: 42px;
   vertical-align: middle;
+
+  font-family: $title-font-family;
+  font-size: 20px;
+
   i {
-    line-height: 42px;
+    line-height: 34px;
     font-size: 20px;
     position: absolute;
     right: 20px;
   }
+
+  &.skip-login {
+    color: $color-light-blue;
+    margin: 0 auto;
+    height: auto;
+    padding: 5px 30px;
+    text-transform: uppercase;
+    background: transparent !important;
+    font-weight: $font-weight-black;
+
+  }
+
+  .login-form & {
+    margin-top: 20px !important;
+  }
 }
 
-button.login-button.skip-login {
-  color: #918f75;
-  margin: 0 auto;
-  height: auto;
-  padding: 5px 30px;
-  text-transform: uppercase;
-}
+
+button.login-button
 
 .login-page {
   background: $color-login-bg;
@@ -114,16 +135,23 @@ button.login-button.skip-login {
     input {
       height: 65px;
       padding: 0;
-      border-bottom: 1px solid transparentize($color-light-02,0.3);
+      border-bottom: 1px solid transparentize($color-dark-blue,0.3);
       // font-family: $main-font-family !important;
       font-size: 20px;
       background: none !important;
       line-height: 2.2em;
       text-align: center;
+      color: $color-dark-blue;
+      font-family: $title-font-family;
+      font-weight: $font-weight-bold;
+
       // text-transform: lowercase;
 
       @include placeholder {
-        color: transparentize($color-brown,0.4);
+        color: $color-dark-blue;
+        font-family: $title-font-family;
+        font-weight: $font-weight-bold;
+
       }
     }
   }
