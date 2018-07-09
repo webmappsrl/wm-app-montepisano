@@ -573,9 +573,11 @@ ion-content div.static-content.card-content {
 
 .button.login-button {
   height: 40px;
-  line-height: 36px;
+  line-height: 34px;
   font-family: "montserrat", sans-serif;
   font-size: 20px; }
+  .button.login-button i {
+    line-height: 34px; }
 
 /**
  * CUSTOM PAGE
