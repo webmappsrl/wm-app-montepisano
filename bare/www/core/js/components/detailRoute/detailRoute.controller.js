@@ -58,10 +58,10 @@ angular.module('webmapp')
         vm.voucherAvailable = CONFIG.MULTIMAP.purchaseType ? CONFIG.MULTIMAP.purchaseType.includes('voucher') : false;
         vm.purchaseAvailable = CONFIG.MULTIMAP.purchaseType ? CONFIG.MULTIMAP.purchaseType.includes('purchase') : false;
 
-        if (!vm.voucherAvailable && !vm.purchaseAvailable) {
-            vm.voucherAvailable = true;
+        // if (!vm.voucherAvailable && !vm.purchaseAvailable) {
+            vm.voucherAvailable = false;
             vm.purchaseAvailable = true;
-        }
+        // }
 
         vm.maxDifficulty = CONFIG.MULTIMAP.maxDifficulty ? CONFIG.MULTIMAP.maxDifficulty : 5;
 
@@ -148,7 +148,7 @@ angular.module('webmapp')
 
         vm.requestRoute = function () {
             if (vm.isLoggedIn) {
-                PackageService.requestPack(routeDetail.id);
+                PackageService.buyPack(routeDetail.id);
             } else {
                 notLoggedIn();
             }

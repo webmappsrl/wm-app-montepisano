@@ -11,6 +11,7 @@
         "webmapp"
     ],
     "dependencies": {
+        "@ionic-native/in-app-purchase": "^4.9.0",
         "del": "^3.0.0",
         "fs": "~0.0.1-security",
         "gulp": "^3.9.1",

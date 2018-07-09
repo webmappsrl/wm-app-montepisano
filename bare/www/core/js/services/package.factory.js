@@ -41,8 +41,7 @@ angular.module('webmapp')
         var packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : null,
             userPackagesId = localStorage.$wm_userPackagesId ? JSON.parse(localStorage.$wm_userPackagesId) : null,
             userDownloadedPackages = localStorage.$wm_userDownloadedPackages ? JSON.parse(localStorage.$wm_userDownloadedPackages) : {},
-            userPackagesIdRquested = localStorage.$wm_userPackagesIdRquested ? JSON.parse(localStorage.$wm_userPackagesIdRquested) : {},
-            categories = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : null,
+            packagesToActivate = localStorage.$wm_packagesToActivate ? JSON.parse(localStorage.$wm_packagesToActivate) : null,
             taxonomy = localStorage.$wm_taxonomy ? JSON.parse(localStorage.$wm_taxonomy) : {
                 activity: null,
                 theme: null,
@@ -56,9 +55,7 @@ angular.module('webmapp')
             asyncRoutes = 0,
             asyncRouteTranslations = 0;
 
-        var modalScope = $rootScope.$new(),
-            modal = {},
-            modalDownloadScope = $rootScope.$new(),
+        var modalDownloadScope = $rootScope.$new(),
             modalDownload = {};
 
         modalDownloadScope.vm = {};
@@ -81,6 +78,44 @@ angular.module('webmapp')
                 userData = null;
             }
         });
+
+        var activatePack = function (data) {
+            $http({
+                method: 'POST',
+                url: communicationConf.baseUrl + communicationConf.endpoint + 'purchase',
+                dataType: 'json',
+                crossDomain: true,
+                data: data,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).success(function (response) {
+                for (var i in packagesToActivate) {
+                    if (+packagesToActivate[i] === +data.route_id) {
+                        delete packagesToActivate[i];
+                        break;
+                    }
+                }
+            }).error(function (err) {
+                packagesToActivate.push([data.route_id]);
+                localStorage.$wm_packsToActivate = JSON.stringify(packagesToActivate);
+            });
+        };
+
+        var activatePackages = function () {
+            if (!Auth.isLoggedIn()) {
+                return;
+            }
+
+            userData = Auth.getUserData();
+            for (var i in packagesToActivate) {
+                var data = {
+                    user_id: userData.ID,
+                    route_id: packagesToActivate[i]
+                };
+                activatePack(data);
+            }
+        };
 
         var mergePackages = function (newPackages) {
             var result = {};
@@ -360,12 +395,11 @@ angular.module('webmapp')
          * @param {number} packId 
          *      the id of the pack to request
          */
-        packageService.requestPack = function (packId) {
+        packageService.buyPack = function (packId) {
             if (!userData || !userData.ID) {
                 return;
             }
             var productId = CONFIG.appId + '.' + packId;
-            
 
             inAppPurchase.getProducts([productId])
                 .then(function (product) {
@@ -373,12 +407,17 @@ angular.module('webmapp')
                         product = product[0];
                     }
 
-                    if (product.productId) {
+                    if (product && product.productId) {
                         inAppPurchase.buy(product.productId)
                             .then((res) => {
-                                //communicate purchase to server
-                                console.log('purchase completed!', res);
-                                // userPackagesId[198] = true;
+                                var data = {
+                                    user_id: userData.ID,
+                                    route_id: packId
+                                };
+
+                                userPackagesId[productId] = true;
+
+                                activatePack(data);
                             })
                             .catch(err => console.log(err));
                     }
@@ -589,6 +628,8 @@ angular.module('webmapp')
             $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
             return userDownloadedPackages;
         };
+
+        activatePackages();
 
         return packageService;
     });
