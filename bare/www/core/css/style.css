@@ -1003,7 +1003,8 @@ ion-content.fullView {
     display: block;
     padding: 10px 34px 10px 20px;
     cursor: pointer;
-    color: #605846; }
+    color: #605846;
+    border: none; }
     .route-related-details .route-related-list .route-related-item:first-child {
       border-top: none; }
     .route-related-details .route-related-list .route-related-item .route-related-image {
@@ -1025,13 +1026,31 @@ ion-content.fullView {
         left: calc(50% - 25px);
         font-size: 50px; }
     .route-related-details .route-related-list .route-related-item .route-related-name {
-      width: 40%;
-      padding: 20px 15px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      float: left;
-      font-size: 16px;
-      color: #1f4651; }
+      margin-bottom: 5px;
+      font-size: 20px;
+      color: #1f4651;
+      white-space: initial;
+      line-height: 1.2; }
+  .route-related-details .route-name-start {
+    width: 40%;
+    padding: 20px 15px;
+    float: left; }
+  .route-related-details .route-start-track {
+    display: block;
+    font-family: "montserrat", sans-serif;
+    color: #1f4651;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px; }
+    .route-related-details .route-start-track i {
+      display: inline-flex;
+      width: 20px;
+      height: 20px;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background: #1f4651;
+      color: #ffffff; }
 
 /* DETAILS ROUTE */
 .details-image-route {

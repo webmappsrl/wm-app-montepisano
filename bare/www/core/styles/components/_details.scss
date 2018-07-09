@@ -511,6 +511,7 @@
       padding: 10px 34px 10px 20px;
       cursor: pointer;
       color: $color-brown;
+      border: none;
       &:first-child {
         border-top: none;
       }
@@ -537,14 +538,40 @@
         }
       }
       .route-related-name {
-        width: 40%;
-        padding: 20px 15px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        float: left;
-        font-size: $font-size-m;
+        margin-bottom: 5px;
+        font-size: 20px;
         color: $color-text;
+        white-space: initial;
+        line-height: 1.2;
       }
+    }
+  }
+
+  .route-name-start {
+    width: 40%;
+    padding: 20px 15px;
+
+    float: left;
+  }
+
+  .route-start-track {
+    display: block;
+    font-family: $title-font-family;
+    color: $color-text;
+    font-weight: $font-weight-bold;
+    text-transform: uppercase;
+    font-size: $font-size-xxs;
+
+    i {
+      display: inline-flex;
+      width: 20px;
+      height: 20px;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background: $color-text;
+      color: #ffffff;
+
     }
   }
 }

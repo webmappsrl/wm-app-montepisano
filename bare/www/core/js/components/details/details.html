@@ -425,9 +425,13 @@
                             <img ng-if="item.properties.image" ng-src="{{item.properties.image}}">
                             <i ng-if="!item.properties.image" class="icon {{item.properties.icon}}"></i>
                         </div>
-                        <div class="route-related-name"
-                            ng-bind-html="item.properties.name">
+                        <div class="route-name-start">
+                            <div class="route-related-name"
+                                 ng-bind-html="item.properties.name">
+                            </div>
+                            <a class="route-start-track"><i class="wm-icon-chevron-right"></i> Inizia percorso</a>
                         </div>
+
                     </li>
                 </ul>
             </div>
