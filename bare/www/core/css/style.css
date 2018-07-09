@@ -293,7 +293,7 @@ button.login-button {
     font-size: 34px;
     vertical-align: middle; }
   .btn-expand:hover, .btn-expand:focus {
-    background: #433d30; }
+    background: #11262c; }
 
 /* Map expand */
 .map-expand {
@@ -301,7 +301,7 @@ button.login-button {
   height: 45px;
   margin-top: -22px;
   margin-left: -22px;
-  background: rgba(96, 88, 70, 0.7);
+  background: rgba(31, 70, 81, 0.7);
   top: 50%;
   left: 50%;
   z-index: 1000;
@@ -314,7 +314,7 @@ button.login-button {
     left: 50%;
     margin-left: -8px; }
   .map-expand:hover, .map-expand:focus {
-    background: #605846; }
+    background: #1f4651; }
   .map-search .map-expand,
   .map-page .map-expand,
   .hide-map .map-expand {
@@ -504,12 +504,15 @@ ion-slide.slider-slide {
    #ATTRIBUTION
 \* ------------------------------------ */
 ion-content div.static-content.card-content {
+  padding: 20px;
   color: #49a5df; }
+  ion-content div.static-content.card-content a {
+    color: #49a5df; }
   ion-content div.static-content.card-content div.attribution-title {
     font-size: 1.5em;
     padding: 20px 0 10px 0; }
   ion-content div.static-content.card-content div.attribution-text {
-    font-size: 1.2em;
+    font-size: 1em;
     padding: 0 10px; }
 
 /*
@@ -2307,7 +2310,7 @@ a.item {
 
 .item {
   background: inherit;
-  border-color: #cecec1;
+  border-color: #b0c3c8;
   border-right: none;
   border-left: none;
   font-size: 22px; }
@@ -2349,7 +2352,7 @@ a.item {
     .advanced-menu-content .item::before {
       content: '';
       height: 1px;
-      background: #cecec1;
+      background: #b0c3c8;
       position: absolute;
       left: 20px;
       right: 0;
@@ -2393,7 +2396,7 @@ a.item {
   z-index: 800;
   width: 45px;
   height: 45px;
-  background-color: rgba(96, 88, 70, 0.7);
+  background-color: rgba(31, 70, 81, 0.7);
   border: none;
   border-radius: 50%; }
   .report-control a i::before {
@@ -2404,7 +2407,7 @@ a.item {
     color: #fff; }
 
 .report-control:active {
-  background-color: #605846; }
+  background-color: #1f4651; }
   .report-control:active a i::before {
     color: #cccccc; }
 
@@ -2413,7 +2416,7 @@ a.item {
 \* ------------------------------------ */
 /* MarkersCluster style */
 .marker-cluster {
-  border: 3px solid rgba(18, 16, 11, 0.6);
+  border: 3px solid rgba(31, 70, 81, 0.6);
   border-radius: 50%;
   background: transparent;
   -webkit-box-sizing: border-box;
@@ -2429,7 +2432,7 @@ a.item {
 .marker-cluster-small div,
 .marker-cluster-medium div,
 .marker-cluster-large div {
-  background-color: rgba(96, 88, 70, 0.8) !important; }
+  background-color: rgba(31, 70, 81, 0.8) !important; }
 
 .marker-cluster-small {
   width: 40px !important;
@@ -2489,7 +2492,7 @@ a.item {
   left: 50%;
   z-index: 401;
   font-size: 48px;
-  color: rgba(96, 88, 70, 0.7); }
+  color: rgba(31, 70, 81, 0.7); }
 
 /* ------------------------------------ *\
    #MAP BUTTONS
@@ -2505,14 +2508,14 @@ a.item {
     width: 45px !important;
     height: 45px !important;
     margin-bottom: 9px;
-    background-color: rgba(96, 88, 70, 0.7);
+    background-color: rgba(31, 70, 81, 0.7);
     border: none !important;
     border-bottom: none !important;
     border-radius: 50%;
     line-height: 43px !important;
     text-align: center !important;
     text-decoration: none;
-    color: rgba(96, 88, 70, 0.7);
+    color: rgba(31, 70, 81, 0.7);
     vertical-align: middle !important;
     outline: none !important;
     -webkit-box-shadow: none !important;
@@ -2530,7 +2533,7 @@ a.item {
     color: transparent;
     opacity: 0.5; }
   .leaflet-bar a:hover, .leaflet-bar a:focus {
-    background-color: #605846; }
+    background-color: #1f4651; }
     .leaflet-bar a:hover::before, .leaflet-bar a:focus::before {
       color: #ffffff; }
   .leaflet-bar .leaflet-control-zoom-in,
@@ -2644,8 +2647,8 @@ div.leaflet-top.leaflet-right {
 .leaflet-control-scale-line {
   background: transparent;
   border: 0;
-  border-bottom: 2px solid #605846;
-  color: #605846;
+  border-bottom: 2px solid #1f4651;
+  color: #1f4651;
   font-size: 15px; }
 
 .show-start-navigation .leaflet-top.leaflet-left {
@@ -2689,7 +2692,7 @@ div.leaflet-top.leaflet-right {
   position: absolute;
   bottom: 24px;
   right: 0;
-  background: rgba(96, 88, 70, 0.8);
+  background: rgba(31, 70, 81, 0.8);
   z-index: 800;
   font-size: 26px;
   padding: 4px 0;
@@ -2710,7 +2713,7 @@ div.leaflet-top.leaflet-right {
     height: 36px;
     padding: 0 14px;
     padding-bottom: 7px;
-    background: rgba(96, 88, 70, 0.8);
+    background: rgba(31, 70, 81, 0.8);
     line-height: 36px; }
   .coords-block .coords-share-button {
     width: 32px;
@@ -2729,7 +2732,7 @@ div.leaflet-top.leaflet-right {
   position: absolute;
   top: 10px;
   left: 10px;
-  background: rgba(96, 88, 70, 0.8);
+  background: rgba(31, 70, 81, 0.8);
   z-index: 800;
   font-size: 26px;
   padding: 8px 18px 8px 9px;
@@ -2793,7 +2796,7 @@ div.leaflet-top.leaflet-right {
     .navigator-div-controller div.content-div div.time-section,
     .navigator-div-controller div.content-div div.distance-section,
     .navigator-div-controller div.content-div div.speed-section {
-      color: #605846;
+      color: #1f4651;
       width: 27%;
       float: left;
       height: inherit; }
@@ -4053,9 +4056,10 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
    #WEBMAPP
 \* ------------------------------------ */
 ion-content div.static-content.card-content {
-  color: #605846; }
+  color: #1f4651;
+  text-align: center; }
   ion-content div.static-content.card-content div.webmapp-paragraph {
-    font-size: 1.2em;
+    font-size: 1em;
     padding: 10px 0; }
   ion-content div.static-content.card-content div.webmapp-img {
     margin: 15px auto 0; }

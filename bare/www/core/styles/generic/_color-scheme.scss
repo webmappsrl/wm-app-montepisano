@@ -7,6 +7,11 @@
 // ------------------------------------ //
 // #COLOR-SCHEME
 // ------------------------------------ //
+$color-light-blue: #49a5df;
+$color-extra-light-blue: #cdeefb;
+$color-dark-blue: #1f4651;
+$color-text: $color-dark-blue;
+
 
 /* Valcamonica color scheme */
 $color-green: #4a6e23;
@@ -17,7 +22,7 @@ $color-dark-brown: #6e655f;
 $color-light-01: #e5e6dd;
 $color-light-02: darken(#bebdae, 20%);
 $color-light-03: #f7f9f1;
-$color-menu-border: #cecec1;
+$color-menu-border: #b0c3c8;
 $color-white: #ffffff;
 $color-button-text-shadow: #221c12;
 $color-box-shadow: #12100b;
@@ -36,7 +41,3 @@ $color-twitter: #00aced;
 $color-google: #c32f10;
 $color-gray: #a2a2a2;
 
-$color-light-blue: #49a5df;
-$color-extra-light-blue: #cdeefb;
-$color-dark-blue: #1f4651;
-$color-text: $color-dark-blue;

@@ -42,7 +42,7 @@
   z-index: 800;
   width: 45px;
   height: 45px;
-  background-color: rgba($color-brown, 0.7);
+  background-color: rgba($color-dark-blue, 0.7);
   // background-color: rgba(200, 20, 20, 0.6);
   border: none;
   border-radius: 50%;
@@ -60,7 +60,7 @@
 
 .report-control:active {
   // background-color: rgba(96, 88, 70, 1);
-  background-color: rgba($color-brown, 1);
+  background-color: rgba($color-dark-blue, 1);
   a {
     i::before {
       color: #cccccc;
@@ -75,7 +75,7 @@
 /* MarkersCluster style */
 
 .marker-cluster {
-  border: 3px solid transparentize($color-box-shadow,0.4);
+  border: 3px solid transparentize($color-dark-blue,0.4);
   border-radius: 50%;
   background: transparent;
   @include box-sizing(border-box);
@@ -94,7 +94,7 @@
 .marker-cluster-medium,
 .marker-cluster-large {
   div {
-    background-color: transparentize($color-brown,0.2) !important;
+    background-color: transparentize($color-dark-blue,0.2) !important;
   }
 
 }
@@ -192,7 +192,7 @@
   left: 50%;
   z-index: 401;
   font-size: 48px;
-  color: transparentize($color-brown, 0.3);
+  color: transparentize($color-dark-blue, 0.3);
 
   .map-page & {
     //display: none;
@@ -214,14 +214,14 @@
       width: 45px !important;
       height: 45px !important;
       margin-bottom: 9px;
-      background-color: transparentize($color-brown,0.3);
+      background-color: transparentize($color-dark-blue,0.3);
       border: none!important;
       border-bottom: none!important;
       border-radius: 50%;
       line-height: 43px!important;
       text-align: center!important;
       text-decoration: none;
-      color: transparentize($color-brown,0.3);
+      color: transparentize($color-dark-blue,0.3);
       vertical-align: middle!important;
       outline: none !important;
       @include box-shadow(none !important);
@@ -248,7 +248,7 @@
 
     &:hover,
     &:focus {
-      background-color: $color-brown;
+      background-color: $color-dark-blue;
 
       &::before {
         color: $color-white;
@@ -404,8 +404,8 @@ div.leaflet-top.leaflet-right {
 .leaflet-control-scale-line {
   background: transparent;
   border: 0;
-  border-bottom: 2px solid $color-brown;
-  color: $color-brown;
+  border-bottom: 2px solid $color-dark-blue;
+  color: $color-dark-blue;
   font-size: 15px;
 }
 
@@ -462,7 +462,7 @@ div.leaflet-top.leaflet-right {
   position: absolute;
   bottom: 24px;
   right: 0;
-  background: transparentize($color-brown, .2);
+  background: transparentize($color-dark-blue, .2);
   z-index: 800;
   font-size: 26px;
   padding: 4px 0;
@@ -485,7 +485,7 @@ div.leaflet-top.leaflet-right {
     height: 36px;
     padding: 0 14px;
     padding-bottom: 7px;
-    background: transparentize($color-brown, .2);
+    background: transparentize($color-dark-blue, .2);
     line-height: 36px;
   }
 
@@ -510,7 +510,7 @@ div.leaflet-top.leaflet-right {
   position: absolute;
   top: 10px;
   left: 10px;
-  background: transparentize($color-brown, .2);
+  background: transparentize($color-dark-blue, .2);
   z-index: 800;
   font-size: 26px;
   padding: 8px 18px 8px 9px;
@@ -596,7 +596,7 @@ div.leaflet-top.leaflet-right {
         display: block;
         line-height: 22px;
       }
-      color: $color-brown;
+      color: $color-dark-blue;
       width: 27%;
       float: left;
       height: inherit;

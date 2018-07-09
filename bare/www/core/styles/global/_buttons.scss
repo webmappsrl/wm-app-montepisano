@@ -124,7 +124,7 @@ button {
 
   &:hover,
   &:focus {
-    background: darken($color-brown, 10%);
+    background: darken($color-dark-blue, 10%);
   }
 }
 
@@ -135,7 +135,7 @@ button {
   height: 45px;
   margin-top: -22px;
   margin-left: -22px;
-  background: transparentize($color-brown,0.3);
+  background: transparentize($color-dark-blue,0.3);
   top: 50%;
   left: 50%;
   z-index: 1000;
@@ -152,7 +152,7 @@ button {
 
   &:hover,
   &:focus {
-    background: $color-brown;
+    background: $color-dark-blue;
   }
 
   .map-search &,
