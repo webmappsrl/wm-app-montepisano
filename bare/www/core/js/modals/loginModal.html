@@ -52,7 +52,7 @@
                             class="login-button button button-block" 
                             type="submit">
                             {{logging ? "(Loading..)" : "ACCEDI" | translate}}
-                            <i class="wm-icon-android-arrow-forward"></i>
+                            <i class="wm-icon-chevron-right"></i>
                         </button>
                     </label>
                 </div>
@@ -149,25 +149,28 @@
                         <country-select ng-model="ud.country"></country-select>
                     </label>
 
-                    <label class="item item-input">
+                    <label class="item item-input item-select">
                         <select id="type-select" ng-model="ud.selectedType">
                             <option ng-repeat="item in ud.types" value="{{item.value}}" selected="item.value === ud.selectedType">{{item.name}}</option>
                         </select>
+                        <!--<i class="wm-icon-chevron-down"></i>-->
                     </label>
 
                     <div id="gender-radio">
-                        <div ng-repeat="item in ud.genders">
+                        <div class="pf-radio-button" ng-repeat="item in ud.genders">
                             <input
                                 type="radio"
                                 name="genderRadio"
                                 ng-model="ud.selectedGender"
-                                value="{{item.value}}">
+                                value="{{item.value}}"
+                                id="{{item.value}}">
+                            <label for="{{item.value}}">
                             <i class="wm-icon-ion-android-checkmark-circle"
                                 ng-class="{
                                     'wm-icon-ion-android-checkmark-circle': item.value === ud.selectedGender,
                                     'wm-icon-ion-android-checkmark-circle-empty': item.value !== ud.selectedGender
-                                }"></i>
-                            {{item.name | translate}}
+                                }"></i>{{item.name | translate}}</label>
+
                         </div>
                     </div>
                     <div
@@ -208,7 +211,7 @@
                             class="login-button button button-block"
                             type="submit">
                             {{logging ? "(Loading..)" : "CONFERMA" | translate}}
-                            <i class="wm-icon-android-arrow-forward"></i>
+                            <i class="wm-icon-chevron-right"></i>
                         </button>
                     </label>
                     <label class="item=" ng-click="state.resetMode = false; resetFields()">
@@ -229,7 +232,7 @@
                         class="login-button skip-login" 
                         ng-click="state.resetMode = true">
                         {{"Registrati" | translate}}
-                        <i class="wm-icon-android-arrow-forward"></i>
+                        <i class="wm-icon-chevron-right"></i>
                     </button>
                 </div>
             </div>

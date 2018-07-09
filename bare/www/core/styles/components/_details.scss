@@ -367,7 +367,7 @@
   position: absolute;
   bottom: 16px;
   left: 50%;
-  background: transparentize($color-brown, .3);
+  background: transparentize($color-dark-blue, .3);
   .icon {
     font-size: 34px;
     color: $color-light-03;
@@ -447,7 +447,7 @@
     font-family: $title-font-family;
     margin: 0;
     padding: 8px;
-    color: $color-brown;
+    color: $color-dark-blue;
     background: $color-light-01;
     font-size: 18px;
     text-align: center;
@@ -458,7 +458,7 @@
       display: block;
       padding-right: 34px;
       cursor: pointer;
-      color: $color-brown;
+      color: $color-dark-blue;
       .icon {
         color: $color-green;
       }
@@ -502,7 +502,7 @@
     font-family: $title-font-family;
     margin: 0;
     padding: 8px;
-    color: $color-brown;
+    color: $color-dark-blue;
     background: $color-light-01;
     font-size: 18px;
     text-align: center;
@@ -513,7 +513,7 @@
       display: block;
       padding: 10px 34px 10px 20px;
       cursor: pointer;
-      color: $color-brown;
+      color: $color-dark-blue;
       border: none;
       &:first-child {
         border-top: none;

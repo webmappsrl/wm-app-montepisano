@@ -24,7 +24,7 @@
 
 .input-ph {
   @include placeholder {
-    color: transparentize($color-brown, 0.4);
+    color: transparentize($color-dark-blue, 0.4);
   }
 }
 
@@ -117,5 +117,34 @@ ion-slide.slider-slide {
         }
       }
     }
+  }
+}
+
+.pf-radio-button {
+  padding: 10px 0;
+
+  input[type="radio"] {
+    display: none;
+  }
+
+  label {
+    font-size: 20px;
+    font-weight: $font-weight-bold;
+    font-family: $title-font-family;
+
+    i {
+      margin-right: 5px;
+    }
+  }
+}
+
+.item-select {
+  display: block;
+  position: relative;
+
+  i {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }

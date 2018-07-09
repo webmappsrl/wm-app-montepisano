@@ -29,8 +29,8 @@ button.login-button {
   i {
     line-height: 34px;
     font-size: 20px;
-    position: absolute;
-    right: 20px;
+    //position: absolute;
+    //right: 20px;
   }
 
   &.skip-login {
@@ -62,7 +62,7 @@ button.login-button
 .login-header {
   background: #fff;
   background-size: 48px 41px;
-  color: $color-brown;
+  color: $color-dark-blue;
   font-weight: 700;
   padding: 12px;
   font-size: 1.1em;
@@ -159,7 +159,7 @@ button.login-button
   .privacy {
     width: 100%;
     margin: 15px auto;
-    font-size: 20px;
+    font-size: 1em;
     margin-left: 20px;
     i {
       margin-left: -20px;
@@ -187,12 +187,18 @@ button.login-button
 
       select {
         border: 0;
-        border-bottom: 1px solid rgba(145,143,117,.7);
+        border-bottom: 1px solid $color-text;
         background-color: transparent;
         margin: 0;
         padding: 13px 20% 14px 20%;
+        border-radius: 0;
         width: 100%;
         font-size: 20px;
+        color: $color-text;
+        font-family: $title-font-family;
+        font-weight: $font-weight-bold;
+        text-align: center;
+        -webkit-appearance: none;
       }
     }
   }
@@ -230,7 +236,7 @@ button.login-button
   font-style: italic;
 
   a {
-    color: $color-brown;
+    color: $color-dark-blue;
   }
 
   .icon {
@@ -475,6 +481,10 @@ button.login-button
   //  left: -19px;
   //  bottom: 0;
   //}
+}
+
+[id="gender-radio"] {
+  padding: 20px 0;
 }
 
 /* ------------------------------------ *\

@@ -13,7 +13,7 @@ body {
   margin: 0;
   padding: 0;
   // font-family: $main-font-family;
-  color: $color-brown;
+  color: $color-dark-blue;
   font-size: 16px; /* To change with fluid typography*/
   -webkit-font-smoothing: antialiased; /* Fix for webkit rendering */
   -webkit-text-size-adjust: 100%;
@@ -52,6 +52,7 @@ label {
 }
 
 a {
+  color: $color-light-blue;
   text-decoration: none;
 }
 
