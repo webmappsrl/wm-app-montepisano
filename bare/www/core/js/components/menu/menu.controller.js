@@ -258,16 +258,26 @@ angular.module('webmapp')
                                         type: 'button-positive'
                                     }]
                                 });
+
                                 loginScope.state.resetMode = false;
                                 resetFields();
-                                loginScope.logging = false;
 
-                                //Saves the user data to localstorage
-                                Auth.setUserData(data.data);
-                                //Set the loggedIn flag to 'true'
-                                $rootScope.isLoggedIn = true;
-                                login.modal.hide();
-                                $rootScope.$emit('logged-in');
+                                Account.login(email, password)
+                                    .then(function (data) {
+
+                                        loginScope.logging = false;
+
+                                        //Saves the user data to localstorage
+                                        Auth.setUserData(data);
+                                        //Set the loggedIn flag to 'true'
+                                        $rootScope.isLoggedIn = true;
+                                        login.modal.hide();
+                                        $rootScope.$emit('logged-in');
+                                    },
+                                    function () {
+                                        loginScope.logging = false;
+                                        login.modal.hide();
+                                    });
 
                             }, function (error) {
                                 if (!error) {
