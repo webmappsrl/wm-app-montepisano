@@ -2319,7 +2319,7 @@ a.item {
     color: #80181e; }
   .menu .item {
     background: transparent;
-    color: #4a6e23;
+    color: #1f4651;
     font-weight: 700; }
 
 /* ------------------------------------ *\
@@ -2332,7 +2332,7 @@ a.item {
     padding: 20px;
     border: none;
     font-size: 30px;
-    color: #605846;
+    color: #1f4651;
     margin: 0;
     /* Temporary */
     /* &:nth-of-type(1) {
@@ -3687,7 +3687,7 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
         height: auto; }
 
 .portoferraio-home-page .map-image {
-  height: 33vh;
+  height: 36vh;
   position: relative;
   overflow: hidden; }
   .portoferraio-home-page .map-image img {
