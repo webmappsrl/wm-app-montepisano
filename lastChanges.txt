@@ -1,1 +1,0 @@
-d small loading delay when opening packages and detailRoute
