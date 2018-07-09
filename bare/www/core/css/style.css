@@ -683,7 +683,7 @@ ion-content.fullView {
   white-space: nowrap; }
 
 .contacts-list__element a {
-  color: #605846; }
+  color: #1f4651; }
 
 .details-contact-single .contacts-list__element {
   width: 100%; }
@@ -3118,8 +3118,8 @@ button.popup-close {
   width: 40px;
   height: 40px;
   padding: 7px;
-  background: #605846;
-  background: rgba(0, 0, 0, 0.2);
+  background: #1f4651;
+  background: rgba(31, 70, 81, 0.6);
   position: absolute;
   top: 0;
   right: 0;
@@ -3138,10 +3138,10 @@ button.popup-close {
   width: 80%;
   font-size: 16px;
   font-weight: 700;
-  color: #918f75; }
+  color: #1f4651; }
   .modal-title i {
     font-size: 50px;
-    color: #f7f9f1;
+    color: #1f4651;
     padding: 5px; }
 
 .modal-content div .modal-subtitle {
@@ -3178,7 +3178,7 @@ button.popup-close {
   padding: 1.5vh 0;
   border-right: none;
   border-left: none;
-  color: #605846; }
+  color: #1f4651; }
   .modal-filters .item:first-child {
     border-top: none; }
   .modal-filters .item:last-child {
@@ -3205,10 +3205,10 @@ button.popup-close {
 
 .modal-column-right p h3, .modal-column-right p h4 {
   font-size: 14px;
-  color: #605846; }
+  color: #1f4651; }
 
 .modal-column-right a {
-  color: #605846; }
+  color: #1f4651; }
 
 .modal-content-title {
   margin: 10px 0;

@@ -114,10 +114,10 @@ gulp.task('update', ['create'], function () {
 
                 gulp.getUrlFile('icon.png', resources + 'icon.png', dir + '/resources/');
                 gulp.getUrlFile('splash.png', resources + 'splash.png', dir + '/resources/');
-
-                sh.exec('ionic cordova resources', {
-                    cwd: dir
-                })
+                //
+                // sh.exec('ionic cordova resources', {
+                //     cwd: dir
+                // })
 
                 return repositories;
 
