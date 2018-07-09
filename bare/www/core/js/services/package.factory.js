@@ -278,7 +278,7 @@ angular.module('webmapp')
             if (taxonomy[taxonomyType]) {
                 $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
             }
-            Communication.getJSON(/*communicationConf.baseUrl + communicationConf.wordPressEndpoint*/ 'http://pf.be.webmapp.it/wp-json/wp/v2/' + taxonomyType + '?per_page=100')
+            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')
                 .then(function (data) {
                     asyncTranslations = 0;
                     taxonomy[taxonomyType] = {};
