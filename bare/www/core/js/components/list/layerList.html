@@ -104,7 +104,9 @@
                     <!-- TODO: add following markup for subtitle -->
                             <span
                                 class="list-info-title"
-                                style="color: #605846"
+                                ng-style="{
+                                    'color': vm.colors.list.color ? vm.colors.list.color : '#605846'
+                                }"
                                 ng-bind-html="item.properties.name">
                             </span>
                             <!-- <span class="list-info-subtitle">Via Nazionale 144 25052 Piancogno, BS</span> -->
