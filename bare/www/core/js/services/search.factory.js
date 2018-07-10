@@ -210,7 +210,6 @@ angular.module('webmapp')
                         if (typeof layersEngine[c] !== 'undefined') {
                             currentResult = layersEngine[c].search(query);
                             if (currentResult.length > 0) {
-                                results.push({ label: c, divider: true });
                                 results = results.concat(currentResult);
                             }
                         }
@@ -219,9 +218,7 @@ angular.module('webmapp')
                     for (var c in confLayersMap) {
                         if (typeof layersEngine[c] !== 'undefined') {
                             currentResult = layersEngine[c].search(query);
-                            if (filteredIds.length) {
-                                currentResult = filterById(currentResult, filteredIds);
-                            }
+                            currentResult = filterById(currentResult, filteredIds);
                             if (currentResult.length > 0) {
                                 results = results.concat(currentResult);
                             }

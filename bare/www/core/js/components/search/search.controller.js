@@ -180,6 +180,7 @@ angular.module('webmapp')
                 }
 
             }
+            updateClickableCheckBoxes([]);
             checkAllTabsState();
 
         } else {
@@ -376,11 +377,10 @@ angular.module('webmapp')
                 modalScope.layers[layerId].checked = false;
             }
 
-            for (let i = 0; i < layers.length; i++) {
-                if (modalScope.layers[layers[i]]) {
-                    modalScope.layers[layers[i]].checked = true;
-                }
-            }
+            layers = layers.filter(function(el) {
+                return featuresIdByLayersMap[el];
+            })
+
 
             Search.setActiveLayers(layers);
             vm.updateSearch(query);
@@ -397,127 +397,127 @@ angular.module('webmapp')
             }
 
             var prevFilters = Search.getActiveLayers();
-            if (true) {
-
-                for (var type in modalScope.filters) {
-
-                    if (type !== "base_maps") {
-
-                        var superCategory = modalScope.filters[type];
-                        for (var i = 0; i < superCategory.sublayers.length; i++) {
-
-                            var macroCategory = superCategory.sublayers[i];
-
-                            var baseFilters = angular.copy(prevFilters);
-                            var categoriesContainerMap = {};
-                            for (var m = 0; m < macroCategory.items.length; m++) {
-
-                                var layer = macroCategory.items[m];
-                                if (layer) {
-                                    var label = layer.label;
-                                    var index = baseFilters.indexOf(label);
-                                    if (index > -1) {
-                                        baseFilters.splice(index, 1);
-                                    }
-                                }
-                                categoriesContainerMap[layer.id] = false;
-
-                            }
 
 
-                            Search.setActiveLayers(baseFilters);
-                            var results = Search.getFeatures(lastQuery);
+            for (var type in modalScope.filters) {
 
-                            for (let k = 0; k < results.length; k++) {
-                                var layer = results[k];
-                                if (layer.properties && layer.properties.taxonomy) {
+                if (type !== "base_maps") {
 
-                                    if (macroCategory.label.en === "Types of content") {
-                                        var tipoArray = layer.properties.taxonomy.tipo;
+                    var superCategory = modalScope.filters[type];
+                    for (var i = 0; i < superCategory.sublayers.length; i++) {
 
-                                        for (var n = 0; n < tipoArray.length; n++) {
-                                            var id = tipoArray[n];
-                                            if (id === "restaurant") {
-                                                id = "4";
-                                            } else if (id === "producer") {
-                                                id = "3";
-                                            } else if (id === "shop") {
-                                                id = "1";
-                                            } else if (id === "event") {
-                                                id = "2";
-                                            }
-                                            tipoArray[n] = id;
-                                        }
+                        var macroCategory = superCategory.sublayers[i];
 
-                                        for (var layerId in categoriesContainerMap) {
+                        var baseFilters = angular.copy(prevFilters);
+                        var categoriesContainerMap = {};
+                        for (var m = 0; m < macroCategory.items.length; m++) {
 
-                                            if (tipoArray.indexOf(layerId) > -1) {
-                                                categoriesContainerMap[layerId] = true;
-                                            }
-                                        }
-
-
-                                    } else if (macroCategory.label.en === "Speciality") {
-
-                                        var tipoArray = layer.properties.taxonomy.specialita;
-
-                                        for (var layerId in categoriesContainerMap) {
-                                            var id = Number(layerId);
-                                            if (tipoArray.indexOf(id) > -1) {
-
-                                                categoriesContainerMap[layerId] = true;
-                                            }
-                                        }
-                                    } else if (macroCategory.label.en === "Places") {
-
-                                        var tipoArray = layer.properties.taxonomy.localita;
-
-                                        for (var key in categoriesContainerMap) {
-                                            if (tipoArray.indexOf(key) > -1) {
-                                                categoriesContainerMap[key] = true;
-                                            }
-                                        }
-                                    }
-
-
-                                    var allClickable = true;
-                                    for (var key in categoriesContainerMap) {
-                                        if (!categoriesContainerMap[key]) {
-                                            var layer = MapService.getOverlayLayerById(key);
-                                            if (layer && modalScope.layers[layer.label]) {
-                                                allClickable = false;
-                                                break;
-                                            }
-                                        }
-                                    }
-
-                                    if (allClickable) {
-                                        break;
-                                    }
+                            var layer = macroCategory.items[m];
+                            if (layer) {
+                                var label = layer.label;
+                                var index = baseFilters.indexOf(label);
+                                if (index > -1) {
+                                    baseFilters.splice(index, 1);
                                 }
                             }
-
-
-                            for (var catId in categoriesContainerMap) {
-
-                                var layer = MapService.getOverlayLayerById(catId);
-                                if (layer && modalScope.layers[layer.label]) {
-
-                                    if (!modalScope.layers[layer.label].checked) {
-                                        modalScope.layers[layer.label].clickable = categoriesContainerMap[catId];
-                                    }
-                                }
-
-                            }
+                            categoriesContainerMap[layer.id] = false;
 
                         }
 
 
+                        Search.setActiveLayers(baseFilters);
+                        var results = Search.getFeatures(lastQuery);
+
+                        for (let k = 0; k < results.length; k++) {
+                            var layer = results[k];
+                            if (layer.properties && layer.properties.taxonomy) {
+
+                                if (macroCategory.label.en === "Types of content") {
+                                    var tipoArray = layer.properties.taxonomy.tipo;
+
+                                    for (var n = 0; n < tipoArray.length; n++) {
+                                        var id = tipoArray[n];
+                                        if (id === "restaurant") {
+                                            id = "4";
+                                        } else if (id === "producer") {
+                                            id = "3";
+                                        } else if (id === "shop") {
+                                            id = "1";
+                                        } else if (id === "event") {
+                                            id = "2";
+                                        }
+                                        tipoArray[n] = id;
+                                    }
+
+                                    for (var layerId in categoriesContainerMap) {
+
+                                        if (tipoArray.indexOf(layerId) > -1) {
+                                            categoriesContainerMap[layerId] = true;
+                                        }
+                                    }
+
+
+                                } else if (macroCategory.label.en === "Speciality") {
+
+                                    var tipoArray = layer.properties.taxonomy.specialita;
+
+                                    for (var layerId in categoriesContainerMap) {
+                                        var id = Number(layerId);
+                                        if (tipoArray.indexOf(id) > -1) {
+
+                                            categoriesContainerMap[layerId] = true;
+                                        }
+                                    }
+                                } else if (macroCategory.label.en === "Places") {
+
+                                    var tipoArray = layer.properties.taxonomy.localita;
+
+                                    for (var key in categoriesContainerMap) {
+                                        if (tipoArray.indexOf(key) > -1) {
+                                            categoriesContainerMap[key] = true;
+                                        }
+                                    }
+                                }
+
+
+                                var allClickable = true;
+                                for (var key in categoriesContainerMap) {
+                                    if (!categoriesContainerMap[key]) {
+                                        var layer = MapService.getOverlayLayerById(key);
+                                        if (layer && modalScope.layers[layer.label]) {
+                                            allClickable = false;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (allClickable) {
+                                    break;
+                                }
+                            }
+                        }
+
+
+                        for (var catId in categoriesContainerMap) {
+
+                            var layer = MapService.getOverlayLayerById(catId);
+                            if (layer && modalScope.layers[layer.label]) {
+
+                                if (!modalScope.layers[layer.label].checked) {
+                                    modalScope.layers[layer.label].clickable = categoriesContainerMap[catId];
+                                }
+                            }
+
+                        }
+
                     }
+
 
                 }
 
             }
+
+
             Search.setActiveLayers(prevFilters);
 
         };

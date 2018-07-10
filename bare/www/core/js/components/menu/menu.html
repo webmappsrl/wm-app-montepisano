@@ -1,52 +1,31 @@
-<ion-side-menus 
-    ng-controller="MenuController as vm"
-    ng-class="{
+<ion-side-menus ng-controller="MenuController as vm" ng-class="{
         'card-page-title': vm.isCardPage,
         'details-page': vm.isDetailPage,
         'is-a-poi': vm.isAPOI,
         'navigation-interface': vm.isNavigating
     }">
-    <ion-pane 
-        ion-side-menu-content 
-        drag-content="false"
-        ng-style="{
+    <ion-pane ion-side-menu-content drag-content="false" ng-style="{
             'background': vm.colors.mainBar.background,
             'color': vm.colors.mainBar.color
         }">
-        <ion-nav-bar 
-            class="bar-positive nav-title-slide-ios7"
-            ng-class="{
+        <ion-nav-bar class="bar-positive nav-title-slide-ios7" ng-class="{
                 'welcome-nav': vm.isWelcomePage,
                 'hide-left-button': vm.hideMenuButton
-            }"
-            align-title="center" 
-            ng-style="barColor">
+            }" align-title="center" ng-style="barColor">
         </ion-nav-bar>
         <ion-nav-view name="main-content"></ion-nav-view>
     </ion-pane>
 
-    <ion-side-menu 
-        side="left" 
-        width="vm.menuWidth"
-        ng-switch="vm.menuState"
-        ng-style="{
+    <ion-side-menu side="left" width="vm.menuWidth" ng-switch="vm.menuState" ng-style="{
             'background': vm.colors.menu.background,
             'color': vm.colors.menu.color
         }">
-        <ion-content 
-            class="advanced-menu-content has-header animate-switch-container" 
-            delegate-handle="menuScroll">
-            
+        <ion-content class="advanced-menu-content has-header animate-switch-container" delegate-handle="menuScroll">
+
             <div class="list">
-                <a 
-                    class="item"
-                    ng-style="{
+                <a class="item" ng-style="{
                         'color': (vm.colors.menu.overwrite || !item.color) ? vm.colors.menu.color : item.color
-                    }" 
-                    ng-click="vm.goTo(item.url, item.type)"
-                    ng-if="(vm.isBrowser && !item.hideInBrowser) || !vm.isBrowser"
-                    ng-repeat="item in vm.advancedMenuItems"
-                    ng-bind-html="item.label | translate">
+                    }" ng-click="vm.goTo(item.url, item.type)" ng-if="(vm.isBrowser && !item.hideInBrowser) || !vm.isBrowser" ng-repeat="item in vm.advancedMenuItems" ng-bind-html="item.label | translate">
                 </a>
             </div>
 

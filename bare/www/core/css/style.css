@@ -3591,7 +3591,8 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
 .label-select-name {
   display: block; }
 
-.label-select-search, .label-select-others {
+.label-select-search,
+.label-select-others {
   font-size: 15px;
   color: inherit; }
 
