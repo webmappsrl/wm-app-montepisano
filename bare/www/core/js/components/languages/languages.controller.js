@@ -7,6 +7,7 @@ angular.module('webmapp')
         $window,
         Auth,
         CONFIG,
+        MapService,
         Utils
     ) {
         var vm = {};
@@ -50,6 +51,7 @@ angular.module('webmapp')
             vm.currentLang = lang.substring(0, 2);
             updatePrivacyUrl();
             $rootScope.$emit('changed-language', lang.substring(0, 2));
+            MapService.reinitializeMap();
             Utils.forceDigest();
         };
 

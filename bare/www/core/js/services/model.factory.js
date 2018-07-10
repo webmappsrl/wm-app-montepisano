@@ -242,5 +242,40 @@ angular.module('webmapp')
         return colorsConfig.global.color;
     };
 
+    model.reset = function () {
+        overlaysMap = {};
+        overlaysGroupMap = {};
+        overlaysChildMap = {};
+
+        for (var p in confPages) {
+            pagesMap[confPages[p].label] = angular.extend({items: []}, confPages[p]);
+            pagesMapByType[confPages[p].type] = confPages[p];
+        }
+    
+        for (var n in confOverlays) {
+            if (!confOverlays[n].skipRedering) {
+                overlaysMap[confOverlays[n].label] = angular.extend({items: []}, confOverlays[n]);
+            }
+        }
+    
+        for (var i in mainMenuItems) {
+            confMainMenuMap[mainMenuItems[i].label] = mainMenuItems[i];
+            if (mainMenuItems[i].type === 'layerGroup') {
+                overlaysGroupMap[mainMenuItems[i].label] = mainMenuItems[i];
+                for (var c in mainMenuItems[i].items) {
+                    overlaysChildMap[mainMenuItems[i].items[c]] = overlaysMap[mainMenuItems[i].items[c]];
+                }
+            }
+            if (mainMenuItems[i].type === 'pageGroup') {
+                pagesGroupMap[mainMenuItems[i].label] = mainMenuItems[i];
+                for (var c in mainMenuItems[i].items) {
+                    pagesChildMap[mainMenuItems[i].items[c]] = pagesMap[mainMenuItems[i].items[c]];
+                }
+            }
+        }
+        
+        Search.reset();
+    };
+
     return model;
 });

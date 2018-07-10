@@ -120,14 +120,14 @@ angular.module('webmapp')
 
         var isAPOILayer = function (layerName) {
             return (overlayLayersConfMap[layerName] &&
-                    overlayLayersConfMap[layerName].type === 'poi_geojson') ||
+                overlayLayersConfMap[layerName].type === 'poi_geojson') ||
                 (extraLayersByLabel[layerName] &&
                     extraLayersByLabel[layerName].type === 'poi_geojson');
         };
 
         var isALineLayer = function (layerName) {
             return (overlayLayersConfMap[layerName] &&
-                    overlayLayersConfMap[layerName].type === 'line_geojson') ||
+                overlayLayersConfMap[layerName].type === 'line_geojson') ||
                 (extraLayersByLabel[layerName] &&
                     extraLayersByLabel[layerName].type === 'line_geojson');
         };
@@ -443,8 +443,8 @@ angular.module('webmapp')
                         '</div>';
 
                     L.popup({
-                            autoPan: false
-                        })
+                        autoPan: false
+                    })
                         .setLatLng({
                             lat: e.latlng.lat + (isPOI && !mapIsRotating ? getIncrement(map.getZoom()) : 0),
                             lng: e.latlng.lng
@@ -577,9 +577,9 @@ angular.module('webmapp')
             resetLayers();
 
             var poiCollection = {
-                    type: 'FeatureCollection',
-                    features: []
-                },
+                type: 'FeatureCollection',
+                features: []
+            },
                 linesCollection = {
                     type: 'FeatureCollection',
                     features: []
@@ -587,10 +587,10 @@ angular.module('webmapp')
                 currentId, feature;
 
             var poiOptions = {
-                    pointToLayer: function (feature, latlng) {
-                        return genericPointToLayer({}, feature, latlng);
-                    }
-                },
+                pointToLayer: function (feature, latlng) {
+                    return genericPointToLayer({}, feature, latlng);
+                }
+            },
                 lineOptions = {
                     style: globalLineApplyStyle
                 },
@@ -765,7 +765,7 @@ angular.module('webmapp')
                         db.put({
                             _id: url,
                             data: data
-                        }).then(function () {}).catch(function () {
+                        }).then(function () { }).catch(function () {
                             console.log(url + " page not updated");
                         });
                     };
@@ -844,14 +844,14 @@ angular.module('webmapp')
 
             var poiCallback = function (data, currentOverlay) {
                 var geoJsonOptions = {
-                        pointToLayer: function (feature, latlng) {
-                            return genericPointToLayer(currentOverlay, feature, latlng);
-                        },
-                        onEachFeature: function (feature) {
-                            feature.parent = currentOverlay;
-                            globalOnEachPOI(feature);
-                        }
+                    pointToLayer: function (feature, latlng) {
+                        return genericPointToLayer(currentOverlay, feature, latlng);
                     },
+                    onEachFeature: function (feature) {
+                        feature.parent = currentOverlay;
+                        globalOnEachPOI(feature);
+                    }
+                },
                     pointsLayer = L.geoJson(data, geoJsonOptions);
 
                 geojsonByLabel[currentOverlay.label] = data;
@@ -864,47 +864,47 @@ angular.module('webmapp')
 
             var lineCallback = function (data, currentOverlay) {
                 var geoJsonOptions = {
-                        onEachFeature: function (feature, layer) {
-                            if (!feature.parent) {
-                                feature.parent = currentOverlay;
-                            }
-                            globalOnEachLine(feature, layer);
+                    onEachFeature: function (feature, layer) {
+                        if (!feature.parent) {
+                            feature.parent = currentOverlay;
+                        }
+                        globalOnEachLine(feature, layer);
 
-                            if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
-                                if (!polylineDecoratorLayers[currentOverlay.label]) {
-                                    polylineDecoratorLayers[currentOverlay.label] = {};
-                                }
-
-                                polylineDecoratorLayers[currentOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
-                                    patterns: [{
-                                        offset: 20,
-                                        repeat: 100,
-                                        symbol: L.Symbol.arrowHead({
-                                            polygon: true,
-                                            pixelSize: 16,
-                                            headAngle: 30,
-                                            pathOptions: {
-                                                color: '#fff',
-                                                opacity: 0,
-                                                fillColor: '#000',
-                                                fillOpacity: 0.8,
-                                                stroke: true,
-                                                weight: 1
-                                            }
-                                        })
-                                    }]
-                                });
-
-                                polylineDecoratorLayers[currentOverlay.label][feature.properties.id].addTo(map);
+                        if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
+                            if (!polylineDecoratorLayers[currentOverlay.label]) {
+                                polylineDecoratorLayers[currentOverlay.label] = {};
                             }
-                        },
-                        style: function (feature) {
-                            if (!feature.parent) {
-                                feature.parent = currentOverlay;
-                            }
-                            return globalLineApplyStyle(feature);
+
+                            polylineDecoratorLayers[currentOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
+                                patterns: [{
+                                    offset: 20,
+                                    repeat: 100,
+                                    symbol: L.Symbol.arrowHead({
+                                        polygon: true,
+                                        pixelSize: 16,
+                                        headAngle: 30,
+                                        pathOptions: {
+                                            color: '#fff',
+                                            opacity: 0,
+                                            fillColor: '#000',
+                                            fillOpacity: 0.8,
+                                            stroke: true,
+                                            weight: 1
+                                        }
+                                    })
+                                }]
+                            });
+
+                            polylineDecoratorLayers[currentOverlay.label][feature.properties.id].addTo(map);
                         }
                     },
+                    style: function (feature) {
+                        if (!feature.parent) {
+                            feature.parent = currentOverlay;
+                        }
+                        return globalLineApplyStyle(feature);
+                    }
+                },
                     linesLayer = L.geoJson(data, geoJsonOptions);
 
                 overlayLayersByLabel[currentOverlay.label] = linesLayer;
@@ -1027,11 +1027,11 @@ angular.module('webmapp')
                 areaMapById[e.data.id] = angular.extend({}, {
                     properties: e.data
                 }, {
-                    parent: {
-                        label: this.baseMapLabel,
-                        mapping: this.baseMapMapping
-                    }
-                });
+                        parent: {
+                            label: this.baseMapLabel,
+                            mapping: this.baseMapMapping
+                        }
+                    });
                 activatePopup(angular.extend(e, {
                     parent: {
                         label: this.baseMapLabel,
@@ -1039,9 +1039,9 @@ angular.module('webmapp')
                     }
                 }));
             }, {
-                baseMapLabel: currentOverlay.label,
-                baseMapMapping: currentOverlay.mapping
-            }));
+                    baseMapLabel: currentOverlay.label,
+                    baseMapMapping: currentOverlay.mapping
+                }));
 
             var currentFromLocalStorage = localStorage.getItem(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl);
 
@@ -1090,10 +1090,10 @@ angular.module('webmapp')
 
                 if (overlayLayersConf[i].type === 'utfgrid') {
                     var utfGridmap = new L.UtfGrid(overlayLayersConf[i].url, {
-                            useJsonP: false,
-                            resolution: 4,
-                            maxZoom: 16
-                        }),
+                        useJsonP: false,
+                        resolution: 4,
+                        maxZoom: 16
+                    }),
                         layerGroup = L.layerGroup([utfGridmap]);
 
                     layerControl.addOverlay(layerGroup);
@@ -1134,10 +1134,10 @@ angular.module('webmapp')
 
             $q.all(promises).then(function () {
                 promiseCallback();
-            }, function(err) {
+            }, function (err) {
                 // TODO find a way to wait until all promises responded
                 console.warn('An error has occurred in utfgrid geojson files', err);
-                setTimeout(function() {
+                setTimeout(function () {
                     dataReady = true;
                     promiseCallback();
                 }, 2000);
@@ -1265,11 +1265,11 @@ angular.module('webmapp')
                         areaMapById[e.data.id] = angular.extend({}, {
                             properties: e.data
                         }, {
-                            parent: {
-                                label: this.baseMapLabel,
-                                mapping: this.baseMapMapping
-                            }
-                        });
+                                parent: {
+                                    label: this.baseMapLabel,
+                                    mapping: this.baseMapMapping
+                                }
+                            });
                         activatePopup(angular.extend(e, {
                             parent: {
                                 label: this.baseMapLabel,
@@ -1277,9 +1277,9 @@ angular.module('webmapp')
                             }
                         }));
                     }, {
-                        baseMapLabel: baseMap.label,
-                        baseMapMapping: baseMap.mapping
-                    }));
+                            baseMapLabel: baseMap.label,
+                            baseMapMapping: baseMap.mapping
+                        }));
                     setBaseLayer(baseMap, baseTms, L.tileLayer(address, options));
                     resolve();
                 } else if (baseMap.type === 'mbtiles') {
@@ -1376,7 +1376,7 @@ angular.module('webmapp')
                 $rootScope.$emit('map-dragstart');
             });
 
-            map.on('zoomstart', function() {
+            map.on('zoomstart', function () {
                 $rootScope.$emit('map-zoomstart');
             });
 
@@ -1513,6 +1513,67 @@ angular.module('webmapp')
         var makeNotificationSound = function () {
             var audio = new Audio('core/audio/alertNotificationSound.mp3');
             audio.play();
+        };
+
+        mapService.reinitializeMap = function () {
+            baseView = {};
+            layerControl = null;
+            currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+
+            eventsList = [];
+            eventsMap = {};
+            couponsList = [];
+            couponsMap = {};
+            dataReady = false;
+            layerCliked = null;
+            useLocalCaching = generalConf.useLocalStorageCaching;
+            centerCoords = {};
+            centerCoordsUTM32 = {};
+            singleFeatureUrl = CONFIG.COMMUNICATION ? CONFIG.COMMUNICATION.singleFeatureUrl : null;
+            eventsPromise = null;
+            couponsPromise = null;
+            pagePromise = null;
+            positionMarker = null;
+            positionCircle = null;
+
+            baseLayersByLabel = {};
+            tileLayersByLabel = {};
+            utfGridBaseLayerByLabel = {};
+            utfGridOverlayLayersByLabel = {};
+            overlayLayersByLabel = {};
+            extraLayersByLabel = {};
+            featureMapById = {};
+            areaMapById = {};
+            geojsonByLabel = {};
+            itineraryRefByFeatureId = {};
+
+            overlayLayersQueueByLabel = {};
+            queueLayerToActivate = null;
+            queueEvents = false;
+            markerClusters = null;
+            interactionsDisabled = false;
+
+            updateHitsTimer = null;
+
+            skipAreaClick = null;
+
+            polylineDecoratorLayers = {};
+            geojsonLayer = null;
+
+            activatedPopup = null;
+            mapIsRotating = false;
+            currentBearing = 0;
+
+            controlLocate = null;
+            circleLocation = {
+                position: null,
+                accuracy: null
+            };
+            map.remove();
+            map = null;
+
+            Model.reset();
+            initialize();
         };
 
         mapService.getPageInPouchDB = function (key) {
@@ -1771,9 +1832,9 @@ angular.module('webmapp')
 
         mapService.centerOnCoords = function (lat, lng) {
             map.setView({
-                    lat: lat,
-                    lng: lng
-                },
+                lat: lat,
+                lng: lng
+            },
                 CONFIG.MAP.maxZoom);
         };
 
@@ -1803,7 +1864,7 @@ angular.module('webmapp')
         };
 
         mapService.removePosition = function () {
-            if (circleLocation.position !== null){
+            if (circleLocation.position !== null) {
                 map.removeLayer(circleLocation.position);
                 circleLocation.position = null;
             }
@@ -1827,8 +1888,8 @@ angular.module('webmapp')
                 $.getJSON(overlayLayersConf[overlay].url, $.proxy(function (data) {
                     setItemInLocalStorage(overlayLayersConf[this.overlay].url, data);
                 }, {
-                    overlay: overlay
-                }));
+                        overlay: overlay
+                    }));
             }
         };
 
@@ -2216,7 +2277,7 @@ angular.module('webmapp')
             map && map.closePopup();
             try {
                 event && event.stopPropagation();
-            } catch (err) {}
+            } catch (err) { }
         };
 
         window.goToDetail = function (id, parentLabel, isPOI, goToDetails, lat, lng) {

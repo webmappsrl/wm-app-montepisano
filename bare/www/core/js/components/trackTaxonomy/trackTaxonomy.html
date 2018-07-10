@@ -21,9 +21,9 @@
 
         <div class="taxonomy" ng-repeat="item in vm.taxonomy" ng-click="vm.goToFilteredTracks(item.id)">
             <div class="taxonomy-title">
-                <span ng-if="item.name[vm.currentLang]">{{item.name[vm.currentLang]}}</span>
-                <span ng-if="!item.name[vm.currentLang] && item.name[vm.defaultLang]">{{item.name[vm.defaultLang]}}</span>
-                <span ng-if="!item.name[vm.currentLang] && !item.name[vm.defaultLang]">{{item.name[Object.keys(item.name)[0]]}}</span>
+                <span ng-if="item.name[vm.currentLang]" ng-bind-html="item.name[vm.currentLang]"></span>
+                <span ng-if="!item.name[vm.currentLang] && item.name[vm.defaultLang]" ng-bind-html="item.name[vm.defaultLang]"></span>
+                <span ng-if="!item.name[vm.currentLang] && !item.name[vm.defaultLang]" ng-bind-html="item.name[Object.keys(item.name)[0]]"></span>
             </div>
             <div class="taxonomy-button" ng-style="{
                 'background': item.color

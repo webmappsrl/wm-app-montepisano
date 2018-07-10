@@ -119,7 +119,7 @@ angular.module('webmapp')
                 modalScope.vm.items = [];
                 modalScope.vm.items.push({
                     id: '-1',
-                    name: "Seleziona",
+                    name: $translate.instant("Seleziona la durata"),
                     icon: null
                 });
                 modalScope.vm.selectedFilter = modalScope.vm.items[0];

@@ -190,7 +190,7 @@ angular.module('webmapp')
         };
 
         var getTaxonomyTranslated = function (taxonomyType, id, lang) {
-            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '/' + id + '?lang=' + lang)
+            Communication.getJSON(communicationConf.baseUrl + lang + '/' + communicationConf.wordPressEndpoint + taxonomyType + '/' + id)
                 .then(function (data) {
                     taxonomy[taxonomyType][id].name[lang] = data.name;
                     taxonomy[taxonomyType][id].description[lang] = data.description;
