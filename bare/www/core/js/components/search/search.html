@@ -1,4 +1,4 @@
-<ion-view cache-view="false" ng-controller="SearchController as vm">
+<ion-view cache-view="true" ng-controller="SearchController as vm">
     <ion-nav-title>
         <span>
             {{"Ricerca" | translate}}
@@ -40,7 +40,7 @@
                     'border': '2px solid ' + vm.colors.mainBar.color
                 }">
                 <span class="search-button-label">
-                    {{vm.isMapView ? "Risultati" : "Mappa" | translate}}
+                    {{vm.isMapView ? "risultati" : "Mappa" | translate}}
                 </span>
                 <i class="icon wm-icon-map" ng-if="!vm.isMapView"></i>
             </button>
@@ -50,7 +50,7 @@
                     'border': '2px solid ' + vm.colors.mainBar.color
                 }">
                 <span class="search-button-label">
-                    {{"Filtra" | translate}}
+                    {{"filtra" | translate}}
                 </span>
                 <i class="icon wm-icon-filter"></i>
                 <!-- {{vm.activeLayers.length}} -->

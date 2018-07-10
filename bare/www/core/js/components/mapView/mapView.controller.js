@@ -116,10 +116,12 @@ angular.module('webmapp')
                         var layerId = subTab.items[index];
                         var layer = MapService.getOverlayLayerById(layerId);
                         if (layer) {
-                            var info = { id: layerId, label: layer.label, checked: false };
+                            var translatedLabel = layer.languages;
+                            var info = { id: layerId, label: layer.label, checked: false, languages: translatedLabel };
                             if (info.id === "1" || info.id === "2" || info.id === "3" || info.id === "4") {
                                 info.checked = true;
                             }
+                            info.clickable = true;
                             tmp.push(info);
                             modalScope.layers[layer.label] = info;
                         }

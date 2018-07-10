@@ -25,6 +25,7 @@ angular.module('webmapp')
 
     vm.goToSearchByString = function() {
         $rootScope.searchQuery = vm.searchString;
+        $rootScope.searchLayers = ["Ristoranti", "Botteghe", "Produttori", "Eventi"];
         Utils.goTo('search');
     };
 
