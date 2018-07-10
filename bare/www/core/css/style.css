@@ -3796,7 +3796,7 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
 .search-input-box {
   padding: 5px;
   background: #ffffff;
-  border: 1px solid #918f75;
+  border: 1px solid rgba(31, 70, 81, 0.6);
   position: relative; }
   .search-input-box .search-input {
     padding: 5px; }
