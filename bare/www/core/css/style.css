@@ -1361,7 +1361,8 @@ ion-content div.home-search {
     left: -9999px;
     bottom: -9999px;
     right: -9999px;
-    margin: auto; }
+    margin: auto;
+    max-width: 40%; }
 
 ion-content div.home-content {
   z-index: 5;
