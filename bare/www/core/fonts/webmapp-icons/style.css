@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?5l478a');
-  src:  url('fonts/webmapp.eot?5l478a#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?5l478a') format('truetype'),
-    url('fonts/webmapp.woff?5l478a') format('woff'),
-    url('fonts/webmapp.svg?5l478a#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?719n7y');
+  src:  url('fonts/webmapp.eot?719n7y#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?719n7y') format('truetype'),
+    url('fonts/webmapp.woff?719n7y') format('woff'),
+    url('fonts/webmapp.svg?719n7y#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -382,9 +382,6 @@
 .wm-icon-pf-beach:before {
   content: "\ea24";
 }
-.wm-icon-pf-couple:before {
-  content: "\ea25";
-}
 .wm-icon-pf-crafts:before {
   content: "\ea26";
 }
@@ -394,17 +391,8 @@
 .wm-icon-pf-fall:before {
   content: "\ea28";
 }
-.wm-icon-pf-family:before {
-  content: "\ea29";
-}
 .wm-icon-pf-food:before {
   content: "\ea2a";
-}
-.wm-icon-pf-friends:before {
-  content: "\ea2b";
-}
-.wm-icon-pf-pets:before {
-  content: "\ea2c";
 }
 .wm-icon-pf-spring:before {
   content: "\ea2d";
@@ -414,6 +402,18 @@
 }
 .wm-icon-pf-winter:before {
   content: "\ea2f";
+}
+.wm-icon-pf-couple:before {
+  content: "\ea25";
+}
+.wm-icon-pf-family:before {
+  content: "\ea29";
+}
+.wm-icon-pf-friends:before {
+  content: "\ea2b";
+}
+.wm-icon-pf-pets:before {
+  content: "\ea2c";
 }
 .wm-icon-aerialway-15:before {
   content: "\e925";
