@@ -2,6 +2,7 @@ angular.module('webmapp')
 
     .controller('TrackTaxonomyController', function TrackTaxonomyController(
         $ionicLoading,
+        $ionicModal,
         $rootScope,
         $scope,
         $translate,
@@ -12,7 +13,9 @@ angular.module('webmapp')
     ) {
         var vm = {};
 
-        var registeredEvents = [];
+        var registeredEvents = [],
+            modalScope = $rootScope.$new(),
+            modal = {};
 
         vm.goBack = Utils.goBack;
         vm.goTo = Utils.goTo;
@@ -29,6 +32,28 @@ angular.module('webmapp')
 
         vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+
+        modalScope.vm = {};
+        modalScope.vm.selectedFilter = null;
+        modalScope.vm.items = [];
+
+        $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/taxonomyRadioModal.html', {
+            scope: modalScope,
+            animation: 'slide-in-up'
+        }).then(function (modalObj) {
+            modal = modalObj;
+        });
+
+        modalScope.vm.hide = function () {
+            getCountForTaxonomy();
+            modal && modal.hide();
+        };
+
+        modalScope.vm.selectFilter = function (filter) {
+            modalScope.vm.selectedFilter = filter;
+            vm.selectedFilter = filter;
+            Utils.forceDigest();
+        };
 
         vm.goToFilteredTracks = function (id) {
             if (vm.taxonomy[id].filteredCount > 0){
@@ -47,15 +72,15 @@ angular.module('webmapp')
                 if (features[id].geometry.type === 'LineString') {
                     if (features[id].properties.taxonomy && features[id].properties.taxonomy.activity) {
                         for (var i in features[id].properties.taxonomy.activity) {
-                            if (+vm.selectedFilter !== -1 && features[id].properties.taxonomy.theme) {
+                            if (+vm.selectedFilter.id !== -1 && features[id].properties.taxonomy.theme) {
                                 for (var j in features[id].properties.taxonomy.theme) {
-                                    if (+features[id].properties.taxonomy.theme[j] === +vm.selectedFilter) {
+                                    if (+features[id].properties.taxonomy.theme[j] === +vm.selectedFilter.id) {
                                         vm.taxonomy[features[id].properties.taxonomy.activity[i]].filteredCount++;
                                         break;
                                     }
                                 }
                             }
-                            else if (+vm.selectedFilter === -1) {
+                            else if (+vm.selectedFilter.id === -1) {
                                 vm.taxonomy[features[id].properties.taxonomy.activity[i]].filteredCount++;
                             }
                         }
@@ -63,6 +88,10 @@ angular.module('webmapp')
                 }
             }
             Utils.forceDigest();
+        };
+
+        vm.showTaxonomyRadioModal = function () {
+            modal.show();
         };
 
         vm.updateCounts = function () {
@@ -87,10 +116,17 @@ angular.module('webmapp')
 
         registeredEvents.push(
             $rootScope.$on('taxonomy-theme-updated', function (e, value) {
-                vm.filter = [];
+                modalScope.vm.items = [];
+                modalScope.vm.items.push({
+                    id: '-1',
+                    name: "Seleziona",
+                    icon: null
+                });
+                modalScope.vm.selectedFilter = modalScope.vm.items[0];
+                vm.selectedFilter = modalScope.vm.selectedFilter;
                 for (var id in value) {
                     var name = value[id].name[vm.currentLang] ? value[id].name[vm.currentLang] : (value[id].name[vm.defaultLang] ? value[id].name[vm.defaultLang] : value[id].name[Object.keys(value[id].name)[0]]);
-                    vm.filter.push({
+                    modalScope.vm.items.push({
                         id: id,
                         name: name,
                         icon: value[id].icon ? value[id].icon : null
