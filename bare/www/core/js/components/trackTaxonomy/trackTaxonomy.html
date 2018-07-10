@@ -7,9 +7,7 @@
     <ion-nav-buttons side="left">
         <button class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left" ng-click="vm.goBack()"></button>
     </ion-nav-buttons>
-    <ion-content ng-style="{
-        'background': vm.colors.mainBar.background
-    }">
+    <ion-content>
         <div class="taxonomy-filter">
             <div class="pf-taxonomy-filter__select">
                 <select id="filter-selection" ng-model="vm.selectedFilter" ng-change="vm.updateCounts()">

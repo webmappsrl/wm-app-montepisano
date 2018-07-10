@@ -3623,6 +3623,7 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
    #GENERAL
 \* ------------------------------------ */
 .portoferraio-home-page ion-content {
+  color: #ffffff;
   padding: 20px; }
   .portoferraio-home-page ion-content .home-container {
     width: 100%; }
@@ -3910,6 +3911,7 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
  *
  */
 .trackTaxonomy-page ion-content {
+  background: #49a5df;
   padding: 10px; }
   .trackTaxonomy-page ion-content .taxonomy-filter {
     display: flex;
