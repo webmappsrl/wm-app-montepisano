@@ -20,6 +20,13 @@ angular.module('webmapp')
         vm.colors = CONFIG.STYLE;
         vm.selectedFilter = '-1';
 
+        for (var i in CONFIG.MENU) {
+            if (CONFIG.MENU[i].type === 'trackTaxonomy') {
+                vm.title = CONFIG.MENU[i].label;
+                break;
+            }
+        }
+
         vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
 

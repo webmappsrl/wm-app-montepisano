@@ -7,7 +7,7 @@
             ng-style="{
                 'color': vm.colors.mainBar.overwrite ? vm.colors.mainBar.color : vm.color
             }">
-            {{vm.viewTitle | translate}} <span ng-if="vm.showCount">({{vm.layersMap[vm.viewTitle].items.length}})</span>
+            {{vm.viewTitle | translate}} <span ng-if="vm.showCount && vm.subMenu">({{(vm.subMenu | layerTaxonomyFilter : vm.filterDetails).length}})</span><span ng-if="vm.showCount && !vm.subMenu">({{vm.layersMap[vm.viewTitle].items.length}})</span>
         </span>
     </ion-nav-title>
     
@@ -86,7 +86,6 @@
                         'color': vm.colors.list.color ? vm.colors.list.color : '#605846'
                     }">
                     <i class="icon {{item.properties.icon}}" ng-style="{'color': item.color ? item.color : '#605846'}"></i>
-                    <!-- TODO: add following markup for subtitle -->
                     <span class="list-info-title" ng-bind-html="item.properties.name"></span>
                     <!-- <span class="list-info-subtitle">Via Nazionale 144 25052 Piancogno, BS</span> -->
                 </a>
@@ -101,16 +100,14 @@
                     ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
                     collection-repeat="item in vm.subMenu | filter:search | layerTaxonomyFilter : vm.filterDetails">
                     <i class="icon {{item.properties.icon}}" ng-style="{'color': item.properties.color ? item.properties.color : '#605846'}"></i>
-                    <!-- TODO: add following markup for subtitle -->
-                            <span
-                                class="list-info-title"
-                                ng-style="{
-                                    'color': vm.colors.list.color ? vm.colors.list.color : '#605846'
-                                }"
-                                ng-bind-html="item.properties.name">
-                            </span>
-                            <!-- <span class="list-info-subtitle">Via Nazionale 144 25052 Piancogno, BS</span> -->
-
+                        <span
+                            class="list-info-title"
+                            ng-style="{
+                                'color': vm.colors.list.color ? vm.colors.list.color : '#605846'
+                            }"
+                            ng-bind-html="item.properties.name">
+                        </span>
+                        <!-- <span class="list-info-subtitle">Via Nazionale 144 25052 Piancogno, BS</span> -->
                 </ion-item>
             </ion-list>
 

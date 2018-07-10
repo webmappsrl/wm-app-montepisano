@@ -10,7 +10,8 @@ angular.module('webmapp')
         $rootScope,
         $ionicModal,
         $ionicPopup,
-        $translate
+        $translate,
+        CONFIG
     ) {
         var utils = {},
             modals = {};
@@ -98,7 +99,9 @@ angular.module('webmapp')
                 history.back();
             } else {
                 // TODO: retrive the relative state based on the startUrl on the configuration
-                utils.goTo('map/');
+                var split = CONFIG.OPTIONS.startUrl.split('/');
+                
+                utils.goTo(split[split.length - 1]);
             }
         };
 

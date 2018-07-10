@@ -126,6 +126,7 @@ angular.module('webmapp')
                             });
 
                             vm.subMenu = [];
+                            vm.layersMap[realState].items.count = vm.layersMap[realState].items.length;
                             Utils.slowAdd(angular.extend([], vm.layersMap[realState].items), vm.subMenu, true);
                         } else {
                             vm.subMenuLabel = realState;

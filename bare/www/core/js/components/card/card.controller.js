@@ -11,6 +11,7 @@ angular.module('webmapp')
         vm.isLoggedIn = Auth.isLoggedIn();
         vm.userData = {};
         vm.goTo = Utils.goTo;
+        vm.goBack = Utils.goBack;
 
         vm.title = "Card";
 
