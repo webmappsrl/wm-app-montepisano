@@ -92,7 +92,8 @@ angular.module('webmapp')
                     var name = value[id].name[vm.currentLang] ? value[id].name[vm.currentLang] : (value[id].name[vm.defaultLang] ? value[id].name[vm.defaultLang] : value[id].name[Object.keys(value[id].name)[0]]);
                     vm.filter.push({
                         id: id,
-                        name: name
+                        name: name,
+                        icon: value[id].icon ? value[id].icon : null
                     });
                 }
 
