@@ -138,13 +138,33 @@ ion-slide.slider-slide {
   }
 }
 
-.item-select {
+.pf-item-select {
   display: block;
   position: relative;
 
   i {
     position: absolute;
     top: 50%;
+    right: 0;
     transform: translateY(-50%);
+  }
+}
+
+
+/* Popup */
+
+.popup-container {
+  .popup {
+    .popup-title {
+      color: $color-text;
+    }
+  }
+
+  button.button-positive {
+    background: $color-light-blue;
+  }
+
+  .popup-body {
+    color: $color-text;
   }
 }

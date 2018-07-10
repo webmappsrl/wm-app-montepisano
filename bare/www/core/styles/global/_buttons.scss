@@ -42,7 +42,7 @@ button {
     text-transform: uppercase;
     letter-spacing: 2px;
     font-size: 18px;
-    padding: 5px 30px;
+    padding: 0 30px;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -198,7 +198,7 @@ button {
   margin-right: 5px;
   padding-left: 35px;
   background: transparent;
-  border: 1px solid $color-light-02;
+  border: none;
   border-radius: 40px;
   font-size: 11px;
   color: $color-light-02;

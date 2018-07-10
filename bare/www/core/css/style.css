@@ -208,7 +208,7 @@ button.button-block {
   text-transform: uppercase;
   letter-spacing: 2px;
   font-size: 18px;
-  padding: 5px 30px;
+  padding: 0 30px;
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -344,7 +344,7 @@ button.login-button {
   margin-right: 5px;
   padding-left: 35px;
   background: transparent;
-  border: 1px solid #918f75;
+  border: none;
   border-radius: 40px;
   font-size: 11px;
   color: #918f75;
@@ -499,13 +499,24 @@ ion-slide.slider-slide {
     .pf-radio-button label i {
       margin-right: 5px; }
 
-.item-select {
+.pf-item-select {
   display: block;
   position: relative; }
-  .item-select i {
+  .pf-item-select i {
     position: absolute;
     top: 50%;
+    right: 0;
     transform: translateY(-50%); }
+
+/* Popup */
+.popup-container .popup .popup-title {
+  color: #1f4651; }
+
+.popup-container button.button-positive {
+  background: #49a5df; }
+
+.popup-container .popup-body {
+  color: #1f4651; }
 
 /**
  * TABLE
@@ -1752,7 +1763,7 @@ button.login-button
   .registration-form .privacy {
     width: 100%;
     margin: 15px auto;
-    font-size: 1em;
+    font-size: 14px;
     margin-left: 20px; }
     .login-form .privacy i,
     .registration-form .privacy i {
@@ -1792,11 +1803,10 @@ button.login-button
   display: none; }
 
 .skip-link {
-  text-align: right;
   padding: 8px 0 !important;
   font-size: 14px;
   text-transform: lowercase;
-  font-style: italic; }
+  text-align: center; }
   .skip-link a {
     color: #1f4651; }
   .skip-link .icon {

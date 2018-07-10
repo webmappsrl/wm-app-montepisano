@@ -159,8 +159,9 @@ button.login-button
   .privacy {
     width: 100%;
     margin: 15px auto;
-    font-size: 1em;
+    font-size: $font-size-s;
     margin-left: 20px;
+
     i {
       margin-left: -20px;
     }
@@ -229,12 +230,10 @@ button.login-button
 }
 
 .skip-link {
-  text-align: right;
   padding: 8px 0 !important;
   font-size: 14px;
   text-transform: lowercase;
-  font-style: italic;
-
+  text-align: center;
   a {
     color: $color-dark-blue;
   }

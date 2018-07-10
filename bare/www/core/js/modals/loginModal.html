@@ -145,15 +145,16 @@
                             autocomplete="off"
                             placeholder="{{'ripeti password' | translate}} *">
                     </label>
-                    <label class="item item-input">
+                    <label class="item item-input pf-item-select">
                         <country-select ng-model="ud.country"></country-select>
+                        <i class="wm-icon-chevron-down"></i>
                     </label>
 
-                    <label class="item item-input item-select">
+                    <label class="item item-input pf-item-select">
                         <select id="type-select" ng-model="ud.selectedType">
                             <option ng-repeat="item in ud.types" value="{{item.value}}" selected="item.value === ud.selectedType">{{item.name}}</option>
                         </select>
-                        <!--<i class="wm-icon-chevron-down"></i>-->
+                        <i class="wm-icon-chevron-down"></i>
                     </label>
 
                     <div id="gender-radio">

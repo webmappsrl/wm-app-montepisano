@@ -30,6 +30,9 @@
 
   input {
     width: 100%;
+
+    @include placeholder {
+    }
   }
 
   button:hover {
@@ -74,7 +77,7 @@
 .search-input-box {
   padding: 5px;
   background: $color-white;
-  border: 1px solid $color-light-02;
+  border: 1px solid transparentize($color-text, 10%) !important;
   position: relative;
 
   .search-input {
