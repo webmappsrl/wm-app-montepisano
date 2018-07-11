@@ -95,6 +95,9 @@
                 line-height: 1.2;
                 color: $color-text;
 
+                &.disabled-title {
+                    color: #aaaaaa;
+                }
             }
 
             div.taxonomy-button {

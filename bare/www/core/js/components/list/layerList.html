@@ -83,12 +83,12 @@
                     ng-style="{
                         'color': vm.colors.list.color ? vm.colors.list.color : '#605846'
                     }">
-                    <i ng-if="!item.properties.image" class="icon {{item.properties.icon}}" ng-style="{'color': item.color ? item.color : '#605846'}"></i>
-                    <div class="layer-list__thumbnail" ng-if="item.properties.image">
-                        <img ng-src="{{item.properties.image}}">
+                    <div class="layer-list__thumbnail">
+                        <img ng-src="{{item.properties.image}}" ng-if="item.properties.image">
+                        <img src="core/images/image-placeholder.png" ng-if="!item.properties.image">
                     </div>
                     <span class="list-info-title" ng-bind-html="item.properties.name"></span>
-                    <!-- <span class="list-info-subtitle">Via Nazionale 144 25052 Piancogno, BS</span> -->
+                    <span class="list-info-subtitle" ng-if="item.properties.date_start">{{item.properties.date_start}} <span ng-if="item.properties.date_stop"> - {{item.properties.date_stop}}</span></span>
                 </a>
             </div>
 
@@ -100,9 +100,9 @@
                     class="item item-icon-left item-has-thumb"
                     ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
                     collection-repeat="item in vm.subMenu | filter:search | layerTaxonomyFilter : vm.filterDetails">
-                    <i ng-if="!item.properties.image" class="icon {{item.properties.icon}}" ng-style="{'color': item.properties.color ? item.properties.color : '#605846'}"></i>
-                    <div class="layer-list__thumbnail" ng-if="item.properties.image">
-                        <img ng-src="{{item.properties.image}}">
+                    <div class="layer-list__thumbnail">
+                        <img ng-src="{{item.properties.image}}" ng-if="item.properties.image">
+                        <img src="core/images/image-placeholder.png" ng-if="!item.properties.image">
                     </div>
                     <span
                         class="list-info-title"
@@ -111,7 +111,7 @@
                         }"
                         ng-bind-html="item.properties.name">
                     </span>
-                    <!-- <span class="list-info-subtitle">Via Nazionale 144 25052 Piancogno, BS</span> -->
+                    <span class="list-info-subtitle" ng-if="item.properties.date_start">{{item.properties.date_start}} <span ng-if="item.properties.date_stop"> - {{item.properties.date_stop}}</span></span>
                 </ion-item>
             </ion-list>
 

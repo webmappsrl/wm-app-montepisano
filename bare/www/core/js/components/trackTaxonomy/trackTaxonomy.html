@@ -22,7 +22,9 @@
         </div>
 
         <div class="taxonomy" ng-repeat="item in vm.taxonomy" ng-click="vm.goToFilteredTracks(item.id)">
-            <div class="taxonomy-title">
+            <div class="taxonomy-title" ng-class="{
+                    'disabled-title': item.filteredCount === 0
+                }">
                 <span ng-if="item.name[vm.currentLang]" ng-bind-html="item.name[vm.currentLang]"></span>
                 <span ng-if="!item.name[vm.currentLang] && item.name[vm.defaultLang]" ng-bind-html="item.name[vm.defaultLang]"></span>
                 <span ng-if="!item.name[vm.currentLang] && !item.name[vm.defaultLang]" ng-bind-html="item.name[Object.keys(item.name)[0]]"></span>

@@ -4039,6 +4039,8 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
       font-size: 28px;
       line-height: 1.2;
       color: #1f4651; }
+      .trackTaxonomy-page ion-content div.taxonomy div.taxonomy-title.disabled-title {
+        color: #aaaaaa; }
     .trackTaxonomy-page ion-content div.taxonomy div.taxonomy-button {
       display: -webkit-box;
       display: -moz-box;

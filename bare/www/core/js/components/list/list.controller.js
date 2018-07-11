@@ -88,6 +88,7 @@ angular.module('webmapp')
                 vm.toggleList();
                 vm.eventsList = MapService.getEventsList();
             } else if (currentState === 'app.main.layer' || currentState === 'app.main.filteredLayer') {
+                vm.toggleList();
                 vm.color = Model.getListColor(currentName);
 
                 layersReferences = MapService.getOverlayLayers();
@@ -145,7 +146,6 @@ angular.module('webmapp')
                 }
 
                 if (currentState === 'app.main.filteredLayer') {
-                    vm.toggleList();
                     vm.canGoBack = true;
                 }
             } else if (Model.isAPageGroup(currentName)) {
