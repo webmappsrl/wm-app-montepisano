@@ -10,14 +10,15 @@
         ion-side-menu-content 
         drag-content="false"
         ng-style="{
-            'background': vm.colors.mainBar.background,
-            'color': vm.colors.mainBar.color
+            'background': vm.isTrackTaxonomyPage ? 'rgb(73, 165, 223)' : vm.colors.mainBar.background,
+            'color': vm.isTrackTaxonomyPage ? '#ffffff' : vm.colors.mainBar.color
         }">
         <ion-nav-bar 
             class="bar-positive nav-title-slide-ios7"
             ng-class="{
                 'welcome-nav': vm.isWelcomePage,
-                'hide-left-button': vm.hideMenuButton
+                'hide-left-button': vm.hideMenuButton,
+                'white-shadow': vm.isTrackTaxonomyPage
             }"
             align-title="center" 
             ng-style="barColor">

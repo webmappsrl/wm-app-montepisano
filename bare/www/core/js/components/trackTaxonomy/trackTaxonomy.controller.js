@@ -46,7 +46,7 @@ angular.module('webmapp')
 
         vm.goToFilteredTracks = function (id) {
             if (vm.taxonomy[id] && vm.taxonomy[id].filteredCount > 0){
-                Utils.goTo('filteredLayer/Tracks/' + id + '/' + ((vm.selectedFilter && vm.selectedFilter[id] && +vm.selectedFilter[id] !== -1) ? vm.selectedFilter[id] : ""));
+                Utils.goTo('filteredLayer/Tracks/' + id + '/' + ((vm.selectedFilter && vm.selectedFilter.id) ? vm.selectedFilter.id : ""));
             }
         };
 
@@ -102,7 +102,9 @@ angular.module('webmapp')
         registeredEvents.push(
             $rootScope.$on('taxonomy-theme-updated', function (e, value) {
                 vm.filters = [];
-                vm.selectedFilter = null;
+                if (!vm.selectedFilter) {
+                    vm.selectedFilter = null;
+                }
                 for (var id in value) {
                     var name = value[id].name[vm.currentLang] ? value[id].name[vm.currentLang] : (value[id].name[vm.defaultLang] ? value[id].name[vm.defaultLang] : value[id].name[Object.keys(value[id].name)[0]]);
                     vm.filters.push({

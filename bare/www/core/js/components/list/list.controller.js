@@ -144,17 +144,17 @@ angular.module('webmapp')
                 }
 
                 if (currentState === 'app.main.filteredLayer') {
+                    vm.toggleList();
                     vm.canGoBack = true;
                 }
             } else if (Model.isAPageGroup(currentName)) {
+                vm.toggleList();
                 vm.color = Model.getListColor(currentName);
                 realState = $rootScope.currentParams.id.replace(/_/g, ' ');
                 vm.viewTitle = realState;
                 vm.subGroupMenu = getPagesByState(currentName);
             }
         };
-
-        init();
 
         vm.renderDate = function (date) {
             var parsedDate,
@@ -185,7 +185,7 @@ angular.module('webmapp')
             vm.goTo('search');
         };
 
-        vm.toggleList();
-
+        init();
+        
         return vm;
     });

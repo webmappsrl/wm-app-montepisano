@@ -586,6 +586,7 @@ angular.module('webmapp')
             vm.isDetailPage = currentState === 'app.main.detaillayer' || currentState === 'app.main.detailevent';
             vm.isEventDetailPage = currentState === 'app.main.detailevent';
             vm.isWelcomePage = currentState === 'app.main.welcome';
+            vm.isTrackTaxonomyPage = currentState === 'app.main.trackTaxonomy';
 
             if (currentState === 'app.main.detaillayer' ||
                 currentState === 'app.main.detailulayer' ||
