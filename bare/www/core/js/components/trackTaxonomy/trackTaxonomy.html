@@ -29,8 +29,11 @@
                 'background': item.color
             }">
                 <i class="icon {{item.icon}}" ng-if="item.icon"></i>
-                {{item.filteredCount}}
-                <i class="icon wm-icon-ios7-arrow-forward"></i>
+                <div class="taxonomy-button__count">
+                    {{item.filteredCount}}
+                    <i class="icon wm-icon-ios7-arrow-forward"></i>
+                </div>
+
             </div>
         </div>
         <div class="taxonomy-footer">

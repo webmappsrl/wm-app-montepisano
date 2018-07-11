@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /* Valcamonica color scheme */
 /*
  * TYPOGRAPHY
@@ -2062,7 +2061,8 @@ button.login-button
 .nav-title-slide-ios7 {
   background: inherit !important;
   color: inherit !important;
-  border-color: transparent !important; }
+  border-color: transparent !important;
+  font-family: "montserrat", sans-serif; }
   .nav-title-slide-ios7 .bar.bar-header {
     padding-right: 2%;
     padding-left: 2%;
@@ -3922,43 +3922,14 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
       height: 100%;
       margin: 0 10px 0 0;
       position: relative;
-      overflow: hidden; }
-      .trackTaxonomy-page ion-content .taxonomy-filter .pf-taxonomy-filter__select::before {
-        width: 45px;
-        display: -webkit-inline-box;
-        display: -ms-inline-flexbox;
-        display: inline-flex;
-        -webkit-align-items: center;
-        -moz-align-items: center;
-        -ms-align-items: center;
-        align-items: center;
-        -webkit-justify-content: center;
-        -moz-justify-content: center;
-        -ms-justify-content: center;
-        justify-content: center;
-        -ms-flex-pack: center;
-        background: #cdeefb;
-        content: "";
-        font-family: 'webmapp' !important;
-        speak: none;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        line-height: 1;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        color: #1f4651;
-        font-size: 24px;
-        -webkit-box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9);
-        -moz-box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9);
-        box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9); }
+      overflow: hidden;
+      font-size: 44px;
+      color: #ffffff;
+      text-align: center; }
       .trackTaxonomy-page ion-content .taxonomy-filter .pf-taxonomy-filter__select:last-of-type {
         margin-right: 0; }
+      .trackTaxonomy-page ion-content .taxonomy-filter .pf-taxonomy-filter__select.pf-taxonomy-filter__selected {
+        color: #1f4651; }
     .trackTaxonomy-page ion-content .taxonomy-filter select {
       width: 120%;
       height: 100%;
@@ -4015,10 +3986,17 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
       display: -ms-flexbox;
       display: -webkit-flex;
       display: flex;
+      -webkit-flex-flow: column nowrap;
+      flex-flow: column nowrap;
       -webkit-align-items: center;
       -moz-align-items: center;
       -ms-align-items: center;
       align-items: center;
+      -webkit-justify-content: center;
+      -moz-justify-content: center;
+      -ms-justify-content: center;
+      justify-content: center;
+      -ms-flex-pack: center;
       -webkit-box-flex: 0 0 20%;
       -moz-box-flex: 0 0 20%;
       -webkit-flex: 0 0 20%;
@@ -4029,7 +4007,7 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
       box-shadow: inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9);
       max-width: 20%;
       height: inherit;
-      padding: 10px;
+      padding: 20px;
       color: #fff;
       text-align: center;
       font-family: "montserrat", sans-serif;
@@ -4038,6 +4016,20 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
       .trackTaxonomy-page ion-content div.taxonomy div.taxonomy-button .wm-icon-ios7-arrow-forward {
         margin-left: 5px;
         font-size: 20px; }
+      .trackTaxonomy-page ion-content div.taxonomy div.taxonomy-button > .icon {
+        font-size: 32px;
+        color: #1f4651; }
+    .trackTaxonomy-page ion-content div.taxonomy .taxonomy-button__count {
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-items: center;
+      -moz-align-items: center;
+      -ms-align-items: center;
+      align-items: center;
+      padding-top: 10px; }
   .trackTaxonomy-page ion-content .taxonomy-footer {
     display: -webkit-box;
     display: -moz-box;

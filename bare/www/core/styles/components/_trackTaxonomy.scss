@@ -19,25 +19,32 @@
                 margin: 0 10px 0 0;
                 position: relative;
                 overflow: hidden;
+                font-size: $font-size-xxxl;
+                color: #ffffff;
+                text-align: center;
 
-                &::before {
-                    width: 45px;
-                    @include inline-flex;
-                    @include align-items(center);
-                    @include justify-content(center);
-                    background: $color-extra-light-blue;
-                    @include webmapp-icon('\f151');
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    bottom: 0;
-                    color: $color-dark-blue;
-                    font-size: $font-size-l;
-                    @include box-shadow(inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9));
-                }
+                //&::before {
+                //    width: 45px;
+                //    @include inline-flex;
+                //    @include align-items(center);
+                //    @include justify-content(center);
+                //    background: $color-extra-light-blue;
+                //    @include webmapp-icon('\f151');
+                //    position: absolute;
+                //    top: 0;
+                //    right: 0;
+                //    bottom: 0;
+                //    color: $color-dark-blue;
+                //    font-size: $font-size-l;
+                //    @include box-shadow(inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9));
+                //}
 
                 &:last-of-type {
                     margin-right: 0;
+                }
+
+                &.pf-taxonomy-filter__selected {
+                    color: $color-text;
                 }
             }
 
@@ -92,12 +99,14 @@
 
             div.taxonomy-button {
                 @include flexbox;
+                @include flex-flow(column nowrap);
                 @include align-items(center);
+                @include justify-content(center);
                 @include flex(0 0 20%);
                 @include box-shadow(inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9));
                 max-width: 20%;
                 height: inherit;
-                padding: 10px;
+                padding: 20px;
                 color: #fff;
                 text-align: center;
                 font-family: $title-font-family;
@@ -108,6 +117,17 @@
                     margin-left: 5px;
                     font-size: 20px;
                 }
+
+                > .icon {
+                    font-size: 32px;
+                    color: $color-text;
+                }
+            }
+
+            .taxonomy-button__count {
+                @include flexbox;
+                @include align-items(center)
+                padding-top: 10px;
             }
         }
 
