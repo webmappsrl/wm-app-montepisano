@@ -2,6 +2,7 @@ angular.module('webmapp')
 
     .controller('TrackTaxonomyController', function TrackTaxonomyController(
         $ionicLoading,
+        $ionicPopup,
         $rootScope,
         $scope,
         $translate,
@@ -15,10 +16,21 @@ angular.module('webmapp')
         var registeredEvents = [];
 
         vm.goBack = Utils.goBack;
-        vm.goTo = Utils.goTo;
         vm.taxonomy = {};
         vm.colors = CONFIG.STYLE;
         vm.selectedFilter = '-1';
+
+        vm.goTo = function (url) {
+            if (url === 'card') {
+                $ionicPopup.alert({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Questa pagina sarà presto disponibile")
+                })
+            }
+            else {
+                Utils.goTo(url);
+            }
+        };
 
         for (var i in CONFIG.MENU) {
             if (CONFIG.MENU[i].type === 'trackTaxonomy') {

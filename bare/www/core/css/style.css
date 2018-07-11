@@ -4064,8 +4064,7 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
         margin-left: 5px;
         font-size: 20px; }
       .trackTaxonomy-page ion-content div.taxonomy div.taxonomy-button > .icon {
-        font-size: 32px;
-        color: #1f4651; }
+        font-size: 32px; }
     .trackTaxonomy-page ion-content div.taxonomy .taxonomy-button__count {
       display: -webkit-box;
       display: -moz-box;
