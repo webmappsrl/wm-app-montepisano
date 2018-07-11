@@ -95,6 +95,9 @@
   font-weight: normal;
   font-style: normal; }
 
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  color: #1f4651; }
+
 /**
  * BASE
  *
@@ -155,8 +158,8 @@ p, a {
 h1, h2, h3, h4, h5, h6 {
   font-family: "merriweather", sans-serif; }
 
-h1, h2, h3, h4 {
-  font-size: 16px !important; }
+h3 {
+  font-size: 18px; }
 
 .title-center {
   text-align: center !important; }
@@ -733,6 +736,8 @@ ion-content.fullView {
     content: '';
     display: table;
     clear: both; }
+  .details-content h3 {
+    font-weight: 700; }
 
 .details-howtoreach {
   display: none;
@@ -2925,11 +2930,11 @@ ion-side-menus.navigation-interface .show-start-navigation .start-navigation {
 
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {
-  background: rgba(96, 88, 70, 0.8);
+  background: rgba(31, 70, 81, 0.75);
   color: white;
-  -webkit-box-shadow: 0 0 3px rgba(18, 16, 11, 0.75);
-  -moz-box-shadow: 0 0 3px rgba(18, 16, 11, 0.75);
-  box-shadow: 0 0 3px rgba(18, 16, 11, 0.75); }
+  -webkit-box-shadow: 0 0 3px rgba(31, 70, 81, 0.75);
+  -moz-box-shadow: 0 0 3px rgba(31, 70, 81, 0.75);
+  box-shadow: 0 0 3px rgba(31, 70, 81, 0.75); }
 
 .leaflet-popup-content-wrapper {
   border-radius: 4px;
@@ -3001,7 +3006,7 @@ ion-side-menus.navigation-interface .show-start-navigation .start-navigation {
           width: 164px;
           font-size: 14px;
           margin: 3px 0;
-          color: #E2E2E2;
+          color: #ffffff;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis; }

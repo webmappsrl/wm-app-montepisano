@@ -659,9 +659,9 @@ ion-side-menus.navigation-interface {
 // TODO: find a way to set popup bg via js ?! 
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {
-  background: rgba(96,88,70,.8);
+  background: transparentize($color-text, 0.25);
   color: white;
-  @include box-shadow(0 0 3px transparentize($color-box-shadow, 0.25));
+  @include box-shadow(0 0 3px transparentize($color-text, 0.25));
 }
 
 .leaflet-popup-content-wrapper {
@@ -758,7 +758,7 @@ ion-side-menus.navigation-interface {
           width: 164px;
           font-size: 14px;
           margin: 3px 0;
-          color: #E2E2E2;
+          color: #ffffff;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
