@@ -162,3 +162,15 @@
         }
     } 
 }
+
+@media screen and (max-height: 630px) {
+    .trackTaxonomy-page {
+        ion-content {
+            .taxonomy-filter {
+                .pf-taxonomy-filter__select {
+                    font-size: $font-size-xxl;
+                }
+            }
+        }
+    }
+}

@@ -4093,6 +4093,10 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
       .trackTaxonomy-page ion-content .taxonomy-footer .footer-button.pf-footer-button-card {
         background: #1f4651; }
 
+@media screen and (max-height: 630px) {
+  .trackTaxonomy-page ion-content .taxonomy-filter .pf-taxonomy-filter__select {
+    font-size: 36px; } }
+
 /*
  * WEBMAPP PAGE
  *
