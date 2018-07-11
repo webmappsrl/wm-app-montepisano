@@ -1568,12 +1568,15 @@ div.logout {
   padding-bottom: 5px; }
 
 .list-info-title {
+  padding-left: 10px;
   padding-bottom: 3px;
   font-size: 22px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   padding-top: 5px; }
+  .item-has-thumb .list-info-title {
+    font-size: 16px; }
 
 .list-info-subtitle {
   font-size: 14px; }
@@ -1634,9 +1637,9 @@ div.logout {
   position: absolute;
   left: 5px;
   top: 5px;
-  height: 52px;
   overflow: hidden;
-  width: 45px; }
+  height: 52px;
+  width: 50px; }
   .layer-list__thumbnail img {
     position: absolute;
     top: -1000px;

@@ -76,7 +76,7 @@
                 </a>
                 <!-- TODO: add class has-subtitle when item has subtitle -->
                 <a 
-                    class="item item-icon-left"
+                    class="item item-icon-left item-has-thumb item-has-thumb"
                     ng-if="vm.subMenuLabel"
                     ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
                     ng-repeat="item in vm.layersMap[vm.subMenuLabel].items | filter:search | layerTaxonomyFilter : vm.filterDetails"
@@ -97,7 +97,7 @@
 
                 <!-- TODO: add class has-subtitle when item has subtitle -->
                 <ion-item 
-                    class="item item-icon-left"
+                    class="item item-icon-left item-has-thumb"
                     ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
                     collection-repeat="item in vm.subMenu | filter:search | layerTaxonomyFilter : vm.filterDetails">
                     <i ng-if="!item.properties.image" class="icon {{item.properties.icon}}" ng-style="{'color': item.properties.color ? item.properties.color : '#605846'}"></i>

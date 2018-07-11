@@ -54,6 +54,10 @@
       padding-top: 10px;
       padding-bottom: 10px;
     }
+
+    &.item-has-thumb {
+        //height: 10vh;
+    }
   }
 
   .advanced-menu-content &,
@@ -140,10 +144,15 @@
 }
 
 .list-info-title {
+  padding-left: 10px;
   padding-bottom: 3px;
   font-size: 22px;
   @include text-ellipsis;
   padding-top: 5px;
+
+  .item-has-thumb & {
+    font-size: 16px;
+  }
 }
 
 .list-info-subtitle {
@@ -205,12 +214,18 @@
 }
 
 .layer-list__thumbnail {
+  //width: 33%;
+  //height: 0;
+  //padding-bottom: 22%;
   position: absolute;
   left: 5px;
   top: 5px;
-  height: 52px;
   overflow: hidden;
-  width: 45px;
+
+  height: 52px;
+
+  width: 50px;
+
   img {
     position: absolute;
     top: -1000px;
