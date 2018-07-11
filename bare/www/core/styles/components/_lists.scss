@@ -204,6 +204,24 @@
   }
 }
 
+.layer-list__thumbnail {
+  position: absolute;
+  left: 0;
+  top: 5px;
+  height: 52px;
+  overflow: hidden;
+  width: 50px;
+  img {
+    position: absolute;
+    top: -1000px;
+    bottom: -1000px;
+    left: -1000px;
+    right: -1000px;
+    margin: auto;
+    max-width: 150%;
+  }
+}
+
 /* ------------------------------------ *\
    #MEDIA QUERIES
 \* ------------------------------------ */

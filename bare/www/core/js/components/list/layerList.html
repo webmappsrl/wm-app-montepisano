@@ -84,7 +84,7 @@
                         'color': vm.colors.list.color ? vm.colors.list.color : '#605846'
                     }">
                     <i ng-if="!item.properties.image" class="icon {{item.properties.icon}}" ng-style="{'color': item.color ? item.color : '#605846'}"></i>
-                    <div ng-if="item.properties.image">
+                    <div class="layer-list__thumbnail" ng-if="item.properties.image">
                         <img ng-src="{{item.properties.image}}">
                     </div>
                     <span class="list-info-title" ng-bind-html="item.properties.name"></span>
@@ -101,7 +101,7 @@
                     ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
                     collection-repeat="item in vm.subMenu | filter:search | layerTaxonomyFilter : vm.filterDetails">
                     <i ng-if="!item.properties.image" class="icon {{item.properties.icon}}" ng-style="{'color': item.properties.color ? item.properties.color : '#605846'}"></i>
-                    <div ng-if="item.properties.image">
+                    <div class="layer-list__thumbnail" ng-if="item.properties.image">
                         <img ng-src="{{item.properties.image}}">
                     </div>
                     <span
