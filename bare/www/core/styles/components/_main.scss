@@ -102,6 +102,8 @@
 }
 
 .nav-title-slide-ios7 {
+  height: auto;
+  min-height: 44px;
   background: inherit !important; // #BF410E
   color: inherit !important;
   border-color: transparent !important;
@@ -147,7 +149,8 @@
       margin: 0;
       right: 15px!important; /* TODO: Temporary - fix in js for this case */
       left: 50px !important; /* TODO: Temporary - fix in js for this case */
-      line-height: 2.5;
+      white-space: normal;
+      line-height: 1.1;
     }
   }
 
@@ -158,7 +161,7 @@
   }
 
   .title-inner {
-    @include text-ellipsis;
+    //@include text-ellipsis;
   }
 }
 
@@ -170,9 +173,10 @@
   /*justify-content: center;*/
 
   .title-right {
-    width: 95%;
-    @include text-ellipsis;
-    font-size: 20px;
+
+    width: 92%;
+    //@include text-ellipsis;
+    font-size: 14px;
   }
 
   &.has-date {

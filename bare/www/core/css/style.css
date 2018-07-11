@@ -2059,6 +2059,8 @@ button.login-button
     z-index: 200; }
 
 .nav-title-slide-ios7 {
+  height: auto;
+  min-height: 44px;
   background: inherit !important;
   color: inherit !important;
   border-color: transparent !important;
@@ -2089,17 +2091,13 @@ button.login-button
   /* TODO: Temporary - fix in js for this case */
   left: 50px !important;
   /* TODO: Temporary - fix in js for this case */
-  line-height: 2.5; }
+  white-space: normal;
+  line-height: 1.1; }
 
 .details-page .nav-bar-title {
   display: block;
   height: 100%;
   padding: 4px 0; }
-
-.details-page .title-inner {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; }
 
 .title-inner {
   display: flex;
@@ -2108,11 +2106,8 @@ button.login-button
   height: 100%;
   /*justify-content: center;*/ }
   .title-inner .title-right {
-    width: 95%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 20px; }
+    width: 92%;
+    font-size: 14px; }
   .title-inner.has-date {
     line-height: 1; }
     .title-inner.has-date .title-left,
