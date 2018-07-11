@@ -229,6 +229,10 @@
                     </a>
                 </div>
 
+                <div class="details-date" ng-if="vm.featureDetails.date_start">
+                    {{vm.featureDetails.date_start}}<span ng-if="vm.featureDetails.date_stop"> - {{vm.featureDetails.date_stop}}</span>
+                </div>
+
                 <div
                     class="details-description details-rows"
                     ng-if="!vm.onlyTable && !vm.avoidModal">
