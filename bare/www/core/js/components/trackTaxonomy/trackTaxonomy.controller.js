@@ -46,7 +46,7 @@ angular.module('webmapp')
 
         vm.goToFilteredTracks = function (id) {
             if (vm.taxonomy[id] && vm.taxonomy[id].filteredCount > 0){
-                Utils.goTo('filteredLayer/Tracks/' + id + '/' + ((vm.selectedFilter && vm.selectedFilter.id) ? vm.selectedFilter.id : ""));
+                Utils.goTo('filteredLayer/Itinerari/' + id + '/' + ((vm.selectedFilter && vm.selectedFilter.id) ? vm.selectedFilter.id : ""));
             }
         };
 

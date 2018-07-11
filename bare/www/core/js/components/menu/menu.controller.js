@@ -587,6 +587,7 @@ angular.module('webmapp')
             vm.isEventDetailPage = currentState === 'app.main.detailevent';
             vm.isWelcomePage = currentState === 'app.main.welcome';
             vm.isTrackTaxonomyPage = currentState === 'app.main.trackTaxonomy';
+            vm.hideMainBar = currentState === 'app.main.portoferraioHome';
 
             if (currentState === 'app.main.detaillayer' ||
                 currentState === 'app.main.detailulayer' ||

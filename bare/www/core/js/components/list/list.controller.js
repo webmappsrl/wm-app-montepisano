@@ -85,6 +85,7 @@ angular.module('webmapp')
             }
 
             if (currentState === 'app.main.events') {
+                vm.toggleList();
                 vm.eventsList = MapService.getEventsList();
             } else if (currentState === 'app.main.layer' || currentState === 'app.main.filteredLayer') {
                 vm.color = Model.getListColor(currentName);

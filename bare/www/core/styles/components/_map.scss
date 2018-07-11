@@ -625,7 +625,8 @@ div.leaflet-top.leaflet-right {
   }
 }
 
-ion-side-menus.navigation-interface {
+ion-side-menus.navigation-interface,
+ion-side-menus.hide-mainBar {
   ion-nav-bar {
     display: none;
   }
@@ -643,6 +644,10 @@ ion-side-menus.navigation-interface {
   }
   .show-start-navigation .start-navigation {
     display: none;
+  }
+
+  ion-content.content-pane {
+    height: 100%;
   }
 }
 

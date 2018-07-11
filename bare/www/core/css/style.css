@@ -1632,11 +1632,11 @@ div.logout {
 
 .layer-list__thumbnail {
   position: absolute;
-  left: 0;
+  left: 5px;
   top: 5px;
   height: 52px;
   overflow: hidden;
-  width: 50px; }
+  width: 45px; }
   .layer-list__thumbnail img {
     position: absolute;
     top: -1000px;
@@ -2904,23 +2904,34 @@ div.leaflet-top.leaflet-right {
       background-color: #FF4108;
       margin: 12px 8% 13px 2%; }
 
-ion-side-menus.navigation-interface ion-nav-bar {
+ion-side-menus.navigation-interface ion-nav-bar,
+ion-side-menus.hide-mainBar ion-nav-bar {
   display: none; }
 
-ion-side-menus.navigation-interface .map-page ion-footer-bar.bar.bar-assertive.bar-footer {
+ion-side-menus.navigation-interface .map-page ion-footer-bar.bar.bar-assertive.bar-footer,
+ion-side-menus.hide-mainBar .map-page ion-footer-bar.bar.bar-assertive.bar-footer {
   height: 100%; }
 
-ion-side-menus.navigation-interface .bar.bar-assertive.bar-footer {
+ion-side-menus.navigation-interface .bar.bar-assertive.bar-footer,
+ion-side-menus.hide-mainBar .bar.bar-assertive.bar-footer {
   height: -webkit-calc(100% - 60%);
   height: -moz-calc(100% - 60%);
   height: calc(100% - 60%); }
 
 ion-side-menus.navigation-interface ion-view ion-content.has-header,
-.platform-ios.platform-cordova:not(.fullscreen) ion-side-menus.navigation-interface ion-view ion-content.has-header {
+.platform-ios.platform-cordova:not(.fullscreen) ion-side-menus.navigation-interface ion-view ion-content.has-header,
+ion-side-menus.hide-mainBar ion-view ion-content.has-header,
+.platform-ios.platform-cordova:not(.fullscreen)
+ion-side-menus.hide-mainBar ion-view ion-content.has-header {
   top: 0; }
 
-ion-side-menus.navigation-interface .show-start-navigation .start-navigation {
+ion-side-menus.navigation-interface .show-start-navigation .start-navigation,
+ion-side-menus.hide-mainBar .show-start-navigation .start-navigation {
   display: none; }
+
+ion-side-menus.navigation-interface ion-content.content-pane,
+ion-side-menus.hide-mainBar ion-content.content-pane {
+  height: 100%; }
 
 /* ------------------------------------ *\
    #MAP POPOVER
