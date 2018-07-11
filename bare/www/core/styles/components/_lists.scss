@@ -154,9 +154,10 @@
   font-size: 22px;
   @include text-ellipsis;
   padding-top: 5px;
+  line-height: 1.2;
 
   .item-has-thumb & {
-    font-size: 14px;
+    font-size: 15px;
     overflow: visible;
     white-space: normal;
   }
@@ -165,10 +166,29 @@
     //padding-left: 50px;
   }
 
+  .list-info-details & {
+    padding-left: 0;
+  }
+
 }
 
 .list-info-subtitle {
   font-size: 14px;
+
+  .list-info-details & {
+    font-size: 12px;
+    font-family: $title-font-family;
+    font-weight: $font-weight-bold;
+    line-height: 1.2;
+    color: $color-light-blue;
+
+  }
+}
+
+.list-info-details {
+  padding-right: 10px;
+  padding-left: 10px;
+  white-space: normal;
 }
 
 /* List filter*/

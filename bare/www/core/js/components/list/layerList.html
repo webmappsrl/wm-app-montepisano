@@ -87,9 +87,13 @@
                         <img ng-src="{{item.properties.image}}" ng-if="item.properties.image">
                         <img src="core/images/image-placeholder.png" ng-if="!item.properties.image">
                     </div>
-                    <span class="list-info-title" ng-bind-html="item.properties.name"></span>
-                    <span class="list-info-subtitle" ng-if="item.properties.date_start">{{item.properties.date_start}} <span ng-if="item.properties.date_stop"> - {{item.properties.date_stop}}</span></span>
-                </a>
+                    <div class="list-info-details">
+                        <span class="list-info-subtitle" ng-if="item.properties.date_start">{{item.properties.date_start}} <span ng-if="item.properties.date_stop"> - {{item.properties.date_stop}}</span></span>
+
+                        <span class="list-info-title" ng-bind-html="item.properties.name"></span>
+
+                    </div>
+                    </a>
             </div>
 
             <ion-list 
