@@ -56,6 +56,11 @@
     }
 
     &.item-has-thumb {
+      @include flexbox;
+      padding-top: 10px;
+      padding-right: 10px;
+      padding-bottom: 10px;
+      padding-left: 10px;
         //height: 10vh;
     }
   }
@@ -151,8 +156,15 @@
   padding-top: 5px;
 
   .item-has-thumb & {
-    font-size: 16px;
+    font-size: 14px;
+    overflow: visible;
+    white-space: normal;
   }
+
+  .wm-icon-generic + & {
+    //padding-left: 50px;
+  }
+
 }
 
 .list-info-subtitle {
@@ -217,23 +229,14 @@
   //width: 33%;
   //height: 0;
   //padding-bottom: 22%;
-  position: absolute;
-  left: 5px;
-  top: 5px;
+  @include flex(0 0 33%);
+  max-width: 33%;
+  height: 0;
+  padding-bottom: 22%;
   overflow: hidden;
 
-  height: 52px;
-
-  width: 50px;
-
   img {
-    position: absolute;
-    top: -1000px;
-    bottom: -1000px;
-    left: -1000px;
-    right: -1000px;
-    margin: auto;
-    max-width: 150%;
+    width: 100%;
   }
 }
 

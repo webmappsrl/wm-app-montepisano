@@ -1513,6 +1513,16 @@ div.logout {
   .list .item.has-subtitle {
     padding-top: 10px;
     padding-bottom: 10px; }
+  .list .item.item-has-thumb {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px; }
 
 .advanced-menu-content .list .item.activated,
 .modal-filters .list .item.activated {
@@ -1576,7 +1586,9 @@ div.logout {
   white-space: nowrap;
   padding-top: 5px; }
   .item-has-thumb .list-info-title {
-    font-size: 16px; }
+    font-size: 14px;
+    overflow: visible;
+    white-space: normal; }
 
 .list-info-subtitle {
   font-size: 14px; }
@@ -1634,20 +1646,17 @@ div.logout {
     font-size: 35px; }
 
 .layer-list__thumbnail {
-  position: absolute;
-  left: 5px;
-  top: 5px;
-  overflow: hidden;
-  height: 52px;
-  width: 50px; }
+  -webkit-box-flex: 0 0 33%;
+  -moz-box-flex: 0 0 33%;
+  -webkit-flex: 0 0 33%;
+  -ms-flex: 0 0 33%;
+  flex: 0 0 33%;
+  max-width: 33%;
+  height: 0;
+  padding-bottom: 22%;
+  overflow: hidden; }
   .layer-list__thumbnail img {
-    position: absolute;
-    top: -1000px;
-    bottom: -1000px;
-    left: -1000px;
-    right: -1000px;
-    margin: auto;
-    max-width: 150%; }
+    width: 100%; }
 
 /* ------------------------------------ *\
    #MEDIA QUERIES
