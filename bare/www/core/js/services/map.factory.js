@@ -131,7 +131,11 @@ angular.module('webmapp')
     var activeFilters = localStorage.activeFilters ?
         JSON.parse(localStorage.activeFilters) : overlayLayersConf.reduce(function(prev, curr) {
             if (!curr.skipRendering) {
-                prev[curr.label] = curr.showByDefault !== false;
+                if (curr.label === "Ristoranti" || curr.label === "Botteghe" || curr.label === "Eventi" || curr.label === "Produttori") {
+                    prev[curr.label] = curr.showByDefault !== false;
+                } else {
+                    prev[curr.label] = false;
+                }
             }
             return prev;
         }, {});
@@ -293,42 +297,7 @@ angular.module('webmapp')
                         }
                     }
                 }
-                // } else {
-
-
-                // // }
             }
-            // } else {
-            //     var categoryids = ["AR", "FI", "GR", "LI", "LU", "MS", "PI", "PT", "PO", "SI"];
-            //     var id = Math.floor(Math.random() * categoryids.length);
-            //     var category = overlayLayersById[categoryids[id]];
-            //     if (!featuresIdByLayersMap[category.label]) {
-
-            //         featuresIdByLayersMap[category.label] = [];
-            //     }
-            //     featuresIdByLayersMap[category.label].push(feature.properties.id);
-
-
-            //     var ids = ["43", "46", "49"];
-            //     var len = Math.floor(Math.random() * (ids.length - 1)) + 1;
-            //     var pivot = Math.floor(Math.random() * ids.length);
-
-            //     for (let i = 0; i < len; i++) {
-            //         if (pivot >= ids.length) {
-            //             pivot = 0;
-            //         }
-            //         var categoryId = ids[pivot];
-            //         var category = overlayLayersById[categoryId];
-            //         if (!featuresIdByLayersMap[category.label]) {
-            //             featuresIdByLayersMap[category.label] = [];
-            //         }
-
-            //         featuresIdByLayersMap[category.label].push(feature.properties.id);
-
-            //         pivot++;
-            //     }
-
-            // }
 
         }
         Model.addItemToLayer(feature, overlayConf);
@@ -1224,7 +1193,6 @@ angular.module('webmapp')
             }
 
             dataReady = true;
-            console.log(featuresIdByLayersMap);
             $rootScope.$$phase || $rootScope.$digest();
 
         }
@@ -1729,14 +1697,24 @@ angular.module('webmapp')
     };
 
     mapService.setFilter = function(layerName, value) {
+
         activeFilters[layerName] = value;
         localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
+        if (!CONFIG.MAP.filters) {
 
-        if (activeFilters[layerName]) {
-            mapService.activateLayer(layerName, true, true);
+            if (activeFilters[layerName]) {
+                mapService.activateLayer(layerName, true, true);
+            } else {
+                mapService.removeLayer(layerName);
+            }
         } else {
-            mapService.removeLayer(layerName);
+
+            for (var label in activeFilters) {
+                mapService.removeLayer(label);
+            }
+
         }
+
     };
 
     mapService.activateAllFilters = function() {
@@ -2359,4 +2337,4 @@ angular.module('webmapp')
     }, 3600);
 
     return mapService;
-});
+})

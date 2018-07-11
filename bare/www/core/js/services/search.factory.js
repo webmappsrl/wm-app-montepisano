@@ -53,30 +53,23 @@ angular.module('webmapp')
                                 layers[layerId] = { label: label, id: layers[layerId] };
                             };
                         }
-
                     } else {
                         delete sublayers[macroCategoryId];
                     }
                 }
-
             } else {
                 delete currentFilterMap[superCategoryId];
             }
-
         }
 
         var featuresIdByLayerMap = {};
-
         search.setFeaturesIdByLayerMap = function(newMap) {
 
             if (typeof newMap === 'undefined') {
                 return;
             }
-
             featuresIdByLayerMap = newMap;
         }
-
-
 
         var setupEngine = function(layerName) {
             layersEngine[layerName] = new JsSearch.Search('id');
@@ -144,7 +137,6 @@ angular.module('webmapp')
 
             if (typeof layersEngine[layerName] !== 'undefined') {
                 addToIndex(item, layerName);
-
             }
         };
 
@@ -203,7 +195,6 @@ angular.module('webmapp')
                 currentResult = [];
 
             var filteredIds = getFilteredFeaturesIds();
-
             if (query) {
                 if (!filteredIds.length) {
                     for (var c in confLayersMap) {
@@ -252,10 +243,7 @@ angular.module('webmapp')
             var results = {},
                 currentResult = [];
 
-
             var idsFilter = getFilteredFeaturesIds();
-
-
             if (query) {
 
                 if (!idsFilter.length) {
@@ -280,13 +268,10 @@ angular.module('webmapp')
                         }
                     }
                 }
-
             } else if (searchConf.showAllByDefault || idsFilter.length) {
-
                 for (var l in confLayersMap) {
                     if (typeof layersEngine[l] !== 'undefined') {
                         currentResult = getAllByLayer(l);
-
                         if (idsFilter.length) {
                             currentResult = filterById(currentResult, idsFilter);
                         }
@@ -296,7 +281,6 @@ angular.module('webmapp')
                     }
                 }
             }
-
             return results;
         };
 
@@ -305,7 +289,6 @@ angular.module('webmapp')
                 currentResult = [];
 
             var idFilter = ids;
-
             for (var l in confLayersMap) {
                 if (typeof layersEngine[l] !== 'undefined') {
                     currentResult = getAllByLayer(l);
@@ -315,7 +298,6 @@ angular.module('webmapp')
                     }
                 }
             }
-
             return results;
         };
 
@@ -339,8 +321,6 @@ angular.module('webmapp')
                     }
                 }
             }
-
-
             return results;
         };
 
@@ -365,8 +345,6 @@ angular.module('webmapp')
                                 cat.push(label);
                             }
                         }
-
-
                     }
                     if (cat.length) {
                         filter.push(cat);
@@ -398,7 +376,6 @@ angular.module('webmapp')
                     }
                 }
             }
-
             return result;
         }
 
@@ -416,10 +393,7 @@ angular.module('webmapp')
             return newResult;
 
         }
-
-
     } else {
-
         var setupEngine = function(layerName) {
             layersEngine[layerName] = new JsSearch.Search('id');
 
@@ -432,7 +406,6 @@ angular.module('webmapp')
             if (searchConf.TFIDFRanking) {
                 layersEngine[layerName].searchIndex = new JsSearch.TfIdfSearchIndex('id');
             }
-
             for (var i in searchConf.indexFields) {
                 layersEngine[layerName].addIndex(['properties', searchConf.indexFields[i]]);
             }
@@ -454,8 +427,8 @@ angular.module('webmapp')
         };
 
         search.getActiveLayers = function() {
-            var res = [];
 
+            var res = [];
             for (var i in activeLayersMap) {
                 if (activeLayersMap[i].state) {
                     res.push(i);
@@ -580,8 +553,5 @@ angular.module('webmapp')
         };
 
     }
-
-
-
     return search;
 });

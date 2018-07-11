@@ -22,12 +22,9 @@ angular.module('webmapp')
     var currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
     var defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';
 
-
-
     modalScope.vm = {};
-    modalScope.vm.currentLang = currentLang;
-    modalScope.vm.defaultLang = defaultLang;
 
+    modalScope.vm.isNewModal = CONFIG.MAP.filters ? true : false;
 
     vm.showInMap = !options.hideShowInMapFromSearch;
     vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
@@ -108,7 +105,7 @@ angular.module('webmapp')
 
     modalScope.vm.updateFilter = function(filterName, value) {
 
-        if (CONFIG.MAP.filters) {
+        if (modalScope.vm.isNewModal) {
             var toUpdate = [];
 
             for (var i in modalScope.layers) {
@@ -132,7 +129,6 @@ angular.module('webmapp')
                     vm.results.realLength = vm.results.realLength + 1;
                 }
             }
-
 
         } else {
 
@@ -170,15 +166,17 @@ angular.module('webmapp')
     vm.openFilters = function() {
 
         var filt = Search.getActiveLayersMap();
-        if (CONFIG.MAP.filters) {
-
+        if (modalScope.vm.isNewModal) {
+            var featuresIdByLayersMap = MapService.getFeaturesIdByLayersMap();
+            Search.setFeaturesIdByLayerMap(featuresIdByLayersMap);
+            modalScope.vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";;
+            modalScope.vm.defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';;
             for (var layerId in modalScope.layers) {
                 if (filt[layerId]) {
                     modalScope.layers[layerId].checked = filt[layerId].state;
                 } else {
                     modalScope.layers[layerId].checked = false;
                 }
-
             }
             updateClickableCheckBoxes([]);
             checkAllTabsState();
@@ -244,7 +242,6 @@ angular.module('webmapp')
     };
 
 
-    modalScope.vm.isNewModal = true;
     if (modalScope.vm.isNewModal) {
 
         var featuresIdByLayersMap = MapService.getFeaturesIdByLayersMap();
@@ -293,11 +290,13 @@ angular.module('webmapp')
         modalScope.currentTab = Object.keys(modalScope.filters)[0];
 
         modalScope.switchTab = function(id) {
+
             if (modalScope.filters[id])
                 modalScope.currentTab = id;
             else {
                 modalScope.currentTab = Object.keys(modalScope.filters)[0];
             }
+
         };
 
         modalScope.toggleSubTab = function(id, tabId) {
@@ -307,6 +306,7 @@ angular.module('webmapp')
             } else {
                 modalScope.filters[tabId].selectedTab = null;
             }
+
         };
 
         modalScope.toggleSubTabCheckBox = function(id, tabId) {
@@ -317,32 +317,43 @@ angular.module('webmapp')
                     var items = modalScope.filters[tabId].sublayers[id].items;
                     for (var index in items) {
                         if (items[index].checked) {
-                            modalScope.vm.updateFilter(items[index].label, false);
                             items[index].checked = !items[index].checked;
+                            modalScope.vm.updateFilter(items[index].label, false);
                         }
                     }
+
                 } else {
+
                     var items = modalScope.filters[tabId].sublayers[id].items;
                     for (var index in items) {
                         if (!items[index].checked) {
-                            modalScope.vm.updateFilter(items[index].label, true);
                             items[index].checked = !items[index].checked;
+                            modalScope.vm.updateFilter(items[index].label, true);
                         }
                     }
+
                 }
                 modalScope.filters[tabId].sublayers[id].checked = !modalScope.filters[tabId].sublayers[id].checked;
             }
+
         }
 
+
+        modalScope.lastToggledLayer = "";
+
         modalScope.toggleLayer = function(layerLabel, sublayerId, tabId) {
-            if (modalScope.layers[layerLabel].clickable) {
-                modalScope.layers[layerLabel].checked = !modalScope.layers[layerLabel].checked;
+
+            if (modalScope.layers[layerLabel].clickable && modalScope.lastToggledLayer !== layerLabel) {
+                modalScope.lastToggledLayer = layerLabel;
+                var value = !modalScope.layers[layerLabel].checked;
+                modalScope.layers[layerLabel].checked = value;
+                modalScope.vm.updateFilter(layerLabel, value);
                 checkTabState(sublayerId, tabId);
-                modalScope.vm.updateFilter(layerLabel, modalScope.layers[layerLabel].checked);
+                setTimeout(function() { modalScope.lastToggledLayer = "" }, 200);
             }
 
-
         };
+
 
         var checkTabState = function(sublayerId, tabId) {
 
@@ -356,6 +367,7 @@ angular.module('webmapp')
                 }
             }
             sublayer.checked = state;
+
         }
 
         var checkAllTabsState = function() {
@@ -366,8 +378,8 @@ angular.module('webmapp')
                     checkTabState(sublayerId, tabId);
                 }
             }
-        }
 
+        }
 
         var setSearchState = function(filters, q) {
 
@@ -381,10 +393,10 @@ angular.module('webmapp')
                 return featuresIdByLayersMap[el];
             })
 
-
             Search.setActiveLayers(layers);
             vm.updateSearch(query);
             vm.startingString = query;
+
         }
 
         var updateClickableCheckBoxes = function(result) {
@@ -397,8 +409,6 @@ angular.module('webmapp')
             }
 
             var prevFilters = Search.getActiveLayers();
-
-
             for (var type in modalScope.filters) {
 
                 if (type !== "base_maps") {
@@ -407,11 +417,10 @@ angular.module('webmapp')
                     for (var i = 0; i < superCategory.sublayers.length; i++) {
 
                         var macroCategory = superCategory.sublayers[i];
-
                         var baseFilters = angular.copy(prevFilters);
                         var categoriesContainerMap = {};
-                        for (var m = 0; m < macroCategory.items.length; m++) {
 
+                        for (var m = 0; m < macroCategory.items.length; m++) {
                             var layer = macroCategory.items[m];
                             if (layer) {
                                 var label = layer.label;
@@ -421,9 +430,7 @@ angular.module('webmapp')
                                 }
                             }
                             categoriesContainerMap[layer.id] = false;
-
                         }
-
 
                         Search.setActiveLayers(baseFilters);
                         var results = Search.getFeatures(lastQuery);
@@ -431,10 +438,9 @@ angular.module('webmapp')
                         for (let k = 0; k < results.length; k++) {
                             var layer = results[k];
                             if (layer.properties && layer.properties.taxonomy) {
-
                                 if (macroCategory.label.en === "Types of content") {
-                                    var tipoArray = layer.properties.taxonomy.tipo;
 
+                                    var tipoArray = layer.properties.taxonomy.tipo;
                                     for (var n = 0; n < tipoArray.length; n++) {
                                         var id = tipoArray[n];
                                         if (id === "restaurant") {
@@ -450,17 +456,14 @@ angular.module('webmapp')
                                     }
 
                                     for (var layerId in categoriesContainerMap) {
-
                                         if (tipoArray.indexOf(layerId) > -1) {
                                             categoriesContainerMap[layerId] = true;
                                         }
                                     }
 
-
                                 } else if (macroCategory.label.en === "Speciality") {
 
                                     var tipoArray = layer.properties.taxonomy.specialita;
-
                                     for (var layerId in categoriesContainerMap) {
                                         var id = Number(layerId);
                                         if (tipoArray.indexOf(id) > -1) {
@@ -468,17 +471,17 @@ angular.module('webmapp')
                                             categoriesContainerMap[layerId] = true;
                                         }
                                     }
+
                                 } else if (macroCategory.label.en === "Places") {
 
                                     var tipoArray = layer.properties.taxonomy.localita;
-
                                     for (var key in categoriesContainerMap) {
                                         if (tipoArray.indexOf(key) > -1) {
                                             categoriesContainerMap[key] = true;
                                         }
                                     }
-                                }
 
+                                }
 
                                 var allClickable = true;
                                 for (var key in categoriesContainerMap) {
@@ -497,12 +500,10 @@ angular.module('webmapp')
                             }
                         }
 
-
                         for (var catId in categoriesContainerMap) {
 
                             var layer = MapService.getOverlayLayerById(catId);
                             if (layer && modalScope.layers[layer.label]) {
-
                                 if (!modalScope.layers[layer.label].checked) {
                                     modalScope.layers[layer.label].clickable = categoriesContainerMap[catId];
                                 }
@@ -511,20 +512,12 @@ angular.module('webmapp')
                         }
 
                     }
-
-
                 }
-
             }
-
-
             Search.setActiveLayers(prevFilters);
-
         };
-
     }
     if ($rootScope.searchQuery || $rootScope.searchLayers) {
-
         setSearchState($rootScope.searchLayers, $rootScope.searchQuery);
         delete $rootScope.searchQuery
         delete $rootScope.searchLayers
@@ -532,9 +525,7 @@ angular.module('webmapp')
         setTimeout(function() {
             vm.updateSearch();
         }, 10);
-
     }
-
 
     return vm;
 });

@@ -82,7 +82,6 @@
                                     'color': layer.checked ? vm.COLORS.search.color : (layer.clickable ? 'inherit': '#BBBBBB')
                                 }" ng-click="toggleLayer(layer.label,sublayerId,key)">
                                 <i class="left-icon" ng-if="item.selectedTab === sublayerId" ng-class="{
-                                    'filter-not-clickable': !layer.clickable,
                                     'ion-android-checkbox-outline': layer.checked, 
                                     'ion-android-checkbox-outline-blank': !layer.checked
                                 }"></i>

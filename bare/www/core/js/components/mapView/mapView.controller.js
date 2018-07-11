@@ -7,7 +7,6 @@ angular.module('webmapp')
     $translate,
     CONFIG,
     MapService,
-    Search,
     Utils
 ) {
     var vm = {};
@@ -30,12 +29,10 @@ angular.module('webmapp')
         return allActive;
     };
 
-
-
     MapService.showAllLayers();
     MapService.activateUtfGrid();
     modalScope.vm = {};
-    modalScope.vm.isNewModal = CONFIG.MAP.filters ? true : false;
+    modalScope.vm.isNewModal = CONFIG.MAP.filters;
 
     vm.mapTitle = CONFIG.OPTIONS.title;
     vm.filterIcon = CONFIG.OPTIONS.filterIcon;
@@ -83,10 +80,113 @@ angular.module('webmapp')
         modal = modalObj;
     });
 
+    modalScope.vm.hide = function() {
+        modal.hide();
+    };
+
+
+
+    modalScope.vm.updateFilter = function(filterName, value) {
+
+        if (modalScope.vm.isNewModal) {
+
+            MapService.setFilter(filterName, value);
+            var features = getDisplayedFeatures();
+            MapService.addFeaturesToFilteredLayer(features);
+
+        } else {
+            if (filterName === "Tutte") {
+                for (var i in modalScope.vm.filters) {
+                    modalScope.vm.filters[i].value = value;
+                    MapService.setFilter(i, value);
+                }
+            } else {
+                MapService.setFilter(filterName, value);
+                modalScope.vm.filters[filterName].value = value;
+                modalScope.vm.filters["Tutte"].value = areAllActive(modalScope.vm.filters);
+            }
+        }
+
+
+    };
+
+    modalScope.vm.updateBaseMap = function(name) {
+        if (modalScope.vm.currentMapLayer === name) {
+            return;
+        }
+        MapService.activateMapLayer(name);
+        modalScope.vm.currentMapLayer = name;
+    };
+
+    vm.openFilters = function() {
+
+        var filt = MapService.getActiveFilters();
+
+        if (modalScope.vm.isNewModal) {
+            modalScope.vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";;
+            modalScope.vm.defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';;
+            for (var layerId in modalScope.layers) {
+                if (filt[layerId]) {
+                    modalScope.layers[layerId].checked = filt[layerId];
+                } else {
+                    modalScope.layers[layerId].checked = false;
+                }
+            }
+            checkAllTabsState();
+        } else {
+            lang = $translate.preferredLanguage(),
+                tmp = {},
+                allActive = false,
+                activeFilters = {};
+
+            tmp["Tutte"] = {
+                name: $translate.instant("Tutte"),
+                value: true
+            };
+
+            for (var i in CONFIG.OVERLAY_LAYERS) {
+                var nameTranslated = CONFIG.OVERLAY_LAYERS[i].label;
+
+                if (nameTranslated.toLowerCase() === 'tappe' || nameTranslated.toLowerCase() === 'stages') {
+                    nameTranslated = $translate.instant('Tappe');
+                } else if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[lang]) {
+                    nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[lang];
+                }
+
+                activeFilters[CONFIG.OVERLAY_LAYERS[i].label] = {
+                    name: nameTranslated,
+                    value: filt[CONFIG.OVERLAY_LAYERS[i].label],
+                    icon: CONFIG.OVERLAY_LAYERS[i].icon,
+                    color: CONFIG.OVERLAY_LAYERS[i].color
+                };
+            }
+
+            activeFilters = angular.extend(tmp, activeFilters);
+            allActive = areAllActive(activeFilters);
+
+            activeFilters["Tutte"].value = allActive;
+            modalScope.vm.filters = activeFilters;
+            modalScope.vm.currentMapLayer = MapService.getCurrentMapLayerName();
+
+        }
+
+        modal.show();
+    };
+
+    $scope.$on('$destroy', function() {
+        modal.hide();
+    });
+
+    $rootScope.$on('item-navigable', function(e, value) {
+        vm.isNavigable = value;
+        Utils.forceDigest();
+    });
+
 
     if (modalScope.vm.isNewModal) {
 
         modalScope.filters = angular.copy(CONFIG.MAP.filters);
+
 
         modalScope.layers = {};
         modalScope.tabNum = 0;
@@ -118,9 +218,6 @@ angular.module('webmapp')
                         if (layer) {
                             var translatedLabel = layer.languages;
                             var info = { id: layerId, label: layer.label, checked: false, languages: translatedLabel };
-                            if (info.id === "1" || info.id === "2" || info.id === "3" || info.id === "4") {
-                                info.checked = true;
-                            }
                             info.clickable = true;
                             tmp.push(info);
                             modalScope.layers[layer.label] = info;
@@ -130,6 +227,9 @@ angular.module('webmapp')
                 }
             }
         }
+
+
+
 
         modalScope.currentTab = Object.keys(modalScope.filters)[0];
 
@@ -158,16 +258,18 @@ angular.module('webmapp')
                     var items = modalScope.filters[tabId].sublayers[id].items;
                     for (var index in items) {
                         if (items[index].checked) {
-                            modalScope.vm.updateFilter(items[index].label, false);
                             items[index].checked = !items[index].checked;
+                            modalScope.vm.updateFilter(items[index].label, false);
+
                         }
                     }
                 } else {
                     var items = modalScope.filters[tabId].sublayers[id].items;
                     for (var index in items) {
                         if (!items[index].checked) {
-                            modalScope.vm.updateFilter(items[index].label, true);
                             items[index].checked = !items[index].checked;
+                            modalScope.vm.updateFilter(items[index].label, true);
+
                         }
                     }
                 }
@@ -175,10 +277,17 @@ angular.module('webmapp')
             }
         }
 
+        modalScope.lastToggledLayer = "";
         modalScope.toggleLayer = function(layerLabel, sublayerId, tabId) {
-            modalScope.layers[layerLabel].checked = !modalScope.layers[layerLabel].checked;
-            checkTabState(sublayerId, tabId);
-            modalScope.vm.updateFilter(layerLabel, modalScope.layers[layerLabel].checked);
+
+            if (modalScope.lastToggledLayer !== layerLabel) {
+                modalScope.lastToggledLayer = layerLabel;
+                modalScope.layers[layerLabel].checked = !modalScope.layers[layerLabel].checked;
+                modalScope.vm.updateFilter(layerLabel, modalScope.layers[layerLabel].checked);
+                checkTabState(sublayerId, tabId);
+                setTimeout(function() { modalScope.lastToggledLayer = "" }, 200);
+            }
+
 
         };
 
@@ -207,183 +316,71 @@ angular.module('webmapp')
         }
 
 
-        var getFiltersMap = function() {
+        var getDisplayedFeatures = function() {
 
+            var filt = MapService.getActiveFilters();
+            var result = {};
+            if (MapService.isReady()) {
 
-            var result = [];
+                var ids = [];
+                var idsMap = MapService.getFeaturesIdByLayersMap();
+                var featureMap = MapService.getFeatureIdMap();
 
-            for (var tabIndex in modalScope.filters) {
-
-                if (tabIndex !== "base_maps") {
-
-                    var tab = modalScope.filters[tabIndex];
-                    for (var subIndex in tab.sublayers) {
-
-                        var sublayer = tab.sublayers[subIndex];
-                        if (sublayer.label === "altri") {
-                            for (var layerId in sublayer.items) {
-                                if (sublayer.items[layerId].checked) {
-                                    result.push([sublayer.items[layerId].id]);
-                                }
-                            }
-                        } else {
-                            var filterOR = [];
-                            for (var layerId in sublayer.items) {
-                                if (sublayer.items[layerId].checked) {
-                                    filterOR.push(sublayer.items[layerId].id);
-                                }
-                            }
-                            if (filterOR.length) {
-                                result.push(filterOR);
-                            }
-                        }
-
+                for (label in filt) {
+                    if (filt[label]) {
+                        ids = ids.concat(idsMap[label]);
                     }
                 }
+                var tmp = ids.filter(function(item, pos) {
+                    return ids.indexOf(item) == pos;
+                })
+                ids = tmp;
+
+                result["Ristoranti"] = [];
+                result["Botteghe"] = [];
+                result["Eventi"] = [];
+                result["Produttori"] = [];
+
+                for (let i = 0; i < ids.length; i++) {
+                    var feature = featureMap[ids[i]];
+                    if (feature && feature.properties && feature.properties.taxonomy && feature.properties.taxonomy.tipo) {
+                        var tipo = feature.properties.taxonomy.tipo[0];
+                        if (tipo === "restaurant" || tipo === "4") {
+                            if (tipo === "restaurant") {
+                                tipo = "4";
+                            }
+                            result["Ristoranti"].push(feature);
+                        } else if (tipo === "producer" || tipo === "3") {
+                            if (tipo === "producer") {
+                                tipo = "3";
+                            }
+                            result["Produttori"].push(feature);
+                        } else if (tipo === "event" || tipo === "2") {
+                            if (tipo === "event") {
+                                tipo = "2";
+                            }
+                            result["Eventi"].push(feature);
+                        } else if (tipo === "shop" || tipo === "1") {
+                            if (tipo === "shop") {
+                                tipo = "1";
+                            }
+                            result["Botteghe"].push(feature);
+                        }
+                    }
+                }
+
             }
 
             return result;
         }
 
+        setTimeout(function() {
+            var features = getDisplayedFeatures();
+            MapService.addFeaturesToFilteredLayer(features);
+        }, 100);
     }
 
 
-    modalScope.vm.hide = function() {
-        modal.hide();
-    };
-
-    modalScope.vm.updateFilter = function(filterName, value) {
-        if (filterName === "Tutte") {
-            for (var i in modalScope.vm.filters) {
-                modalScope.vm.filters[i].value = value;
-                // MapService.setFilter(i, value);
-            }
-        } else {
-            // MapService.setFilter(filterName, value);
-
-
-            // modalScope.vm.filters[filterName].value = value;
-            // modalScope.vm.filters["Tutte"].value = areAllActive(modalScope.vm.filters);
-        }
-        var ids = filtersSearchFun(getFiltersMap(), true);
-
-        var result = Search.getLayersFilteredByIds(ids);
-        MapService.addFeaturesToFilteredLayer(result);
-    };
-    var featuresIdByLayer = MapService.getFeaturesIdByLayersMap();
-    var filtersSearchFun = function(binds, type) {
-
-
-        var result = [];
-
-
-        var filter = typeof binds !== "undefined" ? binds : [];
-
-        for (let i = 0; i < filter.length; i++) {
-
-            var arrayOR = [];
-            for (let j = 0; j < filter[i].length; j++) {
-                var layerId = filter[i][j];
-
-
-                var lay = MapService.getOverlayLayerById(layerId);
-                arrayOR = arrayOR.concat(featuresIdByLayer[lay.label]);
-            }
-
-            if (type) {
-                if (result.length === 0 && i === 0) {
-                    result = arrayOR;
-                } else {
-                    result = result.concat(arrayOR);
-                }
-            } else {
-                if (result.length === 0 && i == 0) {
-                    result = arrayOR;
-                } else {
-                    result = result.filter(function(n) {
-                        return arrayOR.indexOf(n) > -1;
-                    });
-                }
-            }
-        }
-
-        return result;
-    }
-
-    modalScope.vm.updateBaseMap = function(name) {
-        if (modalScope.vm.currentMapLayer === name) {
-            return;
-        }
-        MapService.activateMapLayer(name);
-        modalScope.vm.currentMapLayer = name;
-    };
-
-    vm.openFilters = function() {
-
-        modalScope.vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
-        modalScope.vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
-
-        // for (var i in modalScope.vm.filters) {
-        //     MapService.setFilter(i, false);
-        // }
-        if (modalScope.vm.isNewModal) {
-            // var activeFilters = MapService.getActiveFilters();
-            // for (layerId in activeFilters) {
-            //     if (modalScope.layers[layerId]) {
-            //         modalScope.layers[layerId].checked = activeFilters[layerId];
-            //     }
-            // }
-            checkAllTabsState();
-            var ids = filtersSearchFun(getFiltersMap(), true);
-            MapService.addFeaturesToFilteredLayer(Search.getLayersFilteredByIds(ids));
-        }
-
-        var filt = MapService.getActiveFilters(),
-            lang = $translate.preferredLanguage(),
-            tmp = {},
-            allActive = false,
-            activeFilters = {};
-
-        tmp["Tutte"] = {
-            name: $translate.instant("Tutte"),
-            value: true
-        };
-
-        for (var i in CONFIG.OVERLAY_LAYERS) {
-            var nameTranslated = CONFIG.OVERLAY_LAYERS[i].label;
-
-            if (nameTranslated.toLowerCase() === 'tappe' || nameTranslated.toLowerCase() === 'stages') {
-                nameTranslated = $translate.instant('Tappe');
-            } else if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[lang]) {
-                nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[lang];
-            }
-
-            activeFilters[CONFIG.OVERLAY_LAYERS[i].label] = {
-                name: nameTranslated,
-                value: filt[CONFIG.OVERLAY_LAYERS[i].label],
-                icon: CONFIG.OVERLAY_LAYERS[i].icon,
-                color: CONFIG.OVERLAY_LAYERS[i].color
-            };
-        }
-
-        activeFilters = angular.extend(tmp, activeFilters);
-        allActive = areAllActive(activeFilters);
-
-        activeFilters["Tutte"].value = allActive;
-        modalScope.vm.filters = activeFilters;
-        modalScope.vm.currentMapLayer = MapService.getCurrentMapLayerName();
-
-        modal.show();
-    };
-
-    $scope.$on('$destroy', function() {
-        modal.hide();
-    });
-
-    $rootScope.$on('item-navigable', function(e, value) {
-        vm.isNavigable = value;
-        Utils.forceDigest();
-    });
 
     return vm;
 });
