@@ -185,5 +185,7 @@ angular.module('webmapp')
             vm.goTo('search');
         };
 
+        vm.toggleList();
+
         return vm;
     });

@@ -9,13 +9,13 @@
     </ion-nav-buttons>
     <ion-content>
         <div class="taxonomy-filter">
-            <div class="pf-taxonomy-filter__select" ng-click="vm.showTaxonomyRadioModal()">
-                {{vm.selectedFilter.name}}
-                <!-- <select id="filter-selection" ng-model="vm.selectedFilter" ng-change="vm.updateCounts()">
-                    <option value="-1" selected>----</option>
-                    <option ng-repeat="item in vm.filter" value="{{item.id}}"><i class="icon {{item.icon}}"></i>{{item.name}}</option>
-                </select> -->
-                
+            <div class="pf-taxonomy-filter__select" ng-repeat="item in vm.filters" ng-click="vm.selectFilter(item)" ng-class="{
+                    'pf-taxonomy-filter__selected': vm.selectedFilter && vm.selectedFilter.id === item.id
+                }">
+                <i ng-if="item.icon" class="icon {{item.icon}}"></i>
+                <span ng-if="!item.icon">
+                    {{item.name}}
+                </span>
             </div>
         </div>
 
