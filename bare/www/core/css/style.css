@@ -2044,8 +2044,24 @@ button.login-button
 
 /* Top bar */
 .bar .title {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  -moz-justify-content: center;
+  -ms-justify-content: center;
+  justify-content: center;
+  -ms-flex-pack: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  -ms-align-items: center;
+  align-items: center;
   font-weight: 700;
-  font-size: 1.1em; }
+  font-size: 1.1em;
+  overflow: visible;
+  height: 100%; }
 
 .bar .title-center {
   font-size: 22px !important; }

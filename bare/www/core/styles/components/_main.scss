@@ -62,8 +62,13 @@
 
 .bar {
   .title {
+    @include flexbox;
+    @include justify-content(center);
+    @include align-items(center);
     font-weight: 700;
     font-size: 1.1em;
+    overflow: visible;
+    height:100%;
   }
 
   .title-center{
@@ -141,6 +146,7 @@
     }
   }
 }
+
 
 
 
