@@ -102,23 +102,44 @@
 
 .contacts-list__element {
   font-size: $font-size-xs;
+
+
   a {
     height: auto;
     color: $color-light-blue;
     font-family: $title-font-family;
     line-height: 1.2;
-
-
+    font-weight: $font-weight-bold;
   }
 
   .details-contact-single & {
     width: 100%;
   }
+
   .details-contact-rows & {
     a {
       //@include text-ellipsis;
     }
   }
+
+  &.pf-details-location {
+    a {
+      color: #ffffff;
+
+    }
+  }
+}
+
+/* Event details */
+
+.details-event-infos {
+  position: absolute;
+  background: $color-transparent-bg;
+
+  .details-date {
+    color: #ffffff;
+  }
+
 }
 
 .details-content {

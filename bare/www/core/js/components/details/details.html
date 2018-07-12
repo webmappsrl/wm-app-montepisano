@@ -123,23 +123,8 @@
                         </div>
                     </div>
                 </ul>
-                <div
-                    class="contacts-list__element pf-details-location"
-                    style="width: 100%"
-                    ng-if="vm.feature.address">
-                    <a href="geo:{{vm.coordinates}}"
-                       style="cursor: default"
-                       ng-click="vm.openExternalMap()">
-                        <i class="icon ion-location"></i> {{vm.feature.address}}
-                    </a>
-                </div>
-            </div>
-            
 
-            <div class="details-date" ng-if="vm.featureDetails.date_start">
-                {{vm.renderEventDate(vm.featureDetails.date_start)}}<span ng-if="vm.featureDetails.date_stop"> - {{vm.renderEventDate(vm.featureDetails.date_stop)}}</span>
             </div>
-
 
             <!-- details-columns -->
             <!-- TODO: for one-column layout use details-rows class  - then for only image, table or text just put them in details-left -->
@@ -155,6 +140,26 @@
                   class="details-rows pf-track-header"
                   ng-if="vm.feature.image">
                     <div class="details-image">
+
+                        <div class="details-event-infos">
+
+                            <div class="details-date" ng-if="vm.featureDetails.date_start">
+                                {{vm.renderEventDate(vm.featureDetails.date_start)}}<span ng-if="vm.featureDetails.date_stop"> - {{vm.renderEventDate(vm.featureDetails.date_stop)}}</span>
+                            </div>
+
+                            <div
+                                    class="contacts-list__element pf-details-location"
+                                    style="width: 100%"
+                                    ng-if="vm.feature.address">
+                                <a href="geo:{{vm.coordinates}}"
+                                   style="cursor: default"
+                                   ng-click="vm.openExternalMap()">
+                                    <i class="icon ion-location"></i> {{vm.feature.address}}
+                                </a>
+                            </div>
+
+                        </div>
+
                         <span
                             class="image-expand"
                             ng-if="!vm.isAreaDetail && (vm.imageGallery.length > 1 || (vm.imageGallery.length === 1 && vm.imageGallery[0].caption && vm.imageGallery[0].caption !== ''))"

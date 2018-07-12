@@ -12,6 +12,7 @@ $color-extra-light-blue: #cdeefb;
 $color-dark-blue: #1f4651;
 $color-text: $color-dark-blue;
 
+$color-transparent-bg: transparentize($color-dark-blue, 0.3);
 
 /* Valcamonica color scheme */
 $color-green: #4a6e23;

@@ -700,9 +700,19 @@ ion-content.fullView {
     height: auto;
     color: #49a5df;
     font-family: "montserrat", sans-serif;
-    line-height: 1.2; }
+    line-height: 1.2;
+    font-weight: 700; }
   .details-contact-single .contacts-list__element {
     width: 100%; }
+  .contacts-list__element.pf-details-location a {
+    color: #ffffff; }
+
+/* Event details */
+.details-event-infos {
+  position: absolute;
+  background: rgba(31, 70, 81, 0.7); }
+  .details-event-infos .details-date {
+    color: #ffffff; }
 
 .details-content {
   height: 100%;
