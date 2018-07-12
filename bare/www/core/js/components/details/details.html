@@ -80,7 +80,9 @@
                     'details-row': !vm.feature.image
                 }">
                 <!--    one columns layout -->
-                <div class="details-header">
+                <div class="details-header" ng-class="{
+                        'has-event-infos': vm.renderEventDate(vm.featureDetails.date_start) || vm.feature.address
+                    }">
                     <div class="details-event-infos" ng-if="vm.renderEventDate(vm.featureDetails.date_start) || vm.feature.address">
 
                         <div class="details-date" ng-if="vm.renderEventDate(vm.featureDetails.date_start)">
