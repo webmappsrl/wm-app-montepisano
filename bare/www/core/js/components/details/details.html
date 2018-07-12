@@ -81,7 +81,7 @@
                 }">
                 <!--    one columns layout -->
                 <div class="details-header">
-                    <div class="details-event-infos">
+                    <div class="details-event-infos" ng-if="vm.renderEventDate(vm.featureDetails.date_start) || vm.feature.address">
 
                         <div class="details-date" ng-if="vm.renderEventDate(vm.featureDetails.date_start)">
                             {{vm.renderEventDate(vm.featureDetails.date_start)}}<span ng-if="vm.renderEventDate(vm.featureDetails.date_stop) && vm.renderEventDate(vm.featureDetails.date_stop) !== vm.renderEventDate(vm.featureDetails.date_start)"> - {{vm.renderEventDate(vm.featureDetails.date_stop)}}</span>
