@@ -705,18 +705,36 @@ ion-content.fullView {
   .details-contact-single .contacts-list__element {
     width: 100%; }
   .contacts-list__element.pf-details-location a {
-    color: #ffffff; }
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    padding: 0;
+    position: relative;
+    color: #ffffff;
+    text-transform: none; }
+    .contacts-list__element.pf-details-location a .icon {
+      font-size: 14px; }
 
 /* Event details */
 .details-header {
+  min-height: 95px;
   position: relative; }
 
 .details-event-infos {
+  top: 0;
+  padding: 15px;
+  right: -10px;
+  left: -10px;
   position: absolute;
   z-index: 1;
-  background: rgba(31, 70, 81, 0.7); }
+  background: rgba(31, 70, 81, 0.8); }
   .details-event-infos .details-date {
-    color: #ffffff; }
+    font-family: "montserrat", sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: #99e0ec; }
 
 .details-content {
   height: 100%;
@@ -885,6 +903,9 @@ ion-content.fullView {
       vertical-align: text-top; }
     .details-description .opening-hours .label {
       text-transform: uppercase; }
+  .details-description img {
+    width: 100%;
+    padding: 5px 0; }
   .details-description p {
     margin: 0 0 6px 0;
     padding: 0;
@@ -3794,6 +3815,7 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
   position: relative;
   overflow: hidden; }
   .portoferraio-home-page .map-image img {
+    width: 100%;
     position: absolute;
     top: 50%;
     transform: translateY(-50%); }

@@ -124,8 +124,15 @@
 
   &.pf-details-location {
     a {
+      @include flexbox;
+      padding: 0;
+      position: relative;
       color: #ffffff;
+      text-transform: none;
 
+      .icon {
+        font-size: $font-size-s;
+      }
     }
   }
 }
@@ -133,16 +140,24 @@
 /* Event details */
 
 .details-header {
+  min-height: 95px;
   position: relative;
 }
 
 .details-event-infos {
+  top: 0;
+  padding: 15px;
+  right: -10px;
+  left: -10px;
   position: absolute;
   z-index: 1;
   background: $color-transparent-bg;
 
   .details-date {
-    color: #ffffff;
+    font-family: $title-font-family;
+    font-weight: $font-weight-bold;
+    font-size: $font-size-s;
+    color: $color-light;
   }
 
 }
@@ -348,15 +363,23 @@
 
   .opening-hours {
     padding: 10px 0;
+
     .icon {
       margin-right: 5px;
       font-size: 20px;
       vertical-align: text-top;
     }
+
     .label {
       text-transform: uppercase;
     }
   }
+
+  img {
+    width: 100%;
+    padding: 5px 0;
+  }
+
   p {
     margin: 0 0 6px 0;
     padding: 0;
@@ -365,6 +388,7 @@
     font-size: 16px;
     color: $color-text;
   }
+
   p.link-more {
     display: none;
   }
