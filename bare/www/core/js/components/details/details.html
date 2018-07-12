@@ -136,89 +136,94 @@
                     'details-row': !vm.feature.image
                 }">
                 <!--    one columns layout -->
-                <div
-                  class="details-rows pf-track-header"
-                  ng-if="vm.feature.image">
-                    <div class="details-image">
+                <div class="details-header">
+                    <div class="details-event-infos">
 
-                        <div class="details-event-infos">
-
-                            <div class="details-date" ng-if="vm.renderEventDate(vm.featureDetails.date_start)">
-                                {{vm.renderEventDate(vm.featureDetails.date_start)}}<span ng-if="vm.renderEventDate(vm.featureDetails.date_stop) && vm.renderEventDate(vm.featureDetails.date_stop) !== vm.renderEventDate(vm.featureDetails.date_start)"> - {{vm.renderEventDate(vm.featureDetails.date_stop)}}</span>
-                            </div>
-                            <div
-                                    class="contacts-list__element pf-details-location"
-                                    style="width: 100%"
-                                    ng-if="vm.feature.address">
-                                <a href="geo:{{vm.coordinates}}"
-                                   style="cursor: default"
-                                   ng-click="vm.openExternalMap()">
-                                    <i class="icon ion-location"></i> {{vm.feature.address}}
-                                </a>
-                            </div>
-
+                        <div class="details-date" ng-if="vm.renderEventDate(vm.featureDetails.date_start)">
+                            {{vm.renderEventDate(vm.featureDetails.date_start)}}<span ng-if="vm.renderEventDate(vm.featureDetails.date_stop) && vm.renderEventDate(vm.featureDetails.date_stop) !== vm.renderEventDate(vm.featureDetails.date_start)"> - {{vm.renderEventDate(vm.featureDetails.date_stop)}}</span>
+                        </div>
+                        <div
+                                class="contacts-list__element pf-details-location"
+                                style="width: 100%"
+                                ng-if="vm.feature.address">
+                            <a href="geo:{{vm.coordinates}}"
+                               style="cursor: default"
+                               ng-click="vm.openExternalMap()">
+                                <i class="icon ion-location"></i> {{vm.feature.address}}
+                            </a>
                         </div>
 
-                        <span
-                            class="image-expand"
-                            ng-if="!vm.isAreaDetail && (vm.imageGallery.length > 1 || (vm.imageGallery.length === 1 && vm.imageGallery[0].caption && vm.imageGallery[0].caption !== ''))"
-                            ng-click="vm.openImageModal()">
-                            <i class="icon wm-icon-ios7-more"></i>
-                        </span>
-                        <img
-                          ng-if="!vm.isAreaDetail"
-                          ng-click="vm.openImageModal()"
-                          ng-src="{{vm.feature.image}}">
-                        <img
-                          ng-if="vm.isAreaDetail"
-                          style="max-height: 125px; margin-left: 20%;"
-                          ng-src="{{vm.feature.image}}">
                     </div>
 
-                    <ul
-                      class="details-related">
-                        <li
-                          class="details-related-element related-itinerari"
-                          ng-if="vm.relatedItinerary.length > 0"
-                          ng-click="vm.openItineraryRelatedFeatures()">
-                            <a href="">
-                                {{vm.relatedItinerary.length}} {{vm.relatedItinerary.length === 1 ? "itinerario": "itinerari" | translate}} {{vm.relatedItinerary.length === 1 ? "collegato": "collegati" | translate}}
-                                <i class="icon wm-icon-ios7-arrow-thin-right"></i>
-                            </a>
-                        </li>
-                        <li
-                          class="details-related-element related-events"
-                          ng-if="vm.relatedEvents.length > 0"
-                          ng-click="vm.openRelatedEvents()">
-                            <a href="">
-                                {{vm.relatedEvents.length}} {{vm.relatedEvents.length === 1 ? "evento": "eventi" | translate}} {{vm.relatedEvents.length === 1 ? "collegato": "collegati" | translate}}
-                                <i class="icon wm-icon-ios7-arrow-thin-right"></i>
-                            </a>
-                        </li>
-                        <li
-                          class="details-related-element related-offer"
-                          ng-click="vm.openCouponsModal()"
-                          ng-if="vm.relatedCoupons.length > 0">
-                            <a href="">
-                                <i class="icon wm-icon-lodging"></i>
-                                {{vm.relatedCoupons.length}} {{vm.relatedCoupons.length === 1 ? "offerta": "offerte" | translate}
-                                <i class="icon wm-icon-ios7-arrow-thin-right"></i>
-                            </a>
-                        </li>
-                    </ul>
+                    <div
+                            class="details-rows pf-track-header"
+                            ng-if="vm.feature.image">
+                        <div class="details-image">
 
-                    <ul
-                      ng-if="vm.relatedPlaces.length > 0"
-                      class="details-related">
-                        <li
-                          class="details-related-element related-place"
-                          ng-click="vm.openRelatedPlaces()">
-                            <a href="">
-                                {{vm.relatedPlaces.length}} {{vm.relatedPlaces.length === 1 ? "luogo": "luoghi" | translate}} {{vm.relatedPlaces.length === 1 ? "collegato": "collegati" | translate}}
-                                <i class="icon wm-icon-ios7-arrow-thin-right"></i>
-                            </a>
-                        </li>
-                    </ul>
+
+
+                        <span
+                                class="image-expand"
+                                ng-if="!vm.isAreaDetail && (vm.imageGallery.length > 1 || (vm.imageGallery.length === 1 && vm.imageGallery[0].caption && vm.imageGallery[0].caption !== ''))"
+                                ng-click="vm.openImageModal()">
+                            <i class="icon wm-icon-ios7-more"></i>
+                        </span>
+                            <img
+                                    ng-if="!vm.isAreaDetail"
+                                    ng-click="vm.openImageModal()"
+                                    ng-src="{{vm.feature.image}}">
+                            <img
+                                    ng-if="vm.isAreaDetail"
+                                    style="max-height: 125px; margin-left: 20%;"
+                                    ng-src="{{vm.feature.image}}">
+                        </div>
+
+                        <ul
+                                class="details-related">
+                            <li
+                                    class="details-related-element related-itinerari"
+                                    ng-if="vm.relatedItinerary.length > 0"
+                                    ng-click="vm.openItineraryRelatedFeatures()">
+                                <a href="">
+                                    {{vm.relatedItinerary.length}} {{vm.relatedItinerary.length === 1 ? "itinerario": "itinerari" | translate}} {{vm.relatedItinerary.length === 1 ? "collegato": "collegati" | translate}}
+                                    <i class="icon wm-icon-ios7-arrow-thin-right"></i>
+                                </a>
+                            </li>
+                            <li
+                                    class="details-related-element related-events"
+                                    ng-if="vm.relatedEvents.length > 0"
+                                    ng-click="vm.openRelatedEvents()">
+                                <a href="">
+                                    {{vm.relatedEvents.length}} {{vm.relatedEvents.length === 1 ? "evento": "eventi" | translate}} {{vm.relatedEvents.length === 1 ? "collegato": "collegati" | translate}}
+                                    <i class="icon wm-icon-ios7-arrow-thin-right"></i>
+                                </a>
+                            </li>
+                            <li
+                                    class="details-related-element related-offer"
+                                    ng-click="vm.openCouponsModal()"
+                                    ng-if="vm.relatedCoupons.length > 0">
+                                <a href="">
+                                    <i class="icon wm-icon-lodging"></i>
+                                    {{vm.relatedCoupons.length}} {{vm.relatedCoupons.length === 1 ? "offerta": "offerte" | translate}
+                                    <i class="icon wm-icon-ios7-arrow-thin-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <ul
+                                ng-if="vm.relatedPlaces.length > 0"
+                                class="details-related">
+                            <li
+                                    class="details-related-element related-place"
+                                    ng-click="vm.openRelatedPlaces()">
+                                <a href="">
+                                    {{vm.relatedPlaces.length}} {{vm.relatedPlaces.length === 1 ? "luogo": "luoghi" | translate}} {{vm.relatedPlaces.length === 1 ? "collegato": "collegati" | translate}}
+                                    <i class="icon wm-icon-ios7-arrow-thin-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
 
                 <div class="accessibility-buttons-container" ng-if="vm.showAccessibilityButtons">

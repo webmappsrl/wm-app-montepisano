@@ -132,8 +132,13 @@
 
 /* Event details */
 
+.details-header {
+  position: relative;
+}
+
 .details-event-infos {
   position: absolute;
+  z-index: 1;
   background: $color-transparent-bg;
 
   .details-date {

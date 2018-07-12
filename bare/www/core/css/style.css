@@ -708,8 +708,12 @@ ion-content.fullView {
     color: #ffffff; }
 
 /* Event details */
+.details-header {
+  position: relative; }
+
 .details-event-infos {
   position: absolute;
+  z-index: 1;
   background: rgba(31, 70, 81, 0.7); }
   .details-event-infos .details-date {
     color: #ffffff; }
