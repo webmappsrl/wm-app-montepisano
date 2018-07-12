@@ -740,8 +740,9 @@ ion-content.fullView {
 
 /* Event details */
 .details-header {
-  min-height: 95px;
   position: relative; }
+  .details-header.has-event-infos {
+    min-height: 95px; }
 
 .details-event-infos {
   top: 0;

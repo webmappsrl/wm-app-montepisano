@@ -149,8 +149,11 @@
 /* Event details */
 
 .details-header {
-  min-height: 95px;
   position: relative;
+
+  &.has-event-infos {
+    min-height: 95px;
+  }
 }
 
 .details-event-infos {
