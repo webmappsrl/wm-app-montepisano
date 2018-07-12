@@ -51,28 +51,33 @@
   top: 0;
   left: 0;
   z-index: 1000;
+
   .related-url-content {
     width: 90vw;
     left: 5vw;
     top: 45px;
     position: absolute;
     color: #ffffff;
-    background: #878474;
+    background: $color-dark-blue;
     padding: 10px 15px;
     border-radius: 5px;
     text-transform: uppercase;
+    font-weight: $font-weight-bold;
+
     a.related-url-links {
       color: #ffffff;
       display: block;
       max-width: 100%;
       @include text-ellipsis;
+      font-family: $title-font-family;
+
       i {
         margin-right: 5px;
       }
     }
     .related-url-arrow {
       position: absolute;
-      border-bottom: 10px solid #878474;
+      border-bottom: 10px solid $color-dark-blue;
       border-right: 10px solid transparent;
       border-left: 10px solid transparent;
       top: -10px;
@@ -101,10 +106,14 @@
 }
 
 .contacts-list__element {
+  @include flex(1);
   font-size: $font-size-xs;
 
-
   a {
+    @include flexbox;
+    @include align-items(center);
+    @include justify-content(center);
+
     height: auto;
     color: $color-light-blue;
     font-family: $title-font-family;
@@ -357,6 +366,8 @@
 .details-contacts__list {
   @include flexbox;
   @include align-items(center);
+  padding: 10px 0 5px;
+  position: relative;
 }
 
 .details-description {

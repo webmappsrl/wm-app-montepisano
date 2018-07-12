@@ -659,22 +659,24 @@ ion-content.fullView {
     top: 45px;
     position: absolute;
     color: #ffffff;
-    background: #878474;
+    background: #1f4651;
     padding: 10px 15px;
     border-radius: 5px;
-    text-transform: uppercase; }
+    text-transform: uppercase;
+    font-weight: 700; }
     .related-url-div .related-url-content a.related-url-links {
       color: #ffffff;
       display: block;
       max-width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap; }
+      white-space: nowrap;
+      font-family: "montserrat", sans-serif; }
       .related-url-div .related-url-content a.related-url-links i {
         margin-right: 5px; }
     .related-url-div .related-url-content .related-url-arrow {
       position: absolute;
-      border-bottom: 10px solid #878474;
+      border-bottom: 10px solid #1f4651;
       border-right: 10px solid transparent;
       border-left: 10px solid transparent;
       top: -10px; }
@@ -695,8 +697,27 @@ ion-content.fullView {
   white-space: nowrap; }
 
 .contacts-list__element {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
   font-size: 13px; }
   .contacts-list__element a {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    -ms-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    -ms-justify-content: center;
+    justify-content: center;
+    -ms-flex-pack: center;
     height: auto;
     color: #49a5df;
     font-family: "montserrat", sans-serif;
@@ -900,7 +921,9 @@ ion-content.fullView {
   -webkit-align-items: center;
   -moz-align-items: center;
   -ms-align-items: center;
-  align-items: center; }
+  align-items: center;
+  padding: 10px 0 5px;
+  position: relative; }
 
 .details-description {
   padding: 10px 10px 30px; }
