@@ -127,6 +127,46 @@ angular.module('webmapp')
 
                 return result;
             }
+            else if ($rootScope.currentState.name === 'app.main.layer') {
+                var compare = function (a, b) {
+                    var aStart = a.properties && a.properties.date_start ? a.properties.date_start : false,
+                        bStart = b.properties && b.properties.date_start ? b.properties.date_start : false,
+                        aStop = a.properties && a.properties.date_stop ? a.properties.date_stop : false,
+                        bStop = b.properties && b.properties.date_stop ? b.properties.date_stop : false;
+
+                    aStart = aStart ? aStart.split(" ")[0].split("/") : false;
+                    aStart = aStart[0] && aStart[1] ? aStart[1] + aStart[0] : false;
+                    bStart = bStart ? bStart.split(" ")[0].split("/") : false;
+                    bStart = bStart[0] && bStart[1] ? bStart[1] + bStart[0] : false;
+                    aStop = aStop ? aStop.split(" ")[0].split("/") : false;
+                    aStop = aStop[0] && aStop[1] ? aStop[1] + aStop[0] : false;
+                    bStop = bStop ? bStop.split(" ")[0].split("/") : false;
+                    bStop = bStop[0] && bStop[1] ? bStop[1] + bStop[0] : false;
+
+                    if (aStop && bStop) {
+                        return aStop > bStop ? 1 : -1;
+                    }
+                    else if (aStop) {
+                        return -1;
+                    }
+                    else if (bStop) {
+                        return 1;
+                    }
+                    else if (aStart && bStart) {
+                        return aStart > bStart ? 1 : -1;
+                    }
+                    else if (aStart) {
+                        return -1;
+                    }
+                    else if (bStart) {
+                        return 1;
+                    }
+                    else {
+                        return -1;
+                    }
+                }
+                return input.sort(compare);
+            }
             else {
                 return input;
             }
