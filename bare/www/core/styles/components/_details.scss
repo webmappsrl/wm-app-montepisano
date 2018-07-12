@@ -354,6 +354,11 @@
   }
 }
 
+.details-contacts__list {
+  @include flexbox;
+  @include align-items(center);
+}
+
 .details-description {
   padding: 10px 10px 30px;
 

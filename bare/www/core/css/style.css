@@ -891,6 +891,17 @@ ion-content.fullView {
     height: auto;
     max-height: none; }
 
+.details-contacts__list {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  -ms-align-items: center;
+  align-items: center; }
+
 .details-description {
   padding: 10px 10px 30px; }
   .detail-route .details-description {
@@ -1688,6 +1699,10 @@ div.logout {
 /* ------------------------------------ *\
    #MEDIA QUERIES
 \* ------------------------------------ */
+@media only screen and (min-width: 580px) {
+  .item-has-thumb .list-info-title {
+    font-size: 24px; } }
+
 @media only screen and (min-width: 1025px) {
   .arrow-show-more {
     display: none; } }
