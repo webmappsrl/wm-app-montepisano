@@ -134,10 +134,12 @@
                     </a>
                 </div>
             </div>
+            
 
             <div class="details-date" ng-if="vm.featureDetails.date_start">
-                {{vm.featureDetails.date_start}}<span ng-if="vm.featureDetails.date_stop"> - {{vm.featureDetails.date_stop}}</span>
+                {{vm.renderEventDate(vm.featureDetails.date_start)}}<span ng-if="vm.featureDetails.date_stop"> - {{vm.renderEventDate(vm.featureDetails.date_stop)}}</span>
             </div>
+
 
             <!-- details-columns -->
             <!-- TODO: for one-column layout use details-rows class  - then for only image, table or text just put them in details-left -->
@@ -232,8 +234,6 @@
                         <i class="icon wm-icon-food-intolerance" ng-style="{'background': vm.feature.accessibility.food.check ? vm.colors.mainBar.background : '#cccccc'}"></i>
                     </a>
                 </div>
-
-
 
                 <div
                     class="details-description details-rows"
