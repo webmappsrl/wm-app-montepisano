@@ -134,6 +134,8 @@
   &.pf-details-location {
     a {
       @include flexbox;
+      @include justify-content(flex-start);
+      
       padding: 0;
       position: relative;
       color: #ffffff;
