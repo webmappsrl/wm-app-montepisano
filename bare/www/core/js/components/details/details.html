@@ -229,8 +229,8 @@
                     </a>
                 </div>
 
-                <div class="details-date" ng-if="vm.featureDetails.date_start">
-                    {{vm.renderEventDate(vm.featureDetails.date_start)}}<span ng-if="vm.featureDetails.date_stop"> - {{vm.renderEventDate(vm.featureDetails.date_stop)}}</span>
+                <div class="details-date" ng-if="vm.renderEventDate(vm.featureDetails.date_start)">
+                    {{vm.renderEventDate(vm.featureDetails.date_start)}}<span ng-if="vm.renderEventDate(vm.featureDetails.date_stop) && vm.renderEventDate(vm.featureDetails.date_stop) !== vm.renderEventDate(vm.featureDetails.date_start)"> - {{vm.renderEventDate(vm.featureDetails.date_stop)}}</span>
                 </div>
 
                 <div
