@@ -7,9 +7,6 @@
 /* ------------------------------------ *\
    #FONTS
 \* ------------------------------------ */
-/* cyrillic-ext */
-/* Main font - ALEGREYA SANS */
-/* FONT FACE */
 @font-face {
   font-family: 'montserrat';
   src: url("../fonts/montserrat/montserrat-semibold-webfont.woff2") format("woff2"), url("../fonts/montserrat/montserrat-semibold-webfont.woff") format("woff");
@@ -25,12 +22,6 @@
 @font-face {
   font-family: 'montserrat';
   src: url("../fonts/montserrat/montserrat-regular-webfont.woff2") format("woff2"), url("../fonts/montserrat/montserrat-regular-webfont.woff") format("woff");
-  font-weight: normal;
-  font-style: normal; }
-
-@font-face {
-  font-family: 'montserrat';
-  src: url("../fonts/montserrat/montserrat-light-webfont.woff2") format("woff2"), url("../fonts/montserrat/montserrat-light-webfont.woff") format("woff");
   font-weight: normal;
   font-style: normal; }
 
@@ -83,18 +74,6 @@
 /*
  *    Available fonts
  */
-@font-face {
-  font-family: 'Josefin Sans';
-  src: url("../fonts/Josefin Sans/JosefinSans-Light.ttf");
-  font-weight: normal;
-  font-style: normal; }
-
-@font-face {
-  font-family: 'Abel';
-  src: url("../fonts/Abel/Abel-Regular.ttf");
-  font-weight: normal;
-  font-style: normal; }
-
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   color: #1f4651; }
 
@@ -715,16 +694,15 @@ ion-content.fullView {
   text-overflow: ellipsis;
   white-space: nowrap; }
 
-.contacts-list__element a {
-  color: #1f4651; }
-
-.details-contact-single .contacts-list__element {
-  width: 100%; }
-
-.details-contact-rows .contacts-list__element a {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; }
+.contacts-list__element {
+  font-size: 13px; }
+  .contacts-list__element a {
+    height: auto;
+    color: #49a5df;
+    font-family: "montserrat", sans-serif;
+    line-height: 1.2; }
+  .details-contact-single .contacts-list__element {
+    width: 100%; }
 
 .details-content {
   height: 100%;
@@ -2294,17 +2272,14 @@ button.login-button
   .details-page .bar.bar-header .title {
     left: 60px !important; }
   .title-inner {
-    line-height: 32px;
     text-align: center; }
-    .title-inner.has-date {
-      line-height: 32px; }
-      .title-inner.has-date .title-left {
-        font-size: 16px; }
-        .title-inner.has-date .title-left [class^="event-title"] {
-          display: inline-block;
-          margin-right: 10px; }
-      .title-inner.has-date .title-right {
-        font-size: 16px; }
+    .title-inner.has-date .title-left {
+      font-size: 16px; }
+      .title-inner.has-date .title-left [class^="event-title"] {
+        display: inline-block;
+        margin-right: 10px; }
+    .title-inner.has-date .title-right {
+      font-size: 16px; }
   .nav-title-slide-ios7 .bar.bar-header {
     padding-right: 10px;
     padding-left: 10px; }

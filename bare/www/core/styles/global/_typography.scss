@@ -9,98 +9,6 @@
    #FONTS
 \* ------------------------------------ */
 
-/* cyrillic-ext */
-// @font-face {
-//   font-family: 'Ubuntu';
-//   font-style: normal;
-//   font-weight: 400;
-//   src: local('Ubuntu'), url(http://fonts.gstatic.com/s/ubuntu/v8/BxfrwvhZBmVnDwajjdTQeH-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-//   unicode-range: U+0460-052F, U+20B4, U+2DE0-2DFF, U+A640-A69F;
-// }
-// /* cyrillic */
-// @font-face {
-//   font-family: 'Ubuntu';
-//   font-style: normal;
-//   font-weight: 400;
-//   src: local('Ubuntu'), url(http://fonts.gstatic.com/s/ubuntu/v8/rOHfGaogav5XpJHYhB_YZ3-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-//   unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-// }
-// /* greek-ext */
-// @font-face {
-//   font-family: 'Ubuntu';
-//   font-style: normal;
-//   font-weight: 400;
-//   src: local('Ubuntu'), url(http://fonts.gstatic.com/s/ubuntu/v8/zwDIfh8KEInP4WYoM7h0b3-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-//   unicode-range: U+1F00-1FFF;
-// }
-// /* greek */
-// @font-face {
-//   font-family: 'Ubuntu';
-//   font-style: normal;
-//   font-weight: 400;
-//   src: local('Ubuntu'), url(http://fonts.gstatic.com/s/ubuntu/v8/BgwOR-U84B6EluzUITbpkH-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-//   unicode-range: U+0370-03FF;
-// }
-// /* latin-ext */
-// @font-face {
-//   font-family: 'Ubuntu';
-//   font-style: normal;
-//   font-weight: 400;
-//   src: local('Ubuntu'), url(http://fonts.gstatic.com/s/ubuntu/v8/Zcmru5bcP_p_TwCNg-F3DH-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-//   unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
-// }
-// /* latin */
-// @font-face {
-//   font-family: 'Ubuntu';
-//   font-style: normal;
-//   font-weight: 400;
-//   src: local('Ubuntu'), url(http://fonts.gstatic.com/s/ubuntu/v8/zvCUQcxqeoKhyOlbifSAaevvDin1pK8aKteLpeZ5c0A.woff2) format('woff2');
-//   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-// }
-
-/* Main font - ALEGREYA SANS */
-
-/* FONT FACE */
-// @font-face {
-//   font-family: 'alegreya';
-//   src: url('../fonts/alegreya/alegreyasans-bold-webfont.woff2') format('woff2'), url('../fonts/alegreya/alegreyasans-bold-webfont.woff') format('woff');
-//   font-weight: bold;
-//   font-style: normal;
-// }
-
-// @font-face {
-//   font-family: 'alegreya';
-//   src: url('../fonts/alegreya/alegreyasans-bolditalic-webfont.woff2') format('woff2'), url('../fonts/alegreya/alegreyasans-bolditalic-webfont.woff') format('woff');
-//   font-weight: bold;
-//   font-style: italic;
-// }
-
-// @font-face {
-//   font-family: 'alegreya';
-//   src: url('../fonts/alegreya/alegreyasans-medium-webfont.woff2') format('woff2'), url('../fonts/alegreya/alegreyasans-medium-webfont.woff') format('woff');
-//   font-weight: normal;
-//   font-style: normal;
-// }
-
-// @font-face {
-//   font-family: 'alegreya';
-//   src: url('../fonts/alegreya/alegreyasans-mediumitalic-webfont.woff2') format('woff2'), url('../fonts/alegreya/alegreyasans-mediumitalic-webfont.woff') format('woff');
-//   font-weight: normal;
-//   font-style: italic;
-// }
-
-// /* Fontawesome */
-
-// @font-face {
-//   font-family: 'FontAwesome';
-//   src: url('../fonts/font-awesome/fontawesome-webfont.eot?v=4.6.2&1468998095');
-//   src: url('../fonts/font-awesome/fontawesome-webfont.eot?v=4.6.2&1468998095#iefix') format("embedded-opentype"), url(../fonts/font-awesome/fontawesome-webfont.woff2?v=4.6.2&1468998095) format("woff2"), url(../fonts/font-awesome/fontawesome-webfont.woff?v=4.6.2&1468998095) format("woff"), url(../fonts/font-awesome/fontawesome-webfont.ttf?v=4.6.2&1468998095) format("truetype"), url(../fonts/font-awesome/fontawesome-webfont.svg?v=4.6.2&1468998095#fontawesomeregular) format("svg");
-//   font-weight: normal;
-//   font-style: normal;
-// }
-
-
-// /* MONTSERRAT */
 
 
 @font-face {
@@ -113,18 +21,13 @@
 }
 
 
-
-
 @font-face {
   font-family: 'montserrat';
   src: url('../fonts/montserrat/montserrat-bold-webfont.woff2') format('woff2'),
   url('../fonts/montserrat/montserrat-bold-webfont.woff') format('woff');
   font-weight: bold;
   font-style: normal;
-
 }
-
-
 
 
 @font-face {
@@ -137,16 +40,6 @@
 }
 
 
-
-
-@font-face {
-  font-family: 'montserrat';
-  src: url('../fonts/montserrat/montserrat-light-webfont.woff2') format('woff2'),
-  url('../fonts/montserrat/montserrat-light-webfont.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-
-}
 
 // /* merriweather */
 
@@ -281,20 +174,6 @@
 /*
  *    Available fonts
  */
-
-@font-face {
-  font-family: 'Josefin Sans';
-  src: url('../fonts/Josefin Sans/JosefinSans-Light.ttf');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Abel';
-  src: url('../fonts/Abel/Abel-Regular.ttf');
-  font-weight: normal;
-  font-style: normal;
-}
 
 
 

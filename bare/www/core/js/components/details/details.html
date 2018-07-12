@@ -124,7 +124,7 @@
                     </div>
                 </ul>
                 <div
-                    class="contacts-list__element"
+                    class="contacts-list__element pf-details-location"
                     style="width: 100%"
                     ng-if="vm.feature.address">
                     <a href="geo:{{vm.coordinates}}"
@@ -133,6 +133,10 @@
                         <i class="icon ion-location"></i> {{vm.feature.address}}
                     </a>
                 </div>
+            </div>
+
+            <div class="details-date" ng-if="vm.featureDetails.date_start">
+                {{vm.featureDetails.date_start}}<span ng-if="vm.featureDetails.date_stop"> - {{vm.featureDetails.date_stop}}</span>
             </div>
 
             <!-- details-columns -->
@@ -229,9 +233,7 @@
                     </a>
                 </div>
 
-                <div class="details-date" ng-if="vm.featureDetails.date_start">
-                    {{vm.featureDetails.date_start}}<span ng-if="vm.featureDetails.date_stop"> - {{vm.featureDetails.date_stop}}</span>
-                </div>
+
 
                 <div
                     class="details-description details-rows"

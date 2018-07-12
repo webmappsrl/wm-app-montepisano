@@ -101,15 +101,22 @@
 }
 
 .contacts-list__element {
+  font-size: $font-size-xs;
   a {
-    color: $color-text;
+    height: auto;
+    color: $color-light-blue;
+    font-family: $title-font-family;
+    line-height: 1.2;
+
+
   }
+
   .details-contact-single & {
     width: 100%;
   }
   .details-contact-rows & {
     a {
-      @include text-ellipsis;
+      //@include text-ellipsis;
     }
   }
 }
