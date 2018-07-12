@@ -96,6 +96,7 @@ angular.module('webmapp')
                         break;
                     }
                 }
+                localStorage.$wm_packagesToActivate = JSON.stringify(packagesToActivate);
             }).error(function (err) {
                 packagesToActivate.push([data.route_id]);
                 localStorage.$wm_packsToActivate = JSON.stringify(packagesToActivate);
@@ -114,7 +115,11 @@ angular.module('webmapp')
                     route_id: packagesToActivate[i]
                 };
                 activatePack(data);
+                userPackagesId[packagesToActivate[i]] = true;
             }
+
+            $rootScope.$emit('userPackagesId-updated', userPackagesId);
+            localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
         };
 
         var mergePackages = function (newPackages) {
@@ -387,13 +392,13 @@ angular.module('webmapp')
 
         /**
          * @description
-         * Request the package and
-         * Emit the new list of requested packages
+         * Buy the package via in-app purchase and
+         * Emit the new list of available packages
          * 
-         * @event userPackagesIdRequested-updated
+         * @event userPackagesId-updated
          * 
          * @param {number} packId 
-         *      the id of the pack to request
+         *      the id of the pack to buy
          */
         packageService.buyPack = function (packId) {
             if (!userData || !userData.ID) {
@@ -416,19 +421,63 @@ angular.module('webmapp')
                                 };
 
                                 userPackagesId[productId] = true;
+                                $rootScope.$emit('userPackagesId-updated', userPackagesId);
+                                localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
 
                                 activatePack(data);
                             })
-                            .catch(err => console.log(err));
+                            .catch(err => {
+                                $ionicPopup.alert({
+                                    title: $translate.instant("ATTENZIONE"),
+                                    template: $translate.instant("Si è verificato un errore. Riprova")
+                                });
+                            });
                     }
                     else {
                         $ionicPopup.alert({
+                            title: $translate.instant("ATTENZIONE"),
                             template: $translate.instant("Questo prodotto non è al momento disponibile")
                         });
                     }
                 })
                 .catch(function (err) {
-                    console.log(err);
+                    $ionicPopup.alert({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Si è verificato un errore. Riprova")
+                    });
+                });
+        };
+
+        /**
+         * @description
+         * Restore the purchases and
+         * Emit the new list of purchased packages
+         * 
+         * @event userPackagesId-updated
+         * 
+         */
+        packageService.restorePurchases = function () {
+            inAppPurchase.restorePurchases()
+                .then(function (purchases) {
+                    for (var i in purchases) {
+                        var id = purchases.productId.split('.')[0];
+                        if (!userPackagesId[id]) {
+                            userPackagesId[id] = true;
+                            packagesToActivate.push(id);
+                        }
+                    }
+
+                    $rootScope.$emit('userPackagesId-updated', userPackagesId);
+                    localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
+                    localStorage.$wm_packagesToActivate = JSON.stringify(packagesToActivate);
+                    activatePackages();
+                })
+                .catch(function (err) {
+                    $ionicPopup.alert({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Si è verificato un errore. Controlla di essere connesso e riprova")
+                    });
+                    console.log("Error restoring purchases", err);
                 });
         };
 

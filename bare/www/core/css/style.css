@@ -1375,6 +1375,20 @@ div.section {
   div.section label.item.item-radio {
     border: 0px;
     padding: 3px; }
+  div.section .restore-purchase-text {
+    float: left;
+    width: 65%;
+    margin-bottom: 4px; }
+  div.section .restore-purchase-button {
+    float: right;
+    position: relative;
+    top: -3px;
+    text-transform: uppercase;
+    width: 35%;
+    margin-bottom: 4px;
+    text-align: center;
+    padding-top: 3px;
+    padding-bottom: 3px; }
 
 div.logout {
   position: fixed;
