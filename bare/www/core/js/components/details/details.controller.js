@@ -194,9 +194,9 @@ angular.module('webmapp')
 
                 if (feature.description) {
                     var expandable = false;
-                    if (feature.description.length > 200) {
-                        expandable = true;
-                    }
+                    // if (feature.description.length > 200) {
+                    //     expandable = true;
+                    // }
                     feature.description = feature.description.replace(new RegExp(/src="\//g), 'src="' + CONFIG.COMMUNICATION.baseUrl);
                     // feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), '');
                     // feature.description = feature.description.replace(new RegExp(/href="\//g), 'href="' + CONFIG.COMMUNICATION.baseUrl);
