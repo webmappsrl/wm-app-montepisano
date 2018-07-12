@@ -171,6 +171,23 @@ angular.module('webmapp')
             return month + '.' + year;
         };
 
+        vm.renderEventDate = function (dateString) {
+            if (dateString) {
+                var date = dateString.split(" ")[0].split("/");
+                if (date[0] && date[1] && date[2]) {
+                    date = new Date(date[2], +date[1] - 1, date[0]);
+
+                    return Utils.getDateString(date);
+                }
+                else {
+                    return "";
+                }
+            }
+            else {
+                return "";
+            }
+        };
+
         vm.toggleList = function () {
             vm.isListExpanded = !vm.isListExpanded;
             $rootScope.$emit('toggle-list', vm.isListExpanded);

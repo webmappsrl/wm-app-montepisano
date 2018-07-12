@@ -245,5 +245,30 @@
     "6": {
       "title": "Inizia"
     }
+  },
+  "date": {
+    "day": {
+      "Lun": "Lun",
+      "Mar": "Mar",
+      "Mer": "Mer",
+      "Gio": "Gio",
+      "Ven": "Ven",
+      "Sab": "Sab",
+      "Dom": "Dom"
+    },
+    "month": {
+      "Gennaio": "Gennaio",
+      "Febbraio": "Febbraio",
+      "Marzo": "Marzo",
+      "Aprile": "Aprile",
+      "Maggio": "Maggio",
+      "Giugno": "Giugno",
+      "Luglio": "Luglio",
+      "Agosto": "Agosto",
+      "Settembre": "Settembre",
+      "Ottobre": "Ottobre",
+      "Novembre": "Novembre",
+      "Dicembre": "Dicembre"
+    }
   }
 }

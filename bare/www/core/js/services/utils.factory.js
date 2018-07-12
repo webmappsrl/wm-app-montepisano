@@ -326,5 +326,38 @@ angular.module('webmapp')
             return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
         };
 
+        utils.getDateString = function (date) {
+            if (!date) {
+                return null;
+            }
+
+            var days = [
+                    $translate.instant('date.day.Lun'),
+                    $translate.instant('date.day.Mar'),
+                    $translate.instant('date.day.Mer'),
+                    $translate.instant('date.day.Gio'),
+                    $translate.instant('date.day.Ven'),
+                    $translate.instant('date.day.Sab'),
+                    $translate.instant('date.day.Dom')
+                ],
+                months = [
+                    $translate.instant('date.month.Gennaio'),
+                    $translate.instant('date.month.Febbraio'),
+                    $translate.instant('date.month.Marzo'),
+                    $translate.instant('date.month.Aprile'),
+                    $translate.instant('date.month.Maggio'),
+                    $translate.instant('date.month.Giugno'),
+                    $translate.instant('date.month.Luglio'),
+                    $translate.instant('date.month.Agosto'),
+                    $translate.instant('date.month.Settembre'),
+                    $translate.instant('date.month.Ottobre'),
+                    $translate.instant('date.month.Novembre'),
+                    $translate.instant('date.month.Dicembre'),
+                ];
+
+            return days[date.getDay()] + " " + date.getDate() + " " + months[date.getMonth()];
+
+        }
+
         return utils;
     });

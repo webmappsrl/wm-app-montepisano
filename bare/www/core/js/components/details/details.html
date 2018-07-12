@@ -230,7 +230,7 @@
                 </div>
 
                 <div class="details-date" ng-if="vm.featureDetails.date_start">
-                    {{vm.featureDetails.date_start}}<span ng-if="vm.featureDetails.date_stop"> - {{vm.featureDetails.date_stop}}</span>
+                    {{vm.renderEventDate(vm.featureDetails.date_start)}}<span ng-if="vm.featureDetails.date_stop"> - {{vm.renderEventDate(vm.featureDetails.date_stop)}}</span>
                 </div>
 
                 <div
