@@ -143,10 +143,9 @@
 
                         <div class="details-event-infos">
 
-                            <div class="details-date" ng-if="vm.featureDetails.date_start">
-                                {{vm.renderEventDate(vm.featureDetails.date_start)}}<span ng-if="vm.featureDetails.date_stop"> - {{vm.renderEventDate(vm.featureDetails.date_stop)}}</span>
+                            <div class="details-date" ng-if="vm.renderEventDate(vm.featureDetails.date_start)">
+                                {{vm.renderEventDate(vm.featureDetails.date_start)}}<span ng-if="vm.renderEventDate(vm.featureDetails.date_stop) && vm.renderEventDate(vm.featureDetails.date_stop) !== vm.renderEventDate(vm.featureDetails.date_start)"> - {{vm.renderEventDate(vm.featureDetails.date_stop)}}</span>
                             </div>
-
                             <div
                                     class="contacts-list__element pf-details-location"
                                     style="width: 100%"
@@ -239,7 +238,6 @@
                         <i class="icon wm-icon-food-intolerance" ng-style="{'background': vm.feature.accessibility.food.check ? vm.colors.mainBar.background : '#cccccc'}"></i>
                     </a>
                 </div>
-
                 <div
                     class="details-description details-rows"
                     ng-if="!vm.onlyTable && !vm.avoidModal">
