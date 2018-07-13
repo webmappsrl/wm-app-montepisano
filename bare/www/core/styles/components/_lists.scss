@@ -10,6 +10,10 @@
 
 /* Element */
 
+.item.item-image-left {
+  padding-left: 30%;
+}
+
 .coupons-list {
   padding: 10px !important;
   cursor: pointer;
@@ -144,6 +148,27 @@
   font-size: 22px;
   @include text-ellipsis;
   padding-top: 5px;
+}
+
+.list-info-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: calc(30% - 10px);
+  height: calc(100% - 10px);
+  margin: 5px;
+
+  img {
+      max-width: 100%;
+      @include center-image;
+      height: 30vw;
+  }
+  i {
+    font-size: 40px;
+    @include vertical-centering;
+    left: 29%;
+  }
 }
 
 .list-info-subtitle {

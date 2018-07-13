@@ -93,6 +93,8 @@ angular.module('webmapp')
         } else if (realType === 'page') {
             realUrl = pagesMap[item.label].type;
             realType = separator = '';
+        } else if (realType === 'search') {
+            realUrl = item.label;
         }
 
         if (realType === "packages") {

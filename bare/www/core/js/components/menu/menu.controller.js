@@ -568,7 +568,11 @@ angular.module('webmapp')
         };
 
         vm.goTo = function (url, type) {
-            if (type === 'internalLink') {
+            var split = url.split('/');
+            if (split[0] === 'search') {
+                $rootScope.searchLayers = [split[1]];
+                Utils.goTo('search');
+            } else if (type === 'internalLink') {
                 location.href = url;
             } else if (type === 'closeMap') {
                 Offline.resetCurrentMapAndGoBack();

@@ -383,6 +383,7 @@ angular.module('webmapp')
 
         var setSearchState = function(filters, q) {
 
+            console.log(filters)
             var layers = typeof filters === "undefined" ? [] : filters;
             var query = typeof q === "undefined" ? "" : q;
             for (var layerId in modalScope.layers) {
@@ -522,6 +523,7 @@ angular.module('webmapp')
         delete $rootScope.searchQuery
         delete $rootScope.searchLayers
     } else {
+        // setSearchState(["Produttori"], "");
         setTimeout(function() {
             vm.updateSearch();
         }, 10);

@@ -15,8 +15,10 @@
                 'background': vm.colors.mainBar.background
             }">
             <div class="searchbar">
-                <input type="text" placeholder="{{'Cerca' | translate}}..." ng-model="vm.searchString">
-                <i class="icon wm-icon-ios7-search-strong" ng-click="vm.goToSearchByString()"></i>
+                <form ng-submit="vm.goToSearchByString()">
+                    <input type="text" placeholder="{{'Cerca' | translate}}..." ng-model="vm.searchString">
+                    <i class="icon wm-icon-ios7-search-strong" ng-click="vm.goToSearchByString()"></i>
+                </form>
             </div>
             <img src="core/images/logo-vt.png">
         </div>

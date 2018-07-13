@@ -69,22 +69,29 @@
             }">
             <ion-list ng-if="vm.searchReady">
                 <!-- TODO: add class has-subtitle when item has subtitle and remove comment -->
-                <ion-item class="item item-icon-left" ng-class="{'is-divider': item.divider}" ng-click="vm.goTo('layer/' + item.parent.label + '/' + item.properties.id, item.divider)" collection-repeat="item in vm.results">
-                    <i class="icon {{item.properties.icon}}" ng-style="{color: item.properties.color}"></i>
-
-                    <!-- <span 
-                        style="top: -11px; position: relative;" 
-                        ng-if="item.divider">
-                        <br/>
-                        {{item.label}}
-                    </span> -->
-                    <span class="list-info-title" ng-bind-html="item.properties.name || item.label">
-                    </span>
-                    <!-- <span 
+                <ion-item class="item"
+                    ng-class="{'is-divider': item.divider, 'item-image-left': !item.divider}"
+                    ng-click="vm.goTo('layer/' + item.parent.label + '/' + item.properties.id, item.divider)"
+                    collection-repeat="item in vm.results"
+                    item-height="item.divider ? '62px' : '100px'">
+                    <div ng-if="!item.properties.image" class="list-info-image ">
+                        <i class="icon {{item.properties.icon}}" ng-style="{color: item.properties.color}"></i>
+                    </div>
+                    <div ng-if="item.properties.image" class="list-info-image">
+                        <img ng-src="{{item.properties.image}}">
+                    </div>
+                    <span 
                         class="list-info-subtitle"
                         ng-if="!item.divider">
-                        &nbsp;{{item.properties.address}}
-                    </span> -->
+                        {{item.properties.address}}
+                    </span>
+                    <span class="list-info-title" ng-bind-html="item.properties.name || item.label">
+                    </span>
+                    <span 
+                        class="list-info-subtitle"
+                        ng-if="!item.divider">
+                        {{item.properties.address}}
+                    </span>
                 </ion-item>
                 <ion-item ng-if="vm.results.length === 0" class="is-divider">
                     <span class="list-info-title" style="text-align: center">
