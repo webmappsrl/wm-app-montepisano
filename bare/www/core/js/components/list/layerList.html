@@ -130,7 +130,8 @@
         ng-style="{
             'background': vm.colors.global.background
         }"
-        ng-click="vm.toggleList()">
+        ng-click="vm.toggleList()"
+        ng-if="vm.canShowMap">
         <i 
             class="icon"
             ng-class="{

@@ -78,6 +78,7 @@ angular.module('webmapp')
             vm.showCategoryBack = null;
             vm.eventsList = null;
             vm.backItem = null;
+            vm.canShowMap = true;
 
             if ($state && $state.params &&
                 $state.params.id) {
@@ -88,7 +89,12 @@ angular.module('webmapp')
                 vm.toggleList();
                 vm.eventsList = MapService.getEventsList();
             } else if (currentState === 'app.main.layer' || currentState === 'app.main.filteredLayer') {
-                vm.toggleList();
+                if (currentState === 'app.main.layer') {
+                    vm.toggleList();
+                }
+                else {
+                    vm.canShowMap = false;
+                }
                 vm.color = Model.getListColor(currentName);
 
                 layersReferences = MapService.getOverlayLayers();
