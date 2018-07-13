@@ -13,6 +13,15 @@
             height: 10vh;
             padding: 10px 0;
 
+            .pf-taxonomy-filter__spinner {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                width: 100%;
+            }
+
             .pf-taxonomy-filter__select {
                 flex: 1;
                 height: 100%;
@@ -22,22 +31,6 @@
                 font-size: $font-size-xxxl;
                 color: #ffffff;
                 text-align: center;
-
-                //&::before {
-                //    width: 45px;
-                //    @include inline-flex;
-                //    @include align-items(center);
-                //    @include justify-content(center);
-                //    background: $color-extra-light-blue;
-                //    @include webmapp-icon('\f151');
-                //    position: absolute;
-                //    top: 0;
-                //    right: 0;
-                //    bottom: 0;
-                //    color: $color-dark-blue;
-                //    font-size: $font-size-l;
-                //    @include box-shadow(inset 1000px 0px 55px -1000px rgba(18, 16, 11, 0.9));
-                //}
 
                 &:last-of-type {
                     margin-right: 0;

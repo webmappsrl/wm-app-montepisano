@@ -4045,6 +4045,13 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
     display: flex;
     height: 10vh;
     padding: 10px 0; }
+    .trackTaxonomy-page ion-content .taxonomy-filter .pf-taxonomy-filter__spinner {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%; }
     .trackTaxonomy-page ion-content .taxonomy-filter .pf-taxonomy-filter__select {
       flex: 1;
       height: 100%;

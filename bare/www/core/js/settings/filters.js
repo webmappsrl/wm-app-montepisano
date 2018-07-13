@@ -94,7 +94,7 @@ angular.module('webmapp')
         $rootScope
     ) {
         return function (input, filters) {
-            if ($rootScope.currentState.name === 'app.main.filteredLayer') {
+            if (filters && filters.activityId) {
                 var activityId = filters.activityId,
                     themeId = filters.themeId,
                     result = [];
