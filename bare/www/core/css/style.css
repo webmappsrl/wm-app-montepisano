@@ -1434,7 +1434,7 @@ div.logout {
 \* ------------------------------------ */
 /* Element */
 .item.item-image-left {
-  max-height: 20vh;
+  padding: 10px;
   padding-left: 30%; }
 
 .coupons-list {
@@ -1525,7 +1525,7 @@ div.logout {
   padding-bottom: 5px; }
 
 .list-info-title {
-  padding-bottom: 3px;
+  padding-bottom: 8px;
   font-size: 22px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1548,7 +1548,6 @@ div.logout {
     left: 0px;
     right: 0px;
     margin: auto;
-    max-height: 20vh;
     height: 30vw; }
   .list-info-image i {
     font-size: 40px;
@@ -1558,7 +1557,10 @@ div.logout {
     left: 29%; }
 
 .list-info-subtitle {
-  font-size: 14px; }
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; }
 
 /* List filter*/
 .filter-input-wrapper {

@@ -80,17 +80,19 @@
                     <div ng-if="item.properties.image" class="list-info-image">
                         <img ng-src="{{item.properties.image}}">
                     </div>
-                    <span 
-                        class="list-info-subtitle"
-                        ng-if="!item.divider">
-                        {{item.properties.address}}
-                    </span>
                     <span class="list-info-title" ng-bind-html="item.properties.name || item.label">
                     </span>
                     <span 
                         class="list-info-subtitle"
-                        ng-if="!item.divider">
+                        ng-if="!item.divider"
+                        ng-style="{'color': vm.colors.global.color}">
                         {{item.properties.address}}
+                    </span>
+                    <span 
+                        class="list-info-subtitle"
+                        ng-if="!item.divider && item.properties && item.properties.taxonomy && item.properties.taxonomy.specialita"
+                        ng-style="{'color': vm.colors.global.color}">
+                        {{vm.getSpecialities(item)}}
                     </span>
                 </ion-item>
                 <ion-item ng-if="vm.results.length === 0" class="is-divider">

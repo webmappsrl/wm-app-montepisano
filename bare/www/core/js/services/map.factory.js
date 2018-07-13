@@ -28,6 +28,7 @@ angular.module('webmapp')
         overlayLayersConf = CONFIG.OVERLAY_LAYERS,
         styleConf = CONFIG.STYLE,
         offlineConf = CONFIG.OFFLINE,
+        defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : "it",
         currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
 
     if (!Utils.isBrowser()) {
@@ -126,6 +127,15 @@ angular.module('webmapp')
         return featuresIdByLayersMap;
     };
 
+    mapService.getLayerLabelById = function (id) {
+        currentLang = currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+        if (overlayLayersById[id].languages) {
+            return overlayLayersById[id].languages[currentLang] || overlayLayersById[id].languages[defaultLang] || overlayLayersById[id].languages[Object.keys(overlayLayersById[id].languages[0])] || overlayLayersById[id].label;;
+        }
+        else {
+            return overlayLayersById[id].label;
+        }
+    };
 
 
     var activeFilters = localStorage.activeFilters ?

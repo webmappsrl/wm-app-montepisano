@@ -241,6 +241,19 @@ angular.module('webmapp')
         $rootScope.$emit('toggle-map-in-search', vm.isMapView);
     };
 
+    vm.getSpecialities = function (item) {
+        var specialities = "";
+        if (item.properties && item.properties.taxonomy && item.properties.taxonomy.specialita) {
+            for (var i in item.properties.taxonomy.specialita) {
+                if (specialities !== "") {
+                    specialities += ", ";
+                }
+                specialities += MapService.getLayerLabelById(item.properties.taxonomy.specialita[i]);
+            }
+        }
+        return specialities;
+    };
+
 
     if (modalScope.vm.isNewModal) {
 
@@ -383,7 +396,6 @@ angular.module('webmapp')
 
         var setSearchState = function(filters, q) {
 
-            console.log(filters)
             var layers = typeof filters === "undefined" ? [] : filters;
             var query = typeof q === "undefined" ? "" : q;
             for (var layerId in modalScope.layers) {
@@ -523,7 +535,6 @@ angular.module('webmapp')
         delete $rootScope.searchQuery
         delete $rootScope.searchLayers
     } else {
-        // setSearchState(["Produttori"], "");
         setTimeout(function() {
             vm.updateSearch();
         }, 10);
