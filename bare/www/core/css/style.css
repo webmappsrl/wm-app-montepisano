@@ -4003,7 +4003,6 @@ ion-content div.static-content.card-content {
   height: 40px;
   line-height: 30px; }
   .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title {
-    width: calc(100% / 3);
     float: left;
     text-align: center;
     overflow: hidden;
@@ -4012,6 +4011,12 @@ ion-content div.static-content.card-content {
     text-transform: uppercase;
     font-size: 25px;
     padding: 3px 0; }
+    .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title.cols-3 {
+      width: calc(100% / 3); }
+    .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title.cols-2 {
+      width: 50%; }
+    .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title.cols-1 {
+      width: 100%; }
     .modal-content .accordion-filters .filters-tab-title-container .filters-tab-title.selected {
       color: #349912;
       border-bottom: 3px solid #349912; }

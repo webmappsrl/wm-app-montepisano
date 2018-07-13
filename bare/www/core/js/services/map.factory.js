@@ -263,8 +263,19 @@ angular.module('webmapp')
         feature.properties.color = feature.properties.color || overlayConf.color;
         featureMapById[feature.properties.id] = feature;
         if (feature.parent && feature.parent.id) {
-            if (!featuresIdByLayersMap[feature.parent.label])
+            if (!featuresIdByLayersMap[feature.parent.label]) {
                 featuresIdByLayersMap[feature.parent.label] = [];
+            }
+
+            if (!feature.properties.taxonomy) {
+                feature.properties.taxonomy = {};
+            }
+            if (!feature.properties.taxonomy.webmapp_category) {
+                feature.properties.taxonomy.webmapp_category = [];
+            }
+            if (feature.properties.taxonomy.webmapp_category.indexOf(feature.parent.id) == -1) {
+                feature.properties.taxonomy.webmapp_category.push(feature.parent.id);
+            }
             featuresIdByLayersMap[feature.parent.label].push(feature.properties.id);
         }
         Model.addItemToLayer(feature, overlayConf);
@@ -1664,11 +1675,18 @@ angular.module('webmapp')
         activeFilters[layerName] = value;
         localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
 
-        if (activeFilters[layerName]) {
-            mapService.activateLayer(layerName, true, true);
+        if (!CONFIG.MAP.filters) {
+            if (activeFilters[layerName]) {
+                mapService.activateLayer(layerName, true, true);
+            } else {
+                mapService.removeLayer(layerName);
+            }
         } else {
-            mapService.removeLayer(layerName);
+            for (var label in activeFilters) {
+                mapService.removeLayer(label);
+            }
         }
+
     };
 
     mapService.activateAllFilters = function() {

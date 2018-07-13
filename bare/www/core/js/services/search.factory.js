@@ -20,305 +20,512 @@ angular.module('webmapp')
         return prev;
     }, {});
 
+    var confLayersMapById = confLayers.reduce(function(prev, curr) {
+        prev[curr.id] = curr;
+        return prev;
+    }, {});
+
     var activeLayersMap = confLayers.reduce(function(prev, curr) {
         if (!curr.skipSearch) {
-            prev[curr.label] = true;
+            prev[curr.label] = { state: false };
         }
         return prev;
     }, {});
 
-    var setupEngine = function(layerName) {
-        layersEngine[layerName] = new JsSearch.Search('id');
 
-        if (searchConf.stemming) {
-            layersEngine[layerName].tokenizer = new JsSearch.StemmingTokenizer(stemmer, layersEngine[layerName].tokenizer);
-        }
-        if (searchConf.indexStrategy) {
-            layersEngine[layerName].indexStrategy = new JsSearch[searchConf.indexStrategy]();
-        }
-        if (searchConf.TFIDFRanking) {
-            layersEngine[layerName].searchIndex = new JsSearch.TfIdfSearchIndex('id');
-        }
+    if (CONFIG.MAP.filters) {
 
-        for (var i in searchConf.indexFields) {
-            layersEngine[layerName].addIndex(['properties', searchConf.indexFields[i]]);
-        }
-    };
+        var currentFilterMap = angular.copy(CONFIG.MAP.filters);
+        for (var superCategoryId in currentFilterMap) {
+            if (superCategoryId !== "base_maps" && currentFilterMap[superCategoryId].sublayers) {
+                var sublayers = currentFilterMap[superCategoryId].sublayers;
 
-    var addToIndex = function(item, layerName) {
-        var itemModel = {};
+                for (macroCategoryId in sublayers) {
+                    if (sublayers[macroCategoryId].items && sublayers[macroCategoryId].items.length) {
 
-        itemModel = angular.extend({ id: item.properties.id || Utils.generateUID() }, item);
-        layersEngine[layerName].addDocument(itemModel);
-    };
-
-    var getAllByLayer = function(layerName) {
-        return layersEngine[layerName].documents_;
-    };
-
-    search.getActiveLayersMap = function() {
-        return activeLayersMap;
-    };
-
-    search.getActiveLayers = function() {
-        var res = [];
-
-        for (var i in activeLayersMap) {
-            if (activeLayersMap[i]) {
-                res.push(i);
-            }
-        }
-
-        return res;
-    };
-
-    search.setActiveAllLayers = function() {
-        for (var i in activeLayersMap) {
-            activeLayersMap[i] = true;
-        }
-    };
-
-    search.setActiveLayers = function(layersName) {
-        if (typeof layersName === 'undefined') {
-            return;
-        }
-
-        for (var i in activeLayersMap) {
-            if (layersName.indexOf(i) !== -1) {
-                activeLayersMap[i] = true;
+                        var layers = sublayers[macroCategoryId].items;
+                        for (var layerId in layers) {
+                            var label = confLayersMapById[layers[layerId]].label;
+                            if (activeLayersMap[label]) {
+                                layers[layerId] = { label: label, id: layers[layerId] };
+                            };
+                        }
+                    } else {
+                        delete sublayers[macroCategoryId];
+                    }
+                }
             } else {
-                activeLayersMap[i] = false;
+                delete currentFilterMap[superCategoryId];
             }
         }
-    };
 
-    search.addToIndex = function(item, layerName) {
-        if (typeof confLayersMap[layerName] !== 'undefined' &&
-            typeof layersEngine[layerName] === 'undefined') {
-            setupEngine(layerName);
+        var featuresIdByLayerMap = {};
+        search.setFeaturesIdByLayerMap = function(newMap) {
+
+            if (typeof newMap === 'undefined') {
+                return;
+            }
+            featuresIdByLayerMap = newMap;
         }
 
-        if (typeof layersEngine[layerName] !== 'undefined') {
-            addToIndex(item, layerName);
+        var setupEngine = function(layerName) {
+            layersEngine[layerName] = new JsSearch.Search('id');
 
-        }
-    };
+            if (searchConf.stemming) {
+                layersEngine[layerName].tokenizer = new JsSearch.StemmingTokenizer(stemmer, layersEngine[layerName].tokenizer);
+            }
+            if (searchConf.indexStrategy) {
+                layersEngine[layerName].indexStrategy = new JsSearch[searchConf.indexStrategy]();
+            }
+            if (searchConf.TFIDFRanking) {
+                layersEngine[layerName].searchIndex = new JsSearch.TfIdfSearchIndex('id');
+            }
 
-    search.getByLayersWithDivider = function(query, layers) {
-        var results = [],
-            currentResult = [];
+            for (var i in searchConf.indexFields) {
+                layersEngine[layerName].addIndex(['properties', searchConf.indexFields[i]]);
+            }
+        };
 
-        // if (query) {
-        //     for (var c in confLayersMap) {
-        //         if (typeof layersEngine[c] !== 'undefined' &&
-        //             layers.indexOf(c) !== -1) {
-        //             currentResult = layersEngine[c].search(query);
+        var addToIndex = function(item, layerName) {
+            var itemModel = {};
 
-        //             if (currentResult.length > 0) {
-        //                 results.push({ label: c, divider: true });
-        //                 results = results.concat(currentResult);
-        //             }
-        //         }
-        //     }
-        // } else if (searchConf.showAllByDefault) {
-        //     for (var l in confLayersMap) {
-        //         if (typeof layersEngine[l] !== 'undefined' &&
-        //             layers.indexOf(l) !== -1) {
-        //             results.push({ label: l, divider: true });
-        //             results = results.concat(getAllByLayer(l));
-        //         }
-        //     }
-        // }
-        var idFilter = [];
-        if (facetedFilters.length) {
-            idFilter = facetedFilterFun(facetedFilters);
-        }
+            itemModel = angular.extend({ id: item.properties.id || Utils.generateUID() }, item);
+            layersEngine[layerName].addDocument(itemModel);
+        };
 
-        if (query) {
+        var getAllByLayer = function(layerName) {
+            return layersEngine[layerName].documents_;
+        };
+
+        search.getActiveLayers = function() {
+            var res = [];
+
+            for (var i in activeLayersMap) {
+                if (activeLayersMap[i].state) {
+                    res.push(i);
+                }
+            }
+            return res;
+        };
+
+        search.setActiveAllLayers = function() {
+            for (var i in activeLayersMap) {
+                activeLayersMap[i].state = true;
+            }
+        };
+
+        search.getActiveLayersMap = function() {
+            return activeLayersMap;
+        };
+
+        search.setActiveLayers = function(layersName) {
+            if (typeof layersName === 'undefined') {
+                return;
+            }
+
+            for (var i in activeLayersMap) {
+                if (layersName.indexOf(i) !== -1) {
+                    activeLayersMap[i].state = true;
+                } else {
+                    activeLayersMap[i].state = false;
+                }
+            }
+        };
+
+        search.addToIndex = function(item, layerName) {
+            if (typeof confLayersMap[layerName] !== 'undefined' &&
+                typeof layersEngine[layerName] === 'undefined') {
+                setupEngine(layerName);
+            }
+
+            if (typeof layersEngine[layerName] !== 'undefined') {
+                addToIndex(item, layerName);
+            }
+        };
+
+        search.getByLayersWithDivider = function(query, layers) {
+            var results = [],
+                currentResult = [];
+
+            var filteredIds = getFilteredFeaturesIds();
+            //filterById gonna change array lenght
+            var filterBool = filteredIds.length ? true : false;
+            if (query) {
+                for (var c in confLayersMap) {
+                    if (typeof layersEngine[c] !== 'undefined' &&
+                        layers.indexOf(c) !== -1) {
+                        currentResult = layersEngine[c].search(query);
+                        if (filterBool) {
+                            currentResult = filterById(currentResult, filteredIds);
+                        }
+                        if (currentResult.length > 0) {
+                            results.push({ label: c, divider: true });
+                            results = results.concat(currentResult);
+                        }
+                    }
+                }
+            } else if (searchConf.showAllByDefault || filteredIds.length) {
+                for (var l in confLayersMap) {
+                    if (typeof layersEngine[l] !== 'undefined' &&
+                        layers.indexOf(l) !== -1) {
+                        currentResult = getAllByLayer(l);
+                        if (filterBool) {
+                            currentResult = filterById(currentResult, filteredIds);
+                        }
+                        if (currentResult.length > 0) {
+                            results.push({ label: l, divider: true });
+                            results = results.concat(currentResult);
+                        }
+                    }
+                }
+            }
+
+
+            return results;
+        };
+
+        search.getFeatures = function(query, layers) {
+            var results = [],
+                currentResult = [];
+
+            var filteredIds = getFilteredFeaturesIds();
+            var filterBool = filteredIds.length ? true : false;
+
             for (var c in confLayersMap) {
                 if (typeof layersEngine[c] !== 'undefined' &&
                     layers.indexOf(c) !== -1) {
-                    currentResult = layersEngine[c].search(query);
-                    currentResult = filterById(currentResult, idFilter);
+
+                    if (query) {
+                        currentResult = layersEngine[c].search(query);
+                    } else {
+                        currentResult = getAllByLayer(c);
+                    }
+
+                    if (filterBool) {
+                        currentResult = filterById(currentResult, filteredIds);
+                    }
                     if (currentResult.length > 0) {
-                        console.log(c);
-                        results.push({ label: c, divider: true });
                         results = results.concat(currentResult);
                     }
                 }
             }
-        } else if (searchConf.showAllByDefault) {
-            for (var l in confLayersMap) {
-                if (typeof layersEngine[l] !== 'undefined' &&
-                    layers.indexOf(l) !== -1) {
-                    currentResult = getAllByLayer(l);
-                    currentResult = filterById(currentResult, idFilter);
-                    if (currentResult.length > 0) {
+
+
+
+            return results;
+        };
+
+
+        search.getAllWithDivider = function(query) {
+            return search.getByLayersWithDivider(query, confLayersList);
+        };
+
+        search.getByLayersGroupedByLayer = function(query, layers) {
+            var results = {},
+                currentResult = [];
+
+            var filteredIds = getFilteredFeaturesIds();
+            var filterBool = filteredIds.length ? true : false;
+            if (query) {
+
+                for (var c in confLayersMap) {
+                    if (typeof layersEngine[c] !== 'undefined' &&
+                        layers.indexOf(c) !== -1) {
+                        currentResult = layersEngine[c].search(query);
+                        if (filterBool) {
+                            currentResult = filterById(currentResult, filteredIds);
+                        }
+                        if (currentResult.length > 0) {
+                            results[c] = currentResult;
+                        }
+                    }
+                }
+
+            } else if (searchConf.showAllByDefault || filteredIds.length) {
+                for (var l in confLayersMap) {
+                    if (typeof layersEngine[l] !== 'undefined' &&
+                        layers.indexOf(l) !== -1) {
+                        currentResult = getAllByLayer(l);
+                        if (filterBool) {
+                            currentResult = filterById(currentResult, filteredIds);
+                        }
+                        if (currentResult.length > 0) {
+                            results[l] = currentResult;
+                        }
+                    }
+                }
+            }
+            return results;
+        };
+
+
+        search.getAllGroupedByLayer = function(query) {
+            var results = {},
+                currentResult = [];
+
+            if (query) {
+                for (var c in confLayersMap) {
+                    if (typeof layersEngine[c] !== 'undefined') {
+                        currentResult = layersEngine[c].search(query);
+                        if (currentResult.length > 0) {
+                            results[c] = currentResult;
+                        }
+                    }
+                }
+            } else if (searchConf.showAllByDefault) {
+                for (var l in confLayersMap) {
+                    if (typeof layersEngine[l] !== 'undefined') {
+                        results[l] = getAllByLayer(l);
+                    }
+                }
+            }
+            return results;
+        };
+
+
+        var getFilteredFeaturesIds = function(type) {
+
+            var result = [];
+
+            for (var superId in currentFilterMap) {
+                var filter = [];
+                var superCat = currentFilterMap[superId];
+                for (var macroId in superCat.sublayers) {
+                    var macroCat = superCat.sublayers[macroId];
+                    var cat = []
+                    for (var catIndex in macroCat.items) {
+                        var label = macroCat.items[catIndex].label;
+                        if (macroCat.label === "custom") {
+                            if (activeLayersMap[label].state) {
+                                cat.push([label]);
+                            }
+                        } else {
+                            if (activeLayersMap[label].state) {
+                                cat.push(label);
+                            }
+                        }
+                    }
+                    if (cat.length) {
+                        filter.push(cat);
+                    }
+                }
+
+                var superIds = [];
+                for (var i = 0; i < filter.length; i++) {
+
+                    var arrayOR = [];
+                    for (var j = 0; j < filter[i].length; j++) {
+                        var layerId = filter[i][j];
+                        if (featuresIdByLayerMap[layerId]) {
+                            arrayOR = arrayOR.concat(featuresIdByLayerMap[layerId]);
+                        }
+                    }
+
+                    if (type) {
+                        if (superIds.length === 0 && i === 0) {
+                            superIds = arrayOR;
+                        } else {
+                            superIds = superIds.concat(arrayOR);
+                        }
+                    } else {
+                        if (superIds.length === 0 && i === 0) {
+                            superIds = arrayOR;
+                        } else {
+                            superIds = superIds.filter(function(n) {
+                                return arrayOR.indexOf(n) > -1;
+                            });
+                        }
+                    }
+
+                }
+                result = result.concat(superIds);
+            }
+
+            if (result && result.length) {
+                var tmp = result.filter(function(ele, pos, result) {
+                    return result.indexOf(ele) == pos;
+                })
+                retult = tmp;
+            }
+
+            return result;
+        }
+
+
+        var filterById = function(arrayIds, filterIds) {
+
+            var newResult = [];
+            for (var index in arrayIds) {
+                var id = arrayIds[index].id;
+                var filterId = filterIds.indexOf(id);
+                if (filterId > -1) {
+                    newResult.push(arrayIds[index]);
+                    filterIds.splice(filterId, 1);
+                }
+            }
+
+            return newResult;
+
+        }
+    } else {
+        var setupEngine = function(layerName) {
+            layersEngine[layerName] = new JsSearch.Search('id');
+
+            if (searchConf.stemming) {
+                layersEngine[layerName].tokenizer = new JsSearch.StemmingTokenizer(stemmer, layersEngine[layerName].tokenizer);
+            }
+            if (searchConf.indexStrategy) {
+                layersEngine[layerName].indexStrategy = new JsSearch[searchConf.indexStrategy]();
+            }
+            if (searchConf.TFIDFRanking) {
+                layersEngine[layerName].searchIndex = new JsSearch.TfIdfSearchIndex('id');
+            }
+            for (var i in searchConf.indexFields) {
+                layersEngine[layerName].addIndex(['properties', searchConf.indexFields[i]]);
+            }
+        };
+
+        var addToIndex = function(item, layerName) {
+            var itemModel = {};
+
+            itemModel = angular.extend({ id: item.properties.id || Utils.generateUID() }, item);
+            layersEngine[layerName].addDocument(itemModel);
+        };
+
+        var getAllByLayer = function(layerName) {
+            return layersEngine[layerName].documents_;
+        };
+
+        search.getActiveLayersMap = function() {
+            return activeLayersMap;
+        };
+
+        search.getActiveLayers = function() {
+
+            var res = [];
+            for (var i in activeLayersMap) {
+                if (activeLayersMap[i].state) {
+                    res.push(i);
+                }
+            }
+
+            return res;
+        };
+
+        search.setActiveAllLayers = function() {
+            for (var i in activeLayersMap) {
+                activeLayersMap[i].state = true;
+            }
+        };
+
+        search.setActiveLayers = function(layersName) {
+            if (typeof layersName === 'undefined') {
+                return;
+            }
+
+            for (var i in activeLayersMap) {
+                if (layersName.indexOf(i) !== -1) {
+                    activeLayersMap[i].state = true;
+                } else {
+                    activeLayersMap[i].state = false;
+                }
+            }
+        };
+
+        search.addToIndex = function(item, layerName) {
+            if (typeof confLayersMap[layerName] !== 'undefined' &&
+                typeof layersEngine[layerName] === 'undefined') {
+                setupEngine(layerName);
+            }
+
+            if (typeof layersEngine[layerName] !== 'undefined') {
+                addToIndex(item, layerName);
+            }
+        };
+
+        search.getByLayersWithDivider = function(query, layers) {
+            var results = [],
+                currentResult = [];
+
+            if (query) {
+                for (var c in confLayersMap) {
+                    if (typeof layersEngine[c] !== 'undefined' &&
+                        layers.indexOf(c) !== -1) {
+                        currentResult = layersEngine[c].search(query);
+                        if (currentResult.length > 0) {
+                            results.push({ label: c, divider: true });
+                            results = results.concat(currentResult);
+                        }
+                    }
+                }
+            } else if (searchConf.showAllByDefault) {
+                for (var l in confLayersMap) {
+                    if (typeof layersEngine[l] !== 'undefined' &&
+                        layers.indexOf(l) !== -1) {
                         results.push({ label: l, divider: true });
-                        results = results.concat(currentResult);
-                    }
-
-                }
-            }
-        }
-
-        return results;
-    };
-
-
-    search.getAllWithDivider = function(query) {
-        return search.getByLayersWithDivider(query, confLayersList);
-    };
-
-    search.getByLayersGroupedByLayer = function(query, layers) {
-        var results = {},
-            currentResult = [];
-
-        // if (query) {
-        //     for (var c in confLayersMap) {
-        //         if (typeof layersEngine[c] !== 'undefined' &&
-        //             layers.indexOf(c) !== -1) {
-        //             currentResult = layersEngine[c].search(query);
-
-        //             if (currentResult.length > 0) {
-        //                 results[c] = currentResult;
-        //             }
-        //         }
-        //     }
-        // } else if (searchConf.showAllByDefault) {
-        //     for (var l in confLayersMap) {
-        //         if (typeof layersEngine[l] !== 'undefined' &&
-        //             layers.indexOf(l) !== -1) {
-        //             results[l] = getAllByLayer(l);
-        //         }
-        //     }
-        // }
-
-        var idFilter = [];
-        if (facetedFilters.length) {
-            idFilter = facetedFilterFun(facetedFilters);
-        }
-
-        if (query) {
-            for (var c in confLayersMap) {
-                if (typeof layersEngine[c] !== 'undefined' &&
-                    layers.indexOf(c) !== -1) {
-                    currentResult = layersEngine[c].search(query);
-                    currentResult = layersEngine[c].search(query);
-
-                    var tmp = filterById(currentResult, idFilter);
-                    currentResult = tmp;
-                    if (currentResult.length > 0) {
-                        results[c] = currentResult;
+                        results = results.concat(getAllByLayer(l));
                     }
                 }
             }
-        } else if (searchConf.showAllByDefault) {
-            for (var l in confLayersMap) {
-                if (typeof layersEngine[l] !== 'undefined' &&
-                    layers.indexOf(l) !== -1) {
-                    currentResult = getAllByLayer(l);
-                    var tmp = filterById(currentResult, idFilter);
-                    currentResult = tmp;
-                    if (currentResult.length > 0) {
-                        results[c] = currentResult;
+
+            return results;
+        };
+
+        search.getAllWithDivider = function(query) {
+            return search.getByLayersWithDivider(query, confLayersList);
+        };
+
+        search.getByLayersGroupedByLayer = function(query, layers) {
+            var results = {},
+                currentResult = [];
+
+            if (query) {
+                for (var c in confLayersMap) {
+                    if (typeof layersEngine[c] !== 'undefined' &&
+                        layers.indexOf(c) !== -1) {
+                        currentResult = layersEngine[c].search(query);
+                        if (currentResult.length > 0) {
+                            results[c] = currentResult;
+                        }
+                    }
+                }
+            } else if (searchConf.showAllByDefault) {
+                for (var l in confLayersMap) {
+                    if (typeof layersEngine[l] !== 'undefined' &&
+                        layers.indexOf(l) !== -1) {
+                        results[l] = getAllByLayer(l);
                     }
                 }
             }
-        }
 
+            return results;
+        };
 
+        search.getAllGroupedByLayer = function(query) {
+            var results = {},
+                currentResult = [];
 
-        return results;
-    };
-
-    search.getAllGroupedByLayer = function(query) {
-        var results = {},
-            currentResult = [];
-
-        if (query) {
-            for (var c in confLayersMap) {
-                if (typeof layersEngine[c] !== 'undefined') {
-                    currentResult = layersEngine[c].search(query);
-                    if (currentResult.length > 0) {
-                        results[c] = currentResult;
+            if (query) {
+                for (var c in confLayersMap) {
+                    if (typeof layersEngine[c] !== 'undefined') {
+                        currentResult = layersEngine[c].search(query);
+                        if (currentResult.length > 0) {
+                            results[c] = currentResult;
+                        }
+                    }
+                }
+            } else if (searchConf.showAllByDefault) {
+                for (var l in confLayersMap) {
+                    if (typeof layersEngine[l] !== 'undefined') {
+                        results[l] = getAllByLayer(l);
                     }
                 }
             }
-        } else if (searchConf.showAllByDefault) {
-            for (var l in confLayersMap) {
-                if (typeof layersEngine[l] !== 'undefined') {
-                    results[l] = getAllByLayer(l);
-                }
-            }
-        }
 
 
-        return results;
-    };
-
-
-
-    var facetedFilters = [];
-    var featuresIdByLayer = [];
-    search.setFacetedFilters = function(filters, featuresIdMap) {
-        if (typeof filters === 'undefined' || typeof featuresIdByLayer === 'undefined') {
-            return;
-        }
-
-        facetedFilters = filters;
-        featuresIdByLayer = featuresIdMap;
+            return results;
+        };
 
     }
-
-    var facetedFilterFun = function(binds, type) {
-
-        var result = [];
-
-        var filter = typeof binds !== "undefined" ? binds : [];
-
-        for (let i = 0; i < filter.length; i++) {
-
-            var arrayOR = [];
-            for (let j = 0; j < filter[i].length; j++) {
-                var layerId = filter[i][j];
-                arrayOR = arrayOR.concat(featuresIdByLayer[layerId]);
-            }
-
-            if (type) {
-                if (result.length === 0 && i === 0) {
-                    result = arrayOR;
-                } else {
-                    result = result.concat(arrayOR);
-                }
-            } else {
-                if (result.length === 0 && i == 0) {
-                    result = arrayOR;
-                } else {
-                    result = result.filter(function(n) {
-                        return arrayOR.indexOf(n) > -1;
-                    });
-                }
-            }
-        }
-
-        return result;
-    }
-
-
-    var filterById = function(result, idArray) {
-
-        var newResult = [];
-        for (var index in result) {
-            var id = result[index].id;
-            if (idArray.indexOf(id) > -1) {
-                newResult.push(result[index]);
-            }
-        }
-
-        return newResult;
-
-    }
-
     return search;
 });
