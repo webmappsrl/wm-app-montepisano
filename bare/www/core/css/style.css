@@ -130,6 +130,9 @@ button {
 .button:hover {
   color: inherit; }
 
+.facebook-icon {
+  color: #3b5998 !important; }
+
 @media screen and (min-width: 320px) {
   html {
     font-size: 2vh; } }
@@ -805,6 +808,14 @@ div.detailRoute-footer {
   text-overflow: ellipsis;
   white-space: nowrap; }
 
+.details-contacts__tags {
+  width: 100%;
+  padding: 0 15px; }
+  .details-contacts__tags .details-contacts__tag {
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin: 0 2px; }
+
 .details-content {
   height: 100%;
   padding: 2%;
@@ -1026,6 +1037,47 @@ div.detailRoute-footer {
       color: #f7f9f1;
       font-size: 40px;
       padding: 10px; }
+
+.details-courses div {
+  width: 100%;
+  padding: 10px 5px; }
+  .details-courses div .details-courses_title {
+    display: block;
+    font-size: 150%;
+    font-weight: bold;
+    text-transform: capitalize;
+    margin: 15px 0; }
+
+.details-menu .details-menu__title {
+  display: block;
+  font-size: 120%;
+  margin: 5px 0;
+  font-weight: bold;
+  text-transform: capitalize; }
+
+.details-tabs {
+  border-bottom: 1px solid #999999;
+  margin-bottom: 10px; }
+  .details-tabs div.details-tabs__title {
+    float: left;
+    width: calc(100% / 3);
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px; }
+  .details-tabs::after {
+    content: '';
+    display: block;
+    clear: both; }
+
+.details-infos .details-infos__title {
+  margin: 0 10px 0 0;
+  font-weight: bold;
+  text-transform: capitalize; }
+
+.details-infos .details-infos__cards {
+  margin: 10px 0; }
 
 /* Details table */
 .table-details {

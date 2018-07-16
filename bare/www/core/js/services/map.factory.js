@@ -127,16 +127,15 @@ angular.module('webmapp')
         return featuresIdByLayersMap;
     };
 
-    mapService.getLayerLabelById = function (id) {
+    mapService.getLayerLabelById = function (id, forceLabel) {
         currentLang = currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
-        if (overlayLayersById[id].languages) {
+        if (overlayLayersById[id].languages && !forceLabel) {
             return overlayLayersById[id].languages[currentLang] || overlayLayersById[id].languages[defaultLang] || overlayLayersById[id].languages[Object.keys(overlayLayersById[id].languages[0])] || overlayLayersById[id].label;;
         }
         else {
             return overlayLayersById[id].label;
         }
     };
-
 
     var activeFilters = localStorage.activeFilters ?
         JSON.parse(localStorage.activeFilters) : overlayLayersConf.reduce(function(prev, curr) {

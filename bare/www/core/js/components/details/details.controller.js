@@ -1,18 +1,18 @@
 angular.module('webmapp')
 
     .controller('DetailController', function DetailController(
-        $state,
-        $scope,
-        $rootScope,
-        $sce,
         $ionicModal,
         $ionicSlideBoxDelegate,
+        $rootScope,
+        $sce,
+        $scope,
+        $state,
+        $translate,
+        CONFIG,
         MapService,
         Model,
         Offline,
-        Utils,
-        CONFIG,
-        $translate
+        Utils
     ) {
         var vm = {},
             current = $state.current || {},
@@ -46,6 +46,7 @@ angular.module('webmapp')
         vm.additionalLinks = {};
         vm.isNavigable = false;
         vm.fullDescription = false;
+        vm.selectedTab = 'panoramica';
         vm.showAccessibilityButtons = CONFIG.OPTIONS.showAccessibilityButtons;
 
         vm.hideSubMenu = true;
@@ -366,7 +367,34 @@ angular.module('webmapp')
                 }
             }
 
-            // console.log(feature, vm)
+            if (vm.featureDetails.menu) {
+                vm.showMenu = true;
+            }
+
+            if (feature.antipasto || feature.primopiatto || feature.carnipesce ||
+                feature.contorno || feature.dessert || feature.cantina) {
+                vm.showCourses = true;
+            }
+
+            vm.selectedTab = 'panoramica';
+
+            console.log(feature, vm)
+        };
+
+        vm.selectTab = function (tabType) {
+            vm.selectedTab = tabType;
+        };
+
+        vm.getSpecialityName = function (id) {
+            return MapService.getLayerLabelById(id);
+        };
+
+        vm.goToSpeciality = function (id) {
+            var label = MapService.getLayerLabelById(id, true);
+            $rootScope.searchLayers = [label];
+            setTimeout(function () {
+                Utils.goTo('search');
+            }, 10);
         };
 
         modalScope.vm.openFeature = function (feature) {
@@ -526,7 +554,15 @@ angular.module('webmapp')
         };
 
         vm.openRelatedUrlPopup = function () {
-            vm.relatedUrlPopupOpened = !vm.relatedUrlPopupOpened;
+            if (vm.feature.web && typeof vm.feature.web === 'string') {
+                vm.openLink(vm.feature.web);
+            }
+            else if (vm.feature.facebook && typeof vm.feature.facebook === 'string') {
+                vm.openLink(vm.feature.facebook);
+            }
+            else {
+                vm.relatedUrlPopupOpened = !vm.relatedUrlPopupOpened;
+            }
             
             Utils.forceDigest();
         }
