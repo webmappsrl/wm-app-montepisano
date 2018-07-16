@@ -407,13 +407,22 @@ angular.module('webmapp')
             return;
         }
 
+        markerClusters.clearLayers();
+
         for (var i in overlayLayersByLabel) {
-            removeLayer(i);
+            if (!isAPOILayer(i)) {
+                removeLayer(i);
+            }
+
         }
 
         for (var j in extraLayersByLabel) {
-            removeLayer(j);
+            if (!isAPOILayer(j)) {
+                removeLayer(j);
+            }
         }
+
+
     };
 
     var activatePopup = function(e, isPOI) {
@@ -1682,9 +1691,9 @@ angular.module('webmapp')
                 mapService.removeLayer(layerName);
             }
         } else {
-            for (var label in activeFilters) {
-                mapService.removeLayer(label);
-            }
+            // for (var label in activeFilters) {
+            //     mapService.removeLayer(label);
+            // }
         }
 
     };
