@@ -117,15 +117,16 @@ angular.module('webmapp')
             Search.setActiveLayers(toUpdate);
             vm.translatedFiltersList = vm.translateOverlayInArray(vm.filtersList);
             vm.othersCount = String(vm.filtersList.length - 1);
-            var results = Search.getByLayersWithDivider(lastQuery);
+            var results = Search.getByLayersLexicalOrder(lastQuery);
             updateClickableCheckBoxes(results);
             vm.results = vm.translateOverlayInArray(results);
             MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery));
 
             vm.results.realLength = 0;
-
+            vm.lettersPosition = {};
             for (var i in vm.results) {
                 if (vm.results[i].id) {
+                    vm.lettersPosition[vm.results[i].label] = i;
                     vm.results.realLength = vm.results.realLength + 1;
                 }
             }
@@ -221,12 +222,14 @@ angular.module('webmapp')
     };
 
     vm.updateSearch = function(query) {
-        vm.results = vm.translateOverlayInArray(Search.getByLayersWithDivider(query, Search.getActiveLayers()));
+        vm.results = vm.translateOverlayInArray(Search.getByLayersLexicalOrder(query, Search.getActiveLayers()));
         updateClickableCheckBoxes(vm.results);
         vm.results.realLength = 0;
 
+        vm.lettersPosition = {};
         for (var i in vm.results) {
             if (vm.results[i].id) {
+                vm.lettersPosition[vm.results[i].label] = i;
                 vm.results.realLength = vm.results.realLength + 1;
             }
         }
@@ -241,7 +244,7 @@ angular.module('webmapp')
         $rootScope.$emit('toggle-map-in-search', vm.isMapView);
     };
 
-    vm.getSpecialities = function (item) {
+    vm.getSpecialities = function(item) {
         var specialities = "";
         if (item.properties && item.properties.taxonomy && item.properties.taxonomy.specialita) {
             for (var i in item.properties.taxonomy.specialita) {

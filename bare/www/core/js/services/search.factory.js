@@ -190,6 +190,80 @@ angular.module('webmapp')
             return results;
         };
 
+        search.getByLayersLexicalOrder = function(query, layers) {
+            var results = [],
+                currentResult = [];
+
+            var filteredIds = getFilteredFeaturesIds();
+
+            if (query) {
+                if (!filteredIds.length) {
+                    for (var c in confLayersMap) {
+                        if (typeof layersEngine[c] !== 'undefined') {
+                            currentResult = layersEngine[c].search(query);
+                            if (currentResult.length > 0) {
+                                // results.push({ label: c, divider: true });
+                                results = results.concat(currentResult);
+                            }
+                        }
+                    }
+                } else {
+                    for (var c in confLayersMap) {
+                        if (typeof layersEngine[c] !== 'undefined') {
+                            currentResult = layersEngine[c].search(query);
+                            if (filteredIds.length) {
+                                currentResult = filterById(currentResult, filteredIds);
+                            }
+                            if (currentResult.length > 0) {
+                                // results.push({ label: c, divider: true });
+                                results = results.concat(currentResult);
+                            }
+                        }
+                    }
+                }
+            } else if (searchConf.showAllByDefault || filteredIds.length) {
+                for (var l in confLayersMap) {
+                    if (typeof layersEngine[l] !== 'undefined') {
+                        currentResult = getAllByLayer(l);
+                        if (filteredIds.length) {
+                            currentResult = filterById(currentResult, filteredIds);
+                        }
+                        if (currentResult.length > 0) {
+                            // results.push({ label: l, divider: true });
+                            results = results.concat(currentResult);
+                        }
+                    }
+                }
+            }
+
+
+            results.sort(function(a, b) {
+                var aName = a.properties.name.toLocaleUpperCase();
+                var bName = b.properties.name.toLocaleUpperCase();
+                return aName.localeCompare(bName);
+            });
+
+
+            var char = "empty";
+            for (let i = 0; i < results.length; i++) {
+                var el = results[i];
+                var currentChar = el.properties.name[0].toLocaleUpperCase();
+                if (char === "empty") {
+                    char = currentChar;
+                    results.unshift({ label: char.toLocaleUpperCase(), divider: true })
+                }
+
+
+                if (currentChar !== char) {
+                    results.splice(i, 0, { label: currentChar, divider: true })
+                    char = currentChar;
+                }
+
+            }
+
+            return results;
+        };
+
         search.getFeatures = function(query) {
             var results = [],
                 currentResult = [];
