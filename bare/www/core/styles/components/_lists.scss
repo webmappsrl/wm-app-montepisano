@@ -161,9 +161,8 @@
   margin: 5px;
 
   img {
-      max-width: 100%;
       @include center-image;
-      height: 30vw;
+      max-height: 30vw;
   }
   i {
     font-size: 40px;

@@ -84,11 +84,15 @@ ion-content {
       font-size: 20px;
       text-align: center;
       margin: 0 auto;
+      border-radius: 5%;
       div.home-icon {
         padding: 3% 0 3% 0;
         .icon:before {
           font-size: 40px;
         }
+      }
+      &.activated {
+        color: #ffb3b3;
       }
     }
   

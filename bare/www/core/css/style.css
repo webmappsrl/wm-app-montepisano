@@ -1445,11 +1445,14 @@ ion-content div.home-content {
     position: relative;
     font-size: 20px;
     text-align: center;
-    margin: 0 auto; }
+    margin: 0 auto;
+    border-radius: 5%; }
     ion-content div.home-content div.home-button div.home-icon {
       padding: 3% 0 3% 0; }
       ion-content div.home-content div.home-button div.home-icon .icon:before {
         font-size: 40px; }
+    ion-content div.home-content div.home-button.activated {
+      color: #ffb3b3; }
   ion-content div.home-content div.home-button.height-1 div.home-icon .icon:before {
     font-size: 80px; }
   ion-content div.home-content div.home-button.height-2 div.home-icon .icon:before {
@@ -1593,14 +1596,13 @@ div.logout {
   height: calc(100% - 10px);
   margin: 5px; }
   .list-info-image img {
-    max-width: 100%;
     position: absolute;
     top: 0px;
     bottom: 0px;
     left: 0px;
     right: 0px;
     margin: auto;
-    height: 30vw; }
+    max-height: 30vw; }
   .list-info-image i {
     font-size: 40px;
     position: absolute;
