@@ -100,9 +100,6 @@ angular.module('webmapp')
 
     var db = new PouchDB('webmapp');
 
-
-
-
     var overlayLayersConfMap = overlayLayersConf.reduce(function(prev, curr) {
         prev[curr.label] = curr;
         return prev;

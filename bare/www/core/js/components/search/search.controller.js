@@ -12,7 +12,8 @@ angular.module('webmapp')
         CONFIG,
         $ionicLoading,
         $location,
-        $translate
+        $translate,
+        $window
     ) {
         var vm = {};
 
@@ -311,6 +312,7 @@ angular.module('webmapp')
             template: '<ion-spinner></ion-spinner>'
         });
 
+        vm.width = $window.screen.availWidth - 30;
         if (modalScope.vm.isNewModal) {
 
             var featuresIdByLayersMap = MapService.getFeaturesIdByLayersMap();

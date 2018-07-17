@@ -74,6 +74,7 @@
                     ng-click="vm.goTo('layer/' + item.parent.label + '/' + item.properties.id, item.divider)"
                     collection-repeat="item in vm.results"
                     item-height="item.divider ? '62px' : '100px'"
+                    item-width="vm.width + 'px'"
                     ng-attr-id="{{item.divider ? 'alpha-scroll-' + item.label : ''}}">
                     <div ng-if="!item.properties.image" class="list-info-image">
                         <i class="icon {{item.properties.icon}}" ng-style="{color: item.properties.color}"></i>
