@@ -12,7 +12,8 @@
         'background': COLORS.global.background
     }">
         <div class="home-search" ng-style="{
-                'background': vm.colors.mainBar.background
+                'background': vm.colors.mainBar.background,
+                'height': ((vm.height - 44) * 45 / 100) + 'px'
             }">
             <div class="searchbar">
                 <form ng-submit="vm.goToSearchByString()">
@@ -24,7 +25,9 @@
         </div>
         <div class="home-content" ng-style="{
                 'color': vm.colors.mainBar.background,
-                'background': vm.colors.mainBar.color
+                'background': vm.colors.mainBar.color,
+                'height': ((vm.height - 44) * 70 / 100) + 'px',
+                'top': ((vm.height - 44) * 30 / 100) + 'px'
             }">
             <div ng-repeat="(key, item) in vm.types" class="home-button width-{{vm.columns}} height-{{vm.rows}}" ng-click="vm.goToSearchByCategory(item.label)">
                 <div class="home-button-content">

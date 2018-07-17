@@ -3,6 +3,7 @@ angular.module('webmapp')
 .controller('HomeController', function HomeController(
     $translate,
     $rootScope,
+    $window,
     CONFIG,
     Search,
     Utils
@@ -20,6 +21,7 @@ angular.module('webmapp')
     vm.rows = 2;
 
     vm.colors = CONFIG.STYLE;
+    vm.height = $window.innerHeight;
 
     vm.searchString = "";
 
@@ -30,8 +32,13 @@ angular.module('webmapp')
     };
 
     vm.goToSearchByCategory = function(id) {
-        $rootScope.searchLayers = [id];
-        Utils.goTo('search');
+        if (id === 'Eventi') {
+            Utils.goTo('layer/Eventi');
+        }
+        else {
+            $rootScope.searchLayers = [id];
+            Utils.goTo('search');
+        }
     };
 
     vm.types = [];
