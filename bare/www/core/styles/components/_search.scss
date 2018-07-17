@@ -9,6 +9,23 @@
    #GENERAL
 \* ------------------------------------ */
 
+.alpha-scroll {
+    color: #000;
+    position: absolute;
+    top: 125px;
+    right: 0px;
+    text-align: center;
+    height: calc(100vh - 125px - 44px);
+    font-size: 15px;
+    .alpha-scroll__letter {
+        display: block;
+        height: 15px;
+        margin-bottom: calc((100vh - 125px - 44px - 15px * 27) / 27);
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+}
+
 .item-search-filter {
     padding: 4px;
     position: relative;
@@ -35,7 +52,6 @@
         color: #918F75;
     }
 }
-
 
 /*.select-category-left,
 .select-category-right {

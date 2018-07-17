@@ -16,8 +16,8 @@
         <div class="search-input-box">
             <label class="label-input-wrapper">
                 <input type="text" id="search" class="input search-input" name="search" placeholder="{{'Cerca' | translate}}..."
-                    autocorrect="off" autocomplete="off" spellcheck="false" ng-model="currentQuery" ng-init="currentQuery=vm.startingString"  ng-model-options="{debounce: 200}"
-                    ng-change="vm.updateSearch(currentQuery)" />
+                    autocorrect="off" autocomplete="off" spellcheck="false" ng-model="vm.currentQuery"  ng-model-options="{debounce: 200}"
+                    ng-change="vm.updateSearch(vm.currentQuery)" />
             </label>
 
             <button class="button icon-left ion-search button-small" ng-style="{
@@ -73,8 +73,9 @@
                     ng-class="{'is-divider': item.divider, 'item-image-left': !item.divider}"
                     ng-click="vm.goTo('layer/' + item.parent.label + '/' + item.properties.id, item.divider)"
                     collection-repeat="item in vm.results"
-                    item-height="item.divider ? '62px' : '100px'">
-                    <div ng-if="!item.properties.image" class="list-info-image ">
+                    item-height="item.divider ? '62px' : '100px'"
+                    ng-attr-id="{{item.divider ? 'alpha-scroll-' + item.label : ''}}">
+                    <div ng-if="!item.properties.image" class="list-info-image">
                         <i class="icon {{item.properties.icon}}" ng-style="{color: item.properties.color}"></i>
                     </div>
                     <div ng-if="item.properties.image" class="list-info-image">
@@ -103,4 +104,10 @@
             </ion-list>
         </div>
     </ion-content>
+    <div class="alpha-scroll">
+        <span class="alpha-scroll__letter" ng-repeat="(key, item) in vm.lettersPosition"
+            ng-click="vm.scrollToDivider(key)">
+            {{key}}
+        </span>
+    </div>
 </ion-view>
