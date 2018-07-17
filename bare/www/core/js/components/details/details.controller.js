@@ -397,6 +397,10 @@ angular.module('webmapp')
             }, 10);
         };
 
+        vm.renderEventDate = function (date) {
+            return date.substring(6, 8) + '/' + date.substring(4, 6) + '/' + date.substring(0, 4);
+        };
+
         modalScope.vm.openFeature = function (feature) {
             Utils.goTo('layer/' + feature.parent.label.replace(/ /g, '_') + '/' + feature.properties.id);
         };

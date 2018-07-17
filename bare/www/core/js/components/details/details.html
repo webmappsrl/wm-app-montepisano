@@ -110,6 +110,14 @@
                         {{vm.getSpecialityName(item)}}
                     </a>
                 </div>
+                <div class="details-contacts__event-date" ng-if="vm.feature.date_start || vm.feature.date_stop">
+                    <span ng-if="vm.feature.date_start !== vm.feature.date_stop && vm.feature.date_start && vm.feature.date_stop">
+                        {{"Dal" | translate}} {{vm.renderEventDate(vm.feature.date_start)}} {{"al" | translate}} {{vm.renderEventDate(vm.feature.date_stop)}}
+                    </span>
+                    <span ng-if="vm.feature.date_start === vm.feature.date_stop && vm.feature.date_start">
+                        {{"Il" | translate}} {{vm.renderEventDate(vm.feature.date_start)}}
+                    </span>
+                </div>
             </div>
 
             <!-- details-columns -->

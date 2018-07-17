@@ -816,6 +816,10 @@ div.detailRoute-footer {
     white-space: nowrap;
     margin: 0 2px; }
 
+.details-contacts__event-date {
+  width: 100%;
+  padding: 0 15px; }
+
 .details-content {
   height: 100%;
   padding: 2%;
