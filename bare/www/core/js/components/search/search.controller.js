@@ -229,8 +229,10 @@ angular.module('webmapp')
         vm.lettersPosition = {};
         for (var i in vm.results) {
             if (vm.results[i].id) {
-                vm.lettersPosition[vm.results[i].label] = i;
+
                 vm.results.realLength = vm.results.realLength + 1;
+            } else {
+                vm.lettersPosition[vm.results[i].label] = i;
             }
         }
 

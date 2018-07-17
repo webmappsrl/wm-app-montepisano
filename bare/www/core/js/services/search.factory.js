@@ -238,9 +238,22 @@ angular.module('webmapp')
 
 
             results.sort(function(a, b) {
+
                 var aName = a.properties.name.toLocaleUpperCase();
+
                 var bName = b.properties.name.toLocaleUpperCase();
-                return aName.localeCompare(bName);
+                if (/^[a-zA-Z]/.test(aName) && /^[a-zA-Z]/.test(bName)) {
+                    return aName.localeCompare(bName);
+                } else {
+                    if (/^[a-zA-Z]/.test(aName)) {
+                        return 1;
+                    } else if (/^[a-zA-Z]/.test(bName)) {
+                        return -1;
+                    } else {
+                        return aName.localeCompare(bName);
+                    }
+                }
+
             });
 
 
@@ -249,12 +262,17 @@ angular.module('webmapp')
                 var el = results[i];
                 var currentChar = el.properties.name[0].toLocaleUpperCase();
                 if (char === "empty") {
-                    char = currentChar;
+                    if (!/^[a-zA-Z]/.test(currentChar)) {
+                        char = "*";
+                    } else {
+                        char = currentChar;
+                    }
+
                     results.unshift({ label: char.toLocaleUpperCase(), divider: true })
                 }
 
 
-                if (currentChar !== char) {
+                if (currentChar !== char && /^[a-zA-Z]/.test(currentChar)) {
                     results.splice(i, 0, { label: currentChar, divider: true })
                     char = currentChar;
                 }
