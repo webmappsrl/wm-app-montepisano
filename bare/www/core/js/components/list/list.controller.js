@@ -166,6 +166,10 @@ angular.module('webmapp')
             return month + '.' + year;
         };
 
+        vm.renderEventDate = function (date) {
+            return date.substring(6, 8) + '/' + date.substring(4, 6) + '/' + date.substring(0, 4);
+        };
+
         vm.toggleList = function () {
             vm.isListExpanded = !vm.isListExpanded;
             $rootScope.$emit('toggle-list', vm.isListExpanded);
@@ -180,6 +184,8 @@ angular.module('webmapp')
 
             vm.goTo('search');
         };
+
+        vm.toggleList();
 
         return vm;
     });

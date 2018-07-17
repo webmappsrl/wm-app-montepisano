@@ -249,7 +249,7 @@
                     </div>
                     <p ng-bind-html="vm.feature.description || vm.feature.title"
                         ng-if="vm.selectedTab === 'panoramica'"></p>
-                    <div class="details-infos" ng-if="vm.selectedTab === 'panoramica'">
+                    <div class="details-infos" ng-if="vm.selectedTab === 'panoramica' && vm.featureDetails.carte">
                         <div class="details-infos__cards">
                             <span class="details-infos__title">
                                 {{"Carte di credito" | translate}}:

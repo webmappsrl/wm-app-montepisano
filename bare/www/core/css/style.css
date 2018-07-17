@@ -1618,6 +1618,9 @@ div.logout {
   text-overflow: ellipsis;
   white-space: nowrap; }
 
+.list-item {
+  height: 100px; }
+
 /* List filter*/
 .filter-input-wrapper {
   position: relative; }

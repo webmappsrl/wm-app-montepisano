@@ -61,29 +61,50 @@
                 ng-if="!vm.subMenu">
 
                 <a 
-                    class="item item-icon-left"
+                    class="item item-image-lef list-item"
                     ng-if="vm.subGroupMenu"
-                    ng-style="{
-                        'color': vm.colors.list.color ? vm.colors.list.color : '#605846'
-                    }"
                     ng-click="vm.goTo('layer/' + item.url)"
-                    ng-repeat="item in vm.subGroupMenu">
-                    <i class="icon {{item.icon}}" ng-style="{'color': item.color}"></i>
-                    {{item.label}}
+                    ng-repeat="item in vm.subGroupMenu | layerTaxonomyFilter : vm.filterDetails">
+                    <div ng-if="!item.image" class="list-info-image">
+                        <i class="icon {{item.icon}}" ng-style="{'color': item.color}"></i>
+                    </div>
+                    <div ng-if="item.image" class="list-info-image">
+                        <img ng-src="{{item.image}}">
+                    </div>
+                    <span class="list-info-subtitle"
+                        ng-if="item.date_start || item.date_stop"
+                        ng-style="{
+                            'color': vm.colors.list.color ? vm.colors.list.color : '#605846'
+                        }">
+                        {{vm.renderEventDate(item.date_start) ? vm.renderEventDate(item.date_start) : vm.renderEventDate(item.date_stop)}}
+                        <span ng-if="item.date_start && item.date_stop && item.date_start !== item.date_stop"> - {{vm.renderEventDate(item.date_stop)}}</span>
+                    </span>
+                    <span class="two-lines-ellipsis">
+                        {{item.label}}
+                    </span>
                 </a>
                 <!-- TODO: add class has-subtitle when item has subtitle -->
                 <a 
-                    class="item item-icon-left"
+                    class="item item-image-left list-item"
                     ng-if="vm.subMenuLabel"
                     ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
-                    ng-repeat="item in vm.layersMap[vm.subMenuLabel].items | filter:search"
-                    ng-style="{
-                        'color': vm.colors.list.color ? vm.colors.list.color : '#605846'
-                    }">
-                    <i class="icon {{item.properties.icon}}" ng-style="{'color': item.color ? item.color : '#605846'}"></i>
+                    ng-repeat="item in vm.layersMap[vm.subMenuLabel].items | filter:search | layerTaxonomyFilter : vm.filterDetails">
+                    <div ng-if="!item.properties.image" class="list-info-image">
+                        <i class="icon {{item.properties.icon}}" ng-style="{'color': item.color ? item.color : '#605846'}"></i>
+                    </div>
+                    <div ng-if="item.properties.image" class="list-info-image">
+                        <img ng-src="{{item.properties.image}}">
+                    </div>
                     <!-- TODO: add following markup for subtitle -->
-                    <span class="list-info-title" ng-bind-html="item.properties.name"></span>
-                    <!-- <span class="list-info-subtitle">Via Nazionale 144 25052 Piancogno, BS</span> -->
+                    <span class="list-info-subtitle"
+                        ng-if="item.properties.date_start || item.properties.date_stop"
+                        ng-style="{
+                            'color': vm.colors.list.color ? vm.colors.list.color : '#605846'
+                        }">
+                        {{vm.renderEventDate(item.properties.date_start) ? vm.renderEventDate(item.properties.date_start) : vm.renderEventDate(item.properties.date_stop)}}
+                        <span ng-if="item.properties.date_start && item.properties.date_stop && item.properties.date_start !== item.properties.date_stop"> - {{vm.renderEventDate(item.properties.date_stop)}}</span>
+                    </span>
+                    <span class="list-info-title two-lines-ellipsis" ng-bind-html="item.properties.name"></span>
                 </a>
             </div>
 
@@ -92,18 +113,28 @@
 
                 <!-- TODO: add class has-subtitle when item has subtitle -->
                 <ion-item 
-                    class="item item-icon-left"
+                    class="item item-image-left list-item"
                     ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
-                    collection-repeat="item in vm.subMenu | filter:search">
-                    <i class="icon {{item.properties.icon}}" ng-style="{'color': item.properties.color ? item.properties.color : '#605846'}"></i>
+                    collection-repeat="item in vm.subMenu | filter:search | layerTaxonomyFilter : vm.filterDetails">
+                    <div ng-if="!item.properties.image" class="list-info-image">
+                        <i class="icon {{item.properties.icon}}" ng-style="{'color': item.properties.color ? item.properties.color : '#605846'}"></i>
+                    </div>
+                    <div ng-if="item.properties.image" class="list-info-image">
+                        <img ng-src="{{item.properties.image}}">
+                    </div>
                     <!-- TODO: add following markup for subtitle -->
-                            <span
-                                class="list-info-title"
-                                style="color: #605846"
-                                ng-bind-html="item.properties.name">
-                            </span>
-                            <!-- <span class="list-info-subtitle">Via Nazionale 144 25052 Piancogno, BS</span> -->
-
+                    <span class="list-info-subtitle"
+                        ng-if="item.properties.date_start || item.properties.date_stop"
+                        ng-style="{
+                            'color': vm.colors.list.color ? vm.colors.list.color : '#605846'
+                        }">
+                        {{vm.renderEventDate(item.properties.date_start) ? vm.renderEventDate(item.properties.date_start) : vm.renderEventDate(item.properties.date_stop)}}
+                        <span ng-if="item.properties.date_start && item.properties.date_stop && item.properties.date_start !== item.properties.date_stop"> - {{vm.renderEventDate(item.properties.date_stop)}}</span>
+                    </span>
+                    <span
+                        class="list-info-title two-lines-ellipsis"
+                        ng-bind-html="item.properties.name">
+                    </span>
                 </ion-item>
             </ion-list>
 

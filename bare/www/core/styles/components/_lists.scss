@@ -177,6 +177,10 @@
   @include text-ellipsis;
 }
 
+.list-item {
+  height: 100px;
+}
+
 /* List filter*/
 
 .filter-input-wrapper {
