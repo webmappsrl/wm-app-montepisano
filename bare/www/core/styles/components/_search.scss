@@ -139,3 +139,9 @@
         }
     }
 }
+
+.two-lines-ellipsis {
+    @include line-text-ellipsis(2, 22, 24);
+    padding-bottom: 0;
+    padding-top: 0;
+}

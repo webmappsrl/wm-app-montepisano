@@ -70,6 +70,17 @@
   white-space: nowrap;
 }
 
+@mixin line-text-ellipsis($lines, $font-size, $line-height) {
+  font-size: $font-size + px;
+  line-height: $line-height + px;
+  height: ($line-height * $lines) + px;
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+}
+
 // ------------------------------------ //
 // #LINEAR GRADIENT
 // ------------------------------------ //

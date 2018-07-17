@@ -82,7 +82,9 @@
                     <div ng-if="item.properties.image" class="list-info-image">
                         <img ng-src="{{item.properties.image}}">
                     </div>
-                    <span class="list-info-title" ng-bind-html="item.properties.name || item.label">
+                    <span class="list-info-title" ng-bind-html="item.properties.name || item.label" ng-class="{
+                        'two-lines-ellipsis': !item.divider
+                    }">
                     </span>
                     <span 
                         class="list-info-subtitle"

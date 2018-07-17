@@ -1582,9 +1582,6 @@ div.logout {
 .list-info-title {
   padding-bottom: 8px;
   font-size: 22px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   padding-top: 5px; }
 
 .list-info-image {
@@ -1612,6 +1609,7 @@ div.logout {
 
 .list-info-subtitle {
   font-size: 14px;
+  line-height: 15px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap; }
@@ -2103,17 +2101,13 @@ button.login-button.skip-login {
   /* TODO: Temporary - fix in js for this case */
   left: 50px !important;
   /* TODO: Temporary - fix in js for this case */
-  line-height: 2.5; }
+  line-height: 1.1;
+  white-space: normal; }
 
 .details-page .nav-bar-title {
   display: block;
   height: 100%;
   padding: 4px 0; }
-
-.details-page .title-inner {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; }
 
 .title-inner {
   display: flex;
@@ -2122,11 +2116,8 @@ button.login-button.skip-login {
   height: 100%;
   /*justify-content: center;*/ }
   .title-inner .title-right {
-    width: 95%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 20px; }
+    width: 92%;
+    font-size: 14px; }
   .title-inner.has-date {
     line-height: 1; }
     .title-inner.has-date .title-left,
@@ -3754,6 +3745,18 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
     font-weight: bold; }
     .search-button-container .search-button .search-button-label {
       text-transform: uppercase; }
+
+.two-lines-ellipsis {
+  font-size: 22px;
+  line-height: 24px;
+  height: 48px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+  padding-bottom: 0;
+  padding-top: 0; }
 
 /*
  * SETTINGS PAGE

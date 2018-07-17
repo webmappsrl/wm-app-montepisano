@@ -147,7 +147,7 @@
 .list-info-title {
   padding-bottom: 8px;
   font-size: 22px;
-  @include text-ellipsis;
+  // @include text-ellipsis;
   padding-top: 5px;
 }
 
@@ -173,6 +173,7 @@
 
 .list-info-subtitle {
   font-size: 14px;
+  line-height: 15px;
   @include text-ellipsis;
 }
 
