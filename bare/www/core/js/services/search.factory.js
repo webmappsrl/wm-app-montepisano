@@ -16,7 +16,7 @@ angular.module('webmapp')
     });
 
     var confLayersMap = confLayers.reduce(function(prev, curr) {
-        prev[curr.label] = true;
+        prev[curr.label] = curr;
         return prev;
     }, {});
 
@@ -35,19 +35,21 @@ angular.module('webmapp')
 
     if (CONFIG.MAP.filters) {
 
+
+        var layerFilterMap = {};
         var currentFilterMap = angular.copy(CONFIG.MAP.filters);
         for (var superCategoryId in currentFilterMap) {
             if (superCategoryId !== "base_maps" && currentFilterMap[superCategoryId].sublayers) {
                 var sublayers = currentFilterMap[superCategoryId].sublayers;
-
                 for (macroCategoryId in sublayers) {
                     if (sublayers[macroCategoryId].items && sublayers[macroCategoryId].items.length) {
-
                         var layers = sublayers[macroCategoryId].items;
                         for (var layerId in layers) {
                             var label = confLayersMapById[layers[layerId]].label;
                             if (activeLayersMap[label]) {
-                                layers[layerId] = { label: label, id: layers[layerId] };
+                                var info = { label: label, id: layers[layerId] };
+                                layers[layerId] = info;
+                                layerFilterMap[label] = info;
                             };
                         }
                     } else {
@@ -58,6 +60,69 @@ angular.module('webmapp')
                 delete currentFilterMap[superCategoryId];
             }
         }
+
+
+        for (var label in confLayersMap) {
+
+            if (activeLayersMap[label] && !layerFilterMap[label]) {
+                var layer = confLayersMap[label];
+                var trackIndex = -1;
+                var poiIndex = -1;
+                if (layer.type === 'poi_geojson') {
+                    var macroCategories = currentFilterMap["pois"].sublayers;
+                    for (let i = 0; i < macroCategories.length; i++) {
+                        var macroCat = macroCategories[i];
+                        if (macroCat.label.it === 'altri') {
+                            poiIndex = i;
+                            break;
+                        }
+                    }
+                    if (poiIndex == -1) {
+                        poiIndex = macroCategories.length;
+                        macroCategories[poiIndex] = {
+                            label: { it: "altri", en: "others" },
+                            items: [],
+                            isMacroCategoryGroup: true
+                        };
+                    }
+
+                    if (poiIndex > -1 && macroCategories[poiIndex].isMacroCategoryGroup) {
+                        var layers = macroCategories[poiIndex].items;
+                        var info = { label: label, id: layers[layer.id] };
+                        layers.push(info);
+                        layerFilterMap[label] = info;
+                    }
+
+                } else if (layer.type === 'line_geojson') {
+                    var macroCategories = currentFilterMap["tracks"].sublayers;
+                    for (let i = 0; i < macroCategories.length; i++) {
+                        var macroCat = macroCategories[i];
+                        if (macroCat.label.it === 'altri') {
+                            trackIndex = i;
+                            break;
+                        }
+                    }
+                    if (trackIndex == -1) {
+                        trackIndex = macroCategories.length;
+                        macroCategories[trackIndex] = {
+                            label: { it: "altri", en: "others" },
+                            items: [],
+                            isMacroCategoryGroup: true
+                        };
+                    }
+
+                    if (trackIndex > -1 && macroCategories[trackIndex].isMacroCategoryGroup) {
+                        var layers = macroCategories[trackIndex].items;
+                        var info = { label: label, id: layers[layer.id] };
+                        layers.push(info);
+                        layerFilterMap[label] = info;
+                    }
+                }
+            }
+
+
+        }
+
 
         var featuresIdByLayerMap = {};
         search.setFeaturesIdByLayerMap = function(newMap) {
@@ -109,9 +174,9 @@ angular.module('webmapp')
         };
 
         search.setActiveAllLayers = function() {
-            for (var i in activeLayersMap) {
-                activeLayersMap[i].state = true;
-            }
+            // for (var i in activeLayersMap) {
+            //     activeLayersMap[i].state = true;
+            // }
         };
 
         search.getActiveLayersMap = function() {
@@ -184,7 +249,7 @@ angular.module('webmapp')
             return results;
         };
 
-        search.getFeatures = function(query, layers) {
+        search.getFeatures = function(query) {
             var results = [],
                 currentResult = [];
 
@@ -192,8 +257,7 @@ angular.module('webmapp')
             var filterBool = filteredIds.length ? true : false;
 
             for (var c in confLayersMap) {
-                if (typeof layersEngine[c] !== 'undefined' &&
-                    layers.indexOf(c) !== -1) {
+                if (typeof layersEngine[c] !== 'undefined') {
 
                     if (query) {
                         currentResult = layersEngine[c].search(query);
@@ -295,7 +359,7 @@ angular.module('webmapp')
                     var cat = []
                     for (var catIndex in macroCat.items) {
                         var label = macroCat.items[catIndex].label;
-                        if (macroCat.label === "custom") {
+                        if (macroCat.isMacroCategoryGroup) {
                             if (activeLayersMap[label].state) {
                                 cat.push([label]);
                             }
@@ -413,9 +477,9 @@ angular.module('webmapp')
         };
 
         search.setActiveAllLayers = function() {
-            for (var i in activeLayersMap) {
-                activeLayersMap[i].state = true;
-            }
+            // for (var i in activeLayersMap) {
+            //     activeLayersMap[i].state = true;
+            // }
         };
 
         search.setActiveLayers = function(layersName) {

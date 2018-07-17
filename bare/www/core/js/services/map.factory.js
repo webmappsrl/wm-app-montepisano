@@ -294,11 +294,22 @@ angular.module('webmapp')
         feature.properties.icon = getFeatureIcon(feature, overlayConf);
         featureMapById[feature.properties.id] = feature;
         if (feature.parent && feature.parent.id) {
-            if (!featuresIdByLayersMap[feature.parent.label])
+            if (!featuresIdByLayersMap[feature.parent.label]) {
                 featuresIdByLayersMap[feature.parent.label] = [];
-            featuresIdByLayersMap[feature.parent.label].push(feature.properties.id);
+            }
 
+            if (!feature.properties.taxonomy) {
+                feature.properties.taxonomy = {};
+            }
+            if (!feature.properties.taxonomy.webmapp_category) {
+                feature.properties.taxonomy.webmapp_category = [];
+            }
+            if (feature.properties.taxonomy.webmapp_category.indexOf(feature.parent.id) == -1) {
+                feature.properties.taxonomy.webmapp_category.push(feature.parent.id);
+            }
+            featuresIdByLayersMap[feature.parent.label].push(feature.properties.id);
         }
+
         if (feature.properties.stages) {
             for (var i in feature.properties.stages) {
                 for (var j in feature.properties.stages[i].pois) {
@@ -407,7 +418,11 @@ angular.module('webmapp')
             return;
         }
 
-        markerClusters.clearLayers();
+
+        if (markerClusters) {
+            markerClusters.clearLayers();
+        }
+
 
         for (var i in overlayLayersByLabel) {
             if (!isAPOILayer(i)) {
@@ -1682,6 +1697,7 @@ angular.module('webmapp')
 
     mapService.setFilter = function(layerName, value) {
         activeFilters[layerName] = value;
+        console.log(activeFilters);
         localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
 
         if (!CONFIG.MAP.filters) {

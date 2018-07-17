@@ -35,6 +35,7 @@ angular.module('webmapp')
 
     vm.isMapView = false;
 
+
     setTimeout(function() {
         MapService.resetView();
         vm.searchReady = true;
@@ -121,7 +122,7 @@ angular.module('webmapp')
             vm.areAllActive = areAllActive(Search.getActiveLayersMap());
 
             var results = Search.getByLayersWithDivider(lastQuery, vm.filtersList);
-            // updateClickableCheckBoxes(results);
+            updateClickableCheckBoxes(results);
             vm.results = vm.translateOverlayInArray(results);
             MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery, vm.filtersList));
 
@@ -181,7 +182,7 @@ angular.module('webmapp')
                     modalScope.layers[layerId].checked = false;
                 }
             }
-            // updateClickableCheckBoxes([]);
+            updateClickableCheckBoxes([]);
             checkAllTabsState();
 
         } else {
@@ -225,7 +226,7 @@ angular.module('webmapp')
 
     vm.updateSearch = function(query) {
         vm.results = vm.translateOverlayInArray(Search.getByLayersWithDivider(query, Search.getActiveLayers()));
-        // updateClickableCheckBoxes(vm.results);
+        updateClickableCheckBoxes(vm.results);
         vm.results.realLength = 0;
 
         for (var i in vm.results) {
@@ -247,6 +248,13 @@ angular.module('webmapp')
 
     if (modalScope.vm.isNewModal) {
 
+        var searchLayersMap = CONFIG.OVERLAY_LAYERS.reduce(function(prev, curr) {
+            if (!curr.skipSearch) {
+                prev[curr.label] = curr;
+            }
+            return prev;
+        }, {});
+
         var featuresIdByLayersMap = MapService.getFeaturesIdByLayersMap();
         Search.setFeaturesIdByLayerMap(featuresIdByLayersMap);
         modalScope.filters = angular.copy(CONFIG.MAP.filters);
@@ -262,7 +270,7 @@ angular.module('webmapp')
                 if (tabIndex === 'pois') {
                     modalScope.filters[tabIndex].label = "Punti";
                 } else if (tabIndex === 'tracks') {
-                    modalScope.filters[tabIndex].label = "Traccie";
+                    modalScope.filters[tabIndex].label = "Percorsi";
                 } else {
                     modalScope.filters[tabIndex].label = "Mappe";
                 }
@@ -271,9 +279,7 @@ angular.module('webmapp')
                 for (var subTabIndex in subTabs) {
                     var subTab = subTabs[subTabIndex];
                     subTab.checked = false;
-                    if (subTab.label === "custom") {
-                        subTab.label = "altri";
-                    }
+
                     var tmp = [];
                     for (var index in subTab.items) {
                         var layerId = subTab.items[index];
@@ -289,6 +295,78 @@ angular.module('webmapp')
                 }
             }
         }
+
+
+
+        for (const label in searchLayersMap) {
+            if (!modalScope.layers[label]) {
+                var trackIndex = -1;
+                var poiIndex = -1;
+                var layer = searchLayersMap[label];
+                if (layer.type === 'poi_geojson') {
+                    var macroCategories = modalScope.filters["pois"].sublayers;
+                    for (let i = 0; i < macroCategories.length; i++) {
+                        var macroCat = macroCategories[i];
+                        if (macroCat.label.it === 'altri') {
+                            poiIndex = i;
+                            break;
+                        }
+                    }
+                    if (poiIndex == -1) {
+                        poiIndex = macroCategories.length;
+                        macroCategories[poiIndex] = {
+                            label: { it: "altri", en: "others" },
+                            items: [],
+                            isMacroCategoryGroup: true
+                        };
+
+                    }
+
+                    if (poiIndex > -1 && macroCategories[poiIndex].isMacroCategoryGroup) {
+                        var translatedLabel = layer.languages;
+                        if (!translatedLabel) {
+                            translatedLabel = { it: layer.label };
+                        }
+                        var info = { id: layer.id, label: layer.label, checked: false, languages: translatedLabel };
+                        info.clickable = true;
+                        modalScope.layers[layer.label] = info;
+                        macroCategories[poiIndex].items.push(info);
+                    }
+
+                } else if (layer.type === 'line_geojson') {
+                    var macroCategories = modalScope.filters["tracks"].sublayers;
+                    if (trackIndex == -1) {
+                        for (let i = 0; i < macroCategories.length; i++) {
+                            var macroCat = macroCategories[i];
+                            if (macroCat.label.it === 'altri') {
+                                trackIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    if (trackIndex == -1) {
+                        trackIndex = macroCategories.length;
+                        macroCategories[trackIndex] = {
+                            label: { it: "altri", en: "others" },
+                            items: [],
+                            isMacroCategoryGroup: true
+                        };
+                    }
+
+                    if (trackIndex > -1 && macroCategories[trackIndex].isMacroCategoryGroup) {
+                        var translatedLabel = layer.languages;
+                        if (!translatedLabel) {
+                            translatedLabel = { it: layer.label };
+                        }
+                        var info = { id: layer.id, label: layer.label, checked: false, languages: translatedLabel };
+                        info.clickable = true;
+                        modalScope.layers[layer.label] = info;
+                        macroCategories[trackIndex].items.push(info);
+                    }
+                }
+            }
+        }
+
 
         modalScope.currentTab = Object.keys(modalScope.filters)[0];
 
@@ -418,11 +496,23 @@ angular.module('webmapp')
                 if (type !== "base_maps") {
 
                     var superCategory = modalScope.filters[type];
+                    var ammissibleCategories = [];
+                    for (var j = 0; j < superCategory.sublayers.length; j++) {
+                        var macroCategory = superCategory.sublayers[j];
+                        for (var k = 0; k < macroCategory.items.length; k++) {
+                            var label = macroCategory.items[k].label;
+                            ammissibleCategories.push(label);
+                        }
+                    }
+
                     for (var i = 0; i < superCategory.sublayers.length; i++) {
 
                         var macroCategory = superCategory.sublayers[i];
                         var baseFilters = angular.copy(prevFilters);
                         var categoriesContainerMap = {};
+                        baseFilters = baseFilters.filter(function(ele) {
+                            return (ammissibleCategories.indexOf(ele) > -1);
+                        });
 
                         for (var m = 0; m < macroCategory.items.length; m++) {
                             var layer = macroCategory.items[m];
@@ -433,19 +523,20 @@ angular.module('webmapp')
                                     baseFilters.splice(index, 1);
                                 }
                             }
+
                             categoriesContainerMap[layer.id] = false;
                         }
 
                         Search.setActiveLayers(baseFilters);
                         var results = Search.getFeatures(lastQuery, Search.getActiveLayers());
-
                         for (let k = 0; k < results.length; k++) {
                             var layer = results[k];
                             if (layer.properties && layer.properties.taxonomy && layer.properties.taxonomy.webmapp_category) {
 
                                 var catArray = layer.properties.taxonomy.webmapp_category;
                                 for (var layerId in categoriesContainerMap) {
-                                    if (catArray.indexOf(layerId) > -1) {
+
+                                    if ((catArray.indexOf(parseInt(layerId)) !== -1)) {
                                         categoriesContainerMap[layerId] = true;
                                     }
                                 }
@@ -467,23 +558,24 @@ angular.module('webmapp')
                             }
                         }
 
-                        for (var catId in categoriesContainerMap) {
 
+                        for (var catId in categoriesContainerMap) {
                             var layer = MapService.getOverlayLayerById(catId);
                             if (layer && modalScope.layers[layer.label]) {
                                 if (!modalScope.layers[layer.label].checked) {
                                     modalScope.layers[layer.label].clickable = categoriesContainerMap[catId];
                                 }
                             }
-
                         }
-
                     }
                 }
             }
             Search.setActiveLayers(prevFilters);
         };
+
     }
+
+
     if ($rootScope.searchQuery || $rootScope.searchLayers) {
         setSearchState($rootScope.searchLayers, $rootScope.searchQuery);
         delete $rootScope.searchQuery

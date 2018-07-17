@@ -77,7 +77,7 @@
                     }">
                         <div ng-repeat="(sublayerId, sublayer) in item.sublayers" class="filters-sublayer" ng-if="key !== 'base_maps'">
                             <div>
-                                <i class="left-icon" ng-class="{
+                                <i class="left-icon" ng-if="vm.isMapModal" ng-class="{
                                     'ion-android-checkbox-outline':  sublayer.checked,
                                     'ion-android-checkbox-outline-blank': !sublayer.checked
                                 }" ng-click="toggleSubTabCheckBox(sublayerId,key)"></i>
@@ -93,7 +93,8 @@
 
                             <div class="filters-layer" ng-repeat="(layerId, layer) in sublayer.items" ng-class="{
                                     'animate-show': item.selectedTab === sublayerId,
-                                    'animate-hide': item.selectedTab !== sublayerId
+                                    'animate-hide': item.selectedTab !== sublayerId,
+                                    'disable-checkbox': !layer.clickable
                                 }" ng-click="toggleLayer(layer.label,sublayerId,key)">
                                 <i class="left-icon" ng-if="item.selectedTab === sublayerId" ng-class="{
                                     'ion-android-checkbox-outline': layer.checked,

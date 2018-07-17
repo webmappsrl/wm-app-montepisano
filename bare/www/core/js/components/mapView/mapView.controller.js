@@ -177,7 +177,10 @@ angular.module('webmapp')
 
     if (modalScope.vm.isNewModal) {
 
+        modalScope.vm.isMapModal = true;
+        var overlayLayerConfMap = MapService.overlayLayersConfMap();
         modalScope.filters = angular.copy(CONFIG.MAP.filters);
+
 
         modalScope.layers = {};
         modalScope.tabNum = 0;
@@ -190,7 +193,7 @@ angular.module('webmapp')
                 if (tabIndex === 'pois') {
                     modalScope.filters[tabIndex].label = "Punti";
                 } else if (tabIndex === 'tracks') {
-                    modalScope.filters[tabIndex].label = "Traccie";
+                    modalScope.filters[tabIndex].label = "Percorsi";
                 } else {
                     modalScope.filters[tabIndex].label = "Mappe";
                 }
@@ -199,9 +202,6 @@ angular.module('webmapp')
                 for (var subTabIndex in subTabs) {
                     var subTab = subTabs[subTabIndex];
                     subTab.checked = false;
-                    if (subTab.label === "custom") {
-                        subTab.label = "altri";
-                    }
                     var tmp = [];
                     for (var index in subTab.items) {
                         var layerId = subTab.items[index];
@@ -218,6 +218,76 @@ angular.module('webmapp')
                 }
             }
         }
+
+        for (const label in overlayLayerConfMap) {
+            if (!modalScope.layers[label]) {
+                var trackIndex = -1;
+                var poiIndex = -1;
+                var layer = overlayLayerConfMap[label];
+                if (layer.type === 'poi_geojson') {
+                    var macroCategories = modalScope.filters["pois"].sublayers;
+                    for (let i = 0; i < macroCategories.length; i++) {
+                        var macroCat = macroCategories[i];
+                        if (macroCat.label.it === 'altri') {
+                            poiIndex = i;
+                            break;
+                        }
+                    }
+                    if (poiIndex == -1) {
+                        poiIndex = macroCategories.length;
+                        macroCategories[poiIndex] = {
+                            label: { it: "altri", en: "others" },
+                            items: [],
+                            isMacroCategoryGroup: true
+                        };
+
+                    }
+
+                    if (poiIndex > -1 && macroCategories[poiIndex].isMacroCategoryGroup) {
+                        var translatedLabel = layer.languages;
+                        if (!translatedLabel) {
+                            translatedLabel = { it: layer.label };
+                        }
+                        var info = { id: layer.id, label: layer.label, checked: false, languages: translatedLabel };
+                        info.clickable = true;
+                        modalScope.layers[layer.label] = info;
+                        macroCategories[poiIndex].items.push(info);
+                    }
+
+                } else if (layer.type === 'line_geojson') {
+                    var macroCategories = modalScope.filters["tracks"].sublayers;
+                    if (trackIndex == -1) {
+                        for (let i = 0; i < macroCategories.length; i++) {
+                            var macroCat = macroCategories[i];
+                            if (macroCat.label.it === 'altri') {
+                                trackIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    if (trackIndex == -1) {
+                        trackIndex = macroCategories.length;
+                        macroCategories[trackIndex] = {
+                            label: { it: "altri", en: "others" },
+                            items: [],
+                            isMacroCategoryGroup: true
+                        };
+                    }
+
+                    if (trackIndex > -1 && macroCategories[trackIndex].isMacroCategoryGroup) {
+                        var translatedLabel = layer.languages;
+                        if (!translatedLabel) {
+                            translatedLabel = { it: layer.label };
+                        }
+                        var info = { id: layer.id, label: layer.label, checked: false, languages: translatedLabel };
+                        info.clickable = true;
+                        modalScope.layers[layer.label] = info;
+                        macroCategories[trackIndex].items.push(info);
+                    }
+                }
+            }
+        }
+
 
         modalScope.currentTab = Object.keys(modalScope.filters)[0];
 
@@ -310,6 +380,7 @@ angular.module('webmapp')
 
         var getFeaturesToDisplay = function() {
 
+
             var filt = MapService.getActiveFilters();
             var result = {};
             if (MapService.isReady()) {
@@ -319,7 +390,7 @@ angular.module('webmapp')
                 var featureMap = MapService.getFeatureIdMap();
 
                 for (label in filt) {
-                    if (filt[label] && idsMap[label]) {
+                    if (filt[label] && idsMap[label] && modalScope.layers[label]) {
                         ids = ids.concat(idsMap[label]);
                     }
                 }
@@ -331,21 +402,6 @@ angular.module('webmapp')
                 for (let i = 0; i < ids.length; i++) {
                     var feature = featureMap[ids[i]];
 
-                    // if (feature) {
-
-                    //     for (label in filt) {
-                    //         if (idsMap[label]) {
-                    //             var array = idsMap[label];
-                    //             if (array.indexOf(ids[i]) > -1) {
-                    //                 if (!result[label]) {
-                    //                     result[label] = [];
-                    //                 }
-                    //                 result[label].push(feature);
-                    //                 break;
-                    //             }
-                    //         }
-                    //     }
-                    // }
                     if (feature && feature.properties && feature.properties.taxonomy &&
                         feature.properties.taxonomy.webmapp_category) {
                         var categories = feature.properties.taxonomy.webmapp_category;
@@ -365,14 +421,16 @@ angular.module('webmapp')
                     }
 
                 }
+
             }
+
             return result;
         }
 
         setTimeout(function() {
             var features = getFeaturesToDisplay();
             MapService.addFeaturesToFilteredLayer(features);
-        }, 100);
+        }, 300);
     }
 
 

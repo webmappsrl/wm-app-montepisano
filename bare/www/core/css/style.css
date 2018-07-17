@@ -4040,6 +4040,8 @@ ion-content div.static-content.card-content {
     .modal-content .accordion-filters .filters-tab-content-container .filters-tab-content .filters-sublayer .filters-layer {
       text-transform: capitalize;
       font-weight: initial; }
+    .modal-content .accordion-filters .filters-tab-content-container .filters-tab-content .filters-sublayer .filters-layer.disable-checkbox {
+      color: #BBBBBB; }
 
 .animate-hide {
   animation: animatehide 0.4s forwards; }
