@@ -2181,8 +2181,7 @@ button.login-button
     z-index: 200; }
 
 .bar .button-icon.icon:before {
-  font-size: 26px !important;
-  line-height: 41px; }
+  font-size: 24px !important; }
 
 .nav-title-slide-ios7 {
   height: auto;
