@@ -72,7 +72,7 @@
   }
 
   .title-center{
-    font-size: 22px!important
+    font-size: 16px!important
   }
 
   &.bar-assertive.bar-footer {
@@ -103,6 +103,11 @@
       //top: 44px;
       z-index: 200;
     }
+  }
+
+  .button-icon.icon:before {
+    font-size: 26px !important;
+    line-height: 41px;
   }
 }
 

@@ -2154,7 +2154,7 @@ button.login-button
   height: 100%; }
 
 .bar .title-center {
-  font-size: 22px !important; }
+  font-size: 16px !important; }
 
 .bar.bar-assertive.bar-footer {
   /* There's 2px pixel bottom overflowing - why?*/
@@ -2179,6 +2179,10 @@ button.login-button
     height: -moz-calc(100% - 44px);
     height: calc(100% - 44px);
     z-index: 200; }
+
+.bar .button-icon.icon:before {
+  font-size: 26px !important;
+  line-height: 41px; }
 
 .nav-title-slide-ios7 {
   height: auto;
