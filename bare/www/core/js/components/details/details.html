@@ -171,35 +171,25 @@
                 </div>
 
                 <div
-                        class="details-contacts details-contact-rows"
-                        ng-if="vm.feature.email || vm.feature.phone || vm.feature.address || vm.feature.related_url">
+                    class="details-contacts details-contact-rows"
+                    ng-if="vm.feature.email || vm.feature.phone || vm.feature.address || vm.feature.related_url">
                     <ul
-                            class="details-contacts__list">
+                        class="details-contacts__list">
                         <li
-                                class="contacts-list__element center"
-                                ng-if="vm.feature.phone">
+                            class="contacts-list__element center"
+                            ng-if="vm.feature.phone">
                             <a
-                                    href=""
-                                    style="cursor: default"
-                                    ng-if="!vm.availablePhoneNumber">
+                                href="tel://{{vm.feature.phone}}"
+                                ng-click="vm.chiama(vm.feature.phone)"
+                                style="cursor: default">
                                 <i class="icon ion-ios-telephone-outline"></i>
-                                <!-- {{vm.feature.phone}} -->
-                                {{"Telefono" | translate}}
-                            </a>
-                            <a
-                                    href="tel://{{vm.availablePhoneNumber}}"
-                                    ng-click="vm.chiama(vm.feature.phone)"
-                                    style="cursor: default"
-                                    ng-if="vm.availablePhoneNumber">
-                                <i class="icon ion-ios-telephone-outline"></i>
-                                <!-- {{vm.feature.phone}} -->
                                 {{"Telefono" | translate}}
                             </a>
                         </li>
                         <!-- Hidden for event detail -->
                         <li
-                                class="contacts-list__element center"
-                                ng-if="vm.feature.email">
+                            class="contacts-list__element center"
+                            ng-if="vm.feature.email">
                             <a href="mailto:{{vm.feature.email}}?subject=informazioni">
                                 <i class="icon ion-ios-email-outline"></i> {{"email" | translate}}
                             </a>
