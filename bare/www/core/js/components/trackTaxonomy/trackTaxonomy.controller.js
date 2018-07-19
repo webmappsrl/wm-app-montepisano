@@ -81,7 +81,7 @@ angular.module('webmapp')
                                     }
                                 }
                             }
-                            else if (!vm.selectedFilter) {
+                            else if (!vm.selectedFilter && vm.taxonomy[features[id].properties.taxonomy.activity[i]]) {
                                 vm.taxonomy[features[id].properties.taxonomy.activity[i]].filteredCount++;
                             }
                         }

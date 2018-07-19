@@ -50,7 +50,13 @@ angular.module('webmapp')
             };
 
         var userData = Auth.isLoggedIn() ? Auth.getUserData() : null,
-            asyncTranslations = 0,
+            asyncTranslations = {
+                activity: 0,
+                theme: 0,
+                when: 0,
+                where: 0,
+                who: 0
+            },
             asyncRoutes = 0,
             asyncRouteTranslations = 0;
 
@@ -195,15 +201,15 @@ angular.module('webmapp')
                     taxonomy[taxonomyType][id].name[lang] = data.name;
                     taxonomy[taxonomyType][id].description[lang] = data.description;
 
-                    asyncTranslations--;
-                    if (asyncTranslations === 0) {
+                    asyncTranslations[taxonomyType]--;
+                    if (asyncTranslations[taxonomyType] === 0) {
                         $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
                         localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
                     }
                 })
                 .catch(function (err) {
-                    asyncTranslations--;
-                    if (asyncTranslations === 0) {
+                    asyncTranslations[taxonomyType]--;
+                    if (asyncTranslations[taxonomyType] === 0) {
                         $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
                     }
                     console.warn("Unable to update taxonomy. Using local data")
@@ -220,7 +226,7 @@ angular.module('webmapp')
          */
         packageService.getRoutes = function (updateValues) {
             //Prevent multiple requests
-            if (asyncRoutes > 0 || asyncTranslations > 0) {
+            if (asyncRoutes > 0) {
                 $rootScope.$emit('packages-updated', packages);
                 return;
             }
@@ -280,7 +286,7 @@ angular.module('webmapp')
             }
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')
                 .then(function (data) {
-                    asyncTranslations = 0;
+                    asyncTranslations[taxonomyType] = 0;
                     taxonomy[taxonomyType] = {};
                     for (var i in data) {
                         if (data[i].count > 0) {
@@ -298,7 +304,7 @@ angular.module('webmapp')
 
                                 if (CONFIG.LANGUAGES.available) {
                                     for (var langId in CONFIG.LANGUAGES.available) {
-                                        asyncTranslations++;
+                                        asyncTranslations[taxonomyType]++;
                                         getTaxonomyTranslated(taxonomyType, data[i].id, CONFIG.LANGUAGES.available[langId]);
                                     }
                                 }
@@ -306,7 +312,7 @@ angular.module('webmapp')
                         }
                     }
 
-                    if (asyncTranslations === 0) {
+                    if (asyncTranslations[taxonomyType] === 0) {
                         $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
                     }
                     localStorage.$wm_taxonomy = JSON.stringify(taxonomy);

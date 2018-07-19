@@ -212,16 +212,6 @@ angular.module('webmapp')
                     feature.description.expandable = expandable;
                 }
 
-                if (feature.phone) {
-                    var regExp = /\+(\d{2,4})\s+(\d{2,5}\s\d+)/g;
-                    phoneMatch = regExp.exec(feature.phone);
-
-                    if (phoneMatch) {
-                        var localPhone = phoneMatch[2].replace(/\s/g, '');
-                        vm.availablePhoneNumber = phoneMatch[1] + '-' + localPhone.replace(/(\d\d\d)(\d\d\d)(\d\d\d)/, '$1-$2-$3');
-                    }
-                }
-
                 vm.chiama = function (number) {
                     window.plugins.CallNumber.callNumber(function () {
                         console.log('successo');

@@ -94,7 +94,7 @@ angular.module('webmapp')
         $rootScope
     ) {
         return function (input, filters) {
-            if ($rootScope.currentState.name === 'app.main.filteredLayer') {
+            if (filters && filters.activityId) {
                 var activityId = filters.activityId,
                     themeId = filters.themeId,
                     result = [];
@@ -164,8 +164,33 @@ angular.module('webmapp')
                     else {
                         return -1;
                     }
+                },
+                result = [];
+
+                var date = new Date();
+
+                for (var i in input) {
+                    var stopDate = input[i].properties && input[i].properties.date_stop ? input[i].properties.date_stop : false;
+                    stopDate = stopDate ? stopDate.split(" ")[0].split("/") : false;
+                    if (stopDate) {
+                        if (date.getFullYear() % 100 < +stopDate[2] % 100 || (
+                            date.getYear() % 100 === +stopDate[2] % 100 && (
+                                    date.getMonth() + 1 < +stopDate[1]
+                                ) || (
+                                    date.getMonth() + 1 === +stopDate[1] &&
+                                    date.getDate() <= +stopDate[0]
+                                )
+                            )
+                        ) {
+                            result.push(input[i]);
+                        }
+                    }
+                    else {
+                        result.push(input[i]);
+                    }
                 }
-                return input.sort(compare);
+
+                return result.sort(compare);
             }
             else {
                 return input;

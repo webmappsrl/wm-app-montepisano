@@ -38,6 +38,7 @@ angular.module('webmapp')
     vm.isBrowser = Utils.isBrowser();
     vm.openInAppBrowser = Utils.openInAppBrowser;
     vm.openInExternalBrowser = Utils.openInExternalBrowser;
+    vm.goBack = Utils.goBack;
 
     if (vm.isAPageChild) {
         vm.mainCategory = Model.getPageParent(vm.currentPage.label);

@@ -1284,6 +1284,10 @@ angular.module('webmapp')
                 currentState === 'app.main.search' ||
                 Model.isAPage(currentState)) {
                 vm.hideMap = true;
+            } else if (currentState === 'app.main.filteredLayer') {
+                vm.hideMap = true;
+                vm.hasShadow = true;
+                vm.extendShadow = true;
             }
 
             setTimeout(function () {
