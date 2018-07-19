@@ -151,7 +151,7 @@
 .list-info-title {
   padding-left: 10px;
   padding-bottom: 3px;
-  font-size: 22px;
+  font-size: 18px;
   @include text-ellipsis;
   padding-top: 5px;
   line-height: 1.2;
@@ -266,7 +266,7 @@
 
 @media only screen and (min-width: 580px) {
   .list-info-title {
-
+    font-size: 24px;
 
     .item-has-thumb & {
       font-size: 24px;
