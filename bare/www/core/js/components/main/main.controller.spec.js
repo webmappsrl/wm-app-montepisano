@@ -44,7 +44,7 @@ describe('MainController', function() {
             spyOn(MapService, 'getFeatureById').and.returnValue(deferred.promise);
             spyOn(vm, 'handleDistanceToast').and.callThrough();
             $httpBackend.whenGET(function(url) { return true; }).respond(404, '');
-            vm.checkOutOfTrack([47.718, 10.4]);
+            vm.checkOutOfTrack({ lat: 47.718, lng: 10.4 });
             deferred.resolve(feature);
 
             rootScope.$digest();
@@ -78,7 +78,7 @@ describe('MainController', function() {
             spyOn(vm, 'handleDistanceToast');
             spyOn(console, 'log');
             $httpBackend.whenGET(function(url) { return true; }).respond(404, '');
-            vm.checkOutOfTrack([47.718, 10.4]);
+            vm.checkOutOfTrack({ lat: 47.718, lng: 10.4 });
             deferred.reject(vm.stopNavigationUrlParams);
 
             rootScope.$digest();
