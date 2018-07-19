@@ -47,6 +47,7 @@ angular.module('webmapp')
         vm.isNavigable = false;
         vm.fullDescription = false;
         vm.showAccessibilityButtons = CONFIG.OPTIONS.showAccessibilityButtons;
+        vm.mainTitle = "";
 
         vm.hideSubMenu = true;
 
