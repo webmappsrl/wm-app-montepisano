@@ -198,7 +198,7 @@ angular.module('webmapp')
             if (typeof item.properties.name === 'undefined') {
                 item.properties.name = item.properties.ref;
             }
-            if (!layer.skipSearch) {
+            if (CONFIG.SEARCH && CONFIG.SEARCH.active && !layer.skipSearch) {
                 Search.addToIndex(item, layer.label);
             }
             overlaysMap[layer.label].items.push(item);

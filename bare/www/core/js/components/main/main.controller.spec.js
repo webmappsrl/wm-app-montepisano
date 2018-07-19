@@ -24,7 +24,7 @@ describe('MainController', function() {
         }));
 
 
-        it('Params defined=> should call function successfully', function() {
+        it('Params defined => should call function successfully', function() {
 
             spyOn(window.turf.pointToLineDistance, 'default').and.returnValue(10);
             vm.stopNavigationUrlParams.parentId = 'Tappe';
@@ -45,6 +45,7 @@ describe('MainController', function() {
             spyOn(vm, 'handleDistanceToast').and.callThrough();
             $httpBackend.whenGET(function(url) { return true; }).respond(404, '');
             vm.checkOutOfTrack({ lat: 47.718, lng: 10.4 });
+
             deferred.resolve(feature);
 
             rootScope.$digest();

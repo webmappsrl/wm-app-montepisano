@@ -280,20 +280,6 @@ angular.module('webmapp')
         );
 
         registeredEvents.push(
-            $scope.$on('$ionicView.enter', function () {
-                if (Auth.isLoggedIn()) {
-                    userData = Auth.getUserData();
-                    PackageService.getPackagesIdByUserId();
-                }
-                $ionicLoading.show({
-                    template: '<ion-spinner></ion-spinner>'
-                });
-                PackageService.getTaxonomy('activity');
-                PackageService.getRoutes(true);
-            })
-        );
-
-        registeredEvents.push(
             $scope.$on('$ionicView.beforeLeave', function () {
                 for (var i in registeredEvents) {
                     registeredEvents[i]();
@@ -301,6 +287,16 @@ angular.module('webmapp')
                 delete registeredEvents;
             })
         );
+
+        if (Auth.isLoggedIn()) {
+            userData = Auth.getUserData();
+            PackageService.getPackagesIdByUserId();
+        }
+        $ionicLoading.show({
+            template: '<ion-spinner></ion-spinner>'
+        });
+        PackageService.getTaxonomy('activity');
+        PackageService.getRoutes(true);
 
         return vm;
     });

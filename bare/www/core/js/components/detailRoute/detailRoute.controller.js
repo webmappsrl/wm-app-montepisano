@@ -55,8 +55,23 @@ angular.module('webmapp')
         vm.openInAppBrowser = Utils.openInAppBrowser;
         vm.openInExternalBrowser = Utils.openInExternalBrowser;
 
-        vm.voucherAvailable = CONFIG.MULTIMAP.purchaseType ? CONFIG.MULTIMAP.purchaseType.includes('voucher') : false;
-        vm.purchaseAvailable = CONFIG.MULTIMAP.purchaseType ? CONFIG.MULTIMAP.purchaseType.includes('purchase') : false;
+        vm.voucherAvailable = false;
+        vm.purchaseAvailable = false;
+
+        if (CONFIG.MULTIMAP && CONFIG.MULTIMAP.purchaseType) {
+            for (var i in CONFIG.MULTIMAP.purchaseType) {
+                switch (CONFIG.MULTIMAP.purchaseType[i]) {
+                    case 'purchase':
+                        vm.purchaseAvailable = true;
+                        break;
+                    case 'voucher':
+                        vm.voucherAvailable = true
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
         if (!vm.voucherAvailable && !vm.purchaseAvailable) {
             vm.voucherAvailable = true;
@@ -265,25 +280,6 @@ angular.module('webmapp')
         );
 
         registeredEvents.push(
-            $scope.$on('$ionicView.beforeEnter', function () {
-                $ionicLoading.show({
-                    template: '<ion-spinner></ion-spinner>'
-                });
-                PackageService.getRoutes();
-                PackageService.getDownloadedPackages();
-
-                if (Auth.isLoggedIn()) {
-                    userData = Auth.getUserData();
-                    vm.isLoggedIn = true;
-
-                    PackageService.getPackagesIdByUserId();
-
-                    Utils.forceDigest();
-                }
-            })
-        );
-
-        registeredEvents.push(
             $scope.$on('$destroy', function () {
                 if ($ionicSlideBoxDelegate._instances &&
                     $ionicSlideBoxDelegate._instances.length > 0) {
@@ -301,6 +297,21 @@ angular.module('webmapp')
                 delete registeredEvents;
             })
         );
+
+        $ionicLoading.show({
+            template: '<ion-spinner></ion-spinner>'
+        });
+        PackageService.getRoutes();
+        PackageService.getDownloadedPackages();
+
+        if (Auth.isLoggedIn()) {
+            userData = Auth.getUserData();
+            vm.isLoggedIn = true;
+
+            PackageService.getPackagesIdByUserId();
+
+            Utils.forceDigest();
+        }
 
         return vm;
     });
