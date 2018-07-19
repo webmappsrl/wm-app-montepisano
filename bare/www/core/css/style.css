@@ -2222,6 +2222,7 @@ button.login-button
 
 .details-page .nav-bar-title {
   display: block;
+  width: 100%;
   height: 100%;
   padding: 4px 0; }
 
