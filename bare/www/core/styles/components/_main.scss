@@ -164,7 +164,7 @@
       font-size: $title-size;
       height: 100%;
       margin: 0;
-      right: 15px!important; /* TODO: Temporary - fix in js for this case */
+      //right: 15px!important; /* TODO: Temporary - fix in js for this case */
       left: 50px !important; /* TODO: Temporary - fix in js for this case */
       white-space: normal;
       line-height: 1.1;
@@ -192,9 +192,9 @@
 
   .title-right {
 
-    width: 92%;
+    width: 100%;
     //@include text-ellipsis;
-    font-size: 14px;
+    font-size: 13px;
     //white-space: nowrap;
   }
 

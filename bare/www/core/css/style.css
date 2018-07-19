@@ -2217,8 +2217,6 @@ button.login-button
   font-size: 20px;
   height: 100%;
   margin: 0;
-  right: 15px !important;
-  /* TODO: Temporary - fix in js for this case */
   left: 50px !important;
   /* TODO: Temporary - fix in js for this case */
   white-space: normal;
@@ -2237,8 +2235,8 @@ button.login-button
   height: 100%;
   /*justify-content: center;*/ }
   .title-inner .title-right {
-    width: 92%;
-    font-size: 14px; }
+    width: 100%;
+    font-size: 13px; }
   .title-inner.has-date {
     line-height: 1; }
     .title-inner.has-date .title-left,
