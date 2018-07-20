@@ -24,6 +24,7 @@ angular.module('webmapp')
         vm.isListExpanded = false,
         vm.layersMap = Model.getLayersMap();
         vm.goTo = Utils.goTo;
+        vm.useSearch = CONFIG.SEARCH && CONFIG.SEARCH.active ? CONFIG.SEARCH.active : false;
 
         MapService.activateUtfGrid();
 
