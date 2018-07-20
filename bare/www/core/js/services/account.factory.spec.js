@@ -171,7 +171,7 @@ describe('Account.Factory', function() {
 
         })
 
-        it('location longitude undefined  =>it shoud not update the position', function(done) {
+        it('location longitude undefined  =>it should not update the position', function(done) {
 
 
             location.lat = 1;
@@ -776,6 +776,62 @@ describe('Account.Factory', function() {
             $httpBackend.flush();
 
         });
+
+
+        afterEach(function() {
+            $httpBackend.verifyNoOutstandingExpectation();
+            $httpBackend.verifyNoOutstandingRequest();
+        });
+
+
+    });
+
+
+    describe('refreshCard', function() {
+
+        var udata;
+        beforeEach(function() {
+            udata = {
+                user: { uid: 123456 },
+                api_token: 123654,
+                sessid: 12345
+
+            };
+        });
+
+
+        it('it should refresh Card successfully', function(done) {
+
+            spyOn(Auth, 'getUserData').and.returnValue(udata);
+            spyOn(Auth, 'setUserData').and.returnValue(true);
+
+            var data = {};
+            var expectedResponse = { card: 'card12345' };
+
+            $httpBackend.expect('POST', baseUrl + endpoint + 'get-user-card', data, {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json, text/plain, */*',
+                'X-USER-SESSION-TOKEN': udata.sessid,
+                'X-CSRF-Token': udata.api_token
+            }).respond(200, expectedResponse);
+
+            var promise = accountService.refreshCard();
+            promise.then(function(response) {
+                udata.card = {};
+                udata.card = {
+                    value: response
+                };
+                expect(Auth.setUserData).toHaveBeenCalledWith(udata);
+                done();
+            }).catch(function(error) {
+                done(new Error('Promise should be resolved.'));
+            })
+
+            $httpBackend.flush();
+        });
+
+
+
 
 
         afterEach(function() {
