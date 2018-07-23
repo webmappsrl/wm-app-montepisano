@@ -122,7 +122,7 @@ angular.module('webmapp')
             vm.areAllActive = areAllActive(Search.getActiveLayersMap());
 
             var results = Search.getByLayersWithDivider(lastQuery, vm.filtersList);
-            updateClickableCheckBoxes(results);
+            updateClickableCheckBoxes();
             vm.results = vm.translateOverlayInArray(results);
             MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery, vm.filtersList));
 
@@ -182,7 +182,7 @@ angular.module('webmapp')
                     modalScope.layers[layerId].checked = false;
                 }
             }
-            updateClickableCheckBoxes([]);
+            updateClickableCheckBoxes();
             checkAllTabsState();
 
         } else {
@@ -226,7 +226,7 @@ angular.module('webmapp')
 
     vm.updateSearch = function(query) {
         vm.results = vm.translateOverlayInArray(Search.getByLayersWithDivider(query, Search.getActiveLayers()));
-        updateClickableCheckBoxes(vm.results);
+
         vm.results.realLength = 0;
 
         for (var i in vm.results) {
@@ -238,6 +238,7 @@ angular.module('webmapp')
         MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(query, Search.getActiveLayers()));
         $ionicScrollDelegate.scrollTop();
         lastQuery = query;
+        updateClickableCheckBoxes();
     };
 
     vm.toggleMap = function() {
@@ -481,10 +482,9 @@ angular.module('webmapp')
 
         }
 
-        var updateClickableCheckBoxes = function(result) {
+        var updateClickableCheckBoxes = function() {
 
-            if (typeof result === "undefined")
-                return;
+
 
             for (var label in modalScope.layers) {
                 modalScope.layers[label].clickable = true;

@@ -209,23 +209,47 @@ angular.module('webmapp')
         };
 
         search.getByLayersWithDivider = function(query, layers) {
+
+            if (!query && !layers) {
+                return [];
+            }
+
+            if (!query && !layers.length) {
+                return [];
+            }
+
             var results = [],
                 currentResult = [];
 
             var filteredIds = getFilteredFeaturesIds();
-            //filterById gonna change array lenght
+            //filterById gonna change array length
             var filterBool = filteredIds.length ? true : false;
             if (query) {
-                for (var c in confLayersMap) {
-                    if (typeof layersEngine[c] !== 'undefined' &&
-                        layers.indexOf(c) !== -1) {
-                        currentResult = layersEngine[c].search(query);
-                        if (filterBool) {
-                            currentResult = filterById(currentResult, filteredIds);
+                if (layers.length) {
+                    for (var c in confLayersMap) {
+                        if (typeof layersEngine[c] !== 'undefined' &&
+                            layers.indexOf(c) !== -1) {
+                            currentResult = layersEngine[c].search(query);
+                            if (filterBool) {
+                                currentResult = filterById(currentResult, filteredIds);
+                            }
+                            if (currentResult.length > 0) {
+                                results.push({ label: c, divider: true });
+                                results = results.concat(currentResult);
+                            }
                         }
-                        if (currentResult.length > 0) {
-                            results.push({ label: c, divider: true });
-                            results = results.concat(currentResult);
+                    }
+                } else {
+                    for (var c in confLayersMap) {
+                        if (typeof layersEngine[c] !== 'undefined') {
+                            currentResult = layersEngine[c].search(query);
+                            if (filterBool) {
+                                currentResult = filterById(currentResult, filteredIds);
+                            }
+                            if (currentResult.length > 0) {
+                                results.push({ label: c, divider: true });
+                                results = results.concat(currentResult);
+                            }
                         }
                     }
                 }
@@ -250,6 +274,7 @@ angular.module('webmapp')
         };
 
         search.getFeatures = function(query) {
+
             var results = [],
                 currentResult = [];
 
@@ -264,7 +289,6 @@ angular.module('webmapp')
                     } else {
                         currentResult = getAllByLayer(c);
                     }
-
                     if (filterBool) {
                         currentResult = filterById(currentResult, filteredIds);
                     }
@@ -291,16 +315,29 @@ angular.module('webmapp')
             var filteredIds = getFilteredFeaturesIds();
             var filterBool = filteredIds.length ? true : false;
             if (query) {
-
-                for (var c in confLayersMap) {
-                    if (typeof layersEngine[c] !== 'undefined' &&
-                        layers.indexOf(c) !== -1) {
-                        currentResult = layersEngine[c].search(query);
-                        if (filterBool) {
-                            currentResult = filterById(currentResult, filteredIds);
+                if (layers.length) {
+                    for (var c in confLayersMap) {
+                        if (typeof layersEngine[c] !== 'undefined' &&
+                            layers.indexOf(c) !== -1) {
+                            currentResult = layersEngine[c].search(query);
+                            if (filterBool) {
+                                currentResult = filterById(currentResult, filteredIds);
+                            }
+                            if (currentResult.length > 0) {
+                                results[c] = currentResult;
+                            }
                         }
-                        if (currentResult.length > 0) {
-                            results[c] = currentResult;
+                    }
+                } else {
+                    for (var c in confLayersMap) {
+                        if (typeof layersEngine[c] !== 'undefined') {
+                            currentResult = layersEngine[c].search(query);
+                            if (filterBool) {
+                                currentResult = filterById(currentResult, filteredIds);
+                            }
+                            if (currentResult.length > 0) {
+                                results[c] = currentResult;
+                            }
                         }
                     }
                 }
@@ -349,6 +386,10 @@ angular.module('webmapp')
 
         var getFilteredFeaturesIds = function(type) {
 
+            var allLayers = false;
+            if (search.getActiveLayers().length === 0) {
+                allLayers = true;
+            }
             var result = [];
 
             for (var superId in currentFilterMap) {
@@ -360,11 +401,11 @@ angular.module('webmapp')
                     for (var catIndex in macroCat.items) {
                         var label = macroCat.items[catIndex].label;
                         if (macroCat.isMacroCategoryGroup) {
-                            if (activeLayersMap[label].state) {
+                            if (allLayers || activeLayersMap[label].state) {
                                 cat.push([label]);
                             }
                         } else {
-                            if (activeLayersMap[label].state) {
+                            if (allLayers || activeLayersMap[label].state) {
                                 cat.push(label);
                             }
                         }
@@ -385,7 +426,7 @@ angular.module('webmapp')
                         }
                     }
 
-                    if (type) {
+                    if (type || allLayers) {
                         if (superIds.length === 0 && i === 0) {
                             superIds = arrayOR;
                         } else {
@@ -405,11 +446,12 @@ angular.module('webmapp')
                 result = result.concat(superIds);
             }
 
+
             if (result && result.length) {
                 var tmp = result.filter(function(ele, pos, result) {
-                    return result.indexOf(ele) == pos;
+                    return result.indexOf(ele) === pos;
                 })
-                retult = tmp;
+                result = tmp;
             }
 
             return result;
@@ -427,10 +469,9 @@ angular.module('webmapp')
                     filterIds.splice(filterId, 1);
                 }
             }
-
             return newResult;
-
         }
+
     } else {
         var setupEngine = function(layerName) {
             layersEngine[layerName] = new JsSearch.Search('id');
