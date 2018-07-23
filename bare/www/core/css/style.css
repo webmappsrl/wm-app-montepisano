@@ -4036,35 +4036,12 @@ ion-content div.static-content.card-content {
     font-weight: bold;
     text-align: left;
     position: relative;
-    overflow: hidden; }
+    overflow: hidden;
+    height: auto;
+    transition: height 0.4s ease-out; }
     .modal-content .accordion-filters .filters-tab-content-container .filters-tab-content .filters-sublayer .filters-layer {
       text-transform: capitalize;
-      font-weight: initial; }
+      font-weight: initial;
+      padding: 5px 20px; }
     .modal-content .accordion-filters .filters-tab-content-container .filters-tab-content .filters-sublayer .filters-layer.disable-checkbox {
       color: #BBBBBB; }
-
-.animate-hide {
-  animation: animatehide 0.4s forwards; }
-
-.animate-show {
-  animation: animateshow 0.4s forwards; }
-
-@keyframes animatehide {
-  from {
-    height: 40px;
-    opacity: 1;
-    padding: 10px 20px; }
-  to {
-    height: 0;
-    opacity: 0;
-    padding: 0; } }
-
-@keyframes animateshow {
-  from {
-    height: 0;
-    opacity: 0;
-    padding: 0; }
-  to {
-    height: 40px;
-    opacity: 1;
-    padding: 10px 20px; } }

@@ -120,6 +120,8 @@
                     text-align: left;
                     position: relative;
                     overflow: hidden;
+                    height: auto;
+                    transition: height 0.4s ease-out;
                     // i {
                     //   position: absolute;
                     //   right: 10px;
@@ -127,6 +129,7 @@
                     .filters-layer {
                         text-transform: capitalize;
                         font-weight: initial;
+                        padding: 5px 20px;
                     }
                     .filters-layer.disable-checkbox {
                         color: #BBBBBB;
@@ -150,36 +153,28 @@
     }
 }
 
-.animate-hide {
-    animation: animatehide 0.4s forwards;
-}
+// .animate-hide {
+//     animation: animatehide 0.5s forwards;
+// }
 
-.animate-show {
-    animation: animateshow 0.4s forwards;
-}
+// .animate-show {
+//     animation: animateshow 0.5s forwards;
+// }
 
-@keyframes animatehide {
-    from {
-        height: 40px;
-        opacity: 1;
-        padding: 10px 20px;
-    }
-    to {
-        height: 0;
-        opacity: 0;
-        padding: 0;
-    }
-}
+// @keyframes animatehide {
+//     from {
+//         max-height: 1000px;
+//     }
+//     to {
+//         max-height: 35px;
+//     }
+// }
 
-@keyframes animateshow {
-    from {
-        height: 0;
-        opacity: 0;
-        padding: 0;
-    }
-    to {
-        height: 40px;
-        opacity: 1;
-        padding: 10px 20px;
-    }
-}
+// @keyframes animateshow {
+//     from {
+//         max-height: 35px;
+//     }
+//     to {
+//         max-height: 1000px;
+//     }
+// }

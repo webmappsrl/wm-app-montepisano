@@ -311,5 +311,34 @@ angular.module('webmapp')
             return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
         };
 
+        utils.expandDOMElement = function (element) {
+            var sectionHeight = element.scrollHeight;
+
+            requestAnimationFrame(() => {
+                element.style.height = sectionHeight + 'px';
+                elementTransition = element.style.transition;
+                element.style.transition = '';
+                // requestAnimationFrame(() => {
+                //     element.style.height = null;
+                //     element.style.transition = elementTransition;
+                // });
+            });
+        };
+
+        utils.collapseDOMElement = function (element, finalHeight) {
+            var sectionHeight = element.scrollHeight,
+                elementTransition = element.style.transition;
+            element.style.transition = '';
+            // console.log(element)
+
+            requestAnimationFrame(() => {
+                element.style.height = sectionHeight + 'px';
+                element.style.transition = elementTransition;
+                requestAnimationFrame(() => {
+                    element.style.height = finalHeight + 'px';
+                });
+            });
+        };
+
         return utils;
     });
