@@ -15,17 +15,12 @@
 .ionic_toast>.toast_section {
     padding: 10px;
     background: rgba($color-brown, 0.9);
-    // background: rgba($color-light-01, 0.9);
-    // color: #000;
-    // border: 4px solid #aaa;
-    // background: rgba(#ECBE41, 0.9);
 }
 
 .toast-container {
     .toast-alert-icon {
         display: none;
         i {
-            // color: #ECBE41;
             color: #ff1500;
             font-size: 40px;
             float: left;
@@ -35,7 +30,6 @@
     .toast-content {
         float: left;
         text-align: center;
-        // width: calc(100% - 40px);
         width: 100%;
         .toast-message {
             font-weight: 700;
@@ -51,8 +45,6 @@
                 text-transform: uppercase;
                 padding: 4px 0;
                 background: #aaa;
-                // background: #9C927A;
-                // background: rgba(0, 0, 0, 0.4);
                 &.pause-button {
                     background: #ECBE41;
                 }
@@ -122,14 +114,10 @@
                     overflow: hidden;
                     height: auto;
                     transition: height 0.4s ease-out;
-                    // i {
-                    //   position: absolute;
-                    //   right: 10px;
-                    // }
                     .filters-layer {
                         text-transform: capitalize;
                         font-weight: initial;
-                        padding: 5px 20px;
+                        margin: 5px 20px;
                     }
                     .filters-layer.disable-checkbox {
                         color: #BBBBBB;
@@ -137,44 +125,5 @@
                 }
             }
         }
-        // .parent {
-        //   width: 100%;
-        //   color: $color-brown;
-        //   .child {
-        //     transition: all 2s linear;
-        //     -webkit-transition: all 2s linear;
-        //     background: transparent;
-        //     width: 100%;
-        //     overflow: hidden;
-        //     height: 0;
-        //     padding: 0;
-        //   }
-        // }
     }
 }
-
-// .animate-hide {
-//     animation: animatehide 0.5s forwards;
-// }
-
-// .animate-show {
-//     animation: animateshow 0.5s forwards;
-// }
-
-// @keyframes animatehide {
-//     from {
-//         max-height: 1000px;
-//     }
-//     to {
-//         max-height: 35px;
-//     }
-// }
-
-// @keyframes animateshow {
-//     from {
-//         max-height: 35px;
-//     }
-//     to {
-//         max-height: 1000px;
-//     }
-// }

@@ -55,8 +55,23 @@ angular.module('webmapp')
         vm.openInAppBrowser = Utils.openInAppBrowser;
         vm.openInExternalBrowser = Utils.openInExternalBrowser;
 
-        vm.voucherAvailable = CONFIG.MULTIMAP.purchaseType ? CONFIG.MULTIMAP.purchaseType.includes('voucher') : false;
-        vm.purchaseAvailable = CONFIG.MULTIMAP.purchaseType ? CONFIG.MULTIMAP.purchaseType.includes('purchase') : false;
+        vm.voucherAvailable = false;
+        vm.purchaseAvailable = false;
+
+        if (CONFIG.MULTIMAP && CONFIG.MULTIMAP.purchaseType) {
+            for (var i in CONFIG.MULTIMAP.purchaseType) {
+                switch (CONFIG.MULTIMAP.purchaseType[i]) {
+                    case 'purchase':
+                        vm.purchaseAvailable = true;
+                        break;
+                    case 'voucher':
+                        vm.voucherAvailable = true
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
         if (!vm.voucherAvailable && !vm.purchaseAvailable) {
             vm.voucherAvailable = true;
@@ -297,6 +312,6 @@ angular.module('webmapp')
 
             Utils.forceDigest();
         }
-        
+
         return vm;
     });

@@ -44,10 +44,8 @@ describe('MainController', function() {
             spyOn(MapService, 'getFeatureById').and.returnValue(deferred.promise);
             spyOn(vm, 'handleDistanceToast').and.callThrough();
             $httpBackend.whenGET(function(url) { return true; }).respond(404, '');
-            vm.checkOutOfTrack({
-                lat: 47.718,
-                long: 10.4
-            });
+            vm.checkOutOfTrack({ lat: 47.718, long: 10.4 });
+
             deferred.resolve(feature);
 
             rootScope.$digest();
@@ -69,7 +67,7 @@ describe('MainController', function() {
         });
 
 
-        it('MapService.getfeatureById return rejected promise => Shoud go in catch block and print in log', function() {
+        it('MapService.getfeatureById return rejected promise => should go in catch block and print in log', function() {
 
 
             vm.stopNavigationUrlParams.parentId = 'Tappe';
@@ -81,10 +79,7 @@ describe('MainController', function() {
             spyOn(vm, 'handleDistanceToast');
             spyOn(console, 'log');
             $httpBackend.whenGET(function(url) { return true; }).respond(404, '');
-            vm.checkOutOfTrack({
-                lat: 47.718,
-                long: 10.4
-            });
+            vm.checkOutOfTrack({ lat: 47.718, long: 10.4 });
             deferred.reject(vm.stopNavigationUrlParams);
 
             rootScope.$digest();
@@ -111,7 +106,7 @@ describe('MainController', function() {
         }));
 
 
-        it('Never gone outside track => it shoud not show toast.', function() {
+        it('Never gone outside track => it should not show toast.', function() {
 
             var distance = (vm.maxOutOfTrack) / 1000;
             // var baseTime = new Date(2013, 9, 23, 0, 0, 0, 0);
@@ -127,7 +122,7 @@ describe('MainController', function() {
 
         });
 
-        it('After toast showed, back inside the track since (toastTime-2) seconds => it shoud show toast ', function() {
+        it('After toast showed, back inside the track since (toastTime-2) seconds => it should show toast ', function() {
 
             var distance = (vm.maxOutOfTrack) / 1000;
 
@@ -143,7 +138,7 @@ describe('MainController', function() {
 
 
         });
-        it('After toast not showed, back inside the track since (toastTime-2) seconds => it shoud show toast ', function() {
+        it('After toast not showed, back inside the track since (toastTime-2) seconds => it should show toast ', function() {
 
             var distance = (vm.maxOutOfTrack) / 1000;
 
@@ -160,7 +155,7 @@ describe('MainController', function() {
 
         });
 
-        it('Back in from outside track since (timeToast+1) sec => it shoud not show(hide if open) toast ', function() {
+        it('Back in from outside track since (timeToast+1) sec => it should not show(hide if open) toast ', function() {
 
             var distance = (vm.maxOutOfTrack) / 1000;
             var baseTime = new Date(2013, 9, 23, 0, 0, (vm.toastTime + 1), 0);
@@ -176,7 +171,7 @@ describe('MainController', function() {
 
         });
 
-        it('Ouf of track since (vm.toastTime - 1) sec => it shoud not show toast ', function() {
+        it('Ouf of track since (vm.toastTime - 1) sec => it should not show toast ', function() {
 
             var distance = (vm.maxOutOfTrack + 1) / 1000;
             var baseTime = new Date(2013, 9, 23, 0, 0, (vm.toastTime - 1), 0);
@@ -193,7 +188,7 @@ describe('MainController', function() {
 
         });
 
-        it('Ouf of track from (vm.toastTime + 1) sec => it shoud show toast ', function() {
+        it('Ouf of track from (vm.toastTime + 1) sec => it should show toast ', function() {
 
             var distance = (vm.maxOutOfTrack + 1) / 1000;
             var baseTime = new Date(2013, 9, 23, 0, 0, (vm.toastTime + 1), 0);

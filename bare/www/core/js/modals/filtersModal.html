@@ -28,7 +28,7 @@
                     </div>
                     <div 
                         class="item-content disable-pointer-events">
-                        <span ng-if="key !== 'Tutte'">{{obj.name}}</span>
+                        <span ng-if="key !== 'Tutte'" ng-bind-html="obj.name"></span>
                         <strong ng-if="key === 'Tutte'">{{obj.name}}</strong>
                         <span ng-if="obj.icon !== 'wm-icon-generic'"
                             class="icon {{obj.icon}}"

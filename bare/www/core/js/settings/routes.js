@@ -60,14 +60,6 @@ angular.module('webmapp')
                     }
                 }
             })
-            .state('app.main.search', {
-                url: '/search',
-                views: {
-                    'inception-top': {
-                        templateUrl: basePath + 'js/components/search/search.html'
-                    }
-                }
-            })
             .state('app.main.layer', {
                 url: '/layer/:id',
                 views: {
@@ -108,6 +100,18 @@ angular.module('webmapp')
                     }
                 }
             });
+
+        if (CONFIGProvider.SEARCH && CONFIGProvider.SEARCH.active) {
+            $stateProvider
+                .state('app.main.search', {
+                    url: '/search',
+                    views: {
+                        'inception-top': {
+                            templateUrl: basePath + 'js/components/search/search.html'
+                        }
+                    }
+                });
+        }
 
         if (CONFIGProvider.PAGES) {
             for (var i = 0; i < CONFIGProvider.PAGES.length; i++) {
