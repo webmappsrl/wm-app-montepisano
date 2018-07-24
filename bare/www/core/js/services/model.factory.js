@@ -27,13 +27,13 @@ angular.module('webmapp')
         colorsConfig = CONFIG.STYLE;
 
     for (var p in confPages) {
-        pagesMap[confPages[p].label] = angular.extend({items: []}, confPages[p]);
+        pagesMap[confPages[p].label] = angular.extend({ items: [] }, confPages[p]);
         pagesMapByType[confPages[p].type] = confPages[p];
     }
 
     for (var n in confOverlays) {
         if (!confOverlays[n].skipRedering) {
-            overlaysMap[confOverlays[n].label] = angular.extend({items: []}, confOverlays[n]);
+            overlaysMap[confOverlays[n].label] = angular.extend({ items: [] }, confOverlays[n]);
         }
     }
 
@@ -73,12 +73,13 @@ angular.module('webmapp')
     };
 
     model.buildItemUrl = function(item) {
-        var realUrl = item.label.replace(/ /g, '_'),
-            realType = item.type,
+        var realUrl = item.label ? item.label.replace(/ /g, '_') : "";
+        realType = item.type,
             separator = '/';
 
         if (!realType) {
             realType = model.getItemType(realUrl);
+            realType = typeof realType !== "undefined" ? realType : "";
         }
 
         if (realType === 'layerGroup') {
@@ -147,7 +148,7 @@ angular.module('webmapp')
     };
 
     model.isAPage = function(name) {
-        if (name.indexOf('.') !== - 1) {
+        if (name.indexOf('.') !== -1) {
             name = name.split('.')[name.split('.').length - 1];
         }
 
@@ -188,12 +189,11 @@ angular.module('webmapp')
         if (typeof genericItemsMap[containerName] === 'undefined') {
             genericItemsMap[containerName] = {};
         }
-
         genericItemsMap[containerName][item.id || Utils.generateUID()] = item;
     };
 
     model.addItemToLayer = function(item, layer) {
-        if (typeof item.properties !== 'undefined' && 
+        if (typeof item.properties !== 'undefined' &&
             typeof overlaysMap[layer.label] !== 'undefined') {
             if (typeof item.properties.name === 'undefined') {
                 item.properties.name = item.properties.ref;
@@ -214,7 +214,7 @@ angular.module('webmapp')
             return confMainMenuMap[name].color;
         } else {
             if (model.isAChild(name)) {
-                return overlaysChildMap[name].color || 
+                return overlaysChildMap[name].color ||
                     model.getOverlayParent(name).color;
             }
         }
@@ -233,7 +233,7 @@ angular.module('webmapp')
             return CONFIG.STYLE.menu.color;
         } else {
             if (model.isAChild(name)) {
-                return overlaysChildMap[name].color || 
+                return overlaysChildMap[name].color ||
                     model.getOverlayParent(name).color;
             } else if (model.isAPageChild(name)) {
                 return pagesChildMap[name].color ||
