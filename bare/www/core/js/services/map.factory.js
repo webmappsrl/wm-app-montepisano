@@ -1185,7 +1185,15 @@ angular.module('webmapp')
 
         var setBaseLayer = function (baseMap, baseTms, baseLayer) {
             if (baseMap.default) {
-                Offline.setDefaultInfo(baseLayer, baseMap.tilesUrl + '{z}/{x}/{y}.png', baseTms, mapService.resetView);
+                var address = '',
+                    regex = /.*\{z\}\/\{x\}\/\{y\}\.png.*/gm;
+                if (regex.test(baseMap.tilesUrl)) {
+                    address = baseMap.tilesUrl;
+                }
+                else {
+                    address = baseMap.tilesUrl + '{z}/{x}/{y}.png';
+                }
+                Offline.setDefaultInfo(baseLayer, address, baseTms, mapService.resetView);
                 localStorage.currentMapLayer = localStorage.currentMapLayer || baseMap.label;
 
                 if (!baseLayersByLabel[localStorage.currentMapLayer]) {
@@ -1227,7 +1235,13 @@ angular.module('webmapp')
                             },
                             resetOfflineData);
                     } else {
-                        address = baseMap.tilesUrl + '{z}/{x}/{y}.png';
+                        var regex = /.*\{z\}\/\{x\}\/\{y\}\.png.*/gm;
+                        if (regex.test(baseMap.tilesUrl)) {
+                            address = baseMap.tilesUrl;
+                        }
+                        else {
+                            address = baseMap.tilesUrl + '{z}/{x}/{y}.png';
+                        }
                         setBaseLayer(baseMap, baseTms, L.tileLayer(address, options));
                         resolve();
                     }
