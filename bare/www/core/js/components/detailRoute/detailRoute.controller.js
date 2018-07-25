@@ -1,10 +1,8 @@
 angular.module('webmapp')
 
     .controller('DetailRouteController', function DetailRouteController(
-        $http,
         $ionicLoading,
         $ionicModal,
-        $ionicPlatform,
         $ionicPopup,
         $ionicSlideBoxDelegate,
         $rootScope,
@@ -15,22 +13,16 @@ angular.module('webmapp')
         Auth,
         Communication,
         CONFIG,
-        MapService,
-        Model,
-        Offline,
+        md5,
         PackageService,
         Utils
     ) {
         var vm = {},
-            current = $state.current || {},
-            params = $state.params || {},
-            isOnline = false,
-            isBrowser = vm.isBrowser = Utils.isBrowser();
+            params = $state.params || {};
 
         var registeredEvents = [];
 
         var modalScope = $rootScope.$new(),
-            modal = {},
             modalImage = {};
 
         var userData = {},
@@ -73,10 +65,10 @@ angular.module('webmapp')
             }
         }
 
-        // if (!vm.voucherAvailable && !vm.purchaseAvailable) {
-            vm.voucherAvailable = false;
+        if (!vm.voucherAvailable && !vm.purchaseAvailable) {
+            vm.voucherAvailable = true;
             vm.purchaseAvailable = true;
-        // }
+        }
 
         vm.maxDifficulty = CONFIG.MULTIMAP.maxDifficulty ? CONFIG.MULTIMAP.maxDifficulty : 5;
 
@@ -153,15 +145,20 @@ angular.module('webmapp')
                 });
         };
 
-        vm.openVoucherModal = function () {
+        vm.goToInfo = function () {
             if (vm.isLoggedIn) {
-                PackageService.requestPackageWithVoucher(routeDetail.id);
+                //TODO open link
+                var key = '';
+                var md5Hash = key + '-' + vm.id + '-' + userData.ID;
+                console.log(md5Hash)
+                md5Hash = md5.createHash(md5Hash);
+                console.log(md5Hash)
             } else {
                 notLoggedIn();
             }
         };
 
-        vm.requestRoute = function () {
+        vm.buyRoute = function () {
             if (vm.isLoggedIn) {
                 PackageService.buyPack(routeDetail.id);
             } else {

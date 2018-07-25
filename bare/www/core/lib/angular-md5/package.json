@@ -1,0 +1,78 @@
+{
+  "_from": "angular-md5",
+  "_id": "angular-md5@0.1.10",
+  "_inBundle": false,
+  "_integrity": "sha1-fLbH1cHQQB/+mHGhF4SfA8LMSGM=",
+  "_location": "/angular-md5",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "angular-md5",
+    "name": "angular-md5",
+    "escapedName": "angular-md5",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/angular-md5/-/angular-md5-0.1.10.tgz",
+  "_shasum": "7cb6c7d5c1d0401ffe9871a117849f03c2cc4863",
+  "_spec": "angular-md5",
+  "_where": "/Users/webmapps.r.l./Documents/webmapp-generator/bare",
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/gdi2290/angular-md5/issues"
+  },
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "PatrickJS"
+    },
+    {
+      "name": "Benjamin Orozco",
+      "email": "benoror@gmail.com"
+    }
+  ],
+  "dependencies": {},
+  "deprecated": false,
+  "description": "A md5 crypto component for Angular.js",
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-connect": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "~0.5.0",
+    "grunt-ngmin": "*",
+    "load-grunt-tasks": "~0.1.0",
+    "time-grunt": "~0.1.0"
+  },
+  "homepage": "https://github.com/gdi2290/angular-md5",
+  "keywords": [
+    "PatrickJS",
+    "gdi2290",
+    "angular.js",
+    "angularjs",
+    "angular",
+    "crypto",
+    "md5"
+  ],
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
+  "main": "angular-md5.js",
+  "name": "angular-md5",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/gdi2290/angular-md5.git"
+  },
+  "version": "0.1.10"
+}

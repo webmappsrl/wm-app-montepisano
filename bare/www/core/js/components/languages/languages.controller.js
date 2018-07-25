@@ -7,6 +7,7 @@ angular.module('webmapp')
         $window,
         Auth,
         CONFIG,
+        md5,
         Offline,
         PackageService,
         Utils
@@ -98,13 +99,21 @@ angular.module('webmapp')
             }
         });
 
-        // if (CONFIG.MULTIMAP && CONFIG.MULTIMAP.purchaseType) {
-        //     for (var i in CONFIG.MULTIMAP.purchaseType) {
-        //         if (CONFIG.MULTIMAP.purchaseType[i] === 'purchase') {
-        //             vm.purchaseAvailable = true;
-        //         }
-        //     }
-        // }
+        if (CONFIG.MULTIMAP && CONFIG.MULTIMAP.purchaseType) {
+            for (var i in CONFIG.MULTIMAP.purchaseType) {
+                if (CONFIG.MULTIMAP.purchaseType[i] === 'purchase') {
+                    vm.purchaseAvailable = true;
+                }
+                if (CONFIG.MULTIMAP.purchaseType[i] === 'voucher') {
+                    vm.voucherAvailable = true;
+                }
+            }
+        }
+
+        if (!vm.purchaseAvailable && !vm.voucherAvailable) {
+            vm.purchaseAvailable = true;
+            vm.voucherAvailable = true;
+        }
 
         for (var i in vm.languages) {
             vm.languages[i] = vm.languages[i].substring(0, 2);
@@ -118,6 +127,8 @@ angular.module('webmapp')
         }
 
         updatePrivacyUrl();
+
+        console.log(md5.createHash('gianni'))
 
         return vm;
     });

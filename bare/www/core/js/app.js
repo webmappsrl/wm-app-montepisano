@@ -4,5 +4,6 @@ angular.module('webmapp', [
     'ionic-toast',
     'igTruncate',
     'pascalprecht.translate',
-    'countrySelect'
+    'countrySelect',
+    'angular-md5'
 ]);

@@ -68,15 +68,15 @@
                     'color': COLORS.global.buttonsColor
                 }" class="login-button button left" ng-class="{
                     'full': !(vm.purchaseAvailable && vm.voucherAvailable)
-                }" ng-click="vm.openVoucherModal()">
-                {{"Codice Viaggio" | translate}}
+                }" ng-click="vm.goToInfo()">
+                {{"Piu info" | translate}}
             </button>
             <button ng-if="vm.purchaseAvailable" ng-style="{
                     'background': COLORS.global.buttonsBackground,
                     'color': COLORS.global.buttonsColor
                 }" class="login-button button right" ng-class="{
                     'full': !(vm.purchaseAvailable && vm.voucherAvailable)
-                }" ng-click="vm.requestRoute()">
+                }" ng-click="vm.buyRoute()">
                 {{"Acquista 9.99€" | translate}}
             </button>
         </div>
