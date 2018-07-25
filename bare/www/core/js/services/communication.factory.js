@@ -49,7 +49,7 @@ angular.module('webmapp')
                 });
 
             return defer.promise;
-        }
+        };
 
         communication.get = function (url) {
             var defer = $q.defer();

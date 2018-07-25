@@ -584,6 +584,7 @@ angular.module('webmapp')
         };
 
         var posCallback = function (position) {
+            console.log(Date.now())
             var lat = position.coords.latitude ? position.coords.latitude : 0,
                 long = position.coords.longitude ? position.coords.longitude : 0,
                 altitude = position.coords.altitude ? position.coords.altitude : 0,
@@ -1452,9 +1453,9 @@ angular.module('webmapp')
 
             //ionic cordova plugin add ionic-plugin-deeplinks --variable URL_SCHEME=test --variable DEEPLINK_SCHEME=https --variable DEEPLINK_HOST=api.webmapp.it --variable ANDROID_PATH_PREFIX=/
             $cordovaDeeplinks.route({
-                '/languages': { target: 'languages' },
-                '/home': { target: 'home' },
-                '/packages': { target: 'packages' },
+                // '/languages': { target: 'languages' },
+                // '/home': { target: 'home' },
+                // '/packages': { target: 'packages' },
                 '/route/:id': { target: 'route/', parent: 'packages' }
             }).subscribe(function (match) {
                 setTimeout(function () {
@@ -1462,7 +1463,7 @@ angular.module('webmapp')
                         Utils.goTo(match.$route.parent);
                         setTimeout(function() {
                             Utils.goTo(match.$route.target + match.$args.id);
-                        }, 100);
+                        }, 10);
                     }
                     else {
                         Utils.goTo(match.$route.target);
@@ -1470,7 +1471,6 @@ angular.module('webmapp')
                 }, 50);
             }, function (nomatch) {
                 console.warn('No match', nomatch);
-                Utils.goTo(CONFIG.OPTIONS.startUrl);
             });
         });
 

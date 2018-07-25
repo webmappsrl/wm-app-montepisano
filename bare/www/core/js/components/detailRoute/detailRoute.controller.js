@@ -11,7 +11,6 @@ angular.module('webmapp')
         $state,
         $translate,
         Auth,
-        Communication,
         CONFIG,
         md5,
         PackageService,
@@ -147,12 +146,18 @@ angular.module('webmapp')
 
         vm.goToInfo = function () {
             if (vm.isLoggedIn) {
-                //TODO open link
-                var key = '';
-                var md5Hash = key + '-' + vm.id + '-' + userData.ID;
-                console.log(md5Hash)
+                var md5Hash = privateKey.voucher + '-' + vm.id + '-' + userData.ID;
                 md5Hash = md5.createHash(md5Hash);
-                console.log(md5Hash)
+
+                var data = {
+                    routeId: vm.id,
+                    userId: userData.ID,
+                    lang: vm.currentLang,
+                    deeplink: 'https://api.webmapp.it/route/' + vm.id,
+                    hash: md5Hash
+                };
+
+                Utils.openPageWithPostData("https://api.webmapp.it/services/merinfo/vn/info.php", data);
             } else {
                 notLoggedIn();
             }
