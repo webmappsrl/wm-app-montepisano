@@ -81,20 +81,22 @@ angular.module('webmapp')
     });
 
     modalScope.vm.hide = function() {
-        // resetAll();
-        if (modalScope.vm.isNewModal) {
-            var features = getFeaturesToDisplay();
-            MapService.addFeaturesToFilteredLayer(features);
-        }
         modal.hide();
+        if (modalScope.vm.isNewModal) {
+            var currentFilters = MapService.getActiveFilters();
+            if (!angular.equals(currentFilters, vm.initialFilters)) {
+                // The delay is to prevent the map rendering while the modal is closing
+                setTimeout(function () {
+                    var features = getFeaturesToDisplay();
+                    MapService.addFeaturesToFilteredLayer(features);
+                }, 500);
+            }
+        }
     };
 
     modalScope.vm.updateFilter = function(filterName, value) {
-
         if (modalScope.vm.isNewModal) {
             MapService.setFilter(filterName, value);
-            // var features = getFeaturesToDisplay();
-            // MapService.addFeaturesToFilteredLayer(features);
         } else {
             if (filterName === "Tutte") {
                 for (var i in modalScope.vm.filters) {
@@ -171,6 +173,7 @@ angular.module('webmapp')
 
         if (modalScope.vm.isNewModal) {
             collapseAll();
+            vm.initialFilters = angular.copy(MapService.getActiveFilters());
         }
     };
 
@@ -350,9 +353,6 @@ angular.module('webmapp')
                 }
                 modalScope.filters[tabId].sublayers[id].checked = !modalScope.filters[tabId].sublayers[id].checked;
             }
-
-            var features = getFeaturesToDisplay();
-            MapService.addFeaturesToFilteredLayer(features);
         }
 
         modalScope.lastToggledLayer = "";
@@ -447,17 +447,6 @@ angular.module('webmapp')
                 }
             }
         };
-
-        // var resetAll = function () {
-        //     for (superId in modalScope.filters) {
-        //         for (macroId in modalScope.filters[superId].sublayers) {
-        //             var element = document.getElementById('sublayer-' + superId + '-' + macroId);
-        //             if (element) {
-        //                 Utils.expandDOMElement(element);
-        //             }
-        //         }
-        //     }
-        // };
 
         setTimeout(function() {
             var features = getFeaturesToDisplay();

@@ -418,17 +418,14 @@ angular.module('webmapp')
             return;
         }
 
-
         if (markerClusters) {
             markerClusters.clearLayers();
         }
-
 
         for (var i in overlayLayersByLabel) {
             if (!isAPOILayer(i)) {
                 removeLayer(i);
             }
-
         }
 
         for (var j in extraLayersByLabel) {
@@ -436,8 +433,6 @@ angular.module('webmapp')
                 removeLayer(j);
             }
         }
-
-
     };
 
     var activatePopup = function(e, isPOI) {
@@ -704,6 +699,7 @@ angular.module('webmapp')
 
         addLayer('filteredPOI');
         addLayer('filteredLine');
+        
 
         if (fitToBounds) {
             pointsLayer.addTo(groupLayer);
@@ -1697,7 +1693,6 @@ angular.module('webmapp')
 
     mapService.setFilter = function(layerName, value) {
         activeFilters[layerName] = value;
-        console.log(activeFilters);
         localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
 
         if (!CONFIG.MAP.filters) {
@@ -1706,12 +1701,7 @@ angular.module('webmapp')
             } else {
                 mapService.removeLayer(layerName);
             }
-        } else {
-            // for (var label in activeFilters) {
-            //     mapService.removeLayer(label);
-            // }
         }
-
     };
 
     mapService.activateAllFilters = function() {

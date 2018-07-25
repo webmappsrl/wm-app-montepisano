@@ -60,7 +60,8 @@
     .accordion-filters {
         .left-icon {
             float: left;
-            margin-right: 10px;
+            padding-right: 10px;
+            padding-left: 10px;
         }
         .right-icon {
             float: right;
@@ -103,7 +104,7 @@
                 }
                 .filters-sublayer {
                     border-bottom: 1px solid $color-brown;
-                    padding: 5px 10px;
+                    padding: 5px 10px 5px 0;
                     font-size: 20px;
                     line-height: 25px;
                     text-transform: uppercase;
