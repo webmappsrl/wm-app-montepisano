@@ -1,5 +1,6 @@
 angular.module('webmapp', [
     'ionic',
+    'ionic.native',
     'ngCordova',
     'ionic-toast',
     'igTruncate',
