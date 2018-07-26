@@ -584,7 +584,6 @@ angular.module('webmapp')
         };
 
         var posCallback = function (position) {
-            console.log(Date.now())
             var lat = position.coords.latitude ? position.coords.latitude : 0,
                 long = position.coords.longitude ? position.coords.longitude : 0,
                 altitude = position.coords.altitude ? position.coords.altitude : 0,

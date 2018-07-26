@@ -149,15 +149,9 @@ angular.module('webmapp')
                 var md5Hash = privateKey.voucher + '-' + vm.id + '-' + userData.ID;
                 md5Hash = md5.createHash(md5Hash);
 
-                var data = {
-                    routeId: vm.id,
-                    userId: userData.ID,
-                    lang: vm.currentLang,
-                    deeplink: 'https://api.webmapp.it/route/' + vm.id,
-                    hash: md5Hash
-                };
+                var data = '?routeId=' + vm.id + '&userId=' + userData.ID + '&lang=' + vm.currentLang + '&deeplink=https://api.webmapp.it/route/' + vm.id + '&hash=' + md5Hash;
 
-                Utils.openPageWithPostData("https://api.webmapp.it/services/merinfo/vn/info.php", data);
+                Utils.openInExternalBrowser("https://api.webmapp.it/services/merinfo/vn/info.php" + data);
             } else {
                 notLoggedIn();
             }
