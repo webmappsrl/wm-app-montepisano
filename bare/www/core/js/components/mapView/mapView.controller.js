@@ -201,11 +201,23 @@ angular.module('webmapp')
                 modalScope.tabNum += 1;
 
                 if (tabIndex === 'pois') {
-                    modalScope.filters[tabIndex].label = "Punti";
+                    modalScope.filters[tabIndex].label = "Luoghi";
+                    modalScope.filters[tabIndex].languages = {
+                        it: "Luoghi",
+                        en: "Places"
+                    };
                 } else if (tabIndex === 'tracks') {
                     modalScope.filters[tabIndex].label = "Percorsi";
+                    modalScope.filters[tabIndex].languages = {
+                        it: "Percorsi",
+                        en: "Routes"
+                    };
                 } else {
                     modalScope.filters[tabIndex].label = "Mappe";
+                    modalScope.filters[tabIndex].languages = {
+                        it: "Mappe",
+                        en: "Maps"
+                    };
                 }
 
                 var subTabs = modalScope.filters[tabIndex].sublayers;

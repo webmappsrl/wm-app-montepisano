@@ -68,7 +68,7 @@
                     <div ng-repeat="(key, item) in filters" ng-click="switchTab(key)" class="filters-tab-title cols-{{tabNum}}" ng-class="{
                             'selected': currentTab === key
                         }">
-                        {{item.label}}
+                        {{item.languages[vm.currentLang] || item.languages[vm.defaultLang] || item.label}}
                     </div>
                 </div>
                 <div class="filters-tab-content-container">

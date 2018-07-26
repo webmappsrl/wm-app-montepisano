@@ -281,17 +281,28 @@ angular.module('webmapp')
         modalScope.layers = {};
         modalScope.tabNum = 0;
         for (var tabIndex in modalScope.filters) {
-
             if (!modalScope.filters[tabIndex].sublayers) {
                 delete modalScope.filters[tabIndex];
             } else {
                 modalScope.tabNum += 1;
                 if (tabIndex === 'pois') {
-                    modalScope.filters[tabIndex].label = "Punti";
+                    modalScope.filters[tabIndex].label = "Luoghi";
+                    modalScope.filters[tabIndex].languages = {
+                        it: "Luoghi",
+                        en: "Places"
+                    };
                 } else if (tabIndex === 'tracks') {
                     modalScope.filters[tabIndex].label = "Percorsi";
+                    modalScope.filters[tabIndex].languages = {
+                        it: "Percorsi",
+                        en: "Routes"
+                    };
                 } else {
                     modalScope.filters[tabIndex].label = "Mappe";
+                    modalScope.filters[tabIndex].languages = {
+                        it: "Mappe",
+                        en: "Maps"
+                    };
                 }
                 var subTabs = modalScope.filters[tabIndex].sublayers;
                 modalScope.filters[tabIndex].selectedTab = 0;
@@ -315,8 +326,6 @@ angular.module('webmapp')
             }
         }
 
-
-
         for (const label in searchLayersMap) {
             if (!modalScope.layers[label]) {
                 var trackIndex = -1;
@@ -338,7 +347,6 @@ angular.module('webmapp')
                             items: [],
                             isMacroCategoryGroup: true
                         };
-
                     }
 
                     if (poiIndex > -1 && macroCategories[poiIndex].isMacroCategoryGroup) {
