@@ -1455,19 +1455,23 @@ angular.module('webmapp')
                 // '/languages': { target: 'languages' },
                 // '/home': { target: 'home' },
                 // '/packages': { target: 'packages' },
+                '/routeDownload/:id': { target: 'route/', parent: 'packages' },
                 '/route/:id': { target: 'route/', parent: 'packages' }
             }).subscribe(function (match) {
                 setTimeout(function () {
                     if (match.$route.parent) {
                         Utils.goTo(match.$route.parent);
                         setTimeout(function() {
+                            if (match.$link.path === '/routeDownload/' + match.$args.id) {
+                                $rootScope.routeDownload = true;
+                            }
                             Utils.goTo(match.$route.target + match.$args.id);
                         }, 10);
                     }
                     else {
                         Utils.goTo(match.$route.target);
                     }
-                }, 50);
+                }, 20);
             }, function (nomatch) {
                 console.warn('No match', nomatch);
             });

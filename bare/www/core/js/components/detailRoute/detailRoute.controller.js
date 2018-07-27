@@ -149,7 +149,7 @@ angular.module('webmapp')
                 var md5Hash = privateKey.voucher + '-' + vm.id + '-' + userData.ID;
                 md5Hash = md5.createHash(md5Hash);
 
-                var data = '?routeId=' + vm.id + '&userId=' + userData.ID + '&lang=' + vm.currentLang + '&deeplink=https://api.webmapp.it/route/' + vm.id + '&hash=' + md5Hash;
+                var data = '?routeId=' + vm.id + '&userId=' + userData.ID + '&lang=' + vm.currentLang + '&hash=' + md5Hash;
 
                 Utils.openInExternalBrowser("https://api.webmapp.it/services/merinfo/vn/info.php" + data);
             } else {
@@ -244,6 +244,14 @@ angular.module('webmapp')
         registeredEvents.push(
             $rootScope.$on('userPackagesId-updated', function (e, value) {
                 vm.userPackagesId = value;
+
+                if ($rootScope.routeDownload) {
+                    delete $rootScope.routeDownload;
+                    if (Auth.isLoggedIn() && vm.userPackagesId[vm.id]) {
+                        vm.downloadPack();
+                    }
+                }
+
                 Utils.forceDigest();
             })
         );
@@ -297,7 +305,7 @@ angular.module('webmapp')
         $ionicLoading.show({
             template: '<ion-spinner></ion-spinner>'
         });
-        PackageService.getRoutes();
+        PackageService.getRoutes(true);
         PackageService.getDownloadedPackages();
 
         if (Auth.isLoggedIn()) {
