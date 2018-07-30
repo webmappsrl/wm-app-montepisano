@@ -68,8 +68,8 @@
                     'color': COLORS.global.buttonsColor
                 }" class="login-button button left" ng-class="{
                     'full': !(vm.purchaseAvailable && vm.voucherAvailable)
-                }" ng-click="vm.goToInfo()">
-                {{"Piu info" | translate}}
+                }" ng-click="vm.applyVoucherFunction()">
+                {{vm.isAndroid ? "Codice Viaggio" : "Piu info" | translate}}
             </button>
             <button ng-if="vm.purchaseAvailable" ng-style="{
                     'background': COLORS.global.buttonsBackground,
@@ -94,7 +94,7 @@
             <button ng-style="{
                 'background': COLORS.global.buttonsBackground,
                 'color': COLORS.global.buttonsColor
-            }" class="login-button button button-block" ng-click="vm.downloadPack()">
+            }" class="login-button button button-block" ng-click="vm.downloadPackage()">
                 {{"Scarica" | translate}}
             </button>
         </div>

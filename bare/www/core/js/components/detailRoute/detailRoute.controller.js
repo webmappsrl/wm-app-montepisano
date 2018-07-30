@@ -157,6 +157,24 @@ angular.module('webmapp')
             }
         };
 
+        vm.useVoucher = function () {
+            if (vm.isLoggedIn) {
+                PackageService.useVoucher(routeDetail.id);
+            }
+            else {
+                notLoggedIn();
+            }
+        };
+
+        vm.applyVoucherFunction = function () {
+            if (vm.isAndroid) {
+                vm.useVoucher();
+            }
+            else {
+                vm.goToInfo();
+            }
+        };
+
         vm.buyRoute = function () {
             if (vm.isLoggedIn) {
                 PackageService.buyPack(routeDetail.id);
@@ -165,9 +183,9 @@ angular.module('webmapp')
             }
         };
 
-        vm.downloadPack = function () {
+        vm.downloadPackage = function () {
             if ((CONFIG.OPTIONS.skipLoginPublicRoutesDownload && routeDetail.wm_route_public) || vm.isLoggedIn) {
-                PackageService.downloadPack(routeDetail.id);
+                PackageService.downloadPackage(routeDetail.id);
             } else {
                 notLoggedIn();
             }
@@ -248,7 +266,7 @@ angular.module('webmapp')
                 if ($rootScope.routeDownload) {
                     delete $rootScope.routeDownload;
                     if (Auth.isLoggedIn() && vm.userPackagesId[vm.id]) {
-                        vm.downloadPack();
+                        vm.downloadPackage();
                     }
                 }
 
@@ -307,6 +325,7 @@ angular.module('webmapp')
         });
         PackageService.getRoutes(true);
         PackageService.getDownloadedPackages();
+        vm.isAndroid = window.cordova.platformId === 'ios' ? false : true;
 
         if (Auth.isLoggedIn()) {
             userData = Auth.getUserData();

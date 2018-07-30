@@ -188,8 +188,8 @@ angular.module('webmapp')
             return ret;
         }
 
-        vm.downloadPack = function (pack) {
-            PackageService.downloadPack(pack.id)
+        vm.downloadPackage = function (pack) {
+            PackageService.downloadPackage(pack.id)
         };
 
         vm.openPackage = function (pack) {
@@ -203,7 +203,7 @@ angular.module('webmapp')
                 if (vm.userDownloadedPackages[pack.id]) {
                     vm.openPackage(pack);
                 } else {
-                    vm.downloadPack(pack);
+                    vm.downloadPackage(pack);
                 }
             } else {
                 vm.openDetailsRoute(pack.id);

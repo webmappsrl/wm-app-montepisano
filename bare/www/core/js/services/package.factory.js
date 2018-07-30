@@ -20,7 +20,6 @@ angular.module('webmapp')
 
     .factory('PackageService', function PackageService(
         $http,
-        $q,
         $rootScope,
         $ionicLoading,
         $ionicModal,
@@ -390,6 +389,73 @@ angular.module('webmapp')
                     });
         };
 
+                /**
+         * @description
+         * Use a voucher to get permission to download a route and
+         * Emit the new list of available packages
+         * 
+         * @event userPackagesId-updated
+         * 
+         * @param {number} packId 
+         *      the id of the pack to request
+         * 
+         */
+        packageService.useVoucher = function (packId) {
+            if (!userData || !userData.ID) {
+                return;
+            }
+
+            $ionicPopup.prompt({
+                title: $translate.instant('Codice Viaggio'),
+                subTitle: $translate.instant('Inserisci il codice del tuo pacchetto di viaggio'),
+                inputType: 'text',
+                inputPlaceholder: $translate.instant('Codice Viaggio')
+            })
+                .then(function (res) {
+                    if (res) {
+                        var data = $.param({
+                            route_id: packId,
+                            user_id: userData.ID,
+                            code: res
+                        });
+
+                        var config = {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+                            }
+                        }
+
+                        $ionicLoading.show({
+                            template: '<ion-spinner></ion-spinner>'
+                        });
+
+                        $http.post(
+                            CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
+                            data,
+                            config
+                        )
+                            .success(function (data, status, headers, config) {
+                                $ionicLoading.hide();
+                                ///Update offline data
+                                userPackagesId[packId] = true;
+                                localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
+                            })
+                            .error(function (data, status, header, config) {
+                                $ionicLoading.hide();
+                                if (data.error === "Voucher Expired") {
+                                    $ionicPopup.alert({
+                                        template: $translate.instant("Il codice di viaggio che hai utilizzato è scaduto")
+                                    });
+                                } else {
+                                    $ionicPopup.alert({
+                                        template: $translate.instant("Il codice di viaggio che hai inserito non è valido. Controlla di averlo inserito correttamente e inseriscilo nuovamente.")
+                                    });
+                                }
+                            });
+                    }
+                });
+        };
+
         /**
          * @description
          * Buy the package via in-app purchase and
@@ -401,6 +467,8 @@ angular.module('webmapp')
          *      the id of the pack to buy
          */
         packageService.buyPack = function (packId) {
+            var isAndroid = window.cordova.platformId === 'ios' ? false : true;
+
             if (!userData || !userData.ID) {
                 return;
             }
@@ -441,10 +509,18 @@ angular.module('webmapp')
                     }
                 })
                 .catch(function (err) {
-                    $ionicPopup.alert({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Si è verificato un errore. Riprova")
-                    });
+                    if (isAndroid) {
+                        $ionicPopup.alert({
+                            title: $translate.instant("ATTENZIONE"),
+                            template: $translate.instant("Questo prodotto non è al momento disponibile")
+                        });
+                    }
+                    else {
+                        $ionicPopup.alert({
+                            title: $translate.instant("ATTENZIONE"),
+                            template: $translate.instant("Si è verificato un errore. Riprova")
+                        });
+                    }
                 });
         };
 
@@ -491,7 +567,7 @@ angular.module('webmapp')
          * @param {number} packId 
          *      the id of the pack to download
          */
-        packageService.downloadPack = function (packId) {
+        packageService.downloadPackage = function (packId) {
             $ionicPopup.confirm({
                 title: $translate.instant("ATTENZIONE"),
                 template: $translate.instant("Stai per scaricare l'itinerario sul dispositivo, vuoi procedere?")
