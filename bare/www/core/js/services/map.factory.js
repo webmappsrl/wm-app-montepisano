@@ -328,9 +328,9 @@ angular.module('webmapp')
     };
 
     var setItemInLocalStorage = function(key, data) {
-        if (!useLocalCaching) {
-            return;
-        }
+        // if (!useLocalCaching) {
+        //     return;
+        // }
 
         // TODO: set in sub property
 
@@ -349,7 +349,6 @@ angular.module('webmapp')
         };
 
         db.get(key).then(function(e) {
-            //console.log(e)
             db.remove(e)
                 .then(function() {
                     insert();
@@ -358,12 +357,16 @@ angular.module('webmapp')
             insert();
         });
 
-        try {
-            localStorage.setItem(key, JSON.stringify(data));
-        } catch (err) {
-            localStorage.clear();
-            console.error('Local storage reset - ' + err);
-        }
+        // try {
+        //     localStorage.setItem(key, JSON.stringify(data));
+        // } catch (err) {
+        //     localStorage.clear();
+        //     console.error('Local storage reset - ' + err);
+        // }
+    };
+
+    var getItemFromLocalStorage = function (key) {
+        return db.get(key);
     };
 
     var getFeatureIcon = function(feature, overlayLayer) {
@@ -992,28 +995,45 @@ angular.module('webmapp')
                 setItemInLocalStorage(geojsonUrl, data);
             });
         } else {
-            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(langGeojsonUrl, function(data) {
-                if (currentOverlay.type === 'line_geojson') {
-                    lineCallback(data, currentOverlay);
-                } else if (currentOverlay.type === 'poi_geojson') {
-                    poiCallback(data, currentOverlay);
-                }
-                setItemInLocalStorage(geojsonUrl, data);
-                delete overlayLayersQueueByLabel[currentOverlay.label];
-            }).fail(function() {
-                overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(geojsonUrl, function(data) {
+            if (Offline.isActive()) {
+                // var data = JSON.parse(localStorage.getItem(geojsonUrl));
+                getItemFromLocalStorage(geojsonUrl)
+                    .then(function (localContent) {
+                        if (localContent.data) {
+                            var data = JSON.parse(localContent.data);
+                            if (currentOverlay.type === 'line_geojson') {
+                                lineCallback(data, currentOverlay);
+                            } else if (currentOverlay.type === 'poi_geojson') {
+                                poiCallback(data, currentOverlay);
+                            }
+                        }
+                        delete overlayLayersQueueByLabel[currentOverlay.label]; 
+                    });
+            }
+            else {
+                overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(langGeojsonUrl, function(data) {
                     if (currentOverlay.type === 'line_geojson') {
                         lineCallback(data, currentOverlay);
                     } else if (currentOverlay.type === 'poi_geojson') {
                         poiCallback(data, currentOverlay);
                     }
-                    setItemInLocalStorage(geojsonUrl, data);
+                    setItemInLocalStorage(geojsonUrl, JSON.stringify(data));
                     delete overlayLayersQueueByLabel[currentOverlay.label];
-                }).fail(function(err) {
-                    console.warn('An error has occurred downloading geojson \'' + currentOverlay.geojsonUrl + '\'. This file could miss in the server or the app is offline, and will be skipped', err);
-                    defer.resolve();
+                }).fail(function() {
+                    overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(geojsonUrl, function(data) {
+                        if (currentOverlay.type === 'line_geojson') {
+                            lineCallback(data, currentOverlay);
+                        } else if (currentOverlay.type === 'poi_geojson') {
+                            poiCallback(data, currentOverlay);
+                        }
+                        setItemInLocalStorage(geojsonUrl, JSON.stringify(data));
+                        delete overlayLayersQueueByLabel[currentOverlay.label];
+                    }).fail(function(err) {
+                        console.warn('An error has occurred downloading geojson \'' + currentOverlay.geojsonUrl + '\'. This file could miss in the server or the app is offline, and will be skipped', err);
+                        defer.resolve();
+                    });
                 });
-            });
+            }
         }
 
         promise.then(function() {

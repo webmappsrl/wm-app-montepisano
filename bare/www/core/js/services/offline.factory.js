@@ -52,7 +52,7 @@ angular.module('webmapp')
         };
 
         offline.getOfflineUrl = function () {
-            _offlineUrl = _offlineUrl.replace(/^(.*)map\/([a-zA-Z0-9-_]*\.[a-zA-Z0-9-_]*)/g, cordova.file.dataDirectory + 'map/$2');
+            _offlineUrl = _offlineUrl.replace(/^(.*)map\/([a-zA-Z0-9-_\/]*\.[a-zA-Z0-9-_]*)/g, cordova.file.dataDirectory + 'map/$2');
             localStorage.setItem('offlineUrl', _offlineUrl);
             return _offlineUrl;
         };
@@ -159,13 +159,13 @@ angular.module('webmapp')
                             currentDefer.resolve();
                             $cordovaZip.unzip(targetPath, destDirectory)
                                 .then(function () {
-                                    console.log('finito l\'unzip');
+                                    // console.log('finito l\'unzip');
                                     vm.unzipInProgress = false;
                                     $cordovaFile.removeFile(destDirectory, filename);
                                     currentDefer.resolve();
                                 }, function () {
                                     currentDefer.reject('Si è verificato un errore nell\'installazione, riprova ');
-                                    console.error('Si è verificato un errore nell\'unzip delle immagini');
+                                    // console.error('Si è verificato un errore nell\'unzip delle immagini');
                                 },
                                     function (progress) {
                                         //console.log(progress);
@@ -174,15 +174,15 @@ angular.module('webmapp')
                         } else if (format === 'mbtiles') {
                             currentDefer.resolve();
                             _offlineUrl = destDirectory + filename;
-                            console.log(_offlineUrl);
+                            // console.log(_offlineUrl);
                             localStorage.setItem('offlineUrl', _offlineUrl);
                         }
-                        console.log(result);
-                        console.log('scaricato ' + format);
+                        // console.log(result);
+                        // console.log('scaricato ' + format);
                     },
                         function (error) {
                             currentDefer.reject('Si è verificato un errore nel download, riprova ');
-                            console.error('Si è verificato un errore nel download, riprova ', JSON.stringify(error));
+                            // console.error('Si è verificato un errore nel download, riprova ', JSON.stringify(error));
                             $ionicPopup.alert({
                                 title: $translate.instant("Attenzione"),
                                 template: $translate.instant("C'è stato un problema nello scaricamento, riprova più tardi."),

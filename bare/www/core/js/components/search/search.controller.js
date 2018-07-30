@@ -292,9 +292,9 @@ angular.module('webmapp')
                         en: "Places"
                     };
                 } else if (tabIndex === 'tracks') {
-                    modalScope.filters[tabIndex].label = "Percorsi";
+                    modalScope.filters[tabIndex].label = "Tracciati";
                     modalScope.filters[tabIndex].languages = {
-                        it: "Percorsi",
+                        it: "Tracciati",
                         en: "Routes"
                     };
                 } else {

@@ -85,7 +85,7 @@
                                     'ion-android-checkbox-outline-blank': !sublayer.checked
                                 }" ng-click="toggleSubTabCheckBox(sublayerId,key)"></i>
                                 <div ng-click="toggleSubTab(sublayerId, key)">
-                                    <span ng-bind-html="sublayer.label[vm.currentLang] || sublayer.label[vm.defaultLang]">
+                                    <span ng-bind-html="sublayer.label[vm.currentLang] || sublayer.label[vm.defaultLang] || sublayer.label">
                                     </span>
                                     <i class="icon right-icon" ng-class="{
                                         'wm-icon-ios7-arrow-forward': item.selectedTab !== sublayerId,
@@ -101,7 +101,7 @@
                                     'ion-android-checkbox-outline': layer.checked,
                                     'ion-android-checkbox-outline-blank': !layer.checked
                                 }"></i>
-                                <span ng-bind-html="layer.languages[vm.currentLang] || layer.languages[vm.defaultLang]">
+                                <span ng-bind-html="layer.languages[vm.currentLang] || layer.languages[vm.defaultLang] || layer.label">
                                 </span>
                             </div>
                         </div>
