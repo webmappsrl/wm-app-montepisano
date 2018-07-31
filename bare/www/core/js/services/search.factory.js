@@ -516,7 +516,7 @@ angular.module('webmapp')
                 "Grosseto": ["grosseto"],
                 "Livorno": ["livorno"],
                 "Lucca": ["lucca"],
-                "Massa e Carrara": ["massa e carrara", "massa", "carrara"],
+                "Massa e Carrara": ["massa e carrara", "massa", "carrara", "massa carrara"],
                 "Pisa": ["pisa"],
                 "Pistoia": ["pistoia"],
                 "Prato": ["prato"],

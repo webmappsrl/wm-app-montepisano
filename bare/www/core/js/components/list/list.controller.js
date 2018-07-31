@@ -5,6 +5,7 @@ angular.module('webmapp')
         $state,
         $ionicLoading,
         $ionicScrollDelegate,
+        $window,
         Utils,
         MapService,
         Model,
@@ -24,6 +25,7 @@ angular.module('webmapp')
         vm.layersMap = Model.getLayersMap();
         vm.goTo = Utils.goTo;
         vm.id = $state.params.id ? $state.params.id.replace(/_/g, ' ') : null;
+        vm.width = $window.screen.availWidth - 30;
 
         MapService.activateUtfGrid();
 

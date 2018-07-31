@@ -314,7 +314,6 @@ angular.module('webmapp')
 
         vm.width = $window.screen.availWidth - 30;
         if (modalScope.vm.isNewModal) {
-
             var featuresIdByLayersMap = MapService.getFeaturesIdByLayersMap();
             Search.setFeaturesIdByLayerMap(featuresIdByLayersMap);
             modalScope.filters = angular.copy(CONFIG.MAP.filters);

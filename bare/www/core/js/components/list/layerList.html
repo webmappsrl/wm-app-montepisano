@@ -89,7 +89,8 @@
                         class="item item-image-left list-item"
                         ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
                         collection-repeat="item in vm.layersMap[vm.subMenuLabel].items | filter:search | layerListFilter : vm.id"
-                        item-height="100px">
+                        item-height="100px"
+                        item-width="vm.width + 'px'">
                         <div ng-if="!item.properties.image" class="list-info-image">
                             <i class="icon {{item.properties.icon}}" ng-style="{'color': item.color ? item.color : '#605846'}"></i>
                         </div>
@@ -135,7 +136,8 @@
                     class="item item-image-left list-item"
                     ng-click="vm.goTo('layer/' + vm.currentCategory + '/' + item.properties.id)"
                     collection-repeat="item in vm.subMenu | filter:search | layerListFilter : vm.id"
-                    item-height="100px">
+                    item-height="100px"
+                    item-width="vm.width + 'px'">
                     <div ng-if="!item.properties.image" class="list-info-image">
                         <i class="icon {{item.properties.icon}}" ng-style="{'color': item.properties.color ? item.properties.color : '#605846'}"></i>
                     </div>
