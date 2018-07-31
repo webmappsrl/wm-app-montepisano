@@ -36,13 +36,15 @@ angular.module('webmapp')
     if (CONFIG.MAP.filters) {
 
         var currentFilterMap = angular.copy(CONFIG.MAP.filters);
+        var macroCategoryMap = {};
+        var categoryMap = {};
         for (var superCategoryId in currentFilterMap) {
             if (superCategoryId !== "base_maps" && currentFilterMap[superCategoryId].sublayers) {
                 var sublayers = currentFilterMap[superCategoryId].sublayers;
 
                 for (macroCategoryId in sublayers) {
                     if (sublayers[macroCategoryId].items && sublayers[macroCategoryId].items.length) {
-
+                        macroCategoryMap[sublayers[macroCategoryId].label.it] = {};
                         var layers = sublayers[macroCategoryId].items;
                         for (var layerId in layers) {
                             var label = confLayersMapById[layers[layerId]].label;
@@ -51,6 +53,8 @@ angular.module('webmapp')
                                     activeLayersMap[label].state = true;
                                 }
                                 layers[layerId] = { label: label, id: layers[layerId] };
+                                macroCategoryMap[sublayers[macroCategoryId].label.it][label] = activeLayersMap[label];
+                                categoryMap[label] = { state: activeLayersMap[label], macroCategory: sublayers[macroCategoryId].label.it };
                             };
                         }
                     } else {
@@ -194,7 +198,9 @@ angular.module('webmapp')
             var results = [],
                 currentResult = [];
 
-            var filteredIds = getFilteredFeaturesIds();
+            var additionalFilter = searchForQueryFilters(query);
+            query = updateQuery(query, additionalFilter.wordsToRemove);
+            var filteredIds = getFilteredFeaturesIds(false, additionalFilter);
 
             if (query) {
                 if (!filteredIds.length) {
@@ -202,7 +208,6 @@ angular.module('webmapp')
                         if (typeof layersEngine[c] !== 'undefined') {
                             currentResult = layersEngine[c].search(query);
                             if (currentResult.length > 0) {
-                                // results.push({ label: c, divider: true });
                                 results = results.concat(currentResult);
                             }
                         }
@@ -215,7 +220,6 @@ angular.module('webmapp')
                                 currentResult = filterById(currentResult, filteredIds);
                             }
                             if (currentResult.length > 0) {
-                                // results.push({ label: c, divider: true });
                                 results = results.concat(currentResult);
                             }
                         }
@@ -229,7 +233,6 @@ angular.module('webmapp')
                             currentResult = filterById(currentResult, filteredIds);
                         }
                         if (currentResult.length > 0) {
-                            // results.push({ label: l, divider: true });
                             results = results.concat(currentResult);
                         }
                     }
@@ -286,7 +289,11 @@ angular.module('webmapp')
             var results = [],
                 currentResult = [];
 
-            var filteredIds = getFilteredFeaturesIds();
+            var additionalFilter = searchForQueryFilters(query);
+            query = updateQuery(query, additionalFilter.wordsToRemove);
+            var filteredIds = getFilteredFeaturesIds(false, additionalFilter);
+            console.log(query);
+            console.log(additionalFilter);
             if (query) {
                 if (!filteredIds.length) {
                     for (var c in confLayersMap) {
@@ -335,7 +342,9 @@ angular.module('webmapp')
             var results = {},
                 currentResult = [];
 
-            var idsFilter = getFilteredFeaturesIds();
+            var additionalFilter = searchForQueryFilters(query);
+            query = updateQuery(query, additionalFilter.wordsToRemove);
+            var idsFilter = getFilteredFeaturesIds(false, additionalFilter);
             if (query) {
 
                 if (!idsFilter.length) {
@@ -417,10 +426,11 @@ angular.module('webmapp')
         };
 
 
-        var getFilteredFeaturesIds = function(type) {
+        var getFilteredFeaturesIds = function(type, additionalFilter) {
 
             var result = [];
             var filter = [];
+            additionalFilter = typeof additionalFilter === 'undefined' ? {} : additionalFilter;
             for (var superId in currentFilterMap) {
                 var superCat = currentFilterMap[superId];
                 for (var macroId in superCat.sublayers) {
@@ -429,11 +439,11 @@ angular.module('webmapp')
                     for (var catIndex in macroCat.items) {
                         var label = macroCat.items[catIndex].label;
                         if (macroCat.label === "custom") {
-                            if (activeLayersMap[label].state) {
+                            if (activeLayersMap[label].state || additionalFilter[label]) {
                                 cat.push([label]);
                             }
                         } else {
-                            if (activeLayersMap[label].state) {
+                            if (activeLayersMap[label].state || additionalFilter[label]) {
                                 cat.push(label);
                             }
                         }
@@ -485,6 +495,82 @@ angular.module('webmapp')
             return newResult;
 
         }
+
+
+        var searchForQueryFilters = function(query) {
+
+            if (!query) {
+                return {};
+            }
+
+            var additionalFilter = {};
+            additionalFilter.wordsToRemove = [];
+
+            var dictionary = {
+                "Produttori": ["produttore", "produttori"],
+                "Eventi": ["evento", "eventi"],
+                "Botteghe": ["botteghe", "bottega"],
+                "Ristoranti": ["ristorante", "ristoranti"],
+                "Arezzo": ["arezzo"],
+                "Firenze": ["firenze"],
+                "Grosseto": ["grosseto"],
+                "Livorno": ["livorno"],
+                "Lucca": ["lucca"],
+                "Massa e Carrara": ["massa e carrara", "massa", "carrara"],
+                "Pisa": ["pisa"],
+                "Pistoia": ["pistoia"],
+                "Prato": ["prato"],
+                "Siena": ["siena"]
+            }
+
+            var lowerQuery = query.toLocaleLowerCase();
+            for (var filter in dictionary) {
+
+                var macroCatLabel = categoryMap[filter].macroCategory;
+                var categories = macroCategoryMap[macroCatLabel];
+
+                var check = false;
+                for (var categoryLabel in categories) {
+
+                    if (categoryLabel !== filter && categories[categoryLabel] && categories[categoryLabel].state) {
+                        check = true;
+                        break;
+                    }
+                }
+
+                if (!check) {
+                    var words = dictionary[filter];
+                    for (let i = 0; i < words.length; i++) {
+                        var word = words[i];
+                        if (lowerQuery.indexOf(word) != -1) {
+                            additionalFilter[filter] = true;
+                            if (additionalFilter.wordsToRemove.indexOf(word) === -1) {
+                                additionalFilter.wordsToRemove.push(word);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return additionalFilter;
+        }
+
+        var updateQuery = function(query, wordsToRemove) {
+
+            if (!query || !wordsToRemove)
+                return query;
+
+            var editedQuery = query;
+
+            for (let i = 0; i < wordsToRemove.length; i++) {
+                var word = wordsToRemove[i];
+                editedQuery = editedQuery.replace(new RegExp(word, 'gi'), "");
+                editedQuery = editedQuery.trim();
+            }
+
+            return editedQuery;
+        }
+
     } else {
         var setupEngine = function(layerName) {
             layersEngine[layerName] = new JsSearch.Search('id');
