@@ -32,13 +32,14 @@ angular.module('webmapp')
     };
 
     vm.goToSearchByCategory = function(id) {
-        if (id === 'Eventi') {
-            Utils.goTo('layer/Eventi');
-        }
-        else {
-            $rootScope.searchLayers = [id];
-            Utils.goTo('search');
-        }
+        // if (id === 'Eventi') {
+        //     Utils.goTo('layer/Eventi');
+        // }
+        // else {
+        //     $rootScope.searchLayers = [id];
+        //     Utils.goTo('search');
+        // }
+        Utils.goTo('layer/' + id);
     };
 
     vm.types = [];

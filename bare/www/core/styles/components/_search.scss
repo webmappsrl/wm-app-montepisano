@@ -12,17 +12,24 @@
 .alpha-scroll {
     color: #000;
     position: absolute;
-    top: 125px;
     right: 0px;
     text-align: center;
-    height: calc(100vh - 125px - 44px);
+    height: calc(100vh - 10px - 44px);
     font-size: 15px;
+    top: 10px;
     .alpha-scroll__letter {
         display: block;
         height: 15px;
-        margin-bottom: calc((100vh - 125px - 44px - 15px * 27) / 27);
         margin-left: 10px;
         margin-right: 10px;
+        margin-bottom: calc((100vh - 10px - 44px - 15px * 27) / 27);
+    }
+    &.has-header {
+        height: calc(100vh - 125px - 44px);
+        top: 125px;
+        .alpha-scroll__letter {
+            margin-bottom: calc((100vh - 125px - 44px - 15px * 27) / 27);
+        }
     }
 }
 
@@ -134,6 +141,7 @@
         float: left;
         font-size: 18px;
         font-weight: bold;
+        font-family: $title-font-family;
         .search-button-label {
             text-transform: uppercase;
         }
@@ -141,7 +149,17 @@
 }
 
 .two-lines-ellipsis {
-    @include line-text-ellipsis(2, 22, 24);
+    @include line-text-ellipsis(2, 19, 20);
     padding-bottom: 0;
     padding-top: 0;
+    font-family: $title-font-family;
+}
+
+.one-line-title {
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 6px;
+    margin-top: 7px;
+    @include line-text-ellipsis(1, 19, 20);
+    font-family: $title-font-family;
 }

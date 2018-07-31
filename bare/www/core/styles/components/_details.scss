@@ -41,8 +41,13 @@
       vertical-align: middle;
     }
     &:last-child {
-      padding: 0 15px;
+      padding: 0 5px;
     }
+  }
+}
+div.contacts-list__element {
+  a:last-child {
+    padding: 0 15px;
   }
 }
 

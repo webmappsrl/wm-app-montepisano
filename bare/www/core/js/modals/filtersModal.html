@@ -1,13 +1,17 @@
 <ion-modal-view class="modal-mappalo modal-filters">
-    <a class="modal-close" ng-click="vm.hide()">
-        <i class="icon wm-icon-android-close"></i>
-    </a>
     <ion-content ng-style="{
         'background': vm.COLORS.details.background
     }">
         <div class="modal-content accordion-filters-modal">
-            <span class="modal-title">{{"VISUALIZZA/NASCONDI CATEGORIE" | translate}}</span>
-
+            <div ng-click="vm.hide()"
+                class="filter-modal-close"
+                ng-style="{
+                    'background': vm.COLORS.mainBar.color,
+                    'color': vm.COLORS.mainBar.background,
+                    'border': '2px solid ' + vm.COLORS.mainBar.color
+                }">
+                <i class="icon wm-icon-android-checkmark"></i>{{"Applica" | translate}}
+            </div>
             <ion-list ng-if="!vm.isNewModal">
                 <label class="item item-checkbox ng-not-empty" ng-repeat="(key, obj) in vm.filters" ng-init="currentFilter = obj.value" ng-model="obj.value" ng-class="{
                         'is-selected': obj.value,

@@ -90,71 +90,87 @@ angular.module('webmapp')
     });
 
     angular.module('webmapp')
-    .filter('layerTaxonomyFilter', function (
+    .filter('layerListFilter', function (
     ) {
-        return function (input) {
-            var compare = function (a, b) {
-                var aStart = a.properties && a.properties.date_start ? a.properties.date_start : false,
-                    bStart = b.properties && b.properties.date_start ? b.properties.date_start : false,
-                    aStop = a.properties && a.properties.date_stop ? a.properties.date_stop : false,
-                    bStop = b.properties && b.properties.date_stop ? b.properties.date_stop : false;
-
-                aStart = aStart ? [aStart.substring(6, 8), aStart.substring(4, 6), aStart.substring(0, 4)] : false;
-                aStart = aStart[0] && aStart[1] ? aStart[1] + aStart[0] : false;
-                bStart = bStart ? [bStart.substring(6, 8), bStart.substring(4, 6), bStart.substring(0, 4)] : false;
-                bStart = bStart[0] && bStart[1] ? bStart[1] + bStart[0] : false;
-                aStop = aStop ? [aStop.substring(6, 8), aStop.substring(4, 6), aStop.substring(0, 4)] : false;
-                aStop = aStop[0] && aStop[1] ? aStop[1] + aStop[0] : false;
-                bStop = bStop ? [bStop.substring(6, 8), bStop.substring(4, 6), bStop.substring(0, 4)] : false;
-                bStop = bStop[0] && bStop[1] ? bStop[1] + bStop[0] : false;
-
-                if (aStop && bStop) {
-                    return aStop > bStop ? 1 : -1;
-                }
-                else if (aStop) {
-                    return -1;
-                }
-                else if (bStop) {
-                    return 1;
-                }
-                else if (aStart && bStart) {
-                    return aStart > bStart ? 1 : -1;
-                }
-                else if (aStart) {
-                    return -1;
-                }
-                else if (bStart) {
-                    return 1;
-                }
-                else {
-                    return -1;
-                }
-            },
-            result = [];
-
-            var date = new Date();
-
-            for (var i in input) {
-                var stopDate = input[i].properties && input[i].properties.date_stop ? input[i].properties.date_stop : false;
-                stopDate = stopDate ? [stopDate.substring(6, 8), stopDate.substring(4, 6), stopDate.substring(0, 4)] : false;
-                if (stopDate) {
-                    if (date.getFullYear() % 100 < +stopDate[2] % 100 || (
-                        date.getYear() % 100 === +stopDate[2] % 100 && (
-                                date.getMonth() + 1 < +stopDate[1]
-                            ) || (
-                                date.getMonth() + 1 === +stopDate[1] &&
-                                date.getDate() <= +stopDate[0]
+        return function (input, filters) {
+            if (filters === 'Eventi') {
+                var compareEvents = function (a, b) {
+                    var aStart = a.properties && a.properties.date_start ? a.properties.date_start : false,
+                        bStart = b.properties && b.properties.date_start ? b.properties.date_start : false,
+                        aStop = a.properties && a.properties.date_stop ? a.properties.date_stop : false,
+                        bStop = b.properties && b.properties.date_stop ? b.properties.date_stop : false;
+    
+                    aStart = aStart ? [aStart.substring(6, 8), aStart.substring(4, 6), aStart.substring(0, 4)] : false;
+                    aStart = aStart[0] && aStart[1] ? aStart[1] + aStart[0] : false;
+                    bStart = bStart ? [bStart.substring(6, 8), bStart.substring(4, 6), bStart.substring(0, 4)] : false;
+                    bStart = bStart[0] && bStart[1] ? bStart[1] + bStart[0] : false;
+                    aStop = aStop ? [aStop.substring(6, 8), aStop.substring(4, 6), aStop.substring(0, 4)] : false;
+                    aStop = aStop[0] && aStop[1] ? aStop[1] + aStop[0] : false;
+                    bStop = bStop ? [bStop.substring(6, 8), bStop.substring(4, 6), bStop.substring(0, 4)] : false;
+                    bStop = bStop[0] && bStop[1] ? bStop[1] + bStop[0] : false;
+    
+                    if (aStop && bStop) {
+                        return aStop > bStop ? 1 : -1;
+                    }
+                    else if (aStop) {
+                        return -1;
+                    }
+                    else if (bStop) {
+                        return 1;
+                    }
+                    else if (aStart && bStart) {
+                        return aStart > bStart ? 1 : -1;
+                    }
+                    else if (aStart) {
+                        return -1;
+                    }
+                    else if (bStart) {
+                        return 1;
+                    }
+                    else {
+                        return -1;
+                    }
+                },
+                result = [];
+    
+                var date = new Date();
+    
+                for (var i in input) {
+                    var stopDate = input[i].properties && input[i].properties.date_stop ? input[i].properties.date_stop : false;
+                    stopDate = stopDate ? [stopDate.substring(6, 8), stopDate.substring(4, 6), stopDate.substring(0, 4)] : false;
+                    if (stopDate) {
+                        if (date.getFullYear() % 100 < +stopDate[2] % 100 || (
+                            date.getYear() % 100 === +stopDate[2] % 100 && (
+                                    date.getMonth() + 1 < +stopDate[1]
+                                ) || (
+                                    date.getMonth() + 1 === +stopDate[1] &&
+                                    date.getDate() <= +stopDate[0]
+                                )
                             )
-                        )
-                    ) {
+                        ) {
+                            result.push(input[i]);
+                        }
+                    }
+                    else {
                         result.push(input[i]);
                     }
                 }
-                else {
-                    result.push(input[i]);
-                }
+    
+                return result.sort(compareEvents);
             }
-
-            return result.sort(compare);
+            // else {
+            //     var compareTitles = function (a, b) {
+            //         return a.properties.name > b.properties.name;
+            //     },
+            //         result = input;
+                
+            //     if (result) {
+            //         return result.sort(compareTitles);
+            //     }
+            //     else {
+            //         return input;
+            //     }
+            // }
+            return input;
         };
     });

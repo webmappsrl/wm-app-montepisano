@@ -214,14 +214,13 @@
       width: 45px !important;
       height: 45px !important;
       margin-bottom: 9px;
-      background-color: transparentize($color-brown,0.3);
-      border: none!important;
+      background-color: #dd281f;
+      color: #fff;
       border-bottom: none!important;
       border-radius: 50%;
       line-height: 43px!important;
       text-align: center!important;
       text-decoration: none;
-      color: transparentize($color-brown,0.3);
       vertical-align: middle!important;
       outline: none !important;
       @include box-shadow(none !important);
@@ -245,10 +244,8 @@
       opacity: 0.5;
     }
 
-
-    &:hover,
     &:focus {
-      background-color: $color-brown;
+      background-color: #dd281f;
 
       &::before {
         color: $color-white;
@@ -462,7 +459,7 @@ div.leaflet-top.leaflet-right {
   position: absolute;
   bottom: 24px;
   right: 0;
-  background: transparentize($color-brown, .2);
+  background: #dd281f;
   z-index: 800;
   font-size: 26px;
   padding: 4px 0;
@@ -485,7 +482,7 @@ div.leaflet-top.leaflet-right {
     height: 36px;
     padding: 0 14px;
     padding-bottom: 7px;
-    background: transparentize($color-brown, .2);
+    background: #dd281f;
     line-height: 36px;
   }
 
