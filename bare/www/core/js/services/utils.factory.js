@@ -94,13 +94,16 @@ angular.module('webmapp')
             return typeof window.cordova === 'undefined';
         };
 
-        utils.slowAdd = function (itemsCache, destArray, firstTime) {
+        utils.slowAdd = function (itemsCache, destArray, firstTime, sortFunction) {
             var updateHitsTimer;
 
-            var slowAdd = function (itemsCache, destArray, firstTime) {
+            var slowAdd = function (itemsCache, destArray, firstTime, sortFunction) {
                 $timeout.cancel(updateHitsTimer);
 
                 if (itemsCache.length === 0) {
+                    if (sortFunction) {
+                        destArray.sort(sortFunction);
+                    }
                     return;
                 }
 
@@ -115,7 +118,7 @@ angular.module('webmapp')
                         currentHits++;
                     }
 
-                    slowAdd(itemsCache, destArray);
+                    slowAdd(itemsCache, destArray, false, sortFunction);
                 };
 
                 if (firstTime) {
@@ -127,7 +130,7 @@ angular.module('webmapp')
                 }
             };
 
-            slowAdd(itemsCache, destArray, firstTime);
+            slowAdd(itemsCache, destArray, firstTime, sortFunction);
         };
 
         utils.generateUID = function (separator) {

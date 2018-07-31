@@ -1,7 +1,6 @@
 angular.module('webmapp')
 
     .controller('ListController', function ListController(
-        $scope,
         $rootScope,
         $state,
         $ionicLoading,
@@ -24,6 +23,7 @@ angular.module('webmapp')
         vm.isListExpanded = false,
         vm.layersMap = Model.getLayersMap();
         vm.goTo = Utils.goTo;
+        vm.id = $state.params.id ? $state.params.id.replace(/_/g, ' ') : null;
 
         MapService.activateUtfGrid();
 
@@ -63,7 +63,29 @@ angular.module('webmapp')
             return res;
         };
 
+        var compareTitles = function (a, b) {
+            if (a.properties.name.toUpperCase() < b.properties.name.toUpperCase()) {
+                return -1;
+            }
+            if (a.properties.name.toUpperCase() > b.properties.name.toUpperCase()) {
+                return 1;
+            }
+            return 0;
+        };
+
+        var reinit = function () {
+            if (MapService.isReady()) {
+                init();
+            }
+            else {
+                setTimeout(reinit, 250);
+            }
+        };
+
         var init = function () {
+            $ionicLoading.show({
+                template: '<ion-spinner></ion-spinner>'
+            });
             var currentState = $rootScope.currentState.name,
                 parentState = {},
                 layersReferences,
@@ -115,18 +137,44 @@ angular.module('webmapp')
                         vm.subGroupMenu = getMenuByState(realState);
                     } else {
                         if (MapService.isReady()) {
-                            vm.layersMap[realState].items.sort(function compare(a,b) {
-                                if (a.properties.name < b.properties.name)
-                                  return -1;
-                                if (a.properties.name > b.properties.name)
-                                  return 1;
-                                return 0;
+                            $ionicLoading.show({
+                                template: '<ion-spinner></ion-spinner>'
                             });
-
-                            vm.subMenu = [];
-                            Utils.slowAdd(angular.extend([], vm.layersMap[realState].items), vm.subMenu, true);
-                        } else {
+                            vm.layersMap[realState].items.sort(compareTitles);
                             vm.subMenuLabel = realState;
+
+                            vm.lettersPosition = {};
+                            var lastLetter = '',
+                                alphaRegex = /[A-Z]/g;
+
+                            for (var i in vm.layersMap[realState].items) {
+                                var letter = vm.layersMap[realState].items[i].properties.name[0].toUpperCase();
+                                if (letter !== lastLetter) {
+                                    if (lastLetter === '') {
+                                        if (alphaRegex.test(letter)) {
+                                            vm.lettersPosition[letter] = +i;
+                                        }
+                                        else {
+                                            vm.lettersPosition['*'] = +i;
+                                        }
+                                        
+                                        lastLetter = letter;
+                                    }
+                                    else if (alphaRegex.test(letter)) {
+                                        vm.lettersPosition[letter] = +i;
+                                        lastLetter = letter;
+                                    }
+                                }
+                            }
+
+                            // vm.subMenu = [];
+
+                            // Utils.slowAdd(angular.extend([], vm.layersMap[realState].items), vm.subMenu, true);
+                            // vm.subMenu.sort(compareTitles);
+                            $ionicLoading.hide();
+                        } else {
+                            reinit();
+                            return;
                         }
 
                         parentState = Model.getOverlayParent(realState);
@@ -149,8 +197,10 @@ angular.module('webmapp')
             // console.log(vm)
         };
 
-        init();
-        // $scope.$on('$stateChangeSuccess', init);
+        vm.scrollToDivider = function (key) {
+            var height = vm.lettersPosition[key] * 99.9;
+            $ionicScrollDelegate.scrollTo(0, height, 0);
+        };
 
         vm.renderDate = function (date) {
             var parsedDate,
@@ -184,6 +234,25 @@ angular.module('webmapp')
 
             vm.goTo('search');
         };
+
+        vm.getSpecialities = function (item) {
+            var specialities = "";
+            if (item.properties && item.properties.taxonomy && item.properties.taxonomy.specialita) {
+                for (var i in item.properties.taxonomy.specialita) {
+                    if (specialities !== "") {
+                        specialities += ", ";
+                    }
+                    specialities += MapService.getLayerLabelById(item.properties.taxonomy.specialita[i]);
+                }
+            }
+            return specialities;
+        };
+
+        $ionicLoading.show({
+            template: '<ion-spinner></ion-spinner>'
+        });
+        setTimeout(reinit, 250);
+        // init();
 
         vm.toggleList();
 

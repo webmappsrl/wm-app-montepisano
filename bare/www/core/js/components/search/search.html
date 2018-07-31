@@ -73,7 +73,7 @@
                     ng-class="{'is-divider': item.divider, 'item-image-left': !item.divider}"
                     ng-click="vm.goTo('layer/' + item.parent.label + '/' + item.properties.id, item.divider)"
                     collection-repeat="item in vm.results"
-                    item-height="item.divider ? '62px' : '100px'"
+                    item-height="item.divider ? '62px' : '94px'"
                     item-width="vm.width + 'px'"
                     ng-attr-id="{{item.divider ? 'alpha-scroll-' + item.label : ''}}">
                     <div ng-if="!item.properties.image" class="list-info-image">
@@ -83,7 +83,8 @@
                         <img ng-src="{{item.properties.image}}">
                     </div>
                     <span class="list-info-title" ng-bind-html="item.properties.name || item.label" ng-class="{
-                        'two-lines-ellipsis': !item.divider
+                        'two-lines-ellipsis': !item.divider && ((item.properties.name && item.properties.name.length > 25) || item.label.length > 25),
+                        'one-line-title': !item.divider && ((item.properties.name && item.properties.name.length <= 25) || item.label.length <= 25)
                     }">
                     </span>
                     <span 
@@ -107,7 +108,7 @@
             </ion-list>
         </div>
     </ion-content>
-    <div class="alpha-scroll">
+    <div class="alpha-scroll has-header">
         <span class="alpha-scroll__letter" ng-repeat="(key, item) in vm.lettersPosition"
             ng-click="vm.scrollToDivider(key)">
             {{key}}

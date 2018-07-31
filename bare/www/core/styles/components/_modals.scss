@@ -71,6 +71,20 @@
   color: $color-white;
 }
 
+.filter-modal-close {
+  width: 40%;
+  margin: 20px auto;
+  text-align: center;
+  font-size: 20px;
+  padding: 5px;
+  text-transform: uppercase;
+  font-family: $title-font-family;
+  font-weight:bold;
+  i {
+    margin: 0 3px;
+  }
+}
+
 .modal-content {
   padding: 15px;
   .modal-description {

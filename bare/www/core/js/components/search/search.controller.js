@@ -279,7 +279,7 @@ angular.module('webmapp')
                 }
             }
 
-            height = dividers * 62 + (vm.lettersPosition[id] - dividers) * 100;
+            height = dividers * 62 + (vm.lettersPosition[id] - dividers) * 94;
             // console.log(height)
             // $location.hash('alpha-scroll-' + id);
 
