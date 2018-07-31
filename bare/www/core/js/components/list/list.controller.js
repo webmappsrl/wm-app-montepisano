@@ -143,26 +143,28 @@ angular.module('webmapp')
                             vm.layersMap[realState].items.sort(compareTitles);
                             vm.subMenuLabel = realState;
 
-                            vm.lettersPosition = {};
-                            var lastLetter = '',
-                                alphaRegex = /[A-Z]/g;
+                            if (realState !== 'Eventi') {
+                                vm.lettersPosition = {};
+                                var lastLetter = '',
+                                    alphaRegex = /[A-Z]/g;
 
-                            for (var i in vm.layersMap[realState].items) {
-                                var letter = vm.layersMap[realState].items[i].properties.name[0].toUpperCase();
-                                if (letter !== lastLetter) {
-                                    if (lastLetter === '') {
-                                        if (alphaRegex.test(letter)) {
+                                for (var i in vm.layersMap[realState].items) {
+                                    var letter = vm.layersMap[realState].items[i].properties.name[0].toUpperCase();
+                                    if (letter !== lastLetter) {
+                                        if (lastLetter === '') {
+                                            if (alphaRegex.test(letter)) {
+                                                vm.lettersPosition[letter] = +i;
+                                            }
+                                            else {
+                                                vm.lettersPosition['*'] = +i;
+                                            }
+                                            
+                                            lastLetter = letter;
+                                        }
+                                        else if (alphaRegex.test(letter)) {
                                             vm.lettersPosition[letter] = +i;
+                                            lastLetter = letter;
                                         }
-                                        else {
-                                            vm.lettersPosition['*'] = +i;
-                                        }
-                                        
-                                        lastLetter = letter;
-                                    }
-                                    else if (alphaRegex.test(letter)) {
-                                        vm.lettersPosition[letter] = +i;
-                                        lastLetter = letter;
                                     }
                                 }
                             }
@@ -252,7 +254,6 @@ angular.module('webmapp')
             template: '<ion-spinner></ion-spinner>'
         });
         setTimeout(reinit, 250);
-        // init();
 
         vm.toggleList();
 
