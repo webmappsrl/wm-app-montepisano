@@ -77,6 +77,7 @@ angular.module('webmapp')
 
         var reinit = function () {
             if (MapService.isReady()) {
+                vm.toggleList();
                 init();
             }
             else {
@@ -148,13 +149,24 @@ angular.module('webmapp')
                             if (realState !== 'Eventi') {
                                 vm.lettersPosition = {};
                                 var lastLetter = '',
-                                    alphaRegex = /[A-Z]/g;
+                                    isLetter = function (l) {
+                                        if (l === 'A' || l === 'B' || l == 'C' || l === 'D' || l == 'E' ||
+                                            l === 'F' || l === 'G' || l == 'H' || l === 'I' || l == 'J' ||
+                                            l === 'K' || l === 'L' || l == 'M' || l === 'N' || l == 'O' ||
+                                            l === 'P' || l === 'Q' || l == 'R' || l === 'S' || l == 'T' ||
+                                            l === 'U' || l === 'V' || l == 'W' || l === 'X' || l == 'Y' || l === 'Z') {
+                                            return true
+                                        }
+                                        else {
+                                            return false;
+                                        }
+                                    };
 
                                 for (var i in vm.layersMap[realState].items) {
                                     var letter = vm.layersMap[realState].items[i].properties.name[0].toUpperCase();
                                     if (letter !== lastLetter) {
                                         if (lastLetter === '') {
-                                            if (alphaRegex.test(letter)) {
+                                            if (isLetter(letter)) {
                                                 vm.lettersPosition[letter] = +i;
                                             }
                                             else {
@@ -163,7 +175,7 @@ angular.module('webmapp')
                                             
                                             lastLetter = letter;
                                         }
-                                        else if (alphaRegex.test(letter)) {
+                                        else if (isLetter(letter)) {
                                             vm.lettersPosition[letter] = +i;
                                             lastLetter = letter;
                                         }
@@ -171,10 +183,6 @@ angular.module('webmapp')
                                 }
                             }
 
-                            // vm.subMenu = [];
-
-                            // Utils.slowAdd(angular.extend([], vm.layersMap[realState].items), vm.subMenu, true);
-                            // vm.subMenu.sort(compareTitles);
                             $ionicLoading.hide();
                         } else {
                             reinit();
@@ -202,7 +210,7 @@ angular.module('webmapp')
         };
 
         vm.scrollToDivider = function (key) {
-            var height = vm.lettersPosition[key] * 99.9;
+            var height = vm.lettersPosition[key] * 94;
             $ionicScrollDelegate.scrollTo(0, height, 0);
         };
 
@@ -255,9 +263,7 @@ angular.module('webmapp')
         $ionicLoading.show({
             template: '<ion-spinner></ion-spinner>'
         });
-        setTimeout(reinit, 250);
-
-        vm.toggleList();
+        setTimeout(reinit, 250);        
 
         return vm;
     });
