@@ -1064,9 +1064,10 @@ angular.module('webmapp')
         vm.pauseNavigation = function () {
             vm.isPaused = true;
             vm.timeInMotionBeforePause = Date.now() - vm.navigationStartTime + vm.timeInMotionBeforePause;
-            vm.distanceTravelledBeforePause = vm.distanceTravelled;
+            vm.distanceTravelledBeforePause += vm.distanceTravelled;
             vm.outOfTrackDate = 0;
             vm.inTrackDate = 0;
+            clearInterval(vm.navigationInterval);
             hideOutOfTrackToast();
             window.plugins.insomnia.allowSleepAgain();
         };
