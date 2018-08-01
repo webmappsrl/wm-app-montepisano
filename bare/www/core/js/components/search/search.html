@@ -83,8 +83,8 @@
                         <img ng-src="{{item.properties.image}}">
                     </div>
                     <span class="list-info-title" ng-bind-html="item.properties.name || item.label" ng-class="{
-                        'two-lines-ellipsis': !item.divider && ((item.properties.name && item.properties.name.length > 25) || item.label.length > 25),
-                        'one-line-title': !item.divider && ((item.properties.name && item.properties.name.length <= 25) || item.label.length <= 25)
+                        'two-lines-ellipsis': false && !item.divider && ((item.properties.name && item.properties.name.length > 30) || item.label.length > 25),
+                        'one-line-title': !item.divider
                     }">
                     </span>
                     <span 
