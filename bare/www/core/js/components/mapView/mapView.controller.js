@@ -39,6 +39,10 @@ angular.module('webmapp')
     vm.showFilers = !CONFIG.OPTIONS.hideFiltersInMap;
     vm.isNavigable = $rootScope.isNavigable ? $rootScope.isNavigable : false;
     vm.goBack = Utils.goBack;
+    vm.canGoBack = $rootScope.backToDetails ? true : false;
+    console.log(vm.canGoBack)
+
+    $rootScope.backToDetails = false;
 
     vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
 
@@ -182,11 +186,8 @@ angular.module('webmapp')
         Utils.forceDigest();
     });
 
-
     if (modalScope.vm.isNewModal) {
-
         modalScope.filters = angular.copy(CONFIG.MAP.filters);
-
 
         modalScope.layers = {};
         modalScope.tabNum = 0;
@@ -379,8 +380,6 @@ angular.module('webmapp')
             MapService.addFeaturesToFilteredLayer(features);
         }, 100);
     }
-
-
 
     return vm;
 });

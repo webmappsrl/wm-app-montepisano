@@ -215,12 +215,13 @@
       height: 45px !important;
       margin-bottom: 9px;
       background-color: #dd281f;
-      color: #fff;
+      border: none!important;
       border-bottom: none!important;
       border-radius: 50%;
       line-height: 43px!important;
       text-align: center!important;
       text-decoration: none;
+      color: #fff;
       vertical-align: middle!important;
       outline: none !important;
       @include box-shadow(none !important);

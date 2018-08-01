@@ -1436,6 +1436,9 @@ angular.module('webmapp')
             }).addTo(map);
         }
 
+        document.getElementsByClassName("leaflet-control-zoom-in")[0].innerHTML = '';
+        document.getElementsByClassName("leaflet-control-zoom-out")[0].innerHTML = '';
+
         map.on('click', function() {
             if (layerCliked) {
                 layerCliked = null;

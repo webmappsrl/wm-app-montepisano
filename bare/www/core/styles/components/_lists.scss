@@ -173,7 +173,8 @@
 
 .list-info-subtitle {
   font-size: 14px;
-  line-height: 15px;
+  line-height: 18px;
+  vertical-align: middle;
   @include text-ellipsis;
 }
 

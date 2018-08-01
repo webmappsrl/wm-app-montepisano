@@ -860,6 +860,7 @@ angular.module('webmapp')
 
         vm.returnToMap = function () {
             // vm.isNavigable = false;
+            $rootScope.backToDetails = true;
             if ($state.params.parentId) {
                 MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
             }
@@ -896,6 +897,7 @@ angular.module('webmapp')
         };
 
         vm.toggleMap = function () {
+            $rootScope.backToDetails = true;
             vm.isMapPage = !vm.isMapPage;
             vm.mapView = vm.isMapPage;
             vm.isNavigable = false;

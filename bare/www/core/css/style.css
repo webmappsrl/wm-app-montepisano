@@ -1619,7 +1619,8 @@ div.logout {
 
 .list-info-subtitle {
   font-size: 14px;
-  line-height: 15px;
+  line-height: 18px;
+  vertical-align: middle;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap; }
@@ -2567,12 +2568,13 @@ a.item {
     height: 45px !important;
     margin-bottom: 9px;
     background-color: #dd281f;
-    color: #fff;
+    border: none !important;
     border-bottom: none !important;
     border-radius: 50%;
     line-height: 43px !important;
     text-align: center !important;
     text-decoration: none;
+    color: #fff;
     vertical-align: middle !important;
     outline: none !important;
     -webkit-box-shadow: none !important;
