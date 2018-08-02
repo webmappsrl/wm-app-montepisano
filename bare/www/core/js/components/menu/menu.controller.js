@@ -4,21 +4,16 @@ angular.module('webmapp')
         $cordovaKeyboard,
         $ionicModal,
         $ionicPopup,
-        $ionicScrollDelegate,
         $ionicSideMenuDelegate,
-        $location,
         $rootScope,
         $scope,
         $state,
-        $timeout,
         $translate,
         Account,
         Auth,
         CONFIG,
-        MapService,
         Model,
         Offline,
-        Tracking,
         Utils
     ) {
         var vm = {};

@@ -76,10 +76,13 @@ angular.module('webmapp')
      * @description
      * Start recording stats
      * 
+     * @param recordTrack
+     *      if true record the track in a geojson feature
+     * 
      * @returns
      *      true if all correct, false otherwise
      */
-    geolocationService.startRecording = function () {
+    geolocationService.startRecording = function (recordTrack) {
         return false;
     };
 
@@ -127,6 +130,28 @@ angular.module('webmapp')
      *      all the recorded stats
      */
     geolocationService.getStats = function () {
+        return false;
+    };
+
+    /**
+     * @description
+     * Start the remote tracking with our server
+     * 
+     * @returns
+     *      true if started correctly, false otherwise
+     */
+    geolocationService.startRemoteTracking = function () {
+        return false;
+    };
+
+    /**
+     * @description
+     * Stop the remote tracking with our server
+     * 
+     * @returns
+     *      true if correctly executed, false otherwise
+     */
+    geolocationService.stopRemoteTracking = function () {
         return false;
     };
 
