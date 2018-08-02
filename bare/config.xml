@@ -19,6 +19,7 @@
     <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="StatusBarStyle" value="lightcontent" />
     <preference name="orientation" value="portrait" />
+    <preference name="cordova.plugins.diagnostic.modules" value="LOCATION" />
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
@@ -99,11 +100,11 @@
     <plugin name="phonegap-plugin-barcodescanner" spec="~6.0.1" />
     <plugin name="uk.co.workingedge.phonegap.plugin.launchnavigator" spec="~3.2.1" />
     <plugin name="cordova-plugin-x-socialsharing" spec="^5.2.1" />
-    <plugin name="cordova.plugins.diagnostic" spec="^3.9.2" />
     <engine name="android" spec="6.3.0" />
     <engine name="ios" spec="4.5.4" />
     <plugin name="cordova-android-support-gradle-release" spec="^1.4.2">
         <variable name="ANDROID_SUPPORT_VERSION" value="27.+" />
     </plugin>
     <plugin name="cordova-plugin-insomnia" spec="4.3.0" />
+    <plugin name="cordova.plugins.diagnostic" spec="4.0.8" />
 </widget>
