@@ -6,7 +6,6 @@ angular.module('webmapp')
         $q,
         $state,
         $timeout,
-        $location,
         $rootScope,
         $ionicModal,
         $ionicPopup,
@@ -329,7 +328,6 @@ angular.module('webmapp')
             var sectionHeight = element.scrollHeight,
                 elementTransition = element.style.transition;
             element.style.transition = '';
-            // console.log(element)
 
             requestAnimationFrame(() => {
                 element.style.height = sectionHeight + 'px';
