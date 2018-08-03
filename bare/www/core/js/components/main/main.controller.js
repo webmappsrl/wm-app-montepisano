@@ -45,14 +45,11 @@ angular.module('webmapp')
 
         vm.speedTextType = 'average';
 
-        if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.detaultSpeedType && CONFIG.MAIN.NAVIGATION.defaultSpeedType !== 'average' && CONFIG.MAIN.NAVIGATION.defaultSpeedType === 'current') {
+        if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.defaultSpeedType && CONFIG.MAIN.NAVIGATION.defaultSpeedType === 'current') {
             vm.speedTextType = 'current';
         }
-        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.detaultSpeedType && CONFIG.NAVIGATION.defaultSpeedType !== 'average' && CONFIG.NAVIGATION.defaultSpeedType === 'current') {
+        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.defaultSpeedType && CONFIG.NAVIGATION.defaultSpeedType === 'current') {
             vm.speedTextType = 'current';
-        }
-        else {
-            vm.speedTextType = 'average';
         }
 
         if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) {

@@ -325,7 +325,7 @@ angular.module('webmapp')
         });
         PackageService.getRoutes(true);
         PackageService.getDownloadedPackages();
-        vm.isAndroid = window.cordova.platformId === 'ios' ? false : true;
+        vm.isAndroid = !window.cordova || window.cordova.platformId === 'ios' ? false : true;
 
         if (Auth.isLoggedIn()) {
             userData = Auth.getUserData();
