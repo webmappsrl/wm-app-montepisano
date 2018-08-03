@@ -14,6 +14,7 @@ angular.module('webmapp')
         Auth,
         Communication,
         CONFIG,
+        GeolocationService,
         ionicToast,
         MapService,
         Model,
@@ -1442,7 +1443,8 @@ angular.module('webmapp')
 
         $ionicPlatform.ready(function () {
             vm.userData = Auth.getUserData();
-            checkGPS();
+            // checkGPS();
+            GeolocationService.enable();
             if (window !== top) {
                 MapService.disableWheelZoom();
             }
