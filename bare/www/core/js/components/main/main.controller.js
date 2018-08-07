@@ -1,7 +1,6 @@
 angular.module('webmapp')
 
 .controller('MainController', function MainController(
-    $cordovaDeviceOrientation,
     $cordovaGeolocation,
     $cordovaSocialSharing,
     $ionicPlatform,
@@ -14,6 +13,7 @@ angular.module('webmapp')
     Auth,
     Communication,
     CONFIG,
+    GeolocationService,
     ionicToast,
     MapService,
     Model,
@@ -24,13 +24,14 @@ angular.module('webmapp')
         overlayMap = Model.getOverlaysMap();
 
     var previousBounds = null,
-        heading = 0,
-        watchInterval, orientationWatchRef,
-        prevHeating, prevLatLong, lpf,
-        geolocationTimeoutTime = 60000;
+        geolocationState = {
+            isActive: false,
+            isLoading: false,
+            isFollowing: false,
+            isRotating: false
+        };
 
-    var maxZoom = CONFIG.MAP.maxZoom,
-        hideExpanderInDetails = CONFIG.OPTIONS.hideExpanderInDetails;
+    var hideExpanderInDetails = CONFIG.OPTIONS.hideExpanderInDetails;
 
     var shareScope = $rootScope.$new(),
         shareModal;
@@ -60,18 +61,6 @@ angular.module('webmapp')
         vm.maxOutOfTrack = CONFIG.NAVIGATION.trackBoundsDistance;
     }
 
-    var distanceInMeters = function(lat1, lon1, lat2, lon2) {
-        var R = 6371, // Radius of the earth in km
-            dLat = (lat2 - lat1) * Math.PI / 180, // deg2rad below
-            dLon = (lon2 - lon1) * Math.PI / 180,
-            a = 0.5 - Math.cos(dLat) / 2 +
-            Math.cos(lat1 * Math.PI / 180) *
-            Math.cos(lat2 * Math.PI / 180) *
-            (1 - Math.cos(dLon)) / 2;
-
-        return (R * 2 * Math.asin(Math.sqrt(a))) * 1000;
-    };
-
     var isLandscape = function() {
         var result = false;
 
@@ -87,110 +76,6 @@ angular.module('webmapp')
 
         return result;
     };
-
-    var checkGPS = function() {
-        var onSuccess = function(e) {
-            if (e) {
-                vm.gpsActive = true
-                vm.canFollow = true;
-                vm.followActive = false;
-                vm.isRotating = false;
-                vm.centerOnMe();
-            } else {
-                return $ionicPopup.confirm({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Sembra che tu abbia il GPS disattivato. Per accedere a tutte le funzionalità dell'app occorre attivarlo. Vuoi farlo ora?")
-                    })
-                    .then(function(res) {
-                        if (res) {
-                            if (window.cordova.platformId === "ios") {
-                                cordova.plugins.diagnostic.switchToSettings();
-                            } else {
-                                cordova.plugins.diagnostic.switchToLocationSettings();
-                            }
-                            return;
-                        } else {
-                            return;
-                        }
-                    });
-            }
-        };
-
-        var onError = function(e) {
-            alert("Error: " + e);
-            console.log("Error: ", e);
-        };
-
-        if (window.cordova && vm.showLocate && ($state.current.name === "app.main.map" || vm.isNavigable)) {
-            return cordova.plugins.diagnostic.isLocationAuthorized(function(authorized) {
-                if (authorized) {
-                    if (window.cordova.platformId === "ios") {
-                        return cordova.plugins.diagnostic.isLocationEnabled(
-                            onSuccess,
-                            onError
-                        );
-                    } else {
-                        return cordova.plugins.diagnostic.isGpsLocationEnabled(
-                            onSuccess,
-                            onError
-                        );
-                    }
-                } else {
-                    if (window.cordova.platformId === "ios") {
-                        var permissionDenied = localStorage.$wm_ios_location_permission_denied ? true : false;
-                        if (permissionDenied) {
-                            $ionicPopup.alert({
-                                title: $translate.instant("ATTENZIONE"),
-                                template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
-                            });
-                            return;
-                        }
-                    }
-
-                    return cordova.plugins.diagnostic.requestLocationAuthorization(function(status) {
-                            switch (status) {
-                                case cordova.plugins.diagnostic.permissionStatus.GRANTED:
-                                case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
-                                    if (window.cordova.platformId === "ios") {
-                                        return cordova.plugins.diagnostic.isLocationEnabled(
-                                            onSuccess,
-                                            onError
-                                        );
-                                    } else {
-                                        return cordova.plugins.diagnostic.isGpsLocationEnabled(
-                                            onSuccess,
-                                            onError
-                                        );
-                                    }
-                                    break;
-                                case cordova.plugins.diagnostic.permissionStatus.DENIED:
-                                    if (window.cordova.platformId === "ios") {
-                                        localStorage.$wm_ios_location_permission_denied = true;
-                                        $ionicPopup.alert({
-                                            title: $translate.instant("ATTENZIONE"),
-                                            template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
-                                        });
-                                    } else {
-                                        $ionicPopup.alert({
-                                            title: $translate.instant("ATTENZIONE"),
-                                            template: $translate.instant("Alcune funzionalità funzionano solo se hai abilitato la geolocalizzazione")
-                                        });
-                                    }
-                                    break;
-                                case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
-                                    $ionicPopup.alert({
-                                        title: $translate.instant("ATTENZIONE"),
-                                        template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi attivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
-                                    });
-                                    break;
-                            }
-                        },
-                        onError,
-                        cordova.plugins.diagnostic.locationAuthorizationMode.ALWAYS);
-                }
-            });
-        }
-    }
 
     Utils.createModal('core/js/modals/shareModal.html', {
             backdropClickToClose: true,
@@ -252,20 +137,7 @@ angular.module('webmapp')
     vm.isLandscape = isLandscape();
     vm.hideDeactiveCentralPointer = CONFIG.OPTIONS.hideDeactiveCentralPointer;
 
-    /* Define the state of the geolocation:
-     * canFollow     - true if the next state is a state where the user location is centered in the map view
-     * followActive  - true if the user is localized and is kept in the center of the map
-     * isRotating    - true if the map orientation change following the compass (followActive must be true)
-     * skipZoomEvent - true to prevent the zoom event to stop centering (if the zoom event is triggered programmatically
-     */
-    vm.canFollow = true;
-    vm.followActive = false;
-    vm.isRotating = false;
-    vm.skipZoomEvent = false;
-
     vm.isCoordsBlockExpanded = true;
-    vm.gpsActive = false;
-    vm.isOutsideBoundingBox = false;
 
     vm.navigationAvailable = false;
     vm.isNavigating = false;
@@ -337,7 +209,7 @@ angular.module('webmapp')
         vm.navigationAvailable = true;
     }
 
-    vm.deg = 0;
+    vm.heading = 0;
     vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
     vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
     vm.useExandMapInDetails = CONFIG.OPTIONS.useExandMapInDetails;
@@ -532,217 +404,6 @@ angular.module('webmapp')
         }
     };
 
-    var centerOnCoorsWithoutZoomEvent = function(lat, long) {
-        var currentZoom = MapService.getZoom();
-        if (currentZoom === CONFIG.MAP.maxZoom) {
-            MapService.centerOnCoords(lat, long);
-        } else {
-            vm.skipZoomEvent = true;
-            MapService.centerOnCoords(lat, long);
-        }
-        // setTimeout(() => {
-        //     if (vm.skipZoomEvent) {
-        //         vm.skipZoomEvent = false;
-        //     }
-        // }, 1000);
-    };
-
-    vm.turnOffRotationAndFollow = function() {
-        if (vm.isRotating) {
-            if (orientationWatchRef) {
-                orientationWatchRef.clearWatch();
-            }
-            orientationWatchRef = null;
-            vm.isRotating = false;
-            MapService.mapIsRotating(vm.isRotating);
-        }
-
-        vm.canFollow = true;
-        vm.followActive = false;
-
-        setTimeout(function() {
-            MapService.setBearing(-359.95);
-            MapService.setBearing(-359.97);
-            MapService.setBearing(-359.99);
-        }, 100);
-    };
-
-    var geolocationTimedOut = function(err) {
-        console.log(err);
-        console.log("Restarting geolocalization");
-        watchInterval = $cordovaGeolocation.watchPosition({
-            timeout: geolocationTimeoutTime,
-            enableHighAccuracy: true
-        });
-        watchInterval.then(
-            null,
-            geolocationTimedOut,
-            posCallback);
-    };
-
-    var posCallback = function(position) {
-        var lat = position.coords.latitude ? position.coords.latitude : 0,
-            long = position.coords.longitude ? position.coords.longitude : 0,
-            altitude = position.coords.altitude ? position.coords.altitude : 0,
-            doCenter = false;
-
-        vm.locateLoading = false;
-
-        if (!MapService.isInBoundingBox(lat, long)) {
-            vm.isOutsideBoundingBox = true;
-            prevLatLong = null;
-            vm.turnOffRotationAndFollow();
-
-            $ionicPopup.alert({
-                title: $translate.instant("ATTENZIONE"),
-                template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa")
-            });
-
-            MapService.removePosition();
-            if (watchInterval) {
-                // watchInterval.clearWatch();
-            }
-            watchInterval = null;
-            return;
-        } else {
-            vm.isOutsideBoundingBox = false;
-        }
-
-        if (!prevLatLong) {
-            doCenter = true;
-        } else if (distanceInMeters(lat, long, prevLatLong.lat, prevLatLong.long) > 6) {
-            doCenter = true;
-        }
-
-        if (doCenter) {
-            MapService.drawPosition(position);
-            if (vm.followActive) {
-                MapService.centerOnCoords(lat, long);
-            }
-
-            if (vm.isNavigating && !vm.isPaused) {
-                if (realTimeTracking.enabled && vm.userData.ID) {
-                    // vm.positionsToSend.push({
-                    //     lat: lat,
-                    //     lng: long,
-                    //     altitude: altitude,
-                    //     heading: position.coords.heading,
-                    //     speed: position.coords.speed,
-                    //     timestamp: position.timestamp
-                    // });
-
-                    realTimeTracking.positionsToSend.push([
-                        long,
-                        lat,
-                        altitude
-                        // ,
-                        // position.timestamp,
-                        // position.coords.speed,
-                        // position.coords.heading
-                    ]);
-
-                    if (realTimeTracking.positionsToSend.length >= realTimeTracking.minPositionsToSend) {
-                        var currentRequest = Communication.callAPI(realTimeTracking.url, {
-                            type: "FeatureCollection",
-                            features: [{
-                                type: "Feature",
-                                properties: {
-                                    type: "tracking",
-                                    app: realTimeTracking.appUrl,
-                                    routeId: vm.routeId,
-                                    trackId: vm.stopNavigationUrlParams.id,
-                                    email: vm.userData.user_email,
-                                    firstName: vm.userData.first_name,
-                                    lastName: vm.userData.last_name
-                                },
-                                geometry: {
-                                    type: "LineString",
-                                    coordinates: realTimeTracking.positionsToSend
-                                }
-                            }]
-                        });
-
-                        currentRequest
-                            .then(function() {
-                                    realTimeTracking.positionsToSend = [];
-                                    return;
-                                },
-                                function(error) {
-                                    return;
-                                });
-                    }
-                }
-
-                if (vm.firstPositionSet) {
-                    updateNavigationValues(position, prevLatLong);
-                } else {
-                    vm.firstPositionSet = true;
-                    vm.lastPositionRecordTime = Date.now();
-                    vm.isNotMoving = false;
-                    vm.startMovingTime = Date.now();
-                    vm.currentSpeedExpireTimeout = setTimeout(function() {
-                        vm.currentSpeedText = '0 km/h';
-                        vm.isNotMoving = true;
-                        vm.movingTime = vm.movingTime + Date.now() - vm.startMovingTime;
-                    }, 5000);
-                }
-
-                MapService.triggerNearestPopup({
-                    lat: lat,
-                    long: long
-                });
-            }
-
-            prevLatLong = {
-                lat: lat,
-                long: long
-            };
-        } else {
-            MapService.drawAccuracy(position.coords.accuracy);
-        }
-    };
-
-    var activateRotation = function() {
-        if (!orientationWatchRef) {
-            lpf = new LPF(0.5);
-
-            vm.canFollow = false;
-            vm.isRotating = true;
-            MapService.mapIsRotating(vm.isRotating);
-
-            orientationWatchRef = $cordovaDeviceOrientation.watchHeading({
-                frequency: 80,
-                // filter: true // when true, the frequecy is ignored
-            });
-            orientationWatchRef.then(
-                null,
-                function(error) {
-                    if (vm.isRotating) {
-                        vm.isRotating = false;
-                        MapService.mapIsRotating(vm.isRotating);
-                    }
-                    console.error(error);
-                },
-                function(result) {
-                    if (!vm.isRotating) {
-                        vm.isRotating = true;
-                        MapService.mapIsRotating(vm.isRotating);
-                    }
-
-                    if (Math.abs(result.magneticHeading - prevHeating) > 100) {
-                        lpf = new LPF(0.5);
-                        lpf.init(Array(6).fill(result.magneticHeading));
-                    }
-
-                    heading = vm.isLandscape ? lpf.next(result.magneticHeading) + window.orientation : lpf.next(result.magneticHeading);
-                    MapService.setBearing(-heading);
-                    prevHeating = heading;
-
-                    vm.deg = heading;
-                });
-        }
-    };
-
     var activateGeolocation = function(rotate) {
 
 
@@ -911,28 +572,14 @@ angular.module('webmapp')
     };
 
     vm.centerOnMe = function() {
-        if (!vm.gpsActive) {
-            checkGPS();
-            return;
+        if (!GeolocationService.isActive()) {
+            GeolocationService.enable()
+                .then(function () {
+                    GeolocationService.switchState();
+                });
         }
-
-        if (vm.locateLoading) {
-            return;
-        }
-
-        if (prevLatLong && vm.canFollow && !vm.followActive) {
-            vm.followActive = true;
-            centerOnCoorsWithoutZoomEvent(prevLatLong.lat, prevLatLong.long);
-            return;
-        }
-
-
-        if (vm.isRotating && !vm.canFollow && vm.followActive) {
-            vm.turnOffRotationAndFollow();
-        } else if (vm.canFollow && vm.followActive && !vm.isRotating) {
-            activateGeolocation(true);
-        } else if (vm.canFollow && !vm.followActive && !vm.isRotating) {
-            activateGeolocation(false);
+        else {
+            GeolocationService.switchState();
         }
     };
 
@@ -1396,35 +1043,24 @@ angular.module('webmapp')
         }, 350);
     });
 
-    $rootScope.$on('map-dragstart', function(e, value) {
-        if (vm.isRotating) {
-            vm.turnOffRotationAndFollow();
-        }
-        vm.canFollow = true;
-        vm.followActive = false;
-    });
-
-    $rootScope.$on('map-zoomstart', function(e, value) {
-        if (!vm.skipZoomEvent) {
-            if (vm.isRotating) {
-                vm.turnOffRotationAndFollow();
-            }
-            vm.canFollow = true;
-            vm.followActive = false;
-        } else {
-            vm.skipZoomEvent = false;
-        }
-    });
-
     $rootScope.$on('item-navigable', function(e, value) {
         vm.isNavigable = value;
         Utils.forceDigest();
+    });
+
+    $rootScope.$on('geolocationState-changed', function (e, value) {
+        vm.geolocationState = value;
+    });
+    
+    $rootScope.$on('heading-changed', function (e, value) {
+        vm.heading = value;
     });
 
     window.addEventListener('orientationchange', function() {
         vm.isLandscape = isLandscape();
     });
 
+    //Moved to Utils
     var makeNotificationSound = function() {
         var audio = new Audio('core/audio/alertNotificationSound.mp3');
         audio.play();
@@ -1525,7 +1161,7 @@ angular.module('webmapp')
 
     $ionicPlatform.ready(function() {
         vm.userData = Auth.getUserData();
-        checkGPS();
+        GeolocationService.enable();
         if (window !== top) {
             MapService.disableWheelZoom();
         }
