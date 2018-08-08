@@ -113,8 +113,8 @@
             </a>
         </div>
 
-        <div class="navigator-div-controller" ng-if="vm.isNavigating">
-            <div class="content-div" ng-if="!vm.isPaused">
+        <div class="navigator-div-controller" ng-if="vm.navigation.state.isActive">
+            <div class="content-div" ng-if="!vm.navigation.state.isPaused">
                 <div class="pause-button" ng-style="{
                         'background': vm.colors.mainBar.background,
                         'color': vm.colors.mainBar.color
@@ -128,7 +128,7 @@
                         <i class="wm-icon-android-clock"></i>
                     </div>
                     <span class="navigation-value">
-                        {{vm.timeInMotionText}}
+                        {{vm.formatTime(vm.navigation.stats.time)}}
                     </span>
                     <span class="navigation-text">
                         {{"in movimento" | translate}}
@@ -139,7 +139,7 @@
                         <i class="wm-icon-arrow-right-c"></i>
                     </div>
                     <span class="navigation-value">
-                        {{vm.distanceTravelledText}}
+                        {{vm.formatDistance(vm.navigation.stats.distance)}}
                     </span>
                     <span class="navigation-text">
                         {{"percorsi" | translate}}
@@ -150,20 +150,20 @@
                         <i class="wm-icon-speedometer"></i>
                     </div>
                     <span class="navigation-value" ng-if="vm.speedTextType === 'current'">
-                        {{vm.currentSpeedText}}
+                        {{vm.formatSpeed(vm.navigation.stats.currentSpeed)}}
                     </span>
                     <span class="navigation-text" ng-if="vm.speedTextType === 'current'">
                         {{"velocità" | translate}}
                     </span>
                     <span class="navigation-value" ng-if="vm.speedTextType === 'average'">
-                        {{vm.averageSpeedText}}
+                        {{vm.formatSpeed(vm.navigation.stats.averageSpeed)}}
                     </span>
                     <span class="navigation-text" ng-if="vm.speedTextType === 'average'">
                         {{"v. media" | translate}}
                     </span>
                 </div>
             </div>
-            <div class="content-div" ng-if="vm.isPaused">
+            <div class="content-div" ng-if="vm.navigation.state.isPaused">
                 <div class="resume-navigation">
                     <a href="" ng-click="vm.resumeNavigation()">
                         {{"Riprendi" | translate}}

@@ -356,5 +356,42 @@ angular.module('webmapp')
             audio.play();
         };
 
+        utils.Stopwatch = function() {
+            this.startTime = null;
+            this.totalTime = 0;
+            this.isPaused = false;
+
+            this.start = function () {
+                this.startTime = Date.now();
+                this.totalTime = 0;
+                this.isPaused = false;
+            };
+
+            this.pause = function () {
+                this.totalTime += Date.now() - this.startTime;
+                this.isPaused = true;
+            };
+
+            this.resume = function () {
+                this.startTime = Date.now();
+                this.isPaused = false;
+            };
+
+            this.stop = function () {
+                this.startTime = null;
+                this.totalTime = 0;
+                this.isPaused = false;
+            };
+
+            this.getTime = function() {
+                if (this.isPaused) {
+                    return this.totalTime;
+                }
+                else {
+                    return this.totalTime + Date.now() - this.startTime;
+                }
+            };
+        };
+
         return utils;
     });
