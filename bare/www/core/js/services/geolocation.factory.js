@@ -132,12 +132,13 @@ angular.module('webmapp')
                                 }
                             }
                         });
-                    defer.reject("GPS disabled");
+                    defer.reject(ERRORS.GPS_DISABLED);
                 }
             };
 
             var onError = function (e) {
-                defer.reject(e);
+                console.error(e);
+                defer.reject(ERRORS.GENERIC_GPS);
             };
 
             cordova.plugins.diagnostic.isLocationAuthorized(function (authorized) {
@@ -161,7 +162,7 @@ angular.module('webmapp')
                                 title: $translate.instant("ATTENZIONE"),
                                 template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
                             });
-                            defer.reject("Permissions denied");
+                            defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
                         }
                     }
 
@@ -194,14 +195,14 @@ angular.module('webmapp')
                                         template: $translate.instant("Alcune funzionalità funzionano solo se hai abilitato la geolocalizzazione")
                                     });
                                 }
-                                defer.reject("Permissions denied");
+                                defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
                                 break;
                             case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
                                 $ionicPopup.alert({
                                     title: $translate.instant("ATTENZIONE"),
                                     template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi attivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
                                 });
-                                defer.reject("Permissions denied");
+                                defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
                                 break;
                         }
                     },
@@ -487,7 +488,7 @@ angular.module('webmapp')
                 cordova.plugins.diagnostic.registerLocationStateChangeHandler(GPSSettingsSwitched);
 
                 if (geolocationState.isActive) {
-                    defer.resolve("The geolocation is already running");
+                    defer.resolve(geolocationState);
                 }
                 else if (gpsActive) {
                     geolocationState.isLoading = true;
@@ -516,7 +517,7 @@ angular.module('webmapp')
                                 if (recordingState.isActive) {
                                     geolocationService.pauseRecording();
                                 }
-                                defer.reject("you are outside bounding box");
+                                defer.reject(ERRORS.OUTSIDE_BOUNDING_BOX);
                             }
                             else {
                                 state.isOutsideBoundingBox = false;
@@ -553,7 +554,8 @@ angular.module('webmapp')
                                 title: $translate.instant("ATTENZIONE"),
                                 template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
                             });
-                            defer.reject(err);
+                            console.error(err);
+                            defer.reject(ERRORS.GENERIC_GPS);
                         });
                 }
                 else {
@@ -561,7 +563,7 @@ angular.module('webmapp')
                 }
             }
             else {
-                defer.reject("Cordova not available");
+                defer.reject(ERRORS.CORDOVA_UNAVAILABLE);
             }
 
             return defer.promise;
@@ -618,7 +620,7 @@ angular.module('webmapp')
             var defer = $q.defer();
 
             if (!gpsActive) {
-                defer.reject("GPS is not active");
+                defer.reject(ERRORS.GPS_DISABLED);
             }
             else if (geolocationState.isLoading) {
                 defer.resolve(geolocationState);
