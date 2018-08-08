@@ -15,6 +15,7 @@ angular.module('webmapp')
         var geolocationService = {};
 
         console.warn("TODO: handle all translations");
+        console.warn("TODO: create public global error codes");
 
         /**
          * state goes from:
@@ -233,25 +234,23 @@ angular.module('webmapp')
         };
 
         function turnOffRotationAndFollow() {
-            if (geolocationState.isRotating) {
-                if (state.orientationWatch) {
-                    state.orientationWatch.clearWatch();
-                }
-                delete state.orientationWatch;
-                state.orientationWatch = null;
-                geolocationState.isRotating = false;
-                MapService.mapIsRotating(geolocationState.isRotating);
+            if (state.orientationWatch) {
+                state.orientationWatch.clearWatch();
             }
+            delete state.orientationWatch;
+            state.orientationWatch = null;
+            geolocationState.isRotating = false;
+            MapService.mapIsRotating(geolocationState.isRotating);
 
             geolocationState.isFollowing = false;
 
             $rootScope.$emit("geolocationState-changed", geolocationState);
 
-            setTimeout(function () {
-                MapService.setBearing(-359.95);
-                MapService.setBearing(-359.97);
-                MapService.setBearing(-359.99);
-            }, 100);
+            // setTimeout(function () {
+            //     MapService.setBearing(-359.95);
+            //     MapService.setBearing(-359.97);
+            //     MapService.setBearing(-359.99);
+            // }, 100);
         };
 
         function geolocationTimedOut(error) {
@@ -331,9 +330,7 @@ angular.module('webmapp')
                     },
                     function (result) {
                         if (!geolocationState.isRotating) {
-                            geolocationState.isRotating = true;
-                            MapService.mapIsRotating(geolocationState.isRotating);
-                            $rootScope.$emit("geolocationState-changed", geolocationState);
+                            return;
                         }
 
                         if (Math.abs(result.magneticHeading - state.lastHeading) > 100) {
@@ -341,8 +338,6 @@ angular.module('webmapp')
                             state.lpf.init(Array(6).fill(result.magneticHeading));
                         }
 
-                        console.warn("TODO: add isLandscape or check if it's not necessary")
-                        // heading = isLandscape() ? state.lpf.next(result.magneticHeading) + window.orientation : state.lpf.next(result.magneticHeading);
                         var heading = state.lpf.next(result.magneticHeading);
                         MapService.setBearing(-heading);
                         state.lastHeading = heading;
@@ -381,6 +376,9 @@ angular.module('webmapp')
                     title: $translate.instant("ATTENZIONE"),
                     template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa")
                 });
+                if (recordingState.isActive) {
+                    geolocationService.pauseRecording();
+                }
                 return;
             }
 
@@ -394,9 +392,8 @@ angular.module('webmapp')
                     MapService.centerOnCoords(lat, long);
                 }
 
-                console.warn("TODO: Handle position while navigating");
                 if (recordingState.isActive && !recordingState.isPaused) {
-                    if (false && realTimeTracking.enabled && vm.userData.ID) {
+                    if (realTimeTracking.enabled && vm.userData.ID) {
                         // vm.positionsToSend.push({
                         //     lat: lat,
                         //     lng: long,
@@ -491,10 +488,8 @@ angular.module('webmapp')
 
                 if (geolocationState.isActive) {
                     defer.resolve("The geolocation is already running");
-                    return;
                 }
-
-                if (gpsActive) {
+                else if (gpsActive) {
                     geolocationState.isLoading = true;
                     $rootScope.$emit("geolocationState-changed", geolocationState);
 
@@ -518,6 +513,9 @@ angular.module('webmapp')
                                     title: $translate.instant("ATTENZIONE"),
                                     template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa")
                                 });
+                                if (recordingState.isActive) {
+                                    geolocationService.pauseRecording();
+                                }
                                 defer.reject("you are outside bounding box");
                             }
                             else {
@@ -584,6 +582,8 @@ angular.module('webmapp')
 
                 turnOffRotationAndFollow();
                 MapService.removePosition();
+                clearInterval(state.watchInterval);
+                state.watchInterval = null;
                 state.reset();
             }
             return true;
@@ -614,11 +614,9 @@ angular.module('webmapp')
          * @example geolocationService.enable({isFollowing: true, isRotating: true})
          *      goes to geolocationState 4.1
          */
-        console.warn("TODO: switch to goalState if set");
         geolocationService.switchState = function (goalState) {
             var defer = $q.defer();
 
-            console.warn("TODO: create public global error codes");
             if (!gpsActive) {
                 defer.reject("GPS is not active");
             }
@@ -626,7 +624,6 @@ angular.module('webmapp')
                 defer.resolve(geolocationState);
             }
             else if (goalState) {
-                console.log(geolocationState, goalState);
                 if (goalState.isFollowing !== geolocationState.isFollowing ||
                     goalState.isRotating !== geolocationState.isRotating) {
                     if (goalState.isRotating) {
@@ -702,13 +699,25 @@ angular.module('webmapp')
         console.warn("TODO: function startRecording - if recordTrack record the track");
         geolocationService.startRecording = function (recordTrack) {
             recordingState.reset();
-            recordingState.firstPositionSet = state.lastPosition && state.lastPosition.lat && state.lastPosition.long ? true : false;
             recordingState.isActive = true;
             recordingState.stats.time.start();
+            state.skipZoomEvent = true;
             $rootScope.$emit('recordingState-changed', {
                 isActive: recordingState.isActive,
                 isPaused: recordingState.isPaused
             });
+
+            if (state.lastPosition && state.lastPosition.lat && state.lastPosition.long) {
+                MapService.triggerNearestPopup({
+                    lat: state.lastPosition.lat,
+                    long: state.lastPosition.long
+                });
+                recordingState.firstPositionSet = true;
+            }
+            else {
+                recordingState.firstPositionSet = false;
+            }
+
             return true;
         };
 
@@ -810,10 +819,6 @@ angular.module('webmapp')
         geolocationService.stopRemoteTracking = function () {
             return false;
         };
-
-        $rootScope.$on('$stateChangeStart', function (e, dest) {
-            state.skipZoomEvent = true;
-        });
 
         $rootScope.$on('map-dragstart', function (e, value) {
             turnOffRotationAndFollow();

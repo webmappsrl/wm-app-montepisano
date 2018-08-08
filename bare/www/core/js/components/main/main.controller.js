@@ -81,22 +81,6 @@ angular.module('webmapp')
             vm.maxOutOfTrack = CONFIG.NAVIGATION.trackBoundsDistance;
         }
 
-        var isLandscape = function () {
-            var result = false;
-
-            switch (window.orientation) {
-                case -90:
-                case 90:
-                    result = true;
-                    break;
-                default:
-                    result = false;
-                    break;
-            }
-
-            return result;
-        };
-
         Utils.createModal('core/js/modals/shareModal.html', {
             backdropClickToClose: true,
             hardwareBackButtonClose: true
@@ -154,7 +138,6 @@ angular.module('webmapp')
             }
         };
 
-        vm.isLandscape = isLandscape();
         vm.hideDeactiveCentralPointer = CONFIG.OPTIONS.hideDeactiveCentralPointer;
 
         vm.isCoordsBlockExpanded = true;
@@ -745,7 +728,8 @@ angular.module('webmapp')
                 });
             };
 
-            Utils.goTo('/');
+            vm.stopNavigationUrlParams.parentId = $rootScope.currentParams.parentId;
+            vm.stopNavigationUrlParams.id = $rootScope.currentParams.id;
             if (GeolocationService.isActive()) {
                 startRecording();
             }
@@ -754,109 +738,52 @@ angular.module('webmapp')
                     .then(startRecording);
             }
 
-            // if (!vm.gpsActive) {
-            //     checkGPS();
-            //     return;
-            // }
+            window.plugins.insomnia.keepAwake();
+            setTimeout(function() {
+                MapService.adjust();
+            }, 1000);
 
-            // if (vm.isOutsideBoundingBox) {
-            //     MapService.removePosition();
-            //     prevLatLong = null;
-
-            //     $ionicPopup.alert({
-            //         title: $translate.instant("ATTENZIONE"),
-            //         template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa"),
-            //         buttons: [{
-            //             text: 'Ok',
-            //             type: 'button-positive'
-            //         }]
-            //     });
-            //     return;
-            // }
-
-            // vm.canFollow = true;
-            // vm.followActive = true;
-            // vm.isRotating = false;
-            // vm.centerOnMe();
-
-            // //Hide start button
-            // vm.isNavigable = false;
-
-            // //Start recording
-            // vm.isNavigating = true;
-            // vm.isPaused = false;
-            // vm.stopNavigationUrlParams.parentId = $rootScope.currentParams.parentId;
-            // vm.stopNavigationUrlParams.id = $rootScope.currentParams.id;
-
-            // vm.navigationStartTime = Date.now();
-
-            // vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
-            // $rootScope.$emit('is-navigating', vm.isNavigating);
-            // $rootScope.$emit('navigation-path', vm.stopNavigationUrlParams);
-
-            // window.plugins.insomnia.keepAwake();
-            // setTimeout(function() {
-            //     MapService.adjust();
-            //     if (prevLatLong) {
-            //         MapService.triggerNearestPopup({
-            //             lat: prevLatLong.lat,
-            //             long: prevLatLong.long
-            //         });
-            //     }
-            // }, 1000);
-
-            // Utils.goTo('/');
+            Utils.goTo('/');
         };
 
         vm.pauseNavigation = function () {
             GeolocationService.pauseRecording();
+            GeolocationService.switchState({
+                isFollowing: false,
+                isRotating: false
+            });
             clearInterval(vm.navigationInterval);
-            // vm.isPaused = true;
-            // vm.timeInMotionBeforePause = Date.now() - vm.navigationStartTime + vm.timeInMotionBeforePause;
-            // vm.distanceTravelledBeforePause += vm.distanceTravelled;
+            window.plugins.insomnia.allowSleepAgain();
             // vm.outOfTrackDate = 0;
             // vm.inTrackDate = 0;
             // clearInterval(vm.navigationInterval);
             // hideOutOfTrackToast();
-            // window.plugins.insomnia.allowSleepAgain();
 
         };
 
         vm.resumeNavigation = function () {
             GeolocationService.resumeRecording();
+            GeolocationService.switchState({
+                isFollowing: true,
+                isRotating: true
+            });
             vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
-            // vm.navigationStartTime = Date.now();
-            // vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
-            // vm.distanceTravelled = 0;
-            // vm.firstPositionSet = false;
-            // window.plugins.insomnia.keepAwake();
-            // vm.isPaused = false;
+            window.plugins.insomnia.keepAwake();
+            MapService.adjust();
         };
 
         vm.stopNavigation = function () {
             GeolocationService.stopRecording();
             clearInterval(vm.navigationInterval);
             vm.navigation.resetStats();
-            // vm.isPaused = false;
-            // vm.isNavigating = false;
-            // MapService.adjust();
-            // vm.turnOffRotationAndFollow();
-            // vm.centerOnMe();
+            MapService.adjust();
+
+            window.plugins.insomnia.allowSleepAgain();
+
             // vm.outOfTrackDate = 0;
             // vm.inTrackDate = 0;
             // hideOutOfTrackToast();
-            // clearInterval(vm.navigationInterval);
             // cleanNavigationValues();
-            // $rootScope.$emit('is-navigating', vm.isNavigating);
-            // window.plugins.insomnia.allowSleepAgain();
-            // if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
-            //     var url = 'layer/' + vm.stopNavigationUrlParams.parentId + '/' + vm.stopNavigationUrlParams.id;
-            //     vm.stopNavigationUrlParams = {
-            //         parentId: null,
-            //         id: null
-            //     };
-            //     Utils.goTo(url);
-            // }
         };
 
         vm.toggleSpeedText = function () {
@@ -1105,7 +1032,7 @@ angular.module('webmapp')
         });
 
         $rootScope.$on('geolocationState-changed', function (e, value) {
-            console.log(value)
+            console.log(value);
             vm.geolocationState = value;
         });
 
@@ -1119,12 +1046,11 @@ angular.module('webmapp')
                 $rootScope.$emit('is-navigating', vm.navigation.state.isActive);
 
                 if (vm.navigation.state.isActive) {
-                    vm.stopNavigationUrlParams.parentId = $rootScope.currentParams.parentId;
-                    vm.stopNavigationUrlParams.id = $rootScope.currentParams.id;
                     vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
                     vm.isNavigable = false;
                 }
                 else {
+                    console.log(vm.stopNavigationUrlParams)
                     if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
                         vm.isNavigable = true;
                         var url = 'layer/' + vm.stopNavigationUrlParams.parentId + '/' + vm.stopNavigationUrlParams.id;
@@ -1139,10 +1065,6 @@ angular.module('webmapp')
             if (vm.navigation.state.isPaused !== value.isPaused) {
                 vm.navigation.state.isPaused = value.isPaused;
             }
-        });
-
-        window.addEventListener('orientationchange', function () {
-            vm.isLandscape = isLandscape();
         });
 
         //Moved to Utils
