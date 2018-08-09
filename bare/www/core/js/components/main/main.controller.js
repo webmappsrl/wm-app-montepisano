@@ -858,6 +858,9 @@ angular.module('webmapp')
 
         vm.returnToMap = function () {
             // vm.isNavigable = false;
+            vm.toggleMap();
+            return;
+            console.log("return")
             if ($state.params.parentId) {
                 MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
             }
@@ -866,6 +869,7 @@ angular.module('webmapp')
         };
 
         vm.goToMap = function () {
+            console.log("goto")
             Utils.goTo('/');
         };
 
@@ -896,7 +900,7 @@ angular.module('webmapp')
         vm.toggleMap = function () {
             vm.isMapPage = !vm.isMapPage;
             vm.mapView = vm.isMapPage;
-            vm.isNavigable = false;
+            // vm.isNavigable = false;
             setTimeout(function () {
                 MapService.adjust();
             }, 350);
@@ -1184,6 +1188,7 @@ angular.module('webmapp')
             vm.isWelcomePage = currentState === 'app.main.welcome';
             vm.isSearchPage = currentState === 'app.main.search';
             vm.isMapPage = currentState === 'app.main.map';
+            vm.isInMap = currentState === 'app.main.map'; //not used anywhere except from template
             vm.isMapModeInSearch = false;
             vm.hasShadow = false;
             vm.extendShadow = false;

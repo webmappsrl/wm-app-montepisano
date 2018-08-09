@@ -33,11 +33,8 @@
         }">
 
         <!-- Map expand -->
-        <a href="" class="btn-expand map-expand map-expand-right" ng-click="vm.useExandMapInDetails ? vm.toggleMap() : vm.returnToMap()"
+        <a href="" class="btn-expand map-expand map-expand-right" ng-click="vm.toggleMap()"
             ng-if="!vm.hideExpander">
-            <i class="icon ion-arrow-expand"></i>
-        </a>
-        <a href="" class="btn-expand map-expand" ng-click="vm.goToMap()" ng-if="vm.isWelcomePage">
             <i class="icon ion-arrow-expand"></i>
         </a>
 
@@ -99,7 +96,7 @@
             </span>
         </div>
 
-        <div class="report-control" ng-if="vm.useReport && !vm.outsideBoundingBox">
+        <div class="report-control" ng-if="vm.useReport && !vm.outsideBoundingBox && vm.isInMap">
             <a href="" ng-click="vm.reportCurrentPosition($event)">
                 <i class="icon wm-icon-alert-circled">
                 </i>

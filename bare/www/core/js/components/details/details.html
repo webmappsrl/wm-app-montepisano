@@ -41,8 +41,7 @@
     <ion-nav-buttons side="left" class="no-animate">
         <button
             class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left"
-            ng-if="!vm.hideBack"
-            ng-click="vm.goBack()">
+            ng-click="vm.hideBack ? vm.toggleMap() : vm.goBack()">
         </button>
     </ion-nav-buttons>
 
