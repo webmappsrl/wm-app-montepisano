@@ -50,6 +50,20 @@ angular.module('webmapp')
         Utils.goTo('pages/' + category.replace(/ /g, '_'));
     };
 
+    vm.openLink = function (link) {
+        if (link[0] === '/') {
+            Utils.goTo(link.substring(1));
+        }
+        else {
+            if (vm.isBrowser) {
+                vm.openInAppBrowser(link);
+            }
+            else {
+                vm.openInExternalBrowser(link);
+            }
+        }
+    }
+
     var key = CONFIG.OFFLINE.pagesUrl + currentPageType;
 
     if (currentLang !== defaultLang) {
@@ -60,8 +74,7 @@ angular.module('webmapp')
 
     MapService.getPageInPouchDB(key).then(function(rsp) {
         var html = rsp.data;
-        var openFn = vm.isBrowser ? 'vm.openInAppBrowser' : 'vm.openInExternalBrowser';
-        vm.body = html.replace(/href="([^\'\"]+)/g, 'ng-click="' + openFn + '(\'$1\')" href=""');
+        vm.body = html.replace(/href="([^\'\"]+)/g, 'ng-click="' + 'vm.openLink' + '(\'$1\')" href=""');
     },
     function (e) {
         console.log(e);
