@@ -427,6 +427,7 @@ describe('Geolocation.Factory', function() {
                 var defer = $q.defer();
                 defer.resolve({ clearWatch: function() {} });
                 defer.clearWatch = function() {};
+                defer.promise.clearWatch = function() {};
                 return defer.promise;
             });
 
@@ -452,6 +453,147 @@ describe('Geolocation.Factory', function() {
 
             $httpBackend.flush();
         });
+
+        it('goalState = isFollowing && !isRotating, state === isActive && !isLoading && isFollowing && isRotating  => it should disable rotation and return modified state', function(done) {
+
+            spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function() {
+                var defer = $q.defer();
+                console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
+                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0 } });
+                return defer.promise;
+            });
+
+            spyOn($cordovaDeviceOrientation, 'watchHeading').and.callFake(function() {
+                var defer = $q.defer();
+                defer.resolve({ clearWatch: function() {} });
+                defer.clearWatch = function() {};
+                defer.promise.clearWatch = function() {};
+                return defer.promise;
+            });
+
+            var expectedState = {
+                isActive: true,
+                isLoading: false,
+                isFollowing: true,
+                isRotating: false
+            };
+
+            expect(GeolocationService.isActive()).toBe(false);
+
+            var enablePromise = GeolocationService.enable().then(function() {
+                done();
+                var promise = GeolocationService.switchState();
+                promise.then(function(val) {
+                    done();
+                    var goalswitchState = GeolocationService.switchState(expectedState);
+                    expect(val).toEqual({ isActive: true, isLoading: false, isFollowing: true, isRotating: true });
+                    goalswitchState.then(function(val) {
+                        done();
+                        expect(val).toEqual(expectedState);
+                    }).catch(function() {
+                        done(new Error('it should resolve promise'));
+                    })
+                }).catch(function(err) {
+                    done(new Error('it should resolve promise'));
+                });
+            });
+
+            $httpBackend.flush();
+        })
+
+        it('goalState = isFollowing && isRotating, state === isActive && !isLoading && isFollowing && isRotating  => it should no change nothing resolve with current state', function(done) {
+
+            spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function() {
+                var defer = $q.defer();
+                console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
+                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0 } });
+                return defer.promise;
+            });
+
+            spyOn($cordovaDeviceOrientation, 'watchHeading').and.callFake(function() {
+                var defer = $q.defer();
+                defer.resolve({ clearWatch: function() {} });
+                defer.clearWatch = function() {};
+                defer.promise.clearWatch = function() {};
+                return defer.promise;
+            });
+
+            var expectedState = {
+                isActive: true,
+                isLoading: false,
+                isFollowing: true,
+                isRotating: true
+            };
+
+            expect(GeolocationService.isActive()).toBe(false);
+
+            var enablePromise = GeolocationService.enable().then(function() {
+                done();
+                var promise = GeolocationService.switchState();
+                promise.then(function(val) {
+                    done();
+                    var goalswitchState = GeolocationService.switchState(expectedState);
+                    expect(val).toEqual(expectedState);
+                    goalswitchState.then(function(val) {
+                        done();
+                        expect(val).toEqual(expectedState);
+                    }).catch(function() {
+                        done(new Error('it should resolve promise'));
+                    })
+                }).catch(function(err) {
+                    done(new Error('it should resolve promise'));
+                });
+            });
+
+            $httpBackend.flush();
+        })
+
+        it('goalState = !isFollowing && !isRotating, state === isActive && !isLoading && isFollowing && isRotating  => it should disable rotation and resolve with modified state', function(done) {
+
+            spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function() {
+                var defer = $q.defer();
+                console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
+                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0 } });
+                return defer.promise;
+            });
+
+            spyOn($cordovaDeviceOrientation, 'watchHeading').and.callFake(function() {
+                var defer = $q.defer();
+                defer.resolve({ clearWatch: function() {} });
+                defer.clearWatch = function() {};
+                defer.promise.clearWatch = function() {};
+                return defer.promise;
+            });
+
+            var expectedState = {
+                isActive: true,
+                isLoading: false,
+                isFollowing: false,
+                isRotating: false
+            };
+
+            expect(GeolocationService.isActive()).toBe(false);
+
+            var enablePromise = GeolocationService.enable().then(function() {
+                done();
+                var promise = GeolocationService.switchState();
+                promise.then(function(val) {
+                    done();
+                    var goalswitchState = GeolocationService.switchState(expectedState);
+                    expect(val).toEqual({ isActive: true, isLoading: false, isFollowing: true, isRotating: false });
+                    goalswitchState.then(function(val) {
+                        done();
+                        expect(val).toEqual(expectedState);
+                    }).catch(function() {
+                        done(new Error('it should resolve promise'));
+                    })
+                }).catch(function(err) {
+                    done(new Error('it should resolve promise'));
+                });
+            });
+
+            $httpBackend.flush();
+        })
 
 
 
