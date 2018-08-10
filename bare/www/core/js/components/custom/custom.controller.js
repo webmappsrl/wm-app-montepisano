@@ -1,32 +1,20 @@
 angular.module('webmapp')
 
 .controller('CustomController', function SettingsController(
-    $q,
-    $location,
+    $ionicLoading,
     $rootScope,
-    $templateCache,
-    MapService,
-    Auth,
-    Account,
-    Model,
-    Offline,
-    Utils,
-    $ionicPopup,
     $state,
-    $sce,
-    $templateRequest,
-    MapService,
-    $compile,
-    $scope,
+    $translate,
+    Auth,
     CONFIG,
-    $translate
+    MapService,
+    Model,
+    Utils
 ) {
     var vm = {},
         currentPageType = $state.current.name.split('.').pop(),
         currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
         defaultLang = "it";
-
-    var templateUrl = $sce.getTrustedResourceUrl('templates/' + currentPageType + '.html');
 
     if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) {
         defaultLang = CONFIG.LANGUAGES.actual.substring(0, 2);
@@ -72,19 +60,30 @@ angular.module('webmapp')
 
     key = key + ".html";
 
-    MapService.getPageInPouchDB(key).then(function(rsp) {
-        var html = rsp.data;
-        vm.body = html.replace(/href="([^\'\"]+)/g, 'ng-click="' + 'vm.openLink' + '(\'$1\')" href=""');
-    },
-    function (e) {
-        console.log(e);
+    var getPage = function () {
+        if (MapService.arePagesReady()) {
+            $ionicLoading.hide();
+            MapService.getPageInPouchDB(key).then(function(rsp) {
+                var html = rsp.data;
+                vm.body = html.replace(/href="([^\'\"]+)/g, 'ng-click="' + 'vm.openLink' + '(\'$1\')" href=""');
+            },
+            function (e) {
+                console.log(e);
+            });
+        }
+        else {
+            setTimeout(getPage, 500);
+        }
+    };
+
+    $ionicLoading.show({
+        template: '<ion-spinner></ion-spinner>'
     });
+    getPage();
 
     $rootScope.$on('logged-in', function() {
         vm.isLoggedIn = true;
     });
-
-
 
     return vm;
 });
