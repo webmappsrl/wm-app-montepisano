@@ -1,7 +1,7 @@
 angular.module('webmapp')
 
     .controller('MenuController', function MenuController(
-        $cordovaKeyboard,
+        // $cordovaKeyboard,
         $ionicModal,
         $ionicPopup,
         $ionicScrollDelegate,
@@ -162,9 +162,9 @@ angular.module('webmapp')
                     return;
                 }
 
-                if (!Utils.isBrowser()) {
-                    $cordovaKeyboard.close();
-                }
+                // if (!Utils.isBrowser()) {
+                //     $cordovaKeyboard.close();
+                // }
 
                 if (firstName && lastName && email && password) {
                     if (!isEmailValid(email)) {
@@ -210,9 +210,9 @@ angular.module('webmapp')
                     return;
                 }
 
-                if (!Utils.isBrowser()) {
-                    $cordovaKeyboard.close();
-                }
+                // if (!Utils.isBrowser()) {
+                //     $cordovaKeyboard.close();
+                // }
 
                 var validOptionalFields = firstName && lastName;
                 if (!validOptionalFields) {
@@ -403,9 +403,9 @@ angular.module('webmapp')
                     return;
                 }
 
-                if (!Utils.isBrowser()) {
-                    $cordovaKeyboard.close();
-                }
+                // if (!Utils.isBrowser()) {
+                //     $cordovaKeyboard.close();
+                // }
 
 
 

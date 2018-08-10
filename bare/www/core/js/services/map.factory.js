@@ -824,13 +824,13 @@ angular.module('webmapp')
 
             var getPagesHtml = function (url) {
                 var defer = $q.defer();
-                $.get(url).done(function (data) {
+                $.get(url).then(function (data) {
                     var insert = function () {
                         db.put({
                             _id: url,
                             data: data
                         }).then(function () { defer.resolve("si"); }).catch(function () {
-                            defer.reject("no");
+                            defer.resolve("no");
                             console.log(url + " page not updated");
                         });
                     };
@@ -844,6 +844,9 @@ angular.module('webmapp')
                         insert();
                     });
 
+                },
+                function (error) {
+                    defer.resolve("no");
                 });
 
                 return defer.promise;
@@ -1628,7 +1631,7 @@ angular.module('webmapp')
 
         mapService.arePagesReady = function () {
             return pagesReady;
-        }
+        };
 
         mapService.getPageInPouchDB = function (key) {
             return db.get(key);

@@ -181,7 +181,7 @@ angular.module('webmapp')
     };
 
     vm.closeKeyboard = function() {
-        cordova && cordova.plugins.Keyboard.close();
+    //     cordova && cordova.plugins.Keyboard.close();
     };
 
     vm.openFilters = function() {

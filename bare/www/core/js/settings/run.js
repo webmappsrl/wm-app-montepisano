@@ -36,10 +36,10 @@ angular.module('webmapp')
     }
 
     $ionicPlatform.ready(function() {
-        if (window.cordova && window.cordova.plugins.Keyboard) {
-            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
-            window.cordova.plugins.Keyboard.disableScroll(true);
-        }
+        // if (window.cordova && window.cordova.plugins.Keyboard) {
+        //     cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+        //     window.cordova.plugins.Keyboard.disableScroll(true);
+        // }
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }

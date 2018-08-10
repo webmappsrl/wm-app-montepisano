@@ -77,6 +77,8 @@
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
     <allow-navigation href="http://192.168.1.85:8101" />
     <allow-navigation href="http://192.168.1.85:8100" />
+    <allow-navigation href="https://www.youtube.com" />
+    <allow-navigation href="https://www.vimeo.com" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <allow-intent href="tel:*" />
