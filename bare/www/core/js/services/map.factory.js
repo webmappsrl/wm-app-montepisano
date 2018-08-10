@@ -1878,22 +1878,22 @@ angular.module('webmapp')
 
         mapService.drawPosition = function (position) {
             if (circleLocation.position === null && circleLocation.accuracy === null) {
-                circleLocation.position = L.marker([position.coords.latitude, position.coords.longitude], {
+                circleLocation.position = L.marker([position.latitude, position.longitude], {
                     icon: locationIcon
                 }).addTo(map);
 
-                circleLocation.accuracy = L.circle([position.coords.latitude, position.coords.longitude], {
+                circleLocation.accuracy = L.circle([position.latitude, position.longitude], {
                     weight: 1,
                     color: '#3E82F7',
                     fillColor: '#3E82F7',
                     fillOpacity: 0.2,
-                    radius: position.coords.accuracy
+                    radius: position.accuracy
                 }).addTo(map);
             } else {
-                var newLatLng = new L.LatLng(position.coords.latitude, position.coords.longitude);
+                var newLatLng = new L.LatLng(position.latitude, position.longitude);
                 circleLocation.position.setLatLng(newLatLng);
                 circleLocation.accuracy.setLatLng(newLatLng);
-                circleLocation.accuracy.setRadius(position.coords.accuracy);
+                circleLocation.accuracy.setRadius(position.accuracy);
             }
         };
 
