@@ -41,6 +41,7 @@ angular.module('webmapp')
             couponsList = [],
             couponsMap = {},
             dataReady = false,
+            pagesReady = false,
             layerCliked = null,
             useLocalCaching = generalConf.useLocalStorageCaching,
             centerCoords = {},
@@ -791,9 +792,10 @@ angular.module('webmapp')
         };
 
         var initializePages = function () {
-            var pages = CONFIG.PAGES;
+            var pages = CONFIG.PAGES,
+                promises = [];
 
-            var requestPages = function (item, index) {
+            var requestPage = function (item, index) {
                 if (item.isCustom) {
                     if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.available) {
                         for (var pos in CONFIG.LANGUAGES.available) {
@@ -804,22 +806,24 @@ angular.module('webmapp')
                             }
 
                             url = url + '.html';
-                            getPagesHtml(url);
+                            return getPagesHtml(url);
                         }
                     } else {
                         var url = CONFIG.OFFLINE.pagesUrl + item.type + ".html";
-                        getPagesHtml(url);
+                        return getPagesHtml(url);
                     }
-                };
+                }
             };
 
             var getPagesHtml = function (url) {
+                var defer = $q.defer();
                 $.get(url).done(function (data) {
                     var insert = function () {
                         db.put({
                             _id: url,
                             data: data
-                        }).then(function () { }).catch(function () {
+                        }).then(function () { defer.resolve("si"); }).catch(function () {
+                            defer.reject("no");
                             console.log(url + " page not updated");
                         });
                     };
@@ -834,11 +838,27 @@ angular.module('webmapp')
                     });
 
                 });
+
+                return defer.promise;
             };
 
             if (pages) {
-                pages.forEach(requestPages);
+                for (var i in pages) {
+                    if (pages[i].isCustom) {
+                        promises.push(requestPage(pages[i], i));
+                    }
+                }
             }
+            else {
+                pagesReady = true;
+            }
+
+            $q.all(promises).then(function () {
+                pagesReady = true;
+            }, function (err) {
+                console.error(err);
+                pagesReady = true;
+            })
         };
 
         var initializeThen = function (currentOverlay) {
@@ -1400,12 +1420,14 @@ angular.module('webmapp')
         }
 
         var initialize = function () {
-            if (typeof localStorage.$wm_mhildConf === 'undefined') {
-                pagePromise = initializePages();
-            }
-
             if (map && map !== null) {
                 return map;
+            }
+
+            initializeLanguages();
+
+            if (typeof localStorage.$wm_mhildConf === 'undefined') {
+                pagePromise = initializePages();
             }
 
             if (mapConf.layers.length === 0) {
@@ -1606,6 +1628,10 @@ angular.module('webmapp')
 
             return map;
         };
+
+        mapService.arePagesReady = function () {
+            return pagesReady;
+        }
 
         mapService.getPageInPouchDB = function (key) {
             return db.get(key);
