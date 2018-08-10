@@ -492,8 +492,6 @@ angular.module('webmapp')
                 } else if (gpsActive) {
                     geolocationState.isActive = true;
                     geolocationState.isLoading = true;
-                    geolocationState.isFollowing = true;
-                    geolocationState.isRotating = false;
                     $rootScope.$emit("geolocationState-changed", geolocationState);
 
                     console.warn("TODO: define failure function");
@@ -510,71 +508,74 @@ angular.module('webmapp')
                         saveBatteryOnBackground: true
                     });
 
-                    backgroundGeolocation.start();
+                    $cordovaGeolocation
+                        .getCurrentPosition({
+                            timeout: constants.geolocationTimeoutTime,
+                            enableHighAccuracy: false
+                        })
+                        .then(function(position) {
+                            // var lat = position.coords.latitude,
+                            //     long = position.coords.longitude;
 
-                    // $cordovaGeolocation
-                    //     .getCurrentPosition({
-                    //         timeout: constants.geolocationTimeoutTime,
-                    //         enableHighAccuracy: false
-                    //     })
-                    //     .then(function(position) {
-                    //         var lat = position.coords.latitude,
-                    //             long = position.coords.longitude;
+                            geolocationState.isLoading = false;
+                            geolocationState.isFollowing = true;
+                            geolocationState.isRotating = false;
+                            $rootScope.$emit("geolocationState-changed", geolocationState);
 
-                    //         geolocationState.isLoading = false;
-                    //         $rootScope.$emit("geolocationState-changed", geolocationState);
+                            backgroundGeolocation.start();
 
-                    //         if (!MapService.isInBoundingBox(lat, long)) {
-                    //             state.lastPosition = null;
-                    //             state.isOutsideBoundingBox = true;
-                    //             geolocationState.isActive = false;
-                    //             geolocationService.disable();
-                    //             $ionicPopup.alert({
-                    //                 title: $translate.instant("ATTENZIONE"),
-                    //                 template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa")
-                    //             });
-                    //             if (recordingState.isActive) {
-                    //                 geolocationService.pauseRecording();
-                    //             }
-                    //             defer.reject(ERRORS.OUTSIDE_BOUNDING_BOX);
-                    //         } else {
-                    //             state.isOutsideBoundingBox = false;
-                    //             state.lastPosition = {
-                    //                 lat: lat,
-                    //                 long: long,
-                    //                 timestamp: Date.now()
-                    //             };
+                            positionCallback(position.coords);
+                            // if (!MapService.isInBoundingBox(lat, long)) {
+                            //     state.lastPosition = null;
+                            //     state.isOutsideBoundingBox = true;
+                            //     geolocationState.isActive = false;
+                            //     geolocationService.disable();
+                            //     $ionicPopup.alert({
+                            //         title: $translate.instant("ATTENZIONE"),
+                            //         template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa")
+                            //     });
+                            //     if (recordingState.isActive) {
+                            //         geolocationService.pauseRecording();
+                            //     }
+                            //     defer.reject(ERRORS.OUTSIDE_BOUNDING_BOX);
+                            // } else {
+                            //     state.isOutsideBoundingBox = false;
+                            //     state.lastPosition = {
+                            //         lat: lat,
+                            //         long: long,
+                            //         timestamp: Date.now()
+                            //     };
 
-                    //             MapService.drawPosition(position);
-                    //             centerOnCoorsWithoutZoomEvent(lat, long);
+                            //     MapService.drawPosition(position);
+                            //     centerOnCoorsWithoutZoomEvent(lat, long);
 
-                    //             geolocationState.isFollowing = true;
-                    //             geolocationState.isRotating = false;
+                            //     geolocationState.isFollowing = true;
+                            //     geolocationState.isRotating = false;
 
-                    //             $rootScope.$emit("geolocationState-changed", geolocationState);
+                            //     $rootScope.$emit("geolocationState-changed", geolocationState);
 
-                    //             state.watchInterval = $cordovaGeolocation.watchPosition({
-                    //                 timeout: constants.geolocationTimeoutTime,
-                    //                 enableHighAccuracy: true
-                    //             });
-                    //             state.watchInterval.then(
-                    //                 null,
-                    //                 geolocationTimedOut,
-                    //                 positionCallback);
+                            //     state.watchInterval = $cordovaGeolocation.watchPosition({
+                            //         timeout: constants.geolocationTimeoutTime,
+                            //         enableHighAccuracy: true
+                            //     });
+                            //     state.watchInterval.then(
+                            //         null,
+                            //         geolocationTimedOut,
+                            //         positionCallback);
 
-                    //             defer.resolve(true);
-                    //         }
-                    //     }, function(err) {
-                    //         geolocationState.isActive = false;
-                    //         geolocationState.isLoading = false;
-                    //         $rootScope.$emit("geolocationState-changed", geolocationState);
-                    //         $ionicPopup.alert({
-                    //             title: $translate.instant("ATTENZIONE"),
-                    //             template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
-                    //         });
-                    //         console.error(err);
-                    //         defer.reject(ERRORS.GENERIC_GPS);
-                    //     });
+                            //     defer.resolve(true);
+                            // }
+                        }, function(err) {
+                            geolocationState.isActive = false;
+                            geolocationState.isLoading = false;
+                            $rootScope.$emit("geolocationState-changed", geolocationState);
+                            $ionicPopup.alert({
+                                title: $translate.instant("ATTENZIONE"),
+                                template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
+                            });
+                            console.error(err);
+                            defer.reject(ERRORS.GENERIC_GPS);
+                        });
                 } else {
                     return checkGPS().then(geolocationService.enable);
                 }
