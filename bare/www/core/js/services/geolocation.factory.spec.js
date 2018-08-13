@@ -10,6 +10,7 @@ describe('Geolocation.Factory', function() {
         $ionicPopup,
         $q,
         $translate,
+        $rootScope,
         MapService,
         $httpBackend;
 
@@ -49,9 +50,15 @@ describe('Geolocation.Factory', function() {
             },
             platformId: 'android'
         };
+        backgroundGeolocation = {
+            start: function() {},
+            stop: function() {},
+            configure: function(callback, error, params) { callback({ latitude: currentLat, longitude: currentLong, altitude: 0, accuracy: 10 }) },
+            finish: function() {}
+        };
     });
 
-    beforeEach(inject(function(_GeolocationService_, _$cordovaGeolocation_, _$cordovaDeviceOrientation_, _$ionicPopup_, _$q_, _$translate_, _MapService_, _$httpBackend_, _CONFIG_) {
+    beforeEach(inject(function(_GeolocationService_, _$cordovaGeolocation_, _$cordovaDeviceOrientation_, _$ionicPopup_, _$q_, _$translate_, _$rootScope_, _MapService_, _$httpBackend_, _CONFIG_) {
         GeolocationService = _GeolocationService_;
         $cordovaDeviceOrientation = _$cordovaDeviceOrientation_;
         $cordovaGeolocation = _$cordovaGeolocation_;
@@ -60,6 +67,7 @@ describe('Geolocation.Factory', function() {
         $translate = _$translate_;
         MapService = _MapService_;
         $httpBackend = _$httpBackend_;
+        $rootScope = _$rootScope_;
         CONFIG = _CONFIG_;
 
         currentLat = CONFIG.MAP.bounds.northEast[0] + (CONFIG.MAP.bounds.southWest[0] - CONFIG.MAP.bounds.northEast[0]) / 2;
@@ -134,7 +142,7 @@ describe('Geolocation.Factory', function() {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function() {
                 var defer = $q.defer();
                 console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
-                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0 } });
+                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0, accuracy: 10 } });
                 return defer.promise;
             })
             localStorage.clear()
@@ -158,7 +166,7 @@ describe('Geolocation.Factory', function() {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function() {
                 var defer = $q.defer();
                 console.log("MOCK cordovaGeolocation.getCurrentPosition: " + outsideLat + "," + outsideLong);
-                defer.resolve({ coords: { latitude: outsideLat, longitude: outsideLong, altitude: 0 } });
+                defer.resolve({ coords: { latitude: outsideLat, longitude: outsideLong, altitude: 0, accuracy: 10 } });
                 return defer.promise;
             })
             localStorage.clear()
@@ -180,7 +188,7 @@ describe('Geolocation.Factory', function() {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function() {
                 var defer = $q.defer();
                 console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
-                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0 } });
+                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0, accuracy: 10 } });
                 return defer.promise;
             })
             localStorage.clear()
@@ -271,7 +279,7 @@ describe('Geolocation.Factory', function() {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function() {
                 var defer = $q.defer();
                 console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
-                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0 } });
+                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0, accuracy: 10 } });
                 return defer.promise;
             })
             localStorage.clear();
@@ -355,7 +363,7 @@ describe('Geolocation.Factory', function() {
                 var defer = $q.defer();
                 console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 // setTimeout(function() { defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0 } }) }, 10000);
-                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0 } });
+                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0, accuracy: 10 } });
                 return defer.promise;
             });
 
@@ -386,7 +394,7 @@ describe('Geolocation.Factory', function() {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function() {
                 var defer = $q.defer();
                 console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
-                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0 } });
+                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0, accuracy: 10 } });
                 return defer.promise;
             });
 
@@ -419,7 +427,7 @@ describe('Geolocation.Factory', function() {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function() {
                 var defer = $q.defer();
                 console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
-                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0 } });
+                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0, accuracy: 10 } });
                 return defer.promise;
             });
 
@@ -459,7 +467,7 @@ describe('Geolocation.Factory', function() {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function() {
                 var defer = $q.defer();
                 console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
-                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0 } });
+                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0, accuracy: 10 } });
                 return defer.promise;
             });
 
@@ -506,7 +514,7 @@ describe('Geolocation.Factory', function() {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function() {
                 var defer = $q.defer();
                 console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
-                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0 } });
+                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0, accuracy: 10 } });
                 return defer.promise;
             });
 
@@ -553,7 +561,7 @@ describe('Geolocation.Factory', function() {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function() {
                 var defer = $q.defer();
                 console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
-                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0 } });
+                defer.resolve({ coords: { latitude: currentLat, longitude: currentLong, altitude: 0, accuracy: 10 } });
                 return defer.promise;
             });
 
@@ -595,13 +603,32 @@ describe('Geolocation.Factory', function() {
             $httpBackend.flush();
         })
 
+        afterEach(function() {
+            $httpBackend.verifyNoOutstandingExpectation();
+            $httpBackend.verifyNoOutstandingRequest();
+        });
+    });
+
+
+    describe("startRecording", function() {
+
+        it('!recordingState.isActive  => it should start recording ', function(done) {
+            spyOn($rootScope, '$emit');
+            var promise = GeolocationService.startRecording();
+            promise.then(function(val) {
+                done();
+                expect(val).toBe(true);
+                expect($rootScope.$emit).toHaveBeenCalledWith({ isActive: true, isPaused: false });
+            })
+            $httpBackend.flush();
+        })
 
 
         afterEach(function() {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
-    });
+    })
 
     afterEach(function() {
         $httpBackend.verifyNoOutstandingExpectation();
