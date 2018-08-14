@@ -86,7 +86,7 @@ angular.module('webmapp')
             var currentFilters = MapService.getActiveFilters();
             if (!angular.equals(currentFilters, vm.initialFilters)) {
                 // The delay is to prevent the map rendering while the modal is closing
-                setTimeout(function () {
+                setTimeout(function() {
                     var features = getFeaturesToDisplay();
                     MapService.addFeaturesToFilteredLayer(features);
                 }, 500);
@@ -187,6 +187,11 @@ angular.module('webmapp')
     });
 
     if (modalScope.vm.isNewModal) {
+        var checkBoxState = {
+            EMPTY: 0,
+            INDETERMINATED: 1,
+            FULL: 2
+        };
         var overlayLayerConfMap = MapService.overlayLayersConfMap();
 
         modalScope.vm.isMapModal = true;
@@ -232,7 +237,12 @@ angular.module('webmapp')
                         var layer = MapService.getOverlayLayerById(layerId);
                         if (layer) {
                             var translatedLabel = layer.languages;
-                            var info = { id: layerId, label: layer.label, checked: false, languages: translatedLabel };
+                            var info = {
+                                id: layerId,
+                                label: layer.label,
+                                checked: false,
+                                languages: translatedLabel
+                            };
                             info.clickable = true;
                             tmp.push(info);
                             modalScope.layers[layer.label] = info;
@@ -260,7 +270,10 @@ angular.module('webmapp')
                     if (poiIndex == -1) {
                         poiIndex = macroCategories.length;
                         macroCategories[poiIndex] = {
-                            label: { it: "altri", en: "others" },
+                            label: {
+                                it: "altri",
+                                en: "others"
+                            },
                             items: [],
                             isMacroCategoryGroup: true
                         };
@@ -270,9 +283,16 @@ angular.module('webmapp')
                     if (poiIndex > -1 && macroCategories[poiIndex].isMacroCategoryGroup) {
                         var translatedLabel = layer.languages;
                         if (!translatedLabel) {
-                            translatedLabel = { it: layer.label };
+                            translatedLabel = {
+                                it: layer.label
+                            };
                         }
-                        var info = { id: layer.id, label: layer.label, checked: false, languages: translatedLabel };
+                        var info = {
+                            id: layer.id,
+                            label: layer.label,
+                            checked: false,
+                            languages: translatedLabel
+                        };
                         info.clickable = true;
                         modalScope.layers[layer.label] = info;
                         macroCategories[poiIndex].items.push(info);
@@ -292,7 +312,10 @@ angular.module('webmapp')
                     if (trackIndex == -1) {
                         trackIndex = macroCategories.length;
                         macroCategories[trackIndex] = {
-                            label: { it: "altri", en: "others" },
+                            label: {
+                                it: "altri",
+                                en: "others"
+                            },
                             items: [],
                             isMacroCategoryGroup: true
                         };
@@ -301,9 +324,16 @@ angular.module('webmapp')
                     if (trackIndex > -1 && macroCategories[trackIndex].isMacroCategoryGroup) {
                         var translatedLabel = layer.languages;
                         if (!translatedLabel) {
-                            translatedLabel = { it: layer.label };
+                            translatedLabel = {
+                                it: layer.label
+                            };
                         }
-                        var info = { id: layer.id, label: layer.label, checked: false, languages: translatedLabel };
+                        var info = {
+                            id: layer.id,
+                            label: layer.label,
+                            checked: false,
+                            languages: translatedLabel
+                        };
                         info.clickable = true;
                         modalScope.layers[layer.label] = info;
                         macroCategories[trackIndex].items.push(info);
@@ -364,6 +394,7 @@ angular.module('webmapp')
                     }
                 }
                 modalScope.filters[tabId].sublayers[id].checked = !modalScope.filters[tabId].sublayers[id].checked;
+                checkTabState(id, tabId);
             }
         }
 
@@ -375,21 +406,31 @@ angular.module('webmapp')
                 modalScope.layers[layerLabel].checked = !modalScope.layers[layerLabel].checked;
                 modalScope.vm.updateFilter(layerLabel, modalScope.layers[layerLabel].checked);
                 checkTabState(sublayerId, tabId);
-                setTimeout(function() { modalScope.lastToggledLayer = "" }, 200);
+                setTimeout(function() {
+                    modalScope.lastToggledLayer = ""
+                }, 200);
             }
         };
 
         var checkTabState = function(sublayerId, tabId) {
             var state = true;
+            var atLeastOne = false;
             var sublayer = modalScope.filters[tabId].sublayers[sublayerId];
             for (var index in sublayer.items) {
                 var layerChecked = sublayer.items[index].checked;
                 if (!layerChecked) {
                     state = false;
-                    break;
+                } else {
+                    atLeastOne = true;
                 }
             }
-            sublayer.checked = state;
+            if (state) {
+                sublayer.checked = checkBoxState.FULL;
+            } else if (!state && atLeastOne) {
+                sublayer.checked = checkBoxState.INDETERMINATED;
+            } else {
+                sublayer.checked = checkBoxState.EMPTY;
+            }
         };
 
         var checkAllTabsState = function() {
