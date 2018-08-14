@@ -187,7 +187,7 @@ angular.module('webmapp')
         };
 
         vm.closeKeyboard = function () {
-            cordova && cordova.plugins.Keyboard.close();
+            // cordova && cordova.plugins.Keyboard.close();
         };
 
         vm.openFilters = function () {
@@ -271,7 +271,11 @@ angular.module('webmapp')
         };
 
         if (modalScope.vm.isNewModal) {
-
+            var checkBoxState = {
+                EMPTY: 0,
+                INDETERMINATED: 1,
+                FULL: 2
+            };
             var searchLayersMap = CONFIG.OVERLAY_LAYERS.reduce(function (prev, curr) {
                 if (!curr.skipSearch) {
                     prev[curr.label] = curr;
@@ -380,7 +384,6 @@ angular.module('webmapp')
                             modalScope.layers[layer.label] = info;
                             macroCategories[poiIndex].items.push(info);
                         }
-
                     } else if (layer.type === 'line_geojson') {
                         var macroCategories = modalScope.filters["tracks"].sublayers;
                         if (trackIndex == -1) {
@@ -428,13 +431,11 @@ angular.module('webmapp')
             modalScope.currentTab = Object.keys(modalScope.filters)[0];
 
             modalScope.switchTab = function (id) {
-
                 if (modalScope.filters[id])
                     modalScope.currentTab = id;
                 else {
                     modalScope.currentTab = Object.keys(modalScope.filters)[0];
                 }
-
             };
 
             modalScope.toggleSubTab = function (id, tabId) {
@@ -479,6 +480,7 @@ angular.module('webmapp')
                     }
                     modalScope.filters[tabId].sublayers[id].checked = !modalScope.filters[tabId].sublayers[id].checked;
                     modalScope.vm.updateFilter();
+                    checkTabState(id, tabId);
                 }
             }
 
@@ -499,15 +501,24 @@ angular.module('webmapp')
 
             var checkTabState = function (sublayerId, tabId) {
                 var state = true;
+                var atLeastOne = false;
                 var sublayer = modalScope.filters[tabId].sublayers[sublayerId];
                 for (var index in sublayer.items) {
                     var layerChecked = sublayer.items[index].checked;
                     if (!layerChecked) {
                         state = false;
+                    } else {
+                        atLeastOne = true;
                         break;
                     }
                 }
-                sublayer.checked = state;
+                if (state) {
+                    sublayer.checked = checkBoxState.FULL;
+                } else if (!state && atLeastOne) {
+                    sublayer.checked = checkBoxState.INDETERMINATED;
+                } else {
+                    sublayer.checked = checkBoxState.EMPTY;
+                }
             }
 
             var checkAllTabsState = function () {

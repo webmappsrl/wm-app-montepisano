@@ -189,6 +189,11 @@ angular.module('webmapp')
         });
 
         if (modalScope.vm.isNewModal) {
+            var checkBoxState = {
+                EMPTY: 0,
+                INDETERMINATED: 1,
+                FULL: 2
+            };
             var overlayLayerConfMap = MapService.overlayLayersConfMap();
 
             modalScope.vm.isMapModal = true;
@@ -274,7 +279,6 @@ angular.module('webmapp')
                                 items: [],
                                 isMacroCategoryGroup: true
                             };
-
                         }
 
                         if (poiIndex > -1 && macroCategories[poiIndex].isMacroCategoryGroup) {
@@ -294,7 +298,6 @@ angular.module('webmapp')
                             modalScope.layers[layer.label] = info;
                             macroCategories[poiIndex].items.push(info);
                         }
-
                     } else if (layer.type === 'line_geojson') {
                         var macroCategories = modalScope.filters["tracks"].sublayers;
                         if (trackIndex == -1) {
@@ -317,7 +320,6 @@ angular.module('webmapp')
                                 isMacroCategoryGroup: true
                             };
                         }
-
                         if (trackIndex > -1 && macroCategories[trackIndex].isMacroCategoryGroup) {
                             var translatedLabel = layer.languages;
                             if (!translatedLabel) {
@@ -391,6 +393,7 @@ angular.module('webmapp')
                         }
                     }
                     modalScope.filters[tabId].sublayers[id].checked = !modalScope.filters[tabId].sublayers[id].checked;
+                    checkTabState(id, tabId);
                 }
             }
 
@@ -410,15 +413,23 @@ angular.module('webmapp')
 
             var checkTabState = function (sublayerId, tabId) {
                 var state = true;
+                var atLeastOne = false;
                 var sublayer = modalScope.filters[tabId].sublayers[sublayerId];
                 for (var index in sublayer.items) {
                     var layerChecked = sublayer.items[index].checked;
                     if (!layerChecked) {
                         state = false;
-                        break;
+                    } else {
+                        atLeastOne = true;
                     }
                 }
-                sublayer.checked = state;
+                if (state) {
+                    sublayer.checked = checkBoxState.FULL;
+                } else if (!state && atLeastOne) {
+                    sublayer.checked = checkBoxState.INDETERMINATED;
+                } else {
+                    sublayer.checked = checkBoxState.EMPTY;
+                }
             };
 
             var checkAllTabsState = function () {
