@@ -862,6 +862,10 @@ angular.module('webmapp')
             // vm.isNavigable = false;
             if ($state.params.parentId) {
                 MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
+                $rootScope.highlightTrack = {
+                    id: $state.params.id,
+                    parentId: $state.params.parentId
+                };
             }
 
             vm.goToMap();
@@ -1141,7 +1145,7 @@ angular.module('webmapp')
                     }, false);
                     setTimeout(function () {
                         MapService.adjust();
-                    }, 2500);
+                    }, 1000);
                 });
         };
 

@@ -232,7 +232,6 @@ angular.module('webmapp')
                 };
 
                 if (feature.image) {
-
                     feature.image = Offline.getRealImageUrl(feature.image);
                 }
 
@@ -527,7 +526,7 @@ angular.module('webmapp')
 
         vm.openRelatedUrlPopup = function () {
             vm.relatedUrlPopupOpened = !vm.relatedUrlPopupOpened;
-            
+
             Utils.forceDigest();
         }
 

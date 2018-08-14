@@ -76,6 +76,7 @@ angular.module('webmapp')
             geojsonLayer = null;
 
         var activatedPopup = null,
+            UTFGridHighlighted = null,
             mapIsRotating = false,
             currentBearing = 0;
 
@@ -415,6 +416,11 @@ angular.module('webmapp')
                     activateHighlight(layer, globalLineApplyStyle(layer.feature));
                 }
             });
+
+            if (UTFGridHighlighted) {
+                map.removeLayer(UTFGridHighlighted);
+                UTFGridHighlighted = null;
+            }
         };
 
         var resetLayers = function () {
@@ -584,6 +590,7 @@ angular.module('webmapp')
             }
 
             var layer = e.layer;
+            console.log(layer)
 
             clearLayerHighlight();
             layer.actived = true;
@@ -845,9 +852,9 @@ angular.module('webmapp')
                     });
 
                 },
-                function (error) {
-                    defer.resolve("no");
-                });
+                    function (error) {
+                        defer.resolve("no");
+                    });
 
                 return defer.promise;
             };
@@ -875,7 +882,9 @@ angular.module('webmapp')
             var group = getParentGroup(currentOverlay.label);
 
             if (group) {
-                overlayLayersByLabel[currentOverlay.label].addTo(group.layer);
+                if (overlayLayersByLabel[currentOverlay.label]) {
+                    overlayLayersByLabel[currentOverlay.label].addTo(group.layer);
+                }
 
                 if (Object.keys(group.layer._layers).length === group.items.length) {
                     group.isReady = true;
@@ -1123,20 +1132,27 @@ angular.module('webmapp')
                 }
 
 
-                areaMapById[e.data.id] = angular.extend({}, {
-                    properties: e.data
-                }, {
+                areaMapById[e.data.id] = angular.extend({},
+                    {
+                        properties: e.data
+                    },
+                    {
                         parent: {
                             label: this.baseMapLabel,
                             mapping: this.baseMapMapping
                         }
                     });
-                activatePopup(angular.extend(e, {
-                    parent: {
-                        label: this.baseMapLabel,
-                        mapping: this.baseMapMapping
-                    }
-                }));
+
+                activatePopup(
+                    angular.extend(e, {
+                        parent: {
+                            label: this.baseMapLabel,
+                            mapping: this.baseMapMapping
+                        }
+                    })
+                );
+
+                mapService.highlightTrack(e.data.id, this.baseMapLabel);
             }, {
                     baseMapLabel: currentOverlay.label,
                     baseMapMapping: currentOverlay.mapping
@@ -1939,7 +1955,8 @@ angular.module('webmapp')
                 new L.latLng(mapConf.bounds.northEast));
 
             return bounds.contains(
-                new L.latLng(lat, long));
+                new L.latLng(lat, long)
+            );
         };
 
         mapService.precacheOverlaysData = function () {
@@ -2299,6 +2316,7 @@ angular.module('webmapp')
                         lng: feature.geometry.coordinates[0]
                     }
                 };
+
                 if (feature.geometry.type === 'LineString') {
                     var pos = 0;
                     if (feature.geometry.coordinates.length % 2 === 1) {
@@ -2309,10 +2327,55 @@ angular.module('webmapp')
                     obj.latlng.lat = feature.geometry.coordinates[pos][1];
                     obj.latlng.lng = feature.geometry.coordinates[pos][0];
                 }
+                else if (feature.geometry.type === 'MultiLineString') {
+                    var pos = 0,
+                        totalLength = 0;
+
+                    for (var i in feature.geometry.coordinates) {
+                        totalLength += feature.geometry.coordinates[i].length;
+                    }
+
+                    pos = (totalLength - (totalLength % 2)) / 2;
+                    var line = 0;
+
+                    while (pos > 0) {
+                        if (pos >= feature.geometry.coordinates[line].length) {
+                            pos -= feature.geometry.coordinates[line].length;
+                            line++;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+
+                    obj.latlng.lat = feature.geometry.coordinates[line][pos][1];
+                    obj.latlng.lng = feature.geometry.coordinates[line][pos][0];
+                }
+
                 setTimeout(function () {
                     activatePopup(obj, feature.geometry.type === 'LineString' ? false : true);
                 }, 1000);
             }
+        };
+
+        mapService.highlightTrack = function (id, parentId) {
+            var overlay = null;
+            for (var i in overlayLayersConf) {
+                if (overlayLayersConf[i].type === 'tile_utfgrid_geojson') {
+                    overlay = overlayLayersConf[i];
+                    break;
+                }
+            }
+            mapService.getFeatureById(id, parentId.replace(/_/g, ' '))
+                .then(function (feature) {
+                    if (feature.parent.type === 'tile_utfgrid_geojson') {
+                        UTFGridHighlighted = L.geoJson(feature.geometry, { color: styleConf.line.highlight.color })
+                            .addTo(map);
+                    }
+                    else {
+                        mapService.triggerFeatureClick(feature.properties.id);
+                    }
+                });
         };
 
         mapService.mapIsRotating = function (isRotating) {
