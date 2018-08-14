@@ -1,16 +1,11 @@
-<ion-view 
-    class="languages-page"
-    cache-view="false" 
-    ng-controller="LanguagesController as vm">
+<ion-view class="languages-page" cache-view="false" ng-controller="LanguagesController as vm">
     <ion-nav-title>
         <span>
             {{"Impostazioni" | translate}}
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">
-        <button 
-            class="no-animate button button-icon icon ion-navicon"
-            menu-toggle="left"></button>
+        <button class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
 
     <ion-content ng-style="{
@@ -19,20 +14,12 @@
         <div class="modal-content">
             <span class="modal-title" ng-if="vm.languages">{{"SELEZIONA LA LINGUA" | translate}}</span>
             <div class="section" ng-if="vm.languages">
-                <label
-                    class="item item-radio ng-not-empty" 
-                    ng-repeat="language in vm.languages">
-                    <div
-                        class="radio radio-input-hidden disable-pointer-events radio-circle">
-                        <input
-                            type="radio"
-                            name="languageRadio"
-                            ng-click="vm.chooseLang(language)">
-                        <i 
-                            class="wm-icon-ion-android-checkmark-circle"
-                            ng-class="{
-                                'wm-icon-ion-android-checkmark-circle': vm.currentLang === language,
-                                'wm-icon-ion-android-checkmark-circle-empty': !(vm.currentLang === language)
+                <label class="item item-radio ng-not-empty" ng-repeat="language in vm.languages">
+                    <div class="radio radio-input-hidden disable-pointer-events radio-circle">
+                        <input type="radio" name="languageRadio" ng-click="vm.chooseLang(language)">
+                        <i ng-class="{
+                                'wm-icon-outline-radio_button_checked': vm.currentLang === language,
+                                'wm-icon-outline-radio_button_unchecked': vm.currentLang !== language
                             }"></i>
                         {{language | translate}}
                     </div>
@@ -53,7 +40,8 @@
             <span ng-if="vm.privacyUrl" class="modal-title">{{"PRIVACY" | translate}}</span>
             <div ng-if="vm.privacyUrl" class="section">
                 <p>
-                    {{"Leggi la" | translate}} <a href="" ng-click="vm.openInExternalBrowser(vm.privacyUrl)" target="_blank">{{"normativa sulla privacy" | translate}}</a>
+                    {{"Leggi la" | translate}}
+                    <a href="" ng-click="vm.openInExternalBrowser(vm.privacyUrl)" target="_blank">{{"normativa sulla privacy" | translate}}</a>
                 </p>
             </div>
             <span class="modal-title">{{"APP" | translate}}</span>
@@ -70,29 +58,20 @@
             </div>
         </div>
         <div class="logout" ng-if="vm.useLogin">
-            <button
-                ng-style="{
+            <button ng-style="{
                     'background': COLORS.global.buttonsBackground,
                     'color': COLORS.global.buttonsColor
-                }"
-                class="login-button button button-block"
-                ng-if="vm.isLoggedIn"
-                ng-click="vm.logout()">
-            {{"LOGOUT" | translate}}
-            <i class="wm-icon-android-arrow-forward"></i>
+                }" class="login-button button button-block" ng-if="vm.isLoggedIn" ng-click="vm.logout()">
+                {{"LOGOUT" | translate}}
+                <i class="wm-icon-android-arrow-forward"></i>
             </button>
-            <button
-                ng-style="{
+            <button ng-style="{
                     'background': COLORS.global.buttonsBackground,
                     'color': COLORS.global.buttonsColor
-                }"
-                class="login-button button button-block"
-                ng-if="!vm.isLoggedIn"
-                ng-click="vm.login()">
-            {{"LOGIN" | translate}}
-            <i class="wm-icon-android-arrow-forward"></i>
+                }" class="login-button button button-block" ng-if="!vm.isLoggedIn" ng-click="vm.login()">
+                {{"LOGIN" | translate}}
+                <i class="wm-icon-android-arrow-forward"></i>
             </button>
         </div>
     </ion-content>
 </ion-view>
-
