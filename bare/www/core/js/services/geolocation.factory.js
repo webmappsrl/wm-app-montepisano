@@ -3,6 +3,7 @@ angular.module('webmapp')
     .factory('GeolocationService', function GeolocationService(
         $cordovaDeviceOrientation,
         $cordovaGeolocation,
+        $ionicPlatform,
         $ionicPopup,
         $q,
         $rootScope,
@@ -49,7 +50,6 @@ angular.module('webmapp')
             lpf: null,
             orientationWatch: null,
             isOutsideBoundingBox: false,
-            skipGPSSwitchDeregistration: false,
             skipZoomEvent: false,
             // watchInterval: null,
             reset: function () {
@@ -58,7 +58,6 @@ angular.module('webmapp')
                 state.lpf = null;
                 state.orientationWatch = null;
                 state.isOutsideBoundingBox = false;
-                state.skipGPSSwitchDeregistration = false;
                 state.skipZoomEvent = false;
                 // state.watchInterval = null;
             }
@@ -221,14 +220,14 @@ angular.module('webmapp')
          * @param {*} GPSState 
          */
         function GPSSettingsSwitched(GPSState) {
+            console.log("GPS state changed");
             if ((device.platform === "Android" && GPSState !== cordova.plugins.diagnostic.locationMode.LOCATION_OFF) ||
                 (device.platform === "iOS" && (GPSState === cordova.plugins.diagnostic.permissionStatus.GRANTED ||
                     GPSState === cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE))
             ) {
-                checkGPS().then(geolocationService.enable);
+                geolocationService.enable();
             } else {
                 gpsActive = false;
-                state.skipGPSSwitchDeregistration = true;
                 geolocationService.disable();
             }
         };
@@ -355,7 +354,6 @@ angular.module('webmapp')
         };
 
         console.warn("TODO: complete function positionCallback for realTimeTracking")
-
         function positionCallback(position) {
             console.log(position);
             var lat = position.latitude ? position.latitude : 0,
@@ -365,6 +363,7 @@ angular.module('webmapp')
 
             if (geolocationState.isLoading) {
                 geolocationState.isLoading = false;
+                geolocationState.isFollowing = true;
                 $rootScope.$emit("geolocationState-changed", geolocationState);
             }
 
@@ -484,10 +483,6 @@ angular.module('webmapp')
             var defer = $q.defer();
 
             if (window.cordova) {
-                //To prevent duplication, firstly deregistrer listener
-                cordova.plugins.diagnostic.registerLocationStateChangeHandler(false);
-                cordova.plugins.diagnostic.registerLocationStateChangeHandler(GPSSettingsSwitched);
-
                 if (geolocationState.isActive) {
                     defer.resolve(geolocationState);
                 } else if (gpsActive) {
@@ -495,7 +490,6 @@ angular.module('webmapp')
                     geolocationState.isLoading = true;
                     $rootScope.$emit("geolocationState-changed", geolocationState);
 
-                    console.warn("TODO: define failure function");
                     backgroundGeolocation.configure(positionCallback, geolocationErrorCallback, {
                         desiredAccuracy: 100,
                         stationaryRadius: 10,
@@ -509,76 +503,20 @@ angular.module('webmapp')
                         saveBatteryOnBackground: true
                     });
 
+                    backgroundGeolocation.start();
+
                     $cordovaGeolocation
                         .getCurrentPosition({
                             timeout: constants.geolocationTimeoutTime,
                             enableHighAccuracy: false
                         })
                         .then(function (position) {
-                            // var lat = position.coords.latitude,
-                            //     long = position.coords.longitude;
-
-                            geolocationState.isLoading = false;
-                            geolocationState.isFollowing = true;
-                            geolocationState.isRotating = false;
-                            $rootScope.$emit("geolocationState-changed", geolocationState);
-
-                            backgroundGeolocation.start();
-
                             positionCallback(position.coords);
-
-                            defer.resolve(geolocationState);
-                            // if (!MapService.isInBoundingBox(lat, long)) {
-                            //     state.lastPosition = null;
-                            //     state.isOutsideBoundingBox = true;
-                            //     geolocationState.isActive = false;
-                            //     geolocationService.disable();
-                            //     $ionicPopup.alert({
-                            //         title: $translate.instant("ATTENZIONE"),
-                            //         template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa")
-                            //     });
-                            //     if (recordingState.isActive) {
-                            //         geolocationService.pauseRecording();
-                            //     }
-                            //     defer.reject(ERRORS.OUTSIDE_BOUNDING_BOX);
-                            // } else {
-                            //     state.isOutsideBoundingBox = false;
-                            //     state.lastPosition = {
-                            //         lat: lat,
-                            //         long: long,
-                            //         timestamp: Date.now()
-                            //     };
-
-                            //     MapService.drawPosition(position);
-                            //     centerOnCoorsWithoutZoomEvent(lat, long);
-
-                            //     geolocationState.isFollowing = true;
-                            //     geolocationState.isRotating = false;
-
-                            //     $rootScope.$emit("geolocationState-changed", geolocationState);
-
-                            //     state.watchInterval = $cordovaGeolocation.watchPosition({
-                            //         timeout: constants.geolocationTimeoutTime,
-                            //         enableHighAccuracy: true
-                            //     });
-                            //     state.watchInterval.then(
-                            //         null,
-                            //         geolocationTimedOut,
-                            //         positionCallback);
-
-                            //     defer.resolve(true);
-                            // }
                         }, function (err) {
-                            geolocationState.isActive = false;
-                            geolocationState.isLoading = false;
-                            $rootScope.$emit("geolocationState-changed", geolocationState);
-                            $ionicPopup.alert({
-                                title: $translate.instant("ATTENZIONE"),
-                                template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
-                            });
-                            console.error(err);
-                            defer.reject(ERRORS.GENERIC_GPS);
+                            console.warn("CordovaGeolocation.getCurrentPosition has been rejected: ", err);
                         });
+
+                    defer.resolve(geolocationState);
                 } else {
                     return checkGPS().then(geolocationService.enable);
                 }
@@ -598,16 +536,13 @@ angular.module('webmapp')
          */
         geolocationService.disable = function () {
             if (window.cordova) {
-                if (!state.skipGPSSwitchDeregistration) {
-                    cordova.plugins.diagnostic.registerLocationStateChangeHandler(false);
-                }
-
                 turnOffRotationAndFollow();
                 MapService.removePosition();
-                // clearInterval(state.watchInterval);
-                // state.watchInterval = null;
                 backgroundGeolocation.stop();
                 state.reset();
+                geolocationState.isActive = false;
+                geolocationState.isLoading = false;
+                $rootScope.$emit("geolocationState-changed", geolocationState);
             }
             return true;
         };
@@ -881,6 +816,12 @@ angular.module('webmapp')
                 turnOffRotationAndFollow();
             } else {
                 state.skipZoomEvent = false;
+            }
+        });
+
+        $ionicPlatform.ready(function () {
+            if (window.cordova) {
+                cordova.plugins.diagnostic.registerLocationStateChangeHandler(GPSSettingsSwitched);
             }
         });
 

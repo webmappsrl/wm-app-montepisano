@@ -1034,6 +1034,7 @@ angular.module('webmapp')
         $rootScope.$on('geolocationState-changed', function (e, value) {
             console.log(value);
             vm.geolocationState = value;
+            Utils.forceDigest();
         });
 
         $rootScope.$on('heading-changed', function (e, value) {
