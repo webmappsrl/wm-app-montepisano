@@ -19,15 +19,19 @@ var ERRORS = {
         message: "GPS is not active"
     },
     GPS_DISABLED: {
-        code: 101,
+        code: 102,
         message: "GPS is not active"
     },
     GPS_PERMISSIONS_DENIED: {
-        code: 102,
+        code: 103,
         message: "We are not allowed to use GPS"
     },
-    OUTSIDE_BOUNDING_BOX: {
+    GEOLOCATION_DISABLED: {
         code: 110,
+        message: "The geolocation is disabled"
+    },
+    OUTSIDE_BOUNDING_BOX: {
+        code: 111,
         message: "You are currently outside bounding box"
     }
 };
