@@ -94,6 +94,21 @@ module.exports = function (config) {
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
         logLevel: config.LOG_INFO,
 
+        // Configure how the browser console is logged, all optional values
+        // level: define the desire log level
+        //      possible values "debug", "log"
+        // terminal: enable/disable log
+        // format: the format of the log
+        //      possible values (combinable):
+        //      %t - log type (info, warning, error...)
+        //      %T - log type UPEERCASE
+        //      %b - browser
+        //      %m - message
+        // path: set the path of the log file
+        browserConsoleLogOptions: {
+            terminal: true
+        },
+
 
         // enable / disable watching file and executing tests whenever any file changes
         autoWatch: true,
