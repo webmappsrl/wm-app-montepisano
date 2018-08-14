@@ -322,7 +322,6 @@ angular.module('webmapp')
                 };
 
                 if (feature.image) {
-
                     feature.image = Offline.getRealImageUrl(feature.image);
                 }
 

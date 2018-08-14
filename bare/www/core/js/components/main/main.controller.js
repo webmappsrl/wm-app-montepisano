@@ -456,6 +456,10 @@ angular.module('webmapp')
             console.log("return")
             if ($state.params.parentId) {
                 MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
+                $rootScope.highlightTrack = {
+                    id: $state.params.id,
+                    parentId: $state.params.parentId
+                };
             }
             if (trackRecordingEnabled && MapService.getUserPolyline() !== null) {
                 vm.isNavigable = false;

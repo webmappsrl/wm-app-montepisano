@@ -120,7 +120,6 @@ angular.module('webmapp')
             modalScope.vm.currentMapLayer = name;
         };
 
-
         var openFilters = function () {
             var filt = MapService.getActiveFilters();
             if (modalScope.vm.isNewModal) {
@@ -505,6 +504,15 @@ angular.module('webmapp')
                 MapService.addFeaturesToFilteredLayer(features);
             }, 300);
         }
+
+        setTimeout(function () {
+            if ($rootScope.highlightTrack && $rootScope.highlightTrack.parentId && $rootScope.highlightTrack.id) {
+                MapService.highlightTrack($rootScope.highlightTrack.id, $rootScope.highlightTrack.parentId);
+
+                $rootScope.highlightTrack = null;
+                delete $rootScope.highlightTrack;
+            }
+        }, 1500);
 
         $scope.$on('$ionicView.beforeLeave', function () {
             modal.remove();
