@@ -191,7 +191,7 @@ angular.module('webmapp')
             }
         };
 
-        model.addItemToContaier = function (item, containerName) {
+        model.addItemToContainer = function (item, containerName) {
             if (typeof genericItemsMap[containerName] === 'undefined') {
                 genericItemsMap[containerName] = {};
             }
@@ -219,8 +219,6 @@ angular.module('webmapp')
                 overlaysMap[layer.label].items = [];
             }
         };
-
-
 
         model.getMenuMap = function () {
             return confMainMenuMap;

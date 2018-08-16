@@ -76,7 +76,7 @@ angular.module('webmapp')
             geojsonLayer = null;
 
         var activatedPopup = null,
-            UTFGridHighlighted = null,
+            highlightedTrack = null,
             mapIsRotating = false,
             currentBearing = 0;
 
@@ -416,9 +416,9 @@ angular.module('webmapp')
                 }
             });
 
-            if (UTFGridHighlighted) {
-                map.removeLayer(UTFGridHighlighted);
-                UTFGridHighlighted = null;
+            if (highlightedTrack) {
+                map.removeLayer(highlightedTrack);
+                highlightedTrack = null;
             }
         };
 
@@ -589,7 +589,6 @@ angular.module('webmapp')
             }
 
             var layer = e.layer;
-            console.log(layer)
 
             clearLayerHighlight();
             layer.actived = true;
@@ -741,7 +740,7 @@ angular.module('webmapp')
                     angular.extend(eventsList, data);
 
                     for (var i in data) {
-                        Model.addItemToContaier(data[i], 'events');
+                        Model.addItemToContainer(data[i], 'events');
                         eventsMap[data[i].id] = data[i];
                     }
 
@@ -784,7 +783,7 @@ angular.module('webmapp')
                     for (var i in data) {
                         data[i].body = data[i].body.replace(new RegExp(/href="([^\'\"]+)"/g), '');
                         couponsMap[data[i].id] = data[i];
-                        Model.addItemToContaier(data[i], 'coupons');
+                        Model.addItemToContainer(data[i], 'coupons');
                     }
 
                     defer.resolve(data);
@@ -2392,22 +2391,11 @@ angular.module('webmapp')
         };
 
         mapService.highlightTrack = function (id, parentId) {
-            var overlay = null;
-            for (var i in overlayLayersConf) {
-                if (overlayLayersConf[i].type === 'tile_utfgrid_geojson') {
-                    overlay = overlayLayersConf[i];
-                    break;
-                }
-            }
             mapService.getFeatureById(id, parentId.replace(/_/g, ' '))
                 .then(function (feature) {
-                    if (feature.parent.type === 'tile_utfgrid_geojson') {
-                        UTFGridHighlighted = L.geoJson(feature.geometry, { color: styleConf.line.highlight.color })
-                            .addTo(map);
-                    }
-                    else {
-                        mapService.triggerFeatureClick(feature.properties.id);
-                    }
+                    var style = globalLineApplyStyle(feature);
+                    highlightedTrack = L.geoJson(feature.geometry, { color: styleConf.line.highlight.color, weight: style.weight })
+                        .addTo(map);
                 });
         };
 

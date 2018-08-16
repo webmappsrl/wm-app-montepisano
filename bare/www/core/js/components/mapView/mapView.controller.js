@@ -2,6 +2,7 @@ angular.module('webmapp')
 
     .controller('MapController', function MapController(
         $ionicModal,
+        $ionicPlatform,
         $rootScope,
         $scope,
         $translate,
@@ -505,14 +506,16 @@ angular.module('webmapp')
             }, 300);
         }
 
-        setTimeout(function () {
-            if ($rootScope.highlightTrack && $rootScope.highlightTrack.parentId && $rootScope.highlightTrack.id) {
-                MapService.highlightTrack($rootScope.highlightTrack.id, $rootScope.highlightTrack.parentId);
+        $scope.$on('$ionicView.afterEnter', function () {
+            setTimeout(function () {
+                if ($rootScope.highlightTrack && $rootScope.highlightTrack.parentId && $rootScope.highlightTrack.id) {
+                    MapService.highlightTrack($rootScope.highlightTrack.id, $rootScope.highlightTrack.parentId);
 
-                $rootScope.highlightTrack = null;
-                delete $rootScope.highlightTrack;
-            }
-        }, 1500);
+                    $rootScope.highlightTrack = null;
+                    delete $rootScope.highlightTrack;
+                }
+            }, 1000);
+        });
 
         $scope.$on('$ionicView.beforeLeave', function () {
             modal.remove();
