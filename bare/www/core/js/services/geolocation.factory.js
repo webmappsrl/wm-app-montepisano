@@ -40,7 +40,15 @@ angular.module('webmapp')
         var gpsActive = false;
 
         var constants = {
-            geolocationTimeoutTime: 60000
+            geolocationTimeoutTime: 60000,
+            outOfTrackToastDelay: 10000,
+            outOfTrackDistance: (CONFIG.NAVIGATION && CONFIG.NAVIGATION.trackBoundsDistance) ?
+                CONFIG.NAVIGATION.trackBoundsDistance :
+                (
+                    (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) ?
+                        CONFIG.MAIN.NAVIGATION.trackBoundsDistance :
+                        200
+                )
         };
 
         //Contains all the global variables
@@ -53,7 +61,6 @@ angular.module('webmapp')
             orientationWatch: null,
             isOutsideBoundingBox: false,
             skipZoomEvent: false,
-            // watchInterval: null,
             reset: function () {
                 state.animationInterval = null;
                 state.animationIntervalStartTime = null;
@@ -63,12 +70,12 @@ angular.module('webmapp')
                 state.orientationWatch = null;
                 state.isOutsideBoundingBox = false;
                 state.skipZoomEvent = false;
-                // state.watchInterval = null;
             }
         };
 
         var recordingState = {
             currentSpeedExpireTimeout: null,
+            currentTrack: null,
             firstPositionSet: false,
             isActive: false,
             isPaused: false,
@@ -77,6 +84,28 @@ angular.module('webmapp')
                 distance: 0,
                 averageSpeed: 0,
                 currentSpeed: 0
+            },
+            toast: {
+                hideTimeout: null,
+                showTimeout: null,
+                visible: false,
+                reset: function () {
+                    try {
+                        clearInterval(recordingState.toast.hideTimeout);
+                    }
+                    catch (e) { }
+
+                    try {
+                        clearInterval(recordingState.toast.showTimeout);
+                    }
+                    catch (e) { }
+
+                    recordingState.toast.hideTimeout = null;
+                    recordingState.toast.showTimeout = null;
+
+                    Utils.hideToast();
+                    recordingState.toast.visible = false;
+                }
             },
             reset: function () {
                 recordingState.currentSpeedExpireTimeout = null;
@@ -87,6 +116,7 @@ angular.module('webmapp')
                 recordingState.stats.distance = 0;
                 recordingState.stats.averageSpeed = 0;
                 recordingState.stats.currentSpeed = 0;
+                recordingState.toast.reset();
             }
         };
 
@@ -231,6 +261,12 @@ angular.module('webmapp')
             ) {
                 geolocationService.enable();
             } else {
+                if (recordingState.isActive) {
+                    $ionicPopup.alert({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("La navigazione è stata interrotta a causa di un'interruzione del servizio di geolocalizzazione")
+                    });
+                }
                 gpsActive = false;
                 geolocationService.disable();
             }
@@ -254,15 +290,10 @@ angular.module('webmapp')
                 state.lastHeading -= 360;
             }
             state.animationInterval = setInterval(function () {
-                // MapService.setBearing(-359.95);
-                // MapService.setBearing(-359.97);
-                // MapService.setBearing(-359.99);
                 // Duration = 800msec
                 var currentFrame = (Date.now() - state.animationIntervalStartTime) / 800;
 
-                // t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1;
-                // var newHeading = 
-                console.log(currentFrame);
+                // Cubic function: t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1;
 
                 if (currentFrame >= 1) {
                     clearInterval(state.animationInterval);
@@ -275,14 +306,6 @@ angular.module('webmapp')
                     var newBearing = state.lastHeading - (state.lastHeading * newFrame);
                     MapService.setBearing(-newBearing);
                 }
-
-
-                // MapService.setBearing(-start);
-
-                // if (start <= 0) {
-                //     clearInterval(state.animationInterval);
-                //     state.animationInterval = null;
-                // }
             }, 16);
         };
 
@@ -318,13 +341,14 @@ angular.module('webmapp')
                         console.warn("Geolocation timed out");
                     }
 
-                    watchInterval = $cordovaGeolocation.watchPosition({
-                        timeout: constants.geolocationTimeoutTime,
-                        enableHighAccuracy: true
-                    }).then(
-                        null,
-                        geolocationTimedOut,
-                        positionCallback);
+                    console.warn("TODO: restart with backgroundGeolocation plugin");
+                    // watchInterval = $cordovaGeolocation.watchPosition({
+                    //     timeout: constants.geolocationTimeoutTime,
+                    //     enableHighAccuracy: true
+                    // }).then(
+                    //     null,
+                    //     geolocationTimedOut,
+                    //     positionCallback);
                     break;
                 default:
                     $ionicPopup.alert({
@@ -336,6 +360,14 @@ angular.module('webmapp')
         };
 
         function activateRotation() {
+            if (state.animationInterval) {
+                clearInterval(state.animationInterval);
+                state.animationInterval = null;
+                state.animationIntervalStartTime = null;
+                state.lastHeading = 0;
+                MapService.setBearing(0);
+            }
+
             if (!state.orientationWatch) {
                 state.lpf = new LPF(0.5);
 
@@ -379,12 +411,69 @@ angular.module('webmapp')
         };
 
         function updateNavigationValues(lat, long) {
-            recordingState.stats.distance += Utils.distanceInMeters(lat, long, state.lastPosition.lat, state.lastPosition.long);
-            recordingState.stats.averageSpeed = (recordingState.stats.distance / recordingState.stats.time.getTime()) * 3600;
-            recordingState.stats.currentSpeed = Utils.distanceInMeters(lat, long, state.lastPosition.lat, state.lastPosition.long) / (Date.now() - state.lastPosition.timestamp) * 3600;
-            recordingState.currentSpeedExpireTimeout = setTimeout(function () {
-                recordingState.stats.currentSpeed = 0;
-            }, 5000);
+            if (state.lastPosition && state.lastPosition.lat && state.lastPosition.long) {
+                recordingState.stats.distance += Utils.distanceInMeters(lat, long, state.lastPosition.lat, state.lastPosition.long);
+                recordingState.stats.averageSpeed = (recordingState.stats.distance / recordingState.stats.time.getTime()) * 3600;
+                recordingState.stats.currentSpeed = Utils.distanceInMeters(lat, long, state.lastPosition.lat, state.lastPosition.long) / (Date.now() - state.lastPosition.timestamp) * 3600;
+                recordingState.currentSpeedExpireTimeout = setTimeout(function () {
+                    recordingState.stats.currentSpeed = 0;
+                }, 5000);
+            }
+        };
+
+        function handleToast(lat, long) {
+            if (recordingState.currentTrack) {
+                var distance = turf.pointToLineDistance.default([long, lat], recordingState.currentTrack) * 1000;
+
+                if ((distance) <= constants.outOfTrackDistance) {
+                    if (recordingState.toast.visible) {
+                        recordingState.toast.hideTimeout = setTimeout(function () {
+                            Utils.hideToast();
+                            recordingState.toast.visible = false;
+                            clearTimeout(recordingState.toast.hideTimeout);
+                            recordingState.toast.hideTimeout = null;
+                        }, constants.outOfTrackToastDelay);
+                    }
+                    else if (recordingState.toast.showTimeout) {
+                        clearTimeout(recordingState.toast.showTimeout);
+                        recordingState.toast.showTimeout = null;
+                    }
+                } else {
+                    var currentDistance = distance > 500 ? (distance / 1000).toFixed(1) : (distance - (distance % 10)).toFixed();
+                    var template = '',
+                        message = $translate.instant('Attento, ti sei allontanato dal percorso di') + ' ' + currentDistance + ' ';
+
+                    var unit = distance > 500 ? 'km' : 'm';
+
+                    template = '<div class="toast-container">' +
+                        '<div class="toast-alert-icon">' +
+                        '<i class="icon wm-icon-alert"></i>' +
+                        '</div>' +
+                        '<div class="toast-content">' +
+                        '<div class="toast-message">' +
+                        message + unit +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+
+                    if (recordingState.toast.hideTimeout) {
+                        clearTimeout(recordingState.toast.hideTimeout);
+                        recordingState.toast.hideTimeout = null;
+                    }
+
+                    if (recordingState.toast.visible) {
+                        Utils.showToast(template);
+                    } else if (!recordingState.toast.showTimeout) {
+                        recordingState.toast.showTimeout = setTimeout(function () {
+                            Utils.makeNotificationSound();
+                            Utils.showToast(template);
+                            recordingState.toast.visible = true;
+                            clearTimeout(recordingState.toast.showTimeout);
+                            recordingState.toast.showTimeout = null;
+                        }, constants.outOfTrackToastDelay);
+                    }
+                }
+            }
         };
 
         console.warn("TODO: complete function positionCallback for realTimeTracking")
@@ -426,7 +515,7 @@ angular.module('webmapp')
                 }
 
                 if (recordingState.isActive && !recordingState.isPaused) {
-                    if (realTimeTracking.enabled && vm.userData.ID) {
+                    if (false && realTimeTracking.enabled && vm.userData.ID) {
                         // vm.positionsToSend.push({
                         //     lat: lat,
                         //     lng: long,
@@ -484,6 +573,10 @@ angular.module('webmapp')
                         recordingState.firstPositionSet = true;
                     }
 
+                    if (recordingState.currentTrack) {
+                        handleToast(lat, long);
+                    }
+
                     MapService.triggerNearestPopup({
                         lat: lat,
                         long: long
@@ -530,6 +623,8 @@ angular.module('webmapp')
                         distanceFilter: 10,
                         stopOnTerminate: true,
                         interval: 1000,
+                        fastestInterval: 500,
+                        startForeground: false,
                         notificationTitle: "Geolocation active",
                         notificationText: "you are beautiful",
                         notificationIconColor: "#FF00FF",
@@ -574,8 +669,10 @@ angular.module('webmapp')
                 MapService.removePosition();
                 backgroundGeolocation.stop();
                 state.reset();
+                recordingState.reset();
                 geolocationState.isActive = false;
                 geolocationState.isLoading = false;
+
                 $rootScope.$emit("geolocationState-changed", geolocationState);
             }
             return true;
@@ -671,14 +768,17 @@ angular.module('webmapp')
          * @description
          * Start recording stats
          * 
-         * @param {boolean} recordTrack
+         * @param {boolean} [optional] recordTrack
          *      if true record the track in a geojson feature
          * 
+         * @param {Object(parentId, id)} [optional] navigationTrack
+         *      if set select the navigation track
+         * 
          * @returns {promise}
-         *      resolve when activated and switched state, reject otherwise
+         *      resolve the recording state when correct, reject otherwise
          */
         console.warn("TODO: function startRecording - if recordTrack record the track");
-        geolocationService.startRecording = function (recordTrack) {
+        geolocationService.startRecording = function (recordTrack, navigationTrack) {
             var defer = $q.defer();
             if (!recordingState.isActive) {
                 recordingState.reset();
@@ -699,9 +799,22 @@ angular.module('webmapp')
                 } else {
                     recordingState.firstPositionSet = false;
                 }
-                defer.resolve(true);
+
+                if (navigationTrack && navigationTrack.parentId && navigationTrack.id) {
+                    MapService.getFeatureById(navigationTrack.id, navigationTrack.parentId)
+                        .then(function (track) {
+                            if (track.geometry.type === 'LineString' || track.geometry.type === 'MultiLineString') {
+                                recordingState.currentTrack = track;
+                                if (state.lastPosition && state.lastPosition.lat && state.lastPosition.long) {
+                                    handleToast(state.lastPosition.lat, state.lastPosition.long);
+                                }
+                            }
+                        });
+                }
+
+                defer.resolve(recordingState);
             } else {
-                defer.resolve(false);
+                defer.reject(ERRORS.ALREADY_ACTIVE);
             }
 
             return defer.promise;
@@ -724,11 +837,14 @@ angular.module('webmapp')
                     isActive: recordingState.isActive,
                     isPaused: recordingState.isPaused
                 });
+
+                recordingState.toast.reset();
+
                 defer.resolve(true);
             } else if (recordingState.isActive && recordingState.isPaused) {
-                defer.resolve(false);
+                defer.resolve(true);
             } else {
-                defer.resolve(false);
+                defer.reject(ERRORS.DISABLED);
             }
 
             return defer.promise;
@@ -750,11 +866,16 @@ angular.module('webmapp')
                     isActive: recordingState.isActive,
                     isPaused: recordingState.isPaused
                 });
+
+                if (state.lastPosition && state.lastPosition.lat && state.lastPosition.long) {
+                    handleToast(state.lastPosition.lat, state.lastPosition.long);
+                }
+
                 defer.resolve(true);
             } else if (recordingState.isActive && !recordingState.isPaused) {
-                defer.resolve(false);
+                defer.resolve(true);
             } else {
-                defer.resolve(false);
+                defer.reject(ERRORS.DISABLED);
             }
 
             return defer.promise;
@@ -764,14 +885,12 @@ angular.module('webmapp')
          * @description
          * Stop to record stats from the last saved moment
          * 
-         * @returns {boolean}
-         *      all the recorded stats
+         * @returns {promise}
          */
         console.warn("TODO: implement function stopRecording when track recorded");
         geolocationService.stopRecording = function () {
             var defer = $q.defer();
             if (recordingState.isActive) {
-                recordingState.stats.time.stop();
                 recordingState.reset();
                 $rootScope.$emit('recordingState-changed', {
                     isActive: recordingState.isActive,
@@ -779,7 +898,7 @@ angular.module('webmapp')
                 });
                 defer.resolve(true);
             } else {
-                defer.resolve(false);
+                defer.resolve(true);
             }
 
             return defer.promise;
@@ -796,7 +915,7 @@ angular.module('webmapp')
          *      all the recorded stats
          */
         geolocationService.getStats = function () {
-            var defer = $.defer();
+            var defer = $q.defer();
             if (recordingState.isActive) {
                 recordingState.stats.averageSpeed = (recordingState.stats.distance / recordingState.stats.time.getTime()) * 3600;
                 var currentStats = {

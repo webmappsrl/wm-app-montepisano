@@ -14,6 +14,22 @@ var ERRORS = {
         code: 1,
         message: "Cordova is not available"
     },
+    ALREADY_ACTIVE: {
+        cose: 10,
+        message: "This feature is already active, you should deactivate it first"
+    },
+    UNAVAILABLE: {
+        cose: 11,
+        message: "This feature is not available"
+    },
+    TEMPORARILY_DISABLED: {
+        cose: 11,
+        message: "This feature is temporarily disabled"
+    },
+    DISABLED: {
+        cose: 11,
+        message: "This feature is disabled"
+    },
     GENERIC_GPS: {
         code: 101,
         message: "GPS is not active"

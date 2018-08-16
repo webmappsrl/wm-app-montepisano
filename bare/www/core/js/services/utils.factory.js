@@ -9,7 +9,8 @@ angular.module('webmapp')
         $rootScope,
         $ionicModal,
         $ionicPopup,
-        $translate
+        $translate,
+        ionicToast
     ) {
         var utils = {},
             modals = {};
@@ -350,13 +351,22 @@ angular.module('webmapp')
             return (R * 2 * Math.asin(Math.sqrt(a))) * 1000;
         };
 
-        utils.makeNotificationSound = function(sound) {
+        utils.makeNotificationSound = function (sound) {
             console.warn("TODO: generalize utils.makeNotificationSound depending on sound value");
             var audio = new Audio('core/audio/alertNotificationSound.mp3');
             audio.play();
         };
 
-        utils.Stopwatch = function() {
+        // WARNING: ionicToast handle unique instance
+        utils.showToast = function (template) {
+            ionicToast.show(template, 'top', true);
+        };
+
+        utils.hideToast = function () {
+            ionicToast.hide();
+        };
+
+        utils.Stopwatch = function () {
             this.startTime = null;
             this.totalTime = 0;
             this.isPaused = false;
@@ -383,11 +393,10 @@ angular.module('webmapp')
                 this.isPaused = false;
             };
 
-            this.getTime = function() {
+            this.getTime = function () {
                 if (this.isPaused) {
                     return this.totalTime;
-                }
-                else {
+                } else {
                     return this.totalTime + Date.now() - this.startTime;
                 }
             };

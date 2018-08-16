@@ -1,7 +1,6 @@
 angular.module('webmapp')
 
     .controller('MainController', function MainController(
-        $cordovaGeolocation,
         $cordovaSocialSharing,
         $ionicPlatform,
         $ionicPopup,
@@ -57,11 +56,6 @@ angular.module('webmapp')
         vm.navigationInterval = null;
 
         vm.userData = {};
-        vm.outOfTrackDate = 0;
-        vm.inTrackDate = 0;
-        vm.maxOutOfTrack = 200;
-        vm.toastTime = 5;
-        vm.showToast = false;
 
         vm.speedTextType = 'average';
 
@@ -72,13 +66,6 @@ angular.module('webmapp')
             vm.speedTextType = 'current';
         } else {
             vm.speedTextType = 'average';
-        }
-
-        if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) {
-            vm.maxOutOfTrack = CONFIG.MAIN.NAVIGATION.trackBoundsDistance;
-        }
-        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.trackBoundsDistance) {
-            vm.maxOutOfTrack = CONFIG.NAVIGATION.trackBoundsDistance;
         }
 
         Utils.createModal('core/js/modals/shareModal.html', {
@@ -149,25 +136,6 @@ angular.module('webmapp')
             parentId: null,
             id: null
         };
-
-        vm.navigationStartTime = 0;
-        vm.navigationStopTime = 0;
-        vm.firstPositionSet = false;
-        vm.lastPositionRecordTime = 0;
-
-        vm.timeInMotion = 0;
-        vm.timeInMotionBeforePause = 0;
-        vm.timeInMotionText = '00:00';
-
-        vm.distanceTravelled = 0;
-        vm.distanceTravelledBeforePause = 0;
-        vm.distanceTravelledText = '0.0 km';
-
-        vm.currentSpeedExpireTimeout = null;
-        vm.currentSpeedText = '0 km/h';
-        vm.averageSpeedText = '0 km/h';
-        vm.movingTime = 0;
-        vm.isNotMoving = false;
 
         var realTimeTracking = {};
         realTimeTracking.enabled = (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.TRACKING.enableRealTimeTracking) ||
@@ -406,178 +374,10 @@ angular.module('webmapp')
             }
         };
 
-        var activateGeolocation = function (rotate) {
-
-
-            var callbackFn = function (location) {
-                if (watchInterval) {
-                    posCallback({ coords: location });
-                    if (!vm.locateLoading && prevLatLong) {
-                        vm.canFollow = true;
-                        vm.followActive = true;
-                        centerOnCoorsWithoutZoomEvent(prevLatLong.lat, prevLatLong.long);
-                        if (rotate) {
-                            activateRotation();
-                        }
-                    }
-
-                } else {
-                    vm.locateLoading = true;
-
-                    console.log(location);
-                    var lat = location.latitude,
-                        long = location.longitude;
-
-                    vm.locateLoading = false;
-
-                    if (!MapService.isInBoundingBox(lat, long)) {
-                        vm.isOutsideBoundingBox = true;
-                        prevLatLong = null;
-                        MapService.removePosition();
-                        $ionicPopup.alert({
-                            title: $translate.instant("ATTENZIONE"),
-                            template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa")
-                        });
-                        return;
-                    }
-
-                    MapService.drawPosition({ coords: location });
-
-                    centerOnCoorsWithoutZoomEvent(lat, long);
-
-                    vm.canFollow = true;
-                    vm.followActive = true;
-
-                    if (CONFIG.OPTIONS.useIntervalInsteadOfWatch) {
-                        watchInterval = setInterval(function () {
-                            $cordovaGeolocation
-                                .getCurrentPosition({
-                                    timeout: geolocationTimeoutTime,
-                                    enableHighAccuracy: true
-                                })
-                                .then(posCallback);
-                        }, CONFIG.OPTIONS.intervalUpdateMs);
-                    } else {
-                        // watchInterval = $cordovaGeolocation.watchPosition({
-                        //     timeout: geolocationTimeoutTime,
-                        //     enableHighAccuracy: true
-                        // });
-                        // watchInterval.then(
-                        //     null,
-                        //     geolocationTimedOut,
-                        //     posCallback);
-                        watchInterval = true;
-                        posCallback({ coords: location });
-                    }
-
-
-                    if (rotate) {
-                        activateRotation();
-                    }
-
-                }
-
-                backgroundGeolocation.finish();
-            };
-
-            var failureFn = function (error) {
-                vm.locateLoading = false;
-                $ionicPopup.alert({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
-                });
-                watchInterval = false;
-                backgroundGeolocation.stop();
-            };
-
-            backgroundGeolocation.configure(callbackFn, failureFn, {
-                desiredAccuracy: 5,
-                stationaryRadius: 6,
-                distanceFilter: 30,
-                interval: 1000
-            });
-
-            backgroundGeolocation.start();
-
-            // if (watchInterval) {
-            //     if (!vm.locateLoading && prevLatLong) {
-            //         vm.canFollow = true;
-            //         vm.followActive = true;
-            //         centerOnCoorsWithoutZoomEvent(prevLatLong.lat, prevLatLong.long);
-            //         if (rotate) {
-            //             activateRotation();
-            //         }
-            //     }
-            // } else {
-            //     vm.locateLoading = true;
-            //     $cordovaGeolocation
-            //         .getCurrentPosition({
-            //             timeout: geolocationTimeoutTime,
-            //             enableHighAccuracy: Utils.isBrowser() ? true : false
-            //         })
-            //         .then(function(position) {
-            //             var lat = position.coords.latitude,
-            //                 long = position.coords.longitude;
-
-            //             vm.locateLoading = false;
-
-            //             if (!MapService.isInBoundingBox(lat, long)) {
-            //                 vm.isOutsideBoundingBox = true;
-            //                 prevLatLong = null;
-            //                 MapService.removePosition();
-            //                 $ionicPopup.alert({
-            //                     title: $translate.instant("ATTENZIONE"),
-            //                     template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa")
-            //                 });
-            //                 return;
-            //             }
-
-            //             MapService.drawPosition(position);
-
-            //             centerOnCoorsWithoutZoomEvent(lat, long);
-
-            //             vm.canFollow = true;
-            //             vm.followActive = true;
-
-            //             if (CONFIG.OPTIONS.useIntervalInsteadOfWatch) {
-            //                 watchInterval = setInterval(function() {
-            //                     $cordovaGeolocation
-            //                         .getCurrentPosition({
-            //                             timeout: geolocationTimeoutTime,
-            //                             enableHighAccuracy: true
-            //                         })
-            //                         .then(posCallback);
-            //                 }, CONFIG.OPTIONS.intervalUpdateMs);
-            //             } else {
-            //                 watchInterval = $cordovaGeolocation.watchPosition({
-            //                     timeout: geolocationTimeoutTime,
-            //                     enableHighAccuracy: true
-            //                 });
-            //                 watchInterval.then(
-            //                     null,
-            //                     geolocationTimedOut,
-            //                     posCallback);
-            //             }
-
-
-            //             if (rotate) {
-            //                 activateRotation();
-            //             }
-            //         }, function(err) {
-            //             vm.locateLoading = false;
-            //             $ionicPopup.alert({
-            //                 title: $translate.instant("ATTENZIONE"),
-            //                 template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
-            //             });
-            //         });
-            // }
-        };
-
         vm.centerOnMe = function () {
             if (!GeolocationService.isActive()) {
                 GeolocationService.enable();
-            }
-            else {
+            } else {
                 GeolocationService.switchState();
             }
         };
@@ -638,90 +438,17 @@ angular.module('webmapp')
             $rootScope.$emit('expand-map', vm.isMapPage);
         };
 
-        var updateNavigationValues = function (position, prevPosition) {
-            var distance = 0;
-            if (position && prevPosition) {
-                var distance = distanceInMeters(position.coords.latitude, position.coords.longitude, prevPosition.lat, prevPosition.long)
-                vm.distanceTravelled = distance + vm.distanceTravelled;
-                if (vm.distanceTravelledBeforePause > 0) {
-                    vm.distanceTravelled = vm.distanceTravelled + vm.distanceTravelledBeforePause;
-                    vm.distanceTravelledBeforePause = 0;
-                }
-                vm.distanceTravelledText = getDistanceText(vm.distanceTravelled);
-            }
-
-            var timeElapsedBetweenPositions = 0;
-            if (vm.lastPositionRecordTime) {
-                timeElapsedBetweenPositions = Date.now() - vm.lastPositionRecordTime;
-            }
-
-            if (vm.isNotMoving) {
-                vm.startMovingTime = Date.now();
-                vm.isNotMoving = false;
-            }
-
-            if (!vm.distanceTravelled) {
-                vm.distanceTravelled = 0;
-                vm.distanceTravelledText = getDistanceText(vm.distanceTravelled);
-                vm.averageSpeedText = "0 km/h";
-            } else {
-                vm.averageSpeedText = (vm.distanceTravelled / ((Date.now() - vm.startMovingTime + vm.movingTime) / 1000) * 3.6).toFixed(0) + ' km/h';
-            }
-
-            vm.currentSpeedText = (distance / (timeElapsedBetweenPositions / 1000) * 3.6).toFixed(0) + ' km/h';
-            clearTimeout(vm.currentSpeedExpireTimeout);
-            vm.currentSpeedExpireTimeout = setTimeout(function () {
-                vm.currentSpeedText = '0 km/h';
-                vm.isNotMoving = true;
-                vm.movingTime = vm.movingTime + Date.now() - vm.startMovingTime;
-            }, 5000);
-
-            vm.lastPositionRecordTime = Date.now();
-        };
-
         var navigationIntervalFunction = function () {
-            // vm.checkOutOfTrack(prevLatLong)
-            // vm.timeInMotion = Date.now() - vm.navigationStartTime + vm.timeInMotionBeforePause;
-            // vm.timeInMotionText = getTimeText(vm.timeInMotion);
-            // if (!vm.distanceTravelled) {
-            //     vm.distanceTravelled = 0;
-            //     vm.averageSpeedText = '0 km/h';
-            // } else {
-            //     vm.averageSpeedText = (vm.distanceTravelled / ((Date.now() - vm.startMovingTime + vm.movingTime) / 1000) * 3.6).toFixed(0) + ' km/h';
-            // }
-            vm.navigation.stats = GeolocationService.getStats();
-            Utils.forceDigest();
+            GeolocationService.getStats()
+                .then(function (stats) {
+                    vm.navigation.stats = stats;
+                    Utils.forceDigest();
+                });
         };
-
-        var cleanNavigationValues = function () {
-            vm.navigationStartTime = 0;
-            vm.navigationStopTime = 0;
-            vm.firstPositionSet = false;
-            vm.lastPositionRecordTime = 0;
-
-            vm.timeInMotion = 0;
-            vm.timeInMotionBeforePause = 0;
-            vm.timeInMotionText = '00:00';
-
-            vm.distanceTravelled = 0;
-            vm.distanceTravelledBeforePause = 0;
-            vm.distanceTravelledText = '0.0 km';
-
-            vm.currentSpeedExpireTimeout = null;
-            vm.currentSpeedText = '0 km/h';
-            vm.averageSpeedText = '0 km/h';
-            vm.movingTime = 0;
-            vm.isNotMoving = false;
-            vm.navigationInterval = null;
-        };
-
-        // vm.turnOffRotationAndFollow = function () {
-
-        // };
 
         vm.startNavigation = function () {
             var startRecording = function () {
-                GeolocationService.startRecording();
+                GeolocationService.startRecording(false, vm.stopNavigationUrlParams);
                 GeolocationService.switchState({
                     isRotating: true,
                     isFollowing: true
@@ -730,16 +457,18 @@ angular.module('webmapp')
 
             vm.stopNavigationUrlParams.parentId = $rootScope.currentParams.parentId;
             vm.stopNavigationUrlParams.id = $rootScope.currentParams.id;
+
+            vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
+
             if (GeolocationService.isActive()) {
                 startRecording();
-            }
-            else {
+            } else {
                 GeolocationService.enable()
                     .then(startRecording);
             }
 
             window.plugins.insomnia.keepAwake();
-            setTimeout(function() {
+            setTimeout(function () {
                 MapService.adjust();
             }, 1000);
 
@@ -754,11 +483,6 @@ angular.module('webmapp')
             });
             clearInterval(vm.navigationInterval);
             window.plugins.insomnia.allowSleepAgain();
-            // vm.outOfTrackDate = 0;
-            // vm.inTrackDate = 0;
-            // clearInterval(vm.navigationInterval);
-            // hideOutOfTrackToast();
-
         };
 
         vm.resumeNavigation = function () {
@@ -779,11 +503,6 @@ angular.module('webmapp')
             MapService.adjust();
 
             window.plugins.insomnia.allowSleepAgain();
-
-            // vm.outOfTrackDate = 0;
-            // vm.inTrackDate = 0;
-            // hideOutOfTrackToast();
-            // cleanNavigationValues();
         };
 
         vm.toggleSpeedText = function () {
@@ -801,6 +520,9 @@ angular.module('webmapp')
         };
 
         vm.formatTime = function (time) {
+            if (!time) {
+                return "0:00";
+            }
             var hours = 0,
                 minutes = 0,
                 seconds = 0;
@@ -818,11 +540,11 @@ angular.module('webmapp')
         };
 
         vm.formatDistance = function (distance) {
-            return (distance / 1000).toFixed(1) + ' km';
+            return distance ? ((distance / 1000).toFixed(1) + 'km') : '0km';
         };
 
         vm.formatSpeed = function (speed) {
-            return speed.toFixed(0) + " km/h";
+            return speed ? (speed.toFixed(0) + "km/h") : '0km/h';
         };
 
         var showPathAndRelated = function (params) {
@@ -865,17 +587,6 @@ angular.module('webmapp')
             var currentState = $rootScope.currentState.name,
                 realState,
                 layerState = false;
-
-            // if (currentState !== 'app.main.map') {
-            //     vm.turnOffRotationAndFollow();
-            // }
-
-            // if (GeolocationService.isActive()) {
-            //     GeolocationService.switchState({
-            //         isFollowing: false,
-            //         isRotating: false
-            //     });
-            // }
 
             if (currentState !== 'app.main.detaillayer' &&
                 currentState !== 'app.main.detailevent' &&
@@ -947,7 +658,6 @@ angular.module('webmapp')
             } else if (currentState === 'app.main.layer') {
                 realState = $rootScope.currentParams.id.replace(/_/g, ' ');
                 layerState = true;
-                // vm.hideExpander = true;
 
                 if (typeof overlayMap[realState] !== 'undefined' ||
                     typeof overlaysGroupMap[realState] !== 'undefined') {
@@ -957,20 +667,11 @@ angular.module('webmapp')
                             MapService.activateLayer(realState, false, false);
                         }
                     }, 50);
-                } else {
-                    // TODO: go to map? 
-                    // vm.hideMap = true;
                 }
-
-                // vm.hasShadow = true;
             } else if (currentState === 'app.main.detaillayer') {
                 if (MapService.isAPOILayer($rootScope.currentParams.parentId.replace(/_/g, ' '))) {
                     vm.detail = true;
                 }
-                // TODO: check the shadow
-                // else {
-                //     vm.hasShadow = true;
-                // }
 
                 vm.hideExpander = hideExpanderInDetails;
             } else if (currentState === 'app.main.detailtaxonomy') {
@@ -1032,7 +733,6 @@ angular.module('webmapp')
         });
 
         $rootScope.$on('geolocationState-changed', function (e, value) {
-            console.log(value);
             vm.geolocationState = value;
             Utils.forceDigest();
         });
@@ -1047,11 +747,8 @@ angular.module('webmapp')
                 $rootScope.$emit('is-navigating', vm.navigation.state.isActive);
 
                 if (vm.navigation.state.isActive) {
-                    vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
                     vm.isNavigable = false;
-                }
-                else {
-                    console.log(vm.stopNavigationUrlParams)
+                } else {
                     if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
                         vm.isNavigable = true;
                         var url = 'layer/' + vm.stopNavigationUrlParams.parentId + '/' + vm.stopNavigationUrlParams.id;
@@ -1067,105 +764,6 @@ angular.module('webmapp')
                 vm.navigation.state.isPaused = value.isPaused;
             }
         });
-
-        //Moved to Utils
-        var makeNotificationSound = function () {
-            var audio = new Audio('core/audio/alertNotificationSound.mp3');
-            audio.play();
-        };
-
-        function showOutOfTrackToast(distance) {
-            var currentDistance = distance > 500 ? (distance / 1000).toFixed(1) : (distance - (distance % 10)).toFixed();
-            var content = '',
-                message = $translate.instant('Attento, ti sei allontanato dal percorso di') + ' ' + currentDistance + ' ';
-
-            var unit = distance > 500 ? 'km' : 'm';
-
-            content = content + '<div class="toast-container">';
-            content = content + '<div class="toast-alert-icon">';
-            content = content + '<i class="icon wm-icon-alert"></i>';
-            content = content + '</div>';
-            content = content + '<div class="toast-content">';
-            content = content + '<div class="toast-message">';
-            content = content + message + unit;
-            content = content + '</div>';
-            content = content + '</div>';
-            content = content + '</div>';
-
-            ionicToast.show(content, 'top', true);
-            vm.showToast = true;
-        };
-
-        function hideOutOfTrackToast() {
-            ionicToast.hide();
-            vm.showToast = false;
-        };
-
-        vm.checkOutOfTrack = function (latLong) {
-            if (latLong && latLong.lat && latLong.long) {
-                var lat = latLong.lat;
-                var long = latLong.long;
-                if (vm.stopNavigationUrlParams && vm.stopNavigationUrlParams.id &&
-                    vm.stopNavigationUrlParams.parentId) {
-
-                    var distFromTrack = MapService.getFeatureById(
-                        vm.stopNavigationUrlParams.id,
-                        vm.stopNavigationUrlParams.parentId.replace(/_/g, ' '))
-                        .then(function (feature) {
-                            var dist = turf.pointToLineDistance.default([long, lat], feature);
-                            return dist;
-                        })
-                        .then(function (distance) {
-                            vm.handleDistanceToast(distance);
-                        }).catch(function (e) {
-                            console.log(e);
-                        });
-                } else {
-                    console.log('At least one of vm.stopNavigationUrlParams is undefined');
-                }
-            }
-        };
-
-        vm.handleDistanceToast = function (distance) {
-            var currTime = Date.now();
-
-            if ((distance * 1000) <= vm.maxOutOfTrack) {
-                if (vm.outOfTrackDate) {
-                    vm.outOfTrackDate = 0;
-                }
-
-                if (!vm.inTrackDate) {
-                    vm.inTrackDate = currTime;
-                } else {
-                    var diffMs = (currTime - vm.inTrackDate);
-                    var diffSecs = diffMs / 1000;
-                    if (diffSecs >= vm.toastTime) {
-                        hideOutOfTrackToast();
-                    } else {
-                        if (vm.showToast) {
-                            showOutOfTrackToast((distance * 1000));
-                        }
-                    }
-                }
-            } else {
-                if (vm.inTrackDate) {
-                    vm.inTrackDate = 0;
-                }
-
-                if (!vm.outOfTrackDate) {
-                    vm.outOfTrackDate = currTime;
-                } else {
-                    var diffMs = (currTime - vm.outOfTrackDate);
-                    var diffSecs = diffMs / 1000;
-                    if (diffSecs >= vm.toastTime) {
-                        if (!vm.showToast) {
-                            makeNotificationSound();
-                        }
-                        showOutOfTrackToast((distance * 1000));
-                    }
-                }
-            }
-        };
 
         $ionicPlatform.ready(function () {
             vm.userData = Auth.getUserData();
