@@ -860,7 +860,10 @@ angular.module('webmapp')
                         });
                 }
 
-                defer.resolve(recordingState);
+                defer.resolve({
+                    isActive: recordingState.isActive,
+                    isPaused: recordingState.isPaused
+                });
             } else {
                 defer.reject(ERRORS.ALREADY_ACTIVE);
             }
@@ -888,9 +891,15 @@ angular.module('webmapp')
 
                 recordingState.toast.reset();
 
-                defer.resolve(true);
+                defer.resolve({
+                    isActive: recordingState.isActive,
+                    isPaused: recordingState.isPaused
+                });
             } else if (recordingState.isActive && recordingState.isPaused) {
-                defer.resolve(true);
+                defer.resolve({
+                    isActive: recordingState.isActive,
+                    isPaused: recordingState.isPaused
+                });
             } else {
                 defer.reject(ERRORS.DISABLED);
             }
@@ -919,9 +928,15 @@ angular.module('webmapp')
                     handleToast(state.lastPosition.lat, state.lastPosition.long);
                 }
 
-                defer.resolve(true);
+                defer.resolve({
+                    isActive: recordingState.isActive,
+                    isPaused: recordingState.isPaused
+                });
             } else if (recordingState.isActive && !recordingState.isPaused) {
-                defer.resolve(true);
+                defer.resolve({
+                    isActive: recordingState.isActive,
+                    isPaused: recordingState.isPaused
+                });
             } else {
                 defer.reject(ERRORS.DISABLED);
             }
@@ -943,7 +958,10 @@ angular.module('webmapp')
                 isActive: recordingState.isActive,
                 isPaused: recordingState.isPaused
             });
-            defer.resolve(true);
+            defer.resolve({
+                isActive: recordingState.isActive,
+                isPaused: recordingState.isPaused
+            });
 
             return defer.promise;
         };

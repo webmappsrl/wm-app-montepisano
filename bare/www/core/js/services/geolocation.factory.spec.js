@@ -50,22 +50,22 @@ describe('Geolocation.Factory', function () {
                         // console.log("MOCK isLocationEnabled");
                         callback(this.locationEnableParam);
                     },
-                    switchToSettings: function () {},
-                    switchToLocationSettings: function () {}
+                    switchToSettings: function () { },
+                    switchToLocationSettings: function () { }
                 }
             },
             platformId: 'android'
         };
         BackgroundGeolocation = {
-            start: function () {},
-            stop: function () {},
-            removeAllListeners: function () {},
+            start: function () { },
+            stop: function () { },
+            removeAllListeners: function () { },
             events: [],
             startTask: function (callback) {
                 callback();
             },
-            endTask: function () {},
-            configure: function (params) {},
+            endTask: function () { },
+            configure: function (params) { },
             on: function (event, callback) {
                 if (event === 'location') {
                     this.callbackFun = callback;
@@ -1303,7 +1303,7 @@ describe('Geolocation.Factory', function () {
 
 
     describe('recordingState.stopRecording', function () {
-        it('!recordingState.isActive => it should resolve with false and not emit recordingState-changed', function (done) {
+        it('!recordingState.isActive => it should resolve with state and emit recordingState-changed', function (done) {
             var expectedValue = {
                 isActive: false,
                 isPaused: false
@@ -1312,7 +1312,7 @@ describe('Geolocation.Factory', function () {
             GeolocationService.stopRecording().then(function (val) {
                 done();
                 expect(val).toEqual(expectedValue);
-                expect($rootScope.$emit).not.toHaveBeenCalled();
+                expect($rootScope.$emit).toHaveBeenCalled();
             }).catch(function (err) {
                 fail("it should resolve promise and stop recording");
             });;
