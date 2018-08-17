@@ -886,7 +886,9 @@ angular.module('webmapp')
                 }
                 delete registeredEvents;
 
-                shareModal.remove();
+                if (shareModal) {
+                    shareModal.remove();
+                }
             })
         );
 
