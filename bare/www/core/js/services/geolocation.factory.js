@@ -15,9 +15,6 @@ angular.module('webmapp')
         // Contains all the exposed functions
         var geolocationService = {};
 
-        console.warn("TODO: handle all translations");
-        console.warn("TODO: create public global error codes");
-
         /**
          * state goes from:
          * 0. {false, false, false, false}  > {true, true, false, false}   - geolocation enabled waiting for position
@@ -55,7 +52,8 @@ angular.module('webmapp')
         var state = {
             animationInterval: null,
             animationIntervalStartTime: null,
-            lastHeading: null,
+            appState: 0,
+            lastHeading: 0,
             lastPosition: null,
             lpf: null,
             orientationWatch: null,
@@ -64,7 +62,7 @@ angular.module('webmapp')
             reset: function () {
                 state.animationInterval = null;
                 state.animationIntervalStartTime = null;
-                state.lastHeadind = null;
+                state.lastHeadind = 0;
                 state.lastPosition = null;
                 state.lpf = null;
                 state.orientationWatch = null;
@@ -127,14 +125,13 @@ angular.module('webmapp')
          * @param {number} lat 
          * @param {number} long 
          */
-        function centerOnCoorsWithoutZoomEvent(lat, long) {
+        function centerOnCoordsWithoutZoomEvent(lat, long) {
             var currentZoom = MapService.getZoom();
-            if (currentZoom === CONFIG.MAP.maxZoom) {
-                MapService.centerOnCoords(lat, long);
-            } else {
+            if (currentZoom < CONFIG.MAP.maxZoom) {
                 state.skipZoomEvent = true;
-                MapService.centerOnCoords(lat, long);
             }
+
+            MapService.centerOnCoords(lat, long);
         };
 
         /**
@@ -285,28 +282,30 @@ angular.module('webmapp')
 
             $rootScope.$emit("geolocationState-changed", geolocationState);
 
-            state.animationIntervalStartTime = Date.now();
-            if (state.lastHeading > 180) {
-                state.lastHeading -= 360;
-            }
-            state.animationInterval = setInterval(function () {
-                // Duration = 800msec
-                var currentFrame = (Date.now() - state.animationIntervalStartTime) / 800;
-
-                // Cubic function: t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1;
-
-                if (currentFrame >= 1) {
-                    clearInterval(state.animationInterval);
-                    state.animationInterval = null;
-                    state.animationIntervalStartTime = null;
-                    state.lastHeading = 0;
-                    MapService.setBearing(0);
-                } else {
-                    var newFrame = currentFrame < 0.5 ? (4 * currentFrame * currentFrame * currentFrame) : ((currentFrame - 1) * (2 * currentFrame - 2) * (2 * currentFrame - 2) + 1);
-                    var newBearing = state.lastHeading - (state.lastHeading * newFrame);
-                    MapService.setBearing(-newBearing);
+            if (state.lastHeading !== 0 && !state.animationInterval) {
+                state.animationIntervalStartTime = Date.now();
+                if (state.lastHeading > 180) {
+                    state.lastHeading -= 360;
                 }
-            }, 16);
+                state.animationInterval = setInterval(function () {
+                    // Duration = 800msec
+                    var currentFrame = (Date.now() - state.animationIntervalStartTime) / 800;
+
+                    // Cubic function: t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1;
+                    console.log(currentFrame);
+                    if (currentFrame >= 1) {
+                        clearInterval(state.animationInterval);
+                        state.animationInterval = null;
+                        state.animationIntervalStartTime = null;
+                        state.lastHeading = 0;
+                        MapService.setBearing(0);
+                    } else {
+                        var newFrame = currentFrame < 0.5 ? (4 * currentFrame * currentFrame * currentFrame) : ((currentFrame - 1) * (2 * currentFrame - 2) * (2 * currentFrame - 2) + 1);
+                        var newBearing = state.lastHeading - (state.lastHeading * newFrame);
+                        MapService.setBearing(-newBearing);
+                    }
+                }, 16);
+            }
         };
 
         function geolocationErrorCallback(error) {
@@ -341,14 +340,8 @@ angular.module('webmapp')
                         console.warn("Geolocation timed out");
                     }
 
-                    console.warn("TODO: restart with backgroundGeolocation plugin");
-                    // watchInterval = $cordovaGeolocation.watchPosition({
-                    //     timeout: constants.geolocationTimeoutTime,
-                    //     enableHighAccuracy: true
-                    // }).then(
-                    //     null,
-                    //     geolocationTimedOut,
-                    //     positionCallback);
+                    BackgroundGeolocation.stop();
+                    BackgroundGeolocation.start();
                     break;
                 default:
                     $ionicPopup.alert({
@@ -364,8 +357,6 @@ angular.module('webmapp')
                 clearInterval(state.animationInterval);
                 state.animationInterval = null;
                 state.animationIntervalStartTime = null;
-                state.lastHeading = 0;
-                MapService.setBearing(0);
             }
 
             if (!state.orientationWatch) {
@@ -389,6 +380,9 @@ angular.module('webmapp')
                             $rootScope.$emit("geolocationState-changed", geolocationState);
                         }
 
+                        state.lastHeading = 0;
+                        MapService.setBearing(0);
+
                         console.error(error);
                     },
                     function (result) {
@@ -403,7 +397,7 @@ angular.module('webmapp')
 
                         var heading = state.lpf.next(result.magneticHeading);
                         MapService.setBearing(-heading);
-                        state.lastHeading = heading % 360;
+                        state.lastHeading = heading;
 
                         $rootScope.$emit("heading-changed", state.lastHeading);
                     });
@@ -418,6 +412,14 @@ angular.module('webmapp')
                 recordingState.currentSpeedExpireTimeout = setTimeout(function () {
                     recordingState.stats.currentSpeed = 0;
                 }, 5000);
+
+                if (state.appState === BackgroundGeolocation.BACKGROUND) {
+                    // UPDATE NOTIFICATION VALUES
+                    BackgroundGeolocation.configure({
+                        notificationTitle: $translate.instant("Navigazione attiva"),
+                        notificationText: (recordingState.stats.distance / 1000).toFixed(1) + 'km ' + $translate.instant("percorsi")
+                    });
+                }
             }
         };
 
@@ -425,37 +427,40 @@ angular.module('webmapp')
             if (recordingState.currentTrack) {
                 var distance = turf.pointToLineDistance.default([long, lat], recordingState.currentTrack) * 1000;
 
+                var currentDistance = distance > 500 ? (distance / 1000).toFixed(1) : (distance - (distance % 10)).toFixed();
+                var template = '',
+                    message = $translate.instant('Attento, ti sei allontanato dal percorso di') + ' ' + currentDistance + ' ';
+
+                var unit = distance > 500 ? 'km' : 'm';
+
+                template = '<div class="toast-container">' +
+                    '<div class="toast-alert-icon">' +
+                    '<i class="icon wm-icon-alert"></i>' +
+                    '</div>' +
+                    '<div class="toast-content">' +
+                    '<div class="toast-message">' +
+                    message + unit +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+
                 if ((distance) <= constants.outOfTrackDistance) {
                     if (recordingState.toast.visible) {
-                        recordingState.toast.hideTimeout = setTimeout(function () {
-                            Utils.hideToast();
-                            recordingState.toast.visible = false;
-                            clearTimeout(recordingState.toast.hideTimeout);
-                            recordingState.toast.hideTimeout = null;
-                        }, constants.outOfTrackToastDelay);
+                        Utils.showToast(template);
+                        if (!recordingState.toast.hideTimeout) {
+                            recordingState.toast.hideTimeout = setTimeout(function () {
+                                Utils.hideToast();
+                                recordingState.toast.visible = false;
+                                clearTimeout(recordingState.toast.hideTimeout);
+                                recordingState.toast.hideTimeout = null;
+                            }, constants.outOfTrackToastDelay);
+                        }
                     }
                     else if (recordingState.toast.showTimeout) {
                         clearTimeout(recordingState.toast.showTimeout);
                         recordingState.toast.showTimeout = null;
                     }
                 } else {
-                    var currentDistance = distance > 500 ? (distance / 1000).toFixed(1) : (distance - (distance % 10)).toFixed();
-                    var template = '',
-                        message = $translate.instant('Attento, ti sei allontanato dal percorso di') + ' ' + currentDistance + ' ';
-
-                    var unit = distance > 500 ? 'km' : 'm';
-
-                    template = '<div class="toast-container">' +
-                        '<div class="toast-alert-icon">' +
-                        '<i class="icon wm-icon-alert"></i>' +
-                        '</div>' +
-                        '<div class="toast-content">' +
-                        '<div class="toast-message">' +
-                        message + unit +
-                        '</div>' +
-                        '</div>' +
-                        '</div>';
-
                     if (recordingState.toast.hideTimeout) {
                         clearTimeout(recordingState.toast.hideTimeout);
                         recordingState.toast.hideTimeout = null;
@@ -512,7 +517,7 @@ angular.module('webmapp')
                 if (doCenter) {
                     MapService.drawPosition(position);
                     if (geolocationState.isFollowing) {
-                        centerOnCoorsWithoutZoomEvent(lat, long);
+                        centerOnCoordsWithoutZoomEvent(lat, long);
                     }
 
                     if (recordingState.isActive && !recordingState.isPaused) {
@@ -597,6 +602,36 @@ angular.module('webmapp')
             });
         };
 
+        function activateBackgroundGeolocationHandlers() {
+            BackgroundGeolocation.on('location', positionCallback);
+            BackgroundGeolocation.on('stationary', positionCallback);
+            BackgroundGeolocation.on('error', geolocationErrorCallback);
+            BackgroundGeolocation.on('background', function () {
+                if (recordingState.isActive) {
+                    BackgroundGeolocation.configure({
+                        notificationTitle: $translate.instant("Navigazione attiva"),
+                        startForeground: true
+                    });
+
+                    state.e = BackgroundGeolocation.BACKGROUND;
+                }
+                else {
+                    BackgroundGeolocation.stop();
+                }
+            });
+            BackgroundGeolocation.on('foreground', function () {
+                if (recordingState.isActive) {
+                    BackgroundGeolocation.configure({
+                        startForeground: false
+                    });
+                    state.appState = BackgroundGeolocation.FOREGROUND;
+                }
+                else {
+                    BackgroundGeolocation.start();
+                }
+            });
+        };
+
         /**
          * @description
          * Enable the geolocation (if disabled), checking GPS and if defined goes to
@@ -619,24 +654,7 @@ angular.module('webmapp')
                     geolocationState.isLoading = true;
                     $rootScope.$emit("geolocationState-changed", geolocationState);
 
-                    BackgroundGeolocation.on('location', positionCallback);
-                    BackgroundGeolocation.on('stationary', positionCallback);
-                    BackgroundGeolocation.on('error', geolocationErrorCallback);
-                    BackgroundGeolocation.on('background', function () {
-                        console.log('[INFO] App is in background');
-                        console.warn("TODO: update BackgroundGeolocation config when in background");
-                        // you can also reconfigure service (changes will be applied immediately)
-                        BackgroundGeolocation.configure({
-                            startForeground: true
-                        });
-                    });
-                    BackgroundGeolocation.on('foreground', function () {
-                        console.log('[INFO] App is in foreground');
-                        console.warn("TODO: update BackgroundGeolocation config when in foreground");
-                        BackgroundGeolocation.configure({
-                            startForeground: false
-                        });
-                    });
+                    activateBackgroundGeolocationHandlers();
 
                     BackgroundGeolocation.configure({
                         locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
@@ -650,14 +668,13 @@ angular.module('webmapp')
                         // activitiesInterval: 8000, // Android only, for ACTIVITY location provider
                         // stopOnStillActivity: false, // Android only, for ACTIVITY location provider
                         startForeground: false, // Android only
-                        notificationTitle: "GEOLOCATION ACTIVE", // Android only
-                        notificationText: "What an amazing notification!", // Android only
+                        notificationTitle: $translate.instant("Navigazione attiva"), // Android only
+                        notificationText: "", // Android only
                         notificationIconColor: "#FF00FF", // Android only
                         activityType: "OtherNavigation", // iOS only
                         pauseLocationUpdates: false, // iOS only
                         saveBatteryOnBackground: false, // iOS only
-                        maxLocations: 10000,
-                        debug: true
+                        maxLocations: 10000
                     });
 
                     BackgroundGeolocation.start();
@@ -750,7 +767,7 @@ angular.module('webmapp')
                         if (!geolocationState.isFollowing) {
                             geolocationState.isFollowing = true;
                             if (state.lastPosition && state.lastPosition.lat && state.lastPosition.long) {
-                                MapService.centerOnCoords(state.lastPosition.lat, state.lastPosition.long);
+                                centerOnCoordsWithoutZoomEvent(state.lastPosition.lat, state.lastPosition.long);
                             }
                             $rootScope.$emit("geolocationState-changed", geolocationState);
                         }
@@ -766,7 +783,7 @@ angular.module('webmapp')
 
                         geolocationState.isFollowing = true;
                         if (state.lastPosition && state.lastPosition.lat && state.lastPosition.long) {
-                            MapService.centerOnCoords(state.lastPosition.lat, state.lastPosition.long);
+                            centerOnCoordsWithoutZoomEvent(state.lastPosition.lat, state.lastPosition.long);
                         }
                         $rootScope.$emit("geolocationState-changed", geolocationState);
                     } else {
@@ -787,7 +804,7 @@ angular.module('webmapp')
                 $rootScope.$emit("geolocationState-changed", geolocationState);
 
                 if (state.lastPosition && state.lastPosition.lat && state.lastPosition.long) {
-                    MapService.centerOnCoords(state.lastPosition.lat, state.lastPosition.long);
+                    centerOnCoordsWithoutZoomEvent(state.lastPosition.lat, state.lastPosition.long);
                 }
                 defer.resolve(geolocationState);
             }
@@ -855,8 +872,8 @@ angular.module('webmapp')
          * @description
          * Pause the stats record saving the state
          * 
-         * @returns {boolean}
-         *      true if all correct, false otherwise
+         * @returns {promise}
+         *      resolve if all correct, false otherwise
          */
         geolocationService.pauseRecording = function () {
             var defer = $q.defer();
@@ -921,16 +938,12 @@ angular.module('webmapp')
         console.warn("TODO: implement function stopRecording when track recorded");
         geolocationService.stopRecording = function () {
             var defer = $q.defer();
-            if (recordingState.isActive) {
-                recordingState.reset();
-                $rootScope.$emit('recordingState-changed', {
-                    isActive: recordingState.isActive,
-                    isPaused: recordingState.isPaused
-                });
-                defer.resolve(true);
-            } else {
-                defer.resolve(true);
-            }
+            recordingState.reset();
+            $rootScope.$emit('recordingState-changed', {
+                isActive: recordingState.isActive,
+                isPaused: recordingState.isPaused
+            });
+            defer.resolve(true);
 
             return defer.promise;
         };
@@ -1002,6 +1015,7 @@ angular.module('webmapp')
         $ionicPlatform.ready(function () {
             if (window.cordova) {
                 cordova.plugins.diagnostic.registerLocationStateChangeHandler(GPSSettingsSwitched);
+                state.appState = BackgroundGeolocation.FOREGROUND;
             }
         });
 

@@ -23,11 +23,11 @@ var ERRORS = {
         message: "This feature is not available"
     },
     TEMPORARILY_DISABLED: {
-        cose: 11,
+        cose: 12,
         message: "This feature is temporarily disabled"
     },
     DISABLED: {
-        cose: 11,
+        cose: 13,
         message: "This feature is disabled"
     },
     GENERIC_GPS: {

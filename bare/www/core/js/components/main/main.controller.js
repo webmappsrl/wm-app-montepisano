@@ -458,7 +458,7 @@ angular.module('webmapp')
             vm.stopNavigationUrlParams.parentId = $rootScope.currentParams.parentId;
             vm.stopNavigationUrlParams.id = $rootScope.currentParams.id;
 
-            vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
+            vm.navigationInterval = setInterval(navigationIntervalFunction, 999);
 
             if (GeolocationService.isActive()) {
                 startRecording();
