@@ -175,25 +175,6 @@ angular.module('webmapp')
                         });
                 }
             }
-            // .state('app.main.welcome', {
-            //     url: '/welcome',
-            //     views: {
-            //         'inception-top': {
-            //             templateUrl: basePath + 'js/components/welcome/welcome.html'
-            //         }, 
-            //         'inception-bottom': {
-            //             templateUrl: basePath + 'js/parts/bottom.html'
-            //         }
-            //     }
-            // })
-            // .state('app.main.card', {
-            //     url: '/card',
-            //     views: {
-            //         'inception-top': {
-            //             templateUrl: basePath + 'js/components/card/card.html'
-            //         }
-            //     }
-            // })
         }
 
         if (CONFIGProvider.EXTRA) {

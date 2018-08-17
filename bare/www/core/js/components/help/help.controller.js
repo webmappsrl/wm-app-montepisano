@@ -1,8 +1,6 @@
 angular.module('webmapp')
 
     .controller('HelpController', function HelpController(
-        $rootScope,
-        Offline,
         Utils,
         CONFIG,
         $translate
@@ -23,10 +21,6 @@ angular.module('webmapp')
                 Utils.goTo('/');
             }
         };
-
-        var currentTab = 0;
-        var dir = "";
-        showTab(currentTab);
 
         function showTab(n) {
             var x = document.getElementsByClassName("tab");
@@ -141,6 +135,10 @@ angular.module('webmapp')
                     break;
             }
         });
+
+        var currentTab = 0;
+        var dir = "";
+        showTab(currentTab);
         
         return vm;
     });

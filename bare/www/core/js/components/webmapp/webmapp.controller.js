@@ -1,10 +1,9 @@
 angular.module('webmapp')
 
 .controller('WebmappController', function WebmappController(
-    Utils,
-    $ionicPopup,
+    $translate,
     CONFIG,
-    $translate
+    Utils
 ) {
     var vm = {};
 
@@ -15,7 +14,6 @@ angular.module('webmapp')
     if (vm.currentLang === 'it') {
         vm.currentLang = '';
     }
-
 
     return vm;
 });

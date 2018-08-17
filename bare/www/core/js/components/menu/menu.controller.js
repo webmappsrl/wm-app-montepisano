@@ -19,6 +19,8 @@ angular.module('webmapp')
     ) {
         var vm = {};
 
+        var registeredEvents = [];
+
         var loginConf = CONFIG.LOGIN || {},
             overlayLayersConf = CONFIG.OVERLAY_LAYERS;
 
@@ -617,40 +619,55 @@ angular.module('webmapp')
             }, 10);
         };
 
-        $scope.$on('$stateChangeSuccess', function () {
-            var currentState = $rootScope.currentState.name;
+        registeredEvents.push(
+            $scope.$on('$stateChangeSuccess', function () {
+                var currentState = $rootScope.currentState.name;
 
-            vm.isCardPage = currentState === 'app.main.card';
-            vm.isDetailPage = currentState === 'app.main.detaillayer' || currentState === 'app.main.detailevent';
-            vm.isEventDetailPage = currentState === 'app.main.detailevent';
-            vm.isWelcomePage = currentState === 'app.main.welcome';
+                vm.isCardPage = currentState === 'app.main.card';
+                vm.isDetailPage = currentState === 'app.main.detaillayer' || currentState === 'app.main.detailevent';
+                vm.isEventDetailPage = currentState === 'app.main.detailevent';
+                vm.isWelcomePage = currentState === 'app.main.welcome';
 
-            if (currentState === 'app.main.detaillayer' ||
-                currentState === 'app.main.detailulayer' ||
-                currentState === 'app.main.detailevent' ||
-                currentState === 'app.main.route'
-            ) {
-                vm.hideMenuButton = false;
-            } else {
-                vm.hideMenuButton = CONFIG.OPTIONS.hideMenuButton;
-            }
+                if (currentState === 'app.main.detaillayer' ||
+                    currentState === 'app.main.detailulayer' ||
+                    currentState === 'app.main.detailevent' ||
+                    currentState === 'app.main.route'
+                ) {
+                    vm.hideMenuButton = false;
+                } else {
+                    vm.hideMenuButton = CONFIG.OPTIONS.hideMenuButton;
+                }
 
-            if (currentState === 'app.main.detaillayer' &&
-                $state.params &&
-                $state.params.parentId &&
-                typeof overlayLayersConfMap[$state.params.parentId.replace(/_/g, ' ')] !== 'undefined' &&
-                overlayLayersConfMap[$state.params.parentId.replace(/_/g, ' ')].type === 'poi_geojson') {
-                setTimeout(function () {
-                    vm.isAPOI = true;
-                }, 1000);
-            } else {
-                vm.isAPOI = false;
-            }
-        });
+                if (currentState === 'app.main.detaillayer' &&
+                    $state.params &&
+                    $state.params.parentId &&
+                    typeof overlayLayersConfMap[$state.params.parentId.replace(/_/g, ' ')] !== 'undefined' &&
+                    overlayLayersConfMap[$state.params.parentId.replace(/_/g, ' ')].type === 'poi_geojson') {
+                    setTimeout(function () {
+                        vm.isAPOI = true;
+                    }, 1000);
+                } else {
+                    vm.isAPOI = false;
+                }
+            })
+        );
 
-        $rootScope.$on('is-navigating', function (e, value) {
-            vm.isNavigating = value;
-        });
+        registeredEvents.push(
+            $rootScope.$on('is-navigating', function (e, value) {
+                vm.isNavigating = value;
+            })
+        );
+
+        registeredEvents.push(
+            $scope.$on('$destroy', function () {
+                for (var i in registeredEvents) {
+                    registeredEvents[i]();
+                }
+                delete registeredEvents;
+
+                modalImage.remove();
+            })
+        );
 
 
         return vm;

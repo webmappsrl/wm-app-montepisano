@@ -1,16 +1,14 @@
 angular.module('webmapp')
 
     .controller('ListController', function ListController(
-        $scope,
+        $ionicLoading,
         $rootScope,
         $state,
-        $ionicLoading,
-        $ionicScrollDelegate,
-        Utils,
+        CONFIG,
         MapService,
         Model,
         Search,
-        CONFIG
+        Utils
     ) {
         var vm = {};
 

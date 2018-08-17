@@ -33,6 +33,8 @@ angular.module('webmapp')
         var shareScope = $rootScope.$new(),
             shareModal;
 
+        var registeredEvents = [];
+
         var trackRecordingEnabled = CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
         vm.geolocationState = {
@@ -874,6 +876,17 @@ angular.module('webmapp')
                 if (vm.navigation.state.isPaused !== value.isPaused) {
                     vm.navigation.state.isPaused = value.isPaused;
                 }
+            })
+        );
+
+        registeredEvents.push(
+            $scope.$on('$destroy', function () {
+                for (var i in registeredEvents) {
+                    registeredEvents[i]();
+                }
+                delete registeredEvents;
+
+                shareModal.remove();
             })
         );
 

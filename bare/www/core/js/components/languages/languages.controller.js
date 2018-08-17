@@ -3,19 +3,18 @@ angular.module('webmapp')
     .controller('LanguagesController', function LanguagesController(
         $ionicPopup,
         $rootScope,
+        $scope,
         $translate,
         $window,
         Auth,
         CONFIG,
         md5,
-        Offline,
         PackageService,
         Utils
     ) {
-        var vm = {},
-            offlineModal;
+        var vm = {};
 
-        var offlineScope = $rootScope.$new();
+        var registeredEvents = [];
 
         vm.languages = CONFIG.LANGUAGES.available ? CONFIG.LANGUAGES.available : "";
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
@@ -89,11 +88,22 @@ angular.module('webmapp')
             PackageService.restorePurchases();
         };
 
-        $rootScope.$on('logged-in', function () {
-            if (Auth.isLoggedIn()) {
-                vm.isLoggedIn = true;
-            }
-        });
+        registeredEvents.push(
+            $rootScope.$on('logged-in', function () {
+                if (Auth.isLoggedIn()) {
+                    vm.isLoggedIn = true;
+                }
+            })
+        );
+
+        registeredEvents.push(
+            $scope.$on('$destroy', function () {
+                for (var i in registeredEvents) {
+                    registeredEvents[i]();
+                }
+                delete registeredEvents;
+            })
+        );
 
         if (CONFIG.MULTIMAP && CONFIG.MULTIMAP.purchaseType) {
             for (var i in CONFIG.MULTIMAP.purchaseType) {
@@ -123,8 +133,6 @@ angular.module('webmapp')
         }
 
         updatePrivacyUrl();
-
-        console.log(md5.createHash('gianni'))
 
         return vm;
     });

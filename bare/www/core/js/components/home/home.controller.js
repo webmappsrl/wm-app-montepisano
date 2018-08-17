@@ -6,17 +6,12 @@ angular.module('webmapp')
         $scope,
         $translate,
         CONFIG,
-        Offline,
         PackageService,
         Utils
     ) {
-        var vm = {},
-            offlineModal;
+        var vm = {};
 
         var registeredEvents = [];
-
-        var offlineScope = $rootScope.$new(),
-            communicationConf = CONFIG.COMMUNICATION;
 
         vm.activities = {};
         vm.columns = 1;

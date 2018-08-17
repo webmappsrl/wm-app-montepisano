@@ -32,7 +32,7 @@ angular.module('webmapp')
         vm.fullDescription = false;
 
         var taxonomyType = $state.params.parentId,
-            id = $state.params.id * 1; // * 1 is to make id integrer
+            id = +$state.params.id;
 
         var forceDigest = function () {
             setTimeout(function () {

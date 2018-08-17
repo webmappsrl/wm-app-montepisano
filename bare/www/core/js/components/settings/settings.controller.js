@@ -1,21 +1,21 @@
 angular.module('webmapp')
 
 .controller('SettingsController', function SettingsController(
-    $location,
-    $rootScope,
-    MapService,
-    Auth,
-    Account,
-    Model,
-    Offline,
-    Utils,
     $ionicPopup,
-    $translate
+    $rootScope,
+    $scope,
+    $translate,
+    Account,
+    Auth,
+    Offline,
+    Utils
 ) {
-    var vm = {},
-        offlineModal;
+    var vm = {};
+    
+    var registeredEvents = [];
 
-    var offlineScope = $rootScope.$new();
+    var offlineModal,
+        offlineScope = $rootScope.$new();
 
     vm.isLoggedIn = Auth.isLoggedIn();
     vm.isBrowser = Utils.isBrowser();
@@ -82,9 +82,22 @@ angular.module('webmapp')
         });
     };
 
-    $rootScope.$on('logged-in', function() {
-        vm.isLoggedIn = true;
-    });
+    registeredEvents.push(
+        $rootScope.$on('logged-in', function() {
+            vm.isLoggedIn = true;
+        })
+    );
+
+    registeredEvents.push(
+        $scope.$on('$destroy', function () {
+            for (var i in registeredEvents) {
+                registeredEvents[i]();
+            }
+            delete registeredEvents;
+
+            offlineModal.remove();
+        })
+    );
 
     return vm;
 });

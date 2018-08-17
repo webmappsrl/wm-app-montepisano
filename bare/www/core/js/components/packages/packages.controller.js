@@ -20,18 +20,16 @@ angular.module('webmapp')
         var modalFiltersScope = $rootScope.$new(),
             modalFilters = {};
 
-        var config = CONFIG;
-
-        if (config.MULTIMAP && config.MULTIMAP.useReducedPackages) {
+        if (CONFIG.MULTIMAP && CONFIG.MULTIMAP.useReducedPackages) {
             vm.type = "reduced";
         }
 
-        if (config.MULTIMAP && config.MULTIMAP.categoryFiltersOn) {
-            vm.categoryFiltersOn = config.MULTIMAP.categoryFiltersOn;
+        if (CONFIG.MULTIMAP && CONFIG.MULTIMAP.categoryFiltersOn) {
+            vm.categoryFiltersOn = CONFIG.MULTIMAP.categoryFiltersOn;
         }
 
-        if (config.LOGIN && config.LOGIN.useLogin) {
-            vm.useLogin = config.LOGIN.useLogin;
+        if (CONFIG.LOGIN && CONFIG.LOGIN.useLogin) {
+            vm.useLogin = CONFIG.LOGIN.useLogin;
         }
 
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
@@ -214,8 +212,6 @@ angular.module('webmapp')
             if (Auth.isLoggedIn()) {
                 PackageService.getPackagesIdByUserId();
             }
-
-            // location.reload();
         };
 
         registeredEvents.push(
@@ -268,7 +264,7 @@ angular.module('webmapp')
         );
 
         registeredEvents.push(
-            $scope.$on('$ionicView.beforeLeave', function () {
+            $scope.$on('$destroy', function () {
                 for (var i in registeredEvents) {
                     registeredEvents[i]();
                 }

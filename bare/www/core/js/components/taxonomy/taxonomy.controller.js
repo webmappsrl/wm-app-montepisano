@@ -6,14 +6,13 @@ angular.module('webmapp')
         $scope,
         $state,
         $translate,
+        CONFIG,
         PackageService,
-        Utils,
-        CONFIG
+        Utils
     ) {
         var vm = {};
 
-        var communicationConf = CONFIG.COMMUNICATION,
-            registeredEvents = [];
+        var registeredEvents = [];
 
         vm.title = CONFIG.OPTIONS.title;
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";

@@ -24,8 +24,7 @@ angular.module('webmapp')
         var modalScope = $rootScope.$new(),
             modalImage = {};
 
-        var userData = {},
-            routeDetail;
+        var routeDetail;
 
         modalScope.vm = {};
         modalScope.parent = vm;
@@ -308,15 +307,13 @@ angular.module('webmapp')
                     $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
                     $ionicSlideBoxDelegate.update();
                 }
-            })
-        );
 
-        registeredEvents.push(
-            $scope.$on('$ionicView.beforeLeave', function () {
                 for (var i in registeredEvents) {
                     registeredEvents[i]();
                 }
                 delete registeredEvents;
+
+                modalImage.remove();
             })
         );
 
