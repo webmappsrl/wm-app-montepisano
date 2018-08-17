@@ -1,19 +1,18 @@
 angular.module('webmapp')
 
     .controller('LanguagesController', function LanguagesController(
+        $ionicPopup,
         $rootScope,
+        $scope,
+        $translate,
         $window,
         Auth,
-        Offline,
-        Utils,
-        $ionicPopup,
         CONFIG,
-        $translate
+        Utils
     ) {
-        var vm = {},
-            offlineModal;
+        var vm = {};
 
-        var offlineScope = $rootScope.$new();
+        var registeredEvents = [];
 
         vm.languages = CONFIG.LANGUAGES.available ? CONFIG.LANGUAGES.available : "";
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
@@ -45,7 +44,6 @@ angular.module('webmapp')
         vm.isLoggedIn = false;
 
         vm.useLogin = CONFIG.LOGIN && CONFIG.LOGIN.useLogin;
-        var userData = {};
 
         vm.chooseLang = function (lang) {
             $translate.preferredLanguage(lang.substring(0, 2));
@@ -90,11 +88,22 @@ angular.module('webmapp')
             }, 500);
         }
 
-        $rootScope.$on('logged-in', function () {
-            if (Auth.isLoggedIn()) {
-                vm.isLoggedIn = true;
-            }
-        });
+        registeredEvents.push(
+            $rootScope.$on('logged-in', function () {
+                if (Auth.isLoggedIn()) {
+                    vm.isLoggedIn = true;
+                }
+            })
+        );
+
+        registeredEvents.push(
+            $scope.$on('$destroy', function () {
+                for (var i in registeredEvents) {
+                    registeredEvents[i]();
+                }
+                delete registeredEvents;
+            })
+        );
 
         if (vm.useLogin && !Auth.isLoggedIn()) {
             vm.isLoggedIn = false;

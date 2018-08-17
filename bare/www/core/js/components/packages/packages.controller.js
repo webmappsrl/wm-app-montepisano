@@ -1,49 +1,35 @@
 angular.module('webmapp')
 
     .controller('PackagesController', function CouponController(
-        $http,
         $ionicLoading,
         $ionicModal,
-        $ionicPlatform,
-        $ionicPopup,
-        $q,
         $rootScope,
         $scope,
         $state,
         $translate,
-        $window,
         Auth,
-        Communication,
         CONFIG,
         Model,
-        Offline,
         PackageService,
         Utils
     ) {
-        var vm = {},
-            userData = {};
+        var vm = {};
 
         var registeredEvents = [];
 
         var modalFiltersScope = $rootScope.$new(),
             modalFilters = {};
 
-        var config = CONFIG,
-            baseUrl = config.COMMUNICATION.baseUrl,
-            endpoint = config.COMMUNICATION.endpoint;
-
-        var communicationConf = CONFIG.COMMUNICATION;
-
-        if (config.MULTIMAP && config.MULTIMAP.useReducedPackages) {
+        if (CONFIG.MULTIMAP && CONFIG.MULTIMAP.useReducedPackages) {
             vm.type = "reduced";
         }
 
-        if (config.MULTIMAP && config.MULTIMAP.categoryFiltersOn) {
-            vm.categoryFiltersOn = config.MULTIMAP.categoryFiltersOn;
+        if (CONFIG.MULTIMAP && CONFIG.MULTIMAP.categoryFiltersOn) {
+            vm.categoryFiltersOn = CONFIG.MULTIMAP.categoryFiltersOn;
         }
 
-        if (config.LOGIN && config.LOGIN.useLogin) {
-            vm.useLogin = config.LOGIN.useLogin;
+        if (CONFIG.LOGIN && CONFIG.LOGIN.useLogin) {
+            vm.useLogin = CONFIG.LOGIN.useLogin;
         }
 
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
@@ -226,8 +212,6 @@ angular.module('webmapp')
             if (Auth.isLoggedIn()) {
                 PackageService.getPackagesIdByUserId();
             }
-
-            // location.reload();
         };
 
         registeredEvents.push(
@@ -280,7 +264,7 @@ angular.module('webmapp')
         );
 
         registeredEvents.push(
-            $scope.$on('$ionicView.beforeLeave', function () {
+            $scope.$on('$destroy', function () {
                 for (var i in registeredEvents) {
                     registeredEvents[i]();
                 }

@@ -1,10 +1,8 @@
 angular.module('webmapp')
 
     .controller('DetailRouteController', function DetailRouteController(
-        $http,
         $ionicLoading,
         $ionicModal,
-        $ionicPlatform,
         $ionicPopup,
         $ionicSlideBoxDelegate,
         $rootScope,
@@ -13,28 +11,19 @@ angular.module('webmapp')
         $state,
         $translate,
         Auth,
-        Communication,
         CONFIG,
-        MapService,
-        Model,
-        Offline,
         PackageService,
         Utils
     ) {
         var vm = {},
-            current = $state.current || {},
-            params = $state.params || {},
-            isOnline = false,
-            isBrowser = vm.isBrowser = Utils.isBrowser();
+            params = $state.params || {};
 
         var registeredEvents = [];
 
         var modalScope = $rootScope.$new(),
-            modal = {},
             modalImage = {};
 
-        var userData = {},
-            routeDetail;
+        var routeDetail;
 
         modalScope.vm = {};
         modalScope.parent = vm;
@@ -286,15 +275,13 @@ angular.module('webmapp')
                     $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
                     $ionicSlideBoxDelegate.update();
                 }
-            })
-        );
 
-        registeredEvents.push(
-            $scope.$on('$ionicView.beforeLeave', function () {
                 for (var i in registeredEvents) {
                     registeredEvents[i]();
                 }
                 delete registeredEvents;
+
+                modalImage.remove();
             })
         );
 

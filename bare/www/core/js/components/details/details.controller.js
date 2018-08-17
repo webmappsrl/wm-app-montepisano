@@ -28,8 +28,9 @@ angular.module('webmapp')
             modalFeatures = {},
             modalAccessibility = {};
 
-        var isOnline = false,
-            isBrowser = vm.isBrowser = Utils.isBrowser();
+        var registeredEvents = [];
+
+        var isBrowser = vm.isBrowser = Utils.isBrowser();
 
         var extras = [];
 
@@ -348,8 +349,8 @@ angular.module('webmapp')
                 }
                 setTimeout(function () {
                     MapService.adjust();
-                }, 2500);
-            }, 1000);
+                }, 100);
+            }, 100);
 
             if (vm.feature.accessibility) {
                 vm.feature.accessibility.mobility.icon = 'wm-icon-wheelchair-15';
@@ -660,26 +661,34 @@ angular.module('webmapp')
             forceDigest();
         };
 
-        $rootScope.$on('expand-map', function (e, value) {
-            vm.hideBack = value;
-        });
+        registeredEvents.push(
+            $rootScope.$on('expand-map', function (e, value) {
+                vm.hideBack = value;
+            })
+        );
 
-        $scope.$on('$destroy', function () {
-            modal && modal.remove();
-            modalImage && modalImage.remove();
-            modalText && modalText.remove();
-            modalEvent && modalEvent.remove();
-            modalTable && modalTable.remove();
-            modalCoupons && modalCoupons.remove();
-            modalFeatures && modalFeatures.remove();
+        registeredEvents.push(
+            $scope.$on('$destroy', function () {
+                modal && modal.remove();
+                modalImage && modalImage.remove();
+                modalText && modalText.remove();
+                modalEvent && modalEvent.remove();
+                modalTable && modalTable.remove();
+                modalCoupons && modalCoupons.remove();
+                modalFeatures && modalFeatures.remove();
 
-            if ($ionicSlideBoxDelegate._instances &&
-                $ionicSlideBoxDelegate._instances.length > 0) {
-                // delete $ionicSlideBoxDelegate._instances[0];
-                // $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
-                $ionicSlideBoxDelegate.update();
-            }
-        });
+                if ($ionicSlideBoxDelegate._instances &&
+                    $ionicSlideBoxDelegate._instances.length > 0) {
+                    $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
+                    $ionicSlideBoxDelegate.update();
+                }
+
+                for (var i in registeredEvents) {
+                    registeredEvents[i]();
+                }
+                delete registeredEvents;
+            })
+        );
 
         document.addEventListener('deviceready', function () {
             isOnline = Connection && navigator.network.connection.type !== Connection.NONE;

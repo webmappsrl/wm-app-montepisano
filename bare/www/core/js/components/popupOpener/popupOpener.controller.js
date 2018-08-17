@@ -46,6 +46,5 @@ angular.module('webmapp')
             }, 1000);
         });
 
-
         return {};
     });
