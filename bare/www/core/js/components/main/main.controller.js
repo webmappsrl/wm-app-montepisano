@@ -168,7 +168,7 @@ angular.module('webmapp')
         vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
         vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
         vm.useUTM32 = false;
-        vm.useShare = CONFIG.OPTIONS.allowCoordsShare || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.allowCoordsShare);
+        vm.useShare = Utils.isBrowser() ? false : (CONFIG.OPTIONS.allowCoordsShare || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.allowCoordsShare));
         vm.useReport =
             (CONFIG.REPORT && (
                 (CONFIG.REPORT.email && CONFIG.REPORT.email.apiUrl && CONFIG.REPORT.email.default) ||
@@ -274,48 +274,81 @@ angular.module('webmapp')
             var title = CONFIG.MAIN ? CONFIG.MAIN.OPTIONS.title + ' ' + CONFIG.OPTIONS.title : CONFIG.OPTIONS.title;
             title = Utils.decodeHtml(title);
 
-            shareOptions = {
-                message: $translate.instant('Ciao. Sto usando') + ' ' + title + '. ' + $translate.instant("Dai un'occhiata a questo posto"),
-                mailSubject: title,
-                baseUrl: "http://www.google.com/maps/place/"
-            };
+            var message = $translate.instant("Ciao. Sto usando l'app") + ' ' + title + '. ';
 
-            if (prevLatLong && (distanceInMeters(prevLatLong.lat, prevLatLong.long, vm.centerCoords.lat, vm.centerCoords.lng) > 40)) {
-                $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("La posizione che stai per condividere non è la tua posizione attuale ma la posizione segnata dalla croce nel centro della mappa. Per condividere la tua posizione attuale assicurati di avere il centro della mappa vicino alla tua posizione. Vuoi condividere comunque queste coordinate?")
-                }).then(function (res) {
-                    if (res) {
-                        $cordovaSocialSharing
-                            .share(
-                                shareOptions.message,
-                                shareOptions.mailSubject,
-                                undefined,
-                                shareOptions.baseUrl +
-                                vm.centerCoords.lat + ',' +
-                                vm.centerCoords.lng)
-                            .then(function (result) {
-                                // Success!
-                            }, function (err) {
-                                console.err(err);
-                            });
-                    }
-                });
-            } else {
-                $cordovaSocialSharing
-                    .share(
-                        shareOptions.message,
-                        shareOptions.mailSubject,
-                        undefined,
-                        shareOptions.baseUrl +
-                        vm.centerCoords.lat + ',' +
-                        vm.centerCoords.lng)
-                    .then(function (result) {
-                        // Success!
-                    }, function (err) {
-                        console.err(err);
-                    });
+            if (CONFIG.OPTIONS.shareInternalUrl) {
+                message += '';
+                title += ' - ' + $translate.instant("Dove sono");
             }
+            else {
+                message += $translate.instant("Dai un'occhiata a questo posto");
+            }
+
+            if (CONFIG.OPTIONS.sharePositionCoords ||
+                (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.sharePositionCoords && CONFIG.OPTIONS.sharePositionCoords !== false)) {
+                if (prevLatLong && prevLatLong.lat && prevLatLong.long) {
+                    vm.sharePosition({
+                        lat: prevLatLong.lat,
+                        long: prevLatLong.long
+                    }, message, title);
+                }
+                else {
+                    $ionicPopup.alert({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Per poter condividere la tua posizione attuale assicurati di essere geolocalizzato")
+                    });
+                }
+            }
+            else {
+                if (prevLatLong && (distanceInMeters(prevLatLong.lat, prevLatLong.long, vm.centerCoords.lat, vm.centerCoords.lng) > 40)) {
+                    $ionicPopup.confirm({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("La posizione che stai per condividere non è la tua posizione attuale ma la posizione segnata dalla croce nel centro della mappa. Per condividere la tua posizione attuale assicurati di avere il centro della mappa vicino alla tua posizione. Vuoi condividere comunque queste coordinate?")
+                    }).then(function (res) {
+                        if (res) {
+                            vm.sharePosition({
+                                lat: vm.centerCoords.lat,
+                                long: vm.centerCoords.lng
+                            }, message, title);
+                        }
+                    });
+                } else {
+                    vm.sharePosition({
+                        lat: vm.centerCoords.lat,
+                        long: vm.centerCoords.lng
+                    }, message, title);
+                }
+            }
+
+            shareOptions = {
+                message: message,
+                mailSubject: title,
+            };
+        };
+
+        vm.sharePosition = function (position, message, title) {
+            var url = '';
+
+            if (CONFIG.OPTIONS.shareInternalUrl) {
+                url = CONFIG.COMMUNICATION.baseUrl + "#/?map=" + CONFIG.MAP.defZoom + "/" + position.lat + "/" + position.long;
+            }
+            else {
+                url = "http://www.google.com/maps/place/" +
+                    position.lat + ',' +
+                    position.long;
+            }
+
+            $cordovaSocialSharing
+                .share(
+                    message,
+                    title,
+                    undefined,
+                    url)
+                .then(function (result) {
+                    // Success!
+                }, function (err) {
+                    console.err(err);
+                });
         };
 
         var sendSMS = function (text) {
@@ -886,9 +919,7 @@ angular.module('webmapp')
                 }
                 delete registeredEvents;
 
-                if (shareModal) {
-                    shareModal.remove();
-                }
+                shareModal && shareModal.remove();
             })
         );
 

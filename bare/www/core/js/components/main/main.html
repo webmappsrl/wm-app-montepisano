@@ -99,17 +99,16 @@
                 'animate-rightin': vm.isCoordsBlockExpanded,
                 'animate-rightout': !vm.isCoordsBlockExpanded
             }" ng-if="vm.centerCoords" ng-click="vm.switchCoords()">
-            <span ng-if="vm.useUTM32">
+            <span>
                 <button class="coords-share-button" ng-click="vm.shareCurrentPosition($event)" ng-if="vm.useShare">
                     <i class="icon wm-icon-android-share"></i>
                 </button>
-                {{vm.centerCoordsUTM32.lat}}, {{vm.centerCoordsUTM32.lng}}
-            </span>
-            <span ng-if="!vm.useUTM32">
-                <button class="coords-share-button" ng-click="vm.shareCurrentPosition($event)" ng-if="vm.useShare">
-                    <i class="icon wm-icon-android-share"></i>
-                </button>
-                {{vm.centerCoords.lat}}, {{vm.centerCoords.lng}}
+                <span ng-if="vm.useUTM32">
+                    {{vm.centerCoordsUTM32.lat}}, {{vm.centerCoordsUTM32.lng}}
+                </span>
+                <span ng-if="!vm.useUTM32">
+                    {{vm.centerCoords.lat}}, {{vm.centerCoords.lng}}
+                </span>
             </span>
         </div>
 

@@ -463,96 +463,6 @@ ion-content div.static-content.card-content {
     font-size: 1.2em;
     padding: 0 10px; }
 
-/*
- * CARD PAGE
- *
- * Styles for Valle dei segni card
- */
-/* ------------------------------------ *\
-   #CARD
-\* ------------------------------------ */
-.card-page {
-  background: #f8faf3; }
-
-.card-page-title .nav-title-slide-ios7 .bar.bar-header .title {
-  right: 0 !important;
-  left: 0 !important;
-  text-overflow: clip;
-  text-align: center; }
-
-/* Header */
-.card-page-header {
-  background-size: 48px 41px;
-  color: #605846;
-  font-weight: 700;
-  padding: 12px;
-  font-size: 1.1em;
-  text-align: center; }
-  .card-page-header .icon {
-    padding-right: 5px;
-    color: #b52125; }
-
-/* Card content */
-.card-content {
-  width: 90%;
-  margin: 0 auto;
-  text-align: center; }
-
-/* Card image */
-.card-image {
-  width: 187px;
-  height: 140px;
-  margin: 10px auto; }
-
-.card-text {
-  margin: 15px 0;
-  text-align: center; }
-  .card-text p {
-    color: #605846;
-    font-size: 14px;
-    line-height: 1; }
-
-.card-text-title {
-  margin-bottom: 5px;
-  color: #80181e;
-  font-size: 18px; }
-
-.card-title {
-  margin: 10px auto;
-  position: relative;
-  text-align: center; }
-
-.card-title-inner {
-  display: inline-block;
-  padding: 10px;
-  position: relative;
-  font-size: 16px;
-  z-index: 10; }
-
-/* ------------------------------------ *\
-   #MEDIA QUERIES
-\* ------------------------------------ */
-@media screen and (max-height: 480px) {
-  .card-image {
-    width: 146px;
-    height: 109px; } }
-
-@media screen and (min-width: 768px) {
-  .card-content {
-    width: 428px; }
-    .card-content button.button-block {
-      width: 336px;
-      margin: 0 auto 10px; }
-  .card-image {
-    margin-top: 40px;
-    margin-bottom: 40px; }
-  .card-text {
-    margin: 30px 0; }
-    .card-text p {
-      font-size: 16px; }
-  .card-text-title {
-    margin-bottom: 5px; } }
-
 /**
  * CUSTOM PAGE
  *
@@ -2666,7 +2576,7 @@ div.leaflet-top.leaflet-right {
   z-index: 400;
   font-size: 20px;
   text-align: center; }
-  .coords-block span {
+  .coords-block > span {
     display: inline-block;
     height: 36px;
     padding: 0 14px;
@@ -3723,6 +3633,7 @@ ion-content div.static-content.card-content {
     ion-content div.static-content.card-content div.webmapp-img img {
       height: auto; }
 
+<<<<<<< HEAD
 /*
  * WELCOME
  *
@@ -4042,6 +3953,8 @@ ion-content div.static-content.card-content {
     .login-form .item input {
       height: 2.2em; } }
 
+=======
+>>>>>>> 0be44bf... Added position share
 /* custom style goes here */
 /* ------------------------------------ *\
    #TOAST

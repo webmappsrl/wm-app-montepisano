@@ -480,7 +480,7 @@ div.leaflet-top.leaflet-right {
   z-index: 400;
   font-size: 20px;
   text-align: center;
-  span {
+  > span {
     display: inline-block;
     height: 36px;
     padding: 0 14px;
