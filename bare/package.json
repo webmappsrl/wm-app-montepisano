@@ -22,7 +22,7 @@
     "cordova-plugin-geolocation": "~2.4.0",
     "cordova-plugin-inappbrowser": "~1.5.0",
     "cordova-plugin-insomnia": "4.3.0",
-    "cordova-plugin-mauron85-background-geolocation": "^2.3.5",
+    "cordova-plugin-mauron85-background-geolocation": "^3.0.0-alpha.39",
     "cordova-plugin-network-information": "~1.2.1",
     "cordova-plugin-splashscreen": "~2.1.0",
     "cordova-plugin-statusbar": "~2.2.0",
@@ -85,17 +85,7 @@
       "cordova-android-support-gradle-release": {
         "ANDROID_SUPPORT_VERSION": "27.+"
       },
-      "cordova-plugin-mauron85-background-geolocation": {
-        "GOOGLE_PLAY_SERVICES_VERSION": "11+",
-        "ANDROID_SUPPORT_LIBRARY_VERSION": "23+",
-        "ICON": "@mipmap/icon",
-        "SMALL_ICON": "@mipmap/icon",
-        "ACCOUNT_NAME": "@string/app_name",
-        "ACCOUNT_LABEL": "@string/app_name",
-        "ACCOUNT_TYPE": "$PACKAGE_NAME.account",
-        "CONTENT_AUTHORITY": "$PACKAGE_NAME",
-        "ALWAYS_USAGE_DESCRIPTION": "This app always requires location tracking"
-      }
+      "cordova-plugin-mauron85-background-geolocation": {}
     },
     "platforms": [
       "android",
