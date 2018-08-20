@@ -43,8 +43,8 @@ angular.module('webmapp')
                 CONFIG.NAVIGATION.trackBoundsDistance :
                 (
                     (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) ?
-                        CONFIG.MAIN.NAVIGATION.trackBoundsDistance :
-                        200
+                    CONFIG.MAIN.NAVIGATION.trackBoundsDistance :
+                    200
                 )
         };
 
@@ -90,13 +90,11 @@ angular.module('webmapp')
                 reset: function () {
                     try {
                         clearInterval(recordingState.toast.hideTimeout);
-                    }
-                    catch (e) { }
+                    } catch (e) {}
 
                     try {
                         clearInterval(recordingState.toast.showTimeout);
-                    }
-                    catch (e) { }
+                    } catch (e) {}
 
                     recordingState.toast.hideTimeout = null;
                     recordingState.toast.showTimeout = null;
@@ -150,9 +148,9 @@ angular.module('webmapp')
                     defer.resolve(true);
                 } else {
                     $ionicPopup.confirm({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Sembra che tu abbia il GPS disattivato. Per accedere a tutte le funzionalità dell'app occorre attivarlo. Vuoi farlo ora?")
-                    })
+                            title: $translate.instant("ATTENZIONE"),
+                            template: $translate.instant("Sembra che tu abbia il GPS disattivato. Per accedere a tutte le funzionalità dell'app occorre attivarlo. Vuoi farlo ora?")
+                        })
                         .then(function (res) {
                             if (res) {
                                 if (window.cordova.platformId === "ios") {
@@ -197,45 +195,45 @@ angular.module('webmapp')
                     }
 
                     cordova.plugins.diagnostic.requestLocationAuthorization(function (status) {
-                        switch (status) {
-                            case cordova.plugins.diagnostic.permissionStatus.GRANTED:
-                            case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
-                                if (window.cordova.platformId === "ios") {
-                                    cordova.plugins.diagnostic.isLocationEnabled(
-                                        onSuccess,
-                                        onError
-                                    );
-                                } else {
-                                    cordova.plugins.diagnostic.isGpsLocationEnabled(
-                                        onSuccess,
-                                        onError
-                                    );
-                                }
-                                break;
-                            case cordova.plugins.diagnostic.permissionStatus.DENIED:
-                                if (window.cordova.platformId === "ios") {
-                                    localStorage.$wm_ios_location_permission_denied = true;
+                            switch (status) {
+                                case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+                                case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
+                                    if (window.cordova.platformId === "ios") {
+                                        cordova.plugins.diagnostic.isLocationEnabled(
+                                            onSuccess,
+                                            onError
+                                        );
+                                    } else {
+                                        cordova.plugins.diagnostic.isGpsLocationEnabled(
+                                            onSuccess,
+                                            onError
+                                        );
+                                    }
+                                    break;
+                                case cordova.plugins.diagnostic.permissionStatus.DENIED:
+                                    if (window.cordova.platformId === "ios") {
+                                        localStorage.$wm_ios_location_permission_denied = true;
+                                        $ionicPopup.alert({
+                                            title: $translate.instant("ATTENZIONE"),
+                                            template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
+                                        });
+                                    } else {
+                                        $ionicPopup.alert({
+                                            title: $translate.instant("ATTENZIONE"),
+                                            template: $translate.instant("Alcune funzionalità funzionano solo se hai abilitato la geolocalizzazione")
+                                        });
+                                    }
+                                    defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
+                                    break;
+                                case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
                                     $ionicPopup.alert({
                                         title: $translate.instant("ATTENZIONE"),
-                                        template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
+                                        template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi attivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
                                     });
-                                } else {
-                                    $ionicPopup.alert({
-                                        title: $translate.instant("ATTENZIONE"),
-                                        template: $translate.instant("Alcune funzionalità funzionano solo se hai abilitato la geolocalizzazione")
-                                    });
-                                }
-                                defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
-                                break;
-                            case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
-                                $ionicPopup.alert({
-                                    title: $translate.instant("ATTENZIONE"),
-                                    template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi attivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
-                                });
-                                defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
-                                break;
-                        }
-                    },
+                                    defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
+                                    break;
+                            }
+                        },
                         onError,
                         cordova.plugins.diagnostic.locationAuthorizationMode.ALWAYS);
                 }
@@ -426,7 +424,6 @@ angular.module('webmapp')
         function handleToast(lat, long) {
             if (recordingState.currentTrack) {
                 var distance = turf.pointToLineDistance.default([long, lat], recordingState.currentTrack) * 1000;
-
                 var currentDistance = distance > 500 ? (distance / 1000).toFixed(1) : (distance - (distance % 10)).toFixed();
                 var template = '',
                     message = $translate.instant('Attento, ti sei allontanato dal percorso di') + ' ' + currentDistance + ' ';
@@ -455,8 +452,7 @@ angular.module('webmapp')
                                 recordingState.toast.hideTimeout = null;
                             }, constants.outOfTrackToastDelay);
                         }
-                    }
-                    else if (recordingState.toast.showTimeout) {
+                    } else if (recordingState.toast.showTimeout) {
                         clearTimeout(recordingState.toast.showTimeout);
                         recordingState.toast.showTimeout = null;
                     }
@@ -482,6 +478,7 @@ angular.module('webmapp')
         };
 
         console.warn("TODO: complete function positionCallback for realTimeTracking")
+
         function positionCallback(position) {
             console.log(position);
             BackgroundGeolocation.startTask(function (taskKey) {
@@ -564,9 +561,9 @@ angular.module('webmapp')
 
                                 currentRequest
                                     .then(function () {
-                                        realTimeTracking.positionsToSend = [];
-                                        return;
-                                    },
+                                            realTimeTracking.positionsToSend = [];
+                                            return;
+                                        },
                                         function (error) {
                                             return;
                                         });
@@ -614,8 +611,7 @@ angular.module('webmapp')
                     });
 
                     state.e = BackgroundGeolocation.BACKGROUND;
-                }
-                else {
+                } else {
                     BackgroundGeolocation.stop();
                 }
             });
@@ -625,8 +621,7 @@ angular.module('webmapp')
                         startForeground: false
                     });
                     state.appState = BackgroundGeolocation.FOREGROUND;
-                }
-                else {
+                } else {
                     BackgroundGeolocation.start();
                 }
             });
