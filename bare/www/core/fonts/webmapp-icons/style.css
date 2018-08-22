@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?dodkc3');
-  src:  url('fonts/webmapp.eot?dodkc3#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?dodkc3') format('truetype'),
-    url('fonts/webmapp.woff?dodkc3') format('woff'),
-    url('fonts/webmapp.svg?dodkc3#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?u7ruhz');
+  src:  url('fonts/webmapp.eot?u7ruhz#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?u7ruhz') format('truetype'),
+    url('fonts/webmapp.woff?u7ruhz') format('woff'),
+    url('fonts/webmapp.svg?u7ruhz#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.wm-icon-md-option-menu:before {
+  content: "\ea35";
+}
 .wm-icon-adults-15:before {
   content: "\e9ba";
 }
@@ -429,6 +432,9 @@
 }
 .wm-icon-outline-radio_button_unchecked:before {
   content: "\ea34";
+}
+.wm-icon-layers:before {
+  content: "\e924";
 }
 .wm-icon-aerialway-15:before {
   content: "\e925";
@@ -2794,7 +2800,4 @@
 }
 .wm-icon-funnel-wm:before {
   content: "\e9b9";
-}
-.wm-icon-layers:before {
-  content: "\e924";
 }
