@@ -59,7 +59,7 @@
                 <a class="leaflet-bar-part leaflet-bar-part-single" href="" ng-click="vm.centerOnMe()">
                     <span class="icon" ng-class="{
                             'wm-icon-android-locate-full': !vm.geolocationState.isRotating,
-                            'fa-spin': vm.geolocationState.isLoading,
+                            'fa-spin': vm.geolocationState.isLoading && !vm.geolocationState.isRotating && !vm.geolocationState.isFollowing,
                             'blu-icon': vm.geolocationState.isFollowing
                         }" ng-style="!vm.geolocationState.isRotating ? {
                             '-webkit-transform': 'rotate(0deg)',

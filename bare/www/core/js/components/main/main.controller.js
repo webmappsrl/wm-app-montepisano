@@ -13,7 +13,6 @@ angular.module('webmapp')
         Communication,
         CONFIG,
         GeolocationService,
-        ionicToast,
         MapService,
         Model,
         Utils
@@ -137,37 +136,7 @@ angular.module('webmapp')
             id: null
         };
 
-        var realTimeTracking = {};
-        realTimeTracking.enabled = (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.TRACKING.enableRealTimeTracking) ||
-            (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.TRACKING.enableRealTimeTracking);
-        realTimeTracking.url = "https://api.webmapp.it/services/share.php";
-
-        realTimeTracking.positionsToSend = [];
-        realTimeTracking.minPositionsToSend = 1;
-        realTimeTracking.appUrl = CONFIG.COMMUNICATION.baseUrl;
-
         vm.routeId = CONFIG.routeID ? CONFIG.routeID : 0;
-
-        if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.realTimeTrackingUrl) {
-            realTimeTracking.url = CONFIG.MAIN.NAVIGATION.TRACKING.realTimeTrackingUrl;
-        }
-        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.realTimeTrackingUrl) {
-            realTimeTracking.url = CONFIG.NAVIGATION.TRACKING.realTimeTrackingUrl;
-        }
-
-        if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.TRACKING.minPositionsToSend) {
-            realTimeTracking.minPositionsToSend = CONFIG.MAIN.NAVIGATION.TRACKING.minPositionsToSend;
-        }
-        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.TRACKING.minPositionsToSend) {
-            realTimeTracking.minPositionsToSend = CONFIG.NAVIGATION.TRACKING.minPositionsToSend;
-        }
-
-        if (CONFIG.COMMUNICATION.baseUrl) {
-            realTimeTracking.appUrl = CONFIG.COMMUNICATION.baseUrl;
-        }
-        if (CONFIG.MAIN && CONFIG.MAIN.COMMUNICATION.baseUrl) {
-            realTimeTracking.appUrl = CONFIG.MAIN.COMMUNICATION.baseUrl;
-        }
 
         if (!Date.now) {
             Date.now = function () {
@@ -547,33 +516,6 @@ angular.module('webmapp')
             return speed ? (speed.toFixed(0) + "km/h") : '0km/h';
         };
 
-        var showPathAndRelated = function (params) {
-            var parentId = params.parentId,
-                id = params.id;
-
-            MapService.resetLayers();
-            MapService.getFeatureById(id, parentId.replace(/_/g, ' '))
-                .then(function (data) {
-                    var featuresToShow = [data];
-
-                    if (data.properties.id_pois) {
-                        var related = MapService.getRelatedFeaturesById(data.properties.id_pois);
-                        for (var i in related) {
-                            if (related[i] && related[i].properties) {
-                                featuresToShow = featuresToShow.concat([related[i]]);
-                            }
-                        }
-                    }
-
-                    MapService.addFeaturesToFilteredLayer({
-                        'detail': featuresToShow
-                    }, false);
-                    setTimeout(function () {
-                        MapService.adjust();
-                    }, 2500);
-                });
-        };
-
         $scope.$on('$stateChangeStart', function (e, dest) {
             if ((dest.name === 'app.main.detaillayer' ||
                 dest.name === 'app.main.detailevent' ||
@@ -644,7 +586,7 @@ angular.module('webmapp')
                 vm.hideExpander = true;
                 setTimeout(function () {
                     if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
-                        showPathAndRelated(vm.stopNavigationUrlParams);
+                        MapService.showPathAndRelated(vm.stopNavigationUrlParams);
                     }
                 }, 50);
             } else if (currentState === 'app.main.popup') {
@@ -742,6 +684,16 @@ angular.module('webmapp')
         });
 
         $rootScope.$on('recordingState-changed', function (e, value) {
+            if (value.currentTrack) {
+                vm.stopNavigationUrlParams = {
+                    id: value.currentTrack.id,
+                    parentId: value.currentTrack.parentId
+                };
+
+                vm.navigationInterval = setInterval(navigationIntervalFunction, 999);
+                window.plugins.insomnia.keepAwake();
+            }
+
             if (vm.navigation.state.isActive !== value.isActive) {
                 vm.navigation.state.isActive = value.isActive;
                 $rootScope.$emit('is-navigating', vm.navigation.state.isActive);
@@ -767,7 +719,7 @@ angular.module('webmapp')
 
         $ionicPlatform.ready(function () {
             vm.userData = Auth.getUserData();
-            if (CONFIG.MAIN) {
+            if (!GeolocationService.isActive()) {
                 GeolocationService.enable();
             }
             if (window !== top) {

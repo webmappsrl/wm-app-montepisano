@@ -366,10 +366,12 @@ angular.module('webmapp')
             ionicToast.hide();
         };
 
-        utils.Stopwatch = function () {
-            this.startTime = null;
-            this.totalTime = 0;
-            this.isPaused = false;
+        utils.Stopwatch = function (stopwatchString) {
+            var obj = stopwatchString ? JSON.parse(stopwatchString) : {};
+
+            this.startTime = obj.startTime ? obj.startTime : null;
+            this.totalTime = obj.totalTime ? obj.totalTime : 0;
+            this.isPaused = obj.isPaused ? obj.isPaused : false;
 
             this.start = function () {
                 this.startTime = Date.now();
@@ -399,6 +401,16 @@ angular.module('webmapp')
                 } else {
                     return this.totalTime + Date.now() - this.startTime;
                 }
+            };
+
+            this.toString = function () {
+                var obj = {
+                    startTime: this.startTime,
+                    totalTime: this.totalTime,
+                    isPaused: this.isPaused
+                };
+
+                return JSON.stringify(obj);
             };
         };
 

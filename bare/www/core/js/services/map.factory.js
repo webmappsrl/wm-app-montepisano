@@ -1873,7 +1873,9 @@ angular.module('webmapp')
         };
 
         mapService.drawAccuracy = function (accuracy) {
-            circleLocation.accuracy.setRadius(accuracy);
+            if (circleLocation && circleLocation.accuracy) {
+                circleLocation.accuracy.setRadius(accuracy);
+            }
         };
 
         mapService.drawPosition = function (position) {
@@ -2234,6 +2236,33 @@ angular.module('webmapp')
 
         mapService.centerOnScreen = function (location) {
             map.panTo(new L.LatLng(location.latlng.lat, location.latlng.lng));
+        };
+
+        mapService.showPathAndRelated = function (params) {
+            var parentId = params.parentId,
+                id = params.id;
+
+            mapService.resetLayers();
+            mapService.getFeatureById(id, parentId.replace(/_/g, ' '))
+                .then(function (data) {
+                    var featuresToShow = [data];
+
+                    if (data.properties.id_pois) {
+                        var related = mapService.getRelatedFeaturesById(data.properties.id_pois);
+                        for (var i in related) {
+                            if (related[i] && related[i].properties) {
+                                featuresToShow = featuresToShow.concat([related[i]]);
+                            }
+                        }
+                    }
+
+                    mapService.addFeaturesToFilteredLayer({
+                        'detail': featuresToShow
+                    }, false);
+                    setTimeout(function () {
+                        mapService.adjust();
+                    }, 2500);
+                });
         };
 
         mapService.triggerNearestPopup = function (latLong) {
