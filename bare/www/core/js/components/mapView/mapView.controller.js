@@ -122,7 +122,6 @@ angular.module('webmapp')
 
 
         var openFilters = function () {
-
             var filt = MapService.getActiveFilters();
             if (modalScope.vm.isNewModal) {
                 modalScope.vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";;
@@ -181,6 +180,7 @@ angular.module('webmapp')
 
         $scope.$on('$destroy', function () {
             modal.hide();
+            modal.remove();
         });
 
         $rootScope.$on('item-navigable', function (e, value) {

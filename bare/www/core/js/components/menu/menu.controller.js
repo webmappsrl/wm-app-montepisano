@@ -58,6 +58,11 @@ angular.module('webmapp')
             };
         }
 
+        mainMenuItems[mainMenuItems.length] = {
+            type: 'layer',
+            label: 'I miei percorsi'
+        };
+
         for (var i in mainMenuItems) {
             var type = mainMenuItems[i].type,
                 currentUrl = Model.buildItemUrl(mainMenuItems[i]);
@@ -92,9 +97,9 @@ angular.module('webmapp')
             var optionalFieldsConf = (CONFIG.LOGIN && CONFIG.LOGIN.optionalFields) ? CONFIG.LOGIN.optionalFields : [];
 
             loginScope.optionalFields = {
-                    firstName: false,
-                    lastName: false
-                };
+                firstName: false,
+                lastName: false
+            };
 
             for (var i in optionalFieldsConf) {
                 if (optionalFieldsConf[i] === 'firstName') {
@@ -401,8 +406,6 @@ angular.module('webmapp')
                 if (!Utils.isBrowser()) {
                     $cordovaKeyboard.close();
                 }
-
-
 
                 if ((typeof username !== 'string' || username.length < 2) &&
                     (typeof password !== 'string' || password.length === 0)) {

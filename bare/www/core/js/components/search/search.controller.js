@@ -418,7 +418,6 @@ angular.module('webmapp')
                 }
             }
 
-
             modalScope.currentTab = Object.keys(modalScope.filters)[0];
 
             modalScope.switchTab = function (id) {

@@ -19,7 +19,9 @@ angular.module('webmapp')
         Model,
         Utils
     ) {
-        var vm = {};
+        var vm = {},
+            registeredEvents = [];
+
         var overlaysGroupMap = Model.getOverlaysGroupMap(),
             overlayMap = Model.getOverlaysMap();
 
@@ -70,9 +72,9 @@ angular.module('webmapp')
         }
 
         Utils.createModal('core/js/modals/shareModal.html', {
-                backdropClickToClose: true,
-                hardwareBackButtonClose: true
-            }, shareScope)
+            backdropClickToClose: true,
+            hardwareBackButtonClose: true
+        }, shareScope)
             .then(function (modal) {
                 shareModal = modal;
             });
@@ -110,13 +112,13 @@ angular.module('webmapp')
 
                 currentRequest
                     .then(function () {
-                            shareScope.vm.sendInProgress = false;
-                            shareScope.vm.sendSuccess = true;
+                        shareScope.vm.sendInProgress = false;
+                        shareScope.vm.sendSuccess = true;
 
-                            setTimeout(function () {
-                                shareModal.hide();
-                            }, 1000);
-                        },
+                        setTimeout(function () {
+                            shareModal.hide();
+                        }, 1000);
+                    },
                         function (error) {
                             $ionicPopup.alert({
                                 title: $translate.instant("ATTENZIONE"),
@@ -173,12 +175,10 @@ angular.module('webmapp')
 
         vm.showRightMenu = false;
         vm.filterIcon = CONFIG.OPTIONS.filterIcon;
-        var rightMenuListener = $rootScope.$on('rightMenuClick', function () {
-            vm.showRightMenu = !vm.showRightMenu;
-        });
+
         $scope.$watch(function () {
-                return $ionicSideMenuDelegate.isOpenLeft();
-            },
+            return $ionicSideMenuDelegate.isOpenLeft();
+        },
             function (isOpen) {
                 if (isOpen) {
                     vm.showRightMenu = false;
@@ -221,16 +221,18 @@ angular.module('webmapp')
 
             }
 
-            var stopRecordoListener = $rootScope.$on('recordingState-changed', function (e, value) {
-                if (value.isActive == false && MapService.getUserPolyline() !== null && MapService.getUserPolyline().getLatLngs().length >= 2) {
-                    console.log(MapService.getUserPolyline());
-                    saveModalScope.vm.title = "";
-                    saveModalScope.vm.description = "";
-                    saveModalScope.vm.operation = "salva";
-                    saveModalScope.vm.featureId = "";
-                    saveModal.show();
-                }
-            });
+            registeredEvents.push(
+                $rootScope.$on('recordingState-changed', function (e, value) {
+                    if (value.isActive == false && MapService.getUserPolyline() !== null && MapService.getUserPolyline().getLatLngs().length >= 2) {
+                        console.log(MapService.getUserPolyline());
+                        saveModalScope.vm.title = "";
+                        saveModalScope.vm.description = "";
+                        saveModalScope.vm.operation = "salva";
+                        saveModalScope.vm.featureId = "";
+                        saveModal.show();
+                    }
+                })
+            );
         }
 
         vm.openFilters = function () {
@@ -352,9 +354,9 @@ angular.module('webmapp')
 
             if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) {
                 $ionicPopup.confirm({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
-                    })
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                })
                     .then(function (res) {
                         if (res) {
                             var emailTo = '',
@@ -391,8 +393,8 @@ angular.module('webmapp')
 
                                 currentRequest
                                     .then(function () {
-                                            return;
-                                        },
+                                        return;
+                                    },
                                         function (error) {
                                             return;
                                         });
@@ -402,9 +404,9 @@ angular.module('webmapp')
                     });
             } else {
                 $ionicPopup.confirm({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
-                    })
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                })
                     .then(function (res) {
                         if (res) {
                             sendSMS(text);
@@ -484,7 +486,6 @@ angular.module('webmapp')
                 });
         };
 
-
         vm.startNavigation = function (record) {
             var startRecording = function () {
                 GeolocationService.startRecording(record ? true : vm.stopNavigationUrlParams);
@@ -549,8 +550,6 @@ angular.module('webmapp')
             MapService.adjust();
             vm.isNavigating = false;
             window.plugins.insomnia.allowSleepAgain();
-
-
         };
 
         vm.toggleSpeedText = function () {
@@ -571,6 +570,7 @@ angular.module('webmapp')
             if (!time) {
                 return "0:00";
             }
+
             var hours = 0,
                 minutes = 0,
                 seconds = 0;
@@ -595,206 +595,231 @@ angular.module('webmapp')
             return speed ? (speed.toFixed(0) + "km/h") : '0km/h';
         };
 
-        $scope.$on('$stateChangeStart', function (e, dest) {
-            if ((dest.name === 'app.main.detaillayer' ||
+        registeredEvents.push(
+            $scope.$on('$stateChangeStart', function (e, dest) {
+                vm.showRightMenu = false;
+                if ((dest.name === 'app.main.detaillayer' ||
                     dest.name === 'app.main.detailevent' ||
                     dest.name === 'app.main.detailulayer') &&
-                previousBounds === null) {
-                previousBounds = MapService.getBounds();
-            }
-        });
-
-        $scope.$on('$stateChangeSuccess', function () {
-            var currentState = $rootScope.currentState.name,
-                realState,
-                layerState = false;
-
-            if (currentState !== 'app.main.detaillayer' &&
-                currentState !== 'app.main.detailevent' &&
-                currentState !== 'app.main.detailulayer' &&
-                previousBounds) {
-                setTimeout(function () {
-                    // MapService.fitBounds(previousBounds);
-                    previousBounds = null;
-                }, 1250);
-            }
-
-            if (currentState !== 'app.main.detaillayer' && $rootScope.track) {
-                delete $rootScope.track;
-            }
-
-            if (!$rootScope.stateCounter) {
-                $rootScope.stateCounter = 1;
-            } else {
-                $rootScope.stateCounter++;
-            }
-
-            vm.isWelcomePage = currentState === 'app.main.welcome';
-            vm.isSearchPage = currentState === 'app.main.search';
-            vm.isMapPage = currentState === 'app.main.map';
-            vm.isMapModeInSearch = false;
-            vm.hasShadow = false;
-            vm.extendShadow = false;
-            vm.detail = false;
-
-            if (!$rootScope.first) {
-                $rootScope.first = true;
-            } else {
-                if (!$rootScope.backAllowed) {
-                    $rootScope.backAllowed = true;
+                    previousBounds === null) {
+                    previousBounds = MapService.getBounds();
                 }
-            }
+            })
+        );
 
-            // TODO: find a way to slow down the animation when the state change
-            MapService.adjust();
-            MapService.resetLoading();
-            MapService.closePopup();
+        registeredEvents.push(
+            $scope.$on('$stateChangeSuccess', function () {
+                var currentState = $rootScope.currentState.name,
+                    realState,
+                    layerState = false;
 
-            setTimeout(function () {
+                if (currentState !== 'app.main.detaillayer' &&
+                    currentState !== 'app.main.detailevent' &&
+                    currentState !== 'app.main.detailulayer' &&
+                    previousBounds) {
+                    setTimeout(function () {
+                        // MapService.fitBounds(previousBounds);
+                        previousBounds = null;
+                    }, 1250);
+                }
+
+                if (currentState !== 'app.main.detaillayer' && $rootScope.track) {
+                    delete $rootScope.track;
+                }
+
+                if (!$rootScope.stateCounter) {
+                    $rootScope.stateCounter = 1;
+                } else {
+                    $rootScope.stateCounter++;
+                }
+
+                vm.isWelcomePage = currentState === 'app.main.welcome';
+                vm.isSearchPage = currentState === 'app.main.search';
+                vm.isMapPage = currentState === 'app.main.map';
+                vm.isMapModeInSearch = false;
+                vm.hasShadow = false;
+                vm.extendShadow = false;
+                vm.detail = false;
+
+                if (!$rootScope.first) {
+                    $rootScope.first = true;
+                } else {
+                    if (!$rootScope.backAllowed) {
+                        $rootScope.backAllowed = true;
+                    }
+                }
+
+                // TODO: find a way to slow down the animation when the state change
                 MapService.adjust();
+                MapService.resetLoading();
+                MapService.closePopup();
+
                 setTimeout(function () {
                     MapService.adjust();
-                }, 650);
-            }, 650);
-
-            vm.hideMap = false;
-            vm.mapView = false;
-
-            if (currentState === 'app.main.map') {
-                vm.mapView = true;
-                vm.hideExpander = true;
-                setTimeout(function () {
-                    if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id && MapService.getUserPolyline() === null) {
-                        MapService.showPathAndRelated(vm.stopNavigationUrlParams);
-                    }
-                }, 50);
-            } else if (currentState === 'app.main.popup') {
-                vm.mapView = true;
-                vm.hideExpander = true;
-            } else if (currentState === 'app.main.events') {
-                MapService.showEventsLayer();
-                vm.hasShadow = true;
-            } else if (currentState === 'app.main.welcome') {
-                // TODO: show nothing on the map
-            } else if (currentState === 'app.main.layer') {
-                realState = $rootScope.currentParams.id.replace(/_/g, ' ');
-                layerState = true;
-
-                if (typeof overlayMap[realState] !== 'undefined' ||
-                    typeof overlaysGroupMap[realState] !== 'undefined') {
-
                     setTimeout(function () {
-                        if (layerState) {
-                            MapService.activateLayer(realState, false, false);
+                        MapService.adjust();
+                    }, 650);
+                }, 650);
+
+                vm.hideMap = false;
+                vm.mapView = false;
+
+                if (currentState === 'app.main.map') {
+                    vm.mapView = true;
+                    vm.hideExpander = true;
+                    setTimeout(function () {
+                        if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id && MapService.getUserPolyline() === null) {
+                            MapService.showPathAndRelated(vm.stopNavigationUrlParams);
                         }
                     }, 50);
-                }
-            } else if (currentState === 'app.main.detaillayer') {
-                if (MapService.isAPOILayer($rootScope.currentParams.parentId.replace(/_/g, ' '))) {
+                } else if (currentState === 'app.main.popup') {
+                    vm.mapView = true;
+                    vm.hideExpander = true;
+                } else if (currentState === 'app.main.events') {
+                    MapService.showEventsLayer();
+                    vm.hasShadow = true;
+                } else if (currentState === 'app.main.welcome') {
+                    // TODO: show nothing on the map
+                } else if (currentState === 'app.main.layer') {
+                    realState = $rootScope.currentParams.id.replace(/_/g, ' ');
+                    layerState = true;
+
+                    if (typeof overlayMap[realState] !== 'undefined' ||
+                        typeof overlaysGroupMap[realState] !== 'undefined') {
+
+                        setTimeout(function () {
+                            if (layerState) {
+                                MapService.activateLayer(realState, false, false);
+                            }
+                        }, 50);
+                    }
+                } else if (currentState === 'app.main.detaillayer') {
+                    if (MapService.isAPOILayer($rootScope.currentParams.parentId.replace(/_/g, ' '))) {
+                        vm.detail = true;
+                    }
+
+                    vm.hideExpander = hideExpanderInDetails;
+                } else if (currentState === 'app.main.detailtaxonomy') {
+                    vm.hideExpander = true;
                     vm.detail = true;
+                    vm.hasShadow = true;
+                    vm.extendShadow = true;
+                } else if (currentState === 'app.main.detailevent') {
+                    vm.hasShadow = true;
+                } else if (currentState === 'app.main.detailulayer') {
+                    MapService.resetUtfGridLayers();
+                    vm.hideExpander = true;
+                } else if (currentState === 'app.main.coupons' ||
+                    currentState === 'app.main.packages' ||
+                    currentState === 'app.main.route' ||
+                    currentState === 'app.main.taxonomy' ||
+                    currentState === 'app.main.languages' ||
+                    currentState === 'app.main.webmappInternal' ||
+                    currentState === 'app.main.attributionInternal') {
+                    vm.hideMap = true;
+                    vm.hasShadow = true;
+                    vm.extendShadow = true;
+                } else if (currentState === 'app.main.offline' ||
+                    currentState === 'app.main.search' ||
+                    Model.isAPage(currentState)) {
+                    vm.hideMap = true;
                 }
 
-                vm.hideExpander = hideExpanderInDetails;
-            } else if (currentState === 'app.main.detailtaxonomy') {
-                vm.hideExpander = true;
-                vm.detail = true;
-                vm.hasShadow = true;
-                vm.extendShadow = true;
-            } else if (currentState === 'app.main.detailevent') {
-                vm.hasShadow = true;
-            } else if (currentState === 'app.main.detailulayer') {
-                MapService.resetUtfGridLayers();
-                vm.hideExpander = true;
-            } else if (currentState === 'app.main.coupons' ||
-                currentState === 'app.main.packages' ||
-                currentState === 'app.main.route' ||
-                currentState === 'app.main.taxonomy' ||
-                currentState === 'app.main.languages' ||
-                currentState === 'app.main.webmappInternal' ||
-                currentState === 'app.main.attributionInternal') {
-                vm.hideMap = true;
-                vm.hasShadow = true;
-                vm.extendShadow = true;
-            } else if (currentState === 'app.main.offline' ||
-                currentState === 'app.main.search' ||
-                Model.isAPage(currentState)) {
-                vm.hideMap = true;
-            }
+                setTimeout(function () {
+                    $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
+                    $ionicScrollDelegate.$getByHandle('mainScroll').resize();
+                });
 
-            setTimeout(function () {
-                $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();
-                $ionicScrollDelegate.$getByHandle('mainScroll').resize();
-            });
+                MapService.initialize();
+            })
+        );
 
-            MapService.initialize();
-        });
+        registeredEvents.push(
+            $rootScope.$on('rightMenuClick', function () {
+                vm.showRightMenu = !vm.showRightMenu;
+            })
+        );
 
-        $rootScope.$on('toggle-map-in-search', function (e, value) {
-            vm.isMapModeInSearch = value;
-            setTimeout(function () {
-                MapService.adjust();
-            }, 350);
-        });
+        registeredEvents.push(
+            $rootScope.$on('toggle-map-in-search', function (e, value) {
+                vm.isMapModeInSearch = value;
+                setTimeout(function () {
+                    MapService.adjust();
+                }, 350);
+            })
+        );
 
-        $rootScope.$on('toggle-map-from-detail', function () {
-            vm.toggleMap();
-        });
+        registeredEvents.push(
+            $rootScope.$on('toggle-map-from-detail', function () {
+                vm.toggleMap();
+            })
+        );
 
-        $rootScope.$on('toggle-list', function (e, value) {
-            vm.hideMap = value;
-            setTimeout(function () {
-                MapService.adjust();
-                angular.element(window).triggerHandler('resize');
-            }, 350);
-        });
+        registeredEvents.push(
+            $rootScope.$on('toggle-list', function (e, value) {
+                vm.hideMap = value;
+                setTimeout(function () {
+                    MapService.adjust();
+                    angular.element(window).triggerHandler('resize');
+                }, 350);
+            })
+        );
 
-        $rootScope.$on('item-navigable', function (e, value) {
-            vm.isNavigable = value;
-            Utils.forceDigest();
-        });
+        registeredEvents.push(
+            $rootScope.$on('item-navigable', function (e, value) {
+                vm.isNavigable = value;
+                Utils.forceDigest();
+            })
+        );
 
-        $rootScope.$on('geolocationState-changed', function (e, value) {
-            vm.geolocationState = value;
-            Utils.forceDigest();
-        });
+        registeredEvents.push(
+            $rootScope.$on('geolocationState-changed', function (e, value) {
+                vm.geolocationState = value;
+                Utils.forceDigest();
+            })
+        );
 
-        $rootScope.$on('heading-changed', function (e, value) {
-            vm.heading = value;
-        });
+        registeredEvents.push(
+            $rootScope.$on('heading-changed', function (e, value) {
+                vm.heading = value;
+            })
+        );
 
-        $rootScope.$on('recordingState-changed', function (e, value) {
-            if (value.currentTrack) {
-                vm.stopNavigationUrlParams = {
-                    id: value.currentTrack.id,
-                    parentId: value.currentTrack.parentId
-                };
+        registeredEvents.push(
+            $rootScope.$on('recordingState-changed', function (e, value) {
+                if (value.currentTrack) {
+                    vm.stopNavigationUrlParams = {
+                        id: value.currentTrack.id,
+                        parentId: value.currentTrack.parentId
+                    };
 
-                vm.navigationInterval = setInterval(navigationIntervalFunction, 999);
-                window.plugins.insomnia.keepAwake();
-            }
+                    vm.navigationInterval = setInterval(navigationIntervalFunction, 999);
+                    window.plugins.insomnia.keepAwake();
+                }
 
-            if (vm.navigation.state.isActive !== value.isActive) {
-                vm.navigation.state.isActive = value.isActive;
-                $rootScope.$emit('is-navigating', vm.navigation.state.isActive);
-                $rootScope.isNavigating = vm.navigation.state.isActive;
-                if (vm.navigation.state.isActive) {
-                    vm.isNavigable = false;
-                } else {
-                    if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
-                        vm.isNavigable = true;
-                        var url = 'layer/' + vm.stopNavigationUrlParams.parentId + '/' + vm.stopNavigationUrlParams.id;
-                        vm.stopNavigationUrlParams = {
-                            parentId: null,
-                            id: null
-                        };
-                        Utils.goTo(url);
+                if (vm.navigation.state.isActive !== value.isActive) {
+                    vm.navigation.state.isActive = value.isActive;
+                    $rootScope.$emit('is-navigating', vm.navigation.state.isActive);
+                    $rootScope.isNavigating = vm.navigation.state.isActive;
+                    if (vm.navigation.state.isActive) {
+                        vm.isNavigable = false;
+                    } else {
+                        if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
+                            vm.isNavigable = true;
+                            var url = 'layer/' + vm.stopNavigationUrlParams.parentId + '/' + vm.stopNavigationUrlParams.id;
+                            vm.stopNavigationUrlParams = {
+                                parentId: null,
+                                id: null
+                            };
+                            Utils.goTo(url);
+                        }
                     }
                 }
-            }
-            if (vm.navigation.state.isPaused !== value.isPaused) {
-                vm.navigation.state.isPaused = value.isPaused;
-            }
-        });
+                if (vm.navigation.state.isPaused !== value.isPaused) {
+                    vm.navigation.state.isPaused = value.isPaused;
+                }
+            })
+        );
 
         $ionicPlatform.ready(function () {
             vm.userData = Auth.getUserData();
@@ -806,11 +831,14 @@ angular.module('webmapp')
             }
         });
 
-
-        $scope.$on('$destroy', function () {
-            rightMenuListener();
-            stopRecordoListener();
-        });
+        registeredEvents.push(
+            $scope.$on('$destroy', function () {
+                for (var i in registeredEvents) {
+                    registeredEvents[i]();
+                }
+                delete registeredEvents;
+            })
+        );
 
         return vm;
     });

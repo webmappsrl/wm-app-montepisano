@@ -161,7 +161,9 @@ angular.module('webmapp')
                     }).then(function (res) {
                         if (res) {
                             MapService.deleteUserTrack(id);
-                            Utils.goBack();
+                            $rootScope.$emit('item-navigable', false);
+                            $rootScope.isNavigable = false;
+                            Utils.goTo('/');
                         }
                     })
                 }
@@ -293,8 +295,8 @@ angular.module('webmapp')
 
                 vm.chiama = function (number) {
                     window.plugins.CallNumber.callNumber(function () {
-                            console.log('successo');
-                        },
+                        console.log('successo');
+                    },
                         function () {
                             console.error('error');
                         }, number);
@@ -341,8 +343,8 @@ angular.module('webmapp')
                                     vm.stages[this.s].pois.push(data);
                                     extras.push(data);
                                 }, {
-                                    s: s
-                                }));
+                                        s: s
+                                    }));
                         }
                     }
                 }
