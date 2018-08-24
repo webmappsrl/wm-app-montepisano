@@ -16,6 +16,20 @@
         <ion-nav-view name="inception-top"></ion-nav-view>
 
     </ion-content>
+    <!--3 POINTS MENU-->
+    <div class="map-menu" ng-if="vm.showRightMenu">
+        <div class="list" ng-style="{
+            'background': vm.colors.menu.background,
+            'color': vm.colors.menu.color, 
+        }">
+            <a class="item item-icon-left" ng-click="vm.openFilters()">
+                <i class="icon {{vm.filterIcon}}"></i> {{"seleziona categorie" | translate}}
+            </a>
+            <a class="item item-icon-left" ng-click="vm.startNavigation('true')">
+                <i class="icon wm-icon-plus"></i> {{'registra percorso' | translate }}
+            </a>
+        </div>
+    </div>
 
     <a href="" class="details-shadow" ng-class="{'extend-shadow': vm.extendShadow}" ng-if="vm.hasShadow">
     </a>

@@ -611,6 +611,10 @@ angular.module('webmapp')
                             }
                         }
 
+                        if (!CONFIG.recordTrack && MapService.getUserPolyline() !== null) {
+                            MapService.updateUserPolyline([lat, long, altitude]);
+                        }
+
                         if (recordingState.firstPositionSet) {
                             updateNavigationValues(lat, long);
                         } else {
@@ -621,10 +625,13 @@ angular.module('webmapp')
                             handleToast(lat, long);
                         }
 
-                        MapService.triggerNearestPopup({
-                            lat: lat,
-                            long: long
-                        });
+                        try {
+                            MapService.triggerNearestPopup({
+                                lat: lat,
+                                long: long
+                            });
+                        } catch (e) {}
+
                     }
 
                     state.lastPosition = {
@@ -1054,7 +1061,8 @@ angular.module('webmapp')
          *      resolve the recording state when correct, reject otherwise
          */
         console.warn("TODO: function startRecording - if recordTrack record the track");
-        geolocationService.startRecording = function (recordTrack, navigationTrack) {
+
+        geolocationService.startRecording = function (navigationTrack) {
             var defer = $q.defer();
             if (!recordingState.isActive) {
                 recordingState.reset();
@@ -1067,10 +1075,12 @@ angular.module('webmapp')
                 });
 
                 if (state.lastPosition && state.lastPosition.lat && state.lastPosition.long) {
-                    MapService.triggerNearestPopup({
-                        lat: state.lastPosition.lat,
-                        long: state.lastPosition.long
-                    });
+                    try {
+                        MapService.triggerNearestPopup({
+                            lat: state.lastPosition.lat,
+                            long: state.lastPosition.long
+                        })
+                    } catch (e) {};
                     recordingState.firstPositionSet = true;
                 } else {
                     recordingState.firstPositionSet = false;
@@ -1086,6 +1096,14 @@ angular.module('webmapp')
                                 }
                             }
                         });
+                } else {
+                    if (recordingState.firstPositionSet) {
+                        MapService.createUserPolyline([
+                            [state.lastPosition.lat, state.lastPosition.long, 0]
+                        ]);
+                    } else {
+                        MapService.createUserPolyline([]);
+                    }
                 }
 
                 defer.resolve({
@@ -1190,6 +1208,7 @@ angular.module('webmapp')
                 isActive: recordingState.isActive,
                 isPaused: recordingState.isPaused
             });
+
 
             return defer.promise;
         };

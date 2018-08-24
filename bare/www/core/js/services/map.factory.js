@@ -97,8 +97,7 @@ angular.module('webmapp')
 
         var db = new PouchDB('webmapp');
 
-
-
+        var userTrackPolyline = null;
 
         var overlayLayersConfMap = overlayLayersConf.reduce(function (prev, curr) {
             prev[curr.label] = curr;
@@ -136,14 +135,14 @@ angular.module('webmapp')
 
         var isAPOILayer = function (layerName) {
             return (overlayLayersConfMap[layerName] &&
-                overlayLayersConfMap[layerName].type === 'poi_geojson') ||
+                    overlayLayersConfMap[layerName].type === 'poi_geojson') ||
                 (extraLayersByLabel[layerName] &&
                     extraLayersByLabel[layerName].type === 'poi_geojson');
         };
 
         var isALineLayer = function (layerName) {
             return (overlayLayersConfMap[layerName] &&
-                overlayLayersConfMap[layerName].type === 'line_geojson') ||
+                    overlayLayersConfMap[layerName].type === 'line_geojson') ||
                 (extraLayersByLabel[layerName] &&
                     extraLayersByLabel[layerName].type === 'line_geojson');
         };
@@ -501,8 +500,8 @@ angular.module('webmapp')
                         '</div>';
 
                     L.popup({
-                        autoPan: false
-                    })
+                            autoPan: false
+                        })
                         .setLatLng({
                             lat: e.latlng.lat + (isPOI && !mapIsRotating ? getIncrement(map.getZoom()) : 0),
                             lng: e.latlng.lng
@@ -635,9 +634,9 @@ angular.module('webmapp')
             resetLayers();
 
             var poiCollection = {
-                type: 'FeatureCollection',
-                features: []
-            },
+                    type: 'FeatureCollection',
+                    features: []
+                },
                 linesCollection = {
                     type: 'FeatureCollection',
                     features: []
@@ -645,10 +644,10 @@ angular.module('webmapp')
                 currentId, feature;
 
             var poiOptions = {
-                pointToLayer: function (feature, latlng) {
-                    return genericPointToLayer({}, feature, latlng);
-                }
-            },
+                    pointToLayer: function (feature, latlng) {
+                        return genericPointToLayer({}, feature, latlng);
+                    }
+                },
                 lineOptions = {
                     style: globalLineApplyStyle
                 },
@@ -824,7 +823,7 @@ angular.module('webmapp')
                         db.put({
                             _id: url,
                             data: data
-                        }).then(function () { }).catch(function () {
+                        }).then(function () {}).catch(function () {
                             console.log(url + " page not updated");
                         });
                     };
@@ -903,14 +902,14 @@ angular.module('webmapp')
 
             var poiCallback = function (data, currentOverlay) {
                 var geoJsonOptions = {
-                    pointToLayer: function (feature, latlng) {
-                        return genericPointToLayer(currentOverlay, feature, latlng);
+                        pointToLayer: function (feature, latlng) {
+                            return genericPointToLayer(currentOverlay, feature, latlng);
+                        },
+                        onEachFeature: function (feature) {
+                            feature.parent = currentOverlay;
+                            globalOnEachPOI(feature);
+                        }
                     },
-                    onEachFeature: function (feature) {
-                        feature.parent = currentOverlay;
-                        globalOnEachPOI(feature);
-                    }
-                },
                     pointsLayer = L.geoJson(data, geoJsonOptions);
 
                 geojsonByLabel[currentOverlay.label] = data;
@@ -923,47 +922,47 @@ angular.module('webmapp')
 
             var lineCallback = function (data, currentOverlay) {
                 var geoJsonOptions = {
-                    onEachFeature: function (feature, layer) {
-                        if (!feature.parent) {
-                            feature.parent = currentOverlay;
-                        }
-                        globalOnEachLine(feature, layer);
-
-                        if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
-                            if (!polylineDecoratorLayers[currentOverlay.label]) {
-                                polylineDecoratorLayers[currentOverlay.label] = {};
+                        onEachFeature: function (feature, layer) {
+                            if (!feature.parent) {
+                                feature.parent = currentOverlay;
                             }
+                            globalOnEachLine(feature, layer);
 
-                            polylineDecoratorLayers[currentOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
-                                patterns: [{
-                                    offset: 20,
-                                    repeat: 100,
-                                    symbol: L.Symbol.arrowHead({
-                                        polygon: true,
-                                        pixelSize: 16,
-                                        headAngle: 30,
-                                        pathOptions: {
-                                            color: '#fff',
-                                            opacity: 0,
-                                            fillColor: '#000',
-                                            fillOpacity: 0.8,
-                                            stroke: true,
-                                            weight: 1
-                                        }
-                                    })
-                                }]
-                            });
+                            if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
+                                if (!polylineDecoratorLayers[currentOverlay.label]) {
+                                    polylineDecoratorLayers[currentOverlay.label] = {};
+                                }
 
-                            polylineDecoratorLayers[currentOverlay.label][feature.properties.id].addTo(map);
+                                polylineDecoratorLayers[currentOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
+                                    patterns: [{
+                                        offset: 20,
+                                        repeat: 100,
+                                        symbol: L.Symbol.arrowHead({
+                                            polygon: true,
+                                            pixelSize: 16,
+                                            headAngle: 30,
+                                            pathOptions: {
+                                                color: '#fff',
+                                                opacity: 0,
+                                                fillColor: '#000',
+                                                fillOpacity: 0.8,
+                                                stroke: true,
+                                                weight: 1
+                                            }
+                                        })
+                                    }]
+                                });
+
+                                polylineDecoratorLayers[currentOverlay.label][feature.properties.id].addTo(map);
+                            }
+                        },
+                        style: function (feature) {
+                            if (!feature.parent) {
+                                feature.parent = currentOverlay;
+                            }
+                            return globalLineApplyStyle(feature);
                         }
                     },
-                    style: function (feature) {
-                        if (!feature.parent) {
-                            feature.parent = currentOverlay;
-                        }
-                        return globalLineApplyStyle(feature);
-                    }
-                },
                     linesLayer = L.geoJson(data, geoJsonOptions);
 
                 overlayLayersByLabel[currentOverlay.label] = linesLayer;
@@ -1007,8 +1006,7 @@ angular.module('webmapp')
                             }
                             delete overlayLayersQueueByLabel[currentOverlay.label];
                         });
-                }
-                else {
+                } else {
                     overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(langGeojsonUrl, function (data) {
                         if (currentOverlay.type === 'line_geojson') {
                             lineCallback(data, currentOverlay);
@@ -1103,11 +1101,11 @@ angular.module('webmapp')
                 areaMapById[e.data.id] = angular.extend({}, {
                     properties: e.data
                 }, {
-                        parent: {
-                            label: this.baseMapLabel,
-                            mapping: this.baseMapMapping
-                        }
-                    });
+                    parent: {
+                        label: this.baseMapLabel,
+                        mapping: this.baseMapMapping
+                    }
+                });
                 activatePopup(angular.extend(e, {
                     parent: {
                         label: this.baseMapLabel,
@@ -1115,9 +1113,9 @@ angular.module('webmapp')
                     }
                 }));
             }, {
-                    baseMapLabel: currentOverlay.label,
-                    baseMapMapping: currentOverlay.mapping
-                }));
+                baseMapLabel: currentOverlay.label,
+                baseMapMapping: currentOverlay.mapping
+            }));
 
             var currentFromLocalStorage = localStorage.getItem(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl);
 
@@ -1164,12 +1162,17 @@ angular.module('webmapp')
                     continue;
                 }
 
+
+                if (!CONFIG.recordTrack && overlayLayersConf[i].label === "I miei percorsi") {
+                    continue;
+                }
+
                 if (overlayLayersConf[i].type === 'utfgrid') {
                     var utfGridmap = new L.UtfGrid(overlayLayersConf[i].url, {
-                        useJsonP: false,
-                        resolution: 4,
-                        maxZoom: 16
-                    }),
+                            useJsonP: false,
+                            resolution: 4,
+                            maxZoom: 16
+                        }),
                         layerGroup = L.layerGroup([utfGridmap]);
 
                     layerControl.addOverlay(layerGroup);
@@ -1269,8 +1272,7 @@ angular.module('webmapp')
                     regex = /.*\{z\}\/\{x\}\/\{y\}\.png.*/gm;
                 if (regex.test(baseMap.tilesUrl)) {
                     address = baseMap.tilesUrl;
-                }
-                else {
+                } else {
                     address = baseMap.tilesUrl + '{z}/{x}/{y}.png';
                 }
                 Offline.setDefaultInfo(baseLayer, address, baseTms, mapService.resetView);
@@ -1318,8 +1320,7 @@ angular.module('webmapp')
                         var regex = /.*\{z\}\/\{x\}\/\{y\}\.png.*/gm;
                         if (regex.test(baseMap.tilesUrl)) {
                             address = baseMap.tilesUrl;
-                        }
-                        else {
+                        } else {
                             address = baseMap.tilesUrl + '{z}/{x}/{y}.png';
                         }
                         setBaseLayer(baseMap, baseTms, L.tileLayer(address, options));
@@ -1359,11 +1360,11 @@ angular.module('webmapp')
                         areaMapById[e.data.id] = angular.extend({}, {
                             properties: e.data
                         }, {
-                                parent: {
-                                    label: this.baseMapLabel,
-                                    mapping: this.baseMapMapping
-                                }
-                            });
+                            parent: {
+                                label: this.baseMapLabel,
+                                mapping: this.baseMapMapping
+                            }
+                        });
                         activatePopup(angular.extend(e, {
                             parent: {
                                 label: this.baseMapLabel,
@@ -1371,9 +1372,9 @@ angular.module('webmapp')
                             }
                         }));
                     }, {
-                            baseMapLabel: baseMap.label,
-                            baseMapMapping: baseMap.mapping
-                        }));
+                        baseMapLabel: baseMap.label,
+                        baseMapMapping: baseMap.mapping
+                    }));
                     setBaseLayer(baseMap, baseTms, L.tileLayer(address, options));
                     resolve();
                 } else if (baseMap.type === 'mbtiles') {
@@ -1599,6 +1600,12 @@ angular.module('webmapp')
             layerControl.addTo(map);
 
             initializeLayers();
+
+            if (localStorage.$wm_userTracks) {
+                var uTracks = JSON.parse(localStorage.$wm_userTracks);
+                // Model.removeLayerItems({ label: "userTracks" });
+                initializeUserTracksLayer(uTracks);
+            }
 
             return map;
         };
@@ -1866,9 +1873,9 @@ angular.module('webmapp')
 
         mapService.centerOnCoords = function (lat, lng) {
             map.setView({
-                lat: lat,
-                lng: lng
-            },
+                    lat: lat,
+                    lng: lng
+                },
                 CONFIG.MAP.maxZoom);
         };
 
@@ -1924,8 +1931,8 @@ angular.module('webmapp')
                 $.getJSON(overlayLayersConf[overlay].url, $.proxy(function (data) {
                     setItemInLocalStorage(overlayLayersConf[this.overlay].url, data);
                 }, {
-                        overlay: overlay
-                    }));
+                    overlay: overlay
+                }));
             }
         };
 
@@ -2343,7 +2350,7 @@ angular.module('webmapp')
             map && map.closePopup();
             try {
                 event && event.stopPropagation();
-            } catch (err) { }
+            } catch (err) {}
         };
 
         window.goToDetail = function (id, parentLabel, isPOI, goToDetails, lat, lng) {
@@ -2383,6 +2390,216 @@ angular.module('webmapp')
         setTimeout(function () {
             mapService.adjust();
         }, 3600);
+
+        var initializeUserTracksLayer = function (data) {
+
+            var userOverlay = overlayLayersConfMap["I miei percorsi"];
+
+            if (userOverlay) {
+
+                var geoJsonOptions = {
+                        onEachFeature: function (feature, layer) {
+                            if (!feature.parent) {
+                                feature.parent = userOverlay;
+                            }
+                            globalOnEachLine(feature, layer);
+
+                            if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
+                                if (!polylineDecoratorLayers[userOverlay.label]) {
+                                    polylineDecoratorLayers[userOverlay.label] = {};
+                                }
+
+                                polylineDecoratorLayers[userOverlay.label][feature.properties.id] = L.polylineDecorator(layer, {
+                                    patterns: [{
+                                        offset: 20,
+                                        repeat: 100,
+                                        symbol: L.Symbol.arrowHead({
+                                            polygon: true,
+                                            pixelSize: 16,
+                                            headAngle: 30,
+                                            pathOptions: {
+                                                color: '#fff',
+                                                opacity: 0,
+                                                fillColor: '#000',
+                                                fillOpacity: 0.8,
+                                                stroke: true,
+                                                weight: 1
+                                            }
+                                        })
+                                    }]
+                                });
+
+                                polylineDecoratorLayers[userOverlay.label][feature.properties.id].addTo(map);
+                            }
+                        },
+                        style: function (feature) {
+                            if (!feature.parent) {
+                                feature.parent = userOverlay;
+                            }
+                            return globalLineApplyStyle(feature);
+                        }
+                    },
+                    linesLayer = L.geoJson(data, geoJsonOptions);
+
+                overlayLayersByLabel[userOverlay.label] = linesLayer;
+                mapService.activateLayer(userOverlay.label, true, true, true);
+                activateLineHandlers(linesLayer);
+                if (CONFIG.MAP.filters || !activeFilters['I miei percorsi']) {
+                    mapService.removeLayer('I miei percorsi');
+                } else {
+                    //TODO redraw filtered layer
+                }
+
+            }
+        };
+
+        mapService.createUserPolyline = function (coordsArray) {
+            if (userTrackPolyline) {
+                map.removeLayer(userTrackPolyline);
+            }
+            userTrackPolyline = L.polyline(coordsArray).addTo(map);
+        }
+
+        mapService.updateUserPolyline = function (latLng) {
+            if (userTrackPolyline) {
+                userTrackPolyline.addLatLng(latLng);
+                userTrackPolyline.redraw();
+            } else {
+                userTrackPolyline = L.polyline(latLng).addTo(map);
+            }
+        }
+
+        mapService.getUserPolyline = function () {
+            return userTrackPolyline;
+        }
+
+        mapService.removeUserPolyline = function () {
+            if (userTrackPolyline) {
+                map.removeLayer(userTrackPolyline);
+                userTrackPolyline = null;
+            }
+        }
+
+        mapService.saveUserPolyline = function (info) {
+
+            if (userTrackPolyline) {
+
+                var geoUserTrack = userTrackPolyline.toGeoJSON();
+                geoUserTrack.properties.name = info.name;
+                geoUserTrack.properties.description = info.description;
+                geoUserTrack.properties.isEditable = true;
+
+                var tmp;
+                if (!localStorage.$wm_userTracks) {
+                    geoUserTrack.properties.id = 1000000;
+                    tmp = [];
+
+                } else {
+                    var coll = JSON.parse(localStorage.$wm_userTracks);
+                    tmp = coll.features;
+                    var lastElement = tmp[tmp.length - 1];
+                    if (lastElement && lastElement.properties && lastElement.properties.id) {
+                        geoUserTrack.properties.id = lastElement.properties.id + 1;
+                    } else {
+                        geoUserTrack.properties.id = 1000000;
+                    }
+
+                }
+                tmp.push(geoUserTrack);
+                var featureColl = {
+                    type: "FeatureCollection",
+                    features: tmp
+                }
+                localStorage.$wm_userTracks = JSON.stringify(featureColl);
+
+                mapService.removeLayer("I miei percorsi");
+                if (polylineDecoratorLayers["I miei percorsi"]) {
+                    polylineDecoratorLayers["I miei percorsi"] = {};
+                }
+                Model.removeLayerItems({
+                    label: "I miei percorsi"
+                });
+
+                initializeUserTracksLayer(featureColl);
+            }
+        }
+
+
+        mapService.deleteUserTrack = function (id) {
+
+            if (localStorage.$wm_userTracks) {
+
+                var coll = JSON.parse(localStorage.$wm_userTracks);
+                var tmp = coll.features;
+                var find = false;
+                for (let i = 0; i < tmp.length; i++) {
+                    var feature = tmp[i];
+                    if (feature.properties.id == id) {
+                        tmp.splice(i, 1);
+                        find = true;
+                        break;
+                    }
+
+                }
+                if (find) {
+                    var featureColl = {
+                        type: "FeatureCollection",
+                        features: tmp
+                    }
+                    localStorage.$wm_userTracks = JSON.stringify(featureColl);
+
+                    mapService.removeLayer("I miei percorsi");
+                    if (polylineDecoratorLayers["I miei percorsi"]) {
+                        polylineDecoratorLayers["I miei percorsi"] = {};
+                    }
+                    Model.removeLayerItems({
+                        label: "I miei percorsi"
+                    });
+                    initializeUserTracksLayer(featureColl);
+                }
+            }
+
+        }
+
+        mapService.editUserTrack = function (id, name, descr) {
+
+            if (localStorage.$wm_userTracks) {
+
+                var coll = JSON.parse(localStorage.$wm_userTracks);
+                var tmp = coll.features;
+
+                var find = false;
+                for (let i = 0; i < tmp.length; i++) {
+                    var feature = tmp[i];
+
+                    if (feature.properties.id == id) {
+                        feature.properties.name = name;
+                        feature.properties.description = descr;
+                        find = true;
+                        break;
+                    }
+
+                }
+                if (find) {
+                    var featureColl = {
+                        type: "FeatureCollection",
+                        features: tmp
+                    }
+
+                    localStorage.$wm_userTracks = JSON.stringify(featureColl);
+
+                    mapService.removeLayer("I miei percorsi");
+                    if (polylineDecoratorLayers["I miei percorsi"]) {
+                        polylineDecoratorLayers["I miei percorsi"] = {};
+                    }
+                    Model.removeLayerItems({
+                        label: "I miei percorsi"
+                    });
+
+                    initializeUserTracksLayer(featureColl);
+                }
+            }
+        }
 
         return mapService;
     });

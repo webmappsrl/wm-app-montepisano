@@ -1150,6 +1150,10 @@ div.detailRoute-footer {
 .details-route span.difficulty {
   float: right; }
 
+/*user track buttons */
+.edit-user-track .list a {
+  text-transform: capitalize; }
+
 /* ------------------------------------ *\
    #MEDIA QUERIES
 \* ------------------------------------ */
@@ -2091,6 +2095,13 @@ button.login-button.skip-login {
 .layer-details {
   overflow: visible; }
 
+.map-menu {
+  position: relative;
+  top: 42px;
+  z-index: 999; }
+  .map-menu a {
+    text-transform: capitalize; }
+
 /* ------------------------------------ *\
    #MAP
 \* ------------------------------------ */
@@ -2101,7 +2112,8 @@ button.login-button.skip-login {
 .platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) {
   height: 43px; }
 
-.platform-ios.platform-cordova:not(.fullscreen) .has-header, .platform-ios.platform-cordova:not(.fullscreen) .bar-subheader {
+.platform-ios.platform-cordova:not(.fullscreen) .has-header,
+.platform-ios.platform-cordova:not(.fullscreen) .bar-subheader {
   top: 43px; }
 
 /* testare su mobile END */
@@ -3943,6 +3955,63 @@ ion-content div.static-content.card-content {
     font-size: 16px; }
     .submenu-item .icon {
       font-size: 45px; } }
+
+/* SAVE TRACK MODAL */
+.save-page {
+  background: #f8faf3; }
+  .save-page input {
+    padding-right: 0 !important; }
+
+.save-header {
+  text-transform: uppercase;
+  background: #fff;
+  background-size: 48px 41px;
+  color: #605846;
+  font-weight: 700;
+  padding: 12px;
+  font-size: 1.1em;
+  text-align: center;
+  -webkit-box-shadow: 0 0 1px rgba(18, 16, 11, 0.5);
+  -moz-box-shadow: 0 0 1px rgba(18, 16, 11, 0.5);
+  box-shadow: 0 0 1px rgba(18, 16, 11, 0.5); }
+  .save-header .icon {
+    color: #b52125; }
+
+.save-form {
+  max-width: 80%;
+  margin: 0 auto; }
+  .save-form .item {
+    padding: 7px 0;
+    border: 0 !important;
+    background: transparent !important; }
+    .save-form .item input {
+      height: 65px;
+      padding: 0;
+      border-bottom: 1px solid rgba(145, 143, 117, 0.7);
+      font-size: 20px;
+      background: none !important;
+      line-height: 2.2em;
+      text-align: center; }
+      .save-form .item input::-webkit-input-placeholder {
+        color: rgba(96, 88, 70, 0.6);
+        text-transform: capitalize; }
+      .save-form .item input:-moz-placeholder {
+        color: rgba(96, 88, 70, 0.6);
+        text-transform: capitalize; }
+      .save-form .item input::-moz-placeholder {
+        color: rgba(96, 88, 70, 0.6);
+        text-transform: capitalize; }
+      .save-form .item input:-ms-input-placeholder {
+        color: rgba(96, 88, 70, 0.6);
+        text-transform: capitalize; }
+  .save-form .login-button {
+    text-transform: uppercase; }
+
+@media only screen and (min-width: 481px) {
+  .login-form .item {
+    padding: 1em 0; }
+    .login-form .item input {
+      height: 2.2em; } }
 
 /* custom style goes here */
 /* ------------------------------------ *\

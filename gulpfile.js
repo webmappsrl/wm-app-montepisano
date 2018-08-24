@@ -44,7 +44,7 @@ var argv = yargs.argv,
     config_xml = '',
     instance_name = 'default';
 
-gulp.task('build', ['create', 'update' /*, 'post-install'*/]);
+gulp.task('build', ['create', 'update' /*, 'post-install'*/ ]);
 
 gulp.task('node_modules_link', function () {
     return gulp.src('bare/node_modules')
@@ -89,11 +89,11 @@ gulp.task('update', ['create'], function () {
         resources = argv.url + '/resources/';;
         // estraggo le info
         request({
-            url: info,
-            headers: {
-                'User-Agent': 'request'
-            }
-        })
+                url: info,
+                headers: {
+                    'User-Agent': 'request'
+                }
+            })
             .pipe(source(info))
             // .pipe(fs.access(info))
             .pipe(streamify(jeditor(function (repositories) {
@@ -115,9 +115,9 @@ gulp.task('update', ['create'], function () {
                 gulp.getUrlFile('icon.png', resources + 'icon.png', dir + '/resources/');
                 gulp.getUrlFile('splash.png', resources + 'splash.png', dir + '/resources/');
 
-                sh.exec('ionic cordova resources', {
-                    cwd: dir
-                })
+                // sh.exec('ionic cordova resources', {
+                //     cwd: dir
+                // })
 
                 return repositories;
 
@@ -260,11 +260,11 @@ gulp.copy = function (src, dest) {
 
 gulp.getUrlFile = function (file, src, dest) {
     return request({
-        url: src,
-        headers: {
-            'User-Agent': 'request'
-        }
-    })
+            url: src,
+            headers: {
+                'User-Agent': 'request'
+            }
+        })
         .pipe(source(file))
         .pipe(gulp.dest(dest));
 };
@@ -372,37 +372,37 @@ gulp.task('push-version', function () {
         new Promise(function (resolve, reject) {
             sh.exec('git log --pretty=oneline --abbrev-commit BETA_' + oldVersion + '..HEAD > lastChanges.txt');
             return gulp.src('lastChanges.txt')
-                .pipe(replace(/^(.{1,6} )(.*)\n/gm, ""))   // Remove all multiline messages
-                .pipe(replace(/^([^ ]{8,})(.*)\n/gm, ""))  // Remove all multiline messages
-                .pipe(replace(/^(.{7} )/gm, ""))           // Remove commit id
-                .pipe(replace(/^[^PROD: ].*$\n/gm, ""))    // Select only commit that start with A TODO CHANGE TO PROD
-                .pipe(replace(/^(.{6})/gm, ""))            // Remove start of commit (char A) TODO CHANGE TO PROD
+                .pipe(replace(/^(.{1,6} )(.*)\n/gm, "")) // Remove all multiline messages
+                .pipe(replace(/^([^ ]{8,})(.*)\n/gm, "")) // Remove all multiline messages
+                .pipe(replace(/^(.{7} )/gm, "")) // Remove commit id
+                .pipe(replace(/^[^PROD: ].*$\n/gm, "")) // Select only commit that start with A TODO CHANGE TO PROD
+                .pipe(replace(/^(.{6})/gm, "")) // Remove start of commit (char A) TODO CHANGE TO PROD
                 .on('error', reject)
                 .pipe(gulp.dest('./'))
                 .on('end', resolve);
         })
     ]).then(function () {
         return Promise.all([
-            new Promise(function (resolve, reject) {
-                sh.exec('touch changelog.txt');
-                return gulp.src('changelog.txt')
-                    .pipe(header(fs.readFileSync('lastChanges.txt')))
-                    .pipe(header('Version ' + newVersion + '\n'))
-                    .on('error', reject)
-                    .pipe(gulp.dest('./'))
-                    .on('end', resolve);
-            })
-        ])
+                new Promise(function (resolve, reject) {
+                    sh.exec('touch changelog.txt');
+                    return gulp.src('changelog.txt')
+                        .pipe(header(fs.readFileSync('lastChanges.txt')))
+                        .pipe(header('Version ' + newVersion + '\n'))
+                        .on('error', reject)
+                        .pipe(gulp.dest('./'))
+                        .on('end', resolve);
+                })
+            ])
             .then(function () {
                 return Promise.all([
-                    new Promise(function (resolve, reject) {
-                        return gulp.src('version.json')
-                            .pipe(replace(/"version": "(.{5,10})"/gm, '"version": "' + newVersion + '"'))
-                            .on('error', reject)
-                            .pipe(gulp.dest('./'))
-                            .on('end', resolve);
-                    })
-                ])
+                        new Promise(function (resolve, reject) {
+                            return gulp.src('version.json')
+                                .pipe(replace(/"version": "(.{5,10})"/gm, '"version": "' + newVersion + '"'))
+                                .on('error', reject)
+                                .pipe(gulp.dest('./'))
+                                .on('end', resolve);
+                        })
+                    ])
                     .then(function () {
                         //GIT ADD COMMIT PUSH TAG
                         sh.exec('git add -A');

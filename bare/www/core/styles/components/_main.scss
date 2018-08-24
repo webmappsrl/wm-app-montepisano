@@ -32,7 +32,6 @@
 
 /* Hide/show elements on mobile or desktop */
 
-
 .desktop-visible {
   display: none;
 }
@@ -65,37 +64,28 @@
     font-weight: 700;
     font-size: 1.1em;
   }
-
-  .title-center{
-    font-size: 22px!important
+  .title-center {
+    font-size: 22px !important
   }
-
   &.bar-assertive.bar-footer {
     /* There's 2px pixel bottom overflowing - why?*/
     @include calc(height, '(100% - 43px) - 60%');
     padding: 0;
     background-image: none;
-    border: none;
-    // transition: all 0.2s ease-out;
-
+    border: none; // transition: all 0.2s ease-out;
     .welcome-page & {
       height: 45%;
     }
-
     .hide-map & {
       z-index: 0;
       height: 20%;
     }
-
     .map-search & {
-      @include calc(height, '100% - 186px');
-      //@include calc(height, '100% - 214px'); for selected category
+      @include calc(height, '100% - 186px'); //@include calc(height, '100% - 214px'); for selected category
       z-index: 200;
     }
-
     .map-page & {
-      @include calc(height, '100% - 44px');
-      //top: 44px;
+      @include calc(height, '100% - 44px'); //top: 44px;
       z-index: 200;
     }
   }
@@ -105,26 +95,21 @@
   background: inherit !important; // #BF410E
   color: inherit !important;
   border-color: transparent !important;
-
   .bar.bar-header {
     padding-right: 2%;
-    padding-left: 2%;
-    //background: $color-white;
-    @include box-shadow(0 0 1px transparentize($color-box-shadow,0.5));
+    padding-left: 2%; //background: $color-white;
+    @include box-shadow(0 0 1px transparentize($color-box-shadow, 0.5));
     text-transform: uppercase;
-
     .title {
-      right: 50px!important;
-      left: 50px!important;
+      right: 50px !important;
+      left: 50px !important;
     }
-
     .button {
       color: inherit;
     }
   }
-
-  &.welcome-nav{
-    .bar.bar-positive  {
+  &.welcome-nav {
+    .bar.bar-positive {
       .title {
         padding-right: 2%;
         padding-left: 2%;
@@ -132,8 +117,6 @@
     }
   }
 }
-
-
 
 /* Long title and date */
 
@@ -144,18 +127,18 @@
       font-size: $title-size;
       height: 100%;
       margin: 0;
-      right: 15px!important; /* TODO: Temporary - fix in js for this case */
-      left: 50px !important; /* TODO: Temporary - fix in js for this case */
+      right: 15px !important;
+      /* TODO: Temporary - fix in js for this case */
+      left: 50px !important;
+      /* TODO: Temporary - fix in js for this case */
       line-height: 2.5;
     }
   }
-
   .nav-bar-title {
     display: block;
     height: 100%;
     padding: 4px 0;
   }
-
   .title-inner {
     @include text-ellipsis;
   }
@@ -167,20 +150,17 @@
   align-items: center;
   height: 100%;
   /*justify-content: center;*/
-
   .title-right {
     width: 95%;
     @include text-ellipsis;
     font-size: 20px;
   }
-
   &.has-date {
     line-height: 1;
     .title-left,
     .title-right {
       display: inline-block;
     }
-
     .title-left {
       width: 25%;
       padding-right: 10px;
@@ -191,7 +171,6 @@
         display: block;
       }
     }
-
     .title-right {
       width: 75%;
       height: 32px;
@@ -199,10 +178,9 @@
       text-align: left;
       @include text-ellipsis;
     }
-
-
   }
 }
+
 /*
 .title-right {
   display: inline-block;
@@ -218,12 +196,12 @@
 
 }
 */
+
 /* ------------------------------------ *\
    #VIEW
 \* ------------------------------------ */
 
 .view-container {
-
   .welcome-page & {
     background-color: transparent;
   }
@@ -247,37 +225,30 @@
 .content-pane {
   height: 60%;
   z-index: 20;
-
   .keyboard-open & {
     height: 60% !important;
     overflow: hidden !important;
   }
-
   .keyboard-open .hide-map & {
     height: calc(100% - 42px) !important;
   }
-
   .hide-map &,
   .login-page &,
   .menu-left & {
-    @include calc(height, '100% - 42px'); /* 2 pixel? */
+    @include calc(height, '100% - 42px');
+    /* 2 pixel? */
   }
-
   .welcome-page & {
-   // z-index: 10;
+    // z-index: 10;
   }
-
   .map-page & {
     z-index: 0;
   }
-
   .has-howtoreach & {
     margin-bottom: 30px;
     height: calc(60% - 45px);
   }
-
   .details-page & {
-
     &::before {
       // TODO: solve android bug
       // content: '';
@@ -291,7 +262,6 @@
       // left: 0;
       // z-index: 10;
       // opacity: 0.8;
-
     }
   }
 }
@@ -303,34 +273,41 @@
 }
 
 .scroll {
-  .has-filter > & {
+  .has-filter>& {
     margin-top: 55px;
   }
 }
 
 .scroll-content {
-
-  &.has-back-btn  {
-    top: 52px; /* Back button height */
+  &.has-back-btn {
+    top: 52px;
+    /* Back button height */
   }
-
   &.has-search-filters {
-    top: 140px;
-    //174px if selected more than one category
-
+    top: 140px; //174px if selected more than one category
   }
-
   &.has-show-more {
-    margin-bottom: 35px; /* .arrow-show-more height */
+    margin-bottom: 35px;
+    /* .arrow-show-more height */
   }
-
   .menu-content & {
     //background: $color-light-green;
   }
 }
+
 /* Scrolling pane for details */
+
 .layer-details {
   overflow: visible;
+}
+
+.map-menu {
+  position: relative;
+  top: 42px;
+  z-index: 999;
+  a {
+    text-transform: capitalize
+  }
 }
 
 /* ------------------------------------ *\
@@ -339,7 +316,7 @@
 
 /* TODO: for Raffa, testare su mobile */
 
-.platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) > * {
+.platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader)>* {
   margin-top: 0;
 }
 
@@ -347,12 +324,12 @@
   height: 43px;
 }
 
-.platform-ios.platform-cordova:not(.fullscreen) .has-header, .platform-ios.platform-cordova:not(.fullscreen) .bar-subheader {
+.platform-ios.platform-cordova:not(.fullscreen) .has-header,
+.platform-ios.platform-cordova:not(.fullscreen) .bar-subheader {
   top: 43px;
 }
 
 /* testare su mobile END */
-
 
 /* ------------------------------------ *\
    #MEDIA QUERIES
@@ -362,61 +339,46 @@
 
 @media only screen and (max-height: 666px) and (max-width: 768px) {
   .welcome-page {
-
     .content-pane {
       height: 65%;
     }
-
     .bar.bar-assertive.bar-footer {
       height: 35%;
     }
   }
 }
 
-
 @media only screen and (min-width: 768px) {
-
   .details-page {
     .bar.bar-header {
       .title {
         left: 60px !important;
       }
     }
-
-    .nav-bar-title {
-    }
+    .nav-bar-title {}
   }
-
   .title-inner {
     line-height: 32px;
     text-align: center;
-
     &.has-date {
       line-height: 32px;
-
       .title-left {
-
         font-size: 16px;
         [class^="event-title"] {
           display: inline-block;
           margin-right: 10px;
         }
       }
-
       .title-right {
         font-size: 16px;
-
       }
     }
   }
-
   .nav-title-slide-ios7 {
-
     .bar.bar-header {
       padding-right: 10px;
       padding-left: 10px;
     }
-
     &.welcome-nav {
       .bar.bar-positive {
         .title {
@@ -442,8 +404,6 @@
         left: 0;
         bottom: 0;
       }
-
-
       .bar-assertive.bar.bar-footer {
         width: 100%;
         height: 50%;
@@ -457,15 +417,12 @@
 }
 
 @media only screen and (min-width: 1025px) {
-
   .content-pane.has-footer {
     @include calc(height, '100% - 43px');
   }
-
   .bar-assertive.bar.bar-footer {
     @include calc(height, '100% - 44px');
   }
-
   .desktop-half-map {
     .content-pane.has-footer {
       top: 45px;
@@ -473,32 +430,28 @@
       left: 0;
       bottom: 0;
     }
-
     .view-container {
       height: 100% !important;
     }
-
     .bar-assertive.bar.bar-footer {
       width: 50%;
-      top: 45px; /* for header */
+      top: 45px;
+      /* for header */
       left: 50%;
       right: 0;
       bottom: 0;
     }
   }
-
-  .map-search  {
+  .map-search {
     .bar-assertive.bar.bar-footer {
       @include calc(height, '100% - 187px');
       z-index: 200;
-      width: 100%;
-      //top: 197px; /* for header */
+      width: 100%; //top: 197px; /* for header */
       left: 0;
       right: 0;
       bottom: 0;
     }
   }
-
   .desktop-full-map {
     .content-pane.has-footer {
       @include calc(height, '100% - 45px');
@@ -508,29 +461,24 @@
       left: 0;
       bottom: 0;
     }
-
     .view-container {
       height: 100% !important;
     }
-
     .bar-assertive.bar.bar-footer {
       width: 100%;
-      @include calc(height, '100% - 45px');
-      //top: 45px; /* for header */
+      @include calc(height, '100% - 45px'); //top: 45px; /* for header */
       left: 0;
       right: 0;
       bottom: 0;
       z-index: 20;
     }
   }
-
   .hide-map {
     .content-pane.has-footer {
       top: 45px;
       right: 0;
     }
   }
-
   .scroll-content.has-show-more {
     margin-bottom: 0;
   }

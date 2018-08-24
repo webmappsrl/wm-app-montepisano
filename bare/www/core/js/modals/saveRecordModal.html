@@ -1,0 +1,45 @@
+<ion-modal-view id="save-modal" class="save-page">
+
+    <ion-content ng-style="{
+        'background': COLORS.menu.background
+    }">
+
+        <div class="save-header" ng-style="{
+        'background': COLORS.mainBar.background,
+        'color': COLORS.mainBar.color
+    }">
+            {{vm.operation | translate}}
+        </div>
+        <form class="save-form" ng-submit="submitData(vm.title,vm.descr)">
+            <div class="list">
+                <label class="item item-input">
+                    <input type="text" class="input-ph" autocorrect="off" ng-model="vm.title" autocapitalize="none" spellcheck="false" autocomplete="off"
+                        placeholder="{{ 'titolo' | translate }}">
+                </label>
+                <label class="item item-input">
+                    <input type="text" class="input-ph" autocorrect="off" ng-model="vm.description" autocapitalize="none" spellcheck="false"
+                        autocomplete="off" placeholder="{{ 'descrizione' | translate }}">
+                </label>
+
+                <label class="item">
+                    <button ng-style="{
+                                'background': COLORS.global.buttonsBackground,
+                                'color': COLORS.global.buttonsColor
+                            }" class="login-button button button-block" type="submit">
+                        {{ 'salva' | translate }}
+
+                    </button>
+                </label>
+
+                <label class="item">
+                    <button ng-style="{
+                                'background': COLORS.global.buttonsBackground,
+                                'color': COLORS.global.buttonsColor
+                            }" class="login-button button button-block" ng-click="vm.hide()" type="button">
+                        {{ 'annulla' | translate }}
+                    </button>
+                </label>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>

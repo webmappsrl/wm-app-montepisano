@@ -283,7 +283,6 @@
     color: #D90101;
     text-align: right;
     font-size: 12px;
-
     span {
       padding: 0 0 0 5px;
     }
@@ -296,11 +295,9 @@
 
 .details-description {
   padding: 10px;
-
   .detail-route & {
     margin-bottom: 78px;
   }
-
   .opening-hours {
     padding: 10px 0;
     .icon {
@@ -565,6 +562,16 @@
 
 .details-route span.difficulty {
   float: right;
+}
+
+/*user track buttons */
+
+.edit-user-track {
+  .list {
+    a {
+      text-transform: capitalize;
+    }
+  }
 }
 
 /* ------------------------------------ *\

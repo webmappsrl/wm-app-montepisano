@@ -2,8 +2,10 @@ angular.module('webmapp')
 
     .controller('MainController', function MainController(
         $cordovaSocialSharing,
+        $ionicModal,
         $ionicPlatform,
         $ionicPopup,
+        $ionicSideMenuDelegate,
         $ionicScrollDelegate,
         $rootScope,
         $scope,
@@ -68,9 +70,9 @@ angular.module('webmapp')
         }
 
         Utils.createModal('core/js/modals/shareModal.html', {
-            backdropClickToClose: true,
-            hardwareBackButtonClose: true
-        }, shareScope)
+                backdropClickToClose: true,
+                hardwareBackButtonClose: true
+            }, shareScope)
             .then(function (modal) {
                 shareModal = modal;
             });
@@ -84,6 +86,7 @@ angular.module('webmapp')
                 shareModal.hide();
             }
         };
+
 
         shareScope.vm.sendText = function () {
             var currentRequest;
@@ -107,13 +110,13 @@ angular.module('webmapp')
 
                 currentRequest
                     .then(function () {
-                        shareScope.vm.sendInProgress = false;
-                        shareScope.vm.sendSuccess = true;
+                            shareScope.vm.sendInProgress = false;
+                            shareScope.vm.sendSuccess = true;
 
-                        setTimeout(function () {
-                            shareModal.hide();
-                        }, 1000);
-                    },
+                            setTimeout(function () {
+                                shareModal.hide();
+                            }, 1000);
+                        },
                         function (error) {
                             $ionicPopup.alert({
                                 title: $translate.instant("ATTENZIONE"),
@@ -167,6 +170,73 @@ angular.module('webmapp')
             (CONFIG.MAIN && CONFIG.MAIN.REPORT && (
                 (CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl && CONFIG.MAIN.REPORT.email.default) ||
                 (CONFIG.MAIN.REPORT.sms && CONFIG.MAIN.REPORT.sms.default)));
+
+        vm.showRightMenu = false;
+        vm.filterIcon = CONFIG.OPTIONS.filterIcon;
+        var rightMenuListener = $rootScope.$on('rightMenuClick', function () {
+            vm.showRightMenu = !vm.showRightMenu;
+        });
+        $scope.$watch(function () {
+                return $ionicSideMenuDelegate.isOpenLeft();
+            },
+            function (isOpen) {
+                if (isOpen) {
+                    vm.showRightMenu = false;
+                }
+            });
+
+        if (!CONFIG.recordtrack) {
+            var saveModalScope = $rootScope.$new();
+            var saveModal = {};
+
+            saveModalScope.vm = {};
+            saveModalScope.vm.operation = 'salva';
+            saveModalScope.vm.COLORS = vm.colors;
+
+            $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/saveRecordModal.html', {
+                scope: saveModalScope,
+                animation: 'slide-in-up',
+                hardwareBackButtonClose: false,
+                backdropClickToClose: false
+            }).then(function (modalObj) {
+                saveModal = modalObj;
+            });
+
+            saveModalScope.vm.hide = function () {
+                MapService.removeUserPolyline();
+                saveModal.hide();
+            };
+            saveModalScope.vm.title = "";
+            saveModalScope.vm.description = "";
+
+            saveModalScope.submitData = function () {
+
+                var info = {
+                    name: saveModalScope.vm.title,
+                    description: saveModalScope.vm.description
+                };
+                MapService.saveUserPolyline(info);
+                MapService.removeUserPolyline();
+                saveModal.hide();
+
+            }
+
+            var stopRecordoListener = $rootScope.$on('recordingState-changed', function (e, value) {
+                if (value.isActive == false && MapService.getUserPolyline() !== null && MapService.getUserPolyline().getLatLngs().length >= 2) {
+                    console.log(MapService.getUserPolyline());
+                    saveModalScope.vm.title = "";
+                    saveModalScope.vm.description = "";
+                    saveModalScope.vm.operation = "salva";
+                    saveModalScope.vm.featureId = "";
+                    saveModal.show();
+                }
+            });
+        }
+
+        vm.openFilters = function () {
+            vm.showRightMenu = false;
+            $rootScope.$emit("openFilters");
+        }
 
         vm.shareCurrentPosition = function ($event) {
             $event.stopPropagation();
@@ -282,9 +352,9 @@ angular.module('webmapp')
 
             if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) {
                 $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
-                })
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                    })
                     .then(function (res) {
                         if (res) {
                             var emailTo = '',
@@ -321,8 +391,8 @@ angular.module('webmapp')
 
                                 currentRequest
                                     .then(function () {
-                                        return;
-                                    },
+                                            return;
+                                        },
                                         function (error) {
                                             return;
                                         });
@@ -332,9 +402,9 @@ angular.module('webmapp')
                     });
             } else {
                 $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
-                })
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                    })
                     .then(function (res) {
                         if (res) {
                             sendSMS(text);
@@ -364,7 +434,6 @@ angular.module('webmapp')
             if ($state.params.parentId) {
                 MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
             }
-
             vm.goToMap();
         };
 
@@ -415,17 +484,25 @@ angular.module('webmapp')
                 });
         };
 
-        vm.startNavigation = function () {
+
+        vm.startNavigation = function (record) {
             var startRecording = function () {
-                GeolocationService.startRecording(false, vm.stopNavigationUrlParams);
+                GeolocationService.startRecording(record ? true : vm.stopNavigationUrlParams);
                 GeolocationService.switchState({
                     isRotating: true,
                     isFollowing: true
                 });
             };
 
-            vm.stopNavigationUrlParams.parentId = $rootScope.currentParams.parentId;
-            vm.stopNavigationUrlParams.id = $rootScope.currentParams.id;
+            vm.showRightMenu = false;
+            if (!record) {
+                console.log("IMPOSSIBILE");
+                vm.stopNavigationUrlParams.parentId = $rootScope.currentParams.parentId;
+                vm.stopNavigationUrlParams.id = $rootScope.currentParams.id;
+            } else {
+                vm.stopNavigationUrlParams.parentId = null;
+                vm.stopNavigationUrlParams.id = null;
+            }
 
             vm.navigationInterval = setInterval(navigationIntervalFunction, 999);
 
@@ -470,8 +547,10 @@ angular.module('webmapp')
             clearInterval(vm.navigationInterval);
             vm.navigation.resetStats();
             MapService.adjust();
-
+            vm.isNavigating = false;
             window.plugins.insomnia.allowSleepAgain();
+
+
         };
 
         vm.toggleSpeedText = function () {
@@ -518,8 +597,8 @@ angular.module('webmapp')
 
         $scope.$on('$stateChangeStart', function (e, dest) {
             if ((dest.name === 'app.main.detaillayer' ||
-                dest.name === 'app.main.detailevent' ||
-                dest.name === 'app.main.detailulayer') &&
+                    dest.name === 'app.main.detailevent' ||
+                    dest.name === 'app.main.detailulayer') &&
                 previousBounds === null) {
                 previousBounds = MapService.getBounds();
             }
@@ -585,7 +664,7 @@ angular.module('webmapp')
                 vm.mapView = true;
                 vm.hideExpander = true;
                 setTimeout(function () {
-                    if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id) {
+                    if (vm.stopNavigationUrlParams.parentId && vm.stopNavigationUrlParams.id && MapService.getUserPolyline() === null) {
                         MapService.showPathAndRelated(vm.stopNavigationUrlParams);
                     }
                 }, 50);
@@ -697,7 +776,7 @@ angular.module('webmapp')
             if (vm.navigation.state.isActive !== value.isActive) {
                 vm.navigation.state.isActive = value.isActive;
                 $rootScope.$emit('is-navigating', vm.navigation.state.isActive);
-
+                $rootScope.isNavigating = vm.navigation.state.isActive;
                 if (vm.navigation.state.isActive) {
                     vm.isNavigable = false;
                 } else {
@@ -725,6 +804,12 @@ angular.module('webmapp')
             if (window !== top) {
                 MapService.disableWheelZoom();
             }
+        });
+
+
+        $scope.$on('$destroy', function () {
+            rightMenuListener();
+            stopRecordoListener();
         });
 
         return vm;

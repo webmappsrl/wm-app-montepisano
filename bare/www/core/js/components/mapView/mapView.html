@@ -1,7 +1,4 @@
-<ion-view 
-    cache-view="false" 
-    ng-controller="MapController as vm"
-    ng-style="{
+<ion-view cache-view="false" ng-controller="MapController as vm" ng-style="{
         'background': vm.colors.mainBar.background,
         'color': vm.colors.mainBar.color
     }">
@@ -11,20 +8,11 @@
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">
-        <button 
-            ng-if="!vm.isNavigable"
-            class="no-animate button button-icon icon ion-navicon"
-            menu-toggle="left"></button>
-        <button 
-            ng-if="vm.isNavigable"
-            class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left"
-            ng-click="vm.goBack()"></button>
+        <button ng-if="!vm.isNavigable" class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
+        <button ng-if="vm.isNavigable" class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left" ng-click="vm.goBack()"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <button 
-            class="no-animate button button-icon {{vm.filterIcon}}"
-            ng-if="vm.showFilers"
-            ng-click="vm.openFilters()"></button>
+        <button class="no-animate button button-icon {{vm.filterIcon}}" ng-if="vm.showFilers" ng-click="vm.clickRightMenu()"></button>
     </ion-nav-buttons>
 
     <ion-content>

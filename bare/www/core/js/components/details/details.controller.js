@@ -5,6 +5,7 @@ angular.module('webmapp')
         $scope,
         $rootScope,
         $sce,
+        $ionicPopup,
         $ionicModal,
         $ionicSlideBoxDelegate,
         MapService,
@@ -117,6 +118,74 @@ angular.module('webmapp')
             modalAccessibility = modalObj;
         });
 
+        if (!CONFIG.recordTrack) {
+
+            vm.isNavigating = $rootScope.isNavigating;
+            var saveModalScope = $rootScope.$new();
+            var saveModal = {};
+
+            saveModalScope.vm = {};
+            saveModalScope.vm.operation = 'salva';
+            saveModalScope.vm.COLORS = vm.colors;
+
+            $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/saveRecordModal.html', {
+                scope: saveModalScope,
+                animation: 'slide-in-up',
+                hardwareBackButtonClose: false,
+                backdropClickToClose: false
+            }).then(function (modalObj) {
+                saveModal = modalObj;
+            });
+
+            saveModalScope.vm.hide = function () {
+                saveModal.hide();
+            };
+            saveModalScope.vm.title = "";
+            saveModalScope.vm.description = "";
+
+            saveModalScope.submitData = function () {
+                MapService.editUserTrack(saveModalScope.vm.featureId, saveModalScope.vm.title, saveModalScope.vm.description);
+                saveModal.hide();
+                MapService.getFeatureById(saveModalScope.vm.featureId, "I miei percorsi").then(buildDetail, function () {
+                    console.log("No such feature");
+                    Utils.goBack();
+                });
+            }
+
+            vm.deleteTrack = function () {
+                if (params.id) {
+                    var id = params.id;
+                    $ionicPopup.confirm({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: "Stai per cancellare una traccia. Una volta cancellata non ti sarà più possibile recuperarla",
+                    }).then(function (res) {
+                        if (res) {
+                            MapService.deleteUserTrack(id);
+                            Utils.goBack();
+                        }
+                    })
+                }
+            }
+
+            vm.editTrack = function () {
+                saveModalScope.vm.title = "";
+                saveModalScope.vm.description = "";
+                saveModalScope.vm.operation = "modifica";
+                saveModalScope.vm.featureId = "";
+
+                MapService.getFeatureById(params.id, "I miei percorsi").then(function (feature) {
+                    saveModalScope.vm.title = feature.properties.name;
+                    saveModalScope.vm.description = feature.properties.description;
+                    saveModalScope.vm.operation = "modifica";
+                    saveModalScope.vm.featureId = feature.properties.id;
+                    saveModal.show();
+                }).catch(function (err) {
+                    console.log("No feature with such id", err);
+                })
+            }
+
+        }
+
         var buildDetail = function (data) {
             var parent = data ? angular.extend({}, data.parent) : undefined,
                 _feature = data ? angular.extend({}, data.properties) : {},
@@ -224,8 +293,8 @@ angular.module('webmapp')
 
                 vm.chiama = function (number) {
                     window.plugins.CallNumber.callNumber(function () {
-                        console.log('successo');
-                    },
+                            console.log('successo');
+                        },
                         function () {
                             console.error('error');
                         }, number);
@@ -272,8 +341,8 @@ angular.module('webmapp')
                                     vm.stages[this.s].pois.push(data);
                                     extras.push(data);
                                 }, {
-                                        s: s
-                                    }));
+                                    s: s
+                                }));
                         }
                     }
                 }
@@ -283,12 +352,10 @@ angular.module('webmapp')
                         vm.related = MapService.getRelatedFeaturesById(feature.id_pois);
                         $rootScope.track = data;
                         track = undefined;
-                    }
-                    else if (feature.description && feature.description.expandable) {
+                    } else if (feature.description && feature.description.expandable) {
                         feature.description.expandable = false;
                     }
-                }
-                else {
+                } else {
                     if (feature.description && feature.description.expandable) {
                         feature.description.expandable = false;
                     }
@@ -527,7 +594,7 @@ angular.module('webmapp')
 
         vm.openRelatedUrlPopup = function () {
             vm.relatedUrlPopupOpened = !vm.relatedUrlPopupOpened;
-            
+
             Utils.forceDigest();
         }
 
@@ -679,6 +746,10 @@ angular.module('webmapp')
                 // delete $ionicSlideBoxDelegate._instances[0];
                 // $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
                 $ionicSlideBoxDelegate.update();
+            }
+
+            if (!CONFIG.recordTrack) {
+                saveModal.remove();
             }
         });
 
