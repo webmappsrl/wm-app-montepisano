@@ -441,8 +441,13 @@ angular.module('webmapp')
                 recordingState.stats.distance += Utils.distanceInMeters(lat, long, state.lastPosition.lat, state.lastPosition.long);
                 recordingState.stats.averageSpeed = (recordingState.stats.distance / recordingState.stats.time.getTime()) * 3600;
                 recordingState.stats.currentSpeed = Utils.distanceInMeters(lat, long, state.lastPosition.lat, state.lastPosition.long) / (Date.now() - state.lastPosition.timestamp) * 3600;
+                if (recordingState.currentSpeedExpireTimeout) {
+                    clearTimeout(recordingState.currentSpeedExpireTimeout);
+                    recordingState.currentSpeedExpireTimeout = null;
+                }
                 recordingState.currentSpeedExpireTimeout = setTimeout(function () {
                     recordingState.stats.currentSpeed = 0;
+                    recordingState.currentSpeedExpireTimeout = null;
                 }, 5000);
 
                 if (state.appState === BackgroundGeolocation.BACKGROUND) {
@@ -630,7 +635,7 @@ angular.module('webmapp')
                                 lat: lat,
                                 long: long
                             });
-                        } catch (e) {}
+                        } catch (e) { }
 
                     }
 
@@ -1080,7 +1085,7 @@ angular.module('webmapp')
                             lat: state.lastPosition.lat,
                             long: state.lastPosition.long
                         })
-                    } catch (e) {};
+                    } catch (e) { };
                     recordingState.firstPositionSet = true;
                 } else {
                     recordingState.firstPositionSet = false;
