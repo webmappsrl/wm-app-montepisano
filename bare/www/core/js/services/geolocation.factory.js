@@ -766,11 +766,8 @@ angular.module('webmapp')
         /**
          * @description
          * Enable the geolocation (if disabled), checking GPS and if defined goes to
-         * the specified state (refer to line 8)
-         * 
-         * @argument {object} state [optional]
-         *      contains the goal state,
-         *      isFollowing and isRotating
+         * the specified state (refer to line 8). If the geolocaqtion service is already
+         * running it start again the navigation
          * 
          * @returns {promise}
          */
@@ -834,15 +831,15 @@ angular.module('webmapp')
 
                                 activateBackgroundGeolocationHandlers();
                                 BackgroundGeolocation.configure({
-                                    locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
-                                    desiredAccuracy: BackgroundGeolocation.MEDIUM_ACCURACY,
-                                    stationaryRadius: 25,
-                                    distanceFilter: 5,
+                                    locationProvider: BackgroundGeolocation.RAW_PROVIDER,
+                                    desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
+                                    // stationaryRadius: 25, // for DISTANCE_FILTER_PROVIDER
+                                    distanceFilter: 5, // for DISTANCE_FILTER_PROVIDER and RAW_PROVIDER
                                     stopOnTerminate: true,
                                     startOnBoot: false, // Android only
-                                    interval: 800, // Android only
-                                    // fastestInterval: 500, // Android only, for ACTIVITY location provider
-                                    // activitiesInterval: 8000, // Android only, for ACTIVITY location provider
+                                    interval: 500, // Android only
+                                    // fastestInterval: 100, // Android only, for ACTIVITY location provider
+                                    // activitiesInterval: 10000, // Android only, for ACTIVITY location provider
                                     // stopOnStillActivity: false, // Android only, for ACTIVITY location provider
                                     startForeground: false, // Android only
                                     notificationTitle: $translate.instant("Navigazione attiva"), // Android only
@@ -886,15 +883,15 @@ angular.module('webmapp')
                             activateBackgroundGeolocationHandlers();
 
                             BackgroundGeolocation.configure({
-                                locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
-                                desiredAccuracy: BackgroundGeolocation.MEDIUM_ACCURACY,
-                                stationaryRadius: 25,
-                                distanceFilter: 5,
+                                locationProvider: BackgroundGeolocation.RAW_PROVIDER,
+                                desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
+                                // stationaryRadius: 25, // for DISTANCE_FILTER_PROVIDER
+                                distanceFilter: 5, // for DISTANCE_FILTER_PROVIDER and RAW_PROVIDER
                                 stopOnTerminate: true,
                                 startOnBoot: false, // Android only
-                                interval: 800, // Android only
-                                // fastestInterval: 500, // Android only, for ACTIVITY location provider
-                                // activitiesInterval: 8000, // Android only, for ACTIVITY location provider
+                                interval: 500, // Android only
+                                // fastestInterval: 100, // Android only, for ACTIVITY location provider
+                                // activitiesInterval: 10000, // Android only, for ACTIVITY location provider
                                 // stopOnStillActivity: false, // Android only, for ACTIVITY location provider
                                 startForeground: false, // Android only
                                 notificationTitle: $translate.instant("Navigazione attiva"), // Android only
