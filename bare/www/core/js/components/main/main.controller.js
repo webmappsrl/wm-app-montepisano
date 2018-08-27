@@ -491,7 +491,7 @@ angular.module('webmapp')
 
         vm.startNavigation = function (record) {
             var startRecording = function () {
-                GeolocationService.startRecording(record ? true : vm.stopNavigationUrlParams);
+                GeolocationService.startRecording(vm.stopNavigationUrlParams ? vm.stopNavigationUrlParams : false, record ? true : false);
                 GeolocationService.switchState({
                     isRotating: true,
                     isFollowing: true
@@ -784,6 +784,7 @@ angular.module('webmapp')
         registeredEvents.push(
             $rootScope.$on('heading-changed', function (e, value) {
                 vm.heading = value;
+                Utils.forceDigest();
             })
         );
 

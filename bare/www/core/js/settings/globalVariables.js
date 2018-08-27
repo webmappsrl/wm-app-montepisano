@@ -15,20 +15,24 @@ var ERRORS = {
         message: "Cordova is not available"
     },
     ALREADY_ACTIVE: {
-        cose: 10,
+        code: 10,
         message: "This feature is already active, you should deactivate it first"
     },
     UNAVAILABLE: {
-        cose: 11,
+        code: 11,
         message: "This feature is not available"
     },
     TEMPORARILY_DISABLED: {
-        cose: 12,
+        code: 12,
         message: "This feature is temporarily disabled"
     },
     DISABLED: {
-        cose: 13,
+        code: 13,
         message: "This feature is disabled"
+    },
+    MISSING_ARGUMENTS: {
+        code: 20,
+        message: "At least on mandatory argument miss"
     },
     GENERIC_GPS: {
         code: 101,

@@ -50,26 +50,29 @@ describe('Geolocation.Factory', function () {
                         // console.log("MOCK isLocationEnabled");
                         callback(this.locationEnableParam);
                     },
-                    switchToSettings: function () {},
-                    switchToLocationSettings: function () {}
+                    switchToSettings: function () { },
+                    switchToLocationSettings: function () { }
                 }
             },
             platformId: 'android'
         };
         BackgroundGeolocation = {
-            start: function () {},
-            stop: function () {},
-            removeAllListeners: function () {},
+            start: function () { },
+            stop: function () { },
+            removeAllListeners: function () { },
             events: [],
             startTask: function (callback) {
                 callback();
             },
-            endTask: function () {},
-            configure: function (params) {},
+            endTask: function () { },
+            configure: function (params) { },
             on: function (event, callback) {
                 if (event === 'location') {
                     this.callbackFun = callback;
                 }
+            },
+            checkStatus: function () {
+                return true;
             },
             callbackFun: null
         };
@@ -428,7 +431,7 @@ describe('Geolocation.Factory', function () {
             };
             expect(GeolocationService.isActive()).toBe(false);
             //call get current position and resolve promise
-            GeolocationService.enable().then(function () {});
+            GeolocationService.enable().then(function () { });
 
             $httpBackend.flush();
         });
@@ -1066,7 +1069,7 @@ describe('Geolocation.Factory', function () {
                 isPaused: false
             };
             spyOn($rootScope, '$emit');
-            GeolocationService.startRecording().then(function (val) {
+            GeolocationService.startRecording({ parentId: 0, id: 0 }).then(function (val) {
                 expect(val).toEqual(expectedValue);
                 expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
                 done();
@@ -1080,11 +1083,11 @@ describe('Geolocation.Factory', function () {
                 isPaused: false
             };
             var spy = spyOn($rootScope, '$emit');
-            GeolocationService.startRecording().then(function (val) {
+            GeolocationService.startRecording({ parentId: 0, id: 0 }).then(function (val) {
                 expect(val).toEqual(expectedValue);
                 expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
                 spy.calls.reset();
-                GeolocationService.startRecording().then(function (val) {
+                GeolocationService.startRecording({ parentId: 0, id: 0 }).then(function (val) {
                     fail('it should reject promise');
                 }).catch(function (err) {
                     expect($rootScope.$emit).not.toHaveBeenCalled();
@@ -1229,7 +1232,7 @@ describe('Geolocation.Factory', function () {
         });
     })
 
-    describe('recordingState.stopRecording', function () {
+    describe('stopRecording', function () {
         it('!recordingState.isActive => it should resolve with state and emit recordingState-changed', function (done) {
             var expectedValue = {
                 isActive: false,
@@ -1284,7 +1287,6 @@ describe('Geolocation.Factory', function () {
             });
             $httpBackend.flush();
         });
-
 
         it('recordingState.isActive => it should resolve promise with current stats', function (done) {
             spyOn($rootScope, '$emit');
@@ -1398,9 +1400,9 @@ describe('Geolocation.Factory', function () {
                 defer.resolve(feature);
                 return defer.promise;
             });
-            spyShowToast = spyOn(Utils, 'showToast').and.callFake(function () {});
-            spyHideToast = spyOn(Utils, 'hideToast').and.callFake(function () {});
-            spyMakeSound = spyOn(Utils, 'makeNotificationSound').and.callFake(function () {});
+            spyShowToast = spyOn(Utils, 'showToast').and.callFake(function () { });
+            spyHideToast = spyOn(Utils, 'hideToast').and.callFake(function () { });
+            spyMakeSound = spyOn(Utils, 'makeNotificationSound').and.callFake(function () { });
         });
 
         it("'Never gone outside track => it should not show toast", function (done) {
