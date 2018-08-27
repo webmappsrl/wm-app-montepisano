@@ -1,18 +1,18 @@
 <ion-modal-view id="save-modal" class="save-page">
 
     <ion-content ng-style="{
-        'background': COLORS.menu.background
+        'background': vm.COLORS.menu.background
     }">
 
         <div class="save-header" ng-style="{
-        'background': COLORS.mainBar.background,
-        'color': COLORS.mainBar.color
+        'background': vm.COLORS.mainBar.background,
+        'color': vm.COLORS.mainBar.color
     }">
             {{vm.operation | translate}}
         </div>
         <form class="save-form" ng-submit="submitData(vm.title,vm.descr)">
             <div class="list">
-                <label class="item item-input">
+                <label class="item item-input" ng-class="red-border: vm.inputError">
                     <input type="text" class="input-ph" autocorrect="off" ng-model="vm.title" autocapitalize="none" spellcheck="false" autocomplete="off"
                         placeholder="{{ 'titolo' | translate }}">
                 </label>
@@ -23,8 +23,8 @@
 
                 <label class="item">
                     <button ng-style="{
-                                'background': COLORS.global.buttonsBackground,
-                                'color': COLORS.global.buttonsColor
+                                'background': vm.COLORS.global.buttonsBackground,
+                                'color': vm.COLORS.global.buttonsColor
                             }" class="login-button button button-block" type="submit">
                         {{ 'salva' | translate }}
 
@@ -33,8 +33,8 @@
 
                 <label class="item">
                     <button ng-style="{
-                                'background': COLORS.global.buttonsBackground,
-                                'color': COLORS.global.buttonsColor
+                                'background': vm.COLORS.global.buttonsBackground,
+                                'color': vm.COLORS.global.buttonsColor
                             }" class="login-button button button-block" ng-click="vm.hide()" type="button">
                         {{ 'annulla' | translate }}
                     </button>

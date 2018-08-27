@@ -127,6 +127,8 @@ angular.module('webmapp')
             saveModalScope.vm = {};
             saveModalScope.vm.operation = 'salva';
             saveModalScope.vm.COLORS = vm.colors;
+            saveModalScope.vm.inputError = false;
+            saveModalScope.vm.errorMessage = "";
 
             $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/saveRecordModal.html', {
                 scope: saveModalScope,
@@ -144,12 +146,21 @@ angular.module('webmapp')
             saveModalScope.vm.description = "";
 
             saveModalScope.submitData = function () {
-                MapService.editUserTrack(saveModalScope.vm.featureId, saveModalScope.vm.title, saveModalScope.vm.description);
-                saveModal.hide();
-                MapService.getFeatureById(saveModalScope.vm.featureId, "I miei percorsi").then(buildDetail, function () {
-                    console.log("No such feature");
-                    Utils.goBack();
-                });
+                var title = saveModalScope.vm.title;
+                title = title.trim();
+                if (title === "" || title.length < 3) {
+                    saveModalScope.vm.errorMessage = "Il titolo deve contenere almeno 3 caratteri, gli spazi iniziali e finali verranno rimossi.";
+                    saveModalScope.vm.inputError = true;
+                    saveModal.hide();
+                } else {
+                    MapService.editUserTrack(saveModalScope.vm.featureId, saveModalScope.vm.title, saveModalScope.vm.description);
+                    saveModal.hide();
+                    MapService.getFeatureById(saveModalScope.vm.featureId, "I miei percorsi").then(buildDetail, function () {
+                        console.log("No such feature");
+                        Utils.goBack();
+                    });
+                }
+
             }
 
             vm.deleteTrack = function () {
@@ -157,7 +168,7 @@ angular.module('webmapp')
                     var id = params.id;
                     $ionicPopup.confirm({
                         title: $translate.instant("ATTENZIONE"),
-                        template: "Stai per cancellare una traccia. Una volta cancellata non ti sarà più possibile recuperarla",
+                        template: $translate.instant("Stai per rimuovere il percorso dal dispositivo, vuoi procedere?"),
                     }).then(function (res) {
                         if (res) {
                             MapService.deleteUserTrack(id);
@@ -174,6 +185,8 @@ angular.module('webmapp')
                 saveModalScope.vm.description = "";
                 saveModalScope.vm.operation = "modifica";
                 saveModalScope.vm.featureId = "";
+                saveModalScope.vm.errorMessage = "";
+                saveModalScope.vm.inputError = false;
 
                 MapService.getFeatureById(params.id, "I miei percorsi").then(function (feature) {
                     saveModalScope.vm.title = feature.properties.name;
@@ -295,8 +308,8 @@ angular.module('webmapp')
 
                 vm.chiama = function (number) {
                     window.plugins.CallNumber.callNumber(function () {
-                        console.log('successo');
-                    },
+                            console.log('successo');
+                        },
                         function () {
                             console.error('error');
                         }, number);
@@ -343,8 +356,8 @@ angular.module('webmapp')
                                     vm.stages[this.s].pois.push(data);
                                     extras.push(data);
                                 }, {
-                                        s: s
-                                    }));
+                                    s: s
+                                }));
                         }
                     }
                 }
