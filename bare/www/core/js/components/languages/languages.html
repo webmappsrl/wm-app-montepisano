@@ -38,6 +38,18 @@
                     </div>
                 </label>
             </div>
+            <span ng-if="vm.isLoggedIn && vm.purchaseAvailable" class="modal-title">{{"ACQUISTI" | translate}}</span>
+            <div ng-if="vm.isLoggedIn && vm.purchaseAvailable" class="section">
+                <div class="restore-purchase-text">{{"Ripristina i tuoi acquisti" | translate}}</div>
+                <div class="restore-purchase-button" ng-style="{
+                    'background': COLORS.global.buttonsBackground,
+                    'color': COLORS.global.buttonsColor,
+                    'border': '2px solid ' + COLORS.global.buttonsColor
+                }" ng-click="vm.restorePurchases()">
+                    {{"Ripristina" | translate}}
+                </div>
+                <div style="clear: both"></div>
+            </div>
             <span ng-if="vm.privacyUrl" class="modal-title">{{"PRIVACY" | translate}}</span>
             <div ng-if="vm.privacyUrl" class="section">
                 <p>

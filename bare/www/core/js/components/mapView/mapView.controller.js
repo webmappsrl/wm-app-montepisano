@@ -499,9 +499,13 @@ angular.module('webmapp')
             modal.remove();
         });
 
-
         vm.clickRightMenu = function () {
-            $rootScope.$emit("rightMenuClick");
+            if (CONFIG.NAVIGATION.enableTrackRecording) {
+                $rootScope.$emit("rightMenuClick");
+            }
+            else {
+                openFilters();
+            }
         }
         var openFiltersListener = $rootScope.$on("openFilters", function () {
             openFilters();

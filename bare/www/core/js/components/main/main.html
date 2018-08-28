@@ -47,11 +47,7 @@
         }">
 
         <!-- Map expand -->
-        <a href="" class="btn-expand map-expand map-expand-right" ng-click="vm.useExandMapInDetails ? vm.toggleMap() : vm.returnToMap()"
-            ng-if="!vm.hideExpander">
-            <i class="icon ion-arrow-expand"></i>
-        </a>
-        <a href="" class="btn-expand map-expand" ng-click="vm.goToMap()" ng-if="vm.isWelcomePage">
+        <a href="" class="btn-expand map-expand map-expand-right" ng-click="vm.layerState ? vm.goToMap() : vm.toggleMap()" ng-if="!vm.hideExpander">
             <i class="icon ion-arrow-expand"></i>
         </a>
 
@@ -79,8 +75,8 @@
                             '-webkit-transform': 'rotate(0deg)',
                             'transform': 'rotate(0deg)'
                         } : {
-                            '-webkit-transform': 'rotate(' + (vm.heading - 30) + 'deg)',
-                            'transform': 'rotate(' + (vm.heading - 30) + 'deg)'
+                            '-webkit-transform': 'rotate(' + (- vm.heading - 30) + 'deg)',
+                            'transform': 'rotate(' + (- vm.heading - 30) + 'deg)'
                         }">
                         <img style="margin: 5px" src="core/images/compass.svg" ng-if="vm.geolocationState.isFollowing && vm.geolocationState.isRotating">
                     </span>
@@ -113,7 +109,7 @@
             </span>
         </div>
 
-        <div class="report-control" ng-if="vm.useReport && !vm.outsideBoundingBox">
+        <div class="report-control" ng-if="vm.useReport && !vm.outsideBoundingBox && vm.isInMap">
             <a href="" ng-click="vm.reportCurrentPosition($event)">
                 <i class="icon wm-icon-alert-circled">
                 </i>

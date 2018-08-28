@@ -607,6 +607,14 @@ div.detailRoute-footer {
     left: 14px;
     font-size: 38px; }
 
+@media only screen and (max-width: 350px) {
+  div.detailRoute-footer button.login-button.button {
+    font-size: 14px; } }
+
+@media only screen and (min-width: 350px) and (max-width: 400px) {
+  div.detailRoute-footer button.login-button.button {
+    font-size: 17px; } }
+
 /*
  * TAXONOMY PAGE
  *
@@ -1379,6 +1387,20 @@ div.section {
   div.section label.item.item-radio {
     border: 0px;
     padding: 3px; }
+  div.section .restore-purchase-text {
+    float: left;
+    width: 65%;
+    margin-bottom: 4px; }
+  div.section .restore-purchase-button {
+    float: right;
+    position: relative;
+    top: -3px;
+    text-transform: uppercase;
+    width: 35%;
+    margin-bottom: 4px;
+    text-align: center;
+    padding-top: 3px;
+    padding-bottom: 3px; }
 
 div.logout {
   position: fixed;

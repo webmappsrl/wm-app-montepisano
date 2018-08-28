@@ -1,6 +1,7 @@
 angular.module('webmapp')
 
     .factory('GeolocationService', function GeolocationService(
+        $cordovaDeviceOrientation,
         $cordovaGeolocation,
         $ionicPlatform,
         $ionicPopup,
@@ -56,6 +57,7 @@ angular.module('webmapp')
             lastHeading: 0,
             lastPosition: null,
             lpf: null,
+            orientationWatch: null,
             isOutsideBoundingBox: false,
             skipZoomEvent: false,
             reset: function () {
@@ -64,6 +66,7 @@ angular.module('webmapp')
                 state.lastHeadind = 0;
                 state.lastPosition = null;
                 state.lpf = null;
+                state.orientationWatch = null;
                 state.isOutsideBoundingBox = false;
                 state.skipZoomEvent = false;
             }
@@ -296,8 +299,14 @@ angular.module('webmapp')
         };
 
         function turnOffRotation() {
+            if (state.orientationWatch) {
+                state.orientationWatch.clearWatch();
+            }
+            delete state.orientationWatch;
+            state.orientationWatch = null;
+
             window.removeEventListener("compassneedscalibration", compassNeedsCalibrationCallback, true);
-            window.removeEventListener("deviceorientation", rotationCallback, true);
+            // window.removeEventListener("deviceorientation", rotationCallback, true);
 
             geolocationState.isRotating = false;
             MapService.mapIsRotating(geolocationState.isRotating);
@@ -337,7 +346,6 @@ angular.module('webmapp')
             turnOffRotation();
 
             geolocationState.isFollowing = false;
-
             $rootScope.$emit("geolocationState-changed", geolocationState);
         };
 
@@ -390,20 +398,26 @@ angular.module('webmapp')
                 turnOffRotation();
             }
             else {
-                var heading = rotation.alpha;
+                // var heading = rotation.alpha;
+                var heading = rotation.magneticHeading;
 
-                if (heading - state.lastHeading > constants.maxAngleDifference) {
-                    heading = state.lastHeading + constants.maxAngleDifference;
-                }
-                else if (state.lastHeading - heading > constants.maxAngleDifference) {
-                    heading = state.lastHeading - constants.maxAngleDifference;
+                // if (Math.abs(rotation.beta) > 70 && Math.abs(rotation.beta) < 110) {
+                //     if (heading - state.lastHeading > constants.maxAngleDifference) {
+                //         heading = state.lastHeading + constants.maxAngleDifference;
+                //     }
+                //     else if (state.lastHeading - heading > constants.maxAngleDifference) {
+                //         heading = state.lastHeading - constants.maxAngleDifference;
+                //     }
+                // } else
+                if (Math.abs(heading - state.lastHeading) > 60) {
+                    state.lpf = new LPF(0.5);
+                    state.lpf.init(Array(6).fill(heading));
                 }
 
                 heading = state.lpf.next(heading);
 
-                MapService.setBearing(heading);
+                MapService.setBearing(-heading);
                 state.lastHeading = heading;
-
                 $rootScope.$emit("heading-changed", state.lastHeading);
             }
         };
@@ -430,8 +444,26 @@ angular.module('webmapp')
             $rootScope.$emit("geolocationState-changed", geolocationState);
 
             window.addEventListener("compassneedscalibration", compassNeedsCalibrationCallback, true);
+            // window.addEventListener("deviceorientation", rotationCallback, true);
 
-            window.addEventListener("deviceorientation", rotationCallback, true);
+            state.orientationWatch = $cordovaDeviceOrientation.watchHeading({
+                frequency: 20
+            });
+
+            state.orientationWatch.then(
+                null,
+                function (error) {
+                    if (geolocationState.isRotating) {
+                        geolocationState.isRotating = false;
+                        MapService.mapIsRotating(geolocationState.isRotating);
+                        $rootScope.$emit("geolocationState-changed", geolocationState);
+                    }
+                    state.lastHeading = 0;
+                    MapService.setBearing(0);
+                    console.error(error);
+                },
+                rotationCallback
+            );
         };
 
         function updateNavigationValues(lat, long) {
@@ -614,7 +646,7 @@ angular.module('webmapp')
                             }
                         }
 
-                        if (!CONFIG.recordTrack && MapService.getUserPolyline() !== null) {
+                        if (!CONFIG.NAVIGATION.enableTrackRecording && MapService.getUserPolyline() !== null) {
                             MapService.updateUserPolyline([lat, long, altitude]);
                         }
 
@@ -1063,7 +1095,6 @@ angular.module('webmapp')
          * @returns {promise}
          *      resolve the recording state when correct, reject otherwise
          */
-        console.warn("TODO: function startRecording - if recordTrack record the track");
         geolocationService.startRecording = function (navigationTrack, recordTrack) {
             var defer = $q.defer();
             if (!navigationTrack && !recordTrack) {
@@ -1100,6 +1131,8 @@ angular.module('webmapp')
                                     handleToast(state.lastPosition.lat, state.lastPosition.long);
                                 }
                             }
+                        })
+                        .catch(function (err) {
                         });
                 }
 
@@ -1203,7 +1236,6 @@ angular.module('webmapp')
          * 
          * @returns {promise}
          */
-        console.warn("TODO: implement function stopRecording when track recorded");
         geolocationService.stopRecording = function () {
             var defer = $q.defer();
             recordingState.reset();

@@ -59,7 +59,7 @@
                         'background': COLORS.global.buttonsBackground,
                         'color': COLORS.global.buttonsColor
                     }" ng-if="(vm.userPackagesId[item.id] || item.wm_route_public) && !vm.userDownloadedPackages[item.id]"
-                        ng-click="vm.downloadPack(item)">
+                        ng-click="vm.downloadPackage(item)">
                         {{"Scarica" | translate}}
                     </button>
                     <button class="button-block button button-download button-half" ng-style="{

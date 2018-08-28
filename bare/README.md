@@ -32,4 +32,17 @@ This will install the full toolchain to develop, build and deploy the applicatio
 >     ionic build ios/android
 >     ionic emulate ios/android
 >     ionic run android
+
+# Plugin to check 
+>   ionic cordova plugin add local_plugins/call-number/
+>   ionic cordova plugin add local_plugins/cordova-sqlite-storage-custom/
+>   ionic cordova plugin add ionic-plugin-deeplinks --variable URL_SCHEME=test --variable DEEPLINK_SCHEME=https --variable DEEPLINK_HOST=api.webmapp.it --variable ANDROID_PATH_PREFIX=/
+>   ionic cordova plugin add cordova-plugin-inapppurchase
+>   ionic cordova plugin add cordova plugin add cordova-plugin-mauron85-background-geolocation@latest
+>   ionic cordova plugin add cordova-plugin-device-orientation@2.0.1
+>   ionic cordova plugin add com.verso.cordova.clipboard
+>   ionic cordova plugin add cordova-plugin-actionsheet
+>   ionic cordova plugin add cordova-plugin-device
+>   ionic cordova plugin add cordova-plugin-geolocation
+> 
     

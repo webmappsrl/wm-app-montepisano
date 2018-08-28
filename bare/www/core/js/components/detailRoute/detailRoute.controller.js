@@ -1,10 +1,8 @@
 angular.module('webmapp')
 
     .controller('DetailRouteController', function DetailRouteController(
-        $http,
         $ionicLoading,
         $ionicModal,
-        $ionicPlatform,
         $ionicPopup,
         $ionicSlideBoxDelegate,
         $rootScope,
@@ -13,24 +11,17 @@ angular.module('webmapp')
         $state,
         $translate,
         Auth,
-        Communication,
         CONFIG,
-        MapService,
-        Model,
-        Offline,
+        md5,
         PackageService,
         Utils
     ) {
         var vm = {},
-            current = $state.current || {},
-            params = $state.params || {},
-            isOnline = false,
-            isBrowser = vm.isBrowser = Utils.isBrowser();
+            params = $state.params || {};
 
         var registeredEvents = [];
 
         var modalScope = $rootScope.$new(),
-            modal = {},
             modalImage = {};
 
         var userData = {},
@@ -153,25 +144,48 @@ angular.module('webmapp')
                 });
         };
 
-        vm.openVoucherModal = function () {
+        vm.goToInfo = function () {
             if (vm.isLoggedIn) {
-                PackageService.requestPackageWithVoucher(routeDetail.id);
+                var md5Hash = privateKey.voucher + '-' + vm.id + '-' + userData.ID;
+                md5Hash = md5.createHash(md5Hash);
+
+                var data = '?routeId=' + vm.id + '&userId=' + userData.ID + '&lang=' + vm.currentLang + '&hash=' + md5Hash;
+
+                Utils.openInExternalBrowser("https://api.webmapp.it/services/merinfo/vn/info.php" + data);
             } else {
                 notLoggedIn();
             }
         };
 
-        vm.requestRoute = function () {
+        vm.useVoucher = function () {
             if (vm.isLoggedIn) {
-                PackageService.requestPack(routeDetail.id);
+                PackageService.useVoucher(routeDetail.id);
+            }
+            else {
+                notLoggedIn();
+            }
+        };
+
+        vm.applyVoucherFunction = function () {
+            if (vm.isAndroid) {
+                vm.useVoucher();
+            }
+            else {
+                vm.goToInfo();
+            }
+        };
+
+        vm.buyRoute = function () {
+            if (vm.isLoggedIn) {
+                PackageService.buyPack(routeDetail.id);
             } else {
                 notLoggedIn();
             }
         };
 
-        vm.downloadPack = function () {
+        vm.downloadPackage = function () {
             if ((CONFIG.OPTIONS.skipLoginPublicRoutesDownload && routeDetail.wm_route_public) || vm.isLoggedIn) {
-                PackageService.downloadPack(routeDetail.id);
+                PackageService.downloadPackage(routeDetail.id);
             } else {
                 notLoggedIn();
             }
@@ -248,6 +262,14 @@ angular.module('webmapp')
         registeredEvents.push(
             $rootScope.$on('userPackagesId-updated', function (e, value) {
                 vm.userPackagesId = value;
+
+                if ($rootScope.routeDownload) {
+                    delete $rootScope.routeDownload;
+                    if (Auth.isLoggedIn() && vm.userPackagesId[vm.id]) {
+                        vm.downloadPackage();
+                    }
+                }
+
                 Utils.forceDigest();
             })
         );
@@ -301,8 +323,9 @@ angular.module('webmapp')
         $ionicLoading.show({
             template: '<ion-spinner></ion-spinner>'
         });
-        PackageService.getRoutes();
+        PackageService.getRoutes(true);
         PackageService.getDownloadedPackages();
+        vm.isAndroid = !window.cordova || window.cordova.platformId === 'ios' ? false : true;
 
         if (Auth.isLoggedIn()) {
             userData = Auth.getUserData();

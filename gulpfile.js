@@ -278,7 +278,7 @@ gulp.updateConfigXML = function (config) {
     var edit_tag = '<widget id="' + config.id + '" version="' + config.version + '"',
         edit_name = '<name>' + config.name + '</name>',
         edit_desc = '<description>' + config.description + '</description>',
-        edit_version = "VERSION: \"" + config.version + "\"";
+        edit_version = "VERSION: \"" + config.version + "\", \"appId\": \"" + config.id + "\"";
 
     gulp.start('generate-index');
 

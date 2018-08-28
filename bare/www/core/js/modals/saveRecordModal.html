@@ -12,7 +12,7 @@
         </div>
         <form class="save-form" ng-submit="submitData(vm.title,vm.descr)">
             <div class="list">
-                <label class="item item-input" ng-class="red-border: vm.inputError">
+                <label class="item item-input" ng-class="{'red-border': vm.inputError}">
                     <input type="text" class="input-ph" autocorrect="off" ng-model="vm.title" autocapitalize="none" spellcheck="false" autocomplete="off"
                         placeholder="{{ 'titolo' | translate }}">
                 </label>

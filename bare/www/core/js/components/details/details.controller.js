@@ -52,12 +52,18 @@ angular.module('webmapp')
         vm.hideSubMenu = true;
 
         vm.goBack = function () {
-            if (vm.isNavigable) {
-                vm.isNavigable = false;
-                $rootScope.isNavigable = false;
-                $rootScope.$emit('item-navigable', vm.isNavigable);
+            if (vm.isMapExpanded) {
+                vm.toggleMap();
             }
-            Utils.goBack();
+            else {
+                if (vm.isNavigable) {
+                    vm.isNavigable = false;
+                    $rootScope.isNavigable = false;
+                    $rootScope.$emit('item-navigable', vm.isNavigable);
+                }
+
+                Utils.goBack();
+            }
         }
 
         MapService.resetUtfGridLayers();
@@ -118,7 +124,7 @@ angular.module('webmapp')
             modalAccessibility = modalObj;
         });
 
-        if (!CONFIG.recordTrack) {
+        if (!CONFIG.NAVIGATION.enableTrackRecording) {
 
             vm.isNavigating = $rootScope.isNavigating;
             var saveModalScope = $rootScope.$new();
@@ -308,8 +314,8 @@ angular.module('webmapp')
 
                 vm.chiama = function (number) {
                     window.plugins.CallNumber.callNumber(function () {
-                            console.log('successo');
-                        },
+                        console.log('successo');
+                    },
                         function () {
                             console.error('error');
                         }, number);
@@ -356,8 +362,8 @@ angular.module('webmapp')
                                     vm.stages[this.s].pois.push(data);
                                     extras.push(data);
                                 }, {
-                                    s: s
-                                }));
+                                        s: s
+                                    }));
                         }
                     }
                 }
@@ -744,7 +750,7 @@ angular.module('webmapp')
         };
 
         $rootScope.$on('expand-map', function (e, value) {
-            vm.hideBack = value;
+            vm.isMapExpanded = value;
         });
 
         $scope.$on('$destroy', function () {
@@ -763,7 +769,7 @@ angular.module('webmapp')
                 $ionicSlideBoxDelegate.update();
             }
 
-            if (!CONFIG.recordTrack) {
+            if (!CONFIG.NAVIGATION.enableTrackRecording) {
                 saveModal.remove();
             }
         });

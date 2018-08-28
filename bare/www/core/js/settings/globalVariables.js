@@ -1,5 +1,8 @@
 var templateBasePath = 'core/',
-    templateCustomPath = '';
+    templateCustomPath = '',
+    privateKey = {
+        voucher: 'MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANWKJqSEYyNCU6EQrhdX3boYnP'
+    };
 
 /**
  *   0- 99: Global errors

@@ -1,6 +1,7 @@
 angular.module('webmapp')
 
     .controller('MainController', function MainController(
+        $cordovaDeeplinks,
         $cordovaSocialSharing,
         $ionicModal,
         $ionicPlatform,
@@ -62,19 +63,19 @@ angular.module('webmapp')
 
         vm.speedTextType = 'average';
 
-        if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.detaultSpeedType && CONFIG.MAIN.NAVIGATION.defaultSpeedType !== 'average' && CONFIG.MAIN.NAVIGATION.defaultSpeedType === 'current') {
+        if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.defaultSpeedType && CONFIG.MAIN.NAVIGATION.defaultSpeedType === 'current') {
             vm.speedTextType = 'current';
         }
-        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.detaultSpeedType && CONFIG.NAVIGATION.defaultSpeedType !== 'average' && CONFIG.NAVIGATION.defaultSpeedType === 'current') {
+        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.defaultSpeedType && CONFIG.NAVIGATION.defaultSpeedType === 'current') {
             vm.speedTextType = 'current';
         } else {
             vm.speedTextType = 'average';
         }
 
         Utils.createModal('core/js/modals/shareModal.html', {
-                backdropClickToClose: true,
-                hardwareBackButtonClose: true
-            }, shareScope)
+            backdropClickToClose: true,
+            hardwareBackButtonClose: true
+        }, shareScope)
             .then(function (modal) {
                 shareModal = modal;
             });
@@ -88,7 +89,6 @@ angular.module('webmapp')
                 shareModal.hide();
             }
         };
-
 
         shareScope.vm.sendText = function () {
             var currentRequest;
@@ -112,13 +112,13 @@ angular.module('webmapp')
 
                 currentRequest
                     .then(function () {
-                            shareScope.vm.sendInProgress = false;
-                            shareScope.vm.sendSuccess = true;
+                        shareScope.vm.sendInProgress = false;
+                        shareScope.vm.sendSuccess = true;
 
-                            setTimeout(function () {
-                                shareModal.hide();
-                            }, 1000);
-                        },
+                        setTimeout(function () {
+                            shareModal.hide();
+                        }, 1000);
+                    },
                         function (error) {
                             $ionicPopup.alert({
                                 title: $translate.instant("ATTENZIONE"),
@@ -177,15 +177,15 @@ angular.module('webmapp')
         vm.filterIcon = CONFIG.OPTIONS.filterIcon;
 
         $scope.$watch(function () {
-                return $ionicSideMenuDelegate.isOpenLeft();
-            },
+            return $ionicSideMenuDelegate.isOpenLeft();
+        },
             function (isOpen) {
                 if (isOpen) {
                     vm.showRightMenu = false;
                 }
             });
 
-        if (!CONFIG.recordtrack) {
+        if (!CONFIG.NAVIGATION.enableTrackRecording) {
             var saveModalScope = $rootScope.$new();
             var saveModal = {};
 
@@ -354,9 +354,9 @@ angular.module('webmapp')
 
             if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) {
                 $ionicPopup.confirm({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
-                    })
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                })
                     .then(function (res) {
                         if (res) {
                             var emailTo = '',
@@ -393,8 +393,8 @@ angular.module('webmapp')
 
                                 currentRequest
                                     .then(function () {
-                                            return;
-                                        },
+                                        return;
+                                    },
                                         function (error) {
                                             return;
                                         });
@@ -404,9 +404,9 @@ angular.module('webmapp')
                     });
             } else {
                 $ionicPopup.confirm({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
-                    })
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                })
                     .then(function (res) {
                         if (res) {
                             sendSMS(text);
@@ -433,10 +433,13 @@ angular.module('webmapp')
 
         vm.returnToMap = function () {
             // vm.isNavigable = false;
+            vm.toggleMap();
+            return;
+            console.log("return")
             if ($state.params.parentId) {
                 MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
             }
-            if (!CONFIG.recordTrack && MapService.getUserPolyline() !== null) {
+            if (!CONFIG.NAVIGATION.enableTrackRecording && MapService.getUserPolyline() !== null) {
                 vm.isNavigable = false;
             }
             vm.goToMap();
@@ -473,7 +476,7 @@ angular.module('webmapp')
         vm.toggleMap = function () {
             vm.isMapPage = !vm.isMapPage;
             vm.mapView = vm.isMapPage;
-            vm.isNavigable = false;
+            // vm.isNavigable = false;
             setTimeout(function () {
                 MapService.adjust();
             }, 350);
@@ -601,8 +604,8 @@ angular.module('webmapp')
             $scope.$on('$stateChangeStart', function (e, dest) {
                 vm.showRightMenu = false;
                 if ((dest.name === 'app.main.detaillayer' ||
-                        dest.name === 'app.main.detailevent' ||
-                        dest.name === 'app.main.detailulayer') &&
+                    dest.name === 'app.main.detailevent' ||
+                    dest.name === 'app.main.detailulayer') &&
                     previousBounds === null) {
                     previousBounds = MapService.getBounds();
                 }
@@ -612,8 +615,9 @@ angular.module('webmapp')
         registeredEvents.push(
             $scope.$on('$stateChangeSuccess', function () {
                 var currentState = $rootScope.currentState.name,
-                    realState,
-                    layerState = false;
+                    realState;
+
+                vm.layerState = false;
 
                 if (currentState !== 'app.main.detaillayer' &&
                     currentState !== 'app.main.detailevent' &&
@@ -684,13 +688,13 @@ angular.module('webmapp')
                     // TODO: show nothing on the map
                 } else if (currentState === 'app.main.layer') {
                     realState = $rootScope.currentParams.id.replace(/_/g, ' ');
-                    layerState = true;
+                    vm.layerState = true;
 
                     if (typeof overlayMap[realState] !== 'undefined' ||
                         typeof overlaysGroupMap[realState] !== 'undefined') {
 
                         setTimeout(function () {
-                            if (layerState) {
+                            if (vm.layerState) {
                                 MapService.activateLayer(realState, false, false);
                             }
                         }, 50);
@@ -826,12 +830,43 @@ angular.module('webmapp')
 
         $ionicPlatform.ready(function () {
             vm.userData = Auth.getUserData();
-            if (!GeolocationService.isActive()) {
-                GeolocationService.enable();
+            if (CONFIG.MAIN || !CONFIG.MULTIMAP) {
+                if (!GeolocationService.isActive()) {
+                    GeolocationService.enable();
+                }
+                if (window !== top) {
+                    MapService.disableWheelZoom();
+                }
             }
-            if (window !== top) {
-                MapService.disableWheelZoom();
-            }
+
+            // Note: route's first argument can take any kind of object as its data,
+            // and will send along the matching object if the route matches the deeplink
+
+            //ionic cordova plugin add ionic-plugin-deeplinks --variable URL_SCHEME=test --variable DEEPLINK_SCHEME=https --variable DEEPLINK_HOST=api.webmapp.it --variable ANDROID_PATH_PREFIX=/
+            $cordovaDeeplinks.route({
+                // '/languages': { target: 'languages' },
+                // '/home': { target: 'home' },
+                // '/packages': { target: 'packages' },
+                '/routeDownload/:id': { target: 'route/', parent: 'packages' },
+                '/route/:id': { target: 'route/', parent: 'packages' }
+            }).subscribe(function (match) {
+                setTimeout(function () {
+                    if (match.$route.parent) {
+                        Utils.goTo(match.$route.parent);
+                        setTimeout(function () {
+                            if (match.$link.path === '/routeDownload/' + match.$args.id) {
+                                $rootScope.routeDownload = true;
+                            }
+                            Utils.goTo(match.$route.target + match.$args.id);
+                        }, 10);
+                    }
+                    else {
+                        Utils.goTo(match.$route.target);
+                    }
+                }, 20);
+            }, function (nomatch) {
+                console.warn('No match', nomatch);
+            });
         });
 
         registeredEvents.push(

@@ -12,6 +12,7 @@ angular.module('webmapp')
         Account,
         Auth,
         CONFIG,
+        GeolocationService,
         Model,
         Offline,
         Utils
@@ -58,10 +59,10 @@ angular.module('webmapp')
             };
         }
 
-        mainMenuItems[mainMenuItems.length] = {
-            type: 'layer',
-            label: 'I miei percorsi'
-        };
+        // mainMenuItems[mainMenuItems.length] = {
+        //     type: 'layer',
+        //     label: 'I miei percorsi'
+        // };
 
         for (var i in mainMenuItems) {
             var type = mainMenuItems[i].type,
@@ -569,6 +570,9 @@ angular.module('webmapp')
             if (type === 'internalLink') {
                 location.href = url;
             } else if (type === 'closeMap') {
+                if (GeolocationService.isActive()) {
+                    GeolocationService.disable();
+                }
                 Offline.resetCurrentMapAndGoBack();
             } else {
                 Utils.goTo(url);

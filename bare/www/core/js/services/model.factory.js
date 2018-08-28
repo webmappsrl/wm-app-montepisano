@@ -45,7 +45,7 @@ angular.module('webmapp')
             confMainMenuMap[mainMenuItems[i].label] = mainMenuItems[i];
             if (mainMenuItems[i].type === 'layerGroup') {
                 overlaysGroupMap[mainMenuItems[i].label] = mainMenuItems[i];
-                if (!CONFIG.recordTracks && mainMenuItems[i].label === "Percorsi") {
+                if (!CONFIG.NAVIGATION.enableTrackRecording && mainMenuItems[i].label === "Percorsi") {
                     mainMenuItems[i].items.push("I miei percorsi");
                 }
                 for (var c in mainMenuItems[i].items) {

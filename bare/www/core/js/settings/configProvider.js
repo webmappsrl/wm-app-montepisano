@@ -150,6 +150,4 @@ angular.module('webmapp')
             // console.log(config);
             return config;
         };
-
-
     });

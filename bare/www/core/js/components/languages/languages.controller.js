@@ -1,14 +1,16 @@
 angular.module('webmapp')
 
     .controller('LanguagesController', function LanguagesController(
+        $ionicPopup,
         $rootScope,
+        $translate,
         $window,
         Auth,
-        Offline,
-        Utils,
-        $ionicPopup,
         CONFIG,
-        $translate
+        md5,
+        Offline,
+        PackageService,
+        Utils
     ) {
         var vm = {},
             offlineModal;
@@ -20,10 +22,12 @@ angular.module('webmapp')
         vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : "it";
         vm.version = CONFIG.VERSION;
         vm.privacyUrl = 'http://www.webmapp.it/privacy/';
+        vm.purchaseAvailable = true;
 
-        for (var i in vm.languages) {
-            vm.languages[i] = vm.languages[i].substring(0, 2);
-        }
+        vm.isLoggedIn = false;
+
+        vm.useLogin = CONFIG.LOGIN && CONFIG.LOGIN.useLogin;
+        var userData = {};
 
         var updatePrivacyUrl = function () {
             if (CONFIG.COMMUNICATION.privacy) {
@@ -41,11 +45,6 @@ angular.module('webmapp')
                 }
             }
         };
-
-        vm.isLoggedIn = false;
-
-        vm.useLogin = CONFIG.LOGIN && CONFIG.LOGIN.useLogin;
-        var userData = {};
 
         vm.chooseLang = function (lang) {
             $translate.preferredLanguage(lang.substring(0, 2));
@@ -88,13 +87,37 @@ angular.module('webmapp')
             setTimeout(function () {
                 showLogin();
             }, 500);
-        }
+        };
+
+        vm.restorePurchases = function () {
+            PackageService.restorePurchases();
+        };
 
         $rootScope.$on('logged-in', function () {
             if (Auth.isLoggedIn()) {
                 vm.isLoggedIn = true;
             }
         });
+
+        if (CONFIG.MULTIMAP && CONFIG.MULTIMAP.purchaseType) {
+            for (var i in CONFIG.MULTIMAP.purchaseType) {
+                if (CONFIG.MULTIMAP.purchaseType[i] === 'purchase') {
+                    vm.purchaseAvailable = true;
+                }
+                if (CONFIG.MULTIMAP.purchaseType[i] === 'voucher') {
+                    vm.voucherAvailable = true;
+                }
+            }
+        }
+
+        if (!vm.purchaseAvailable && !vm.voucherAvailable) {
+            vm.purchaseAvailable = true;
+            vm.voucherAvailable = true;
+        }
+
+        for (var i in vm.languages) {
+            vm.languages[i] = vm.languages[i].substring(0, 2);
+        }
 
         if (vm.useLogin && !Auth.isLoggedIn()) {
             vm.isLoggedIn = false;
@@ -104,6 +127,8 @@ angular.module('webmapp')
         }
 
         updatePrivacyUrl();
+
+        console.log(md5.createHash('gianni'))
 
         return vm;
     });

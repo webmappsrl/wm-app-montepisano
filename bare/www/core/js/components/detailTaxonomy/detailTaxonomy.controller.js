@@ -46,11 +46,11 @@ angular.module('webmapp')
             forceDigest();
         };
 
-        vm.openOrDownloadPack = function (packId) {
+        vm.openOrDownloadPackage = function (packId) {
             if (vm.userDownloadedPackages[packId]) {
                 PackageService.openPackage(packId);
             } else {
-                PackageService.downloadPack(packId);
+                PackageService.downloadPackage(packId);
             }
         };
 

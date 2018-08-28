@@ -1,38 +1,23 @@
-<ion-view 
-    class="events-view"
-    cache-view="false" 
-    ng-controller="CustomController as vm">
+<ion-view class="events-view" cache-view="false" ng-controller="CustomController as vm">
     <ion-nav-title>
         <span id="pageTitle">
             {{vm.currentPage.label}}
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">
-        <button 
-            class="no-animate button button-icon icon ion-navicon"
-            menu-toggle="left"></button>
+        <button class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
 
-    <ion-content
-        class="fullView"
-        style="color: black;" ng-style"{'background': COLORS.global.background}">
-        <ion-item 
-            class="item item-icon-left back-item"
-            ng-style="{
+    <ion-content class="fullView" style="color: black;" ng-style="{'background': COLORS.global.background}">
+        <ion-item class="item item-icon-left back-item" ng-style="{
                 'background': COLORS.subnav.background,
                 'color': COLORS.subnav.color
-            }"
-            ng-if="vm.isAPageChild"
-            ng-click="vm.goBackToCategory(vm.mainCategory.label)">
+            }" ng-if="vm.isAPageChild" ng-click="vm.goBackToCategory(vm.mainCategory.label)">
             <i class="icon ion-ios-arrow-left"></i>
             {{vm.mainCategory.label}}
         </ion-item>
         <br ng-if="vm.isAPageChild">
-        <div
-            style="text-align: left"
-            class="static-content custom-page-padding"
-            compile="vm.body">
+        <div style="text-align: left" class="static-content custom-page-padding" compile="vm.body">
         </div>
     </ion-content>
 </ion-view>
-
