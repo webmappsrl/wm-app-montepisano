@@ -571,7 +571,6 @@ angular.module('webmapp')
                 if (typeof confLayersMap[layerName] !== 'undefined' &&
                     typeof layersEngine[layerName] !== 'undefined') {
                     delete layersEngine[layerName];
-                    console.log('CALLED');
                 }
             }
 

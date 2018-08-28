@@ -1,4 +1,4 @@
-describe('Account.Factory', function() {
+xdescribe('Account.Factory', function () {
 
 
     beforeEach(module('webmapp'));
@@ -11,7 +11,7 @@ describe('Account.Factory', function() {
     var $rootScope;
     var config;
     var baseUrl, endpoint;
-    beforeEach(inject(function(Account, _$httpBackend_, _$q_, _$rootScope_, _Auth_, CONFIG) {
+    beforeEach(inject(function (Account, _$httpBackend_, _$q_, _$rootScope_, _Auth_, CONFIG) {
         accountService = Account;
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
@@ -29,9 +29,9 @@ describe('Account.Factory', function() {
 
 
 
-    describe('.login', function() {
+    describe('.login', function () {
 
-        it('it should execute login successfully', function(done) {
+        it('it should execute login successfully', function (done) {
             var fakeUser = 'fakeUser';
             var fakePass = 'fakePass';
             var data = {
@@ -41,21 +41,24 @@ describe('Account.Factory', function() {
 
 
             var res = JSON.stringify(data);
-            $httpBackend.expect('POST', baseUrl + endpoint + 'user/', data, { 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*' })
+            $httpBackend.expect('POST', baseUrl + endpoint + 'user/', data, {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json, text/plain, */*'
+                })
                 .respond(200, res);
 
 
-            accountService.login(fakeUser, fakePass).then(function(response) {
+            accountService.login(fakeUser, fakePass).then(function (response) {
                 expect(response).toEqual(data);
                 done();
-            }).catch(function(err) {
+            }).catch(function (err) {
                 done(new Error('it should resolve promise'));
             });
             $httpBackend.flush();
 
         })
 
-        it('it not should execute login successfully', function() {
+        it('it not should execute login successfully', function () {
             var fakeUser = 'fakeUser';
             var fakePass = 'fakePass';
             var data = {
@@ -64,11 +67,14 @@ describe('Account.Factory', function() {
             };
 
             var res = 'Error Message';
-            $httpBackend.expect('POST', baseUrl + endpoint + 'user/', data, { 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*' })
+            $httpBackend.expect('POST', baseUrl + endpoint + 'user/', data, {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json, text/plain, */*'
+                })
                 .respond(404, res);
-            accountService.login(fakeUser, fakePass).then(function(response) {
+            accountService.login(fakeUser, fakePass).then(function (response) {
                 expect(true).toBe(false);
-            }).catch(function(err) {
+            }).catch(function (err) {
                 expect(err).toEqual(res);
             });
             $httpBackend.flush();
@@ -77,7 +83,7 @@ describe('Account.Factory', function() {
 
     });
 
-    describe('.createAccount', function() {
+    describe('.createAccount', function () {
 
         var data;
         var email;
@@ -87,7 +93,7 @@ describe('Account.Factory', function() {
         var newsl;
         var country;
 
-        beforeEach(function() {
+        beforeEach(function () {
 
             email = "fakemail@mail.com";
             password = "fakepass";
@@ -109,19 +115,22 @@ describe('Account.Factory', function() {
 
         })
 
-        it('it should create account successfully', function(done) {
+        it('it should create account successfully', function (done) {
 
 
 
             var res = JSON.stringify(data);
-            $httpBackend.expect('POST', baseUrl + endpoint + 'users', data, { 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*' })
+            $httpBackend.expect('POST', baseUrl + endpoint + 'users', data, {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json, text/plain, */*'
+                })
                 .respond(200, res);
 
 
-            accountService.createAccount(firstName, lastName, email, password, country, newsl, undefined).then(function(response) {
+            accountService.createAccount(firstName, lastName, email, password, country, newsl, undefined).then(function (response) {
                 expect(response).toEqual(data);
                 done();
-            }).catch(function(err) {
+            }).catch(function (err) {
                 done(new Error('Promise should not be rejected!'))
             });
             $httpBackend.flush();
@@ -129,16 +138,19 @@ describe('Account.Factory', function() {
         })
 
 
-        it('it should not create account successfully', function(done) {
+        it('it should not create account successfully', function (done) {
 
 
             var res = 'Error Message!';
-            $httpBackend.expect('POST', baseUrl + endpoint + 'users', data, { 'Content-Type': 'application/json', 'Accept': 'application/json, text/plain, */*' })
+            $httpBackend.expect('POST', baseUrl + endpoint + 'users', data, {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json, text/plain, */*'
+                })
                 .respond(404, res);
 
-            accountService.createAccount(firstName, lastName, email, password, country, newsl, undefined).then(function(response) {
+            accountService.createAccount(firstName, lastName, email, password, country, newsl, undefined).then(function (response) {
                 done(new Error('Promise should not be resolved'));
-            }).catch(function(err) {
+            }).catch(function (err) {
                 expect(err).toEqual(res);
                 done();
             });
@@ -149,14 +161,14 @@ describe('Account.Factory', function() {
 
     });
 
-    describe('.checkin', function() {
+    describe('.checkin', function () {
 
 
 
         var location;
         var userData;
 
-        beforeEach(function() {
+        beforeEach(function () {
 
             location = {};
 
@@ -171,7 +183,7 @@ describe('Account.Factory', function() {
 
         })
 
-        it('location longitude undefined  =>it should not update the position', function(done) {
+        it('location longitude undefined  =>it should not update the position', function (done) {
 
 
             location.lat = 1;
@@ -179,10 +191,10 @@ describe('Account.Factory', function() {
             var promise = accountService.checkin(location);
             promise
                 .then(
-                    function() {
+                    function () {
                         done(new Error('Promise should not be resolved'));
                     }
-                ).catch(function(err) {
+                ).catch(function (err) {
                     done();
                 });
 
@@ -192,7 +204,7 @@ describe('Account.Factory', function() {
 
         })
 
-        it('location latitute undefined  =>it should not update the position', function(done) {
+        it('location latitute undefined  =>it should not update the position', function (done) {
 
 
             location.long = 1;
@@ -200,10 +212,10 @@ describe('Account.Factory', function() {
             var promise = accountService.checkin(location);
             promise
                 .then(
-                    function() {
+                    function () {
                         done(new Error('Promise should not be resolved'));
                     }
-                ).catch(function(err) {
+                ).catch(function (err) {
                     done();
                 });
 
@@ -213,17 +225,17 @@ describe('Account.Factory', function() {
         })
 
 
-        it('location param undefined  =>it should not update the position', function(done) {
+        it('location param undefined  =>it should not update the position', function (done) {
 
             location = undefined;
 
             var promise = accountService.checkin(location);
             promise
                 .then(
-                    function() {
+                    function () {
                         done(new Error('Promise should not be resolved'));
                     }
-                ).catch(function(err) {
+                ).catch(function (err) {
                     done();
                 });
 
@@ -231,13 +243,16 @@ describe('Account.Factory', function() {
             $httpBackend.flush();
         })
 
-        it('location defined, correct request => it should update location', function(done) {
+        it('location defined, correct request => it should update location', function (done) {
 
 
 
 
 
-            location = { lat: 1, long: 2 };
+            location = {
+                lat: 1,
+                long: 2
+            };
             var requestData = {
                 lat: location.lat,
                 long: location.long,
@@ -253,10 +268,10 @@ describe('Account.Factory', function() {
                 })
                 .respond(200, requestData);
 
-            accountService.checkin(location).then(function(response) {
+            accountService.checkin(location).then(function (response) {
                 expect(response).toEqual(requestData);
                 done();
-            }).catch(function(err) {
+            }).catch(function (err) {
                 done(new Error('Promise should not be resolved'));
             });
 
@@ -264,11 +279,14 @@ describe('Account.Factory', function() {
 
         })
 
-        it('location defined, wrong request => it should not update location', function(done) {
+        it('location defined, wrong request => it should not update location', function (done) {
 
 
 
-            location = { lat: 1, long: 2 };
+            location = {
+                lat: 1,
+                long: 2
+            };
             var requestData = {
                 lat: location.lat,
                 long: location.long,
@@ -285,9 +303,9 @@ describe('Account.Factory', function() {
 
             var promise = accountService.checkin(location);
             promise
-                .then(function(response) {
+                .then(function (response) {
                     done(new Error('Promise should not be resolved'));
-                }).catch(function() {
+                }).catch(function () {
                     done();
                 });
 
@@ -296,7 +314,7 @@ describe('Account.Factory', function() {
 
         })
 
-        afterEach(function() {
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
@@ -304,17 +322,25 @@ describe('Account.Factory', function() {
     })
 
 
-    describe('hasAdditionalInfo', function() {
+    describe('hasAdditionalInfo', function () {
 
         var udata;
 
-        beforeEach(function() {
+        beforeEach(function () {
             udata = {
                 user: {
-                    field_city: { und: 'val' },
-                    field_birthday: { und: 'val' },
-                    field_gender: { und: 'val' },
-                    field_user_type: { it: 'val' }
+                    field_city: {
+                        und: 'val'
+                    },
+                    field_birthday: {
+                        und: 'val'
+                    },
+                    field_gender: {
+                        und: 'val'
+                    },
+                    field_user_type: {
+                        it: 'val'
+                    }
                 },
                 pass: 'pass',
                 mail: 'user',
@@ -334,7 +360,7 @@ describe('Account.Factory', function() {
 
 
 
-        it('user is not logged in => should return undefined', function() {
+        it('user is not logged in => should return undefined', function () {
 
             spyOn(Auth, 'getUserData').and.returnValue();
             spyOn(Auth, 'isLoggedIn').and.returnValue(false);
@@ -342,7 +368,7 @@ describe('Account.Factory', function() {
 
         })
 
-        it('user is logged and has all additional info => should return true', function() {
+        it('user is logged and has all additional info => should return true', function () {
 
 
             spyOn(Auth, 'isLoggedIn').and.returnValue(true);
@@ -353,7 +379,7 @@ describe('Account.Factory', function() {
         })
 
 
-        it('user is logged and field_user_type.it undefined  => should return false', function() {
+        it('user is logged and field_user_type.it undefined  => should return false', function () {
 
             udata.user.field_user_type.it = undefined;
             spyOn(Auth, 'isLoggedIn').and.returnValue(true);
@@ -363,7 +389,7 @@ describe('Account.Factory', function() {
         })
 
 
-        it('user is logged and field_gender.und undefined  => should return false', function() {
+        it('user is logged and field_gender.und undefined  => should return false', function () {
 
             udata.user.field_gender.und = undefined;
             spyOn(Auth, 'isLoggedIn').and.returnValue(true);
@@ -373,7 +399,7 @@ describe('Account.Factory', function() {
 
         })
 
-        it('user is logged and field_birthday.und undefined  => should return false', function() {
+        it('user is logged and field_birthday.und undefined  => should return false', function () {
 
             udata.user.field_birthday.und = undefined;
             spyOn(Auth, 'isLoggedIn').and.returnValue(true);
@@ -382,7 +408,7 @@ describe('Account.Factory', function() {
             expect(accountService.hasAdditionalInfo()).toBe(false);
 
         })
-        it('user is logged and field_city.und undefined  => should return false', function() {
+        it('user is logged and field_city.und undefined  => should return false', function () {
 
             udata.user.field_city.und = undefined;
             spyOn(Auth, 'isLoggedIn').and.returnValue(true);
@@ -391,7 +417,7 @@ describe('Account.Factory', function() {
 
         })
 
-        it('user is logged and field_city undefined  => should return true', function() {
+        it('user is logged and field_city undefined  => should return true', function () {
 
             udata.user.field_city = undefined;
             spyOn(Auth, 'isLoggedIn').and.returnValue(true);
@@ -400,7 +426,7 @@ describe('Account.Factory', function() {
 
         })
 
-        it('user is logged and field_user_type undefined  => should return true', function() {
+        it('user is logged and field_user_type undefined  => should return true', function () {
 
             udata.user.field_user_type = undefined;
 
@@ -409,7 +435,7 @@ describe('Account.Factory', function() {
             expect(accountService.hasAdditionalInfo()).toBe(true);
 
         })
-        it('user is logged and field_birthday undefined  => should return true', function() {
+        it('user is logged and field_birthday undefined  => should return true', function () {
 
             udata.user.field_birthday = undefined;
             spyOn(Auth, 'isLoggedIn').and.returnValue(true);
@@ -418,7 +444,7 @@ describe('Account.Factory', function() {
             expect(accountService.hasAdditionalInfo()).toBe(true);
 
         })
-        it('user is logged and field_gender undefined  => should return true', function() {
+        it('user is logged and field_gender undefined  => should return true', function () {
 
             udata.user.field_gender = undefined;
             spyOn(Auth, 'isLoggedIn').and.returnValue(true);
@@ -428,7 +454,7 @@ describe('Account.Factory', function() {
 
         })
 
-        afterEach(function() {
+        afterEach(function () {
             $httpBackend.flush();
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
@@ -436,15 +462,17 @@ describe('Account.Factory', function() {
 
     })
 
-    describe('updateAdditionalInfo', function() {
+    describe('updateAdditionalInfo', function () {
 
 
         var udata;
 
-        beforeEach(function() {
+        beforeEach(function () {
 
             udata = {
-                user: { uid: 123456 },
+                user: {
+                    uid: 123456
+                },
                 api_token: 123654,
                 sessid: 12345
 
@@ -454,7 +482,7 @@ describe('Account.Factory', function() {
         })
 
 
-        it('Send correct data => it should resolve successfully', function(done) {
+        it('Send correct data => it should resolve successfully', function (done) {
 
 
 
@@ -478,10 +506,10 @@ describe('Account.Factory', function() {
 
             var promise = accountService.updateAdditionalInfo(updateData);
 
-            promise.then(function(response) {
+            promise.then(function (response) {
                 done();
                 expect(Auth.setUserData).toHaveBeenCalled();
-            }).catch(function() {
+            }).catch(function () {
                 done(new Error('Promise should not be rejected.'))
             })
 
@@ -491,7 +519,7 @@ describe('Account.Factory', function() {
         })
 
 
-        it('Send correct data => it should reject request', function(done) {
+        it('Send correct data => it should reject request', function (done) {
 
 
 
@@ -514,9 +542,9 @@ describe('Account.Factory', function() {
 
             var promise = accountService.updateAdditionalInfo(updateData);
 
-            promise.then(function(response) {
+            promise.then(function (response) {
                 done(new Error('Promise should be rejected.'))
-            }).catch(function() {
+            }).catch(function () {
                 done();
             })
 
@@ -524,26 +552,30 @@ describe('Account.Factory', function() {
 
         })
 
-        afterEach(function() {
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
 
     })
 
-    describe('resetPassword', function() {
+    describe('resetPassword', function () {
 
-        it('Token response OK and correct email param => it should call resetPassword successfully', function(done) {
+        it('Token response OK and correct email param => it should call resetPassword successfully', function (done) {
 
             var data;
             var fakeemail = "email@email.com";
-            var faketoken = { token: "token1234" };
+            var faketoken = {
+                token: "token1234"
+            };
             $httpBackend.expect('POST', baseUrl + endpoint + 'user/token', data, {
                 // 'Content-Type': 'application/json',
                 'Accept': 'application/json, text/plain, */*'
             }).respond(200, faketoken);
 
-            $httpBackend.expect('POST', baseUrl + endpoint + 'user/request_new_password', { name: fakeemail }, {
+            $httpBackend.expect('POST', baseUrl + endpoint + 'user/request_new_password', {
+                name: fakeemail
+            }, {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json, text/plain, */*',
                 'X-CSRF-Token': faketoken.token
@@ -552,11 +584,11 @@ describe('Account.Factory', function() {
             var promise = accountService.resetPassword(fakeemail);
 
 
-            promise.then(function(response) {
+            promise.then(function (response) {
                 done();
                 expect(response).toEqual("Reset Password Success!");
 
-            }).catch(function() {
+            }).catch(function () {
                 done(new Error('Promise should be resolved.'))
             })
 
@@ -564,7 +596,7 @@ describe('Account.Factory', function() {
             $httpBackend.flush();
         })
 
-        it('Bad token response => it should reject the returned promise', function(done) {
+        it('Bad token response => it should reject the returned promise', function (done) {
 
             var data;
             var fakeemail = "email@email.com";
@@ -574,9 +606,9 @@ describe('Account.Factory', function() {
             }).respond(404, "Request token error!");
 
             var promise = accountService.resetPassword(fakeemail);
-            promise.then(function(response) {
+            promise.then(function (response) {
                 done(new Error('Promise should be rejected.'))
-            }).catch(function(response) {
+            }).catch(function (response) {
                 done();
                 expect(response).toEqual("Request token error!");
 
@@ -586,26 +618,30 @@ describe('Account.Factory', function() {
 
         })
 
-        it('Bad email response => it should reject the returned promise', function(done) {
+        it('Bad email response => it should reject the returned promise', function (done) {
 
             var data;
             var fakeemail = "email@email.com";
-            var faketoken = { token: "token1234" };
+            var faketoken = {
+                token: "token1234"
+            };
             $httpBackend.expect('POST', baseUrl + endpoint + 'user/token', data, {
                 // 'Content-Type': 'application/json',
                 'Accept': 'application/json, text/plain, */*'
             }).respond(200, faketoken);
 
-            $httpBackend.expect('POST', baseUrl + endpoint + 'user/request_new_password', { name: fakeemail }, {
+            $httpBackend.expect('POST', baseUrl + endpoint + 'user/request_new_password', {
+                name: fakeemail
+            }, {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json, text/plain, */*',
                 'X-CSRF-Token': faketoken.token
             }).respond(404, "Reset password error!");
 
             var promise = accountService.resetPassword(fakeemail);
-            promise.then(function(response) {
+            promise.then(function (response) {
                 done(new Error('Promise should be rejected.'))
-            }).catch(function(response) {
+            }).catch(function (response) {
                 done();
                 expect(response).toEqual("Reset password error!");
             })
@@ -616,21 +652,23 @@ describe('Account.Factory', function() {
 
 
 
-        afterEach(function() {
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
 
     })
 
-    describe('logout', function() {
+    describe('logout', function () {
 
 
         var udata;
-        beforeEach(function() {
+        beforeEach(function () {
 
             udata = {
-                user: { uid: 123456 },
+                user: {
+                    uid: 123456
+                },
                 api_token: 123654,
                 sessid: 12345
 
@@ -640,7 +678,7 @@ describe('Account.Factory', function() {
         });
 
 
-        it('it should logout successfully', function(done) {
+        it('it should logout successfully', function (done) {
 
 
 
@@ -657,11 +695,11 @@ describe('Account.Factory', function() {
             }).respond(200, "Logout Success!");
 
             var promise = accountService.logout();
-            promise.then(function(response) {
+            promise.then(function (response) {
 
                 expect(response).toBe("Logout Success!");
                 done();
-            }).catch(function() {
+            }).catch(function () {
                 done(new Error('Promise should be resolved.'));
             })
 
@@ -669,7 +707,7 @@ describe('Account.Factory', function() {
 
         });
 
-        it('it should not logout successfully', function(done) {
+        it('it should not logout successfully', function (done) {
 
 
 
@@ -686,9 +724,9 @@ describe('Account.Factory', function() {
             }).respond(404, "Logout Error!");
 
             var promise = accountService.logout();
-            promise.then(function(response) {
+            promise.then(function (response) {
                 done(new Error('Promise should be rejected.'));;
-            }).catch(function(response) {
+            }).catch(function (response) {
                 expect(response).toBe("Logout Error!");
                 done();
             })
@@ -697,7 +735,7 @@ describe('Account.Factory', function() {
 
         });
 
-        afterEach(function() {
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
@@ -706,12 +744,14 @@ describe('Account.Factory', function() {
     });
 
 
-    describe('generateCard', function() {
+    describe('generateCard', function () {
 
         var udata;
-        beforeEach(function() {
+        beforeEach(function () {
             udata = {
-                user: { uid: 123456 },
+                user: {
+                    uid: 123456
+                },
                 api_token: 123654,
                 sessid: 12345
 
@@ -719,13 +759,15 @@ describe('Account.Factory', function() {
         });
 
 
-        it('it should generate Card successfully', function(done) {
+        it('it should generate Card successfully', function (done) {
 
             spyOn(Auth, 'getUserData').and.returnValue(udata);
             spyOn(Auth, 'setUserData').and.returnValue(true);
 
             var cardId = 12345;
-            var data = { card_id: cardId };
+            var data = {
+                card_id: cardId
+            };
             var expectedResponse = 'card12345';
 
             $httpBackend.expect('POST', baseUrl + endpoint + 'generate-new-card', data, {
@@ -736,14 +778,14 @@ describe('Account.Factory', function() {
             }).respond(200, expectedResponse);
 
             var promise = accountService.generateCard(cardId);
-            promise.then(function(response) {
+            promise.then(function (response) {
                 udata.card = {};
                 udata.card = response;
                 udata.card.value = response;
                 expect(response).toEqual(expectedResponse);
                 expect(Auth.setUserData).toHaveBeenCalledWith(udata);
                 done();
-            }).catch(function(error) {
+            }).catch(function (error) {
                 done(new Error('Promise should be resolved.'));
             })
 
@@ -751,13 +793,15 @@ describe('Account.Factory', function() {
         });
 
 
-        it('it should not generate card successfully', function(done) {
+        it('it should not generate card successfully', function (done) {
 
             spyOn(Auth, 'getUserData').and.returnValue(udata);
             spyOn(Auth, 'setUserData').and.returnValue(true);
 
             var cardId = 12345;
-            var data = { card_id: cardId };
+            var data = {
+                card_id: cardId
+            };
             $httpBackend.expect('POST', baseUrl + endpoint + 'generate-new-card', data, {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json, text/plain, */*',
@@ -766,9 +810,9 @@ describe('Account.Factory', function() {
             }).respond(404, "Generate Card Error Response!");
 
             var promise = accountService.generateCard(cardId);
-            promise.then(function(response) {
+            promise.then(function (response) {
                 done(new Error('Promise should be rejected.'));
-            }).catch(function(error) {
+            }).catch(function (error) {
                 expect(error).toEqual("Generate Card Error Response!");
                 done();
             })
@@ -778,7 +822,7 @@ describe('Account.Factory', function() {
         });
 
 
-        afterEach(function() {
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
@@ -787,12 +831,14 @@ describe('Account.Factory', function() {
     });
 
 
-    describe('refreshCard', function() {
+    describe('refreshCard', function () {
 
         var udata;
-        beforeEach(function() {
+        beforeEach(function () {
             udata = {
-                user: { uid: 123456 },
+                user: {
+                    uid: 123456
+                },
                 api_token: 123654,
                 sessid: 12345
 
@@ -800,13 +846,15 @@ describe('Account.Factory', function() {
         });
 
 
-        it('it should refresh Card successfully', function(done) {
+        it('it should refresh Card successfully', function (done) {
 
             spyOn(Auth, 'getUserData').and.returnValue(udata);
             spyOn(Auth, 'setUserData').and.returnValue(true);
 
             var data = {};
-            var expectedResponse = { card: 'card12345' };
+            var expectedResponse = {
+                card: 'card12345'
+            };
 
             $httpBackend.expect('POST', baseUrl + endpoint + 'get-user-card', data, {
                 'Content-Type': 'application/json',
@@ -816,14 +864,14 @@ describe('Account.Factory', function() {
             }).respond(200, expectedResponse);
 
             var promise = accountService.refreshCard();
-            promise.then(function(response) {
+            promise.then(function (response) {
                 udata.card = {};
                 udata.card = {
                     value: response
                 };
                 expect(Auth.setUserData).toHaveBeenCalledWith(udata);
                 done();
-            }).catch(function(error) {
+            }).catch(function (error) {
                 done(new Error('Promise should be resolved.'));
             })
 
@@ -834,7 +882,7 @@ describe('Account.Factory', function() {
 
 
 
-        afterEach(function() {
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
@@ -843,7 +891,7 @@ describe('Account.Factory', function() {
     });
 
 
-    afterEach(function() {
+    afterEach(function () {
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
     });

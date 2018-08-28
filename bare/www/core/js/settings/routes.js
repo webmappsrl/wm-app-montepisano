@@ -7,7 +7,6 @@ angular.module('webmapp')
         $ionicConfigProvider,
         CONFIGProvider) {
         var basePath = templateBasePath || '';
-
         // Cache each view in DOM
         // $ionicConfigProvider.views.forwardCache(true);
 

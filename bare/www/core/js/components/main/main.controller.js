@@ -33,6 +33,8 @@ angular.module('webmapp')
         var shareScope = $rootScope.$new(),
             shareModal;
 
+        var trackRecordingEnabled = CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+
         vm.geolocationState = {
             isActive: false,
             isLoading: false,
@@ -73,9 +75,9 @@ angular.module('webmapp')
         }
 
         Utils.createModal('core/js/modals/shareModal.html', {
-            backdropClickToClose: true,
-            hardwareBackButtonClose: true
-        }, shareScope)
+                backdropClickToClose: true,
+                hardwareBackButtonClose: true
+            }, shareScope)
             .then(function (modal) {
                 shareModal = modal;
             });
@@ -112,13 +114,13 @@ angular.module('webmapp')
 
                 currentRequest
                     .then(function () {
-                        shareScope.vm.sendInProgress = false;
-                        shareScope.vm.sendSuccess = true;
+                            shareScope.vm.sendInProgress = false;
+                            shareScope.vm.sendSuccess = true;
 
-                        setTimeout(function () {
-                            shareModal.hide();
-                        }, 1000);
-                    },
+                            setTimeout(function () {
+                                shareModal.hide();
+                            }, 1000);
+                        },
                         function (error) {
                             $ionicPopup.alert({
                                 title: $translate.instant("ATTENZIONE"),
@@ -177,21 +179,23 @@ angular.module('webmapp')
         vm.filterIcon = CONFIG.OPTIONS.filterIcon;
 
         $scope.$watch(function () {
-            return $ionicSideMenuDelegate.isOpenLeft();
-        },
+                return $ionicSideMenuDelegate.isOpenLeft();
+            },
             function (isOpen) {
                 if (isOpen) {
                     vm.showRightMenu = false;
                 }
             });
 
-        if (!CONFIG.NAVIGATION.enableTrackRecording) {
+        if (!trackRecordingEnabled) {
             var saveModalScope = $rootScope.$new();
             var saveModal = {};
 
             saveModalScope.vm = {};
             saveModalScope.vm.operation = 'salva';
             saveModalScope.vm.COLORS = vm.colors;
+            saveModalScope.vm.inputError = false;
+            saveModalScope.vm.errorMessage = "";
 
             $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/saveRecordModal.html', {
                 scope: saveModalScope,
@@ -211,13 +215,21 @@ angular.module('webmapp')
 
             saveModalScope.submitData = function () {
 
-                var info = {
-                    name: saveModalScope.vm.title,
-                    description: saveModalScope.vm.description
-                };
-                MapService.saveUserPolyline(info);
-                MapService.removeUserPolyline();
-                saveModal.hide();
+                var title = saveModalScope.vm.title;
+                title = title.trim();
+                var description = saveModalScope.vm.description.trim();
+                if (title === "") {
+                    saveModalScope.vm.errorMessage = "Compila tutti i campi richiesti";
+                    saveModalScope.vm.inputError = true;
+                } else {
+                    var info = {
+                        name: title,
+                        description: description
+                    };
+                    MapService.saveUserPolyline(info);
+                    MapService.removeUserPolyline();
+                    saveModal.hide();
+                }
 
             }
 
@@ -230,6 +242,8 @@ angular.module('webmapp')
                         saveModalScope.vm.operation = "salva";
                         saveModalScope.vm.featureId = "";
                         saveModal.show();
+                        saveModalScope.vm.inputError = false;
+                        saveModalScope.vm.errorMessage = "";
                     }
                 })
             );
@@ -354,9 +368,9 @@ angular.module('webmapp')
 
             if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) {
                 $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
-                })
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                    })
                     .then(function (res) {
                         if (res) {
                             var emailTo = '',
@@ -393,8 +407,8 @@ angular.module('webmapp')
 
                                 currentRequest
                                     .then(function () {
-                                        return;
-                                    },
+                                            return;
+                                        },
                                         function (error) {
                                             return;
                                         });
@@ -404,9 +418,9 @@ angular.module('webmapp')
                     });
             } else {
                 $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
-                })
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                    })
                     .then(function (res) {
                         if (res) {
                             sendSMS(text);
@@ -439,7 +453,7 @@ angular.module('webmapp')
             if ($state.params.parentId) {
                 MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
             }
-            if (!CONFIG.NAVIGATION.enableTrackRecording && MapService.getUserPolyline() !== null) {
+            if (!trackRecordingEnabled && MapService.getUserPolyline() !== null) {
                 vm.isNavigable = false;
             }
             vm.goToMap();
@@ -604,8 +618,8 @@ angular.module('webmapp')
             $scope.$on('$stateChangeStart', function (e, dest) {
                 vm.showRightMenu = false;
                 if ((dest.name === 'app.main.detaillayer' ||
-                    dest.name === 'app.main.detailevent' ||
-                    dest.name === 'app.main.detailulayer') &&
+                        dest.name === 'app.main.detailevent' ||
+                        dest.name === 'app.main.detailulayer') &&
                     previousBounds === null) {
                     previousBounds = MapService.getBounds();
                 }
@@ -847,8 +861,14 @@ angular.module('webmapp')
                 // '/languages': { target: 'languages' },
                 // '/home': { target: 'home' },
                 // '/packages': { target: 'packages' },
-                '/routeDownload/:id': { target: 'route/', parent: 'packages' },
-                '/route/:id': { target: 'route/', parent: 'packages' }
+                '/routeDownload/:id': {
+                    target: 'route/',
+                    parent: 'packages'
+                },
+                '/route/:id': {
+                    target: 'route/',
+                    parent: 'packages'
+                }
             }).subscribe(function (match) {
                 setTimeout(function () {
                     if (match.$route.parent) {
@@ -859,8 +879,7 @@ angular.module('webmapp')
                             }
                             Utils.goTo(match.$route.target + match.$args.id);
                         }, 10);
-                    }
-                    else {
+                    } else {
                         Utils.goTo(match.$route.target);
                     }
                 }, 20);

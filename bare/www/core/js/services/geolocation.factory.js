@@ -44,8 +44,8 @@ angular.module('webmapp')
                 CONFIG.NAVIGATION.trackBoundsDistance :
                 (
                     (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) ?
-                        CONFIG.MAIN.NAVIGATION.trackBoundsDistance :
-                        200
+                    CONFIG.MAIN.NAVIGATION.trackBoundsDistance :
+                    200
                 )
         };
 
@@ -92,11 +92,11 @@ angular.module('webmapp')
                 reset: function () {
                     try {
                         clearInterval(recordingState.toast.hideTimeout);
-                    } catch (e) { }
+                    } catch (e) {}
 
                     try {
                         clearInterval(recordingState.toast.showTimeout);
-                    } catch (e) { }
+                    } catch (e) {}
 
                     recordingState.toast.hideTimeout = null;
                     recordingState.toast.showTimeout = null;
@@ -142,6 +142,9 @@ angular.module('webmapp')
             realTimeTracking.minPositionsToSend = CONFIG.NAVIGATION.TRACKING.minPositionsToSend;
         }
 
+        var trackRecordingEnabled = CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+
+
         /**
          * @description
          * Center the map in [lat, long] position skipping the zoom event handling
@@ -174,9 +177,9 @@ angular.module('webmapp')
                     defer.resolve(true);
                 } else {
                     $ionicPopup.confirm({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Sembra che tu abbia il GPS disattivato. Per accedere a tutte le funzionalità dell'app occorre attivarlo. Vuoi farlo ora?")
-                    })
+                            title: $translate.instant("ATTENZIONE"),
+                            template: $translate.instant("Sembra che tu abbia il GPS disattivato. Per accedere a tutte le funzionalità dell'app occorre attivarlo. Vuoi farlo ora?")
+                        })
                         .then(function (res) {
                             if (res) {
                                 if (window.cordova.platformId === "ios") {
@@ -221,45 +224,45 @@ angular.module('webmapp')
                     }
 
                     cordova.plugins.diagnostic.requestLocationAuthorization(function (status) {
-                        switch (status) {
-                            case cordova.plugins.diagnostic.permissionStatus.GRANTED:
-                            case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
-                                if (window.cordova.platformId === "ios") {
-                                    cordova.plugins.diagnostic.isLocationEnabled(
-                                        onSuccess,
-                                        onError
-                                    );
-                                } else {
-                                    cordova.plugins.diagnostic.isGpsLocationEnabled(
-                                        onSuccess,
-                                        onError
-                                    );
-                                }
-                                break;
-                            case cordova.plugins.diagnostic.permissionStatus.DENIED:
-                                if (window.cordova.platformId === "ios") {
-                                    localStorage.$wm_ios_location_permission_denied = true;
+                            switch (status) {
+                                case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+                                case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
+                                    if (window.cordova.platformId === "ios") {
+                                        cordova.plugins.diagnostic.isLocationEnabled(
+                                            onSuccess,
+                                            onError
+                                        );
+                                    } else {
+                                        cordova.plugins.diagnostic.isGpsLocationEnabled(
+                                            onSuccess,
+                                            onError
+                                        );
+                                    }
+                                    break;
+                                case cordova.plugins.diagnostic.permissionStatus.DENIED:
+                                    if (window.cordova.platformId === "ios") {
+                                        localStorage.$wm_ios_location_permission_denied = true;
+                                        $ionicPopup.alert({
+                                            title: $translate.instant("ATTENZIONE"),
+                                            template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
+                                        });
+                                    } else {
+                                        $ionicPopup.alert({
+                                            title: $translate.instant("ATTENZIONE"),
+                                            template: $translate.instant("Alcune funzionalità funzionano solo se hai abilitato la geolocalizzazione")
+                                        });
+                                    }
+                                    defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
+                                    break;
+                                case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
                                     $ionicPopup.alert({
                                         title: $translate.instant("ATTENZIONE"),
-                                        template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
+                                        template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi attivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
                                     });
-                                } else {
-                                    $ionicPopup.alert({
-                                        title: $translate.instant("ATTENZIONE"),
-                                        template: $translate.instant("Alcune funzionalità funzionano solo se hai abilitato la geolocalizzazione")
-                                    });
-                                }
-                                defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
-                                break;
-                            case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
-                                $ionicPopup.alert({
-                                    title: $translate.instant("ATTENZIONE"),
-                                    template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi attivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
-                                });
-                                defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
-                                break;
-                        }
-                    },
+                                    defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
+                                    break;
+                            }
+                        },
                         onError,
                         cordova.plugins.diagnostic.locationAuthorizationMode.ALWAYS);
                 }
@@ -396,8 +399,7 @@ angular.module('webmapp')
         function rotationCallback(rotation) {
             if (!geolocationState.isRotating) {
                 turnOffRotation();
-            }
-            else {
+            } else {
                 // var heading = rotation.alpha;
                 var heading = rotation.magneticHeading;
 
@@ -547,13 +549,13 @@ angular.module('webmapp')
         };
 
         console.warn("TODO: complete function positionCallback for realTimeTracking")
+
         function positionCallback(position) {
             console.log(position);
 
             if (localStorage.$positionCount) {
                 localStorage.$positionCount = JSON.stringify(JSON.parse(localStorage.$positionCount) + 1);
-            }
-            else {
+            } else {
                 localStorage.$positionCount = JSON.stringify(1);
             }
 
@@ -637,16 +639,16 @@ angular.module('webmapp')
 
                                 currentRequest
                                     .then(function () {
-                                        realTimeTracking.positionsToSend = [];
-                                        return;
-                                    },
+                                            realTimeTracking.positionsToSend = [];
+                                            return;
+                                        },
                                         function (error) {
                                             return;
                                         });
                             }
                         }
 
-                        if (!CONFIG.NAVIGATION.enableTrackRecording && MapService.getUserPolyline() !== null) {
+                        if (!trackRecordingEnabled && MapService.getUserPolyline() !== null) {
                             MapService.updateUserPolyline([lat, long, altitude]);
                         }
 
@@ -665,7 +667,7 @@ angular.module('webmapp')
                                 lat: lat,
                                 long: long
                             });
-                        } catch (e) { }
+                        } catch (e) {}
 
                     }
 
@@ -730,8 +732,7 @@ angular.module('webmapp')
             BackgroundGeolocation.checkStatus(function (status) {
                 if (status.isRunning) {
                     defer.resolve(true);
-                }
-                else {
+                } else {
                     defer.resolve(false);
                 }
             });
@@ -799,8 +800,7 @@ angular.module('webmapp')
                 state.lastPosition = lastState.lastPosition;
                 // MapService.drawPosition(state.lastPosition);
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         };
@@ -895,7 +895,10 @@ angular.module('webmapp')
                                 state.appState = BackgroundGeolocation.FOREGROUND;
 
                                 checkGPS().then(function () {
-                                    geolocationService.switchState({ isFollowing: true, isRotating: true }).then(function () {
+                                    geolocationService.switchState({
+                                        isFollowing: true,
+                                        isRotating: true
+                                    }).then(function () {
                                         $rootScope.$emit('recordingState-changed', {
                                             isActive: recordingState.isActive,
                                             isPaused: recordingState.isPaused,
@@ -908,13 +911,11 @@ angular.module('webmapp')
                                     });
                                 });
                             });
-                        }
-                        else {
+                        } else {
                             BackgroundGeolocation.stop();
                             return geolocationService.enable();
                         }
-                    }
-                    else {
+                    } else {
                         if (geolocationState.isActive) {
                             defer.resolve(geolocationState);
                         } else if (gpsActive) {
@@ -1116,7 +1117,7 @@ angular.module('webmapp')
                             lat: state.lastPosition.lat,
                             long: state.lastPosition.long
                         })
-                    } catch (e) { };
+                    } catch (e) {};
                     recordingState.firstPositionSet = true;
                 } else {
                     recordingState.firstPositionSet = false;
@@ -1132,8 +1133,7 @@ angular.module('webmapp')
                                 }
                             }
                         })
-                        .catch(function (err) {
-                        });
+                        .catch(function (err) {});
                 }
 
                 if (recordTrack) {

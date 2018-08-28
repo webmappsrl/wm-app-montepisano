@@ -14,7 +14,6 @@ angular.module('webmapp')
         var modalScope = $rootScope.$new(),
             modal = {};
 
-
         var areAllActive = function (filtersMap) {
             var allActive = true;
 
@@ -29,6 +28,7 @@ angular.module('webmapp')
 
             return allActive;
         };
+        var trackRecordingEnabled = CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
         MapService.showAllLayers();
         MapService.activateUtfGrid();
@@ -500,10 +500,9 @@ angular.module('webmapp')
         });
 
         vm.clickRightMenu = function () {
-            if (CONFIG.NAVIGATION.enableTrackRecording) {
+            if (!trackRecordingEnabled) {
                 $rootScope.$emit("rightMenuClick");
-            }
-            else {
+            } else {
                 openFilters();
             }
         }

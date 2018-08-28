@@ -32,7 +32,7 @@
         input {
             height: 65px;
             padding: 0;
-            border-bottom: 1px solid transparentize($color-light-02, 0.3);
+            border-bottom: 1px solid transparentize($color-light-01, 0.3);
             font-size: 20px;
             background: none !important;
             line-height: 2.2em;
@@ -40,6 +40,9 @@
             @include placeholder {
                 color: transparentize($color-brown, 0.4);
                 text-transform: capitalize;
+            }
+            &.red-border {
+                border-bottom: 1px solid transparentize($color-red-01, 0.3);
             }
         }
     }
@@ -49,6 +52,13 @@
         // height: auto;
         // padding: 5px 30px;
         text-transform: uppercase;
+    }
+    .error-message {
+        color: $color-red-02;
+        padding: 3px 0;
+        ::first-letter {
+            text-transform: uppercase;
+        }
     }
 }
 

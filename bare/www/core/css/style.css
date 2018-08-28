@@ -4009,7 +4009,7 @@ ion-content div.static-content.card-content {
     .save-form .item input {
       height: 65px;
       padding: 0;
-      border-bottom: 1px solid rgba(145, 143, 117, 0.7);
+      border-bottom: 1px solid rgba(229, 230, 221, 0.7);
       font-size: 20px;
       background: none !important;
       line-height: 2.2em;
@@ -4026,8 +4026,15 @@ ion-content div.static-content.card-content {
       .save-form .item input:-ms-input-placeholder {
         color: rgba(96, 88, 70, 0.6);
         text-transform: capitalize; }
+      .save-form .item input.red-border {
+        border-bottom: 1px solid rgba(166, 62, 10, 0.7); }
   .save-form .login-button {
     text-transform: uppercase; }
+  .save-form .error-message {
+    color: #bb3437;
+    padding: 3px 0; }
+    .save-form .error-message ::first-letter {
+      text-transform: uppercase; }
 
 @media only screen and (min-width: 481px) {
   .login-form .item {

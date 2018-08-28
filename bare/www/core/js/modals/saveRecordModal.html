@@ -12,15 +12,18 @@
         </div>
         <form class="save-form" ng-submit="submitData(vm.title,vm.descr)">
             <div class="list">
-                <label class="item item-input" ng-class="{'red-border': vm.inputError}">
+                <label class="item item-input">
                     <input type="text" class="input-ph" autocorrect="off" ng-model="vm.title" autocapitalize="none" spellcheck="false" autocomplete="off"
-                        placeholder="{{ 'titolo' | translate }}">
+                        ng-class="{'red-border': vm.inputError}" placeholder="{{ 'titolo' | translate }}">
                 </label>
                 <label class="item item-input">
                     <input type="text" class="input-ph" autocorrect="off" ng-model="vm.description" autocapitalize="none" spellcheck="false"
                         autocomplete="off" placeholder="{{ 'descrizione' | translate }}">
                 </label>
 
+                <div class="error-message" ng-if="vm.inputError">
+                    {{vm.errorMessage | translate }}
+                </div>
                 <label class="item">
                     <button ng-style="{
                                 'background': vm.COLORS.global.buttonsBackground,

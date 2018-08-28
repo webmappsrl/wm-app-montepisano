@@ -34,6 +34,8 @@ angular.module('webmapp')
 
         var extras = [];
 
+        var trackRecordingEnabled = CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+
         modalScope.vm = {};
         modalScope.parent = vm;
 
@@ -54,8 +56,7 @@ angular.module('webmapp')
         vm.goBack = function () {
             if (vm.isMapExpanded) {
                 vm.toggleMap();
-            }
-            else {
+            } else {
                 if (vm.isNavigable) {
                     vm.isNavigable = false;
                     $rootScope.isNavigable = false;
@@ -124,7 +125,7 @@ angular.module('webmapp')
             modalAccessibility = modalObj;
         });
 
-        if (!CONFIG.NAVIGATION.enableTrackRecording) {
+        if (!trackRecordingEnabled) {
 
             vm.isNavigating = $rootScope.isNavigating;
             var saveModalScope = $rootScope.$new();
@@ -154,12 +155,12 @@ angular.module('webmapp')
             saveModalScope.submitData = function () {
                 var title = saveModalScope.vm.title;
                 title = title.trim();
-                if (title === "" || title.length < 3) {
-                    saveModalScope.vm.errorMessage = "Il titolo deve contenere almeno 3 caratteri, gli spazi iniziali e finali verranno rimossi.";
+                var description = saveModalScope.vm.description.trim();
+                if (title === "") {
+                    saveModalScope.vm.errorMessage = "Compila tutti i campi richiesti";
                     saveModalScope.vm.inputError = true;
-                    saveModal.hide();
                 } else {
-                    MapService.editUserTrack(saveModalScope.vm.featureId, saveModalScope.vm.title, saveModalScope.vm.description);
+                    MapService.editUserTrack(saveModalScope.vm.featureId, title, description);
                     saveModal.hide();
                     MapService.getFeatureById(saveModalScope.vm.featureId, "I miei percorsi").then(buildDetail, function () {
                         console.log("No such feature");
@@ -314,8 +315,8 @@ angular.module('webmapp')
 
                 vm.chiama = function (number) {
                     window.plugins.CallNumber.callNumber(function () {
-                        console.log('successo');
-                    },
+                            console.log('successo');
+                        },
                         function () {
                             console.error('error');
                         }, number);
@@ -362,8 +363,8 @@ angular.module('webmapp')
                                     vm.stages[this.s].pois.push(data);
                                     extras.push(data);
                                 }, {
-                                        s: s
-                                    }));
+                                    s: s
+                                }));
                         }
                     }
                 }
@@ -769,7 +770,7 @@ angular.module('webmapp')
                 $ionicSlideBoxDelegate.update();
             }
 
-            if (!CONFIG.NAVIGATION.enableTrackRecording) {
+            if (!trackRecordingEnabled) {
                 saveModal.remove();
             }
         });

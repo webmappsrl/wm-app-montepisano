@@ -26,6 +26,8 @@ angular.module('webmapp')
             confOverlays = CONFIG.OVERLAY_LAYERS,
             colorsConfig = CONFIG.STYLE;
 
+        var trackRecordingEnabled = CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+
         for (var p in confPages) {
             pagesMap[confPages[p].label] = angular.extend({
                 items: []
@@ -45,9 +47,6 @@ angular.module('webmapp')
             confMainMenuMap[mainMenuItems[i].label] = mainMenuItems[i];
             if (mainMenuItems[i].type === 'layerGroup') {
                 overlaysGroupMap[mainMenuItems[i].label] = mainMenuItems[i];
-                if (!CONFIG.NAVIGATION.enableTrackRecording && mainMenuItems[i].label === "Percorsi") {
-                    mainMenuItems[i].items.push("I miei percorsi");
-                }
                 for (var c in mainMenuItems[i].items) {
                     overlaysChildMap[mainMenuItems[i].items[c]] = overlaysMap[mainMenuItems[i].items[c]];
                 }
@@ -58,6 +57,13 @@ angular.module('webmapp')
                     pagesChildMap[mainMenuItems[i].items[c]] = pagesMap[mainMenuItems[i].items[c]];
                 }
             }
+        }
+
+        if (!trackRecordingEnabled) {
+            mainMenuItems.push({
+                type: 'layer',
+                label: 'I miei percorsi'
+            });
         }
 
         model.isLayerInMenu = function (label) {

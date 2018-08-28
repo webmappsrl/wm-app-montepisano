@@ -59,6 +59,51 @@ angular.module('webmapp')
             };
         }
 
+        $rootScope.$on('updatedTracks', function (e, value) {
+            showUserTracks(value);
+        });
+
+        var showUserTracks = function (bool) {
+
+            var found = false;
+            var index = 0;
+            for (var i in vm.advancedMenuItems) {
+                if (vm.advancedMenuItems[i].label === "I miei percorsi") {
+                    found = true;
+                    index = i;
+                    break;
+                }
+            }
+
+            if (bool) {
+                if (!found) {
+                    var item = {
+                        type: 'layer',
+                        label: 'I miei percorsi'
+                    };
+
+                    var type = item.type,
+                        currentUrl = Model.buildItemUrl(item);
+
+                    vm.advancedMenuItems.push({
+                        label: item.label,
+                        url: currentUrl,
+                        icon: item.icon,
+                        color: item.color,
+                        hideInBrowser: item.hideInBrowser,
+                        type: type
+                    });
+                }
+            } else {
+                if (found) {
+                    vm.advancedMenuItems.splice(index, 1);
+                }
+            }
+
+
+        }
+
+
         // mainMenuItems[mainMenuItems.length] = {
         //     type: 'layer',
         //     label: 'I miei percorsi'
@@ -508,14 +553,11 @@ angular.module('webmapp')
                 if (CONFIG.COMMUNICATION.privacy) {
                     if (CONFIG.COMMUNICATION.privacy[vm.currentLang]) {
                         vm.privacyUrl = CONFIG.COMMUNICATION.privacy[vm.currentLang];
-                    }
-                    else if (CONFIG.COMMUNICATION.privacy[vm.defaultLang]) {
+                    } else if (CONFIG.COMMUNICATION.privacy[vm.defaultLang]) {
                         vm.privacyUrl = CONFIG.COMMUNICATION.privacy[vm.defaultLang];
-                    }
-                    else if (typeof CONFIG.COMMUNICATION.privacy !== 'string') {
+                    } else if (typeof CONFIG.COMMUNICATION.privacy !== 'string') {
                         vm.privacyUrl = CONFIG.COMMUNICATION.privacy[Object.keys(CONFIG.COMMUNICATION.privacy)[0]];
-                    }
-                    else {
+                    } else {
                         vm.privacyUrl = CONFIG.COMMUNICATION.privacy;
                     }
                 }
@@ -617,6 +659,7 @@ angular.module('webmapp')
         $rootScope.$on('is-navigating', function (e, value) {
             vm.isNavigating = value;
         });
+
 
         return vm;
     });
