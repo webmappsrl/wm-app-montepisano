@@ -28,6 +28,7 @@ angular.module('webmapp')
         CONFIG,
         Auth,
         Communication,
+        MapService,
         Offline,
         Utils
     ) {
@@ -39,7 +40,7 @@ angular.module('webmapp')
 
         var packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : null,
             userPackagesId = localStorage.$wm_userPackagesId ? JSON.parse(localStorage.$wm_userPackagesId) : null,
-            userDownloadedPackages = localStorage.$wm_userDownloadedPackages ? JSON.parse(localStorage.$wm_userDownloadedPackages) : {},
+            userDownloadedPackages = {},
             packagesToActivate = localStorage.$wm_packagesToActivate ? JSON.parse(localStorage.$wm_packagesToActivate) : null,
             taxonomy = localStorage.$wm_taxonomy ? JSON.parse(localStorage.$wm_taxonomy) : {
                 activity: null,
@@ -48,6 +49,22 @@ angular.module('webmapp')
                 where: null,
                 who: null
             };
+
+        // To let update from old version
+        if (localStorage.$wm_userDownloadedPackages) {
+            userDownloadedPackages = JSON.parse(localStorage.$wm_userDownloadedPackages)
+            MapService.setItemInLocalStorage("$wm_userDownloadedPackages", JSON.parse(userDownloadedPackages));
+            delete localStorage.$wm_userDownloadedPackages;
+        }
+
+        MapService.getItemFromLocalStorage("$wm_userDownloadedPackages")
+            .then(function (item) {
+                userDownloadedPackages = JSON.parse(item.data);
+            })
+            .catch(function (err) {
+                console.error(err)
+                userDownloadedPackages = {};
+            });
 
         var userData = Auth.isLoggedIn() ? Auth.getUserData() : null,
             asyncTranslations = 0,
@@ -389,17 +406,17 @@ angular.module('webmapp')
                     });
         };
 
-                /**
-         * @description
-         * Use a voucher to get permission to download a route and
-         * Emit the new list of available packages
-         * 
-         * @event userPackagesId-updated
-         * 
-         * @param {number} packId 
-         *      the id of the pack to request
-         * 
-         */
+        /**
+ * @description
+ * Use a voucher to get permission to download a route and
+ * Emit the new list of available packages
+ * 
+ * @event userPackagesId-updated
+ * 
+ * @param {number} packId 
+ *      the id of the pack to request
+ * 
+ */
         packageService.useVoucher = function (packId) {
             if (!userData || !userData.ID) {
                 return;
@@ -586,7 +603,7 @@ angular.module('webmapp')
                                     modalDownload.hide();
                                     userDownloadedPackages[packId] = true;
                                     $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
-                                    localStorage.$wm_userDownloadedPackages = JSON.stringify(userDownloadedPackages);
+                                    MapService.setItemInLocalStorage("$wm_userDownloadedPackages", JSON.stringify(userDownloadedPackages));
                                 };
 
                                 var downloadFail = function () {
@@ -669,7 +686,7 @@ angular.module('webmapp')
                         Offline.removePackById(packId);
                         delete userDownloadedPackages[packId];
                         $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
-                        localStorage.$wm_userDownloadedPackages = JSON.stringify(userDownloadedPackages);
+                        MapService.setItemInLocalStorage("$wm_userDownloadedPackages", JSON.stringify(userDownloadedPackages));
                     }
                 });
         };

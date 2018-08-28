@@ -41,8 +41,7 @@ angular.module('webmapp')
             maxAngleDifference: 10,
             outOfTrackToastDelay: 10000,
             outOfTrackDistance: (CONFIG.NAVIGATION && CONFIG.NAVIGATION.trackBoundsDistance) ?
-                CONFIG.NAVIGATION.trackBoundsDistance :
-                (
+                CONFIG.NAVIGATION.trackBoundsDistance : (
                     (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) ?
                     CONFIG.MAIN.NAVIGATION.trackBoundsDistance :
                     200
@@ -552,14 +551,15 @@ angular.module('webmapp')
 
         function positionCallback(position) {
             console.log(position);
-
-            if (localStorage.$positionCount) {
-                localStorage.$positionCount = JSON.stringify(JSON.parse(localStorage.$positionCount) + 1);
-            } else {
-                localStorage.$positionCount = JSON.stringify(1);
-            }
-
             BackgroundGeolocation.startTask(function (taskKey) {
+                if (state.isOutsideBoundingBox) {
+                    if (geolocationService.isActive()) {
+                        geolocationService.disable();
+                    }
+                    BackgroundGeolocation.endTask(taskKey);
+                    return;
+                }
+
                 var lat = position.latitude ? position.latitude : 0,
                     long = position.longitude ? position.longitude : 0,
                     altitude = position.altitude ? position.altitude : 0,
@@ -574,14 +574,15 @@ angular.module('webmapp')
                 if (!MapService.isInBoundingBox(lat, long)) {
                     state.lastPosition = null;
                     state.isOutsideBoundingBox = true;
-                    geolocationService.disable();
                     $ionicPopup.alert({
                         title: $translate.instant("ATTENZIONE"),
                         template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa")
                     });
                     if (recordingState.isActive) {
-                        geolocationService.pauseRecording();
+                        geolocationService.stopRecording();
                     }
+                    geolocationService.disable();
+                    BackgroundGeolocation.endTask(taskKey);
                     return;
                 }
 
@@ -815,6 +816,7 @@ angular.module('webmapp')
          */
         geolocationService.enable = function () {
             var defer = $q.defer();
+            state.isOutsideBoundingBox = false;
 
             if (window.cordova) {
                 return checkStatus().then(function (isRunningInBackground) {
@@ -1003,6 +1005,20 @@ angular.module('webmapp')
          */
         geolocationService.isActive = function () {
             return geolocationState.isActive;
+        };
+
+        /**
+         * @returns {object}
+         *      position if current position set, ERROR otherwise
+         */
+        geolocationService.getCurrentPosition = function () {
+            if (state.lastPosition && state.lastPosition.lat && state.lastPosition.long) {
+                return angular.copy(state.lastPosition);
+            } else if (state.isOutsideBoundingBox) {
+                return ERRORS.OUTSIDE_BOUNDING_BOX;
+            } else {
+                return ERRORS.GENERIC;
+            }
         };
 
         /**

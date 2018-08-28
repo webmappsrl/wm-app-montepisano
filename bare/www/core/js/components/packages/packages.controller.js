@@ -1,38 +1,26 @@
 angular.module('webmapp')
 
     .controller('PackagesController', function CouponController(
-        $http,
         $ionicLoading,
         $ionicModal,
-        $ionicPlatform,
-        $ionicPopup,
-        $q,
         $rootScope,
         $scope,
         $state,
         $translate,
-        $window,
         Auth,
-        Communication,
         CONFIG,
         Model,
-        Offline,
         PackageService,
         Utils
     ) {
-        var vm = {},
-            userData = {};
+        var vm = {};
 
         var registeredEvents = [];
 
         var modalFiltersScope = $rootScope.$new(),
             modalFilters = {};
 
-        var config = CONFIG,
-            baseUrl = config.COMMUNICATION.baseUrl,
-            endpoint = config.COMMUNICATION.endpoint;
-
-        var communicationConf = CONFIG.COMMUNICATION;
+        var config = CONFIG;
 
         if (config.MULTIMAP && config.MULTIMAP.useReducedPackages) {
             vm.type = "reduced";

@@ -3,17 +3,17 @@
 angular.module('webmapp')
 
     .factory('MapService', function MapService(
-        $rootScope,
-        $timeout,
-        $q,
-        Model,
-        $state,
-        $ionicPopup,
         $ionicLoading,
-        Utils,
-        Offline,
+        $ionicPopup,
+        $q,
+        $rootScope,
+        $state,
+        $timeout,
+        $translate,
         CONFIG,
-        $translate
+        Model,
+        Offline,
+        Utils
     ) {
         var mapService = {};
 
@@ -124,8 +124,6 @@ angular.module('webmapp')
 
             return featuresIdByLayersMap;
         };
-
-
 
         var activeFilters = localStorage.activeFilters ?
             JSON.parse(localStorage.activeFilters) : overlayLayersConf.reduce(function (prev, curr) {
@@ -287,7 +285,6 @@ angular.module('webmapp')
 
             var overlayConf = feature.parent || {},
                 currentRelatedPOIs;
-
 
             feature.properties.id = feature.properties.id || Utils.generateUID();
             feature.properties.icon = getFeatureIcon(feature, overlayConf);
@@ -787,14 +784,8 @@ angular.module('webmapp')
                 defer.reject();
             }
 
-
             return promise;
         };
-
-        var initializeLanguages = function () {
-            var languages = CONFIG.LANGUAGES;
-
-        }
 
         var initializePages = function () {
             var pages = CONFIG.PAGES;
@@ -845,8 +836,6 @@ angular.module('webmapp')
             if (pages) {
                 pages.forEach(requestPages);
             }
-
-
         };
 
         var initializeThen = function (currentOverlay) {
@@ -1230,8 +1219,6 @@ angular.module('webmapp')
             });
         };
 
-
-
         var getMaxBounds = function () {
             var southWest = L.latLng(mapConf.bounds.southWest),
                 northEast = L.latLng(mapConf.bounds.northEast);
@@ -1410,8 +1397,6 @@ angular.module('webmapp')
         }
 
         var initialize = function () {
-            initializeLanguages();
-
             if (typeof localStorage.$wm_mhildConf === 'undefined') {
                 pagePromise = initializePages();
             }
@@ -1551,10 +1536,10 @@ angular.module('webmapp')
                         setView: false
                     },
                     onLocationOutsideMapBounds: function () {
-                        $ionicPopup.alert({
-                            template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa!"),
-                            title: $translate.instant("ATTENZIONE")
-                        });
+                        // $ionicPopup.alert({
+                        //     template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa!"),
+                        //     title: $translate.instant("ATTENZIONE")
+                        // });
                     }
                 }).addTo(map);
             }
@@ -1613,11 +1598,6 @@ angular.module('webmapp')
             }
 
             return map;
-        };
-
-        var makeNotificationSound = function () {
-            var audio = new Audio('core/audio/alertNotificationSound.mp3');
-            audio.play();
         };
 
         mapService.getPageInPouchDB = function (key) {
@@ -2293,7 +2273,7 @@ angular.module('webmapp')
                             activatedPopup = nearPois[pos].layer.feature.properties.id;
                             activatePopup(nearPois[pos], false);
 
-                            makeNotificationSound();
+                            Utils.makeNotificationSound();
                         }
                         break;
                     }
@@ -2533,7 +2513,6 @@ angular.module('webmapp')
             }
         }
 
-
         mapService.deleteUserTrack = function (id) {
 
             if (localStorage.$wm_userTracks) {
@@ -2608,6 +2587,14 @@ angular.module('webmapp')
                     initializeUserTracksLayer(featureColl);
                 }
             }
+        }
+
+        mapService.setItemInLocalStorage = function (key, item) {
+            setItemInLocalStorage(key, item);
+        }
+
+        mapService.getItemFromLocalStorage = function (key) {
+            return getItemFromLocalStorage(key);
         }
 
         return mapService;
