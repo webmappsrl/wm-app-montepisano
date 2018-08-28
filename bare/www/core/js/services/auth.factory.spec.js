@@ -1,20 +1,14 @@
-describe('Auth.Factory Test', function() {
-
-
+describe('Auth.Factory Test', function () {
     beforeEach(module('webmapp'));
 
     var authService;
 
-
-    beforeEach(inject(function(Auth) {
+    beforeEach(inject(function (Auth) {
         authService = Auth;
-
     }));
 
-    describe('Auth.Factory.setUserData', function() {
-
-
-        it('Should set user data successfully', function() {
+    describe('Auth.Factory.setUserData', function () {
+        it('Should set user data successfully', function () {
             var data = {
                 user: 'user',
                 pass: 'pass',
@@ -29,30 +23,18 @@ describe('Auth.Factory Test', function() {
             var obj = JSON.parse(window.localStorage.user);
 
             expect(obj).toEqual(data);
-
         });
-
-
     });
 
-    describe('Auth.Factory.resetUserData', function() {
-
-
-
-        it('Should reset user data successfully', function() {
-
+    describe('Auth.Factory.resetUserData', function () {
+        it('Should reset user data successfully', function () {
             authService.resetUserData();
             expect(localStorage.user).toBeUndefined();
         });
-
-
     });
 
-
-    describe('Auth.Factory.getUserData', function() {
-
-        it('Should return user data successfully', function() {
-
+    describe('Auth.Factory.getUserData', function () {
+        it('Should return user data successfully', function () {
             var udata = {
                 user: 'user',
                 pass: 'pass',
@@ -68,14 +50,10 @@ describe('Auth.Factory Test', function() {
 
             expect(udata).toEqual(data);
         });
-
     });
 
-
-    describe('Auth.Factory.isLoggedIn', function() {
-
-        it('localStorage.user is object  && user.ID is undefined =>Should return false', function() {
-
+    describe('Auth.Factory.isLoggedIn', function () {
+        it('localStorage.user is object  && user.ID is undefined =>Should return false', function () {
             var udata = {
                 user: 'user',
                 pass: 'pass',
@@ -88,12 +66,10 @@ describe('Auth.Factory Test', function() {
             };
             localStorage.user = JSON.stringify(udata);
 
-
             expect(authService.isLoggedIn()).toBe(false);
         });
 
-        it('localStorage.user is object  && user.ID is defined =>Should return true', function() {
-
+        it('localStorage.user is object  && user.ID is defined =>Should return true', function () {
             var udata = {
                 user: 'user',
                 pass: 'pass',
@@ -107,13 +83,7 @@ describe('Auth.Factory Test', function() {
             };
             localStorage.user = JSON.stringify(udata);
 
-
             expect(authService.isLoggedIn()).toBe(true);
         });
-
     });
-
-
-
-
 });

@@ -70,10 +70,6 @@ angular.module('webmapp')
 
             confirmPopup.then(function (res) {
                 if (res) {
-                    // for (var i in vm.userDownloadedPackages) {
-                    //     Offline.removePackById(i);
-                    // }
-
                     delete localStorage.$wm_userPackages;
 
                     Auth.resetUserData();

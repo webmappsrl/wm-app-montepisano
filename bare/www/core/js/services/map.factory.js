@@ -365,6 +365,12 @@ angular.module('webmapp')
             return db.get(key);
         };
 
+        var removeItemFromLocalStorage = function (key) {
+            db.get(key).then(function (e) {
+                db.remove(e);
+            });
+        };
+
         var getFeatureIcon = function (feature, overlayLayer) {
             return feature.properties.icon ||
                 overlayLayer.icon ||
@@ -2595,6 +2601,10 @@ angular.module('webmapp')
 
         mapService.getItemFromLocalStorage = function (key) {
             return getItemFromLocalStorage(key);
+        }
+
+        mapService.removeItemFromLocalStorage = function (key) {
+            removeItemFromLocalStorage(key);
         }
 
         return mapService;

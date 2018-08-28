@@ -381,7 +381,10 @@ angular.module('webmapp')
          * 
          */
         packageService.getPackagesIdByUserId = function () {
+            userData = Auth.getUserData();
             if (!userData || !userData.ID) {
+                userPackagesId = {};
+                $rootScope.$emit('userPackagesId-updated', {});
                 return;
             }
 
@@ -407,17 +410,18 @@ angular.module('webmapp')
         };
 
         /**
- * @description
- * Use a voucher to get permission to download a route and
- * Emit the new list of available packages
- * 
- * @event userPackagesId-updated
- * 
- * @param {number} packId 
- *      the id of the pack to request
- * 
- */
+         * @description
+         * Use a voucher to get permission to download a route and
+         * Emit the new list of available packages
+         * 
+         * @event userPackagesId-updated
+         * 
+         * @param {number} packId 
+         *      the id of the pack to request
+         * 
+         */
         packageService.useVoucher = function (packId) {
+            userData = Auth.getUserData();
             if (!userData || !userData.ID) {
                 return;
             }
@@ -486,6 +490,7 @@ angular.module('webmapp')
         packageService.buyPack = function (packId) {
             var isAndroid = window.cordova.platformId === 'ios' ? false : true;
 
+            userData = Auth.getUserData();
             if (!userData || !userData.ID) {
                 return;
             }

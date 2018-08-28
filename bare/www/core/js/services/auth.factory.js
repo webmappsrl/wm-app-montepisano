@@ -15,8 +15,8 @@ angular.module('webmapp')
             if (localStorage.user) {
                 userData = JSON.parse(localStorage.user);
                 isLoggedIn = true;
-                MapService.setItemInLocalStorage("$wm_userData", JSON.parse(userData));
-                delete localStorage.$wm_userData;
+                MapService.setItemInLocalStorage("$wm_userData", userData);
+                delete localStorage.user;
             }
 
             MapService.getItemFromLocalStorage("$wm_userData")
@@ -42,14 +42,13 @@ angular.module('webmapp')
             isLoggedIn = true;
         };
 
-        console.warn("TODO: MapService.removeItemFromLocalStorage")
         auth.resetUserData = function () {
             MapService.removeItemFromLocalStorage("$wm_userData");
             isLoggedIn = false;
         };
 
         auth.getUserData = function () {
-            return angular.copy(userData);
+            return userData;
         };
 
         auth.isLoggedIn = function () {
