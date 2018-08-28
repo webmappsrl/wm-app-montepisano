@@ -1550,10 +1550,10 @@ angular.module('webmapp')
                         setView: false
                     },
                     onLocationOutsideMapBounds: function () {
-                        $ionicPopup.alert({
-                            template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa!"),
-                            title: $translate.instant("ATTENZIONE")
-                        });
+                        // $ionicPopup.alert({
+                        //     template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa!"),
+                        //     title: $translate.instant("ATTENZIONE")
+                        // });
                     }
                 }).addTo(map);
             }

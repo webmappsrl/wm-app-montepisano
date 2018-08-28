@@ -325,94 +325,101 @@ angular.module('webmapp')
         };
 
         vm.reportCurrentPosition = function ($event) {
-            if (!vm.gpsActive) {
-                checkGPS();
-                return;
-            }
+            var reportPosition = function () {
+                var position = GeolocationService.getCurrentPosition();
 
-            if (vm.isOutsideBoundingBox) {
-                $ionicPopup.alert({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa: la richiesta di aiuto non è disponibile.")
-                });
-                return;
-            }
+                if (position && position.lat && position.long) {
+                    text = "ALERT MSG - Myeasyroute user: " +
+                        vm.userData.user_email + " nome: " + vm.userData.first_name + " cognome: " + vm.userData.last_name + " https://www.google.com/maps/search/?api=1&query=" +
+                        position.lat + ',' +
+                        position.long;
 
-            if (!prevLatLong) {
-                $ionicPopup.alert({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Devi essere localizzato per segnalare la tua posizione")
+                    if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) {
+                        $ionicPopup.confirm({
+                            title: $translate.instant("ATTENZIONE"),
+                            template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                        })
+                            .then(function (res) {
+                                if (res) {
+                                    var emailTo = '',
+                                        url = '';
+
+                                    if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.default) {
+                                        emailTo = CONFIG.REPORT.email.default;
+                                    } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.default) {
+                                        emailTo = CONFIG.MAIN.REPORT.email.default;
+                                    }
+
+                                    if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.apiUrl) {
+                                        url = CONFIG.REPORT.email.apiUrl;
+                                    } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl) {
+                                        url = CONFIG.MAIN.REPORT.email.apiUrl;
+                                    }
+
+                                    var app = CONFIG.OPTIONS.title;
+                                    if (CONFIG.MAIN) {
+                                        app = CONFIG.MAIN.OPTIONS.title + " - " + app;
+                                    }
+
+                                    if (emailTo !== '' && url !== '') {
+                                        var currentRequest = Communication.callAPI(url, {
+                                            email: vm.userData.user_email,
+                                            firstName: vm.userData.first_name,
+                                            lastName: vm.userData.last_name,
+                                            to: emailTo,
+                                            lat: position.lat,
+                                            lng: position.long,
+                                            type: "alert",
+                                            app: app
+                                        });
+
+                                        currentRequest
+                                            .then(function () {
+                                                return;
+                                            },
+                                                function (error) {
+                                                    return;
+                                                });
+                                    }
+                                    sendSMS(text);
+                                }
+                            });
+                    } else {
+                        $ionicPopup.confirm({
+                            title: $translate.instant("ATTENZIONE"),
+                            template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                        })
+                            .then(function (res) {
+                                if (res) {
+                                    sendSMS(text);
+                                }
+                            });
+                    }
+                }
+                else if (position === ERRORS.OUTSIDE_BOUNDING_BOX) {
+                    $ionicPopup.alert({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa: la richiesta di aiuto non è disponibile.")
+                    });
+                }
+                else {
+                    $ionicPopup.alert({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Devi essere localizzato per segnalare la tua posizione")
+                    });
+                }
+            };
+
+            if (GeolocationService.isActive()) {
+                reportPosition();
+            }
+            else {
+                GeolocationService.enable().then(function () {
+                    reportPosition();
                 });
-                return;
             }
 
             $event.stopPropagation();
-            text = "ALERT MSG - Myeasyroute user: " +
-                vm.userData.user_email + " nome: " + vm.userData.first_name + " cognome: " + vm.userData.last_name + " https://www.google.com/maps/search/?api=1&query=" +
-                prevLatLong.lat + ',' +
-                prevLatLong.long;
-
-            if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) {
-                $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
-                })
-                    .then(function (res) {
-                        if (res) {
-                            var emailTo = '',
-                                url = '';
-
-                            if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.default) {
-                                emailTo = CONFIG.REPORT.email.default;
-                            } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.default) {
-                                emailTo = CONFIG.MAIN.REPORT.email.default;
-                            }
-
-                            if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.apiUrl) {
-                                url = CONFIG.REPORT.email.apiUrl;
-                            } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl) {
-                                url = CONFIG.MAIN.REPORT.email.apiUrl;
-                            }
-
-                            var app = CONFIG.OPTIONS.title;
-                            if (CONFIG.MAIN) {
-                                app = CONFIG.MAIN.OPTIONS.title + " - " + app;
-                            }
-
-                            if (emailTo !== '' && url !== '') {
-                                var currentRequest = Communication.callAPI(url, {
-                                    email: vm.userData.user_email,
-                                    firstName: vm.userData.first_name,
-                                    lastName: vm.userData.last_name,
-                                    to: emailTo,
-                                    lat: prevLatLong.lat,
-                                    lng: prevLatLong.long,
-                                    type: "alert",
-                                    app: app
-                                });
-
-                                currentRequest
-                                    .then(function () {
-                                        return;
-                                    },
-                                        function (error) {
-                                            return;
-                                        });
-                            }
-                            sendSMS(text);
-                        }
-                    });
-            } else {
-                $ionicPopup.confirm({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
-                })
-                    .then(function (res) {
-                        if (res) {
-                            sendSMS(text);
-                        }
-                    });
-            }
         };
 
         vm.centerOnMe = function () {

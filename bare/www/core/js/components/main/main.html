@@ -62,8 +62,10 @@
                 'opacity': 0.4
             }"></i>
 
+        <!-- Map -->
         <div id="map" class="advanced-layout advanced-map"></div>
 
+        <!-- Control locate -->
         <div class="locate-custom-control" ng-if="vm.showLocate">
             <div class="leaflet-control-locate leaflet-bar leaflet-control">
                 <a class="leaflet-bar-part leaflet-bar-part-single" href="" ng-click="vm.centerOnMe()">
@@ -84,6 +86,7 @@
             </div>
         </div>
 
+        <!-- Arrow to expand coordinates -->
         <div class="coords-expander">
             <a href="" ng-click="vm.expandCoords()">
                 <i ng-if="!vm.isCoordsBlockExpanded" class="wm-icon-ios7-arrow-back"></i>
@@ -91,6 +94,7 @@
             </a>
         </div>
 
+        <!-- Coordinates -->
         <div class="coords-block" ng-class="{
                 'animate-rightin': vm.isCoordsBlockExpanded,
                 'animate-rightout': !vm.isCoordsBlockExpanded
@@ -109,13 +113,15 @@
             </span>
         </div>
 
-        <div class="report-control" ng-if="vm.useReport && !vm.outsideBoundingBox && vm.isInMap">
+        <!-- Report -->
+        <div class="report-control" ng-if="vm.useReport && vm.isInMap">
             <a href="" ng-click="vm.reportCurrentPosition($event)">
                 <i class="icon wm-icon-alert-circled">
                 </i>
             </a>
         </div>
 
+        <!-- Start navigation -->
         <div class="start-navigation" ng-if="vm.navigationAvailable">
             <a href="" ng-click="vm.startNavigation()">
                 <i class="wm-icon-navigate"></i>
@@ -123,6 +129,7 @@
             </a>
         </div>
 
+        <!-- Navigation interface -->
         <div class="navigator-div-controller" ng-if="vm.navigation.state.isActive">
             <div class="content-div" ng-if="!vm.navigation.state.isPaused">
                 <div class="pause-button" ng-style="{

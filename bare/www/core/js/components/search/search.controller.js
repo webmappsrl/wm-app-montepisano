@@ -170,6 +170,13 @@ angular.module('webmapp')
                 vm.results = vm.translateOverlayInArray(Search.getByLayersWithDivider(lastQuery, vm.filtersList));
                 MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery, vm.filtersList));
 
+                vm.results.realLength = 0;
+
+                for (var i in vm.results) {
+                    if (vm.results[i].id) {
+                        vm.results.realLength = vm.results.realLength + 1;
+                    }
+                }
             }
 
             $ionicScrollDelegate.scrollTop();

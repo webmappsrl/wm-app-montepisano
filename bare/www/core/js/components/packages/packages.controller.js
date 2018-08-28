@@ -1,38 +1,26 @@
 angular.module('webmapp')
 
     .controller('PackagesController', function CouponController(
-        $http,
         $ionicLoading,
         $ionicModal,
-        $ionicPlatform,
-        $ionicPopup,
-        $q,
         $rootScope,
         $scope,
         $state,
         $translate,
-        $window,
         Auth,
-        Communication,
         CONFIG,
         Model,
-        Offline,
         PackageService,
         Utils
     ) {
-        var vm = {},
-            userData = {};
+        var vm = {};
 
         var registeredEvents = [];
 
         var modalFiltersScope = $rootScope.$new(),
             modalFilters = {};
 
-        var config = CONFIG,
-            baseUrl = config.COMMUNICATION.baseUrl,
-            endpoint = config.COMMUNICATION.endpoint;
-
-        var communicationConf = CONFIG.COMMUNICATION;
+        var config = CONFIG;
 
         if (config.MULTIMAP && config.MULTIMAP.useReducedPackages) {
             vm.type = "reduced";
@@ -114,6 +102,7 @@ angular.module('webmapp')
 
         var closeLoading = function () {
             if (vm.packages && vm.activities) {
+                console.log("ok")
                 $ionicLoading.hide();
             }
         };
@@ -297,6 +286,20 @@ angular.module('webmapp')
         });
         PackageService.getTaxonomy('activity');
         PackageService.getRoutes(true);
+
+        // var load = function () {
+        //     if (vm.packages && vm.activities) {
+        //         $ionicLoading.hide();
+        //     }
+        //     else {
+        //         $ionicLoading.show({
+        //             template: '<ion-spinner></ion-spinner>'
+        //         });
+        //         setTimeout(load, 100);
+        //     }
+        // };
+
+        // load();
 
         return vm;
     });

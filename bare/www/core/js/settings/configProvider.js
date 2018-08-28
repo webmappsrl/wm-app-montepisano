@@ -136,7 +136,7 @@ angular.module('webmapp')
             }
 
             // console.log(config);
-            if (!config.recordTracks) {
+            if (config.NAVIGATION.enableTrackRecording) {
                 config.OVERLAY_LAYERS.push({
                     id: "userTracks",
                     label: "I miei percorsi",
