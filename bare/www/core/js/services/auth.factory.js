@@ -2,36 +2,61 @@
 
 angular.module('webmapp')
 
-.factory('Auth', function Auth(
-    $window
-) {
-    var auth = {};
+    .factory('Auth', function Auth(
+        $rootScope,
+        MapService
+    ) {
+        var auth = {};
 
-    auth.setUserData = function(value) {
-        $window.localStorage.user = JSON.stringify(value);
-    };
+        var userData = {},
+            isLoggedIn = false;
 
-    auth.resetUserData = function() {
-        delete $window.localStorage.user;
-    };
+        var init = function () {
+            if (localStorage.user) {
+                userData = JSON.parse(localStorage.user);
+                isLoggedIn = true;
+                MapService.setItemInLocalStorage("$wm_userData", JSON.parse(userData));
+                delete localStorage.$wm_userData;
+            }
 
-    auth.getUserData = function() {
-        var userData = {};
+            MapService.getItemFromLocalStorage("$wm_userData")
+                .then(function (data) {
+                    if (data.data && typeof data.data === 'string') {
+                        userData = JSON.parse(data.data);
+                        isLoggedIn = true;
+                        $rootScope.$emit('logged-in');
+                    }
+                    else {
+                        isLoggedIn = false;
+                    }
+                })
+                .catch(function (err) {
+                    console.error(err)
+                    isLoggedIn = false;
+                });
+        };
 
-        if (typeof $window.localStorage.user === 'string') {
-            userData = JSON.parse($window.localStorage.user);
-        }
+        auth.setUserData = function (value) {
+            userData = value;
+            MapService.setItemInLocalStorage("$wm_userData", JSON.stringify(value));
+            isLoggedIn = true;
+        };
 
-        return userData;
-    };
+        console.warn("TODO: MapService.removeItemFromLocalStorage")
+        auth.resetUserData = function () {
+            MapService.removeItemFromLocalStorage("$wm_userData");
+            isLoggedIn = false;
+        };
 
-    auth.isLoggedIn = function() {
-        var dataUser = this.getUserData();
-        return typeof dataUser === 'object' &&
-            typeof dataUser.ID !== 'undefined';
-            // dataUser.token &&
-            // dataUser.sessid;
-    };
+        auth.getUserData = function () {
+            return angular.copy(userData);
+        };
 
-    return auth;
-});
+        auth.isLoggedIn = function () {
+            return isLoggedIn;
+        };
+
+        init();
+
+        return auth;
+    });

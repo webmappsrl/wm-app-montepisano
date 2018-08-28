@@ -185,7 +185,7 @@ angular.module('webmapp')
                 }
             });
 
-        if (!CONFIG.NAVIGATION.enableTrackRecording) {
+        if (CONFIG.NAVIGATION && !CONFIG.NAVIGATION.enableTrackRecording) {
             var saveModalScope = $rootScope.$new();
             var saveModal = {};
 
@@ -446,7 +446,7 @@ angular.module('webmapp')
             if ($state.params.parentId) {
                 MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
             }
-            if (!CONFIG.NAVIGATION.enableTrackRecording && MapService.getUserPolyline() !== null) {
+            if (CONFIG.NAVIGATION && !CONFIG.NAVIGATION.enableTrackRecording && MapService.getUserPolyline() !== null) {
                 vm.isNavigable = false;
             }
             vm.goToMap();

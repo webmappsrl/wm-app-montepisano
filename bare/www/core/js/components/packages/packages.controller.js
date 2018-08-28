@@ -102,7 +102,6 @@ angular.module('webmapp')
 
         var closeLoading = function () {
             if (vm.packages && vm.activities) {
-                console.log("ok")
                 $ionicLoading.hide();
             }
         };
@@ -286,20 +285,6 @@ angular.module('webmapp')
         });
         PackageService.getTaxonomy('activity');
         PackageService.getRoutes(true);
-
-        // var load = function () {
-        //     if (vm.packages && vm.activities) {
-        //         $ionicLoading.hide();
-        //     }
-        //     else {
-        //         $ionicLoading.show({
-        //             template: '<ion-spinner></ion-spinner>'
-        //         });
-        //         setTimeout(load, 100);
-        //     }
-        // };
-
-        // load();
 
         return vm;
     });
