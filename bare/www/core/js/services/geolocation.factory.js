@@ -731,6 +731,7 @@ angular.module('webmapp')
         function checkStatus() {
             var defer = $q.defer();
             BackgroundGeolocation.checkStatus(function (status) {
+
                 if (status.isRunning) {
                     defer.resolve(true);
                 } else {
@@ -820,6 +821,7 @@ angular.module('webmapp')
 
             if (window.cordova) {
                 return checkStatus().then(function (isRunningInBackground) {
+
                     if (isRunningInBackground) {
                         var restored = restoreRecordingState();
 
@@ -909,7 +911,7 @@ angular.module('webmapp')
                                                 parentId: recordingState.currentTrack.parent.label
                                             }
                                         });
-                                        defer.resolve(geolocationState);
+                                        return geolocationState;
                                     });
                                 });
                             });
@@ -919,7 +921,7 @@ angular.module('webmapp')
                         }
                     } else {
                         if (geolocationState.isActive) {
-                            defer.resolve(geolocationState);
+                            return geolocationState;
                         } else if (gpsActive) {
                             geolocationState.isActive = true;
                             geolocationState.isLoading = true;
@@ -961,7 +963,7 @@ angular.module('webmapp')
                                     console.warn("CordovaGeolocation.getCurrentPosition has been rejected: ", err);
                                 });
 
-                            defer.resolve(geolocationState);
+                            return geolocationState;
                         } else {
                             return checkGPS().then(geolocationService.enable);
                         }

@@ -25,6 +25,8 @@ angular.module('webmapp')
         var postLoginModal = loginConf.postLoginModal,
             login = {};
 
+        var trackRecordingEnabled = CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+
         var mainMenuItems = CONFIG.MENU,
             itemInGroupMap = {},
             overlayLayersConfMap = {};
@@ -59,32 +61,34 @@ angular.module('webmapp')
             };
         }
 
-        $rootScope.$on('updatedTracks', function (e, value) {
-            showUserTracks(value);
-        });
+        if (!trackRecordingEnabled) {
+            $rootScope.$on('updatedTracks', function (e, value) {
+                showUserTracks(value);
+            });
 
-        var showUserTracks = function (bool) {
-
-            var found = false;
-            var index = 0;
-            for (var i in vm.advancedMenuItems) {
-                if (vm.advancedMenuItems[i].label === "I miei percorsi") {
-                    found = true;
-                    index = i;
-                    break;
+            var showUserTracks = function (show) {
+                var foundMapVoice = false;
+                var found = false;
+                var index = 0;
+                for (var i in vm.advancedMenuItems) {
+                    if (vm.advancedMenuItems[i].label === "I miei percorsi") {
+                        found = true;
+                        index = i;
+                    } else if (vm.advancedMenuItems[i].type === "map") {
+                        foundMapVoice = true;
+                    }
+                    if (found && foundMapVoice) {
+                        break;
+                    }
                 }
-            }
 
-            if (bool) {
-                if (!found) {
+                if (foundMapVoice && show && !found) {
                     var item = {
                         type: 'layer',
                         label: 'I miei percorsi'
                     };
-
                     var type = item.type,
                         currentUrl = Model.buildItemUrl(item);
-
                     vm.advancedMenuItems.push({
                         label: item.label,
                         url: currentUrl,
@@ -93,32 +97,21 @@ angular.module('webmapp')
                         hideInBrowser: item.hideInBrowser,
                         type: type
                     });
-                }
-            } else {
-                if (found) {
+                } else if ((!foundMapVoice || !show) && found) {
                     vm.advancedMenuItems.splice(index, 1);
                 }
             }
-
-
         }
 
-
-        // mainMenuItems[mainMenuItems.length] = {
-        //     type: 'layer',
-        //     label: 'I miei percorsi'
-        // };
 
         for (var i in mainMenuItems) {
             var type = mainMenuItems[i].type,
                 currentUrl = Model.buildItemUrl(mainMenuItems[i]);
-
             if (type === 'layerGroup' || type === 'pageGroup') {
                 for (var j in mainMenuItems[i].items) {
                     itemInGroupMap[mainMenuItems[i].items[j]] = true;
                 }
             }
-
             vm.advancedMenuItems.push({
                 label: mainMenuItems[i].label,
                 url: currentUrl,

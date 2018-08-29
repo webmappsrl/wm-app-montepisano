@@ -50,29 +50,29 @@ describe('Geolocation.Factory', function () {
                         // console.log("MOCK isLocationEnabled");
                         callback(this.locationEnableParam);
                     },
-                    switchToSettings: function () { },
-                    switchToLocationSettings: function () { }
+                    switchToSettings: function () {},
+                    switchToLocationSettings: function () {}
                 }
             },
             platformId: 'android'
         };
         BackgroundGeolocation = {
-            start: function () { },
-            stop: function () { },
-            removeAllListeners: function () { },
+            start: function () {},
+            stop: function () {},
+            removeAllListeners: function () {},
             events: [],
             startTask: function (callback) {
                 callback();
             },
-            endTask: function () { },
-            configure: function (params) { },
+            endTask: function () {},
+            configure: function (params) {},
             on: function (event, callback) {
                 if (event === 'location') {
                     this.callbackFun = callback;
                 }
             },
-            checkStatus: function () {
-                return true;
+            checkStatus: function (callback) {
+                callback({})
             },
             callbackFun: null
         };
@@ -150,7 +150,7 @@ describe('Geolocation.Factory', function () {
 
     describe('enable', function () {
 
-        it('cordova is not defined => it should reject promise', function (done) {
+        xit('cordova is not defined => it should reject promise', function (done) {
             window.cordova = undefined;
             expect(GeolocationService.isActive()).toBe(false);
             GeolocationService.enable().then(function () {
@@ -248,6 +248,7 @@ describe('Geolocation.Factory', function () {
             GeolocationService.enable()
                 .then(function (value) {
                     fail("it should not be resolved");
+                    done();
                 }).catch(function (err) {
                     expect(err).toEqual(ERRORS.GPS_DISABLED);
                     expect(GeolocationService.isActive()).toBe(false);
@@ -431,7 +432,7 @@ describe('Geolocation.Factory', function () {
             };
             expect(GeolocationService.isActive()).toBe(false);
             //call get current position and resolve promise
-            GeolocationService.enable().then(function () { });
+            GeolocationService.enable().then(function () {});
 
             $httpBackend.flush();
         });
@@ -475,7 +476,6 @@ describe('Geolocation.Factory', function () {
                 expect(GeolocationService.isActive()).toBe(true);
                 GeolocationService.switchState()
                     .then(function (val) {
-                        done();
                         var middleState = {
                             isActive: true,
                             isLoading: false,
@@ -484,7 +484,6 @@ describe('Geolocation.Factory', function () {
                         }
                         expect(middleState).toEqual(val);
                         GeolocationService.switchState().then(function (val) {
-                            done();
                             var rotationState = {
                                 isActive: true,
                                 isLoading: false,
@@ -492,7 +491,7 @@ describe('Geolocation.Factory', function () {
                                 isRotating: false
                             }
                             expect(rotationState).toEqual(val);
-
+                            done();
                         })
                     }).catch(function (err) {
                         fail('it should resolve promise');
@@ -1063,17 +1062,46 @@ describe('Geolocation.Factory', function () {
     });
 
     describe("startRecording", function () {
+
+        it('no params defined => it should reject with an error', function (done) {
+            GeolocationService.enable().then(function () {
+                GeolocationService.startRecording().then(function (val) {
+                    fail('it should reject promise');
+                }).catch(function (err) {
+                    expect(err).toEqual(ERRORS.MISSING_ARGUMENTS);
+                    done();
+                });
+            }).catch(function (err) {
+                expect(err).toEqual(ERRORS.MISSING_ARGUMENTS);
+                done();
+            });
+
+
+            $httpBackend.flush();
+        })
+
+
         it('!recordingState.isActive  => it should start recording emitting a recordingState-changed and resolving with current state', function (done) {
             var expectedValue = {
                 isActive: true,
                 isPaused: false
             };
             spyOn($rootScope, '$emit');
-            GeolocationService.startRecording({ parentId: 0, id: 0 }).then(function (val) {
-                expect(val).toEqual(expectedValue);
-                expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
-                done();
+            GeolocationService.enable().then(function () {
+                GeolocationService.startRecording({
+                    parentId: 1,
+                    id: 1
+                }).then(function (val) {
+                    expect(val).toEqual(expectedValue);
+                    expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
+                    done();
+                }).catch(function (err) {
+                    fail("it should resolve promise" + err);
+                });
+            }).catch(function (err) {
+                fail("it should resolve promise" + err);
             });
+
             $httpBackend.flush();
         })
 
@@ -1083,18 +1111,29 @@ describe('Geolocation.Factory', function () {
                 isPaused: false
             };
             var spy = spyOn($rootScope, '$emit');
-            GeolocationService.startRecording({ parentId: 0, id: 0 }).then(function (val) {
-                expect(val).toEqual(expectedValue);
-                expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
-                spy.calls.reset();
-                GeolocationService.startRecording({ parentId: 0, id: 0 }).then(function (val) {
-                    fail('it should reject promise');
-                }).catch(function (err) {
-                    expect($rootScope.$emit).not.toHaveBeenCalled();
-                    expect(err).toEqual(ERRORS.ALREADY_ACTIVE);
-                    done();
-                });
-            })
+            GeolocationService.enable().then(function () {
+                GeolocationService.startRecording({
+                    parentId: 1,
+                    id: 1
+                }).then(function (val) {
+                    expect(val).toEqual(expectedValue);
+                    expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
+                    spy.calls.reset();
+                    GeolocationService.startRecording({
+                        parentId: 1,
+                        id: 1
+                    }).then(function (val) {
+                        fail('it should reject promise');
+                    }).catch(function (err) {
+                        expect($rootScope.$emit).not.toHaveBeenCalled();
+                        expect(err).toEqual(ERRORS.ALREADY_ACTIVE);
+                        done();
+                    });
+                })
+            }).catch(function (err) {
+                fail("it should resolve promise" + err);
+            });
+
             $httpBackend.flush();
         })
 
@@ -1106,14 +1145,20 @@ describe('Geolocation.Factory', function () {
 
     describe("pauseRecording", function () {
         it("!recordingState.isActive => it should reject promise with error code and  not emit recordingState-changed", function (done) {
-            spyOn($rootScope, '$emit');
-            GeolocationService.pauseRecording().then(function (val) {
-                fail("it should reject promoise with error code");
+            var spyEmit = spyOn($rootScope, '$emit');
+            GeolocationService.enable().then(function () {
+                spyEmit.calls.reset();
+                GeolocationService.pauseRecording().then(function (val) {
+                    fail("it should reject promoise with error code");
+                }).catch(function (err) {
+                    expect($rootScope.$emit).not.toHaveBeenCalled();
+                    expect(err).toEqual(ERRORS.DISABLED);
+                    done();
+                })
             }).catch(function (err) {
-                expect($rootScope.$emit).not.toHaveBeenCalled();
-                expect(err).toEqual(ERRORS.DISABLED);
-                done();
-            })
+                fail("it should resolve promise" + err);
+            });
+
             $httpBackend.flush();
         });
 
@@ -1123,15 +1168,23 @@ describe('Geolocation.Factory', function () {
                 isPaused: true
             };
             spyOn($rootScope, '$emit');
-            GeolocationService.startRecording().then(function (val) {
-                GeolocationService.pauseRecording().then(function (val) {
-                    expect(val).toEqual(expectedValue);
-                    expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
-                    done();
+            GeolocationService.enable().then(function () {
+                GeolocationService.startRecording({
+                    parentId: 1,
+                    id: 1
+                }).then(function (val) {
+                    GeolocationService.pauseRecording().then(function (val) {
+                        expect(val).toEqual(expectedValue);
+                        expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
+                        done();
+                    })
+                }).catch(function (err) {
+                    fail("it should resolve promise and start recording");
                 })
             }).catch(function (err) {
-                fail("it should resolve promise and start recording");
-            })
+                fail("it should resolve promise" + err);
+            });
+
             $httpBackend.flush();
         });
 
@@ -1141,22 +1194,30 @@ describe('Geolocation.Factory', function () {
                 isPaused: true
             };
             var spy = spyOn($rootScope, '$emit');
-            GeolocationService.startRecording().then(function (val) {
-                GeolocationService.pauseRecording().then(function (val) {
-                    spy.calls.reset();
+            GeolocationService.enable().then(function () {
+                GeolocationService.startRecording({
+                    parentId: 1,
+                    id: 1
+                }).then(function (val) {
                     GeolocationService.pauseRecording().then(function (val) {
-                        expect($rootScope.$emit).not.toHaveBeenCalled();
-                        expect(val).toEqual(expectedValue);
-                        done();
+                        spy.calls.reset();
+                        GeolocationService.pauseRecording().then(function (val) {
+                            expect($rootScope.$emit).not.toHaveBeenCalled();
+                            expect(val).toEqual(expectedValue);
+                            done();
+                        }).catch(function (err) {
+                            fail("it should resolve promise with current state");
+                        });;
                     }).catch(function (err) {
-                        fail("it should resolve promise with current state");
-                    });;
+                        fail("it should resolve promise and pause recording");
+                    });
                 }).catch(function (err) {
-                    fail("it should resolve promise and pause recording");
+                    fail("it should resolve promise and start recording");
                 });
             }).catch(function (err) {
-                fail("it should resolve promise and start recording");
+                fail("it should resolve promise" + err);
             });
+
             $httpBackend.flush();
         });
 
@@ -1168,14 +1229,20 @@ describe('Geolocation.Factory', function () {
 
     describe('resumeRecording', function () {
         it('!recordingState.isActive =>it should resolve promise with false and not emit recordingState-changed', function (done) {
-            spyOn($rootScope, '$emit');
-            GeolocationService.resumeRecording().then(function (val) {
-                fail("it should reject promise cause no recording is active");
+            var spyEmit = spyOn($rootScope, '$emit');
+            GeolocationService.enable().then(function () {
+                spyEmit.calls.reset();
+                GeolocationService.resumeRecording().then(function (val) {
+                    fail("it should reject promise cause no recording is active");
+                }).catch(function (err) {
+                    expect(err).toBe(ERRORS.DISABLED);
+                    expect($rootScope.$emit).not.toHaveBeenCalled();
+                    done();
+                });
             }).catch(function (err) {
-                expect(err).toBe(ERRORS.DISABLED);
-                expect($rootScope.$emit).not.toHaveBeenCalled();
-                done();
+                fail("it should resolve promise" + err);
             });
+
             $httpBackend.flush();
         });
 
@@ -1185,18 +1252,26 @@ describe('Geolocation.Factory', function () {
                 isPaused: false
             };
             var spy = spyOn($rootScope, '$emit');
-            GeolocationService.startRecording().then(function (val) {
-                spy.calls.reset();
-                GeolocationService.resumeRecording().then(function (val) {
-                    expect(val).toEqual(expectedValue);
-                    expect($rootScope.$emit).not.toHaveBeenCalled();
-                    done();
+            GeolocationService.enable().then(function () {
+                GeolocationService.startRecording({
+                    parentId: 1,
+                    id: 1
+                }).then(function (val) {
+                    spy.calls.reset();
+                    GeolocationService.resumeRecording().then(function (val) {
+                        expect(val).toEqual(expectedValue);
+                        expect($rootScope.$emit).not.toHaveBeenCalled();
+                        done();
+                    }).catch(function (err) {
+                        fail("it should resolve promise with current state");
+                    });;
                 }).catch(function (err) {
-                    fail("it should resolve promise with current state");
-                });;
+                    fail("it should resolve promise and start recording");
+                });
             }).catch(function (err) {
-                fail("it should resolve promise and start recording");
+                fail("it should resolve promise" + err);
             });
+
             $httpBackend.flush();
         });
 
@@ -1206,23 +1281,31 @@ describe('Geolocation.Factory', function () {
                 isPaused: false
             };
             var spy = spyOn($rootScope, '$emit');
-            GeolocationService.startRecording().then(function (val) {
-                spy.calls.reset();
-                GeolocationService.pauseRecording().then(function () {
+            GeolocationService.enable().then(function () {
+                GeolocationService.startRecording({
+                    parentId: 1,
+                    id: 1
+                }).then(function (val) {
                     spy.calls.reset();
-                    GeolocationService.resumeRecording().then(function (val) {
-                        expect(val).toEqual(expectedValue);
-                        expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
-                        done();
+                    GeolocationService.pauseRecording().then(function () {
+                        spy.calls.reset();
+                        GeolocationService.resumeRecording().then(function (val) {
+                            expect(val).toEqual(expectedValue);
+                            expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
+                            done();
+                        }).catch(function (err) {
+                            fail("it should resolve promise and resume recording");
+                        });;
                     }).catch(function (err) {
-                        fail("it should resolve promise and resume recording");
+                        fail("it should resolve promise and pause recording");
                     });;
                 }).catch(function (err) {
-                    fail("it should resolve promise and pause recording");
-                });;
+                    fail("it should resolve promise and start recording");
+                });
             }).catch(function (err) {
-                fail("it should resolve promise and start recording");
+                fail("it should resolve promise" + err);
             });
+
             $httpBackend.flush();
         });
 
@@ -1239,13 +1322,21 @@ describe('Geolocation.Factory', function () {
                 isPaused: false
             };
             spyOn($rootScope, '$emit');
-            GeolocationService.stopRecording().then(function (val) {
-                expect(val).toEqual(expectedValue);
-                expect($rootScope.$emit).toHaveBeenCalled();
-                done();
+            GeolocationService.enable().then(function () {
+                GeolocationService.stopRecording({
+                    parentId: 1,
+                    id: 1
+                }).then(function (val) {
+                    expect(val).toEqual(expectedValue);
+                    expect($rootScope.$emit).toHaveBeenCalled();
+                    done();
+                }).catch(function (err) {
+                    fail("it should resolve promise and stop recording");
+                });
             }).catch(function (err) {
-                fail("it should resolve promise and stop recording");
-            });;
+                fail("it should resolve promise" + err);
+            });
+
             $httpBackend.flush();
         });
 
@@ -1255,17 +1346,24 @@ describe('Geolocation.Factory', function () {
                 isPaused: false
             };
             var spy = spyOn($rootScope, '$emit');
-            GeolocationService.startRecording().then(function (val) {
-                spy.calls.reset();
-                GeolocationService.stopRecording().then(function (val) {
-                    expect(val).toEqual(expectedValue);
-                    expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
-                    done();
+            GeolocationService.enable().then(function () {
+                GeolocationService.startRecording({
+                    parentId: 1,
+                    id: 1
+                }).then(function (val) {
+                    spy.calls.reset();
+                    GeolocationService.stopRecording().then(function (val) {
+                        expect(val).toEqual(expectedValue);
+                        expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
+                        done();
+                    }).catch(function (err) {
+                        fail("it should resolve promise and stop recording");
+                    });;
                 }).catch(function (err) {
-                    fail("it should resolve promise and stop recording");
-                });;
+                    fail("it should resolve promise and start recording");
+                });
             }).catch(function (err) {
-                fail("it should resolve promise and start recording");
+                fail("it should resolve promise" + err);
             });
             $httpBackend.flush();
         });
@@ -1306,8 +1404,10 @@ describe('Geolocation.Factory', function () {
 
             var timeToTick = 2000;
             GeolocationService.enable().then(function (val) {
-                GeolocationService.startRecording().then(function (val) {
-
+                GeolocationService.startRecording({
+                    parentId: 1,
+                    id: 1
+                }).then(function (val) {
                     var requestDate = new Date(Date.now() + timeToTick);
                     jasmine.clock().mockDate(requestDate)
                     var distanceExpected = Utils.distanceInMeters(currentLat, currentLong, currentLat + 0.001, currentLong);
@@ -1400,15 +1500,15 @@ describe('Geolocation.Factory', function () {
                 defer.resolve(feature);
                 return defer.promise;
             });
-            spyShowToast = spyOn(Utils, 'showToast').and.callFake(function () { });
-            spyHideToast = spyOn(Utils, 'hideToast').and.callFake(function () { });
-            spyMakeSound = spyOn(Utils, 'makeNotificationSound').and.callFake(function () { });
+            spyShowToast = spyOn(Utils, 'showToast').and.callFake(function () {});
+            spyHideToast = spyOn(Utils, 'hideToast').and.callFake(function () {});
+            spyMakeSound = spyOn(Utils, 'makeNotificationSound').and.callFake(function () {});
         });
 
         it("'Never gone outside track => it should not show toast", function (done) {
             spyOn(window.turf.pointToLineDistance, 'default').and.callThrough();
             GeolocationService.enable().then(function (val) {
-                GeolocationService.startRecording(false, {
+                GeolocationService.startRecording({
                     parentId: 1,
                     id: 1
                 }).then(function () {
@@ -1438,7 +1538,7 @@ describe('Geolocation.Factory', function () {
         it("out of track  since (outOfTrackToastDelay+1) sec => it should show toast", function (done) {
             spyOn(window.turf.pointToLineDistance, 'default').and.callThrough();
             GeolocationService.enable().then(function (val) {
-                GeolocationService.startRecording(false, {
+                GeolocationService.startRecording({
                     parentId: 1,
                     id: 1
                 }).then(function () {
@@ -1459,7 +1559,7 @@ describe('Geolocation.Factory', function () {
         it("out of track since (outOfTrackToastDelay-1) sec => it should not show toast", function (done) {
             spyOn(window.turf.pointToLineDistance, 'default').and.callThrough();
             GeolocationService.enable().then(function (val) {
-                GeolocationService.startRecording(false, {
+                GeolocationService.startRecording({
                     parentId: 1,
                     id: 1
                 }).then(function () {
@@ -1480,7 +1580,7 @@ describe('Geolocation.Factory', function () {
         it("Back in from outside track since (outOfTrackToastDelay+1) sec => it should not show (hide if open) toast ", function (done) {
             spyOn(window.turf.pointToLineDistance, 'default').and.callThrough();
             GeolocationService.enable().then(function (val) {
-                GeolocationService.startRecording(false, {
+                GeolocationService.startRecording({
                     parentId: 1,
                     id: 1
                 }).then(function () {
@@ -1507,7 +1607,7 @@ describe('Geolocation.Factory', function () {
         it("Back in from outside track since (outOfTrackToastDelay-1) sec => it should continue to show toast", function (done) {
             spyOn(window.turf.pointToLineDistance, 'default').and.callThrough();
             GeolocationService.enable().then(function (val) {
-                GeolocationService.startRecording(false, {
+                GeolocationService.startRecording({
                     parentId: 1,
                     id: 1
                 }).then(function () {
@@ -1536,7 +1636,7 @@ describe('Geolocation.Factory', function () {
         it("Back in from outside track before (outOfTrackToastDelay) interval  => it should not show toast", function (done) {
             spyOn(window.turf.pointToLineDistance, 'default').and.callThrough();
             GeolocationService.enable().then(function (val) {
-                GeolocationService.startRecording(false, {
+                GeolocationService.startRecording({
                     parentId: 1,
                     id: 1
                 }).then(function () {
