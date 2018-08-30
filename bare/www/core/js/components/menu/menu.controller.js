@@ -61,7 +61,7 @@ angular.module('webmapp')
             };
         }
 
-        if (!trackRecordingEnabled) {
+        if (trackRecordingEnabled) {
             $rootScope.$on('updatedTracks', function (e, value) {
                 showUserTracks(value);
             });

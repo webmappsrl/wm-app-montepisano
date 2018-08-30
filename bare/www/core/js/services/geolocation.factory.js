@@ -649,7 +649,7 @@ angular.module('webmapp')
                             }
                         }
 
-                        if (!trackRecordingEnabled && MapService.getUserPolyline() !== null) {
+                        if (trackRecordingEnabled && MapService.getUserPolyline() !== null) {
                             MapService.updateUserPolyline([lat, long, altitude]);
                         }
 
@@ -1154,7 +1154,7 @@ angular.module('webmapp')
                         .catch(function (err) {});
                 }
 
-                if (recordTrack) {
+                if (trackRecordingEnabled && recordTrack) {
                     if (recordingState.firstPositionSet) {
                         MapService.createUserPolyline([
                             [state.lastPosition.lat, state.lastPosition.long, 0]

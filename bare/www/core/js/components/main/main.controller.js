@@ -187,7 +187,7 @@ angular.module('webmapp')
                 }
             });
 
-        if (!trackRecordingEnabled) {
+        if (trackRecordingEnabled) {
             var saveModalScope = $rootScope.$new();
             var saveModal = {};
 
@@ -457,7 +457,7 @@ angular.module('webmapp')
             if ($state.params.parentId) {
                 MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
             }
-            if (!trackRecordingEnabled && MapService.getUserPolyline() !== null) {
+            if (trackRecordingEnabled && MapService.getUserPolyline() !== null) {
                 vm.isNavigable = false;
             }
             vm.goToMap();

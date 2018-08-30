@@ -500,7 +500,7 @@ angular.module('webmapp')
         });
 
         vm.clickRightMenu = function () {
-            if (!trackRecordingEnabled) {
+            if (trackRecordingEnabled) {
                 $rootScope.$emit("rightMenuClick");
             } else {
                 openFilters();

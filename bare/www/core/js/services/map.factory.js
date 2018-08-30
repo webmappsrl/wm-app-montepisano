@@ -1163,7 +1163,7 @@ angular.module('webmapp')
                     continue;
                 }
 
-                if (!trackRecordingEnabled && overlayLayersConf[i].label === "I miei percorsi") {
+                if (trackRecordingEnabled && overlayLayersConf[i].label === "I miei percorsi") {
                     continue;
                 }
 
@@ -1597,9 +1597,8 @@ angular.module('webmapp')
 
             initializeLayers();
 
-            if (localStorage.$wm_userTracks) {
+            if (trackRecordingEnabled && localStorage.$wm_userTracks) {
                 var uTracks = JSON.parse(localStorage.$wm_userTracks);
-                // Model.removeLayerItems({ label: "userTracks" });
                 initializeUserTracksLayer(uTracks);
             }
 
@@ -2443,7 +2442,7 @@ angular.module('webmapp')
                 } else {
                     //TODO redraw filtered layer
                 }
-                $rootScope.$emit('updatedTracks', data && data.features && data.features.length);
+                // $rootScope.$emit('updatedTracks', data && data.features && data.features.length);
 
             }
         };

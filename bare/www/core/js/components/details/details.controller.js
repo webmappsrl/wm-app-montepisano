@@ -125,7 +125,7 @@ angular.module('webmapp')
             modalAccessibility = modalObj;
         });
 
-        if (!trackRecordingEnabled) {
+        if (trackRecordingEnabled) {
 
             vm.isNavigating = $rootScope.isNavigating;
             var saveModalScope = $rootScope.$new();
@@ -770,7 +770,7 @@ angular.module('webmapp')
                 $ionicSlideBoxDelegate.update();
             }
 
-            if (!trackRecordingEnabled) {
+            if (trackRecordingEnabled) {
                 saveModal.remove();
             }
         });

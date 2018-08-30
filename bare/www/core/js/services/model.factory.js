@@ -59,7 +59,7 @@ angular.module('webmapp')
             }
         }
 
-        if (!trackRecordingEnabled) {
+        if (trackRecordingEnabled) {
             mainMenuItems.push({
                 type: 'layer',
                 label: 'I miei percorsi'
