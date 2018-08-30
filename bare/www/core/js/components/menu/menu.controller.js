@@ -62,10 +62,6 @@ angular.module('webmapp')
         }
 
         if (trackRecordingEnabled) {
-            $rootScope.$on('updatedTracks', function (e, value) {
-                showUserTracks(value);
-            });
-
             var showUserTracks = function (show) {
                 var foundMapVoice = false;
                 var found = false;
@@ -100,9 +96,12 @@ angular.module('webmapp')
                 } else if ((!foundMapVoice || !show) && found) {
                     vm.advancedMenuItems.splice(index, 1);
                 }
-            }
-        }
+            };
 
+            $rootScope.$on('updatedTracks', function (e, value) {
+                showUserTracks(value);
+            });
+        }
 
         for (var i in mainMenuItems) {
             var type = mainMenuItems[i].type,

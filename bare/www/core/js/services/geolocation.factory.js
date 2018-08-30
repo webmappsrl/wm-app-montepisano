@@ -34,7 +34,8 @@ angular.module('webmapp')
             isRotating: false
         };
 
-        var gpsActive = false;
+        var gpsActive = false,
+            isAndroid = window.cordova && window.cordova.platformId === "ios" ? false : true;
 
         var constants = {
             geolocationTimeoutTime: 60000,
@@ -53,6 +54,7 @@ angular.module('webmapp')
             animationInterval: null,
             animationIntervalStartTime: null,
             appState: 0,
+            firstHeading: null,
             lastHeading: 0,
             lastPosition: null,
             lpf: null,
@@ -62,6 +64,7 @@ angular.module('webmapp')
             reset: function () {
                 state.animationInterval = null;
                 state.animationIntervalStartTime = null;
+                state.firstHeading = null;
                 state.lastHeadind = 0;
                 state.lastPosition = null;
                 state.lpf = null;
@@ -78,6 +81,7 @@ angular.module('webmapp')
             firstPositionSet: false,
             isActive: false,
             isPaused: false,
+            isRecordingPolyline: false,
             stats: {
                 time: new Utils.Stopwatch(),
                 distance: 0,
@@ -109,6 +113,7 @@ angular.module('webmapp')
                 recordingState.firstPositionSet = false;
                 recordingState.isActive = false;
                 recordingState.isPaused = false;
+                recordingState.isRecordingPolyline = false;
                 recordingState.stats.time.stop();
                 recordingState.stats.distance = 0;
                 recordingState.stats.averageSpeed = 0;
@@ -301,14 +306,18 @@ angular.module('webmapp')
         };
 
         function turnOffRotation() {
-            if (state.orientationWatch) {
-                state.orientationWatch.clearWatch();
+            if (isAndroid) {
+                window.removeEventListener("compassneedscalibration", compassNeedsCalibrationCallback, true);
+                window.removeEventListener("deviceorientation", rotationCallback, true);
+                window.removeEventListener("deviceorientationabsolute", rotationCallback, true);
+                state.firstHeading = null;
+            } else {
+                if (state.orientationWatch) {
+                    state.orientationWatch.clearWatch();
+                }
+                delete state.orientationWatch;
+                state.orientationWatch = null;
             }
-            delete state.orientationWatch;
-            state.orientationWatch = null;
-
-            window.removeEventListener("compassneedscalibration", compassNeedsCalibrationCallback, true);
-            // window.removeEventListener("deviceorientation", rotationCallback, true);
 
             geolocationState.isRotating = false;
             MapService.mapIsRotating(geolocationState.isRotating);
@@ -316,6 +325,7 @@ angular.module('webmapp')
 
             if (state.lastHeading !== 0 && !state.animationInterval) {
                 state.animationIntervalStartTime = Date.now();
+                state.lastHeading %= 360;
                 if (state.lastHeading > 180) {
                     state.lastHeading -= 360;
                 }
@@ -399,27 +409,61 @@ angular.module('webmapp')
             if (!geolocationState.isRotating) {
                 turnOffRotation();
             } else {
-                // var heading = rotation.alpha;
-                var heading = rotation.magneticHeading;
+                // console.log(rotation)
 
-                // if (Math.abs(rotation.beta) > 70 && Math.abs(rotation.beta) < 110) {
-                //     if (heading - state.lastHeading > constants.maxAngleDifference) {
-                //         heading = state.lastHeading + constants.maxAngleDifference;
-                //     }
-                //     else if (state.lastHeading - heading > constants.maxAngleDifference) {
-                //         heading = state.lastHeading - constants.maxAngleDifference;
-                //     }
-                // } else
-                if (Math.abs(heading - state.lastHeading) > 60) {
-                    state.lpf = new LPF(0.5);
-                    state.lpf.init(Array(6).fill(heading));
+                if (isAndroid) {
+                    var heading = rotation.alpha % 360;
+
+                    if (rotation.absolute) {
+                        window.removeEventListener("deviceorientationabsolute", rotationCallback, true);
+                        if (!state.lastHeading || Math.abs(heading - state.lastHeading) > 2) {
+                            if (Math.abs(rotation.beta) > 70 && Math.abs(rotation.beta) < 110) {
+                                if (heading - state.lastHeading > constants.maxAngleDifference) {
+                                    heading = state.lastHeading + constants.maxAngleDifference;
+                                } else if (state.lastHeading - heading > constants.maxAngleDifference) {
+                                    heading = state.lastHeading - constants.maxAngleDifference;
+                                }
+                            } else if (Math.abs(heading - state.lastHeading) > 60) {
+                                state.lpf = new LPF(0.5);
+                                state.lpf.init(Array(6).fill(heading));
+                            }
+
+                            heading = state.lpf.next(heading);
+                            state.firstHeading = heading;
+
+                            MapService.setBearing(heading);
+                            state.lastHeading = heading;
+                            $rootScope.$emit("heading-changed", state.lastHeading);
+                        }
+                    } else if (state.firstHeading) {
+                        if (Math.abs(heading) > 2) {
+                            if (Math.abs(heading) > 60) {
+                                state.lpf = new LPF(0.5);
+                                state.lpf.init(Array(6).fill(state.firstHeading + heading));
+                            }
+
+                            heading = state.lpf.next(state.firstHeading + heading);
+
+                            MapService.setBearing(heading);
+                            state.lastHeading = heading;
+                            $rootScope.$emit("heading-changed", state.lastHeading);
+                        }
+                    }
+                } else {
+                    var heading = (-rotation.magneticHeading) % 360;
+
+                    if (Math.abs(heading - state.lastHeading) > 60) {
+                        state.lpf = new LPF(0.5);
+                        state.lpf.init(Array(6).fill(heading));
+                    }
+
+                    heading = state.lpf.next(heading);
+                    state.firstHeading = heading;
+
+                    MapService.setBearing(heading);
+                    state.lastHeading = heading;
+                    $rootScope.$emit("heading-changed", state.lastHeading);
                 }
-
-                heading = state.lpf.next(heading);
-
-                MapService.setBearing(-heading);
-                state.lastHeading = heading;
-                $rootScope.$emit("heading-changed", state.lastHeading);
             }
         };
 
@@ -444,27 +488,31 @@ angular.module('webmapp')
 
             $rootScope.$emit("geolocationState-changed", geolocationState);
 
-            window.addEventListener("compassneedscalibration", compassNeedsCalibrationCallback, true);
-            // window.addEventListener("deviceorientation", rotationCallback, true);
+            if (isAndroid) {
+                state.firstHeading = null;
+                window.addEventListener("compassneedscalibration", compassNeedsCalibrationCallback, true);
+                window.addEventListener("deviceorientation", rotationCallback, true);
+                window.addEventListener("deviceorientationabsolute", rotationCallback, true);
+            } else {
+                state.orientationWatch = $cordovaDeviceOrientation.watchHeading({
+                    frequency: 20
+                });
 
-            state.orientationWatch = $cordovaDeviceOrientation.watchHeading({
-                frequency: 20
-            });
-
-            state.orientationWatch.then(
-                null,
-                function (error) {
-                    if (geolocationState.isRotating) {
-                        geolocationState.isRotating = false;
-                        MapService.mapIsRotating(geolocationState.isRotating);
-                        $rootScope.$emit("geolocationState-changed", geolocationState);
-                    }
-                    state.lastHeading = 0;
-                    MapService.setBearing(0);
-                    console.error(error);
-                },
-                rotationCallback
-            );
+                state.orientationWatch.then(
+                    null,
+                    function (error) {
+                        if (geolocationState.isRotating) {
+                            geolocationState.isRotating = false;
+                            MapService.mapIsRotating(geolocationState.isRotating);
+                            $rootScope.$emit("geolocationState-changed", geolocationState);
+                        }
+                        state.lastHeading = 0;
+                        MapService.setBearing(0);
+                        console.error(error);
+                    },
+                    rotationCallback
+                );
+            }
         };
 
         function updateNavigationValues(lat, long) {
@@ -649,7 +697,7 @@ angular.module('webmapp')
                             }
                         }
 
-                        if (trackRecordingEnabled && MapService.getUserPolyline() !== null) {
+                        if (trackRecordingEnabled && recordingState.isRecordingPolyline) {
                             MapService.updateUserPolyline([lat, long, altitude]);
                         }
 
@@ -675,6 +723,7 @@ angular.module('webmapp')
                     state.lastPosition = {
                         lat: lat,
                         long: long,
+                        altitude: altitude,
                         timestamp: position.time ? position.time : Date.now()
                     };
 
@@ -748,17 +797,22 @@ angular.module('webmapp')
          * 
          */
         function saveRecordingState() {
+            var polyline = MapService.getUserPolyline();
+            polyline = polyline ? polyline.getLatLngs() : null;
+
             var toSave = {
-                currentTrack: recordingState.currentTrack,
+                currentTrack: recordingState.currentTrack ? recordingState.currentTrack : null,
                 isActive: recordingState.isActive,
                 isPaused: recordingState.isPaused,
+                isRecordingPolyline: recordingState.isRecordingPolyline,
                 stats: {
                     time: recordingState.stats.time.toString(),
                     distance: recordingState.stats.distance,
                     averageSpeed: recordingState.stats.averageSpeed,
                     currentSpeed: 0
                 },
-                lastPosition: state.lastPosition
+                lastPosition: state.lastPosition,
+                userPolyline: polyline
             };
 
             localStorage.$wm_lastRecordingState = JSON.stringify(toSave);
@@ -792,6 +846,7 @@ angular.module('webmapp')
                 recordingState.currentTrack = lastState.currentTrack;
                 recordingState.isActive = lastState.isActive;
                 recordingState.isPaused = lastState.isPaused;
+                recordingState.isRecordingPolyline = lastState.isRecordingPolyline;
                 recordingState.stats = {
                     time: new Utils.Stopwatch(lastState.stats.time),
                     distance: lastState.stats.distance,
@@ -800,7 +855,13 @@ angular.module('webmapp')
                 };
                 recordingState.firstPositionSet = true;
                 state.lastPosition = lastState.lastPosition;
-                // MapService.drawPosition(state.lastPosition);
+                if (recordingState.isRecordingPolyline) {
+                    if (lastState.userPolyline) {
+                        MapService.createUserPolyline(lastState.userPolyline);
+                    } else {
+                        MapService.createUserPolyline([]);
+                    }
+                }
                 return true;
             } else {
                 return false;
@@ -825,12 +886,14 @@ angular.module('webmapp')
                     if (isRunningInBackground) {
                         var restored = restoreRecordingState();
 
-                        setTimeout(function () {
-                            MapService.showPathAndRelated({
-                                id: recordingState.currentTrack.properties.id,
-                                parentId: recordingState.currentTrack.parent.label
-                            });
-                        }, 1000);
+                        if (recordingState.currentTrack) {
+                            setTimeout(function () {
+                                MapService.showPathAndRelated({
+                                    id: recordingState.currentTrack.properties.id,
+                                    parentId: recordingState.currentTrack.parent.label
+                                });
+                            }, 1000);
+                        }
 
                         if (restored) {
                             BackgroundGeolocation.getLocations(function (locations) {
@@ -856,9 +919,15 @@ angular.module('webmapp')
                                 if (id !== -1) {
                                     while (locations[id].time > state.lastPosition.timestamp) {
                                         updateNavigationValues(locations[id].latitude, locations[id].longitude);
+
+                                        if (recordingState.isRecordingPolyline) {
+                                            MapService.updateUserPolyline([locations[id].latitude, locations[id].longitude, locations[id].altitude]);
+                                        }
+
                                         state.lastPosition = {
                                             lat: locations[id].latitude,
                                             long: locations[id].longitude,
+                                            altitude: locations[id].altitude,
                                             timestamp: locations[id].time
                                         };
 
@@ -906,10 +975,11 @@ angular.module('webmapp')
                                         $rootScope.$emit('recordingState-changed', {
                                             isActive: recordingState.isActive,
                                             isPaused: recordingState.isPaused,
-                                            currentTrack: {
+                                            currentTrack: recordingState.currentTrack ? {
                                                 id: recordingState.currentTrack.properties.id,
                                                 parentId: recordingState.currentTrack.parent.label
-                                            }
+                                            } : null,
+                                            recordingTrack: recordingState.isRecordingPolyline
                                         });
                                         return geolocationState;
                                     });
@@ -1152,9 +1222,12 @@ angular.module('webmapp')
                             }
                         })
                         .catch(function (err) {});
+                } else {
+                    recordingState.currentTrack = null;
                 }
 
-                if (trackRecordingEnabled && recordTrack) {
+                if (recordTrack) {
+                    recordingState.isRecordingPolyline = true;
                     if (recordingState.firstPositionSet) {
                         MapService.createUserPolyline([
                             [state.lastPosition.lat, state.lastPosition.long, 0]

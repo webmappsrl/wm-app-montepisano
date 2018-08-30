@@ -15,7 +15,7 @@ angular.module('webmapp')
             if (localStorage.user) {
                 userData = JSON.parse(localStorage.user);
                 isLoggedIn = true;
-                MapService.setItemInLocalStorage("$wm_userData", userData);
+                MapService.setItemInLocalStorage("$wm_userData", JSON.stringify(userData));
                 delete localStorage.user;
             }
 

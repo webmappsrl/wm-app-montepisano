@@ -59,13 +59,6 @@ angular.module('webmapp')
             }
         }
 
-        if (trackRecordingEnabled) {
-            mainMenuItems.push({
-                type: 'layer',
-                label: 'I miei percorsi'
-            });
-        }
-
         model.isLayerInMenu = function (label) {
             return confMainMenuMap[label] || overlaysChildMap[label];
         };
