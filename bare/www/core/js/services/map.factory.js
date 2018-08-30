@@ -119,9 +119,7 @@ angular.module('webmapp')
             return prev;
         }, {});
 
-
         mapService.getFeaturesIdByLayersMap = function () {
-
             return featuresIdByLayersMap;
         };
 
@@ -263,7 +261,6 @@ angular.module('webmapp')
                 if (!featuresIdByLayersMap[feature.parent.label]) {
                     featuresIdByLayersMap[feature.parent.label] = [];
                 }
-
                 if (!feature.properties.taxonomy) {
                     feature.properties.taxonomy = {};
                 }
@@ -2338,57 +2335,22 @@ angular.module('webmapp')
             }
         };
 
-        window.closePopup = mapService.closePopup = function (e) {
-            map && map.closePopup();
-            try {
-                event && event.stopPropagation();
-            } catch (err) { }
+        mapService.setItemInLocalStorage = function (key, item) {
+            setItemInLocalStorage(key, item);
         };
 
-        window.goToDetail = function (id, parentLabel, isPOI, goToDetails, lat, lng) {
-            if (goToDetails === 'false') {
-                return;
-            }
-
-            if (isPOI === 'true') {
-                map.setView({
-                    lat: lat,
-                    lng: lng
-                }, mapConf.maxZoom);
-            } else {
-                map.setView({
-                    lat: lat,
-                    lng: lng
-                });
-            }
-
-            setTimeout(function () {
-                Utils.goTo('layer/' + parentLabel.replace(/ /g, '_') + '/' + id);
-            }, Utils.isBrowser() ? 500 : 0);
+        mapService.getItemFromLocalStorage = function (key) {
+            return getItemFromLocalStorage(key);
         };
 
-        window.goToUtfGridDetail = function (id, parentLabel) {
-            Utils.goTo('ulayer/' + parentLabel.replace(/ /g, '_') + '/' + id);
+        mapService.removeItemFromLocalStorage = function (key) {
+            removeItemFromLocalStorage(key);
         };
-
-        window.goToTileUtfGridDetail = function (id, parentLabel, lat, lng) {
-            map.setView({
-                lat: lat,
-                lng: lng
-            });
-            Utils.goTo('layer/' + parentLabel.replace(/ /g, '_') + '/' + id);
-        };
-
-        setTimeout(function () {
-            mapService.adjust();
-        }, 3600);
 
         var initializeUserTracksLayer = function (data) {
-
             var userOverlay = overlayLayersConfMap["I miei percorsi"];
 
             if (userOverlay) {
-
                 var geoJsonOptions = {
                     onEachFeature: function (feature, layer) {
                         if (!feature.parent) {
@@ -2433,8 +2395,6 @@ angular.module('webmapp')
                 },
                     linesLayer = L.geoJson(data, geoJsonOptions);
 
-
-
                 overlayLayersByLabel[userOverlay.label] = linesLayer;
                 mapService.activateLayer(userOverlay.label, true, true, true);
                 activateLineHandlers(linesLayer);
@@ -2443,8 +2403,7 @@ angular.module('webmapp')
                 } else {
                     //TODO redraw filtered layer
                 }
-                // $rootScope.$emit('updatedTracks', data && data.features && data.features.length);
-
+                $rootScope.$emit('updatedTracks', data && data.features && data.features.length);
             }
         };
 
@@ -2453,7 +2412,7 @@ angular.module('webmapp')
                 map.removeLayer(userTrackPolyline);
             }
             userTrackPolyline = L.polyline(coordsArray).addTo(map);
-        }
+        };
 
         mapService.updateUserPolyline = function (latLng) {
             if (userTrackPolyline) {
@@ -2462,150 +2421,189 @@ angular.module('webmapp')
             } else {
                 userTrackPolyline = L.polyline(latLng).addTo(map);
             }
-        }
+        };
 
         mapService.getUserPolyline = function () {
             return userTrackPolyline;
-        }
+        };
 
         mapService.removeUserPolyline = function () {
             if (userTrackPolyline) {
                 map.removeLayer(userTrackPolyline);
                 userTrackPolyline = null;
             }
-        }
+        };
 
         mapService.saveUserPolyline = function (info) {
-
             if (userTrackPolyline) {
-
                 var geoUserTrack = userTrackPolyline.toGeoJSON();
                 geoUserTrack.properties.name = info.name;
                 geoUserTrack.properties.description = info.description;
                 geoUserTrack.properties.isEditable = true;
 
-                var tmp;
-                if (!localStorage.$wm_userTracks) {
-                    geoUserTrack.properties.id = 1000000;
-                    tmp = [];
+                var tmp = [];
+                geoUserTrack.properties.id = 1000000;
 
-                } else {
-                    var coll = JSON.parse(localStorage.$wm_userTracks);
-                    tmp = coll.features;
-                    var lastElement = tmp[tmp.length - 1];
-                    if (lastElement && lastElement.properties && lastElement.properties.id) {
-                        geoUserTrack.properties.id = lastElement.properties.id + 1;
-                    } else {
-                        geoUserTrack.properties.id = 1000000;
+                getItemFromLocalStorage("$wm_userTracks").then(function (data) {
+                    var collection = JSON.parse(data.data);
+                    tmp = collection.features;
+
+                    if (tmp.length) {
+                        var lastElement = tmp[tmp.length - 1];
+                        if (lastElement && lastElement.properties && lastElement.properties.id) {
+                            geoUserTrack.properties.id = lastElement.properties.id + 1;
+                        }
                     }
+                }).catch(function (err) {
+                    console.warn(err);
+                }).finally(function () {
+                    tmp.push(geoUserTrack);
 
-                }
-                tmp.push(geoUserTrack);
-                var featureColl = {
-                    type: "FeatureCollection",
-                    features: tmp
-                }
-                localStorage.$wm_userTracks = JSON.stringify(featureColl);
+                    var featureCollection = {
+                        type: "FeatureCollection",
+                        features: tmp
+                    };
 
-                mapService.removeLayer("I miei percorsi");
-                if (polylineDecoratorLayers["I miei percorsi"]) {
-                    polylineDecoratorLayers["I miei percorsi"] = {};
-                }
-                Model.removeLayerItems({
-                    label: "I miei percorsi"
+                    setItemInLocalStorage("$wm_userTracks", JSON.stringify(featureCollection));
+
+                    mapService.removeLayer("I miei percorsi");
+                    if (polylineDecoratorLayers["I miei percorsi"]) {
+                        polylineDecoratorLayers["I miei percorsi"] = {};
+                    }
+                    Model.removeLayerItems({
+                        label: "I miei percorsi"
+                    });
+
+                    initializeUserTracksLayer(featureCollection);
                 });
-
-                initializeUserTracksLayer(featureColl);
             }
-        }
+        };
 
         mapService.deleteUserTrack = function (id) {
+            getItemFromLocalStorage("$wm_userTracks").then(function (data) {
+                var collection = JSON.parse(data.data);
 
-            if (localStorage.$wm_userTracks) {
-
-                var coll = JSON.parse(localStorage.$wm_userTracks);
-                var tmp = coll.features;
-                var find = false;
-                for (let i = 0; i < tmp.length; i++) {
-                    var feature = tmp[i];
-                    if (feature.properties.id == id) {
-                        tmp.splice(i, 1);
-                        find = true;
-                        break;
+                if (collection) {
+                    var tmp = collection.features;
+                    var find = false;
+                    for (let i = 0; i < tmp.length; i++) {
+                        var feature = tmp[i];
+                        if (feature.properties.id == id) {
+                            tmp.splice(i, 1);
+                            find = true;
+                            break;
+                        }
                     }
 
+                    if (find) {
+                        var featureCollection = {
+                            type: "FeatureCollection",
+                            features: tmp
+                        };
+
+                        setItemInLocalStorage("$wm_userTracks", JSON.stringify(featureCollection));
+
+                        mapService.removeLayer("I miei percorsi");
+                        if (polylineDecoratorLayers["I miei percorsi"]) {
+                            polylineDecoratorLayers["I miei percorsi"] = {};
+                        }
+                        Model.removeLayerItems({
+                            label: "I miei percorsi"
+                        });
+                        initializeUserTracksLayer(featureCollection);
+                    }
                 }
-                if (find) {
-                    var featureColl = {
-                        type: "FeatureCollection",
-                        features: tmp
-                    }
-                    localStorage.$wm_userTracks = JSON.stringify(featureColl);
-
-                    mapService.removeLayer("I miei percorsi");
-                    if (polylineDecoratorLayers["I miei percorsi"]) {
-                        polylineDecoratorLayers["I miei percorsi"] = {};
-                    }
-                    Model.removeLayerItems({
-                        label: "I miei percorsi"
-                    });
-                    initializeUserTracksLayer(featureColl);
-                }
-            }
-
-        }
+            }).catch(function (err) {
+                console.warn(err);
+            });
+        };
 
         mapService.editUserTrack = function (id, name, descr) {
+            getItemFromLocalStorage("$wm_userTracks").then(function (data) {
+                var collection = JSON.parse(data.data);
+                if (collection) {
+                    var tmp = collection.features;
+                    var find = false;
 
-            if (localStorage.$wm_userTracks) {
+                    for (let i = 0; i < tmp.length; i++) {
+                        var feature = tmp[i];
 
-                var coll = JSON.parse(localStorage.$wm_userTracks);
-                var tmp = coll.features;
-
-                var find = false;
-                for (let i = 0; i < tmp.length; i++) {
-                    var feature = tmp[i];
-
-                    if (feature.properties.id == id) {
-                        feature.properties.name = name;
-                        feature.properties.description = descr;
-                        find = true;
-                        break;
+                        if (feature.properties.id == id) {
+                            feature.properties.name = name;
+                            feature.properties.description = descr;
+                            find = true;
+                            break;
+                        }
                     }
 
+                    if (find) {
+                        var featureCollection = {
+                            type: "FeatureCollection",
+                            features: tmp
+                        };
+
+                        setItemInLocalStorage("$wm_userTracks", JSON.stringify(featureCollection));
+
+                        mapService.removeLayer("I miei percorsi");
+                        if (polylineDecoratorLayers["I miei percorsi"]) {
+                            polylineDecoratorLayers["I miei percorsi"] = {};
+                        }
+                        Model.removeLayerItems({
+                            label: "I miei percorsi"
+                        });
+
+                        initializeUserTracksLayer(featureCollection);
+                    }
                 }
-                if (find) {
-                    var featureColl = {
-                        type: "FeatureCollection",
-                        features: tmp
-                    }
+            }).catch(function (err) {
+                console.warn(err);
+            });
+        };
 
-                    localStorage.$wm_userTracks = JSON.stringify(featureColl);
+        window.closePopup = mapService.closePopup = function (e) {
+            map && map.closePopup();
+            try {
+                event && event.stopPropagation();
+            } catch (err) { }
+        };
 
-                    mapService.removeLayer("I miei percorsi");
-                    if (polylineDecoratorLayers["I miei percorsi"]) {
-                        polylineDecoratorLayers["I miei percorsi"] = {};
-                    }
-                    Model.removeLayerItems({
-                        label: "I miei percorsi"
-                    });
-
-                    initializeUserTracksLayer(featureColl);
-                }
+        window.goToDetail = function (id, parentLabel, isPOI, goToDetails, lat, lng) {
+            if (goToDetails === 'false') {
+                return;
             }
-        }
 
-        mapService.setItemInLocalStorage = function (key, item) {
-            setItemInLocalStorage(key, item);
-        }
+            if (isPOI === 'true') {
+                map.setView({
+                    lat: lat,
+                    lng: lng
+                }, mapConf.maxZoom);
+            } else {
+                map.setView({
+                    lat: lat,
+                    lng: lng
+                });
+            }
 
-        mapService.getItemFromLocalStorage = function (key) {
-            return getItemFromLocalStorage(key);
-        }
+            setTimeout(function () {
+                Utils.goTo('layer/' + parentLabel.replace(/ /g, '_') + '/' + id);
+            }, Utils.isBrowser() ? 500 : 0);
+        };
 
-        mapService.removeItemFromLocalStorage = function (key) {
-            removeItemFromLocalStorage(key);
-        }
+        window.goToUtfGridDetail = function (id, parentLabel) {
+            Utils.goTo('ulayer/' + parentLabel.replace(/ /g, '_') + '/' + id);
+        };
+
+        window.goToTileUtfGridDetail = function (id, parentLabel, lat, lng) {
+            map.setView({
+                lat: lat,
+                lng: lng
+            });
+            Utils.goTo('layer/' + parentLabel.replace(/ /g, '_') + '/' + id);
+        };
+
+        setTimeout(function () {
+            mapService.adjust();
+        }, 3600);
 
         return mapService;
     });
