@@ -36,7 +36,7 @@ angular.module('webmapp')
         modalScope.vm.isNewModal = CONFIG.MAP.filters;
 
         vm.mapTitle = CONFIG.OPTIONS.title;
-        vm.filterIcon = CONFIG.OPTIONS.filterIcon;
+        vm.filterIcon = trackRecordingEnabled ? "wm-icon-md-option-menu" : CONFIG.OPTIONS.filterIcon;
         vm.showFilers = !CONFIG.OPTIONS.hideFiltersInMap;
         vm.isNavigable = $rootScope.isNavigable ? $rootScope.isNavigable : false;
         vm.goBack = Utils.goBack;
@@ -500,7 +500,7 @@ angular.module('webmapp')
         });
 
         vm.clickRightMenu = function () {
-            if (!trackRecordingEnabled) {
+            if (trackRecordingEnabled) {
                 $rootScope.$emit("rightMenuClick");
             } else {
                 openFilters();

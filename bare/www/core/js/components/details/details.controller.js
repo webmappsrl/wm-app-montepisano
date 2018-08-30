@@ -125,8 +125,7 @@ angular.module('webmapp')
             modalAccessibility = modalObj;
         });
 
-        if (!trackRecordingEnabled) {
-
+        if (trackRecordingEnabled) {
             vm.isNavigating = $rootScope.isNavigating;
             var saveModalScope = $rootScope.$new();
             var saveModal = {};
@@ -315,8 +314,8 @@ angular.module('webmapp')
 
                 vm.chiama = function (number) {
                     window.plugins.CallNumber.callNumber(function () {
-                            console.log('successo');
-                        },
+                        console.log('successo');
+                    },
                         function () {
                             console.error('error');
                         }, number);
@@ -363,8 +362,8 @@ angular.module('webmapp')
                                     vm.stages[this.s].pois.push(data);
                                     extras.push(data);
                                 }, {
-                                    s: s
-                                }));
+                                        s: s
+                                    }));
                         }
                     }
                 }
@@ -770,7 +769,7 @@ angular.module('webmapp')
                 $ionicSlideBoxDelegate.update();
             }
 
-            if (!trackRecordingEnabled) {
+            if (trackRecordingEnabled) {
                 saveModal.remove();
             }
         });

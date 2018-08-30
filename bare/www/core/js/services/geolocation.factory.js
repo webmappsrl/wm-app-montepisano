@@ -81,6 +81,7 @@ angular.module('webmapp')
             firstPositionSet: false,
             isActive: false,
             isPaused: false,
+            isRecordingPolyline: false,
             stats: {
                 time: new Utils.Stopwatch(),
                 distance: 0,
@@ -112,6 +113,7 @@ angular.module('webmapp')
                 recordingState.firstPositionSet = false;
                 recordingState.isActive = false;
                 recordingState.isPaused = false;
+                recordingState.isRecordingPolyline = false;
                 recordingState.stats.time.stop();
                 recordingState.stats.distance = 0;
                 recordingState.stats.averageSpeed = 0;
@@ -599,7 +601,6 @@ angular.module('webmapp')
         };
 
         console.warn("TODO: complete function positionCallback for realTimeTracking")
-
         function positionCallback(position) {
             console.log(position);
             BackgroundGeolocation.startTask(function (taskKey) {
@@ -700,7 +701,7 @@ angular.module('webmapp')
                             }
                         }
 
-                        if (!trackRecordingEnabled && MapService.getUserPolyline() !== null) {
+                        if (trackRecordingEnabled && recordingState.isRecordingPolyline) {
                             MapService.updateUserPolyline([lat, long, altitude]);
                         }
 
@@ -726,6 +727,7 @@ angular.module('webmapp')
                     state.lastPosition = {
                         lat: lat,
                         long: long,
+                        altitude: altitude,
                         timestamp: position.time ? position.time : Date.now()
                     };
 
@@ -799,17 +801,22 @@ angular.module('webmapp')
          * 
          */
         function saveRecordingState() {
+            var polyline = MapService.getUserPolyline();
+            polyline = polyline ? polyline.getLatLngs() : null;
+
             var toSave = {
-                currentTrack: recordingState.currentTrack,
+                currentTrack: recordingState.currentTrack ? recordingState.currentTrack : null,
                 isActive: recordingState.isActive,
                 isPaused: recordingState.isPaused,
+                isRecordingPolyline: recordingState.isRecordingPolyline,
                 stats: {
                     time: recordingState.stats.time.toString(),
                     distance: recordingState.stats.distance,
                     averageSpeed: recordingState.stats.averageSpeed,
                     currentSpeed: 0
                 },
-                lastPosition: state.lastPosition
+                lastPosition: state.lastPosition,
+                userPolyline: polyline
             };
 
             localStorage.$wm_lastRecordingState = JSON.stringify(toSave);
@@ -843,6 +850,7 @@ angular.module('webmapp')
                 recordingState.currentTrack = lastState.currentTrack;
                 recordingState.isActive = lastState.isActive;
                 recordingState.isPaused = lastState.isPaused;
+                recordingState.isRecordingPolyline = lastState.isRecordingPolyline;
                 recordingState.stats = {
                     time: new Utils.Stopwatch(lastState.stats.time),
                     distance: lastState.stats.distance,
@@ -851,7 +859,14 @@ angular.module('webmapp')
                 };
                 recordingState.firstPositionSet = true;
                 state.lastPosition = lastState.lastPosition;
-                // MapService.drawPosition(state.lastPosition);
+                if (recordingState.isRecordingPolyline) {
+                    if (lastState.userPolyline) {
+                        MapService.createUserPolyline(lastState.userPolyline);
+                    }
+                    else {
+                        MapService.createUserPolyline([]);
+                    }
+                }
                 return true;
             } else {
                 return false;
@@ -876,12 +891,14 @@ angular.module('webmapp')
                     if (isRunningInBackground) {
                         var restored = restoreRecordingState();
 
-                        setTimeout(function () {
-                            MapService.showPathAndRelated({
-                                id: recordingState.currentTrack.properties.id,
-                                parentId: recordingState.currentTrack.parent.label
-                            });
-                        }, 1000);
+                        if (recordingState.currentTrack) {
+                            setTimeout(function () {
+                                MapService.showPathAndRelated({
+                                    id: recordingState.currentTrack.properties.id,
+                                    parentId: recordingState.currentTrack.parent.label
+                                });
+                            }, 1000);
+                        }
 
                         if (restored) {
                             BackgroundGeolocation.getLocations(function (locations) {
@@ -907,9 +924,15 @@ angular.module('webmapp')
                                 if (id !== -1) {
                                     while (locations[id].time > state.lastPosition.timestamp) {
                                         updateNavigationValues(locations[id].latitude, locations[id].longitude);
+
+                                        if (recordingState.isRecordingPolyline) {
+                                            MapService.updateUserPolyline([locations[id].latitude, locations[id].longitude, locations[id].altitude]);
+                                        }
+
                                         state.lastPosition = {
                                             lat: locations[id].latitude,
                                             long: locations[id].longitude,
+                                            altitude: locations[id].altitude,
                                             timestamp: locations[id].time
                                         };
 
@@ -957,10 +980,11 @@ angular.module('webmapp')
                                         $rootScope.$emit('recordingState-changed', {
                                             isActive: recordingState.isActive,
                                             isPaused: recordingState.isPaused,
-                                            currentTrack: {
+                                            currentTrack: recordingState.currentTrack ? {
                                                 id: recordingState.currentTrack.properties.id,
                                                 parentId: recordingState.currentTrack.parent.label
-                                            }
+                                            } : null,
+                                            recordingTrack: recordingState.isRecordingPolyline
                                         });
                                         return geolocationState;
                                     });
@@ -1204,8 +1228,12 @@ angular.module('webmapp')
                         })
                         .catch(function (err) { });
                 }
+                else {
+                    recordingState.currentTrack = null;
+                }
 
                 if (recordTrack) {
+                    recordingState.isRecordingPolyline = true;
                     if (recordingState.firstPositionSet) {
                         MapService.createUserPolyline([
                             [state.lastPosition.lat, state.lastPosition.long, 0]
