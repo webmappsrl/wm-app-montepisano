@@ -77,8 +77,8 @@
                             '-webkit-transform': 'rotate(0deg)',
                             'transform': 'rotate(0deg)'
                         } : {
-                            '-webkit-transform': 'rotate(' + (- vm.heading - 30) + 'deg)',
-                            'transform': 'rotate(' + (- vm.heading - 30) + 'deg)'
+                            '-webkit-transform': 'rotate(' + (vm.heading - 30) + 'deg)',
+                            'transform': 'rotate(' + (vm.heading - 30) + 'deg)'
                         }">
                         <img style="margin: 5px" src="core/images/compass.svg" ng-if="vm.geolocationState.isFollowing && vm.geolocationState.isRotating">
                     </span>

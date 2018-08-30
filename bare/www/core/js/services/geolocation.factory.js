@@ -34,7 +34,8 @@ angular.module('webmapp')
             isRotating: false
         };
 
-        var gpsActive = false;
+        var gpsActive = false,
+            isAndroid = window.cordova && window.cordova.platformId === "ios" ? false : true;
 
         var constants = {
             geolocationTimeoutTime: 60000,
@@ -43,8 +44,8 @@ angular.module('webmapp')
             outOfTrackDistance: (CONFIG.NAVIGATION && CONFIG.NAVIGATION.trackBoundsDistance) ?
                 CONFIG.NAVIGATION.trackBoundsDistance : (
                     (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) ?
-                    CONFIG.MAIN.NAVIGATION.trackBoundsDistance :
-                    200
+                        CONFIG.MAIN.NAVIGATION.trackBoundsDistance :
+                        200
                 )
         };
 
@@ -53,6 +54,7 @@ angular.module('webmapp')
             animationInterval: null,
             animationIntervalStartTime: null,
             appState: 0,
+            firstHeading: null,
             lastHeading: 0,
             lastPosition: null,
             lpf: null,
@@ -62,6 +64,7 @@ angular.module('webmapp')
             reset: function () {
                 state.animationInterval = null;
                 state.animationIntervalStartTime = null;
+                state.firstHeading = null;
                 state.lastHeadind = 0;
                 state.lastPosition = null;
                 state.lpf = null;
@@ -91,11 +94,11 @@ angular.module('webmapp')
                 reset: function () {
                     try {
                         clearInterval(recordingState.toast.hideTimeout);
-                    } catch (e) {}
+                    } catch (e) { }
 
                     try {
                         clearInterval(recordingState.toast.showTimeout);
-                    } catch (e) {}
+                    } catch (e) { }
 
                     recordingState.toast.hideTimeout = null;
                     recordingState.toast.showTimeout = null;
@@ -176,9 +179,9 @@ angular.module('webmapp')
                     defer.resolve(true);
                 } else {
                     $ionicPopup.confirm({
-                            title: $translate.instant("ATTENZIONE"),
-                            template: $translate.instant("Sembra che tu abbia il GPS disattivato. Per accedere a tutte le funzionalità dell'app occorre attivarlo. Vuoi farlo ora?")
-                        })
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Sembra che tu abbia il GPS disattivato. Per accedere a tutte le funzionalità dell'app occorre attivarlo. Vuoi farlo ora?")
+                    })
                         .then(function (res) {
                             if (res) {
                                 if (window.cordova.platformId === "ios") {
@@ -223,45 +226,45 @@ angular.module('webmapp')
                     }
 
                     cordova.plugins.diagnostic.requestLocationAuthorization(function (status) {
-                            switch (status) {
-                                case cordova.plugins.diagnostic.permissionStatus.GRANTED:
-                                case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
-                                    if (window.cordova.platformId === "ios") {
-                                        cordova.plugins.diagnostic.isLocationEnabled(
-                                            onSuccess,
-                                            onError
-                                        );
-                                    } else {
-                                        cordova.plugins.diagnostic.isGpsLocationEnabled(
-                                            onSuccess,
-                                            onError
-                                        );
-                                    }
-                                    break;
-                                case cordova.plugins.diagnostic.permissionStatus.DENIED:
-                                    if (window.cordova.platformId === "ios") {
-                                        localStorage.$wm_ios_location_permission_denied = true;
-                                        $ionicPopup.alert({
-                                            title: $translate.instant("ATTENZIONE"),
-                                            template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
-                                        });
-                                    } else {
-                                        $ionicPopup.alert({
-                                            title: $translate.instant("ATTENZIONE"),
-                                            template: $translate.instant("Alcune funzionalità funzionano solo se hai abilitato la geolocalizzazione")
-                                        });
-                                    }
-                                    defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
-                                    break;
-                                case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
+                        switch (status) {
+                            case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+                            case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
+                                if (window.cordova.platformId === "ios") {
+                                    cordova.plugins.diagnostic.isLocationEnabled(
+                                        onSuccess,
+                                        onError
+                                    );
+                                } else {
+                                    cordova.plugins.diagnostic.isGpsLocationEnabled(
+                                        onSuccess,
+                                        onError
+                                    );
+                                }
+                                break;
+                            case cordova.plugins.diagnostic.permissionStatus.DENIED:
+                                if (window.cordova.platformId === "ios") {
+                                    localStorage.$wm_ios_location_permission_denied = true;
                                     $ionicPopup.alert({
                                         title: $translate.instant("ATTENZIONE"),
-                                        template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi attivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
+                                        template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi riattivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
                                     });
-                                    defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
-                                    break;
-                            }
-                        },
+                                } else {
+                                    $ionicPopup.alert({
+                                        title: $translate.instant("ATTENZIONE"),
+                                        template: $translate.instant("Alcune funzionalità funzionano solo se hai abilitato la geolocalizzazione")
+                                    });
+                                }
+                                defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
+                                break;
+                            case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
+                                $ionicPopup.alert({
+                                    title: $translate.instant("ATTENZIONE"),
+                                    template: $translate.instant("Tutte le funzionalità legate alla tua posizione sono disabilitate. Puoi attivarle autorizzando l'uso della tua positione tramite le impostazioni del tuo dispositivo")
+                                });
+                                defer.reject(ERRORS.GPS_PERMISSIONS_DENIED);
+                                break;
+                        }
+                    },
                         onError,
                         cordova.plugins.diagnostic.locationAuthorizationMode.ALWAYS);
                 }
@@ -301,14 +304,19 @@ angular.module('webmapp')
         };
 
         function turnOffRotation() {
-            if (state.orientationWatch) {
-                state.orientationWatch.clearWatch();
+            if (isAndroid) {
+                window.removeEventListener("compassneedscalibration", compassNeedsCalibrationCallback, true);
+                window.removeEventListener("deviceorientation", rotationCallback, true);
+                window.removeEventListener("deviceorientationabsolute", rotationCallback, true);
+                state.firstHeading = null;
             }
-            delete state.orientationWatch;
-            state.orientationWatch = null;
-
-            window.removeEventListener("compassneedscalibration", compassNeedsCalibrationCallback, true);
-            // window.removeEventListener("deviceorientation", rotationCallback, true);
+            else {
+                if (state.orientationWatch) {
+                    state.orientationWatch.clearWatch();
+                }
+                delete state.orientationWatch;
+                state.orientationWatch = null;
+            }
 
             geolocationState.isRotating = false;
             MapService.mapIsRotating(geolocationState.isRotating);
@@ -316,6 +324,7 @@ angular.module('webmapp')
 
             if (state.lastHeading !== 0 && !state.animationInterval) {
                 state.animationIntervalStartTime = Date.now();
+                state.lastHeading %= 360;
                 if (state.lastHeading > 180) {
                     state.lastHeading -= 360;
                 }
@@ -399,27 +408,64 @@ angular.module('webmapp')
             if (!geolocationState.isRotating) {
                 turnOffRotation();
             } else {
-                // var heading = rotation.alpha;
-                var heading = rotation.magneticHeading;
+                // console.log(rotation)
 
-                // if (Math.abs(rotation.beta) > 70 && Math.abs(rotation.beta) < 110) {
-                //     if (heading - state.lastHeading > constants.maxAngleDifference) {
-                //         heading = state.lastHeading + constants.maxAngleDifference;
-                //     }
-                //     else if (state.lastHeading - heading > constants.maxAngleDifference) {
-                //         heading = state.lastHeading - constants.maxAngleDifference;
-                //     }
-                // } else
-                if (Math.abs(heading - state.lastHeading) > 60) {
-                    state.lpf = new LPF(0.5);
-                    state.lpf.init(Array(6).fill(heading));
+                if (isAndroid) {
+                    var heading = rotation.alpha % 360;
+
+                    if (rotation.absolute) {
+                        window.removeEventListener("deviceorientationabsolute", rotationCallback, true);
+                        if (!state.lastHeading || Math.abs(heading - state.lastHeading) > 2) {
+                            if (Math.abs(rotation.beta) > 70 && Math.abs(rotation.beta) < 110) {
+                                if (heading - state.lastHeading > constants.maxAngleDifference) {
+                                    heading = state.lastHeading + constants.maxAngleDifference;
+                                }
+                                else if (state.lastHeading - heading > constants.maxAngleDifference) {
+                                    heading = state.lastHeading - constants.maxAngleDifference;
+                                }
+                            } else if (Math.abs(heading - state.lastHeading) > 60) {
+                                state.lpf = new LPF(0.5);
+                                state.lpf.init(Array(6).fill(heading));
+                            }
+
+                            heading = state.lpf.next(heading);
+                            state.firstHeading = heading;
+
+                            MapService.setBearing(heading);
+                            state.lastHeading = heading;
+                            $rootScope.$emit("heading-changed", state.lastHeading);
+                        }
+                    }
+                    else if (state.firstHeading) {
+                        if (Math.abs(heading) > 2) {
+                            if (Math.abs(heading) > 60) {
+                                state.lpf = new LPF(0.5);
+                                state.lpf.init(Array(6).fill(state.firstHeading + heading));
+                            }
+
+                            heading = state.lpf.next(state.firstHeading + heading);
+
+                            MapService.setBearing(heading);
+                            state.lastHeading = heading;
+                            $rootScope.$emit("heading-changed", state.lastHeading);
+                        }
+                    }
                 }
+                else {
+                    var heading = (-rotation.magneticHeading) % 360;
 
-                heading = state.lpf.next(heading);
+                    if (Math.abs(heading - state.lastHeading) > 60) {
+                        state.lpf = new LPF(0.5);
+                        state.lpf.init(Array(6).fill(heading));
+                    }
 
-                MapService.setBearing(-heading);
-                state.lastHeading = heading;
-                $rootScope.$emit("heading-changed", state.lastHeading);
+                    heading = state.lpf.next(heading);
+                    state.firstHeading = heading;
+
+                    MapService.setBearing(heading);
+                    state.lastHeading = heading;
+                    $rootScope.$emit("heading-changed", state.lastHeading);
+                }
             }
         };
 
@@ -444,27 +490,32 @@ angular.module('webmapp')
 
             $rootScope.$emit("geolocationState-changed", geolocationState);
 
-            window.addEventListener("compassneedscalibration", compassNeedsCalibrationCallback, true);
-            // window.addEventListener("deviceorientation", rotationCallback, true);
+            if (isAndroid) {
+                state.firstHeading = null;
+                window.addEventListener("compassneedscalibration", compassNeedsCalibrationCallback, true);
+                window.addEventListener("deviceorientation", rotationCallback, true);
+                window.addEventListener("deviceorientationabsolute", rotationCallback, true);
+            }
+            else {
+                state.orientationWatch = $cordovaDeviceOrientation.watchHeading({
+                    frequency: 20
+                });
 
-            state.orientationWatch = $cordovaDeviceOrientation.watchHeading({
-                frequency: 20
-            });
-
-            state.orientationWatch.then(
-                null,
-                function (error) {
-                    if (geolocationState.isRotating) {
-                        geolocationState.isRotating = false;
-                        MapService.mapIsRotating(geolocationState.isRotating);
-                        $rootScope.$emit("geolocationState-changed", geolocationState);
-                    }
-                    state.lastHeading = 0;
-                    MapService.setBearing(0);
-                    console.error(error);
-                },
-                rotationCallback
-            );
+                state.orientationWatch.then(
+                    null,
+                    function (error) {
+                        if (geolocationState.isRotating) {
+                            geolocationState.isRotating = false;
+                            MapService.mapIsRotating(geolocationState.isRotating);
+                            $rootScope.$emit("geolocationState-changed", geolocationState);
+                        }
+                        state.lastHeading = 0;
+                        MapService.setBearing(0);
+                        console.error(error);
+                    },
+                    rotationCallback
+                );
+            }
         };
 
         function updateNavigationValues(lat, long) {
@@ -640,9 +691,9 @@ angular.module('webmapp')
 
                                 currentRequest
                                     .then(function () {
-                                            realTimeTracking.positionsToSend = [];
-                                            return;
-                                        },
+                                        realTimeTracking.positionsToSend = [];
+                                        return;
+                                    },
                                         function (error) {
                                             return;
                                         });
@@ -668,7 +719,7 @@ angular.module('webmapp')
                                 lat: lat,
                                 long: long
                             });
-                        } catch (e) {}
+                        } catch (e) { }
 
                     }
 
@@ -1135,7 +1186,7 @@ angular.module('webmapp')
                             lat: state.lastPosition.lat,
                             long: state.lastPosition.long
                         })
-                    } catch (e) {};
+                    } catch (e) { };
                     recordingState.firstPositionSet = true;
                 } else {
                     recordingState.firstPositionSet = false;
@@ -1151,7 +1202,7 @@ angular.module('webmapp')
                                 }
                             }
                         })
-                        .catch(function (err) {});
+                        .catch(function (err) { });
                 }
 
                 if (recordTrack) {
