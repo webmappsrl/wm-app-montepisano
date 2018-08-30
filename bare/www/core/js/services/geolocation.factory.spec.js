@@ -93,7 +93,13 @@ describe('Geolocation.Factory', function () {
         Utils = _Utils_;
         currentLat = CONFIG.MAP.bounds.northEast[0] + (CONFIG.MAP.bounds.southWest[0] - CONFIG.MAP.bounds.northEast[0]) / 2;
         currentLong = CONFIG.MAP.bounds.northEast[1] + (CONFIG.MAP.bounds.southWest[1] - CONFIG.MAP.bounds.northEast[1]) / 2;
-
+        if (CONFIG.NAVIGATION) {
+            CONFIG.NAVIGATION.enableTrackRecording = true;
+        } else {
+            CONFIG.NAVIGATION = {
+                enableTrackRecording: true
+            }
+        }
         $httpBackend.whenGET().respond(404);
     }));
 
@@ -138,6 +144,11 @@ describe('Geolocation.Factory', function () {
             defer.resolve(true);
             return defer.promise;
         });
+
+        spyOn(MapService, 'createUserPolyline');
+        spyOn(MapService, 'updateUserPolyline');
+        spyOn(MapService, 'getUserPolyline');
+        spyOn(MapService, 'removeUserPolyline');
         // spyOn($cordovaDeviceOrientation, 'watchHeading').and.callFake(function() {
         //     console.log("MOCK $cordovaDeviceOrientation.watchHeading")
         //     var defer = $q.defer();
@@ -1080,8 +1091,7 @@ describe('Geolocation.Factory', function () {
             $httpBackend.flush();
         })
 
-
-        it('!recordingState.isActive  => it should start recording emitting a recordingState-changed and resolving with current state', function (done) {
+        it('!recordingState.isActive and navigationTrack defined => it should start recording emitting a recordingState-changed and resolving with current state', function (done) {
             var expectedValue = {
                 isActive: true,
                 isPaused: false
@@ -1105,7 +1115,7 @@ describe('Geolocation.Factory', function () {
             $httpBackend.flush();
         })
 
-        it('recordingState.isActive  => it should not restart recording and reject promise with error code', function (done) {
+        it('recordingState.isActive &&  params defined  => it should not restart recording and reject promise with error code', function (done) {
             var expectedValue = {
                 isActive: true,
                 isPaused: false
@@ -1162,7 +1172,7 @@ describe('Geolocation.Factory', function () {
             $httpBackend.flush();
         });
 
-        it("recordingState.isActive && !recordingState.isPaused => it should resolve promise with new state and emit recordingState-changed", function (done) {
+        it("recordingState.isActive && !recordingState.isPaused && params defined=> it should resolve promise with new state and emit recordingState-changed", function (done) {
             var expectedValue = {
                 isActive: true,
                 isPaused: true
@@ -1188,7 +1198,7 @@ describe('Geolocation.Factory', function () {
             $httpBackend.flush();
         });
 
-        it("recordingState.isActive && recordingState.isPaused => it should resolve promise with current state and not emit recordingState-changed", function (done) {
+        it("recordingState.isActive && recordingState.isPaused &&  params=> it should resolve promise with current state and not emit recordingState-changed", function (done) {
             var expectedValue = {
                 isActive: true,
                 isPaused: true
@@ -1668,6 +1678,96 @@ describe('Geolocation.Factory', function () {
             $httpBackend.verifyNoOutstandingRequest();
         });
     });
+
+
+    describe('recordingUserTrack', function () {
+        it('!recordingState.isActive && recordTrack && !firstPositionIsSet => it should start recording emitting a recordingState-changed, creating a new user polyline and resolving with current state', function (done) {
+            var expectedValue = {
+                isActive: true,
+                isPaused: false
+            };
+            spyOn($rootScope, '$emit');
+            GeolocationService.enable().then(function () {
+                GeolocationService.startRecording(null, true).then(function (val) {
+                    expect(val).toEqual(expectedValue);
+                    expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
+                    expect(MapService.createUserPolyline).toHaveBeenCalledWith([]);
+                    done();
+                }).catch(function (err) {
+                    fail("it should resolve promise" + err);
+                });
+            }).catch(function (err) {
+                fail("it should resolve promise" + err);
+            });
+
+            $httpBackend.flush();
+        })
+
+        it('!recordingState.isActive && recordTrack defined && firstPositionIsSet=> it should start recording emitting a recordingState-changed, creating a new user polyline and resolving with current state', function (done) {
+            var expectedValue = {
+                isActive: true,
+                isPaused: false
+            };
+            spyOn($rootScope, '$emit');
+            GeolocationService.enable().then(function () {
+                BackgroundGeolocation.callbackFun({
+                    latitude: currentLat,
+                    longitude: currentLong,
+                    altitude: 0,
+                    accuracy: 10
+                });
+                GeolocationService.startRecording(null, true).then(function (val) {
+                    expect(val).toEqual(expectedValue);
+                    expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
+                    expect(MapService.createUserPolyline).toHaveBeenCalledWith([
+                        [currentLat, currentLong, 0]
+                    ]);
+                    done();
+                }).catch(function (err) {
+                    fail("it should resolve promise" + err);
+                });
+            }).catch(function (err) {
+                fail("it should resolve promise" + err);
+            });
+
+            $httpBackend.flush();
+        })
+
+        it('recordingState.isActive && new position is send=> it should update polyline with new position', function (done) {
+            var expectedValue = {
+                isActive: true,
+                isPaused: false
+            };
+            spyOn($rootScope, '$emit');
+            GeolocationService.enable().then(function () {
+                GeolocationService.startRecording(null, true).then(function (val) {
+                    expect(val).toEqual(expectedValue);
+                    expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
+                    expect(MapService.createUserPolyline).toHaveBeenCalledWith([]);
+                    BackgroundGeolocation.callbackFun({
+                        latitude: currentLat,
+                        longitude: currentLong,
+                        altitude: 0,
+                        accuracy: 10
+                    });
+                    expect(MapService.updateUserPolyline).toHaveBeenCalledWith([currentLat, currentLong, 0]);
+                    done();
+                }).catch(function (err) {
+                    fail("it should resolve promise" + err);
+                });
+            }).catch(function (err) {
+                fail("it should resolve promise" + err);
+            });
+
+            $httpBackend.flush();
+        });
+
+        afterEach(function () {
+            $httpBackend.verifyNoOutstandingExpectation();
+            $httpBackend.verifyNoOutstandingRequest();
+        });
+
+    })
 
     afterEach(function () {
         $httpBackend.verifyNoOutstandingExpectation();
