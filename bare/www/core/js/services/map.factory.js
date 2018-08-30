@@ -1595,9 +1595,13 @@ angular.module('webmapp')
 
             initializeLayers();
 
-            if (trackRecordingEnabled && localStorage.$wm_userTracks) {
-                var uTracks = JSON.parse(localStorage.$wm_userTracks);
-                initializeUserTracksLayer(uTracks);
+            if (trackRecordingEnabled) {
+                getItemFromLocalStorage("$wm_userTracks").then(function (data) {
+                    var userTracks = JSON.parse(data.data);
+                    initializeUserTracksLayer(userTracks);
+                }).catch(function (err) {
+                    console.warn(err);
+                });
             }
 
             return map;
@@ -2603,6 +2607,9 @@ angular.module('webmapp')
 
         setTimeout(function () {
             mapService.adjust();
+            // var s = localStorage.$wm_userTracks;
+
+            // setItemInLocalStorage("$wm_userTracks", s);
         }, 3600);
 
         return mapService;
