@@ -1442,8 +1442,6 @@ angular.module('webmapp')
                 return map;
             }
 
-            initializeLanguages();
-
             if (typeof localStorage.$wm_mhildConf === 'undefined') {
                 pagePromise = initializePages();
             }

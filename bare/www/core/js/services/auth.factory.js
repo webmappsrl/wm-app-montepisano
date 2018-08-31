@@ -31,7 +31,7 @@ angular.module('webmapp')
                     }
                 })
                 .catch(function (err) {
-                    console.error(err)
+                    console.warn(err)
                     isLoggedIn = false;
                 });
         };
