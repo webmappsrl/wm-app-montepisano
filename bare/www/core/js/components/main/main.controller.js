@@ -699,6 +699,7 @@ angular.module('webmapp')
                 vm.isWelcomePage = currentState === 'app.main.welcome';
                 vm.isSearchPage = currentState === 'app.main.search';
                 vm.isMapPage = currentState === 'app.main.map';
+                vm.isInMap = currentState === 'app.main.map';
                 vm.isMapModeInSearch = false;
                 vm.hasShadow = false;
                 vm.extendShadow = false;

@@ -60,7 +60,7 @@ angular.module('webmapp')
                 }
             }
 
-            if (config.INCLUDE) {
+            if (config.INCLUDE && !config.MAIN) {
                 var errors = 0;
                 warnings = 0;
 
