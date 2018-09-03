@@ -37,9 +37,10 @@ angular.module('webmapp')
         var gpsActive = false,
             isAndroid = window.cordova && window.cordova.platformId === "ios" ? false : true;
 
-        var constants = {
+        const constants = {
+            currentSpeedTimeWindow: 10000, // Time window of positions to calculate currentSpeed with
             geolocationTimeoutTime: 60000,
-            maxAngleDifference: 10,
+            maxAngleDifference: 10, // Max angle difference allowed if using device vertically
             outOfTrackToastDelay: 10000,
             outOfTrackDistance: (CONFIG.NAVIGATION && CONFIG.NAVIGATION.trackBoundsDistance) ?
                 CONFIG.NAVIGATION.trackBoundsDistance : (
@@ -76,7 +77,7 @@ angular.module('webmapp')
 
         //Contains all the variables needed when recording stats
         var recordingState = {
-            currentSpeedExpireTimeout: null,
+            currentSpeedPositions: [],
             currentTrack: null,
             firstPositionSet: false,
             isActive: false,
@@ -109,7 +110,7 @@ angular.module('webmapp')
                 }
             },
             reset: function () {
-                recordingState.currentSpeedExpireTimeout = null;
+                recordingState.currentSpeedPositions = [];
                 recordingState.firstPositionSet = false;
                 recordingState.isActive = false;
                 recordingState.isPaused = false;
@@ -518,16 +519,6 @@ angular.module('webmapp')
         function updateNavigationValues(lat, long) {
             if (state.lastPosition && state.lastPosition.lat && state.lastPosition.long) {
                 recordingState.stats.distance += Utils.distanceInMeters(lat, long, state.lastPosition.lat, state.lastPosition.long);
-                recordingState.stats.averageSpeed = (recordingState.stats.distance / recordingState.stats.time.getTime()) * 3600;
-                recordingState.stats.currentSpeed = Utils.distanceInMeters(lat, long, state.lastPosition.lat, state.lastPosition.long) / (Date.now() - state.lastPosition.timestamp) * 3600;
-                if (recordingState.currentSpeedExpireTimeout) {
-                    clearTimeout(recordingState.currentSpeedExpireTimeout);
-                    recordingState.currentSpeedExpireTimeout = null;
-                }
-                recordingState.currentSpeedExpireTimeout = setTimeout(function () {
-                    recordingState.stats.currentSpeed = 0;
-                    recordingState.currentSpeedExpireTimeout = null;
-                }, 5000);
 
                 if (state.appState === BackgroundGeolocation.BACKGROUND) {
                     // UPDATE NOTIFICATION VALUES
@@ -596,7 +587,6 @@ angular.module('webmapp')
         };
 
         console.warn("TODO: complete function positionCallback for realTimeTracking")
-
         function positionCallback(position) {
             console.log(position);
             BackgroundGeolocation.startTask(function (taskKey) {
@@ -700,6 +690,13 @@ angular.module('webmapp')
                         if (trackRecordingEnabled && recordingState.isRecordingPolyline) {
                             MapService.updateUserPolyline([lat, long, altitude]);
                         }
+
+                        recordingState.currentSpeedPositions.push({
+                            lat: lat,
+                            long: long,
+                            altitude: altitude,
+                            timestamp: position.time ? position.time : Date.now()
+                        });
 
                         if (recordingState.firstPositionSet) {
                             updateNavigationValues(lat, long);
@@ -1360,12 +1357,39 @@ angular.module('webmapp')
             var defer = $q.defer();
             if (recordingState.isActive) {
                 recordingState.stats.averageSpeed = (recordingState.stats.distance / recordingState.stats.time.getTime()) * 3600;
+
+                while (recordingState.currentSpeedPositions &&
+                    recordingState.currentSpeedPositions[0] &&
+                    recordingState.currentSpeedPositions[0].timestamp < Date.now() - constants.currentSpeedTimeWindow) {
+                    delete recordingState.currentSpeedPositions[0];
+                    recordingState.currentSpeedPositions.shift(-1);
+                }
+
+                if (recordingState.currentSpeedPositions && recordingState.currentSpeedPositions.length > 1) {
+                    console.log(recordingState.currentSpeedPositions);
+                    var time = Date.now() - recordingState.currentSpeedPositions[0].timestamp,
+                        distance = 0;
+
+                    for (var i = 1; i < recordingState.currentSpeedPositions.length; i++) {
+                        distance += Utils.distanceInMeters(
+                            recordingState.currentSpeedPositions[i - 1].lat, recordingState.currentSpeedPositions[i - 1].long,
+                            recordingState.currentSpeedPositions[i].lat, recordingState.currentSpeedPositions[i].long
+                        );
+                    }
+
+                    recordingState.stats.currentSpeed = (distance / time) * 3600;
+                }
+                else {
+                    recordingState.stats.currentSpeed = 0;
+                }
+
                 var currentStats = {
                     time: recordingState.stats.time.getTime(),
                     distance: recordingState.stats.distance,
                     averageSpeed: recordingState.stats.averageSpeed,
                     currentSpeed: recordingState.stats.currentSpeed
-                }
+                };
+
                 defer.resolve(currentStats);
             } else {
                 defer.reject(false);

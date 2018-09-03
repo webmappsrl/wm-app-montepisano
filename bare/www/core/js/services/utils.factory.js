@@ -145,7 +145,7 @@ angular.module('webmapp')
                 window.open(url, '_blank');
             } else {
                 // Open in external browser
-                window.open(url, '_system', 'location=yes');    
+                window.open(url, '_system', 'location=yes');
             }
 
         };
@@ -172,7 +172,7 @@ angular.module('webmapp')
             form.method = "POST";
             form.action = url;
             form.style.display = "none";
-        
+
             for (var key in data) {
                 var input = document.createElement("input");
                 input.type = "hidden";
@@ -180,7 +180,7 @@ angular.module('webmapp')
                 input.value = data[key];
                 form.appendChild(input);
             }
-        
+
             document.body.appendChild(form);
             form.submit();
             document.body.removeChild(form);
@@ -212,7 +212,6 @@ angular.module('webmapp')
         };
 
         utils.trimHtml = function (html, options) {
-
             options = options || {};
 
             var limit = options.limit || 100,
@@ -238,7 +237,6 @@ angular.module('webmapp')
                 more = false;
 
             for (var i = 0; i < arr.length; i++) {
-
                 row = arr[i];
                 // count multiple spaces as one character
                 rowCut = row.replace(/[ ]+/g, ' ');
@@ -248,11 +246,9 @@ angular.module('webmapp')
                 }
 
                 if (row[0] !== '<') {
-
                     if (sum >= limit) {
                         row = '';
                     } else if ((sum + rowCut.length) >= limit) {
-
                         cut = limit - sum;
 
                         if (row[cut - 1] === ' ') {
@@ -263,7 +259,6 @@ angular.module('webmapp')
                                 }
                             }
                         } else {
-
                             add = row.substring(cut).split('').indexOf(' ');
 
                             // break on halh of word
@@ -290,17 +285,14 @@ angular.module('webmapp')
                 } else if (!preserveTags) {
                     row = '';
                 } else if (sum >= limit) {
-
                     tagMatch = row.match(/[a-zA-Z]+/);
                     tagName = tagMatch ? tagMatch[0] : '';
 
                     if (tagName) {
                         if (row.substring(0, 2) !== '</') {
-
                             tagStack.push(tagName);
                             row = '';
                         } else {
-
                             while (tagStack[tagStack.length - 1] !== tagName && tagStack.length) {
                                 tagStack.pop();
                             }
