@@ -426,5 +426,9 @@ angular.module('webmapp')
             };
         };
 
+        utils.cubicAnimation = function (frame) {
+            return frame < 0.5 ? (4 * Math.pow(frame, 3)) : ((frame - 1) * (2 * frame - 2) * (2 * frame - 2) + 1);
+        };
+
         return utils;
     });

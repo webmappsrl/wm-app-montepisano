@@ -238,7 +238,6 @@ angular.module('webmapp')
             registeredEvents.push(
                 $rootScope.$on('recordingState-changed', function (e, value) {
                     if (value.isActive == false && MapService.getUserPolyline() !== null && MapService.getUserPolyline().getLatLngs().length >= 2) {
-                        console.log(MapService.getUserPolyline());
                         saveModalScope.vm.title = "";
                         saveModalScope.vm.description = "";
                         saveModalScope.vm.operation = "salva";
@@ -704,6 +703,13 @@ angular.module('webmapp')
                 vm.hasShadow = false;
                 vm.extendShadow = false;
                 vm.detail = false;
+
+                if (vm.isInMap) {
+                    vm.hideDeactiveCentralPointer = CONFIG.OPTIONS.hideDeactiveCentralPointer;
+                }
+                else {
+                    vm.hideDeactiveCentralPointer = true;
+                }
 
                 if (!$rootScope.first) {
                     $rootScope.first = true;

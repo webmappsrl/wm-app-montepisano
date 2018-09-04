@@ -78,23 +78,34 @@ angular.module('webmapp')
         var activatedPopup = null,
             highlightedTrack = null,
             mapIsRotating = false,
-            currentBearing = 0;
+            currentBearing = 0,
+            bearingAnimation = {
+                startBearing: null,
+                endBearing: null,
+                interval: null,
+                startTime: null,
+                duration: 100
+            };
 
         var controlLocate = null;
         var circleLocation = {
             position: null,
-            accuracy: null
+            accuracy: null,
+            icon: "locationIcon"
         };
         var locationIcon = L.icon({
             iconUrl: 'core/images/location-icon.png',
-
+            iconSize: [40, 40],
+            iconAnchor: [20, 20],
+        });
+        var locationIconArrow = L.icon({
+            iconUrl: 'core/images/location-icon-arrow.png',
             iconSize: [40, 40],
             iconAnchor: [20, 20],
         });
 
         var arrowIcon = L.icon({
             iconUrl: 'core/images/arrow-icon.png',
-
             iconSize: [10, 14],
             iconAnchor: [5, 7],
         });
@@ -1913,18 +1924,20 @@ angular.module('webmapp')
                 CONFIG.MAP.maxZoom);
         };
 
-        mapService.drawAccuracy = function (accuracy) {
-            if (circleLocation && circleLocation.accuracy) {
-                circleLocation.accuracy.setRadius(accuracy);
-            }
-        };
-
         mapService.drawPosition = function (position) {
-            if (circleLocation.position === null && circleLocation.accuracy === null) {
+            var newLatLng = new L.LatLng(position.latitude, position.longitude);
+
+            if (!circleLocation.position) {
+                circleLocation.icon = "locationIcon";
                 circleLocation.position = L.marker([position.latitude, position.longitude], {
                     icon: locationIcon
                 }).addTo(map);
+            }
+            else {
+                circleLocation.position.setLatLng(newLatLng);
+            }
 
+            if (!circleLocation.accuracy && position.accuracy > 10) {
                 circleLocation.accuracy = L.circle([position.latitude, position.longitude], {
                     weight: 1,
                     color: '#3E82F7',
@@ -1932,11 +1945,57 @@ angular.module('webmapp')
                     fillOpacity: 0.2,
                     radius: position.accuracy
                 }).addTo(map);
-            } else {
-                var newLatLng = new L.LatLng(position.latitude, position.longitude);
-                circleLocation.position.setLatLng(newLatLng);
+            }
+            else if (circleLocation.accuracy && position.accuracy > 10) {
                 circleLocation.accuracy.setLatLng(newLatLng);
                 circleLocation.accuracy.setRadius(position.accuracy);
+            }
+            else if (circleLocation.accuracy && position.accuracy <= 10) {
+                try {
+                    map.removeLayer(circleLocation.accuracy);
+                }
+                catch (e) {
+                    console.warn("Removing accuracy", e);
+                }
+                circleLocation.accuracy = null;
+            }
+        };
+
+        mapService.drawAccuracy = function (accuracy) {
+            if (circleLocation && !circleLocation.accuracy && accuracy > 10) {
+                var latLng = circleLocation.position.getLatLng();
+                circleLocation.accuracy = L.circle(latLng, {
+                    weight: 1,
+                    color: '#3E82F7',
+                    fillColor: '#3E82F7',
+                    fillOpacity: 0.2,
+                    radius: accuracy
+                }).addTo(map);
+            }
+            else if (circleLocation && circleLocation.accuracy && position.accuracy > 10) {
+                circleLocation.accuracy.setRadius(position.accuracy);
+            }
+            else if (circleLocation && circleLocation.accuracy && position.accuracy <= 10) {
+                try {
+                    map.removeLayer(circleLocation.accuracy);
+                }
+                catch (e) {
+                    console.warn("Removing accuracy", e);
+                }
+                circleLocation.accuracy = null;
+            }
+        };
+
+        mapService.togglePositionIcon = function (icon) {
+            if (icon !== circleLocation.icon) {
+                if (circleLocation.icon === "locationIcon") {
+                    circleLocation.icon = "locationIconArrow";
+                    circleLocation.position.setIcon(locationIconArrow);
+                }
+                else {
+                    circleLocation.icon = "locationIcon";
+                    circleLocation.position.setIcon(locationIcon);
+                }
             }
         };
 
@@ -2211,9 +2270,52 @@ angular.module('webmapp')
         };
 
         mapService.setBearing = function (n) {
-            currentBearing = n;
-            map && map.setBearing(n);
-        };
+            if (map) {
+                currentBearing = n;
+                map.setBearing(n);
+            }
+        }
+
+        mapService.animateBearing = function (goal, duration) {
+            if (map) {
+                bearingAnimation.startTime = Date.now();
+                currentBearing %= 360;
+                goal %= 360;
+                if (currentBearing - goal > 180) {
+                    goal += 360;
+                }
+                else if (goal - currentBearing > 180) {
+                    goal -= 360;
+                }
+                bearingAnimation.endBearing = goal;
+                bearingAnimation.startBearing = currentBearing;
+                bearingAnimation.duration = duration;
+
+                if (!bearingAnimation.interval) {
+                    bearingAnimation.interval = setInterval(function () {
+                        var currentFrame = (Date.now() - bearingAnimation.startTime) / bearingAnimation.duration;
+
+                        if (currentFrame >= 1) {
+                            map.setBearing(bearingAnimation.endBearing);
+                            clearInterval(bearingAnimation.interval);
+                            if (bearingAnimation.endBearing < 0) {
+                                bearingAnimation.endBearing %= 360;
+                            }
+                            currentBearing = bearingAnimation.endBearing;
+                            bearingAnimation.interval = null;
+                            bearingAnimation.startTime = null;
+                            bearingAnimation.startBearing = null;
+                            bearingAnimation.endBearing = null;
+                            bearingAnimation.duration = 100;
+                        } else {
+                            currentFrame = Utils.cubicAnimation(currentFrame);
+                            currentBearing = bearingAnimation.startBearing + ((bearingAnimation.endBearing - bearingAnimation.startBearing) * currentFrame);
+                            map.setBearing(currentBearing);
+                        }
+                    }, 10);
+                }
+            }
+        }
 
         mapService.setZoom = function (n) {
             map && map.setZoom(n);
@@ -2262,18 +2364,6 @@ angular.module('webmapp')
                 if (map.tap) map.tap.enable();
                 document.getElementById('map').style.cursor = 'grab';
                 interactionsDisabled = false;
-            }
-        };
-
-        mapService.startControlLocate = function () {
-            if (controlLocate !== null) {
-                controlLocate.start();
-            }
-        };
-
-        mapService.stopControlLocate = function () {
-            if (controlLocate !== null) {
-                controlLocate.stop();
             }
         };
 

@@ -57,8 +57,9 @@
             <i class="icon wm-icon-arrow-shrink"></i>
         </a>
 
-        <i class="icon wm-icon-ios7-plus-empty map-center" ng-if="!vm.hideDeactiveCentralPointer || vm.followActive" ng-style="{
-                'color': vm.followActive ? vm.colors.global.centralPointerActive : '#000000',
+        <i class="icon wm-icon-ios7-plus-empty map-center" ng-if="!vm.hideDeactiveCentralPointer && !vm.geolocationState.isFollowing"
+            ng-style="{
+                'color': vm.geolocationState.isFollowing ? '' : '#000000',
                 'opacity': 0.4
             }"></i>
 
