@@ -354,26 +354,27 @@ angular.module('webmapp')
              * error.code === 3 => position timed out
              */
             console.error(error);
-            switch (error.code) {
+            switch (+error.code) {
                 case 1:
                     geolocationService.disable();
                     geolocationService.enable();
                     break;
-                case 2, 3:
-                    if (error.code === 2) {
-                        console.warn("Geolocation unavailable");
-                    } else {
-                        console.warn("Geolocation timed out");
-                    }
-
+                case 3:
+                    console.warn("Geolocation timed out");
                     BackgroundGeolocation.stop();
                     BackgroundGeolocation.start();
                     break;
-                default:
+                case 2: default:
+                    console.warn("Geolocation unavailable");
                     $ionicPopup.alert({
                         title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Si è verificato un errore durante la geolocalizzazione")
+                        template: $translate.instant("Si è verificato un errore durante la geolocalizzazione") + '<br>code: ' + error.code + '<br>message: ' + error.message
                     });
+
+                    if (recordingState.isActive) {
+                        geolocationService.stopRecording();
+                    }
+                    geolocationService.disable();
                     break;
             }
         };
@@ -1317,7 +1318,6 @@ angular.module('webmapp')
                 isActive: recordingState.isActive,
                 isPaused: recordingState.isPaused
             });
-
 
             return defer.promise;
         };
