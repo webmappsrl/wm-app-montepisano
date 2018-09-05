@@ -5,6 +5,7 @@ angular.module('webmapp')
         $scope,
         $rootScope,
         $sce,
+        $cordovaSocialSharing,
         $ionicPopup,
         $ionicModal,
         $ionicSlideBoxDelegate,
@@ -160,14 +161,22 @@ angular.module('webmapp')
                     saveModalScope.vm.errorMessage = "Compila tutti i campi richiesti";
                     saveModalScope.vm.inputError = true;
                 } else {
-                    MapService.editUserTrack(saveModalScope.vm.featureId, title, description);
-                    saveModal.hide();
-                    MapService.getFeatureById(saveModalScope.vm.featureId, "I miei percorsi").then(buildDetail, function () {
-                        console.log("No such feature");
+                    MapService.editUserTrack(saveModalScope.vm.featureId, title, description).then(function () {
+                        MapService.getFeatureById(saveModalScope.vm.featureId, "I miei percorsi").then(function (feature) {
+                            buildDetail(feature);
+                            Utils.forceDigest();
+                        }, function () {
+                            console.log("No such feature");
+                            Utils.goBack();
+                        });
+
+                    }).catch(function (err) {
+                        console.log("Impossible to save");
                         Utils.goBack();
                     });
-                }
 
+                    saveModal.hide();
+                }
             }
 
             vm.deleteTrack = function () {
@@ -187,6 +196,23 @@ angular.module('webmapp')
                 }
             }
 
+            vm.shareTrack = function () {
+                MapService.getUserTrackGeoJSON(params.id).then(
+                    function (data) {
+                        $cordovaSocialSharing
+                            .share(
+                                data,
+                                "traccia geojson")
+                            .then(function (result) {
+                                // Success!
+                            }, function (err) {
+                                console.err(err);
+                            });
+                    }).catch(function (err) {
+                    console.log(err);
+                });
+            }
+
             vm.editTrack = function () {
                 saveModalScope.vm.title = "";
                 saveModalScope.vm.description = "";
@@ -201,6 +227,7 @@ angular.module('webmapp')
                     saveModalScope.vm.operation = "modifica";
                     saveModalScope.vm.featureId = feature.properties.id;
                     saveModal.show();
+                    console.log(feature);
                 }).catch(function (err) {
                     console.log("No feature with such id", err);
                 })
@@ -315,8 +342,8 @@ angular.module('webmapp')
 
                 vm.chiama = function (number) {
                     window.plugins.CallNumber.callNumber(function () {
-                        console.log('successo');
-                    },
+                            console.log('successo');
+                        },
                         function () {
                             console.error('error');
                         }, number);
@@ -362,8 +389,8 @@ angular.module('webmapp')
                                     vm.stages[this.s].pois.push(data);
                                     extras.push(data);
                                 }, {
-                                        s: s
-                                    }));
+                                    s: s
+                                }));
                         }
                     }
                 }
@@ -615,7 +642,6 @@ angular.module('webmapp')
 
         vm.openRelatedUrlPopup = function () {
             vm.relatedUrlPopupOpened = !vm.relatedUrlPopupOpened;
-
             Utils.forceDigest();
         }
 

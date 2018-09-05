@@ -839,7 +839,9 @@ angular.module('webmapp')
                         db.put({
                             _id: url,
                             data: data
-                        }).then(function () { defer.resolve("si"); }).catch(function () {
+                        }).then(function () {
+                            defer.resolve("si");
+                        }).catch(function () {
                             defer.resolve("no");
                             console.log(url + " page not updated");
                         });
@@ -868,8 +870,7 @@ angular.module('webmapp')
                         promises.push(requestPage(pages[i], i));
                     }
                 }
-            }
-            else {
+            } else {
                 pagesReady = true;
             }
 
@@ -1138,11 +1139,9 @@ angular.module('webmapp')
                 }
 
 
-                areaMapById[e.data.id] = angular.extend({},
-                    {
-                        properties: e.data
-                    },
-                    {
+                areaMapById[e.data.id] = angular.extend({}, {
+                    properties: e.data
+                }, {
                         parent: {
                             label: this.baseMapLabel,
                             mapping: this.baseMapMapping
@@ -1932,8 +1931,7 @@ angular.module('webmapp')
                 circleLocation.position = L.marker([position.latitude, position.longitude], {
                     icon: locationIcon
                 }).addTo(map);
-            }
-            else {
+            } else {
                 circleLocation.position.setLatLng(newLatLng);
             }
 
@@ -1945,16 +1943,13 @@ angular.module('webmapp')
                     fillOpacity: 0.2,
                     radius: position.accuracy
                 }).addTo(map);
-            }
-            else if (circleLocation.accuracy && position.accuracy > 10) {
+            } else if (circleLocation.accuracy && position.accuracy > 10) {
                 circleLocation.accuracy.setLatLng(newLatLng);
                 circleLocation.accuracy.setRadius(position.accuracy);
-            }
-            else if (circleLocation.accuracy && position.accuracy <= 10) {
+            } else if (circleLocation.accuracy && position.accuracy <= 10) {
                 try {
                     map.removeLayer(circleLocation.accuracy);
-                }
-                catch (e) {
+                } catch (e) {
                     console.warn("Removing accuracy", e);
                 }
                 circleLocation.accuracy = null;
@@ -1978,8 +1973,7 @@ angular.module('webmapp')
             else if (circleLocation && circleLocation.accuracy && accuracy <= 10) {
                 try {
                     map.removeLayer(circleLocation.accuracy);
-                }
-                catch (e) {
+                } catch (e) {
                     console.warn("Removing accuracy", e);
                 }
                 circleLocation.accuracy = null;
@@ -1991,8 +1985,7 @@ angular.module('webmapp')
                 if (circleLocation.icon === "locationIcon") {
                     circleLocation.icon = "locationIconArrow";
                     circleLocation.position.setIcon(locationIconArrow);
-                }
-                else {
+                } else {
                     circleLocation.icon = "locationIcon";
                     circleLocation.position.setIcon(locationIcon);
                 }
@@ -2283,8 +2276,7 @@ angular.module('webmapp')
                 goal %= 360;
                 if (currentBearing - goal > 180) {
                     goal += 360;
-                }
-                else if (goal - currentBearing > 180) {
+                } else if (goal - currentBearing > 180) {
                     goal -= 360;
                 }
                 bearingAnimation.endBearing = goal;
@@ -2446,8 +2438,7 @@ angular.module('webmapp')
                     }
                     obj.latlng.lat = feature.geometry.coordinates[pos][1];
                     obj.latlng.lng = feature.geometry.coordinates[pos][0];
-                }
-                else if (feature.geometry.type === 'MultiLineString') {
+                } else if (feature.geometry.type === 'MultiLineString') {
                     var pos = 0,
                         totalLength = 0;
 
@@ -2462,8 +2453,7 @@ angular.module('webmapp')
                         if (pos >= feature.geometry.coordinates[line].length) {
                             pos -= feature.geometry.coordinates[line].length;
                             line++;
-                        }
-                        else {
+                        } else {
                             break;
                         }
                     }
@@ -2482,7 +2472,10 @@ angular.module('webmapp')
             mapService.getFeatureById(id, parentId.replace(/_/g, ' '))
                 .then(function (feature) {
                     var style = globalLineApplyStyle(feature);
-                    highlightedTrack = L.geoJson(feature.geometry, { color: styleConf.line.highlight.color, weight: style.weight })
+                    highlightedTrack = L.geoJson(feature.geometry, {
+                        color: styleConf.line.highlight.color,
+                        weight: style.weight
+                    })
                         .addTo(map);
                 });
         };
@@ -2608,27 +2601,7 @@ angular.module('webmapp')
 
         mapService.saveUserPolyline = function (info) {
             if (userTrackPolyline) {
-                var geoUserTrack = userTrackPolyline.toGeoJSON();
-                geoUserTrack.properties.name = info.name;
-                geoUserTrack.properties.description = info.description;
-                geoUserTrack.properties.isEditable = true;
-
-                var tmp = [];
-                geoUserTrack.properties.id = 1000000;
-
-                getItemFromLocalStorage("$wm_userTracks").then(function (data) {
-                    var collection = JSON.parse(data.data);
-                    tmp = collection.features;
-
-                    if (tmp.length) {
-                        var lastElement = tmp[tmp.length - 1];
-                        if (lastElement && lastElement.properties && lastElement.properties.id) {
-                            geoUserTrack.properties.id = lastElement.properties.id + 1;
-                        }
-                    }
-                }).catch(function (err) {
-                    console.warn(err);
-                }).finally(function () {
+                var finallyFun = function () {
                     tmp.push(geoUserTrack);
 
                     var featureCollection = {
@@ -2647,6 +2620,30 @@ angular.module('webmapp')
                     });
 
                     initializeUserTracksLayer(featureCollection);
+                };
+
+                var geoUserTrack = userTrackPolyline.toGeoJSON();
+                geoUserTrack.properties.name = info.name;
+                geoUserTrack.properties.description = info.description;
+                geoUserTrack.properties.isEditable = true;
+
+                var tmp = [];
+                geoUserTrack.properties.id = 1000000;
+
+                getItemFromLocalStorage("$wm_userTracks").then(function (data) {
+                    var collection = JSON.parse(data.data);
+                    tmp = collection.features;
+
+                    if (tmp.length) {
+                        var lastElement = tmp[tmp.length - 1];
+                        if (lastElement && lastElement.properties && lastElement.properties.id) {
+                            geoUserTrack.properties.id = lastElement.properties.id + 1;
+                        }
+                    }
+                    finallyFun();
+                }).catch(function (err) {
+                    console.warn(err);
+                    finallyFun();
                 });
             }
         };
@@ -2690,8 +2687,38 @@ angular.module('webmapp')
             });
         };
 
-        mapService.editUserTrack = function (id, name, descr) {
+        mapService.getUserTrackGeoJSON = function (id) {
+            var deferred = $q.defer();
             getItemFromLocalStorage("$wm_userTracks").then(function (data) {
+                var collection = JSON.parse(data.data);
+                if (collection) {
+                    var tmp = collection.features;
+                    var featureGeoJSON;
+                    for (let i = 0; i < tmp.length; i++) {
+                        var feature = tmp[i];
+                        if (feature.properties.id == id) {
+                            featureGeoJSON = feature;
+                            break;
+                        }
+                    }
+
+                    if (featureGeoJSON) {
+                        deferred.resolve(featureGeoJSON);
+                    } else {
+                        deferred.reject(err);
+                    }
+                }
+            }).catch(function (err) {
+                deferred.reject(err);
+                console.warn(err);
+            });
+
+            return deferred.promise;
+
+        }
+
+        mapService.editUserTrack = function (id, name, descr) {
+            return getItemFromLocalStorage("$wm_userTracks").then(function (data) {
                 var collection = JSON.parse(data.data);
                 if (collection) {
                     var tmp = collection.features;
