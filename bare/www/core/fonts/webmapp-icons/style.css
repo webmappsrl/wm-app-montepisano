@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?u7ruhz');
-  src:  url('fonts/webmapp.eot?u7ruhz#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?u7ruhz') format('truetype'),
-    url('fonts/webmapp.woff?u7ruhz') format('woff'),
-    url('fonts/webmapp.svg?u7ruhz#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?ai3qsq');
+  src:  url('fonts/webmapp.eot?ai3qsq#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?ai3qsq') format('truetype'),
+    url('fonts/webmapp.woff?ai3qsq') format('woff'),
+    url('fonts/webmapp.svg?ai3qsq#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,9 +24,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.wm-icon-md-option-menu:before {
-  content: "\ea35";
-}
 .wm-icon-adults-15:before {
   content: "\e9ba";
 }
@@ -418,23 +415,35 @@
 .wm-icon-pf-pets:before {
   content: "\ea2c";
 }
-.wm-icon-outline-check_box_outline_blank:before {
+.wm-icon-boudinage:before {
   content: "\ea30";
 }
-.wm-icon-outline-check_box:before {
+.wm-icon-faults:before {
   content: "\ea31";
 }
-.wm-icon-outline-indeterminate_check_box:before {
+.wm-icon-folds:before {
   content: "\ea32";
 }
-.wm-icon-outline-radio_button_checked:before {
+.wm-icon-foliations:before {
   content: "\ea33";
 }
-.wm-icon-outline-radio_button_unchecked:before {
+.wm-icon-fractures:before {
   content: "\ea34";
 }
-.wm-icon-layers:before {
-  content: "\e924";
+.wm-icon-lineations:before {
+  content: "\ea35";
+}
+.wm-icon-logo_apuane:before {
+  content: "\ea36";
+}
+.wm-icon-metamorphic:before {
+  content: "\ea37";
+}
+.wm-icon-primary_structures:before {
+  content: "\ea38";
+}
+.wm-icon-shear_zones:before {
+  content: "\ea39";
 }
 .wm-icon-aerialway-15:before {
   content: "\e925";
@@ -2800,4 +2809,7 @@
 }
 .wm-icon-funnel-wm:before {
   content: "\e9b9";
+}
+.wm-icon-layers:before {
+  content: "\e924";
 }
