@@ -3,6 +3,7 @@ angular.module('webmapp')
     .controller('PackagesController', function CouponController(
         $ionicLoading,
         $ionicModal,
+        $ionicPlatform,
         $rootScope,
         $scope,
         $state,
@@ -272,15 +273,17 @@ angular.module('webmapp')
             })
         );
 
-        if (Auth.isLoggedIn()) {
-            userData = Auth.getUserData();
-            PackageService.getPackagesIdByUserId();
-        }
-        $ionicLoading.show({
-            template: '<ion-spinner></ion-spinner>'
+        $ionicPlatform.ready(function () {
+            if (Auth.isLoggedIn()) {
+                userData = Auth.getUserData();
+                PackageService.getPackagesIdByUserId();
+            }
+            $ionicLoading.show({
+                template: '<ion-spinner></ion-spinner>'
+            });
+            PackageService.getTaxonomy('activity');
+            PackageService.getRoutes(true);
         });
-        PackageService.getTaxonomy('activity');
-        PackageService.getRoutes(true);
 
         return vm;
     });

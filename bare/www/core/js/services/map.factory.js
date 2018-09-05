@@ -1972,10 +1972,10 @@ angular.module('webmapp')
                     radius: accuracy
                 }).addTo(map);
             }
-            else if (circleLocation && circleLocation.accuracy && position.accuracy > 10) {
-                circleLocation.accuracy.setRadius(position.accuracy);
+            else if (circleLocation && circleLocation.accuracy && accuracy > 10) {
+                circleLocation.accuracy.setRadius(accuracy);
             }
-            else if (circleLocation && circleLocation.accuracy && position.accuracy <= 10) {
+            else if (circleLocation && circleLocation.accuracy && accuracy <= 10) {
                 try {
                     map.removeLayer(circleLocation.accuracy);
                 }
