@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?719n7y');
-  src:  url('fonts/webmapp.eot?719n7y#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?719n7y') format('truetype'),
-    url('fonts/webmapp.woff?719n7y') format('woff'),
-    url('fonts/webmapp.svg?719n7y#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?ai3qsq');
+  src:  url('fonts/webmapp.eot?ai3qsq#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?ai3qsq') format('truetype'),
+    url('fonts/webmapp.woff?ai3qsq') format('woff'),
+    url('fonts/webmapp.svg?ai3qsq#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -414,6 +414,36 @@
 }
 .wm-icon-pf-pets:before {
   content: "\ea2c";
+}
+.wm-icon-boudinage:before {
+  content: "\ea30";
+}
+.wm-icon-faults:before {
+  content: "\ea31";
+}
+.wm-icon-folds:before {
+  content: "\ea32";
+}
+.wm-icon-foliations:before {
+  content: "\ea33";
+}
+.wm-icon-fractures:before {
+  content: "\ea34";
+}
+.wm-icon-lineations:before {
+  content: "\ea35";
+}
+.wm-icon-logo_apuane:before {
+  content: "\ea36";
+}
+.wm-icon-metamorphic:before {
+  content: "\ea37";
+}
+.wm-icon-primary_structures:before {
+  content: "\ea38";
+}
+.wm-icon-shear_zones:before {
+  content: "\ea39";
 }
 .wm-icon-aerialway-15:before {
   content: "\e925";
