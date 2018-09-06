@@ -113,8 +113,8 @@ angular.module('webmapp')
         registeredEvents.push(
             $rootScope.$on('taxonomy-' + taxonomyType + '-updated', function (e, value) {
                 $ionicLoading.hide();
-                vm.taxonomy = value;
-                vm.item = value[id];
+                vm.taxonomy = value.taxonomy;
+                vm.item = value.taxonomy[id];
                 vm.title = vm.item.name;
                 forceDigest();
             })
@@ -123,7 +123,7 @@ angular.module('webmapp')
         registeredEvents.push(
             $rootScope.$on('taxonomy-activity-updated', function (e, value) {
                 $ionicLoading.hide();
-                vm.activities = value;
+                vm.activities = value.taxonomy;
                 for (var i in vm.activities) {
                     if (!vm.activities[i].icon) {
                         vm.activities[i].icon = 'wm-icon-help-circled';
@@ -137,11 +137,11 @@ angular.module('webmapp')
             $rootScope.$on('packages-updated', function (e, value) {
                 $ionicLoading.hide();
                 vm.routes = {};
-                for (var i in value) {
-                    if (value[i][taxonomyType]) {
-                        for (var j in value[i][taxonomyType]) {
-                            if (value[i][taxonomyType][j] === id) {
-                                vm.routes[i] = value[i];
+                for (var i in value.packages) {
+                    if (value.packages[i][taxonomyType]) {
+                        for (var j in value.packages[i][taxonomyType]) {
+                            if (value.packages[i][taxonomyType][j] === id) {
+                                vm.routes[i] = value.packages[i];
                                 vm.routes[i].tracks = vm.tracks[i];
                                 getTracksForPack(i);
                                 break;

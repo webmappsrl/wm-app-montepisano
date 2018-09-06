@@ -446,6 +446,15 @@ ion-slide.slider-slide {
 /* ------------------------------------ *\
    #TABLE
 \* ------------------------------------ */
+.loading-spinner {
+  text-align: center;
+  width: 100%; }
+
+.search-spinner {
+  position: relative;
+  top: 55px;
+  padding-bottom: 10px; }
+
 /*
  * ATTRIBUTION PAGE
  *
@@ -3451,6 +3460,10 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
   border-bottom: 0;
   height: calc(90vw * 35 / 100);
   max-height: 150px; }
+  .modal-inner-content.modal-two-columns.coupons-list.reduced-list:first-child {
+    margin-top: 55px; }
+  .modal-inner-content.modal-two-columns.coupons-list.reduced-list:last-child {
+    margin-bottom: 75px; }
 
 .details-image-reduced {
   position: relative;

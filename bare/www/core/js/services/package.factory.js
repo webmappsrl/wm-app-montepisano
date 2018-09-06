@@ -62,7 +62,7 @@ angular.module('webmapp')
                 userDownloadedPackages = JSON.parse(item.data);
             })
             .catch(function (err) {
-                console.error(err)
+                console.warn("$wm_userDownloadedPackages: " + err.message);
                 userDownloadedPackages = {};
             });
 
@@ -177,6 +177,9 @@ angular.module('webmapp')
         };
 
         var getImage = function (packId) {
+            if (!packages[packId].imgUrl) {
+                packages[packId].imgUrl = "core/images/image-loading.gif";
+            }
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'media/' + packages[packId].featured_media)
                 .then(function (data) {
                     if (packages[packId].imgUrl !== data.media_details.sizes.thumbnail.source_url) {
@@ -199,7 +202,10 @@ angular.module('webmapp')
 
                                 asyncRoutes--;
                                 if (asyncRoutes === 0) {
-                                    $rootScope.$emit('packages-updated', packages);
+                                    $rootScope.$emit('packages-updated', { packages: packages, loading: false });
+                                }
+                                else {
+                                    $rootScope.$emit('packages-updated', { packages: packages, loading: true });
                                 }
                                 localStorage.$wm_packages = JSON.stringify(packages);
                             }
@@ -207,7 +213,10 @@ angular.module('webmapp')
                             function (err) {
                                 asyncRoutes--;
                                 if (asyncRoutes === 0) {
-                                    $rootScope.$emit('packages-updated', packages);
+                                    $rootScope.$emit('packages-updated', { packages: packages, loading: false });
+                                }
+                                else {
+                                    $rootScope.$emit('packages-updated', { packages: packages, loading: true });
                                 }
                                 console.warn("Error downloading image for " + packId)
                             });
@@ -217,7 +226,10 @@ angular.module('webmapp')
                     function (err) {
                         asyncRoutes--;
                         if (asyncRoutes === 0) {
-                            $rootScope.$emit('packages-updated', packages);
+                            $rootScope.$emit('packages-updated', { packages: packages, loading: false });
+                        }
+                        else {
+                            $rootScope.$emit('packages-updated', { packages: packages, loading: true });
                         }
                         console.error('Unable to download images');
                     });
@@ -230,13 +242,19 @@ angular.module('webmapp')
 
                 asyncRouteTranslations--;
                 if (asyncRouteTranslations === 0 && asyncRoutes === 0) {
-                    $rootScope.$emit('packages-updated', packages);
+                    $rootScope.$emit('packages-updated', { packages: packages, loading: false });
+                }
+                else {
+                    $rootScope.$emit('packages-updated', { packages: packages, loading: true });
                 }
                 localStorage.$wm_packages = JSON.stringify(packages);
             }).fail(function () {
                 asyncRouteTranslations--;
                 if (asyncRouteTranslations === 0 && asyncRoutes === 0) {
-                    $rootScope.$emit('packages-updated', packages);
+                    $rootScope.$emit('packages-updated', { packages: packages, loading: false });
+                }
+                else {
+                    $rootScope.$emit('packages-updated', { packages: packages, loading: true });
                 }
                 console.error('Route translation retrive error');
             });
@@ -250,14 +268,17 @@ angular.module('webmapp')
 
                     asyncTranslations--;
                     if (asyncTranslations === 0) {
-                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
-                        localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: false });
                     }
+                    else {
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: true });
+                    }
+                    localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
                 })
                 .catch(function (err) {
                     asyncTranslations--;
                     if (asyncTranslations === 0) {
-                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: false });
                     }
                     console.warn("Unable to update taxonomy. Using local data")
                 });
@@ -274,12 +295,12 @@ angular.module('webmapp')
         packageService.getRoutes = function (updateValues) {
             //Prevent multiple requests
             if (asyncRoutes > 0 || asyncTranslations > 0) {
-                $rootScope.$emit('packages-updated', packages);
+                $rootScope.$emit('packages-updated', { packages: packages, loading: true });
                 return;
             }
 
             if (packages) {
-                $rootScope.$emit('packages-updated', packages);
+                $rootScope.$emit('packages-updated', { packages: packages, loading: updateValues });
             }
 
             if (!updateValues) {
@@ -307,8 +328,12 @@ angular.module('webmapp')
                     }
 
                     if (asyncRoutes === 0) {
-                        $rootScope.$emit('packages-updated', packages);
+                        $rootScope.$emit('packages-updated', { packages: packages, loading: false });
                     }
+                    else {
+                        $rootScope.$emit('packages-updated', { packages: packages, loading: true });
+                    }
+
                     localStorage.$wm_packages = JSON.stringify(packages);
                 },
                     function (err) {
@@ -329,8 +354,9 @@ angular.module('webmapp')
          */
         packageService.getTaxonomy = function (taxonomyType) {
             if (taxonomy[taxonomyType]) {
-                $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: true });
             }
+
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')
                 .then(function (data) {
                     asyncTranslations = 0;
@@ -360,7 +386,10 @@ angular.module('webmapp')
                     }
 
                     if (asyncTranslations === 0) {
-                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: false });
+                    }
+                    else {
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: true });
                     }
                     localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
                 })

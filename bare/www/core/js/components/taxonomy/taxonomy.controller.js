@@ -26,7 +26,7 @@ angular.module('webmapp')
         registeredEvents.push(
             $rootScope.$on('taxonomy-' + $state.params.id + '-updated', function (e, value) {
                 $ionicLoading.hide();
-                vm.taxonomy = value;
+                vm.taxonomy = value.taxonomy;
             })
         );
 

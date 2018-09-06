@@ -1,7 +1,6 @@
 angular.module('webmapp')
 
     .controller('PackagesController', function CouponController(
-        $ionicLoading,
         $ionicModal,
         $ionicPlatform,
         $rootScope,
@@ -41,6 +40,9 @@ angular.module('webmapp')
         vm.userPackagesIdRquested = {};
         vm.skipLoginPublicRoutesDownload = CONFIG.OPTIONS.skipLoginPublicRoutesDownload;
 
+        vm.packagesLoading = true;
+        vm.activitiesLoading = true;
+        vm.firstLoading = true;
         vm.isLoggedIn = Auth.isLoggedIn();
         vm.isBrowser = Utils.isBrowser();
         vm.openInAppBrowser = Utils.openInAppBrowser;
@@ -97,12 +99,6 @@ angular.module('webmapp')
             }
 
             return allActive;
-        };
-
-        var closeLoading = function () {
-            if (vm.packages && vm.activities) {
-                $ionicLoading.hide();
-            }
         };
 
         vm.setFilters = function () {
@@ -165,7 +161,6 @@ angular.module('webmapp')
         };
 
         vm.truncateTitle = function (title) {
-
             var ret = title;
             var maxLength = 44;
             if (ret && ret.length && ret.length > maxLength) {
@@ -206,8 +201,9 @@ angular.module('webmapp')
         };
 
         vm.doRefresh = function (refresher) {
-            console.log('Begin refresh');
-
+            vm.firstLoading = false;
+            vm.packagesLoading = true;
+            vm.activitiesLoading = true;
             PackageService.getRoutes(true);
 
             if (Auth.isLoggedIn()) {
@@ -232,27 +228,33 @@ angular.module('webmapp')
         registeredEvents.push(
             $rootScope.$on('userPackagesId-updated', function (e, value) {
                 vm.userPackagesId = value;
-                setTimeout(function () {
-                    $scope.$broadcast('scroll.refreshComplete');
-                    Utils.forceDigest();
-                }, 2000);
                 Utils.forceDigest();
             })
         );
 
         registeredEvents.push(
             $rootScope.$on('packages-updated', function (e, value) {
-                vm.packages = value;
-                closeLoading();
+                vm.packages = value.packages;
+                vm.packagesLoading = value.loading;
+                if (!vm.packagesLoading && !vm.activitiesLoading) {
+                    $scope.$broadcast('scroll.refreshComplete');
+                    vm.firstLoading = false;
+                }
+
                 Utils.forceDigest();
             })
         );
 
         registeredEvents.push(
             $rootScope.$on('taxonomy-activity-updated', function (e, value) {
-                vm.activities = value;
+                vm.activities = value.taxonomy;
+                vm.activitiesLoading = value.loading;
                 vm.setFilters();
-                closeLoading();
+                if (!vm.packagesLoading && !vm.activitiesLoading) {
+                    $scope.$broadcast('scroll.refreshComplete');
+                    vm.firstLoading = false;
+                }
+
                 Utils.forceDigest();
             })
         );
@@ -278,9 +280,6 @@ angular.module('webmapp')
                 userData = Auth.getUserData();
                 PackageService.getPackagesIdByUserId();
             }
-            $ionicLoading.show({
-                template: '<ion-spinner></ion-spinner>'
-            });
             PackageService.getTaxonomy('activity');
             PackageService.getRoutes(true);
         });

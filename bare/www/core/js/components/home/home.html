@@ -13,6 +13,9 @@
     }">
         <div class="home-title">
             {{vm.title | translate}}
+            <div class="loading-spinner search-spinner" ng-if="vm.activitiesLoading">
+                <ion-spinner></ion-spinner>
+            </div>
         </div>
         <div class="home-content">
             <div ng-repeat="(key, item) in vm.activities" class="home-button width-{{vm.columns}} height-{{vm.rows}}" ng-click="vm.goTo(key)">
