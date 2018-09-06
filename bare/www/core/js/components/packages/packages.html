@@ -22,7 +22,9 @@
         'color': COLORS.global.color,
         'background': COLORS.global.background
     }">
-        <ion-refresher on-refresh="vm.doRefresh(event)">
+        <ion-refresher on-refresh="vm.doRefresh(event)" ng-class="{
+            'under-search-bar': !vm.isBrowser && vm.isAndroid
+        }">
             <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
             </ion-refresher-content>
         </ion-refresher>
@@ -31,7 +33,9 @@
             <ion-spinner></ion-spinner>
         </div>
 
-        <div class="static-content card-content search-bar-content">
+        <div class="static-content card-content search-bar-content" ng-class="{
+            'search-bar-margin-fix': !vm.isBrowser && !vm.isAndroid
+        }">
             <div class="modal-inner-content modal-two-columns coupons-list" ng-if="(vm.isLoggedIn || !vm.useLogin) && vm.type !== 'reduced'"
                 ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search">
                 <div class="packages-title" ng-bind-html="item.title.rendered">

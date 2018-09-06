@@ -320,7 +320,7 @@ angular.module('webmapp')
         $ionicLoading.show({
             template: '<ion-spinner></ion-spinner>'
         });
-        PackageService.getRoutes(true);
+        PackageService.getRoutes();
         PackageService.getDownloadedPackages();
         vm.isAndroid = !window.cordova || window.cordova.platformId === 'ios' ? false : true;
 

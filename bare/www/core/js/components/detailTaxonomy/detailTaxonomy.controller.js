@@ -166,7 +166,7 @@ angular.module('webmapp')
                 $ionicLoading.show({
                     template: '<ion-spinner></ion-spinner>'
                 });
-                PackageService.getRoutes(true);
+                PackageService.getRoutes();
                 PackageService.getDownloadedPackages();
                 PackageService.getTaxonomy('activity');
                 PackageService.getTaxonomy(taxonomyType);

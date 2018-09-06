@@ -50,6 +50,17 @@ angular.module('webmapp')
                 who: null
             };
 
+        var updated = {
+            packages: false,
+            taxonomy: {
+                activity: false,
+                theme: false,
+                when: false,
+                where: false,
+                who: false
+            }
+        };
+
         // To let update from old version
         if (localStorage.$wm_userDownloadedPackages) {
             userDownloadedPackages = JSON.parse(localStorage.$wm_userDownloadedPackages);
@@ -290,21 +301,22 @@ angular.module('webmapp')
          * Emit the updated lists
          * 
          * @event packages-updated
-         * @event categories-updated
          */
-        packageService.getRoutes = function (updateValues) {
+        packageService.getRoutes = function (forceUpdate) {
             //Prevent multiple requests
-            if (asyncRoutes > 0 || asyncTranslations > 0) {
-                $rootScope.$emit('packages-updated', { packages: packages, loading: true });
+            if (forceUpdate) {
+                updated.packages = false;
+            }
+
+            if (updated.packages) {
+                $rootScope.$emit('packages-updated', { packages: packages, loading: asyncRoutes > 0 || asyncTranslations > 0 });
                 return;
             }
+
+            updated.packages = true;
 
             if (packages) {
-                $rootScope.$emit('packages-updated', { packages: packages, loading: updateValues });
-            }
-
-            if (!updateValues) {
-                return;
+                $rootScope.$emit('packages-updated', { packages: packages, loading: true });
             }
 
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/?per_page=100')
@@ -352,7 +364,18 @@ angular.module('webmapp')
          * @param {string} taxonomyType
          *      the type of taxonomy to update
          */
-        packageService.getTaxonomy = function (taxonomyType) {
+        packageService.getTaxonomy = function (taxonomyType, forceUpdate) {
+            if (forceUpdate) {
+                updated.taxonomy[taxonomyType] = false;
+            }
+
+            if (updated.taxonomy[taxonomyType]) {
+                $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: asyncTranslations !== 0 });
+                return;
+            }
+
+            updated.taxonomy[taxonomyType] = true;
+
             if (taxonomy[taxonomyType]) {
                 $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: true });
             }

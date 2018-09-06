@@ -3451,6 +3451,9 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
   overflow: hidden;
   text-align: left; }
 
+.under-search-bar {
+  top: -5px; }
+
 .modal-inner-content.modal-two-columns.coupons-list.reduced-list {
   padding: 0 !important;
   position: relative;
@@ -3462,7 +3465,7 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
   max-height: 150px; }
   .modal-inner-content.modal-two-columns.coupons-list.reduced-list:first-child {
     margin-top: 55px; }
-  .modal-inner-content.modal-two-columns.coupons-list.reduced-list:last-child {
+  .search-bar-margin-fix .modal-inner-content.modal-two-columns.coupons-list.reduced-list:last-child {
     margin-bottom: 75px; }
 
 .details-image-reduced {

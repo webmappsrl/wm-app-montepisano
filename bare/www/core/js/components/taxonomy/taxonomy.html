@@ -11,6 +11,14 @@
     <ion-content style="color: black;" ng-style="{
         'background': COLORS.global.background
     }">
+        <ion-refresher on-refresh="vm.doRefresh(event)">
+            <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+            </ion-refresher-content>
+        </ion-refresher>
+
+        <div class="loading-spinner" ng-if="vm.firstLoading && vm.loading">
+            <ion-spinner></ion-spinner>
+        </div>
         <div ng-repeat="item in vm.taxonomy" class="taxonomy-button" ng-click="vm.goTo(item.id)" ng-style="{
                 'background-color': item.color
             }">

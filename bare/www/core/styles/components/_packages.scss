@@ -45,6 +45,10 @@ ion-content {
   text-align: left;
 }
 
+.under-search-bar {
+  top: -5px;
+}
+
 .modal-inner-content.modal-two-columns.coupons-list.reduced-list {
   padding: 0!important;
   position: relative;
@@ -57,7 +61,7 @@ ion-content {
   &:first-child {
     margin-top: 55px;
   }
-  &:last-child {
+  .search-bar-margin-fix &:last-child {
     margin-bottom: 75px;
   }
 }

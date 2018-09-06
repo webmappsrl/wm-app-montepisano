@@ -45,6 +45,7 @@ angular.module('webmapp')
         vm.firstLoading = true;
         vm.isLoggedIn = Auth.isLoggedIn();
         vm.isBrowser = Utils.isBrowser();
+        vm.isAndroid = !window.cordova || window.cordova.platformId === 'ios' ? false : true;
         vm.openInAppBrowser = Utils.openInAppBrowser;
         vm.pageConf = Model.getPage('Pacchetti');
         vm.search = "";
@@ -281,7 +282,7 @@ angular.module('webmapp')
                 PackageService.getPackagesIdByUserId();
             }
             PackageService.getTaxonomy('activity');
-            PackageService.getRoutes(true);
+            PackageService.getRoutes();
         });
 
         return vm;
