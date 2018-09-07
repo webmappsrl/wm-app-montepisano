@@ -504,6 +504,11 @@ angular.module('webmapp')
                 var features = getFeaturesToDisplay();
                 MapService.addFeaturesToFilteredLayer(features);
             }, 300);
+
+            $rootScope.$on("updatedTracks", function () {
+                var features = getFeaturesToDisplay();
+                MapService.addFeaturesToFilteredLayer(features);
+            });
         }
 
         $scope.$on('$ionicView.afterEnter', function () {

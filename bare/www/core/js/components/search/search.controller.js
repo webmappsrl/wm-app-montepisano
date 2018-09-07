@@ -595,7 +595,11 @@ angular.module('webmapp')
                                 if (layer.properties && layer.properties.taxonomy && layer.properties.taxonomy.webmapp_category) {
                                     var catArray = layer.properties.taxonomy.webmapp_category;
                                     for (var layerId in categoriesContainerMap) {
-                                        if ((catArray.indexOf(parseInt(layerId)) !== -1)) {
+                                        var parsedID = Number(layerId);
+                                        if (!parsedID) {
+                                            parsedID = layerId;
+                                        }
+                                        if ((catArray.indexOf(parsedID) !== -1)) {
                                             categoriesContainerMap[layerId] = true;
                                         }
                                     }

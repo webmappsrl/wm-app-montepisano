@@ -2561,7 +2561,7 @@ angular.module('webmapp')
                 overlayLayersByLabel[userOverlay.label] = linesLayer;
                 mapService.activateLayer(userOverlay.label, true, true, true);
                 activateLineHandlers(linesLayer);
-                if (CONFIG.MAP.filters || !activeFilters['I miei percorsi']) {
+                if (!activeFilters['I miei percorsi']) {
                     mapService.removeLayer('I miei percorsi');
                 } else {
                     //TODO redraw filtered layer
@@ -2677,6 +2677,10 @@ angular.module('webmapp')
                         Model.removeLayerItems({
                             label: "I miei percorsi"
                         });
+
+                        delete featureMapById[id];
+                        delete featuresIdByLayersMap['I miei percorsi'];
+
                         initializeUserTracksLayer(featureCollection);
                     }
                 }
@@ -2748,7 +2752,8 @@ angular.module('webmapp')
                         Model.removeLayerItems({
                             label: "I miei percorsi"
                         });
-
+                        delete featureMapById[id];
+                        delete featuresIdByLayersMap['I miei percorsi'];
                         initializeUserTracksLayer(featureCollection);
                     }
                 }

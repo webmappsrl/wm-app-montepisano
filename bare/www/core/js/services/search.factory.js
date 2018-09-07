@@ -216,6 +216,13 @@ angular.module('webmapp')
                 }
             };
 
+            search.clearEngine = function (layerName) {
+                if (typeof confLayersMap[layerName] !== 'undefined' &&
+                    typeof layersEngine[layerName] !== 'undefined') {
+                    delete layersEngine[layerName];
+                }
+            }
+
             search.addToIndex = function (item, layerName) {
                 if (typeof confLayersMap[layerName] !== 'undefined' &&
                     typeof layersEngine[layerName] === 'undefined') {

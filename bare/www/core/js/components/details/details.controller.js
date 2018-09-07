@@ -232,7 +232,6 @@ angular.module('webmapp')
                     console.log("No feature with such id", err);
                 })
             }
-
         }
 
         var buildDetail = function (data) {
