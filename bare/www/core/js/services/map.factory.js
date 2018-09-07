@@ -1253,6 +1253,7 @@ angular.module('webmapp')
                 }
 
                 dataReady = true;
+                navigator.splashscreen.hide();
 
                 $rootScope.$$phase || $rootScope.$digest();
 
@@ -1265,6 +1266,7 @@ angular.module('webmapp')
                 console.warn('An error has occurred in utfgrid geojson files', err);
                 setTimeout(function () {
                     dataReady = true;
+                    navigator.splashscreen.hide();
                     promiseCallback();
                 }, 2000);
             });
@@ -1457,6 +1459,7 @@ angular.module('webmapp')
             }
 
             if (mapConf.layers.length === 0) {
+                navigator.splashscreen.hide();
                 return;
             }
 
@@ -2626,6 +2629,10 @@ angular.module('webmapp')
                 geoUserTrack.properties.name = info.name;
                 geoUserTrack.properties.description = info.description;
                 geoUserTrack.properties.isEditable = true;
+
+                if (CONFIG.routeID) {
+                    geoUserTrack.properties.routeID = CONFIG.routeID;
+                }
 
                 var tmp = [];
                 geoUserTrack.properties.id = 1000000;
