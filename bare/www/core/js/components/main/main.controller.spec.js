@@ -1,191 +1,257 @@
-xdescribe('MainController', function () {
+describe('MainController', function () {
 
     beforeEach(module('webmapp'));
 
+    var GeolocationService,
+        CONFIG,
+        $cordovaDeviceOrientation,
+        $cordovaGeolocation,
+        $ionicPopup,
+        $ionicModal,
+        $q,
+        $translate,
+        $rootScope,
+        MapService,
+        $httpBackend,
+        Utils,
+        MainController;
+    var currentLat, currentLong;
+    var userPoly = null;
 
-    describe('checkOutOfTrack', function () {
-        var scope, rootScope, vm;
-        var MapService;
-        var CONFIG;
-        var $q;
-        var deferred;
-        var $httpBackend;
+    beforeEach(inject(function (_CONFIG_) {
+        CONFIG = _CONFIG_;
+        if (CONFIG.NAVIGATION) {
+            CONFIG.NAVIGATION.enableTrackRecording = true;
+        } else {
+            CONFIG.NAVIGATION = {
+                enableTrackRecording: true
+            }
+        }
+        currentLat = CONFIG.MAP.bounds.northEast[0] + (CONFIG.MAP.bounds.southWest[0] - CONFIG.MAP.bounds.northEast[0]) / 2;
+        currentLong = CONFIG.MAP.bounds.northEast[1] + (CONFIG.MAP.bounds.southWest[1] - CONFIG.MAP.bounds.northEast[1]) / 2;
+    }));
 
-        beforeEach(inject(function (_$httpBackend_, _$rootScope_, $controller, _$q_, _MapService_) {
-
-            rootScope = _$rootScope_;
-            scope = _$rootScope_.$new();
-            MapService = _MapService_;
-            $httpBackend = _$httpBackend_;
-            vm = $controller('MainController', {
-                $scope: scope
-            });
-
-            $q = _$q_;
-
-        }));
-
-
-        xit('Params defined => should call function successfully', function () {
-            spyOn(window.turf.pointToLineDistance, 'default').and.returnValue(10);
-            vm.stopNavigationUrlParams.parentId = 'Tappe';
-            vm.stopNavigationUrlParams.id = 170;
-            deferred = $q.defer();
-
-            var feature = {
-                type: "Feature",
-                geometry: {
-                    type: "LineString",
-                    coordinates: [
-                        [125.6, 10.1],
-                        [1, 1]
-                    ]
+    beforeEach(function () {
+        window.cordova = {
+            plugins: {
+                diagnostic: {
+                    permissionStatus: {
+                        GRANTED: 1,
+                        GRANTED_WHEN_IN_USE: 2,
+                        DENIED: 3,
+                        DENIED_ALWAYS: 4
+                    },
+                    locationAuthorizationMode: {
+                        ALWAYS: 1
+                    },
+                    status: 1,
+                    locationEnableParam: true,
+                    registerLocationStateChangeHandler: function (value) {
+                        // console.log("MOCK registerLocationStateChangeHandler");
+                        return value
+                    },
+                    isLocationAuthorized: function (callback) {
+                        // console.log("MOCK isLocationAuthorized");
+                        callback()
+                    },
+                    requestLocationAuthorization: function (callback, error, param) {
+                        // console.log("MOCK requestLocationAuthorization");
+                        callback(this.status)
+                    },
+                    isGpsLocationEnabled: function (callback, err, param) {
+                        // console.log("MOCK isGpsLocationEnabled");
+                        callback(this.locationEnableParam);
+                    },
+                    isLocationEnabled: function (callback, err, param) {
+                        // console.log("MOCK isLocationEnabled");
+                        callback(this.locationEnableParam);
+                    },
+                    switchToSettings: function () {},
+                    switchToLocationSettings: function () {}
                 }
-            };
-            spyOn(MapService, 'getFeatureById').and.returnValue(deferred.promise);
-            spyOn(vm, 'handleDistanceToast').and.callThrough();
-            $httpBackend.whenGET(function (url) {
-                return true;
-            }).respond(404, '');
-            vm.checkOutOfTrack({
-                lat: 47.718,
-                long: 10.4
-            });
+            },
+            platformId: 'android'
+        };
 
-            deferred.resolve(feature);
+        window.plugins = {
+            insomnia: {
+                allowSleepAgain: function () {},
+                keepAwake: function () {}
+            }
+        }
+        BackgroundGeolocation = {
+            start: function () {},
+            stop: function () {},
+            removeAllListeners: function () {},
+            events: [],
+            startTask: function (callback) {
+                callback();
+            },
+            endTask: function () {},
+            configure: function (params) {},
+            on: function (event, callback) {
+                if (event === 'location') {
+                    this.callbackFun = callback;
+                }
+            },
+            checkStatus: function (callback) {
+                callback({})
+            },
+            callbackFun: null
+        };
 
-            rootScope.$digest();
-            $httpBackend.flush();
-
-            expect(MapService.getFeatureById).toHaveBeenCalled();
-            expect(window.turf.pointToLineDistance.default).toHaveBeenCalled();
-            expect(vm.handleDistanceToast).toHaveBeenCalledWith(10);
-        });
-
-
-        it('Params undefined => Should not call MapService.getFeature.', function () {
-            spyOn(MapService, 'getFeatureById');
-            expect(vm.stopNavigationUrlParams.parentId).toBe(null);
-            expect(vm.stopNavigationUrlParams.id).toBe(null);
-            expect(MapService.getFeatureById).not.toHaveBeenCalled();
-        });
-
-        xit('MapService.getfeatureById return rejected promise => should go in catch block and print in log', function () {
-            vm.stopNavigationUrlParams.parentId = 'Tappe';
-            vm.stopNavigationUrlParams.id = 170;
-            deferred = $q.defer();
-
-            spyOn(MapService, 'getFeatureById').and.returnValue(deferred.promise);
-            spyOn(vm, 'handleDistanceToast');
-            spyOn(console, 'log');
-            $httpBackend.whenGET(function (url) {
-                return true;
-            }).respond(404, '');
-            vm.checkOutOfTrack({
-                lat: 47.718,
-                long: 10.4
-            });
-            deferred.reject(vm.stopNavigationUrlParams);
-
-            rootScope.$digest();
-
-            $httpBackend.flush();
-
-            expect(MapService.getFeatureById).toHaveBeenCalled();
-            expect(vm.handleDistanceToast).not.toHaveBeenCalled();
-            expect(console.log).toHaveBeenCalledWith(vm.stopNavigationUrlParams);
-        });
     });
 
-    describe('handleDistanceToast', function () {
-        var vm, scope;
-        beforeEach(inject(function (_$rootScope_, $controller) {
-            scope = _$rootScope_.$new();
-            vm = $controller('MainController', {
-                $scope: scope
+    beforeEach(inject(function ($controller, _GeolocationService_, _$cordovaGeolocation_, _$cordovaDeviceOrientation_, _$ionicModal_, _$ionicPopup_, _$q_, _$translate_, _$rootScope_, _MapService_, _$httpBackend_, _Utils_) {
+        GeolocationService = _GeolocationService_;
+        $cordovaDeviceOrientation = _$cordovaDeviceOrientation_;
+        $cordovaGeolocation = _$cordovaGeolocation_;
+        $ionicPopup = _$ionicPopup_;
+        $ionicModal = _$ionicModal_;
+        $q = _$q_;
+        $translate = _$translate_;
+        MapService = _MapService_;
+        $httpBackend = _$httpBackend_;
+        $rootScope = _$rootScope_;
+        Utils = _Utils_;
+
+        var scope = $rootScope.$new();
+        spyOn($ionicModal, 'fromTemplateUrl').and.callFake(function () {
+            var deferred = $q.defer();
+            deferred.resolve({
+                show: function () {},
+                hide: function () {}
             });
-        }));
-
-        xit('Never gone outside track => it should not show toast.', function () {
-            var distance = (vm.maxOutOfTrack) / 1000;
-            // var baseTime = new Date(2013, 9, 23, 0, 0, 0, 0);
-            // vm.inTrackDate = 0;
-            // vm.outOfTrackDate = 0;
-            // jasmine.clock().mockDate(baseTime);
-
-            vm.handleDistanceToast(distance);
-
-            expect(vm.outOfTrackDate).toBe(0);
-            expect(vm.showToast).toBe(false);
+            return deferred.promise;
+        });
+        spyOn(Utils, 'createModal').and.callFake(function () {
+            var deferred = $q.defer();
+            deferred.resolve({
+                show: function () {},
+                hide: function () {},
+                remove: function () {}
+            });
+            return deferred.promise;
+        })
+        MainController = $controller('MainController', {
+            '$scope': scope,
+            $ionicModal: $ionicModal,
+            Utils: Utils
         });
 
-        xit('After toast showed, back inside the track since (toastTime-2) seconds => it should show toast ', function () {
-            var distance = (vm.maxOutOfTrack) / 1000;
+        userPoly = null;
+        $httpBackend.whenGET().respond(404);
+    }));
 
-            var baseTime = new Date(2013, 9, 23, 0, 0, 2, 0);
-            vm.inTrackDate = new Date(2013, 9, 23, 0, 0, 0, 0);
-            vm.showToast = true;
-            jasmine.clock().mockDate(baseTime);
-
-            vm.handleDistanceToast(distance);
-
-            expect(vm.outOfTrackDate).toBe(0);
-            expect(vm.showToast).toBe(true);
+    beforeEach(function () {
+        spyOn(MapService, 'drawPosition').and.callFake(function () {
+            // console.log("MOCK MapService.drawPosition");
+            return true;
+        });
+        spyOn(MapService, 'drawAccuracy').and.callFake(function () {
+            // console.log("MOCK MapService.drawAccuracy");
+            return true;
+        });
+        spyOn(MapService, 'removePosition').and.callFake(function () {
+            // console.log("MOCK MapService.removePosition");
+            return true;
+        });
+        spyOn(MapService, 'centerOnCoords').and.callFake(function () {
+            // console.log("MOCK MapService.centerOnCoords");
+            return true;
+        });
+        spyOn(MapService, 'getZoom').and.callFake(function () {
+            // console.log("MOCK MapService.getZoom");
+            return true;
+        });
+        spyOn(MapService, 'mapIsRotating').and.callFake(function () {
+            // console.log("MOCK MapService.mapIsRotating");
+            return true;
+        });
+        spyOn(MapService, 'triggerNearestPopup').and.callFake(function () {
+            // console.log("MOCK MapService.mapIsRotating");
+            return true;
+        });
+        spyOn($ionicPopup, 'confirm').and.callFake(function () {
+            // console.log("MOCK $ionicPopup.confirm")
+            var defer = $q.defer();
+            defer.resolve(true);
+            return defer.promise;
+        });
+        spyOn($ionicPopup, 'alert').and.callFake(function () {
+            // console.log("MOCK $ionicPopup.alert")
+            var defer = $q.defer();
+            defer.resolve(true);
+            return defer.promise;
         });
 
-        xit('After toast not showed, back inside the track since (toastTime-2) seconds => it should show toast ', function () {
-            var distance = (vm.maxOutOfTrack) / 1000;
-
-            var baseTime = new Date(2013, 9, 23, 0, 0, 2, 0);
-            vm.inTrackDate = new Date(2013, 9, 23, 0, 0, 0, 0);
-            vm.showToast = false;
-            jasmine.clock().mockDate(baseTime);
-
-            vm.handleDistanceToast(distance);
-
-            expect(vm.outOfTrackDate).toBe(0);
-            expect(vm.showToast).toBe(false);
+        spyOn(MapService, 'createUserPolyline').and.callFake(function (value) {
+            if (userPoly == null) {
+                userPoly = {
+                    coords: value,
+                    getLatLngs: function () {
+                        return this.coords;
+                    }
+                }
+            }
+        });
+        spyOn(MapService, 'updateUserPolyline').and.callFake(function (val) {
+            userPoly.coords.push(val);
+        });
+        spyOn(MapService, 'getUserPolyline').and.callFake(function () {
+            return userPoly;
+        });
+        spyOn(MapService, 'removeUserPolyline').and.callFake(function () {
+            userPoly = null;
         });
 
-        xit('Back in from outside track since (timeToast+1) sec => it should not show(hide if open) toast ', function () {
-            var distance = (vm.maxOutOfTrack) / 1000;
-            var baseTime = new Date(2013, 9, 23, 0, 0, (vm.toastTime + 1), 0);
-            vm.inTrackDate = new Date(2013, 9, 23, 0, 0, 0, 0);
-            vm.showToast = true;
-            jasmine.clock().mockDate(baseTime);
 
-            vm.handleDistanceToast(distance);
+    })
 
-            expect(vm.outOfTrackDate).toBe(0);
-            expect(vm.showToast).toBe(false);
+
+    describe('recordingTrack', function () {
+
+        it('submbitData', function () {
+
+            GeolocationService.enable().then(function () {
+
+                MainController.startNavigation(true);
+
+                BackgroundGeolocation.callbackFun({
+                    latitude: currentLat,
+                    longitude: currentLong,
+                    altitude: 0,
+                    accuracy: 10
+                });
+
+                BackgroundGeolocation.callbackFun({
+                    latitude: currentLat + 0.002,
+                    longitude: currentLong,
+                    altitude: 0,
+                    accuracy: 10
+                });
+
+
+
+                MainController.stopNavigation();
+
+
+            })
+
+
+            $httpBackend.flush();
+
+        })
+
+        afterEach(function () {
+            $httpBackend.verifyNoOutstandingExpectation();
+            $httpBackend.verifyNoOutstandingRequest();
         });
 
-        xit('Ouf of track since (vm.toastTime - 1) sec => it should not show toast ', function () {
-            var distance = (vm.maxOutOfTrack + 1) / 1000;
-            var baseTime = new Date(2013, 9, 23, 0, 0, (vm.toastTime - 1), 0);
-            vm.inTrackDate = 0;
-            vm.outOfTrackDate = new Date(2013, 9, 23, 0, 0, 0, 0);;
-            vm.showToast = false;
-            jasmine.clock().mockDate(baseTime);
+    })
 
-            vm.handleDistanceToast(distance);
 
-            expect(vm.inTrackDate).toBe(0);
-            expect(vm.showToast).toBe(false);
-        });
 
-        xit('Ouf of track from (vm.toastTime + 1) sec => it should show toast ', function () {
-            var distance = (vm.maxOutOfTrack + 1) / 1000;
-            var baseTime = new Date(2013, 9, 23, 0, 0, (vm.toastTime + 1), 0);
-            vm.inTrackDate = 0;
-            vm.outOfTrackDate = new Date(2013, 9, 23, 0, 0, 0, 0);;
-            vm.showToast = false;
-            jasmine.clock().mockDate(baseTime);
 
-            vm.handleDistanceToast(distance);
 
-            expect(vm.inTrackDate).toBe(0);
-            expect(vm.showToast).toBe(true);
-        });
-    });
 });

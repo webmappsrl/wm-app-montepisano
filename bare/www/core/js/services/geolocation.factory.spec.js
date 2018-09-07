@@ -15,6 +15,19 @@ describe('Geolocation.Factory', function () {
         Utils;
     var currentLat, currentLong;
 
+    beforeEach(inject(function (_CONFIG_) {
+        CONFIG = _CONFIG_;
+        if (CONFIG.NAVIGATION) {
+            CONFIG.NAVIGATION.enableTrackRecording = true;
+        } else {
+            CONFIG.NAVIGATION = {
+                enableTrackRecording: true
+            }
+        }
+        currentLat = CONFIG.MAP.bounds.northEast[0] + (CONFIG.MAP.bounds.southWest[0] - CONFIG.MAP.bounds.northEast[0]) / 2;
+        currentLong = CONFIG.MAP.bounds.northEast[1] + (CONFIG.MAP.bounds.southWest[1] - CONFIG.MAP.bounds.northEast[1]) / 2;
+    }));
+
     beforeEach(function () {
         window.cordova = {
             plugins: {
@@ -79,7 +92,7 @@ describe('Geolocation.Factory', function () {
 
     });
 
-    beforeEach(inject(function (_GeolocationService_, _$cordovaGeolocation_, _$cordovaDeviceOrientation_, _$ionicPopup_, _$q_, _$translate_, _$rootScope_, _MapService_, _$httpBackend_, _CONFIG_, _Utils_) {
+    beforeEach(inject(function (_GeolocationService_, _$cordovaGeolocation_, _$cordovaDeviceOrientation_, _$ionicPopup_, _$q_, _$translate_, _$rootScope_, _MapService_, _$httpBackend_, _Utils_) {
         GeolocationService = _GeolocationService_;
         $cordovaDeviceOrientation = _$cordovaDeviceOrientation_;
         $cordovaGeolocation = _$cordovaGeolocation_;
@@ -89,17 +102,7 @@ describe('Geolocation.Factory', function () {
         MapService = _MapService_;
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
-        CONFIG = _CONFIG_;
         Utils = _Utils_;
-        currentLat = CONFIG.MAP.bounds.northEast[0] + (CONFIG.MAP.bounds.southWest[0] - CONFIG.MAP.bounds.northEast[0]) / 2;
-        currentLong = CONFIG.MAP.bounds.northEast[1] + (CONFIG.MAP.bounds.southWest[1] - CONFIG.MAP.bounds.northEast[1]) / 2;
-        if (CONFIG.NAVIGATION) {
-            CONFIG.NAVIGATION.enableTrackRecording = true;
-        } else {
-            CONFIG.NAVIGATION = {
-                enableTrackRecording: true
-            }
-        }
         $httpBackend.whenGET().respond(404);
     }));
 
@@ -145,10 +148,10 @@ describe('Geolocation.Factory', function () {
             return defer.promise;
         });
 
-        spyOn(MapService, 'createUserPolyline');
-        spyOn(MapService, 'updateUserPolyline');
-        spyOn(MapService, 'getUserPolyline');
-        spyOn(MapService, 'removeUserPolyline');
+        spyOn(MapService, 'createUserPolyline').and.callFake(function () {});
+        spyOn(MapService, 'updateUserPolyline').and.callFake(function () {});
+        spyOn(MapService, 'getUserPolyline').and.callFake(function () {});
+        spyOn(MapService, 'removeUserPolyline').and.callFake(function () {});
         // spyOn($cordovaDeviceOrientation, 'watchHeading').and.callFake(function() {
         //     console.log("MOCK $cordovaDeviceOrientation.watchHeading")
         //     var defer = $q.defer();
@@ -161,7 +164,7 @@ describe('Geolocation.Factory', function () {
 
     describe('enable', function () {
 
-        xit('cordova is not defined => it should reject promise', function (done) {
+        it('cordova is not defined => it should reject promise', function (done) {
             window.cordova = undefined;
             expect(GeolocationService.isActive()).toBe(false);
             GeolocationService.enable().then(function () {
