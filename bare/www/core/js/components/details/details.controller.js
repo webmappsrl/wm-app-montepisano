@@ -213,8 +213,8 @@ angular.module('webmapp')
                                 console.err(err);
                             });
                     }).catch(function (err) {
-                    console.log(err);
-                });
+                        console.log(err);
+                    });
             };
 
             vm.exportTrack = function () {
@@ -389,8 +389,8 @@ angular.module('webmapp')
 
                 vm.chiama = function (number) {
                     window.plugins.CallNumber.callNumber(function () {
-                            console.log('successo');
-                        },
+                        console.log('successo');
+                    },
                         function () {
                             console.error('error');
                         }, number);
@@ -436,8 +436,8 @@ angular.module('webmapp')
                                     vm.stages[this.s].pois.push(data);
                                     extras.push(data);
                                 }, {
-                                    s: s
-                                }));
+                                        s: s
+                                    }));
                         }
                     }
                 }
@@ -479,6 +479,16 @@ angular.module('webmapp')
                 }
                 if (vm.feature.email) {
                     vm.relatedUrlLeftValue = vm.relatedUrlLeftValue + 32;
+                }
+
+
+                if (CONFIG.routeID && feature.routeID && CONFIG.routeID !== feature.routeID) {
+                    vm.isEditable = false;
+                    vm.isExportable = true;
+                }
+                else {
+                    vm.isEditable = true;
+                    vm.isExportable = true;
                 }
             }
 
