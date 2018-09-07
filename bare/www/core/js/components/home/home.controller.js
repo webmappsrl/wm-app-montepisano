@@ -29,7 +29,9 @@ angular.module('webmapp')
         registeredEvents.push(
             $rootScope.$on('taxonomy-activity-updated', function (e, value) {
                 vm.activities = value.taxonomy;
-                vm.activitiesLoading = value.loading;
+                if (vm.activitiesLoading !== value.loading) {
+                    vm.activitiesLoading = value.loading;
+                }
                 switch (Object.keys(value.taxonomy).length) {
                     case 1:
                     case 2:

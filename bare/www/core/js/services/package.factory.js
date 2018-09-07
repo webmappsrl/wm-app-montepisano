@@ -483,50 +483,49 @@ angular.module('webmapp')
                 subTitle: $translate.instant('Inserisci il codice del tuo pacchetto di viaggio'),
                 inputType: 'text',
                 inputPlaceholder: $translate.instant('Codice Viaggio')
-            })
-                .then(function (res) {
-                    if (res) {
-                        var data = $.param({
-                            route_id: packId,
-                            user_id: userData.ID,
-                            code: res
-                        });
+            }).then(function (res) {
+                if (res) {
+                    var data = $.param({
+                        route_id: packId,
+                        user_id: userData.ID,
+                        code: res
+                    });
 
-                        var config = {
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-                            }
+                    var config = {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
                         }
-
-                        $ionicLoading.show({
-                            template: '<ion-spinner></ion-spinner>'
-                        });
-
-                        $http.post(
-                            CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
-                            data,
-                            config
-                        )
-                            .success(function (data, status, headers, config) {
-                                $ionicLoading.hide();
-                                ///Update offline data
-                                userPackagesId[packId] = true;
-                                localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
-                            })
-                            .error(function (data, status, header, config) {
-                                $ionicLoading.hide();
-                                if (data.error === "Voucher Expired") {
-                                    $ionicPopup.alert({
-                                        template: $translate.instant("Il codice di viaggio che hai utilizzato è scaduto")
-                                    });
-                                } else {
-                                    $ionicPopup.alert({
-                                        template: $translate.instant("Il codice di viaggio che hai inserito non è valido. Controlla di averlo inserito correttamente e inseriscilo nuovamente.")
-                                    });
-                                }
-                            });
                     }
-                });
+
+                    $ionicLoading.show({
+                        template: '<ion-spinner></ion-spinner>'
+                    });
+
+                    $http.post(
+                        CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
+                        data,
+                        config
+                    )
+                        .success(function (data, status, headers, config) {
+                            $ionicLoading.hide();
+                            ///Update offline data
+                            userPackagesId[packId] = true;
+                            localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
+                        })
+                        .error(function (data, status, header, config) {
+                            $ionicLoading.hide();
+                            if (data.error === "Voucher Expired") {
+                                $ionicPopup.alert({
+                                    template: $translate.instant("Il codice di viaggio che hai utilizzato è scaduto")
+                                });
+                            } else {
+                                $ionicPopup.alert({
+                                    template: $translate.instant("Il codice di viaggio che hai inserito non è valido. Controlla di averlo inserito correttamente e inseriscilo nuovamente.")
+                                });
+                            }
+                        });
+                }
+            });
         };
 
         /**

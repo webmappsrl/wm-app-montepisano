@@ -236,7 +236,10 @@ angular.module('webmapp')
         registeredEvents.push(
             $rootScope.$on('packages-updated', function (e, value) {
                 vm.packages = value.packages;
-                vm.packagesLoading = value.loading;
+                if (vm.packagesLoading !== value.loading) {
+                    vm.packagesLoading = value.loading;
+                }
+
                 if (!vm.packagesLoading && !vm.activitiesLoading) {
                     $scope.$broadcast('scroll.refreshComplete');
                     vm.firstLoading = false;

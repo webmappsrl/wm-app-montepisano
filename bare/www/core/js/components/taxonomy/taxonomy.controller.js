@@ -34,7 +34,9 @@ angular.module('webmapp')
         registeredEvents.push(
             $rootScope.$on('taxonomy-' + $state.params.id + '-updated', function (e, value) {
                 vm.taxonomy = value.taxonomy;
-                vm.loading = value.loading;
+                if (vm.loading !== value.loading) {
+                    vm.loading = value.loading;
+                }
                 if (!vm.loading) {
                     $scope.$broadcast('scroll.refreshComplete');
                     vm.firstLoading = false;

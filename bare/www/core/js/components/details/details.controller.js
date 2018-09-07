@@ -1,20 +1,23 @@
 angular.module('webmapp')
 
     .controller('DetailController', function DetailController(
-        $state,
-        $scope,
+        $cordovaFile,
+        $cordovaSocialSharing,
+        $ionicModal,
+        $ionicPopup,
+        $ionicSlideBoxDelegate,
         $rootScope,
         $sce,
-        $cordovaSocialSharing,
-        $ionicPopup,
-        $ionicModal,
-        $ionicSlideBoxDelegate,
+        $scope,
+        $state,
+        $translate,
+        Auth,
+        CONFIG,
+        Communication,
         MapService,
         Model,
         Offline,
-        Utils,
-        CONFIG,
-        $translate
+        Utils
     ) {
         var vm = {},
             current = $state.current || {},
@@ -52,6 +55,7 @@ angular.module('webmapp')
         vm.isNavigable = false;
         vm.fullDescription = false;
         vm.showAccessibilityButtons = CONFIG.OPTIONS.showAccessibilityButtons;
+        vm.isLoggedIn = Auth.isLoggedIn();
 
         vm.hideSubMenu = true;
 
@@ -166,18 +170,18 @@ angular.module('webmapp')
                             buildDetail(feature);
                             Utils.forceDigest();
                         }, function () {
-                            console.log("No such feature");
+                            console.warn("No such feature");
                             Utils.goBack();
                         });
 
                     }).catch(function (err) {
-                        console.log("Impossible to save");
+                        console.warn("Impossible to save the new feature");
                         Utils.goBack();
                     });
 
                     saveModal.hide();
                 }
-            }
+            };
 
             vm.deleteTrack = function () {
                 if (params.id) {
@@ -194,7 +198,7 @@ angular.module('webmapp')
                         }
                     })
                 }
-            }
+            };
 
             vm.shareTrack = function () {
                 MapService.getUserTrackGeoJSON(params.id).then(
@@ -209,9 +213,54 @@ angular.module('webmapp')
                                 console.err(err);
                             });
                     }).catch(function (err) {
-                    console.log(err);
-                });
-            }
+                        console.log(err);
+                    });
+            };
+
+            vm.exportTrack = function () {
+                if (vm.isLoggedIn) {
+                    var userData = Auth.getUserData();
+
+                    $ionicPopup.confirm({
+                        title: $translate.instant('ATTENZIONE'),
+                        subTitle: $translate.instant('Ti verrà inviata una mail con allegato il file in formato gpx di questo percorso. Vuoi procedere?'),
+                    }).then(function (res) {
+                        if (res) {
+                            MapService.getUserTrackGeoJSON(params.id).then(function (geojson) {
+                                var url = 'https://api.webmapp.it/services/share.php';
+
+                                var app = CONFIG.OPTIONS.title;
+                                if (CONFIG.MAIN) {
+                                    app = CONFIG.MAIN.OPTIONS.title + " - " + app;
+                                }
+
+                                var currentRequest = Communication.callAPI(url, {
+                                    to: userData.user_email,
+                                    firstName: userData.first_name,
+                                    lastName: userData.last_name,
+                                    type: "export",
+                                    geojson: JSON.stringify(geojson),
+                                    app: app
+                                });
+
+                                currentRequest
+                                    .then(function (data) {
+                                        console.log(data)
+                                        return;
+                                    }).catch(function (error) {
+                                        console.warn(error);
+                                        return;
+                                    });
+                            }).catch(function (err) {
+                                console.warn(err);
+                            });
+                        }
+                        else {
+                            vm.exportTrack();
+                        }
+                    });
+                }
+            };
 
             vm.editTrack = function () {
                 saveModalScope.vm.title = "";
@@ -231,8 +280,7 @@ angular.module('webmapp')
                 }).catch(function (err) {
                     console.log("No feature with such id", err);
                 })
-            }
-
+            };
         }
 
         var buildDetail = function (data) {
@@ -342,8 +390,8 @@ angular.module('webmapp')
 
                 vm.chiama = function (number) {
                     window.plugins.CallNumber.callNumber(function () {
-                            console.log('successo');
-                        },
+                        console.log('successo');
+                    },
                         function () {
                             console.error('error');
                         }, number);
@@ -389,8 +437,8 @@ angular.module('webmapp')
                                     vm.stages[this.s].pois.push(data);
                                     extras.push(data);
                                 }, {
-                                    s: s
-                                }));
+                                        s: s
+                                    }));
                         }
                     }
                 }
@@ -726,7 +774,6 @@ angular.module('webmapp')
         };
 
         vm.openAccessibilityModal = function (type) {
-
             modalScope.vm.accessibility = vm.feature.accessibility[type];
             modalAccessibility.show();
         };
