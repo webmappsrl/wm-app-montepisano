@@ -216,7 +216,6 @@ angular.module('webmapp')
             saveModalScope.vm.description = "";
 
             saveModalScope.submitData = function () {
-
                 var title = saveModalScope.vm.title;
                 title = title.trim();
                 var description = saveModalScope.vm.description.trim();

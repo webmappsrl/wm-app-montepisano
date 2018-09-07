@@ -22,16 +22,20 @@
         'color': COLORS.global.color,
         'background': COLORS.global.background
     }">
-        <ion-refresher on-refresh="vm.doRefresh(event)">
+        <ion-refresher on-refresh="vm.doRefresh(event)" ng-class="{
+            'under-search-bar': !vm.isBrowser && vm.isAndroid
+        }">
             <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
             </ion-refresher-content>
         </ion-refresher>
-        <div class="static-content card-content" ng-if="!vm.isLoggedIn">
+
+        <div class="loading-spinner search-spinner" ng-if="vm.firstLoading && (vm.packagesLoading || vm.activitiesLoading)">
+            <ion-spinner></ion-spinner>
         </div>
 
-        <div id="whitespace"></div>
-
-        <div class="static-content card-content">
+        <div class="static-content card-content search-bar-content" ng-class="{
+            'search-bar-margin-fix': !vm.isBrowser && !vm.isAndroid
+        }">
             <div class="modal-inner-content modal-two-columns coupons-list" ng-if="(vm.isLoggedIn || !vm.useLogin) && vm.type !== 'reduced'"
                 ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search">
                 <div class="packages-title" ng-bind-html="item.title.rendered">
@@ -127,7 +131,9 @@
                     </div>
                     <div class="route-languages-reduced" ng-if="vm.isMultilanguage">
                         <span ng-if="item.wpml_current_locale">{{item.wpml_current_locale.substring(0, 2)}} </span>
-                        <span ng-if="item.wpml_translations" ng-repeat="translation in item.wpml_translations"> {{translation.locale.substring(0, 2)}}</span>
+                        <span ng-if="item.wpml_translations" ng-repeat="translation in item.wpml_translations"> {{translation.locale.substring(0,
+                            2)}}
+                        </span>
                     </div>
                 </div>
 

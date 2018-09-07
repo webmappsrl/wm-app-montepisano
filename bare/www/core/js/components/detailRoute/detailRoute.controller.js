@@ -205,7 +205,7 @@ angular.module('webmapp')
 
         registeredEvents.push(
             $rootScope.$on('packages-updated', function (e, value) {
-                routeDetail = value[vm.id];
+                routeDetail = value.packages[vm.id];
 
                 vm.isPublic = routeDetail.wm_route_public;
                 vm.skipLogin = CONFIG.OPTIONS.skipLoginPublicRoutesDownload ? CONFIG.OPTIONS.skipLoginPublicRoutesDownload : false;
@@ -320,7 +320,7 @@ angular.module('webmapp')
         $ionicLoading.show({
             template: '<ion-spinner></ion-spinner>'
         });
-        PackageService.getRoutes(true);
+        PackageService.getRoutes();
         PackageService.getDownloadedPackages();
         vm.isAndroid = !window.cordova || window.cordova.platformId === 'ios' ? false : true;
 

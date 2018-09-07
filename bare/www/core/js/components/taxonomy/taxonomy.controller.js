@@ -18,23 +18,36 @@ angular.module('webmapp')
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
         vm.defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';
         vm.taxonomy = {};
+        vm.loading = true;
+        vm.firstLoading = true;
 
         vm.goTo = function (id) {
             Utils.goTo('taxonomy/' + $state.params.id + '/' + id);
         };
 
+        vm.doRefresh = function (refresher) {
+            vm.firstLoading = false;
+            vm.loading = true;
+            PackageService.getTaxonomy($state.params.id, true);
+        };
+
         registeredEvents.push(
             $rootScope.$on('taxonomy-' + $state.params.id + '-updated', function (e, value) {
-                $ionicLoading.hide();
-                vm.taxonomy = value;
+                vm.taxonomy = value.taxonomy;
+                if (vm.loading !== value.loading) {
+                    vm.loading = value.loading;
+                }
+                if (!vm.loading) {
+                    $scope.$broadcast('scroll.refreshComplete');
+                    vm.firstLoading = false;
+                }
+
+                Utils.forceDigest();
             })
         );
 
         registeredEvents.push(
             $scope.$on('$ionicView.enter', function () {
-                $ionicLoading.show({
-                    template: '<ion-spinner></ion-spinner>'
-                });
                 PackageService.getTaxonomy($state.params.id);
             })
         );

@@ -50,6 +50,17 @@ angular.module('webmapp')
                 who: null
             };
 
+        var updated = {
+            packages: false,
+            taxonomy: {
+                activity: false,
+                theme: false,
+                when: false,
+                where: false,
+                who: false
+            }
+        };
+
         // To let update from old version
         if (localStorage.$wm_userDownloadedPackages) {
             userDownloadedPackages = JSON.parse(localStorage.$wm_userDownloadedPackages);
@@ -62,7 +73,7 @@ angular.module('webmapp')
                 userDownloadedPackages = JSON.parse(item.data);
             })
             .catch(function (err) {
-                console.error(err)
+                console.warn("$wm_userDownloadedPackages: " + err.message);
                 userDownloadedPackages = {};
             });
 
@@ -177,6 +188,9 @@ angular.module('webmapp')
         };
 
         var getImage = function (packId) {
+            if (!packages[packId].imgUrl) {
+                packages[packId].imgUrl = "core/images/image-loading.gif";
+            }
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'media/' + packages[packId].featured_media)
                 .then(function (data) {
                     if (packages[packId].imgUrl !== data.media_details.sizes.thumbnail.source_url) {
@@ -199,7 +213,10 @@ angular.module('webmapp')
 
                                 asyncRoutes--;
                                 if (asyncRoutes === 0) {
-                                    $rootScope.$emit('packages-updated', packages);
+                                    $rootScope.$emit('packages-updated', { packages: packages, loading: false });
+                                }
+                                else {
+                                    $rootScope.$emit('packages-updated', { packages: packages, loading: true });
                                 }
                                 localStorage.$wm_packages = JSON.stringify(packages);
                             }
@@ -207,7 +224,10 @@ angular.module('webmapp')
                             function (err) {
                                 asyncRoutes--;
                                 if (asyncRoutes === 0) {
-                                    $rootScope.$emit('packages-updated', packages);
+                                    $rootScope.$emit('packages-updated', { packages: packages, loading: false });
+                                }
+                                else {
+                                    $rootScope.$emit('packages-updated', { packages: packages, loading: true });
                                 }
                                 console.warn("Error downloading image for " + packId)
                             });
@@ -217,7 +237,10 @@ angular.module('webmapp')
                     function (err) {
                         asyncRoutes--;
                         if (asyncRoutes === 0) {
-                            $rootScope.$emit('packages-updated', packages);
+                            $rootScope.$emit('packages-updated', { packages: packages, loading: false });
+                        }
+                        else {
+                            $rootScope.$emit('packages-updated', { packages: packages, loading: true });
                         }
                         console.error('Unable to download images');
                     });
@@ -230,13 +253,19 @@ angular.module('webmapp')
 
                 asyncRouteTranslations--;
                 if (asyncRouteTranslations === 0 && asyncRoutes === 0) {
-                    $rootScope.$emit('packages-updated', packages);
+                    $rootScope.$emit('packages-updated', { packages: packages, loading: false });
+                }
+                else {
+                    $rootScope.$emit('packages-updated', { packages: packages, loading: true });
                 }
                 localStorage.$wm_packages = JSON.stringify(packages);
             }).fail(function () {
                 asyncRouteTranslations--;
                 if (asyncRouteTranslations === 0 && asyncRoutes === 0) {
-                    $rootScope.$emit('packages-updated', packages);
+                    $rootScope.$emit('packages-updated', { packages: packages, loading: false });
+                }
+                else {
+                    $rootScope.$emit('packages-updated', { packages: packages, loading: true });
                 }
                 console.error('Route translation retrive error');
             });
@@ -250,14 +279,17 @@ angular.module('webmapp')
 
                     asyncTranslations--;
                     if (asyncTranslations === 0) {
-                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
-                        localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: false });
                     }
+                    else {
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: true });
+                    }
+                    localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
                 })
                 .catch(function (err) {
                     asyncTranslations--;
                     if (asyncTranslations === 0) {
-                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: false });
                     }
                     console.warn("Unable to update taxonomy. Using local data")
                 });
@@ -269,21 +301,22 @@ angular.module('webmapp')
          * Emit the updated lists
          * 
          * @event packages-updated
-         * @event categories-updated
          */
-        packageService.getRoutes = function (updateValues) {
+        packageService.getRoutes = function (forceUpdate) {
             //Prevent multiple requests
-            if (asyncRoutes > 0 || asyncTranslations > 0) {
-                $rootScope.$emit('packages-updated', packages);
+            if (forceUpdate) {
+                updated.packages = false;
+            }
+
+            if (updated.packages) {
+                $rootScope.$emit('packages-updated', { packages: packages, loading: asyncRoutes > 0 || asyncTranslations > 0 });
                 return;
             }
+
+            updated.packages = true;
 
             if (packages) {
-                $rootScope.$emit('packages-updated', packages);
-            }
-
-            if (!updateValues) {
-                return;
+                $rootScope.$emit('packages-updated', { packages: packages, loading: true });
             }
 
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/?per_page=100')
@@ -307,8 +340,12 @@ angular.module('webmapp')
                     }
 
                     if (asyncRoutes === 0) {
-                        $rootScope.$emit('packages-updated', packages);
+                        $rootScope.$emit('packages-updated', { packages: packages, loading: false });
                     }
+                    else {
+                        $rootScope.$emit('packages-updated', { packages: packages, loading: true });
+                    }
+
                     localStorage.$wm_packages = JSON.stringify(packages);
                 },
                     function (err) {
@@ -327,10 +364,22 @@ angular.module('webmapp')
          * @param {string} taxonomyType
          *      the type of taxonomy to update
          */
-        packageService.getTaxonomy = function (taxonomyType) {
-            if (taxonomy[taxonomyType]) {
-                $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+        packageService.getTaxonomy = function (taxonomyType, forceUpdate) {
+            if (forceUpdate) {
+                updated.taxonomy[taxonomyType] = false;
             }
+
+            if (updated.taxonomy[taxonomyType]) {
+                $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: asyncTranslations !== 0 });
+                return;
+            }
+
+            updated.taxonomy[taxonomyType] = true;
+
+            if (taxonomy[taxonomyType]) {
+                $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: true });
+            }
+
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')
                 .then(function (data) {
                     asyncTranslations = 0;
@@ -360,7 +409,10 @@ angular.module('webmapp')
                     }
 
                     if (asyncTranslations === 0) {
-                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', taxonomy[taxonomyType]);
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: false });
+                    }
+                    else {
+                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: true });
                     }
                     localStorage.$wm_taxonomy = JSON.stringify(taxonomy);
                 })
@@ -431,50 +483,49 @@ angular.module('webmapp')
                 subTitle: $translate.instant('Inserisci il codice del tuo pacchetto di viaggio'),
                 inputType: 'text',
                 inputPlaceholder: $translate.instant('Codice Viaggio')
-            })
-                .then(function (res) {
-                    if (res) {
-                        var data = $.param({
-                            route_id: packId,
-                            user_id: userData.ID,
-                            code: res
-                        });
+            }).then(function (res) {
+                if (res) {
+                    var data = $.param({
+                        route_id: packId,
+                        user_id: userData.ID,
+                        code: res
+                    });
 
-                        var config = {
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-                            }
+                    var config = {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
                         }
-
-                        $ionicLoading.show({
-                            template: '<ion-spinner></ion-spinner>'
-                        });
-
-                        $http.post(
-                            CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
-                            data,
-                            config
-                        )
-                            .success(function (data, status, headers, config) {
-                                $ionicLoading.hide();
-                                ///Update offline data
-                                userPackagesId[packId] = true;
-                                localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
-                            })
-                            .error(function (data, status, header, config) {
-                                $ionicLoading.hide();
-                                if (data.error === "Voucher Expired") {
-                                    $ionicPopup.alert({
-                                        template: $translate.instant("Il codice di viaggio che hai utilizzato è scaduto")
-                                    });
-                                } else {
-                                    $ionicPopup.alert({
-                                        template: $translate.instant("Il codice di viaggio che hai inserito non è valido. Controlla di averlo inserito correttamente e inseriscilo nuovamente.")
-                                    });
-                                }
-                            });
                     }
-                });
+
+                    $ionicLoading.show({
+                        template: '<ion-spinner></ion-spinner>'
+                    });
+
+                    $http.post(
+                        CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
+                        data,
+                        config
+                    )
+                        .success(function (data, status, headers, config) {
+                            $ionicLoading.hide();
+                            ///Update offline data
+                            userPackagesId[packId] = true;
+                            localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
+                        })
+                        .error(function (data, status, header, config) {
+                            $ionicLoading.hide();
+                            if (data.error === "Voucher Expired") {
+                                $ionicPopup.alert({
+                                    template: $translate.instant("Il codice di viaggio che hai utilizzato è scaduto")
+                                });
+                            } else {
+                                $ionicPopup.alert({
+                                    template: $translate.instant("Il codice di viaggio che hai inserito non è valido. Controlla di averlo inserito correttamente e inseriscilo nuovamente.")
+                                });
+                            }
+                        });
+                }
+            });
         };
 
         /**

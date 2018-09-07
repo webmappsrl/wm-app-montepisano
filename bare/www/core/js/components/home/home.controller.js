@@ -1,7 +1,6 @@
 angular.module('webmapp')
 
     .controller('HomeController', function HomeController(
-        $ionicLoading,
         $rootScope,
         $scope,
         $translate,
@@ -14,6 +13,7 @@ angular.module('webmapp')
         var registeredEvents = [];
 
         vm.activities = {};
+        vm.activitiesLoading = true;
         vm.columns = 1;
         vm.rows = 1;
         vm.title = "Cosa vuoi fare?";
@@ -28,9 +28,11 @@ angular.module('webmapp')
 
         registeredEvents.push(
             $rootScope.$on('taxonomy-activity-updated', function (e, value) {
-                $ionicLoading.hide();
-                vm.activities = value;
-                switch (Object.keys(value).length) {
+                vm.activities = value.taxonomy;
+                if (vm.activitiesLoading !== value.loading) {
+                    vm.activitiesLoading = value.loading;
+                }
+                switch (Object.keys(value.taxonomy).length) {
                     case 1:
                     case 2:
                     case 3:
@@ -53,7 +55,7 @@ angular.module('webmapp')
                         vm.columns = 3;
                         break;
                 }
-                switch (Object.keys(value).length) {
+                switch (Object.keys(value.taxonomy).length) {
                     case 1:
                         vm.rows = 1;
                         break;
@@ -84,9 +86,6 @@ angular.module('webmapp')
 
         registeredEvents.push(
             $scope.$on('$ionicView.enter', function () {
-                $ionicLoading.show({
-                    template: '<ion-spinner></ion-spinner>'
-                });
                 PackageService.getTaxonomy('activity');
             })
         );
