@@ -483,21 +483,7 @@ angular.module('webmapp')
         };
 
         vm.returnToMap = function () {
-            // vm.isNavigable = false;
             vm.toggleMap();
-            return;
-            console.log("return")
-            if ($state.params.parentId) {
-                MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
-                $rootScope.highlightTrack = {
-                    id: $state.params.id,
-                    parentId: $state.params.parentId
-                };
-            }
-            if (trackRecordingEnabled && MapService.getUserPolyline() !== null) {
-                vm.isNavigable = false;
-            }
-            vm.goToMap();
         };
 
         vm.goToMap = function () {

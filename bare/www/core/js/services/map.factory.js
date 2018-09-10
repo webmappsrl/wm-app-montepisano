@@ -1801,7 +1801,7 @@ angular.module('webmapp')
         };
 
         mapService.showEventsLayer = function () {
-            var events = Model.getItemsByContaier('events'),
+            var events = Model.getItemsByContainer('events'),
                 pois = [];
 
             if (map !== null && events) {
@@ -2478,8 +2478,7 @@ angular.module('webmapp')
                     highlightedTrack = L.geoJson(feature.geometry, {
                         color: styleConf.line.highlight.color,
                         weight: style.weight
-                    })
-                        .addTo(map);
+                    }).addTo(map);
                 });
         };
 

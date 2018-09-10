@@ -1,7 +1,6 @@
 angular.module('webmapp')
 
     .controller('DetailController', function DetailController(
-        $cordovaFile,
         $cordovaSocialSharing,
         $ionicModal,
         $ionicPopup,
@@ -55,6 +54,7 @@ angular.module('webmapp')
         vm.isNavigable = false;
         vm.fullDescription = false;
         vm.showAccessibilityButtons = CONFIG.OPTIONS.showAccessibilityButtons;
+        vm.useLogin = CONFIG.LOGIN && CONFIG.LOGIN.useLogin;
         vm.isLoggedIn = Auth.isLoggedIn();
 
         vm.hideSubMenu = true;
@@ -67,6 +67,14 @@ angular.module('webmapp')
                     vm.isNavigable = false;
                     $rootScope.isNavigable = false;
                     $rootScope.$emit('item-navigable', vm.isNavigable);
+                }
+
+                if ($state.params.parentId) {
+                    MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
+                    $rootScope.highlightTrack = {
+                        id: $state.params.id,
+                        parentId: $state.params.parentId
+                    };
                 }
 
                 Utils.goBack();

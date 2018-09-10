@@ -102,7 +102,25 @@ angular.module('webmapp')
         };
 
         offline.downloadMap = function (vm) {
-            var arrayLink = [offline.options.urlMbtiles, offline.options.urlImages];
+            var arrayLink = [];
+
+            if (typeof offline.options.urlMbtiles === "string") {
+                arrayLink.push(offline.options.urlMbtiles);
+            }
+            else {
+                for (var i in offline.options.urlMbtiles) {
+                    arrayLink.push(offline.options.urlMbtiles[i]);
+                }
+            }
+
+            if (typeof offline.options.urlImages === "string") {
+                arrayLink.push(offline.options.urlImages);
+            }
+            else {
+                for (var i in offline.options.urlImages) {
+                    arrayLink.push(offline.options.urlImages[i]);
+                }
+            }
 
             var vmReset = function () {
                 vm.downloadProgress = 0;

@@ -44,26 +44,7 @@ angular.module('webmapp')
 
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
 
-        vm.packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : null;
         vm.id = CONFIG.routeID;
-        var currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
-
-        if (vm.packages && vm.id) {
-            for (var i in vm.packages) {
-                if (vm.packages[i].id === vm.id) {
-                    if (vm.packages[i].wpml_translations) {
-                        for (var pos in vm.packages[i].wpml_translations) {
-                            if (vm.packages[i].wpml_translations[pos].locale.substring(0, 2) === currentLang) {
-                                vm.mapTitle = vm.packages[i].wpml_translations[pos].post_title;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-
         vm.mapLayers = CONFIG.MAP.layers;
 
         if (vm.mapLayers.length > 1) {
