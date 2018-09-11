@@ -136,7 +136,7 @@ angular.module('webmapp')
             }
 
             // console.log(config);
-            if (config.NAVIGATION && config.NAVIGATION.enableTrackRecording) {
+            if (window.cordova && config.NAVIGATION && config.NAVIGATION.enableTrackRecording) {
                 config.OVERLAY_LAYERS.push({
                     id: "userTracks",
                     label: "I miei percorsi",

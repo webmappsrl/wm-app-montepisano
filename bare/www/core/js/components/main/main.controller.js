@@ -35,7 +35,7 @@ angular.module('webmapp')
 
         var registeredEvents = [];
 
-        var trackRecordingEnabled = CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+        var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
         vm.geolocationState = {
             isActive: false,

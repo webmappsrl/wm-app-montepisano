@@ -29,7 +29,7 @@ angular.module('webmapp')
 
             return allActive;
         };
-        var trackRecordingEnabled = CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+        var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
         MapService.showAllLayers();
         MapService.activateUtfGrid();

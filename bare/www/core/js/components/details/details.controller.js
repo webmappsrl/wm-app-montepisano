@@ -38,7 +38,7 @@ angular.module('webmapp')
 
         var extras = [];
 
-        var trackRecordingEnabled = CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+        var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
         modalScope.vm = {};
         modalScope.parent = vm;

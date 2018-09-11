@@ -28,7 +28,7 @@ angular.module('webmapp')
             offlineConf = CONFIG.OFFLINE,
             currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
 
-        var trackRecordingEnabled = CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+        var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
         if (!Utils.isBrowser()) {
             generalConf.useAlmostOver = true;
