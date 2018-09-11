@@ -521,6 +521,11 @@ angular.module('webmapp')
         function positionCallback(position) {
             console.log(position);
             BackgroundGeolocation.startTask(function (taskKey) {
+                if (!geolocationState.isActive) {
+                    BackgroundGeolocation.endTask(taskKey);
+                    return;
+                }
+
                 if (state.isOutsideBoundingBox) {
                     if (geolocationService.isActive()) {
                         geolocationService.disable();

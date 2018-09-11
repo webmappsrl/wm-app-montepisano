@@ -269,6 +269,8 @@ angular.module('webmapp')
                 return;
             }
 
+            var currentPosition = GeolocationService.getCurrentPosition();
+
             var title = CONFIG.MAIN ? CONFIG.MAIN.OPTIONS.title + ' ' + CONFIG.OPTIONS.title : CONFIG.OPTIONS.title;
             title = Utils.decodeHtml(title);
 
@@ -284,10 +286,10 @@ angular.module('webmapp')
 
             if (CONFIG.OPTIONS.sharePositionCoords ||
                 (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.sharePositionCoords && CONFIG.OPTIONS.sharePositionCoords !== false)) {
-                if (prevLatLong && prevLatLong.lat && prevLatLong.long) {
+                if (currentPosition && currentPosition.lat && currentPosition.long) {
                     vm.sharePosition({
-                        lat: prevLatLong.lat,
-                        long: prevLatLong.long
+                        lat: currentPosition.lat,
+                        long: currentPosition.long
                     }, message, title);
                 }
                 else {
@@ -298,7 +300,7 @@ angular.module('webmapp')
                 }
             }
             else {
-                if (prevLatLong && (distanceInMeters(prevLatLong.lat, prevLatLong.long, vm.centerCoords.lat, vm.centerCoords.lng) > 40)) {
+                if (currentPosition && (distanceInMeters(currentPosition.lat, currentPosition.long, vm.centerCoords.lat, vm.centerCoords.lng) > 40)) {
                     $ionicPopup.confirm({
                         title: $translate.instant("ATTENZIONE"),
                         template: $translate.instant("La posizione che stai per condividere non è la tua posizione attuale ma la posizione segnata dalla croce nel centro della mappa. Per condividere la tua posizione attuale assicurati di avere il centro della mappa vicino alla tua posizione. Vuoi condividere comunque queste coordinate?")

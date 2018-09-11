@@ -47,7 +47,7 @@ angular.module('webmapp')
                         if (sublayers[macroCategoryId].items && sublayers[macroCategoryId].items.length) {
                             var layers = sublayers[macroCategoryId].items;
                             for (var layerId in layers) {
-                                var label = confLayersMapById[layers[layerId]].label;
+                                var label = confLayersMapById[layers[layerId]] && confLayersMapById[layers[layerId]].label;
                                 if (activeLayersMap[label]) {
                                     var info = {
                                         label: label,
@@ -55,7 +55,10 @@ angular.module('webmapp')
                                     };
                                     layers[layerId] = info;
                                     layerFilterMap[label] = info;
-                                };
+                                }
+                                else {
+                                    console.warn("Filter id " + layerId + " missing in OVERLAY_LAYERS");
+                                }
                             }
                         } else {
                             delete sublayers[macroCategoryId];

@@ -1253,7 +1253,7 @@ angular.module('webmapp')
                 }
 
                 dataReady = true;
-                navigator.splashscreen.hide();
+                navigator.splashscreen && navigator.splashscreen.hide();
 
                 $rootScope.$$phase || $rootScope.$digest();
 
@@ -1266,7 +1266,7 @@ angular.module('webmapp')
                 console.warn('An error has occurred in utfgrid geojson files', err);
                 setTimeout(function () {
                     dataReady = true;
-                    navigator.splashscreen.hide();
+                    navigator.splashscreen && navigator.splashscreen.hide();
                     promiseCallback();
                 }, 2000);
             });
@@ -1459,7 +1459,7 @@ angular.module('webmapp')
             }
 
             if (mapConf.layers.length === 0) {
-                navigator.splashscreen.hide();
+                navigator.splashscreen && navigator.splashscreen.hide();
                 return;
             }
 
@@ -1571,34 +1571,6 @@ angular.module('webmapp')
                 new L.Hash(map);
             }
 
-            if (!mapConf.hideLocationControl) {
-                controlLocate = L.control.locate({
-                    remainActive: false,
-                    position: 'topleft',
-                    setView: false,
-                    drawCircle: false,
-                    circleStyle: {
-                        opacity: 0,
-                        fillOpacity: 0
-                    },
-                    markerStyle: {
-                        opacity: 0,
-                        fillOpacity: 0
-                    },
-                    locateOptions: {
-                        enableHighAccuracy: true,
-                        watch: false,
-                        setView: false
-                    },
-                    onLocationOutsideMapBounds: function () {
-                        // $ionicPopup.alert({
-                        //     template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa!"),
-                        //     title: $translate.instant("ATTENZIONE")
-                        // });
-                    }
-                }).addTo(map);
-            }
-
             markerClusters = new L.MarkerClusterGroup({
                 spiderfyOnMaxZoom: mapConf.markerClustersOptions.spiderfyOnMaxZoom,
                 showCoverageOnHover: mapConf.markerClustersOptions.showCoverageOnHover,
@@ -1651,7 +1623,7 @@ angular.module('webmapp')
                     var userTracks = JSON.parse(data.data);
                     initializeUserTracksLayer(userTracks);
                 }).catch(function (err) {
-                    console.warn(err);
+                    console.warn("$wm_userTracks: " + err.message);
                 });
             }
 
