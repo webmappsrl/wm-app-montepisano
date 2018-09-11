@@ -14,7 +14,7 @@
     <!-- CSS -->
     <link href="core/fonts/webmapp-icons/style.css" rel="stylesheet">
 
-    <link href="core/lib/leaflet_plugin/leaflet-control-locate/L.Control.Locate.mapbox.css" rel="stylesheet">
+    <!-- <link href="core/lib/leaflet_plugin/leaflet-control-locate/L.Control.Locate.mapbox.css" rel="stylesheet"> -->
     <link href="core/lib/leaflet_plugin/leaflet-markercluster/MarkerCluster.css" rel="stylesheet">
     <link href="core/lib/leaflet_plugin/leaflet-markercluster/MarkerCluster.Default.css" rel="stylesheet">
 
@@ -46,6 +46,7 @@
     <script src="core/lib/jsSHA/src/sha1.js"></script>
     <script src="core/lib/porter-stemmer/porterStemmer1980.min.js"></script>
     <script src="core/lib/js-search/dist/js-search.min.js"></script>
+    <script src="core/lib/ng-country-select/dist/ng-country-select.js"></script>
     <script src="core/lib/igTruncate/igTruncate.js"></script>
     <script src="core/lib/JsBarcode/dist/JsBarcode.all.min.js"></script>
     <script src="core/lib/angular-md5/angular-md5.js"></script>
@@ -58,14 +59,13 @@
     <script src="core/lib/leaflet_plugin/leaflet.groupedlayercontrol/leaflet.groupedlayercontrol.min.js"></script>
     <script src="core/lib/leaflet_plugin/leaflet.utfgrid.js"></script>
     <script src="core/lib/leaflet_plugin/leaflet.vector-markers/leaflet-vector-markers.min.js"></script>
-    <script src="core/lib/leaflet_plugin/leaflet-control-locate/L.Control.Locate.min.js"></script>
+    <!-- <script src="core/lib/leaflet_plugin/leaflet-control-locate/L.Control.Locate.min.js"></script> -->
     <script src="core/lib/leaflet_plugin/leaflet-markercluster/leaflet.markercluster.js"></script>
     <script src="core/lib/leaflet_plugin/leaflet.kkn.min.js"></script>
     <script src="core/lib/leaflet_plugin/leaflet.geometryutil.js"></script>
     <script src="core/lib/leaflet_plugin/leaflet.almostover.js"></script>
     <script src="core/lib/leaflet_plugin/L.UTFGrid-min.js"></script>
     <script src="core/lib/leaflet_plugin/leaflet-polylinedecorator/dist/leaflet.polylineDecorator.js"></script>
-
     <script src="core/lib/leaflet_plugin/leaflet-knn/leaflet-knn.js"></script>
 
     <script src="core/lib/leaflet_plugin/sql.js"></script>
@@ -133,8 +133,6 @@
     <script src="core/js/components/welcome/welcome.controller.js"></script>
 
     <script src="core/js/components/popupOpener/popupOpener.controller.js"></script>
-
-    <script src="core/lib/ng-country-select/dist/ng-country-select.js"></script>
 </head>
 
 <body ng-app="webmapp">
@@ -152,7 +150,8 @@
                 transform: translate(-50%, -50%);
                 margin-top: -60px;
                 margin-left: -60px;
-            " class="loader">
+            "
+        class="loader">
     </div>
     <ion-nav-view></ion-nav-view>
     <!-- <ion-nav-view style="top: 15px"></ion-nav-view> -->
