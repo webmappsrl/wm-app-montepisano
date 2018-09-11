@@ -1253,7 +1253,9 @@ angular.module('webmapp')
                 }
 
                 dataReady = true;
-                navigator.splashscreen && navigator.splashscreen.hide();
+                if (navigator.splashscreen) {
+                    navigator.splashscreen.hide();
+                }
 
                 $rootScope.$$phase || $rootScope.$digest();
 
@@ -1266,7 +1268,9 @@ angular.module('webmapp')
                 console.warn('An error has occurred in utfgrid geojson files', err);
                 setTimeout(function () {
                     dataReady = true;
-                    navigator.splashscreen && navigator.splashscreen.hide();
+                    if (navigator.splashscreen) {
+                        navigator.splashscreen.hide();
+                    }
                     promiseCallback();
                 }, 2000);
             });
@@ -1459,7 +1463,9 @@ angular.module('webmapp')
             }
 
             if (mapConf.layers.length === 0) {
-                navigator.splashscreen && navigator.splashscreen.hide();
+                if (navigator.splashscreen) {
+                    navigator.splashscreen.hide();
+                }
                 return;
             }
 
