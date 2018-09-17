@@ -1192,7 +1192,9 @@ angular.module('webmapp')
             } else {
                 overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, function (data) {
                     utfgridCallback(data, currentOverlay, tileLayer);
-                    setItemInLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, data);
+                    if (!Utils.isBrowser()) {
+                        setItemInLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, JSON.stringify(data));
+                    }
                     delete overlayLayersQueueByLabel[currentOverlay.label];
                 }).fail(function () {
                     defer.reject();
