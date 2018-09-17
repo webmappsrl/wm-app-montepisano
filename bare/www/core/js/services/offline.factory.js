@@ -295,13 +295,13 @@ angular.module('webmapp')
                 }
 
             } else if (localStorage.offlineMode) {
-                // var index = url.indexOf('uploads');
-                // if (index !== -1) {
-                //     var substr = url.substring(index + 8, url.length);
+                var index = url.indexOf('uploads');
+                if (index !== -1) {
+                    var substr = url.substring(index + 8, url.length);
 
-                offlineUrl = url.replace(/\//g, '_');
-                offlineUrl = cordova.file.dataDirectory + 'map/images/' + offlineUrl;
-                // }
+                    offlineUrl = url.replace(/\//g, '_');
+                    offlineUrl = cordova.file.dataDirectory + 'map/images/' + offlineUrl;
+                }
 
             } else {
                 offlineUrl = url;
