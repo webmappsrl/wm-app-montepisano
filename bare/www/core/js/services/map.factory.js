@@ -1050,7 +1050,11 @@ angular.module('webmapp')
                     } else if (currentOverlay.type === 'poi_geojson') {
                         poiCallback(data, currentOverlay);
                     }
-                    setItemInLocalStorage(geojsonUrl, JSON.stringify(data));
+                    if (!Utils.isBrowser()) {
+                        $.getJSON(geojsonUrl, function (data) {
+                            setItemInLocalStorage(geojsonUrl, data);
+                        });
+                    }
                     delete overlayLayersQueueByLabel[currentOverlay.label];
                 }).fail(function () {
                     overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(geojsonUrl, function (data) {
@@ -1059,7 +1063,9 @@ angular.module('webmapp')
                         } else if (currentOverlay.type === 'poi_geojson') {
                             poiCallback(data, currentOverlay);
                         }
-                        setItemInLocalStorage(geojsonUrl, JSON.stringify(data));
+                        if (!Utils.isBrowser()) {
+                            setItemInLocalStorage(geojsonUrl, JSON.stringify(data));
+                        }
                         delete overlayLayersQueueByLabel[currentOverlay.label];
                     }).fail(function (err) {
                         console.warn('An error has occurred downloading geojson \'' + currentOverlay.geojsonUrl + '\'. This file could miss in the server or the app is offline, and will be skipped', err);
