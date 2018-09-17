@@ -66,20 +66,19 @@ angular.module('webmapp')
         };
 
         offline.toggleMode = function () {
-            offline.resetCurrentMapAndGoBack();
             if (_state.active) {
                 _defaultLayer.setUrl(_onlineUrl);
                 _state.active = false;
                 _defaultLayer.options.tms = _tmsBase;
-
             } else {
                 if (typeof offline.options.tms !== 'undefined') {
                     //_defaultLayer.options.tms = offline.options.tms;
                 }
-                _defaultLayer.setUrl(_offlineUrl);
+                _defaultLayer.setUrl(offline.getOfflineUrl());
                 _state.active = true;
             }
             localStorage.setItem('offlineMode', _state.active);
+            offline.resetCurrentMapAndGoBack();
             resetMapView();
         };
 
@@ -122,8 +121,19 @@ angular.module('webmapp')
                 }
             }
 
+            if (typeof offline.options.urlUTFGridTiles === "string") {
+                arrayLink.push(offline.options.urlUTFGridTiles);
+            }
+            else {
+                for (var i in offline.options.urlUTFGridTiles) {
+                    arrayLink.push(offline.options.urlUTFGridTiles[i]);
+                }
+            }
+
+            console.log(arrayLink);
+
             var vmReset = function () {
-                vm.downloadProgress = 0;
+                vm.installationProgress = 0;
                 vm.unzipProgress = 0;
                 vm.downloadInProgress = false;
                 vm.unzipInProgress = false;
@@ -152,7 +162,24 @@ angular.module('webmapp')
             var destDirectory = cordova.file.dataDirectory + 'map/',
                 transferPromises = [],
                 promises = [],
-                aborted = false;
+                aborted = false,
+                download = 0,
+                unzip = 0,
+                currentDownload = {},
+                currentUnzip = {};
+
+            arrayLink.forEach(function (item) {
+                var filename = item.split('/').pop(),
+                    format = filename.split('.').pop();
+
+                download++;
+                currentDownload[filename] = 0;
+
+                if (format === 'zip') {
+                    unzip++;
+                    currentUnzip[filename] = 0;
+                }
+            });
 
             arrayLink.forEach(function (item) {
                 var filename = item.split('/').pop(),
@@ -171,14 +198,11 @@ angular.module('webmapp')
                         if (aborted) {
                             return;
                         }
-                        vm.unzipInProgress = true;
                         if (format === 'zip') {
                             vm.unzipInProgress = true;
-                            currentDefer.resolve();
                             $cordovaZip.unzip(targetPath, destDirectory)
                                 .then(function () {
-                                    // console.log('finito l\'unzip');
-                                    vm.unzipInProgress = false;
+                                    console.log('unzip ' + filename);
                                     $cordovaFile.removeFile(destDirectory, filename);
                                     currentDefer.resolve();
                                 }, function () {
@@ -186,17 +210,24 @@ angular.module('webmapp')
                                     // console.error('Si è verificato un errore nell\'unzip delle immagini');
                                 },
                                     function (progress) {
-                                        //console.log(progress);
+                                        // vm.installationProgress = Math.min(Math.max(Math.round((progress.loaded / progress.total) * 100), vm.installationProgress), 99);
+                                        currentUnzip[filename] = ((progress.loaded / progress.total) * 100) / (unzip + download);
+                                        var totalProgress = 0;
+                                        for (var i in currentDownload) {
+                                            totalProgress += currentDownload[i];
+                                        }
+                                        for (var i in currentUnzip) {
+                                            totalProgress += currentUnzip[i];
+                                        }
+                                        vm.installationProgress = Math.min(Math.round(totalProgress), 99);
                                         vm.unzipInProgress = true;
                                     });
                         } else if (format === 'mbtiles') {
-                            currentDefer.resolve();
                             _offlineUrl = destDirectory + filename;
-                            // console.log(_offlineUrl);
                             localStorage.setItem('offlineUrl', _offlineUrl);
+                            currentDefer.resolve();
                         }
-                        // console.log(result);
-                        // console.log('scaricato ' + format);
+                        console.log('scaricato ' + filename);
                     },
                         function (error) {
                             currentDefer.reject('Si è verificato un errore nel download, riprova ');
@@ -215,10 +246,20 @@ angular.module('webmapp')
                             if (aborted) {
                                 return;
                             }
-                            //console.log(progress);
-                            if (format === 'mbtiles') {
-                                vm.downloadProgress = Math.min(Math.max(Math.round((progress.loaded / progress.total) * 100), vm.downloadProgress), 99);
+                            currentDownload[filename] = ((progress.loaded / progress.total) * 100) / (download + unzip);
+                            // console.log(progress);
+                            // console.log(currentDownload);
+                            // if (format === 'mbtiles') {
+                            // vm.installationProgress = Math.min(Math.max(Math.round((progress.loaded / progress.total) * 100), vm.installationProgress), 99);
+                            // }
+                            var totalProgress = 0;
+                            for (var i in currentDownload) {
+                                totalProgress += currentDownload[i];
                             }
+                            for (var i in currentUnzip) {
+                                totalProgress += currentUnzip[i];
+                            }
+                            vm.installationProgress = Math.min(Math.round(totalProgress), 99);
                             vm.downloadInProgress = true;
                         });
             });
@@ -232,7 +273,6 @@ angular.module('webmapp')
             });
 
             return $q.all(promises);
-
         };
 
         offline.getOfflineBasePath = function () {
@@ -255,13 +295,13 @@ angular.module('webmapp')
                 }
 
             } else if (localStorage.offlineMode) {
-                var index = url.indexOf('uploads');
-                if (index !== -1) {
-                    var substr = url.substring(index + 8, url.length);
+                // var index = url.indexOf('uploads');
+                // if (index !== -1) {
+                //     var substr = url.substring(index + 8, url.length);
 
-                    offlineUrl = substr.replace(/\//g, '_');
-                    offlineUrl = cordova.file.dataDirectory + 'map/images/' + offlineUrl;
-                }
+                offlineUrl = url.replace(/\//g, '_');
+                offlineUrl = cordova.file.dataDirectory + 'map/images/' + offlineUrl;
+                // }
 
             } else {
                 offlineUrl = url;
@@ -283,7 +323,7 @@ angular.module('webmapp')
         offline.downloadUserMap = function (id, arrayLink, vm) {
             var vmReset = function () {
                 vm.downloadInProgress = false;
-                vm.downloadProgress = 0;
+                vm.installationProgress = 0;
                 //vm.unzipInProgress = false;
             };
 
@@ -362,7 +402,7 @@ angular.module('webmapp')
 
                             // TODO: test a better flow
                             // if (format !== 'mbtiles') {
-                            //     vm.downloadProgress++;
+                            //     vm.installationProgress++;
                             // }
                         }
                     },
@@ -377,7 +417,7 @@ angular.module('webmapp')
                             }
 
                             if (format === 'mbtiles') {
-                                vm.downloadProgress = Math.min(Math.max(Math.round((progress.loaded / progress.total) * 100), vm.downloadProgress), 99);
+                                vm.installationProgress = Math.min(Math.max(Math.round((progress.loaded / progress.total) * 100), vm.installationProgress), 99);
                             }
                             vm.downloadInProgress = true;
                         });

@@ -6,21 +6,18 @@
             </span>
         </h1> -->
     </ion-header-bar>
-    
+
     <ion-content class="download-page" style="background: transparent;">
         <div class="static-content offline-content">
-            
+
             <p class="offline-text offline-download">
                 {{"Download della mappa in corso" | translate}}
             </p>
-            <div
-                style="border-top: 16px solid {{COLORS.global.buttonsBackground}};"
-                class="loader">
+            <div ng-style="{'border-top': '16px solid' + COLORS.global.buttonsBackground}" class="loader">
             </div>
             <!-- TODO: use proper class -->
-            <p
-                class="offline-text offline-install">
-                {{vm.downloadProgress}}%
+            <p class="offline-text offline-install">
+                {{vm.installationProgress}}%
             </p>
             <!-- <p
                 class="offline-text offline-install"
@@ -36,7 +33,7 @@
         </div>
         </div>
     </ion-content>
-    
+
     <!-- TODO: make it visible -->
     <!-- <div class="bottom-buttons">
         <button

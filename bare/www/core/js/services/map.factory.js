@@ -1016,35 +1016,44 @@ angular.module('webmapp')
                 langGeojsonUrl = offlineConf.resourceBaseUrl + currentLangGeojsonUrl;
             }
 
-            if (useLocalCaching && currentFromLocalStorage) {
-                if (currentOverlay.type === 'line_geojson') {
-                    db.get(geojsonUrl).then(function (e) {
-                        lineCallback(e.data, currentOverlay);
-                    });
-                } else if (currentOverlay.type === 'poi_geojson') {
-                    poiCallback(JSON.parse(currentFromLocalStorage), currentOverlay);
-                }
+            // if (useLocalCaching && currentFromLocalStorage) {
+            //     if (currentOverlay.type === 'line_geojson') {
+            //         db.get(geojsonUrl).then(function (e) {
+            //             lineCallback(e.data, currentOverlay);
+            //         });
+            //     } else if (currentOverlay.type === 'poi_geojson') {
+            //         poiCallback(JSON.parse(currentFromLocalStorage), currentOverlay);
+            //     }
 
-                $.getJSON(geojsonUrl, function (data) {
-                    setItemInLocalStorage(geojsonUrl, data);
-                });
-            } else {
-                if (Offline.isActive()) {
-                    // var data = JSON.parse(localStorage.getItem(geojsonUrl));
-                    getItemFromLocalStorage(geojsonUrl)
-                        .then(function (localContent) {
-                            if (localContent.data) {
-                                var data = JSON.parse(localContent.data);
-                                if (currentOverlay.type === 'line_geojson') {
-                                    lineCallback(data, currentOverlay);
-                                } else if (currentOverlay.type === 'poi_geojson') {
-                                    poiCallback(data, currentOverlay);
-                                }
+            //     $.getJSON(geojsonUrl, function (data) {
+            //         setItemInLocalStorage(geojsonUrl, data);
+            //     });
+            // } else {
+            if (Offline.isActive()) {
+                // var data = JSON.parse(localStorage.getItem(geojsonUrl));
+                getItemFromLocalStorage(geojsonUrl)
+                    .then(function (localContent) {
+                        if (localContent.data) {
+                            var data = JSON.parse(localContent.data);
+                            if (currentOverlay.type === 'line_geojson') {
+                                lineCallback(data, currentOverlay);
+                            } else if (currentOverlay.type === 'poi_geojson') {
+                                poiCallback(data, currentOverlay);
                             }
-                            delete overlayLayersQueueByLabel[currentOverlay.label];
-                        });
-                } else {
-                    overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(langGeojsonUrl, function (data) {
+                        }
+                        delete overlayLayersQueueByLabel[currentOverlay.label];
+                    });
+            } else {
+                overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(langGeojsonUrl, function (data) {
+                    if (currentOverlay.type === 'line_geojson') {
+                        lineCallback(data, currentOverlay);
+                    } else if (currentOverlay.type === 'poi_geojson') {
+                        poiCallback(data, currentOverlay);
+                    }
+                    setItemInLocalStorage(geojsonUrl, JSON.stringify(data));
+                    delete overlayLayersQueueByLabel[currentOverlay.label];
+                }).fail(function () {
+                    overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(geojsonUrl, function (data) {
                         if (currentOverlay.type === 'line_geojson') {
                             lineCallback(data, currentOverlay);
                         } else if (currentOverlay.type === 'poi_geojson') {
@@ -1052,22 +1061,13 @@ angular.module('webmapp')
                         }
                         setItemInLocalStorage(geojsonUrl, JSON.stringify(data));
                         delete overlayLayersQueueByLabel[currentOverlay.label];
-                    }).fail(function () {
-                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(geojsonUrl, function (data) {
-                            if (currentOverlay.type === 'line_geojson') {
-                                lineCallback(data, currentOverlay);
-                            } else if (currentOverlay.type === 'poi_geojson') {
-                                poiCallback(data, currentOverlay);
-                            }
-                            setItemInLocalStorage(geojsonUrl, JSON.stringify(data));
-                            delete overlayLayersQueueByLabel[currentOverlay.label];
-                        }).fail(function (err) {
-                            console.warn('An error has occurred downloading geojson \'' + currentOverlay.geojsonUrl + '\'. This file could miss in the server or the app is offline, and will be skipped', err);
-                            defer.resolve();
-                        });
+                    }).fail(function (err) {
+                        console.warn('An error has occurred downloading geojson \'' + currentOverlay.geojsonUrl + '\'. This file could miss in the server or the app is offline, and will be skipped', err);
+                        defer.resolve();
                     });
-                }
+                });
             }
+            // }
 
             promise.then(function () {
                 if (!geojsonUrl) {
@@ -1103,14 +1103,22 @@ angular.module('webmapp')
             if (!currentOverlay.geojsonUrl ||
                 !currentOverlay.tilesUrl ||
                 !currentOverlay.gridUrl) {
-                console.error('Specify geojsonUrl,  tilesUrl and gridUrl in config');
+                console.error('Specify geojsonUrl, tilesUrl and gridUrl in config');
                 defer.reject();
                 return promise;
             }
 
-            var tileLayer = tileLayersByLabel[currentOverlay.label] = L.tileLayer(currentOverlay.tilesUrl + '{z}/{x}/{y}.png', options);
+            var tilesUrl = currentOverlay.tilesUrl,
+                tileLayer = currentOverlay.tilesUrl;
 
-            utfGridOverlayLayersByLabel[currentOverlay.label] = L.utfGridCanvas(currentOverlay.tilesUrl + '{z}/{x}/{y}.grid.json', {
+            if (Offline.isActive()) {
+                tilerUrl = cordova.file.destDirectory + "map/sentierisat.mbtiles";
+            }
+
+            console.log(tilesUrl)
+
+            tileLayer = tileLayersByLabel[currentOverlay.label] = L.tileLayer(tilesUrl + '{z}/{x}/{y}.png', options);
+            utfGridOverlayLayersByLabel[currentOverlay.label] = L.utfGridCanvas(tilesUrl + '{z}/{x}/{y}.grid.json', {
                 idField: 'ref', // Expects UTFgrid to have a property 'ID' that indicates the feature ID
                 buildIndex: true, // requires above field to be set properly
                 // fillColor: 'green',
@@ -1138,7 +1146,6 @@ angular.module('webmapp')
                     return;
                 }
 
-
                 areaMapById[e.data.id] = angular.extend({}, {
                     properties: e.data
                 }, {
@@ -1163,7 +1170,7 @@ angular.module('webmapp')
                     baseMapMapping: currentOverlay.mapping
                 }));
 
-            var currentFromLocalStorage = localStorage.getItem(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl);
+            // var currentFromLocalStorage = localStorage.getItem(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl);
 
             var utfgridCallback = function (data, currentOverlay, layerGroup) {
                 overlayLayersByLabel[currentOverlay.label] = layerGroup;
@@ -1177,21 +1184,38 @@ angular.module('webmapp')
                 }, currentOverlay));
             };
 
-            if (useLocalCaching && currentFromLocalStorage) {
-                utfgridCallback(JSON.parse(currentFromLocalStorage), currentOverlay, tileLayer);
+            // if (useLocalCaching && currentFromLocalStorage) {
+            //     utfgridCallback(JSON.parse(currentFromLocalStorage), currentOverlay, tileLayer);
 
-                $.getJSON(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, function (data) {
-                    setItemInLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, data);
-                });
+            //     $.getJSON(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, function (data) {
+            //         setItemInLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, data);
+            //     });
+            // } else {
+            if (Offline.isActive()) {
+                // var data = JSON.parse(localStorage.getItem(geojsonUrl));
+                getItemFromLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl)
+                    .then(function (localContent) {
+                        if (localContent.data) {
+                            var data = JSON.parse(localContent.data);
+                            if (currentOverlay.type === 'line_geojson') {
+                                lineCallback(data, currentOverlay);
+                            } else if (currentOverlay.type === 'poi_geojson') {
+                                poiCallback(data, currentOverlay);
+                            }
+                        }
+                        delete overlayLayersQueueByLabel[currentOverlay.label];
+                    });
             } else {
+
                 overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, function (data) {
                     utfgridCallback(data, currentOverlay, tileLayer);
-                    setItemInLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, data);
+                    setItemInLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, JSON.stringify(data));
                     delete overlayLayersQueueByLabel[currentOverlay.label];
                 }).fail(function () {
                     defer.reject();
                 });
             }
+            // }
 
             promise.then(function () {
                 initializeThen(currentOverlay);
