@@ -1026,28 +1026,46 @@ angular.module('webmapp')
                 if (Utils.isBrowser() && window.location.protocol === "https:") {
                     geolocationState.isActive = true;
                     geolocationState.isLoading = true;
-                    geolocationState.isFollowing = true;
+                    geolocationState.isFollowing = false;
                     geolocationState.isRotating = false;
 
                     $rootScope.$emit("geolocationState-changed", geolocationState);
 
-                    state.positionWatch = $cordovaGeolocation
-                        .watchPosition({
+                    $cordovaGeolocation
+                        .getCurrentPosition({
                             timeout: constants.geolocationTimeoutTime,
                             enableHighAccuracy: false
-                        });
+                        }).then(function (pos) {
+                            geolocationState.isFollowing = true;
+                            geolocationState.isLoading = false;
+                            positionCallback(pos.coords);
 
-                    state.positionWatch.then(function (position) {
-                        positionCallback(position.coords);
-                    }, function (err) {
-                        console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
-                        $ionicPopup.alert({
-                            title: $translate.instant("ATTENZIONE"),
-                            template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
-                        });
+                            state.positionWatch = $cordovaGeolocation
+                                .watchPosition({
+                                    timeout: constants.geolocationTimeoutTime,
+                                    enableHighAccuracy: false
+                                });
 
-                        geolocationService.disable();
-                    });
+                            state.positionWatch.then(function (position) {
+                                positionCallback(position.coords);
+                            }, function (err) {
+                                console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
+                                $ionicPopup.alert({
+                                    title: $translate.instant("ATTENZIONE"),
+                                    template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
+                                });
+
+                                geolocationService.disable();
+                            });
+                        }, function (err) {
+                            console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
+                            $ionicPopup.alert({
+                                title: $translate.instant("ATTENZIONE"),
+                                template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
+                            });
+
+                            geolocationService.disable();
+                        });
 
                     defer.resolve(geolocationState);
                 }
