@@ -54,20 +54,22 @@ angular.module('webmapp')
         //Contains all the global variables
         var state = {
             appState: 0,
+            isOutsideBoundingBox: false,
             lastHeading: 0,
             lastPosition: null,
             lpf: null,
             orientationWatch: null,
-            isOutsideBoundingBox: false,
+            positionWatch: null,
             rotationSwitchTimeout: null,
             skipZoomEvent: false,
             reset: function () {
                 state.appState = 0;
+                state.isOutsideBoundingBox = false;
                 state.lastHeadind = 0;
                 state.lastPosition = null;
                 state.lpf = null;
                 state.orientationWatch = null;
-                state.isOutsideBoundingBox = false;
+                state.positionWatch = null;
                 state.rotationSwitchTimeout = null;
                 state.skipZoomEvent = false;
             }
@@ -1021,7 +1023,37 @@ angular.module('webmapp')
                     }
                 });
             } else {
-                defer.reject(ERRORS.CORDOVA_UNAVAILABLE);
+                if (Utils.isBrowser() && window.location.protocol === "https:") {
+                    geolocationState.isActive = true;
+                    geolocationState.isLoading = true;
+                    geolocationState.isFollowing = true;
+                    geolocationState.isRotating = false;
+
+                    $rootScope.$emit("geolocationState-changed", geolocationState);
+
+                    state.positionWatch = $cordovaGeolocation
+                        .watchPosition({
+                            timeout: constants.geolocationTimeoutTime,
+                            enableHighAccuracy: false
+                        });
+
+                    state.positionWatch.then(function (position) {
+                        positionCallback(position.coords);
+                    }, function (err) {
+                        console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
+                        $ionicPopup.alert({
+                            title: $translate.instant("ATTENZIONE"),
+                            template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
+                        });
+
+                        geolocationService.disable();
+                    });
+
+                    defer.resolve(geolocationState);
+                }
+                else {
+                    defer.reject(ERRORS.CORDOVA_UNAVAILABLE);
+                }
             }
 
             return defer.promise;
@@ -1049,6 +1081,24 @@ angular.module('webmapp')
                 geolocationState.isLoading = false;
                 $rootScope.$emit("geolocationState-changed", geolocationState);
             }
+            else if (Utils.isBrowser() && window.location.protocol === "https:") {
+                turnOffRotationAndFollow();
+                MapService.removePosition();
+
+                try {
+                    state.positionWatch.clearWatch();
+                }
+                catch (e) {
+                    console.warn(e);
+                }
+
+                state.reset();
+                recordingState.reset();
+                geolocationState.isActive = false;
+                geolocationState.isLoading = false;
+                $rootScope.$emit("geolocationState-changed", geolocationState);
+            }
+
             return true;
         };
 

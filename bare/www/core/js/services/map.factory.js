@@ -766,13 +766,17 @@ angular.module('webmapp')
                     eventCallback(JSON.parse(currentFromLocalStorage));
 
                     $.getJSON(CONFIG.EXTRA.events.serverUrl, function (data) {
-                        setItemInLocalStorage(CONFIG.EXTRA.events.serverUrl, data);
+                        if (!Utils.isBrowser()) {
+                            setItemInLocalStorage(CONFIG.EXTRA.events.serverUrl, data);
+                        }
                         angular.extend(eventsList, data);
                     });
                 } else {
                     $.getJSON(CONFIG.EXTRA.events.serverUrl, function (data) {
                         eventCallback(data);
-                        setItemInLocalStorage(CONFIG.EXTRA.events.serverUrl, data);
+                        if (!Utils.isBrowser()) {
+                            setItemInLocalStorage(CONFIG.EXTRA.events.serverUrl, data);
+                        }
                     }).fail(function () {
                         defer.reject();
                     });
@@ -1186,9 +1190,11 @@ angular.module('webmapp')
             if (useLocalCaching && currentFromLocalStorage) {
                 utfgridCallback(JSON.parse(currentFromLocalStorage), currentOverlay, tileLayer);
 
-                $.getJSON(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, function (data) {
-                    setItemInLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, data);
-                });
+                if (!Utils.isBrowser()) {
+                    $.getJSON(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, function (data) {
+                        setItemInLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, data);
+                    });
+                }
             } else {
                 overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, function (data) {
                     utfgridCallback(data, currentOverlay, tileLayer);
