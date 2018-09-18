@@ -519,208 +519,210 @@ angular.module('webmapp')
             }
         };
 
-        console.warn("TODO: complete function positionCallback for realTimeTracking")
-        function positionCallback(position) {
-            console.log(position);
+        function positionTask(position) {
             BackgroundGeolocation.startTask(function (taskKey) {
-                if (!geolocationState.isActive) {
-                    BackgroundGeolocation.endTask(taskKey);
-                    return;
-                }
-
-                if (state.isOutsideBoundingBox) {
-                    if (geolocationService.isActive()) {
-                        geolocationService.disable();
-                    }
-                    BackgroundGeolocation.endTask(taskKey);
-                    return;
-                }
-
-                var lat = position.latitude ? position.latitude : 0,
-                    long = position.longitude ? position.longitude : 0,
-                    accuracy = position.accuracy ? position.accuracy : 0,
-                    altitude = position.altitude ? position.altitude : 0,
-                    bearing = position.bearing ? position.bearing : false,
-                    speed = position.speed ? position.speed * 3.6 : 0,
-                    doCenter = false;
-
-                if (geolocationState.isLoading) {
-                    geolocationState.isLoading = false;
-                    geolocationState.isFollowing = true;
-                    $rootScope.$emit("geolocationState-changed", geolocationState);
-                }
-
-                if (!MapService.isInBoundingBox(lat, long)) {
-                    state.lastPosition = null;
-                    state.isOutsideBoundingBox = true;
-                    $ionicPopup.alert({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa")
-                    });
-                    if (recordingState.isActive) {
-                        geolocationService.stopRecording();
-                    }
-                    geolocationService.disable();
-                    BackgroundGeolocation.endTask(taskKey);
-                    return;
-                }
-
-                if (geolocationState.isRotating && bearing !== false) {
-                    if (speed > constants.minSpeedForGpsBearing) {
-                        if (!state.useGpsBearing) { //first valid position: keep compass
-                            state.useGpsBearing = true;
-                        }
-                        else { //valid position confirmation: change to gps
-                            MapService.togglePositionIcon("locationIconArrow");
-                            if (state.orientationWatch) {
-                                state.orientationWatch.clearWatch();
-                                delete state.orientationWatch;
-                                state.orientationWatch = null;
-                            }
-                            MapService.animateBearing(-bearing, 600);
-                            state.lastHeading = -bearing;
-                            $rootScope.$emit("heading-changed", state.lastHeading);
-
-                            if (state.rotationSwitchTimeout) {
-                                clearTimeout(state.rotationSwitchTimeout);
-                            }
-                            state.rotationSwitchTimeout = setTimeout(function () {
-                                enableCompassRotation();
-                                MapService.togglePositionIcon("locationIcon");
-
-                                state.useGpsBearing = false;
-
-                                delete state.rotationSwitchTimeout;
-                                state.rotationSwitchTimeout = null;
-                            }, constants.compassRotationTimeout);
-                        }
-                    }
-                    else {
-                        if (state.rotationSwitchTimeout) {
-                            MapService.animateBearing(-bearing, 600);
-                            state.lastHeading = -bearing;
-                            $rootScope.$emit("heading-changed", state.lastHeading);
-                        }
-                    }
-                }
-
-                if (!state.lastPosition || Utils.distanceInMeters(lat, long, state.lastPosition.lat, state.lastPosition.long) > 6) {
-                    doCenter = true;
-                }
-
-                if (doCenter) {
-                    MapService.drawPosition(position);
-                    if (geolocationState.isFollowing) {
-                        centerOnCoordsWithoutZoomEvent(lat, long);
-                    }
-
-                    if (recordingState.isActive && !recordingState.isPaused) {
-                        if (false && realTimeTracking.enabled && vm.userData.ID) {
-                            // vm.positionsToSend.push({
-                            //     lat: lat,
-                            //     lng: long,
-                            //     altitude: altitude,
-                            //     heading: position.coords.heading,
-                            //     speed: position.coords.speed,
-                            //     timestamp: position.timestamp
-                            // });
-
-                            realTimeTracking.positionsToSend.push([
-                                long,
-                                lat,
-                                altitude
-                                // ,
-                                // position.timestamp,
-                                // position.coords.speed,
-                                // position.coords.heading
-                            ]);
-
-                            if (realTimeTracking.positionsToSend.length >= realTimeTracking.minPositionsToSend) {
-                                var currentRequest = Communication.callAPI(realTimeTracking.url, {
-                                    type: "FeatureCollection",
-                                    features: [{
-                                        type: "Feature",
-                                        properties: {
-                                            type: "tracking",
-                                            app: realTimeTracking.appUrl,
-                                            routeId: vm.routeId,
-                                            trackId: vm.stopNavigationUrlParams.id,
-                                            email: vm.userData.user_email,
-                                            firstName: vm.userData.first_name,
-                                            lastName: vm.userData.last_name
-                                        },
-                                        geometry: {
-                                            type: "LineString",
-                                            coordinates: realTimeTracking.positionsToSend
-                                        }
-                                    }]
-                                });
-
-                                currentRequest
-                                    .then(function () {
-                                        realTimeTracking.positionsToSend = [];
-                                        return;
-                                    },
-                                        function (error) {
-                                            return;
-                                        });
-                            }
-                        }
-
-                        if (trackRecordingEnabled && recordingState.isRecordingPolyline) {
-                            MapService.updateUserPolyline([lat, long, altitude]);
-                        }
-
-                        recordingState.currentSpeedPositions.push({
-                            lat: lat,
-                            long: long,
-                            altitude: altitude,
-                            timestamp: position.time ? position.time : Date.now()
-                        });
-
-                        if (recordingState.firstPositionSet) {
-                            updateNavigationValues(lat, long);
-                        } else {
-                            recordingState.firstPositionSet = true;
-                        }
-
-                        if (recordingState.currentTrack) {
-                            handleToast(lat, long);
-                        }
-
-                        try {
-                            MapService.triggerNearestPopup({
-                                lat: lat,
-                                long: long
-                            });
-                        } catch (e) { }
-
-                    }
-
-                    state.lastPosition = {
-                        lat: lat,
-                        long: long,
-                        accuracy: accuracy,
-                        altitude: altitude,
-                        heading: bearing,
-                        timestamp: position.time ? position.time : Date.now()
-                    };
-
-                    if (recordingState.isActive && state.appState === BackgroundGeolocation.BACKGROUND) {
-                        saveRecordingState();
-                    }
-                } else {
-                    state.lastPosition.accuracy = accuracy;
-                    MapService.drawAccuracy(accuracy);
-                }
-
+                positionCallback(position);
                 BackgroundGeolocation.endTask(taskKey);
             });
         };
 
+        console.warn("TODO: complete function positionCallback for realTimeTracking")
+        function positionCallback(position) {
+            console.log(position);
+
+            if (!geolocationState.isActive) {
+                return;
+            }
+
+            if (state.isOutsideBoundingBox) {
+                if (geolocationService.isActive()) {
+                    geolocationService.disable();
+                }
+                return;
+            }
+
+            var lat = position.latitude ? position.latitude : 0,
+                long = position.longitude ? position.longitude : 0,
+                accuracy = position.accuracy ? position.accuracy : 0,
+                altitude = position.altitude ? position.altitude : 0,
+                bearing = position.bearing ? position.bearing : false,
+                speed = position.speed ? position.speed * 3.6 : 0,
+                doCenter = false;
+
+            if (geolocationState.isLoading) {
+                geolocationState.isLoading = false;
+                geolocationState.isFollowing = true;
+                $rootScope.$emit("geolocationState-changed", geolocationState);
+            }
+
+            if (!MapService.isInBoundingBox(lat, long)) {
+                state.lastPosition = null;
+                state.isOutsideBoundingBox = true;
+                $ionicPopup.alert({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa")
+                });
+                if (recordingState.isActive) {
+                    geolocationService.stopRecording();
+                }
+                geolocationService.disable();
+                BackgroundGeolocation.endTask(taskKey);
+                return;
+            }
+
+            if (geolocationState.isRotating && bearing !== false) {
+                if (speed > constants.minSpeedForGpsBearing) {
+                    if (!state.useGpsBearing) { //first valid position: keep compass
+                        state.useGpsBearing = true;
+                    }
+                    else { //valid position confirmation: change to gps
+                        MapService.togglePositionIcon("locationIconArrow");
+                        if (state.orientationWatch) {
+                            state.orientationWatch.clearWatch();
+                            delete state.orientationWatch;
+                            state.orientationWatch = null;
+                        }
+                        MapService.animateBearing(-bearing, 600);
+                        state.lastHeading = -bearing;
+                        $rootScope.$emit("heading-changed", state.lastHeading);
+
+                        if (state.rotationSwitchTimeout) {
+                            clearTimeout(state.rotationSwitchTimeout);
+                        }
+                        state.rotationSwitchTimeout = setTimeout(function () {
+                            enableCompassRotation();
+                            MapService.togglePositionIcon("locationIcon");
+
+                            state.useGpsBearing = false;
+
+                            delete state.rotationSwitchTimeout;
+                            state.rotationSwitchTimeout = null;
+                        }, constants.compassRotationTimeout);
+                    }
+                }
+                else {
+                    if (state.rotationSwitchTimeout) {
+                        MapService.animateBearing(-bearing, 600);
+                        state.lastHeading = -bearing;
+                        $rootScope.$emit("heading-changed", state.lastHeading);
+                    }
+                }
+            }
+
+            if (!state.lastPosition || Utils.distanceInMeters(lat, long, state.lastPosition.lat, state.lastPosition.long) > 6) {
+                doCenter = true;
+            }
+
+            if (doCenter) {
+                MapService.drawPosition(position);
+                if (geolocationState.isFollowing) {
+                    centerOnCoordsWithoutZoomEvent(lat, long);
+                }
+
+                if (recordingState.isActive && !recordingState.isPaused) {
+                    if (false && realTimeTracking.enabled && vm.userData.ID) {
+                        // vm.positionsToSend.push({
+                        //     lat: lat,
+                        //     lng: long,
+                        //     altitude: altitude,
+                        //     heading: position.coords.heading,
+                        //     speed: position.coords.speed,
+                        //     timestamp: position.timestamp
+                        // });
+
+                        realTimeTracking.positionsToSend.push([
+                            long,
+                            lat,
+                            altitude
+                            // ,
+                            // position.timestamp,
+                            // position.coords.speed,
+                            // position.coords.heading
+                        ]);
+
+                        if (realTimeTracking.positionsToSend.length >= realTimeTracking.minPositionsToSend) {
+                            var currentRequest = Communication.callAPI(realTimeTracking.url, {
+                                type: "FeatureCollection",
+                                features: [{
+                                    type: "Feature",
+                                    properties: {
+                                        type: "tracking",
+                                        app: realTimeTracking.appUrl,
+                                        routeId: vm.routeId,
+                                        trackId: vm.stopNavigationUrlParams.id,
+                                        email: vm.userData.user_email,
+                                        firstName: vm.userData.first_name,
+                                        lastName: vm.userData.last_name
+                                    },
+                                    geometry: {
+                                        type: "LineString",
+                                        coordinates: realTimeTracking.positionsToSend
+                                    }
+                                }]
+                            });
+
+                            currentRequest
+                                .then(function () {
+                                    realTimeTracking.positionsToSend = [];
+                                    return;
+                                },
+                                    function (error) {
+                                        return;
+                                    });
+                        }
+                    }
+
+                    if (trackRecordingEnabled && recordingState.isRecordingPolyline) {
+                        MapService.updateUserPolyline([lat, long, altitude]);
+                    }
+
+                    recordingState.currentSpeedPositions.push({
+                        lat: lat,
+                        long: long,
+                        altitude: altitude,
+                        timestamp: position.time ? position.time : Date.now()
+                    });
+
+                    if (recordingState.firstPositionSet) {
+                        updateNavigationValues(lat, long);
+                    } else {
+                        recordingState.firstPositionSet = true;
+                    }
+
+                    if (recordingState.currentTrack) {
+                        handleToast(lat, long);
+                    }
+
+                    try {
+                        MapService.triggerNearestPopup({
+                            lat: lat,
+                            long: long
+                        });
+                    } catch (e) { }
+
+                }
+
+                state.lastPosition = {
+                    lat: lat,
+                    long: long,
+                    accuracy: accuracy,
+                    altitude: altitude,
+                    heading: bearing,
+                    timestamp: position.time ? position.time : Date.now()
+                };
+
+                if (recordingState.isActive && state.appState === BackgroundGeolocation.BACKGROUND) {
+                    saveRecordingState();
+                }
+            } else {
+                state.lastPosition.accuracy = accuracy;
+                MapService.drawAccuracy(accuracy);
+            }
+        };
+
         function activateBackgroundGeolocationHandlers() {
-            BackgroundGeolocation.on('location', positionCallback);
-            BackgroundGeolocation.on('stationary', positionCallback);
+            BackgroundGeolocation.on('location', positionTask);
+            BackgroundGeolocation.on('stationary', positionTask);
             BackgroundGeolocation.on('error', geolocationErrorCallback);
             BackgroundGeolocation.on('background', function () {
                 if (recordingState.isActive) {
@@ -1011,7 +1013,7 @@ angular.module('webmapp')
                                     enableHighAccuracy: false
                                 })
                                 .then(function (position) {
-                                    positionCallback(position.coords);
+                                    positionTask(position.coords);
                                 }, function (err) {
                                     console.warn("CordovaGeolocation.getCurrentPosition has been rejected: ", err);
                                 });
