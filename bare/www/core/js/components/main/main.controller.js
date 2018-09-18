@@ -162,7 +162,7 @@ angular.module('webmapp')
         vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
         vm.useExandMapInDetails = CONFIG.OPTIONS.useExandMapInDetails;
         vm.showLocate = !CONFIG.MAP.hideLocationControl && !Utils.isBrowser() ||
-            Utils.isBrowser && !CONFIG.MAP.hideLocationControl && window.location.protocol === "https:";
+            Utils.isBrowser() && !CONFIG.MAP.hideLocationControl && window.location.protocol === "https:";
 
         vm.viewTitle = $translate.instant("MAPPA");
         vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;

@@ -766,13 +766,17 @@ angular.module('webmapp')
                     eventCallback(JSON.parse(currentFromLocalStorage));
 
                     $.getJSON(CONFIG.EXTRA.events.serverUrl, function (data) {
-                        setItemInLocalStorage(CONFIG.EXTRA.events.serverUrl, data);
+                        if (!Utils.isBrowser()) {
+                            setItemInLocalStorage(CONFIG.EXTRA.events.serverUrl, data);
+                        }
                         angular.extend(eventsList, data);
                     });
                 } else {
                     $.getJSON(CONFIG.EXTRA.events.serverUrl, function (data) {
                         eventCallback(data);
-                        setItemInLocalStorage(CONFIG.EXTRA.events.serverUrl, data);
+                        if (!Utils.isBrowser()) {
+                            setItemInLocalStorage(CONFIG.EXTRA.events.serverUrl, data);
+                        }
                     }).fail(function () {
                         defer.reject();
                     });
@@ -1212,7 +1216,6 @@ angular.module('webmapp')
                         delete overlayLayersQueueByLabel[currentOverlay.label];
                     });
             } else {
-
                 overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, function (data) {
                     utfgridCallback(data, currentOverlay, tileLayer);
                     if (!Utils.isBrowser()) {
