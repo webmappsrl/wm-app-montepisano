@@ -963,14 +963,5 @@ angular.module('webmapp')
             });
         });
 
-        registeredEvents.push(
-            $scope.$on('$destroy', function () {
-                for (var i in registeredEvents) {
-                    registeredEvents[i]();
-                }
-                delete registeredEvents;
-            })
-        );
-
         return vm;
     });

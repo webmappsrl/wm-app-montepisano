@@ -291,9 +291,9 @@ angular.module('webmapp')
         }
 
         var buildDetail = function (data) {
-            var parent = data ? angular.extend({}, data.parent) : undefined,
-                _feature = data ? angular.extend({}, data.properties) : {},
-                feature = angular.extend({}, _feature);
+            var parent = data ? angular.copy(data.parent) : undefined,
+                _feature = data ? angular.copy(data.properties) : {},
+                feature = angular.copy(_feature);
 
             var mappingKey = parent.mapping || 'default',
                 mapping = CONFIG.DETAIL_MAPPING[mappingKey],
@@ -301,7 +301,6 @@ angular.module('webmapp')
                 mappingUrls = mapping ? mapping.urls : {},
                 mappingFields = mapping ? mapping.fields : {},
                 phoneMatch;
-
 
             var track = undefined;
 
@@ -522,7 +521,7 @@ angular.module('webmapp')
                     objData.extras = extras;
                 }
 
-                MapService.addFeaturesToFilteredLayer(objData, true);
+                MapService.addFeaturesToFilteredLayer(objData, true, 400);
 
                 if (centerOnPoint) {
                     MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);

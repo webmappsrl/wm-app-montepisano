@@ -132,10 +132,6 @@ angular.module('webmapp')
             return prev;
         }, {});
 
-        mapService.getFeaturesIdByLayersMap = function () {
-            return featuresIdByLayersMap;
-        };
-
         var activeFilters = localStorage.activeFilters ?
             JSON.parse(localStorage.activeFilters) : overlayLayersConf.reduce(function (prev, curr) {
                 if (!curr.skipRendering) {
@@ -240,7 +236,7 @@ angular.module('webmapp')
                     }
                 } else if (utfGridOverlayLayersByLabel[layerName]) {
                     map.removeLayer(layer);
-                    map.removeLayer(utfGridOverlayLayersByLabel[layerName])
+                    map.removeLayer(utfGridOverlayLayersByLabel[layerName]);
                 }
             }
         };
@@ -252,11 +248,25 @@ angular.module('webmapp')
 
             var overlayConf = feature.parent || {};
 
-            return {
-                color: feature.properties.color || overlayConf.color || styleConf.line.default.color,
-                weight: feature.properties.weight || overlayConf.weight || styleConf.line.default.weight,
-                opacity: feature.properties.opacity || overlayConf.opacity || styleConf.line.default.opacity
-            };
+            if (feature.parent) {
+                if (feature.parent.type === "tile_utfgrid_geojson" && $state.current.name === "app.main.map") {
+                    return {
+                        color: "#ff0000",
+                        weight: 5,
+                        opacity: 0
+                    };
+                }
+                else {
+                    return {
+                        color: feature.properties.color || overlayConf.color || styleConf.line.default.color,
+                        weight: feature.properties.weight || overlayConf.weight || styleConf.line.default.weight,
+                        opacity: feature.properties.opacity || overlayConf.opacity || styleConf.line.default.opacity
+                    };
+                }
+            }
+            else {
+                return {};
+            }
         };
 
         var globalOnEachPOI = function (feature) {
@@ -334,23 +344,12 @@ angular.module('webmapp')
         };
 
         var setItemInLocalStorage = function (key, data) {
-            // if (!useLocalCaching) {
-            //     return;
-            // }
-
-            // TODO: set in sub property
-
-            //db.get(key).then(function(e) {
-            //    db.remove(e);
-            //});
-
             var insert = function () {
                 db.put({
                     _id: key,
                     data: data
                 }).then(function () {
-                    //localStorage.setItem(key, true);
-                    //console.log('Cached ' + key);
+                    // console.log('Cached ' + key);
                 });
             };
 
@@ -362,13 +361,6 @@ angular.module('webmapp')
             }).catch(function () {
                 insert();
             });
-
-            // try {
-            //     localStorage.setItem(key, JSON.stringify(data));
-            // } catch (err) {
-            //     localStorage.clear();
-            //     console.error('Local storage reset - ' + err);
-            // }
         };
 
         var getItemFromLocalStorage = function (key) {
@@ -419,6 +411,11 @@ angular.module('webmapp')
         };
 
         var clearLayerHighlight = function () {
+            if (highlightedTrack) {
+                map.removeLayer(highlightedTrack);
+                highlightedTrack = null;
+            }
+
             map.eachLayer(function (layer) {
                 if (layer.feature &&
                     layer.setStyle) {
@@ -426,11 +423,6 @@ angular.module('webmapp')
                     activateHighlight(layer, globalLineApplyStyle(layer.feature));
                 }
             });
-
-            if (highlightedTrack) {
-                map.removeLayer(highlightedTrack);
-                highlightedTrack = null;
-            }
         };
 
         var resetLayers = function () {
@@ -460,6 +452,7 @@ angular.module('webmapp')
                 clearLayerHighlight();
                 return;
             }
+
             var getIncrement = function (n) {
                 var value = 19.6618;
 
@@ -622,6 +615,15 @@ angular.module('webmapp')
                     if (layer.actived) {
                         return;
                     }
+
+                    map.eachLayer(function (layer) {
+                        if (layer.feature &&
+                            layer.setStyle &&
+                            !layer.actived) {
+                            activateHighlight(layer, globalLineApplyStyle(layer.feature));
+                        }
+                    });
+
                     activateHighlight(layer, styleConf.line.highlight);
                     layer.bringToFront();
                 },
@@ -720,15 +722,16 @@ angular.module('webmapp')
             addLayer('filteredPOI');
             addLayer('filteredLine');
 
-
             if (fitToBounds) {
                 pointsLayer.addTo(groupLayer);
                 linesLayer.addTo(groupLayer);
-                fitBounds(groupLayer.getBounds());
                 if (delayedFit) {
                     setTimeout(function () {
                         fitBounds(groupLayer.getBounds());
                     }, delayedFit);
+                }
+                else {
+                    fitBounds(groupLayer.getBounds());
                 }
             }
 
@@ -1102,8 +1105,6 @@ angular.module('webmapp')
             var defer = $q.defer(),
                 promise = defer.promise;
 
-            var mapReference = document.getElementById('map');
-
             var options = {
                 minZoom: mapConf.minZoom,
                 maxZoom: mapConf.maxZoom,
@@ -1122,96 +1123,105 @@ angular.module('webmapp')
                 tileLayer = currentOverlay.tilesUrl;
 
             if (Offline.isActive()) {
-                tilerUrl = cordova.file.destDirectory + "map/sentierisat.mbtiles";
+                tilesUrl = cordova.file.destDirectory + "map/" + currentOverlay.label.replace(/ /, "_") + ".mbtiles";
+                tileLayer = tileLayersByLabel[currentOverlay.label] = L.tileLayer.mbTiles(tilesUrl, options);
+            }
+            else {
+                tileLayer = tileLayersByLabel[currentOverlay.label] = L.tileLayer(tilesUrl + '{z}/{x}/{y}.png', options);
             }
 
-            console.log(tilesUrl)
+            // utfGridOverlayLayersByLabel[currentOverlay.label] = L.utfGridCanvas(tilesUrl + '{z}/{x}/{y}.grid.json', {
+            //     idField: 'ref', // Expects UTFgrid to have a property 'ID' that indicates the feature ID
+            //     buildIndex: true, // requires above field to be set properly
+            //     // fillColor: 'green',
+            //     // shadowBlur: 10,  // Number of pixels for blur effect
+            //     // shadowColor: 'green',  // Color for shadow, if present.  Defaults to fillColor.
+            //     // pointerCursor: true,
+            //     debug: true // if true, show tile borders and tile keys
+            // });
 
-            tileLayer = tileLayersByLabel[currentOverlay.label] = L.tileLayer(tilesUrl + '{z}/{x}/{y}.png', options);
-            utfGridOverlayLayersByLabel[currentOverlay.label] = L.utfGridCanvas(tilesUrl + '{z}/{x}/{y}.grid.json', {
-                idField: 'ref', // Expects UTFgrid to have a property 'ID' that indicates the feature ID
-                buildIndex: true, // requires above field to be set properly
-                // fillColor: 'green',
-                // shadowBlur: 10,  // Number of pixels for blur effect
-                // shadowColor: 'green',  // Color for shadow, if present.  Defaults to fillColor.
-                // pointerCursor: true,
-                debug: true // if true, show tile borders and tile keys
-            });
+            // // TODO: temporary, to fix with leaflet update
+            // utfGridOverlayLayersByLabel[currentOverlay.label].on('mouseover', function () {
+            //     if (mapReference) {
+            //         mapReference.style.cursor = 'pointer';
+            //     }
+            // });
+            // utfGridOverlayLayersByLabel[currentOverlay.label].on('mouseout', function () {
+            //     if (mapReference) {
+            //         mapReference.style.cursor = 'default';
+            //     }
+            // });
 
-            // TODO: temporary, to fix with leaflet update
-            utfGridOverlayLayersByLabel[currentOverlay.label].on('mouseover', function () {
-                if (mapReference) {
-                    mapReference.style.cursor = 'pointer';
-                }
-            });
-            utfGridOverlayLayersByLabel[currentOverlay.label].on('mouseout', function () {
-                if (mapReference) {
-                    mapReference.style.cursor = 'default';
-                }
-            });
+            // utfGridOverlayLayersByLabel[currentOverlay.label].on('click', $.proxy(function (e) {
+            //     if (skipAreaClick || !e.data) {
+            //         skipAreaClick = null;
+            //         return;
+            //     }
 
-            utfGridOverlayLayersByLabel[currentOverlay.label].on('click', $.proxy(function (e) {
-                if (skipAreaClick || !e.data) {
-                    skipAreaClick = null;
-                    return;
-                }
+            //     areaMapById[e.data.id] = angular.extend({}, {
+            //         properties: e.data
+            //     }, {
+            //             parent: {
+            //                 label: this.baseMapLabel,
+            //                 mapping: this.baseMapMapping
+            //             }
+            //         });
 
-                areaMapById[e.data.id] = angular.extend({}, {
-                    properties: e.data
-                }, {
-                        parent: {
-                            label: this.baseMapLabel,
-                            mapping: this.baseMapMapping
-                        }
-                    });
+            //     activatePopup(
+            //         angular.extend(e, {
+            //             parent: {
+            //                 label: this.baseMapLabel,
+            //                 mapping: this.baseMapMapping
+            //             }
+            //         })
+            //     );
 
-                activatePopup(
-                    angular.extend(e, {
-                        parent: {
-                            label: this.baseMapLabel,
-                            mapping: this.baseMapMapping
-                        }
-                    })
-                );
-
-                mapService.highlightTrack(e.data.id, this.baseMapLabel);
-            }, {
-                    baseMapLabel: currentOverlay.label,
-                    baseMapMapping: currentOverlay.mapping
-                }));
+            //     mapService.highlightTrack(e.data.id, this.baseMapLabel);
+            // }, {
+            //         baseMapLabel: currentOverlay.label,
+            //         baseMapMapping: currentOverlay.mapping
+            //     }));
 
             // var currentFromLocalStorage = localStorage.getItem(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl);
 
             var utfgridCallback = function (data, currentOverlay, layerGroup) {
-                overlayLayersByLabel[currentOverlay.label] = layerGroup;
-                for (var i = 0; i < data.features.length; i++) {
-                    data.features[i].parent = currentOverlay;
-                    Model.addItemToLayer(data.features[i], currentOverlay);
-                }
+                utfGridOverlayLayersByLabel[currentOverlay.label] = layerGroup;
+
+                var geoJsonOptions = {
+                    onEachFeature: function (feature, layer) {
+                        if (!feature.parent) {
+                            feature.parent = currentOverlay;
+                        }
+                        globalOnEachLine(feature, layer);
+                    },
+                    style: function (feature) {
+                        if (!feature.parent) {
+                            feature.parent = currentOverlay;
+                        }
+                        return globalLineApplyStyle(feature);
+                    }
+                },
+                    linesLayer = L.geoJson(data, geoJsonOptions);
+
+                overlayLayersByLabel[currentOverlay.label] = linesLayer;
+                activateLineHandlers(linesLayer);
+
+                // for (var i = 0; i < data.features.length; i++) {
+                //     data.features[i].parent = currentOverlay;
+                //     Model.addItemToLayer(data.features[i], currentOverlay);
+                // }
 
                 defer.resolve(angular.extend({
                     data: data
                 }, currentOverlay));
             };
 
-            // if (useLocalCaching && currentFromLocalStorage) {
-            //     utfgridCallback(JSON.parse(currentFromLocalStorage), currentOverlay, tileLayer);
-
-            //     $.getJSON(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, function (data) {
-            //         setItemInLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, data);
-            //     });
-            // } else {
             if (Offline.isActive()) {
-                // var data = JSON.parse(localStorage.getItem(geojsonUrl));
                 getItemFromLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl)
                     .then(function (localContent) {
                         if (localContent.data) {
                             var data = JSON.parse(localContent.data);
-                            if (currentOverlay.type === 'line_geojson') {
-                                lineCallback(data, currentOverlay);
-                            } else if (currentOverlay.type === 'poi_geojson') {
-                                poiCallback(data, currentOverlay);
-                            }
+                            utfgridCallback(data, currentOverlay, tileLayer);
                         }
                         delete overlayLayersQueueByLabel[currentOverlay.label];
                     });
@@ -1226,7 +1236,6 @@ angular.module('webmapp')
                     defer.reject();
                 });
             }
-            // }
 
             promise.then(function () {
                 initializeThen(currentOverlay);
@@ -1318,33 +1327,6 @@ angular.module('webmapp')
             return L.latLngBounds(southWest, northEast);
         };
 
-        var readLocalMbTiles = function (fileEntry, options) {
-            return $q(function (resolve, reject) {
-                if (fileEntry !== void 0 && fileEntry.isFile) {
-                    fileEntry.file(
-                        function (blob) {
-                            var fr = new FileReader();
-
-                            fr.onload = function (evt) {
-                                resolve(L.tileLayer.mbTiles(evt.target.result, options));
-                            };
-
-                            var idx = 0;
-
-                            fr.onerror = function (e) {
-                                reject();
-                            };
-
-                            fr.readAsArrayBuffer(blob);
-                        },
-                        function (e) {
-                            reject();
-                        }
-                    );
-                }
-            });
-        };
-
         var resetOfflineData = function (e) {
             // @TODO local mbtiles file was not found. reset offline settings
             console.error('@TODO local mbtiles file was not found. reset offline settings');
@@ -1368,7 +1350,7 @@ angular.module('webmapp')
             }
 
             baseLayersByLabel[baseMap.label] = baseLayer;
-        }
+        };
 
         var buildBaseLayer = function (maxBounds, i) {
             return $q(function (resolve, reject) {
@@ -1486,7 +1468,7 @@ angular.module('webmapp')
                     }
                 }
             });
-        }
+        };
 
         var initialize = function () {
             if (map && map !== null) {
@@ -1851,7 +1833,8 @@ angular.module('webmapp')
 
         mapService.activateUtfGrid = function () {
             for (var i in utfGridBaseLayerByLabel) {
-                map.addLayer(utfGridBaseLayerByLabel[i]);
+                // map.addLayer(utfGridBaseLayerByLabel[i]);
+                map.addLayer(overlayLayersByLabel[i]);
             }
         };
 
@@ -1863,7 +1846,8 @@ angular.module('webmapp')
 
         mapService.resetUtfGridOverlayLayers = function () {
             for (var i in utfGridOverlayLayersByLabel) {
-                map.removeLayer(utfGridOverlayLayersByLabel[i]);
+                // map.removeLayer(utfGridOverlayLayersByLabel[i]);
+                map.removeLayer(overlayLayersByLabel[i]);
             }
         };
 
@@ -2091,6 +2075,10 @@ angular.module('webmapp')
             return featureMapById;
         };
 
+        mapService.getFeaturesIdByLayersMap = function () {
+            return featuresIdByLayersMap;
+        };
+
         mapService.getFeatureById = function (id, layerName) {
             var defer = $q.defer();
 
@@ -2102,57 +2090,56 @@ angular.module('webmapp')
                 }
             };
 
-            if (overlayLayersConfMap[layerName] &&
-                overlayLayersConfMap[layerName].type === 'tile_utfgrid_geojson' &&
-                overlayLayersConfMap[layerName].featureUrl) {
-                $.getJSON(overlayLayersConfMap[layerName].featureUrl + id + '.geojson', function (data) {
-                    var feature = data.features[0];
-                    if (feature &&
-                        feature.properties) {
-                        feature.parent = overlayLayersConfMap[layerName];
-                        featureMapById[feature.properties.id] = feature;
-                        defer.resolve(feature);
-                    } else {
-                        defer.reject();
-                    }
-                }).fail(function () {
-                    defer.reject();
-                });
-            } else {
-                if (typeof overlayLayersConfMap[layerName] === 'undefined') {
-                    if (typeof featureMapById[id] !== 'undefined') {
-                        defer.resolve(featureMapById[id]);
-                    } else if (singleFeatureUrl) {
-                        $.getJSON(singleFeatureUrl + id, function (data) {
-                            var feature = data.features;
-                            if (feature &&
-                                feature.properties) {
-                                // feature.parent = overlayLayersConfMap[feature.properties.category];
-                                feature.parent = overlayLayersConfMap[layerName];
-                                featureMapById[feature.properties.id] = feature;
-                                defer.resolve(feature);
-                            } else {
-                                defer.reject();
-                            }
-                        }).fail(function () {
-                            defer.reject();
-                        });
-                    } else {
-                        defer.reject();
-                    }
-                }
-
-                if (overlayLayersByLabel[layerName]) {
-                    checkNow();
+            // if (overlayLayersConfMap[layerName] &&
+            //     overlayLayersConfMap[layerName].type === 'tile_utfgrid_geojson' &&
+            //     overlayLayersConfMap[layerName].featureUrl) {
+            //     $.getJSON(overlayLayersConfMap[layerName].featureUrl + id + '.geojson', function (data) {
+            //         var feature = data.features[0];
+            //         if (feature &&
+            //             feature.properties) {
+            //             feature.parent = overlayLayersConfMap[layerName];
+            //             featureMapById[feature.properties.id] = feature;
+            //             defer.resolve(feature);
+            //         } else {
+            //             defer.reject();
+            //         }
+            //     }).fail(function () {
+            //         defer.reject();
+            //     });
+            // } else {
+            if (typeof overlayLayersConfMap[layerName] === 'undefined') {
+                if (typeof featureMapById[id] !== 'undefined') {
+                    defer.resolve(featureMapById[id]);
+                    // } else if (singleFeatureUrl) {
+                    //     $.getJSON(singleFeatureUrl + id, function (data) {
+                    //         var feature = data.features;
+                    //         if (feature &&
+                    //             feature.properties) {
+                    //             // feature.parent = overlayLayersConfMap[feature.properties.category];
+                    //             feature.parent = overlayLayersConfMap[layerName];
+                    //             featureMapById[feature.properties.id] = feature;
+                    //             defer.resolve(feature);
+                    //         } else {
+                    //             defer.reject();
+                    //         }
+                    //     }).fail(function () {
+                    //         defer.reject();
+                    //     });
                 } else {
-                    if (overlayLayersQueueByLabel[layerName]) {
-                        overlayLayersQueueByLabel[layerName].then(checkNow);
-                    } else if (overlayLayersConfMap[layerName]) {
-                        initializeLayer(overlayLayersConfMap[layerName]).then(checkNow);
-                    }
+                    defer.reject();
                 }
             }
 
+            if (overlayLayersByLabel[layerName]) {
+                checkNow();
+            } else {
+                if (overlayLayersQueueByLabel[layerName]) {
+                    overlayLayersQueueByLabel[layerName].then(checkNow);
+                } else if (overlayLayersConfMap[layerName]) {
+                    initializeLayer(overlayLayersConfMap[layerName]).then(checkNow);
+                }
+            }
+            // }
 
             return defer.promise;
         };
@@ -2490,9 +2477,15 @@ angular.module('webmapp')
                     var style = globalLineApplyStyle(feature);
                     highlightedTrack = L.geoJson(feature.geometry, {
                         color: styleConf.line.highlight.color,
-                        weight: style.weight
-                    }).addTo(map);
+                        weight: style.weight,
+                        opacity: 1
+                    });
+                    highlightedTrack.addTo(map);
                 });
+
+            map.eachLayer(function (layer) {
+                activateHighlight(layer, styleConf.line.highlight.color)
+            });
         };
 
         mapService.mapIsRotating = function (isRotating) {

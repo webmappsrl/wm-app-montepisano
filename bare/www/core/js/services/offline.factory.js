@@ -121,16 +121,11 @@ angular.module('webmapp')
                 }
             }
 
-            if (typeof offline.options.urlUTFGridTiles === "string") {
-                arrayLink.push(offline.options.urlUTFGridTiles);
-            }
-            else {
-                for (var i in offline.options.urlUTFGridTiles) {
-                    arrayLink.push(offline.options.urlUTFGridTiles[i]);
+            for (var layer in CONFIG.OVERLAY_LAYERS) {
+                if (CONFIG.OVERLAY_LAYERS[layer].type === "tile_utfgrid_geojson") {
+                    arrayLink.push(CONFIG.OFFLINE.baseUrl + "tiles/" + CONFIG.OVERLAY_LAYERS[layer].label.replace(/ /, "_") + ".mbtiles");
                 }
             }
-
-            console.log(arrayLink);
 
             var vmReset = function () {
                 vm.installationProgress = 0;
