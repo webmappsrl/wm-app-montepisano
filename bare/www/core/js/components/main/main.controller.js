@@ -289,7 +289,8 @@ angular.module('webmapp')
                 if (currentPosition && currentPosition.lat && currentPosition.long) {
                     vm.sharePosition({
                         lat: currentPosition.lat,
-                        long: currentPosition.long
+                        long: currentPosition.long,
+                        zoom: CONFIG.MAP.maxZoom
                     }, message, title);
                 }
                 else {
@@ -300,7 +301,7 @@ angular.module('webmapp')
                 }
             }
             else {
-                if (currentPosition && (distanceInMeters(currentPosition.lat, currentPosition.long, vm.centerCoords.lat, vm.centerCoords.lng) > 40)) {
+                if (currentPosition && (Utils.distanceInMeters(currentPosition.lat, currentPosition.long, vm.centerCoords.lat, vm.centerCoords.lng) > 40)) {
                     $ionicPopup.confirm({
                         title: $translate.instant("ATTENZIONE"),
                         template: $translate.instant("La posizione che stai per condividere non è la tua posizione attuale ma la posizione segnata dalla croce nel centro della mappa. Per condividere la tua posizione attuale assicurati di avere il centro della mappa vicino alla tua posizione. Vuoi condividere comunque queste coordinate?")
@@ -308,14 +309,16 @@ angular.module('webmapp')
                         if (res) {
                             vm.sharePosition({
                                 lat: vm.centerCoords.lat,
-                                long: vm.centerCoords.lng
+                                long: vm.centerCoords.lng,
+                                zoom: MapService.getZoom()
                             }, message, title);
                         }
                     });
                 } else {
                     vm.sharePosition({
                         lat: vm.centerCoords.lat,
-                        long: vm.centerCoords.lng
+                        long: vm.centerCoords.lng,
+                        zoom: MapService.getZoom()
                     }, message, title);
                 }
             }
@@ -330,7 +333,7 @@ angular.module('webmapp')
             var url = '';
 
             if (CONFIG.OPTIONS.shareInternalUrl) {
-                url = CONFIG.COMMUNICATION.baseUrl + "#/?map=" + CONFIG.MAP.defZoom + "/" + position.lat + "/" + position.long;
+                url = CONFIG.COMMUNICATION.baseUrl + "#/?map=" + position.zoom + "/" + position.lat + "/" + position.long;
             }
             else {
                 url = "http://www.google.com/maps/place/" +

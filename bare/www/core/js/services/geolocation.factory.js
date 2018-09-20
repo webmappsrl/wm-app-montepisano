@@ -566,7 +566,6 @@ angular.module('webmapp')
                     geolocationService.stopRecording();
                 }
                 geolocationService.disable();
-                BackgroundGeolocation.endTask(taskKey);
                 return;
             }
 

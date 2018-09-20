@@ -9,14 +9,13 @@
             <span class="modal-title">{{"VISUALIZZA/NASCONDI CATEGORIE" | translate}}</span>
 
             <ion-list ng-if="!vm.isNewModal">
-                <label class="item item-checkbox ng-not-empty" ng-repeat="(key, obj) in vm.filters" ng-init="currentFilter = obj.value" ng-model="obj.value"
-                    ng-class="{
+                <label class="item item-checkbox ng-not-empty" ng-repeat="(key, obj) in vm.filters" ng-class="{
                         'is-selected': obj.value,
                         'is-not-selected': !obj.value
                     }">
                     <div class="checkbox checkbox-input-hidden disable-pointer-events checkbox-circle">
-                        <input type="checkbox" ng-model="obj.value" ng-change="vm.updateFilter(key, obj.value)" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-not-empty">
-                        <i class="wm-icon-outline-check_box" ng-class="{
+                        <input type="checkbox" ng-click="vm.updateFilter(key, !obj.value)">
+                        <i ng-class="{
                                 'wm-icon-outline-check_box': obj.value,
                                 'wm-icon-outline-check_box_outline_blank': !obj.value
                             }"></i>
@@ -24,7 +23,8 @@
                     <div class="item-content disable-pointer-events">
                         <span ng-if="key !== 'Tutte'" ng-bind-html="obj.name"></span>
                         <strong ng-if="key === 'Tutte'">{{obj.name}}</strong>
-                        <span ng-if="obj.icon !== 'wm-icon-generic'" class="icon {{obj.icon}}" style="float: right" ng-style="{ 'color': obj.color }"></span>
+                        <span ng-if="obj.icon !== 'wm-icon-generic'" class="icon {{obj.icon}}" style="float: right"
+                            ng-style="{ 'color': obj.color }"></span>
                     </div>
                 </label>
             </ion-list>
@@ -50,7 +50,8 @@
 
             <div class="accordion-filters" ng-if="vm.isNewModal">
                 <div class="filters-tab-title-container">
-                    <div ng-repeat="(key, item) in filters" ng-click="switchTab(key)" class="filters-tab-title cols-{{tabNum}}" ng-class="{
+                    <div ng-repeat="(key, item) in filters" ng-click="switchTab(key)" class="filters-tab-title cols-{{tabNum}}"
+                        ng-class="{
                             'selected': currentTab === key
                         }">
                         {{item.languages[vm.currentLang] || item.languages[vm.defaultLang] || item.label}}
@@ -67,7 +68,8 @@
                                     'wm-icon-outline-check_box': sublayer.checked === 2,
                                     'wm-icon-outline-check_box_outline_blank': sublayer.checked === 0,
                                     'wm-icon-outline-indeterminate_check_box': sublayer.checked === 1
-                                }" ng-click="toggleSubTabCheckBox(sublayerId,key)"></i>
+                                }"
+                                    ng-click="toggleSubTabCheckBox(sublayerId,key)"></i>
                                 <div ng-click=" toggleSubTab(sublayerId, key) ">
                                     <span ng-bind-html="sublayer.label[vm.currentLang] || sublayer.label[vm.defaultLang] || sublayer.label ">
                                     </span>
@@ -77,7 +79,8 @@
 
                             <div class="filters-layer" ng-repeat="(layerId, layer) in sublayer.items" ng-class="{
                                 'disable-checkbox': !layer.clickable
-                            }" ng-click="toggleLayer(layer.label, sublayerId, key)">
+                            }"
+                                ng-click="toggleLayer(layer.label, sublayerId, key)">
                                 <i class="left-icon" ng-class="{
                                     'wm-icon-outline-check_box': layer.checked,
                                     'wm-icon-outline-check_box_outline_blank': !layer.checked
@@ -91,7 +94,8 @@
                                 <i class="left-icon" ng-class="{
                                     'wm-icon-outline-radio_button_checked': vm.currentMapLayer === mapItem.label,
                                     'wm-icon-outline-radio_button_unchecked': vm.currentMapLayer !== mapItem.label
-                                }" ng-click="vm.updateBaseMap(mapItem.label)"></i>
+                                }"
+                                    ng-click="vm.updateBaseMap(mapItem.label)"></i>
                                 <div ng-click="vm.updateBaseMap(mapItem.label)">
                                     {{mapItem.label}}
                                 </div>

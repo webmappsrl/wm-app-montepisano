@@ -116,7 +116,7 @@ angular.module('webmapp')
                 }
                 checkAllTabsState();
             } else {
-                lang = $translate.preferredLanguage(),
+                var lang = $translate.preferredLanguage(),
                     tmp = {},
                     allActive = false,
                     activeFilters = {};
@@ -151,12 +151,13 @@ angular.module('webmapp')
                 modalScope.vm.currentMapLayer = MapService.getCurrentMapLayerName();
             }
 
-            modal.show();
-
             if (modalScope.vm.isNewModal) {
                 collapseAll();
                 vm.initialFilters = angular.copy(MapService.getActiveFilters());
             }
+
+            Utils.forceDigest();
+            modal.show();
         };
 
         $scope.$on('$destroy', function () {
