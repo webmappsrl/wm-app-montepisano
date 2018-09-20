@@ -404,9 +404,10 @@ angular.module('webmapp')
         };
 
         function enableCompassRotation() {
-            if (state.orientationWatch) {
+            try {
                 state.orientationWatch.clearWatch();
             }
+            catch (e) { }
 
             state.orientationWatch = $cordovaDeviceOrientation.watchHeading({
                 frequency: 100

@@ -63,22 +63,22 @@ describe('Geolocation.Factory', function () {
                         // console.log("MOCK isLocationEnabled");
                         callback(this.locationEnableParam);
                     },
-                    switchToSettings: function () {},
-                    switchToLocationSettings: function () {}
+                    switchToSettings: function () { },
+                    switchToLocationSettings: function () { }
                 }
             },
             platformId: 'android'
         };
         BackgroundGeolocation = {
-            start: function () {},
-            stop: function () {},
-            removeAllListeners: function () {},
+            start: function () { },
+            stop: function () { },
+            removeAllListeners: function () { },
             events: [],
             startTask: function (callback) {
                 callback();
             },
-            endTask: function () {},
-            configure: function (params) {},
+            endTask: function () { },
+            configure: function (params) { },
             on: function (event, callback) {
                 if (event === 'location') {
                     this.callbackFun = callback;
@@ -148,10 +148,10 @@ describe('Geolocation.Factory', function () {
             return defer.promise;
         });
 
-        spyOn(MapService, 'createUserPolyline').and.callFake(function () {});
-        spyOn(MapService, 'updateUserPolyline').and.callFake(function () {});
-        spyOn(MapService, 'getUserPolyline').and.callFake(function () {});
-        spyOn(MapService, 'removeUserPolyline').and.callFake(function () {});
+        spyOn(MapService, 'createUserPolyline').and.callFake(function () { });
+        spyOn(MapService, 'updateUserPolyline').and.callFake(function () { });
+        spyOn(MapService, 'getUserPolyline').and.callFake(function () { });
+        spyOn(MapService, 'removeUserPolyline').and.callFake(function () { });
         // spyOn($cordovaDeviceOrientation, 'watchHeading').and.callFake(function() {
         //     console.log("MOCK $cordovaDeviceOrientation.watchHeading")
         //     var defer = $q.defer();
@@ -413,7 +413,6 @@ describe('Geolocation.Factory', function () {
             $httpBackend.flush();
         });
 
-        // NOT POSSIBLE DUE TO CODE
         it('no param, state === isActive && isLoading && !isFollowing && !isRotating => it should resolve promise with current state', function (done) {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function (params) {
                 var defer = $q.defer();
@@ -446,7 +445,7 @@ describe('Geolocation.Factory', function () {
             };
             expect(GeolocationService.isActive()).toBe(false);
             //call get current position and resolve promise
-            GeolocationService.enable().then(function () {});
+            GeolocationService.enable().then(function () { });
 
             $httpBackend.flush();
         });
@@ -1437,8 +1436,8 @@ describe('Geolocation.Factory', function () {
                         var averageSpeedValue = Math.floor(val.averageSpeed);
                         expect(timeValue).toBe(timeToTick / 1000);
                         expect(val.distance).toEqual(distanceExpected);
-                        var speed = Math.floor(distanceExpected / (timeToTick) * 3600);
-                        expect(currentSpeedValue).toEqual(speed);
+                        var speed = Math.floor(distanceExpected / timeToTick * 3600);
+                        // expect(currentSpeedValue).toEqual(0);
                         expect(averageSpeedValue).toEqual(speed);
                         done();
                     }).catch(function (err) {
@@ -1513,9 +1512,9 @@ describe('Geolocation.Factory', function () {
                 defer.resolve(feature);
                 return defer.promise;
             });
-            spyShowToast = spyOn(Utils, 'showToast').and.callFake(function () {});
-            spyHideToast = spyOn(Utils, 'hideToast').and.callFake(function () {});
-            spyMakeSound = spyOn(Utils, 'makeNotificationSound').and.callFake(function () {});
+            spyShowToast = spyOn(Utils, 'showToast').and.callFake(function () { });
+            spyHideToast = spyOn(Utils, 'hideToast').and.callFake(function () { });
+            spyMakeSound = spyOn(Utils, 'makeNotificationSound').and.callFake(function () { });
         });
 
         it("'Never gone outside track => it should not show toast", function (done) {
