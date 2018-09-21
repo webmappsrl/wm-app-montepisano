@@ -2,7 +2,6 @@ angular.module('webmapp')
 
     .controller('TaxonomyController', function TaxonomyController(
         $rootScope,
-        $ionicLoading,
         $scope,
         $state,
         $translate,

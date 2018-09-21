@@ -905,7 +905,6 @@ angular.module('webmapp')
                     if (queueLayerToActivate === group.label) {
                         mapService.activateLayer(queueLayerToActivate);
                         queueLayerToActivate = null;
-                        $ionicLoading.hide();
                         return;
                     }
                 } else {
@@ -918,7 +917,6 @@ angular.module('webmapp')
             if (queueLayerToActivate === currentOverlay.label) {
                 mapService.activateLayer(queueLayerToActivate);
                 queueLayerToActivate = null;
-                $ionicLoading.hide();
             }
         };
 
@@ -1287,8 +1285,6 @@ angular.module('webmapp')
             couponsPromise = initializeOffers();
 
             var promiseCallback = function () {
-                $ionicLoading.hide();
-
                 if (queueLayerToActivate !== null) {
                     if (queueLayerToActivate === '$all') {
                         mapService.showAllLayers();
@@ -1300,12 +1296,13 @@ angular.module('webmapp')
                 }
 
                 dataReady = true;
+                $rootScope.$$phase || $rootScope.$digest();
+
+                $ionicLoading.hide();
+
                 if (navigator.splashscreen) {
                     navigator.splashscreen.hide();
                 }
-
-                $rootScope.$$phase || $rootScope.$digest();
-
             }
 
             $q.all(promises).then(function () {
@@ -1314,10 +1311,6 @@ angular.module('webmapp')
                 // TODO find a way to wait until all promises responded
                 console.warn('An error has occurred in utfgrid geojson files', err);
                 setTimeout(function () {
-                    dataReady = true;
-                    if (navigator.splashscreen) {
-                        navigator.splashscreen.hide();
-                    }
                     promiseCallback();
                 }, 2000);
             });
@@ -1482,12 +1475,16 @@ angular.module('webmapp')
                 pagePromise = initializePages();
             }
 
-            if (mapConf.layers.length === 0) {
+            if (!mapConf.layers || mapConf.layers.length === 0) {
                 if (navigator.splashscreen) {
                     navigator.splashscreen.hide();
                 }
                 return;
             }
+
+            $ionicLoading.show({
+                template: '<ion-spinner></ion-spinner>'
+            });
 
             var maxBounds = null,
                 mapCenter = null,

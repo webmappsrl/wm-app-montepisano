@@ -15,7 +15,12 @@
     <preference name="android-minSdkVersion" value="16" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashScreen" value="screen" />
-    <preference name="SplashScreenDelay" value="10000" />
+    <preference name="AutoHideSplashScreen" value="false" />
+    <preference name="SplashScreenDelay" value="100000" />
+    <preference name="ShowSplashScreenSpinner" value="true" />
+    <preference name="SplashScreenSpinnerColor" value="white" />
+    <preference name="SplashShowOnlyFirstTime" value="false" />
+    <preference name="FadeSplashScreenDuration" value="1000" />
     <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="StatusBarStyle" value="lightcontent" />
     <preference name="orientation" value="portrait" />
@@ -88,7 +93,6 @@
     <plugin name="cordova-plugin-geolocation" spec="~2.4.0" />
     <plugin name="cordova-plugin-inappbrowser" spec="~1.5.0" />
     <plugin name="cordova-plugin-network-information" spec="~1.2.1" />
-    <plugin name="cordova-plugin-splashscreen" spec="~2.1.0" />
     <plugin name="cordova-plugin-statusbar" spec="~2.2.0" />
     <plugin name="cordova-plugin-whitelist" spec="~1.3.0" />
     <plugin name="cordova-plugin-zip" spec="~3.0.0" />
@@ -112,4 +116,5 @@
     <plugin name="cordova-plugin-actionsheet" spec="^2.3.3" />
     <plugin name="cordova-plugin-device" spec="^1.1.7" />
     <plugin name="cordova-plugin-compat" spec="~1.0.0" />
+    <plugin name="cordova-plugin-splashscreen" spec="5.0.2" />
 </widget>
