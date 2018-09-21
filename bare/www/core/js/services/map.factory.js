@@ -210,6 +210,9 @@ angular.module('webmapp')
                 } else if (utfGridOverlayLayersByLabel[layerName]) {
                     map.addLayer(layer);
                     map.addLayer(utfGridOverlayLayersByLabel[layerName]);
+                    if (generalConf.useAlmostOver) {
+                        map.almostOver.addLayer(layer);
+                    }
                 }
             }
         };
@@ -1123,7 +1126,7 @@ angular.module('webmapp')
                 tileLayer = currentOverlay.tilesUrl;
 
             if (Offline.isActive()) {
-                tilesUrl = cordova.file.destDirectory + "map/" + currentOverlay.label.replace(/ /, "_") + ".mbtiles";
+                tilesUrl = cordova.file.dataDirectory + "map/" + currentOverlay.label.replace(/ /, "_") + ".mbtiles";
                 tileLayer = tileLayersByLabel[currentOverlay.label] = L.tileLayer.mbTiles(tilesUrl, options);
             }
             else {

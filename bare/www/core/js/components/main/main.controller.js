@@ -520,14 +520,24 @@ angular.module('webmapp')
         };
 
         vm.toggleMap = function () {
-            vm.isMapPage = !vm.isMapPage;
-            vm.mapView = vm.isMapPage;
-            // vm.isNavigable = false;
+            if (!vm.isNavigating) {
+                if (vm.isNavigable) {
+                    vm.isNavigable = false;
+                    $rootScope.isNavigable = false;
+                    $rootScope.$emit('item-navigable', vm.isNavigable);
+                }
+
+                Utils.goBack();
+            }
+            else {
+                vm.isMapPage = !vm.isMapPage;
+                vm.mapView = vm.isMapPage;
+                $rootScope.$emit('expand-map', vm.isMapPage);
+            }
+
             setTimeout(function () {
                 MapService.adjust();
             }, 350);
-            MapService.adjust();
-            $rootScope.$emit('expand-map', vm.isMapPage);
         };
 
         var navigationIntervalFunction = function () {

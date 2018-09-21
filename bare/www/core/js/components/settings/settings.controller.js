@@ -7,6 +7,7 @@ angular.module('webmapp')
         $translate,
         Account,
         Auth,
+        CONFIG,
         Offline,
         Utils
     ) {
@@ -57,6 +58,19 @@ angular.module('webmapp')
         offlineScope.canBeEnabled = Offline.canBeEnabled();
         offlineScope.downloadInProgress = false;
         offlineScope.unzipInProgress = false;
+        size = CONFIG.OFFLINE.size ? CONFIG.OFFLINE.size : 400;
+
+        if (size > 1000) {
+            size = (size / 1024).toFixed(1) + " GB";
+        }
+        else {
+            size = size + " MB";
+        }
+
+        offlineScope.message = $translate.instant("La mappa offline occupa circa 250 MB di spazio, è consigliabile effettuare il download con una rete Wi-Fi (l'installazione può richiedere alcuni minuti)",
+            {
+                size: size
+            });
 
         vm.openOfflinePage = function () {
             offlineModal && offlineModal.show();

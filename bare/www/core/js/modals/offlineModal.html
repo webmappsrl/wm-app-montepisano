@@ -26,8 +26,7 @@
                     offline" | translate}}</p>
 
                 <p ng-if="!canBeEnabled && !downloadInProgress && !unzipInProgress">
-                    {{"La mappa offline occupa circa 250 MB di spazio, è consigliabile effettuare il download con una
-                    rete Wi-Fi (l'installazione può richiedere alcuni minuti)" | translate}}
+                    {{message}}
                 </p>
             </div>
 
