@@ -137,6 +137,16 @@ angular.module('webmapp')
 
             vmReset();
 
+            var destDirectory = cordova.file.dataDirectory + 'map/',
+                transferPromises = [],
+                promises = [],
+                aborted = false,
+                download = {
+                    downloadArray: {},
+                    zipArray: {},
+                    totalDownloadSize: (CONFIG.OFFLINE && CONFIG.OFFLINE.size) ? CONFIG.OFFLINE.size * 1024 * 1024 : -1
+                };
+
             var abortAll = function () {
                 for (var i = 0; i < transferPromises.length; i++) {
                     if (typeof transferPromises[i].abort === 'function') {
@@ -154,25 +164,83 @@ angular.module('webmapp')
                 vmReset();
             };
 
-            var destDirectory = cordova.file.dataDirectory + 'map/',
-                transferPromises = [],
-                promises = [],
-                aborted = false,
-                download = 0,
-                unzip = 0,
-                currentDownload = {},
-                currentUnzip = {};
+            var calculateProgress = function () {
+                var progress = 0,
+                    loaded = 0,
+                    size = 0,
+                    validSize = true;
+
+                for (var i in download.downloadArray) {
+                    if (i !== "length") {
+                        loaded += download.downloadArray[i].loaded;
+
+                        if (download.downloadArray[i].size <= 0) {
+                            validSize = false;
+                        }
+
+                        if (validSize) {
+                            size += download.downloadArray[i].size;
+                        }
+                    }
+                }
+
+                if (validSize) {
+                    progress = loaded / size;
+                }
+                else {
+                    progress = loaded / download.totalDownloadSize;
+                }
+
+                if (download.zipArray.length && download.zipArray.length > 0) {
+                    progress *= 80;
+
+                    loaded = 0;
+                    size = 0;
+
+                    for (var i in download.zipArray) {
+                        if (i !== "length") {
+                            loaded += download.downloadArray[i].loaded;
+                            size += download.downloadArray[i].size;
+                        }
+                    }
+
+                    progress += loaded / size * 20;
+                }
+                else {
+                    progress *= 100;
+                }
+
+                vm.installationProgress = Math.min(Math.round(progress), 99);
+            };
+
+            var progressInterval = setInterval(calculateProgress, 500);
 
             arrayLink.forEach(function (item) {
                 var filename = item.split('/').pop(),
                     format = filename.split('.').pop();
 
-                download++;
-                currentDownload[filename] = 0;
+                if (!download.downloadArray.length) {
+                    download.downloadArray.length = 1;
+                }
+                else {
+                    download.downloadArray.length++;
+                }
+                download.downloadArray[filename] = {
+                    loaded: 0,
+                    size: 0
+                };
 
                 if (format === 'zip') {
-                    unzip++;
-                    currentUnzip[filename] = 0;
+                    if (!download.zipArray.length) {
+                        download.zipArray.length = 1;
+                    }
+                    else {
+                        download.zipArray.length++;
+                    }
+                    download.zipArray[filename] = {
+                        loaded: 0,
+                        size: 0
+                    };
                 }
             });
 
@@ -205,16 +273,11 @@ angular.module('webmapp')
                                     // console.error('Si è verificato un errore nell\'unzip delle immagini');
                                 },
                                     function (progress) {
-                                        // vm.installationProgress = Math.min(Math.max(Math.round((progress.loaded / progress.total) * 100), vm.installationProgress), 99);
-                                        currentUnzip[filename] = ((progress.loaded / progress.total) * 100) / (unzip + download);
-                                        var totalProgress = 0;
-                                        for (var i in currentDownload) {
-                                            totalProgress += currentDownload[i];
+                                        if (progress.lengthComputable) {
+                                            download.zipArray[filename].size = progress.total;
                                         }
-                                        for (var i in currentUnzip) {
-                                            totalProgress += currentUnzip[i];
-                                        }
-                                        vm.installationProgress = Math.min(Math.round(totalProgress), 99);
+                                        download.zipArray[filename].loaded = progress.loaded;
+
                                         vm.unzipInProgress = true;
                                     });
                         } else if (format === 'mbtiles') {
@@ -241,20 +304,12 @@ angular.module('webmapp')
                             if (aborted) {
                                 return;
                             }
-                            currentDownload[filename] = ((progress.loaded / progress.total) * 100) / (download + unzip);
-                            // console.log(progress);
-                            // console.log(currentDownload);
-                            // if (format === 'mbtiles') {
-                            // vm.installationProgress = Math.min(Math.max(Math.round((progress.loaded / progress.total) * 100), vm.installationProgress), 99);
-                            // }
-                            var totalProgress = 0;
-                            for (var i in currentDownload) {
-                                totalProgress += currentDownload[i];
+
+                            if (progress.lengthComputable) {
+                                download.downloadArray[filename].size = progress.total;
                             }
-                            for (var i in currentUnzip) {
-                                totalProgress += currentUnzip[i];
-                            }
-                            vm.installationProgress = Math.min(Math.round(totalProgress), 99);
+                            download.downloadArray[filename].loaded = progress.loaded;
+
                             vm.downloadInProgress = true;
                         });
             });
@@ -263,6 +318,7 @@ angular.module('webmapp')
                 vm.downloadInProgress = false;
                 vm.canBeEnabled = true;
                 vm.unzipInProgress = false;
+                clearInterval(progressInterval);
                 _state.available = true;
                 localStorage.setItem('offlineAvailable', _state.available);
             });

@@ -491,11 +491,15 @@ angular.module('webmapp')
 
                 if (CONFIG.routeID && feature.routeID && CONFIG.routeID !== feature.routeID) {
                     vm.isEditable = false;
-                    vm.isExportable = true;
                 }
                 else {
                     vm.isEditable = true;
+                }
+                if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableExportRecordedTrack) {
                     vm.isExportable = true;
+                }
+                else {
+                    vm.isExportable = false;
                 }
             }
 
