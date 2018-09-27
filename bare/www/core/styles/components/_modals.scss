@@ -388,6 +388,27 @@
   }
 }
 
+.image-picker {
+  width: 100%;
+  line-height: 50px;
+  vertical-align: middle;
+  font-size: 120%;
+
+  .report-buttons {
+    width: 40%;
+    float: left;
+    .report-button {
+      display: inline;
+      font-size: 120%;
+    }
+  }
+
+  a {
+    margin: 0 5px;
+    font-size: 120%;
+  }
+}
+
 /* MODAL DOWNLOAD */
 ion-modal-view.modal-download {
   position: relative;
@@ -418,7 +439,23 @@ ion-modal-view.modal-download {
   100% { transform: rotate(360deg); }
 }
 
+@media screen and (max-width: 350px) {
+  .image-picker {
+    font-size: 100%;
+    .report-buttons {
+      width: 50%;
+    }
+  }
+}
 
+@media screen and (min-width: 350px) and (max-width: 380px) {
+  .image-picker {
+    font-size: 105%;
+    .report-buttons {
+      width: 45%;
+    }
+  }
+}
 
 @media (min-width: 1025px) {
   .modal {

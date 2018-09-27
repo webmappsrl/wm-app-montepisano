@@ -117,4 +117,5 @@
     <plugin name="cordova-plugin-device" spec="^1.1.7" />
     <plugin name="cordova-plugin-compat" spec="~1.0.0" />
     <plugin name="cordova-plugin-splashscreen" spec="5.0.2" />
+    <plugin name="cordova-plugin-camera" spec="^4.0.3" />
 </widget>

@@ -1,0 +1,47 @@
+<ion-modal-view class="modal-mappalo modal-report">
+    <a class="modal-close" ng-click="vm.hide()">
+        <i class="icon wm-icon-android-close"></i>
+    </a>
+    <ion-content ng-style="{
+        'background': vm.colors.global.background
+    }">
+        <div class="modal-content">
+            <span class="modal-title">{{"Segnalazione" | translate}}</span>
+
+            <div class="login-form">
+                <label class="item item-input">
+                    <input class="input-email input-ph" type="text" ng-model="vm.notes" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="off" placeholder="{{'Note' | translate}}">
+                </label>
+                <div class="image-picker">
+                    <div class="report-buttons">
+                        <button ng-click="vm.getPicture(true)" ng-style="{
+                                    'background': vm.colors.global.buttonsBackground,
+                                    'color': vm.colors.global.buttonsColor
+                                }" class="report-button button">
+                            <i class="icon wm-icon-fu_camera"></i>
+                        </button>
+                        <button ng-click="vm.getPicture(false)" ng-style="{
+                                    'background': vm.colors.global.buttonsBackground,
+                                    'color': vm.colors.global.buttonsColor
+                                }" class="report-button button">
+                            <i class="icon wm-icon-images"></i>
+                        </button>
+                    </div>
+                    <div ng-if="vm.picture !== ''">
+                        {{vm.picName}}
+                        <a ng-click="vm.resetPicture()">
+                            <i class="icon wm-icon-close-circled"></i>
+                        </a>
+                    </div>
+                    <div ng-if="vm.picture === ''">{{"Nessuna immagine" | translate}}</div>
+                </div>
+                <button ng-click="vm.addReportToQueue()" ng-style="{
+                                'background': vm.colors.global.buttonsBackground,
+                                'color': vm.colors.global.buttonsColor
+                            }" class="login-button button button-block">
+                    {{"Invia" | translate}}
+                </button>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

@@ -58,7 +58,7 @@ angular.module('webmapp')
         offlineScope.canBeEnabled = Offline.canBeEnabled();
         offlineScope.downloadInProgress = false;
         offlineScope.unzipInProgress = false;
-        size = CONFIG.OFFLINE.size ? CONFIG.OFFLINE.size : 400;
+        size = CONFIG.OFFLINE.size ? CONFIG.OFFLINE.size : 250;
 
         if (size > 1000) {
             size = (size / 1024).toFixed(1) + " GB";

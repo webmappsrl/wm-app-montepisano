@@ -353,6 +353,7 @@ angular.module('webmapp')
                     data: data
                 }).then(function () {
                     // console.log('Cached ' + key);
+                }, function (err) {
                 });
             };
 
