@@ -22,6 +22,8 @@ angular.module('webmapp')
 
         // TODO: add single template overwrite (!)
 
+        config = CONFIGProvider.$get();
+
         $stateProvider
             .state('app', {
                 abstract: true,
@@ -100,7 +102,7 @@ angular.module('webmapp')
                 }
             });
 
-        if (CONFIGProvider.SEARCH && CONFIGProvider.SEARCH.active) {
+        if (config.SEARCH && config.SEARCH.active) {
             $stateProvider
                 .state('app.main.search', {
                     url: '/search',
@@ -112,10 +114,10 @@ angular.module('webmapp')
                 });
         }
 
-        if (CONFIGProvider.PAGES) {
-            for (var i = 0; i < CONFIGProvider.PAGES.length; i++) {
-                if (!CONFIGProvider.PAGES[i].isCustom) {
-                    if (CONFIGProvider.PAGES[i].type === "packages") {
+        if (config.PAGES) {
+            for (var i = 0; i < config.PAGES.length; i++) {
+                if (!config.PAGES[i].isCustom) {
+                    if (config.PAGES[i].type === "packages") {
                         $stateProvider
                             .state('app.main.packages', {
                                 url: '/page/packages/:id',
@@ -133,7 +135,7 @@ angular.module('webmapp')
                                     }
                                 }
                             });
-                    } else if (CONFIGProvider.PAGES[i].type === "taxonomy") {
+                    } else if (config.PAGES[i].type === "taxonomy") {
                         $stateProvider
                             .state('app.main.taxonomy', {
                                 url: '/taxonomy/:id',
@@ -153,11 +155,11 @@ angular.module('webmapp')
                             });
                     } else {
                         $stateProvider
-                            .state('app.main.' + CONFIGProvider.PAGES[i].type, {
-                                url: '/page/' + CONFIGProvider.PAGES[i].type,
+                            .state('app.main.' + config.PAGES[i].type, {
+                                url: '/page/' + config.PAGES[i].type,
                                 views: {
                                     'inception-top': {
-                                        templateUrl: basePath + 'js/components/' + CONFIGProvider.PAGES[i].type + '/' + CONFIGProvider.PAGES[i].type + '.html'
+                                        templateUrl: basePath + 'js/components/' + config.PAGES[i].type + '/' + config.PAGES[i].type + '.html'
 
                                     }
                                 }
@@ -165,8 +167,8 @@ angular.module('webmapp')
                     }
                 } else {
                     $stateProvider
-                        .state('app.main.' + CONFIGProvider.PAGES[i].type, {
-                            url: '/page/' + CONFIGProvider.PAGES[i].type,
+                        .state('app.main.' + config.PAGES[i].type, {
+                            url: '/page/' + config.PAGES[i].type,
                             views: {
                                 'inception-top': {
                                     templateUrl: basePath + 'js/components/' + 'custom' + '/' + 'custom' + '.html'
@@ -177,8 +179,8 @@ angular.module('webmapp')
             }
         }
 
-        if (CONFIGProvider.EXTRA) {
-            if (CONFIGProvider.EXTRA.events) {
+        if (config.EXTRA) {
+            if (config.EXTRA.events) {
                 $stateProvider
                     .state('app.main.events', {
                         url: '/events',
@@ -199,7 +201,7 @@ angular.module('webmapp')
             }
         }
 
-        $urlRouterProvider.otherwise(CONFIGProvider.OPTIONS.startUrl);
+        $urlRouterProvider.otherwise(config.OPTIONS.startUrl);
 
         // $locationProvider.html5Mode(true); Aggiungere $locationProvider ai parametri
     });

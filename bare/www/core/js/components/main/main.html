@@ -9,8 +9,7 @@
         'has-shadow': vm.hasShadow,
         'show-start-navigation': vm.isNavigable,
         'logged-in': vm.userData.ID
-    }"
-    ng-controller="MainController as vm">
+    }" ng-controller="MainController as vm">
 
     <ion-content class="content-pane" delegate-handle="mainScroll">
 
@@ -21,7 +20,7 @@
     <div class="map-menu" ng-if="vm.showRightMenu">
         <div class="list" ng-style="{
             'background': vm.colors.menu.background,
-            'color': vm.colors.menu.color, 
+            'color': vm.colors.menu.color,
         }">
             <a class="item item-icon-left" ng-click="vm.openFilters()">
                 <i class="icon {{vm.filterIcon}}"></i> {{"seleziona categorie" | translate}}
@@ -36,8 +35,7 @@
     </a>
     <a href="" class="details-howtoreach" ng-style="{
         'background': vm.colors.details.buttons
-    }" ng-click="vm.openExternalMap()"
-        ng-if="vm.detail && detailCoordinates && !vm.hideHowToReach">
+    }" ng-click="vm.openExternalMap()" ng-if="vm.detail && detailCoordinates && !vm.hideHowToReach">
         <i class="icon ion-map"></i> {{"Come raggiungerci" | translate}}
     </a>
 
@@ -49,20 +47,17 @@
         }">
 
         <!-- Map expand -->
-        <a href="" class="btn-expand map-expand map-expand-right" ng-click="vm.layerState ? vm.goToMap() : vm.toggleMap()"
-            ng-if="!vm.hideExpander">
+        <a href="" class="btn-expand map-expand map-expand-right" ng-click="vm.toggleMap()" ng-if="!vm.hideExpander">
             <i class="icon ion-arrow-expand"></i>
         </a>
 
         <!-- Map shrink -->
-        <a href="" class="btn-expand map-expand map-shrink map-expand-right" ng-click="vm.toggleMap()" ng-show="!vm.isSearchPage && !vm.hideExpander"
-            ng-if="!vm.isWelcomePage">
+        <a href="" class="btn-expand map-expand map-shrink map-expand-right" ng-click="vm.toggleMap()" ng-show="!vm.isSearchPage && !vm.hideExpander" ng-if="!vm.isWelcomePage">
             <i class="icon wm-icon-arrow-shrink"></i>
         </a>
 
         <!-- Map central pointer -->
-        <i class="icon wm-icon-ios7-plus-empty map-center" ng-if="!vm.hideDeactiveCentralPointer && !vm.geolocationState.isFollowing"
-            ng-style="{
+        <i class="icon wm-icon-ios7-plus-empty map-center" ng-if="!vm.hideDeactiveCentralPointer && !vm.geolocationState.isFollowing" ng-style="{
                 'color': vm.geolocationState.isFollowing ? '' : '#000000',
                 'opacity': 0.4
             }"></i>
@@ -78,8 +73,7 @@
                             'wm-icon-android-locate-full': !vm.geolocationState.isRotating,
                             'fa-spin': vm.geolocationState.isLoading && !vm.geolocationState.isRotating && !vm.geolocationState.isFollowing,
                             'blu-icon': vm.geolocationState.isFollowing
-                        }"
-                        ng-style="!vm.geolocationState.isRotating ? {
+                        }" ng-style="!vm.geolocationState.isRotating ? {
                             '-webkit-transform': 'rotate(0deg)',
                             'transform': 'rotate(0deg)'
                         } : {
@@ -104,8 +98,7 @@
         <div class="coords-block" ng-class="{
                 'animate-rightin': vm.isCoordsBlockExpanded,
                 'animate-rightout': !vm.isCoordsBlockExpanded
-            }"
-            ng-if="vm.centerCoords" ng-click="vm.switchCoords()">
+            }" ng-if="vm.centerCoords" ng-click="vm.switchCoords()">
             <span>
                 <button class="coords-share-button" ng-click="vm.shareCurrentPosition($event)" ng-if="vm.useShare">
                     <i class="icon wm-icon-android-share"></i>

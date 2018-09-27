@@ -488,7 +488,6 @@ angular.module('webmapp')
                     vm.relatedUrlLeftValue = vm.relatedUrlLeftValue + 32;
                 }
 
-
                 if (CONFIG.routeID && feature.routeID && CONFIG.routeID !== feature.routeID) {
                     vm.isEditable = false;
                 }

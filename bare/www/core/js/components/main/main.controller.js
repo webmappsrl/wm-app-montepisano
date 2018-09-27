@@ -492,7 +492,8 @@ angular.module('webmapp')
         };
 
         vm.goToMap = function () {
-            Utils.goTo('/');
+            console.log("lol")
+            // Utils.goTo('/');
         };
 
         vm.expandCoords = function () {
@@ -521,18 +522,17 @@ angular.module('webmapp')
 
         vm.toggleMap = function () {
             if (!vm.isNavigating) {
+                vm.isMapPage = !vm.isMapPage;
+                vm.mapView = vm.isMapPage;
+                $rootScope.$emit('expand-map', vm.isMapPage);
+            }
+            else {
                 if (vm.isNavigable) {
                     vm.isNavigable = false;
                     $rootScope.isNavigable = false;
                     $rootScope.$emit('item-navigable', vm.isNavigable);
                 }
-
                 Utils.goBack();
-            }
-            else {
-                vm.isMapPage = !vm.isMapPage;
-                vm.mapView = vm.isMapPage;
-                $rootScope.$emit('expand-map', vm.isMapPage);
             }
 
             setTimeout(function () {
