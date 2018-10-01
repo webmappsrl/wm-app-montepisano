@@ -10,9 +10,13 @@ angular.module('webmapp')
 
         // Load local config.json
         function loadConfigJson() {
-            var xobj = new XMLHttpRequest();
+            var xobj = new XMLHttpRequest(),
+                url = "./config/config.json";
             xobj.overrideMimeType("application/json");
-            xobj.open('GET', './config/config.json', false);
+            if (!window.cordova && window.location.hostname !== "localhost") {
+                url = "./config.json";
+            }
+            xobj.open('GET', url, false);
             xobj.onreadystatechange = function () {
                 if (xobj.readyState == 4 && xobj.status == "200") {
                     GENERAL_CONFIG = JSON.parse(xobj.responseText);
@@ -144,7 +148,7 @@ angular.module('webmapp')
                 });
             }
 
-            console.error(config);
+            // console.log(config);
             return config;
         };
 
