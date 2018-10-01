@@ -8,7 +8,6 @@ angular.module('webmapp')
 
         var GENERAL_CONFIG = {};
 
-        // Load local config.json
         function loadConfigJson() {
             var xobj = new XMLHttpRequest(),
                 url = "./config/config.json";
@@ -25,24 +24,7 @@ angular.module('webmapp')
             xobj.send(null);
         }
 
-        loadConfigJson();
-        config = angular.extend(this, GENERAL_CONFIG);
-
-        if (!!localStorage.$wm_mhildConf) {
-            this.MAIN = GENERAL_CONFIG;
-            if (this.MAIN.INCLUDE && this.MAIN.INCLUDE.url) {
-                var url = this.MAIN.INCLUDE.url;
-                if (url.substring(0, 4) !== "http") {
-                    url = this.MAIN.COMMUNICATION.baseUrl + url;
-                }
-                var mainInclude = localStorage.getItem(this.MAIN.INCLUDE.url) ? JSON.parse(localStorage.getItem(this.MAIN.INCLUDE.url)) : {};
-                this.MAIN = angular.extend(this.MAIN, mainInclude);
-                // console.log(this.MAIN, mainInclude);
-            }
-            config = angular.extend(this, JSON.parse(localStorage.$wm_mhildConf));
-        }
-
-        var getAsyncJSON = function (url) {
+        function getAsyncJSON(url) {
             var retValue;
             var options = {
                 method: 'GET',
@@ -65,6 +47,22 @@ angular.module('webmapp')
             return retValue;
         };
 
+        loadConfigJson();
+        config = angular.extend(this, GENERAL_CONFIG);
+
+        if (!!localStorage.$wm_mhildConf) {
+            this.MAIN = GENERAL_CONFIG;
+            if (this.MAIN.INCLUDE && this.MAIN.INCLUDE.url) {
+                var url = this.MAIN.INCLUDE.url;
+                if (url.substring(0, 4) !== "http") {
+                    url = this.MAIN.COMMUNICATION.baseUrl + url;
+                }
+                var mainInclude = localStorage.getItem(this.MAIN.INCLUDE.url) ? JSON.parse(localStorage.getItem(this.MAIN.INCLUDE.url)) : {};
+                this.MAIN = angular.extend(this.MAIN, mainInclude);
+                // console.log(this.MAIN, mainInclude);
+            }
+            config = angular.extend(this, JSON.parse(localStorage.$wm_mhildConf));
+        }
 
         this.$get = function (
             $ionicPopup,
@@ -82,6 +80,7 @@ angular.module('webmapp')
             }
 
             if (config.INCLUDE && !config.MAIN) {
+                var version = config.VERSION;
                 var warnings = 0;
 
                 if (config.INCLUDE.url) {
@@ -134,9 +133,10 @@ angular.module('webmapp')
                         }]
                     });
                 }
+
+                config.VERSION = version;
             }
 
-            // console.log(config);
             if (window.cordova && config.NAVIGATION && config.NAVIGATION.enableTrackRecording) {
                 config.OVERLAY_LAYERS.push({
                     id: "userTracks",
@@ -148,9 +148,7 @@ angular.module('webmapp')
                 });
             }
 
-            // console.log(config);
+            console.log(config);
             return config;
         };
-
-        return this.$get();
     });

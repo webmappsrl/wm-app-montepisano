@@ -2476,13 +2476,15 @@ angular.module('webmapp')
         mapService.highlightTrack = function (id, parentId) {
             mapService.getFeatureById(id, parentId.replace(/_/g, ' '))
                 .then(function (feature) {
-                    var style = globalLineApplyStyle(feature);
-                    highlightedTrack = L.geoJson(feature.geometry, {
-                        color: styleConf.line.highlight.color,
-                        weight: style.weight,
-                        opacity: 1
-                    });
-                    highlightedTrack.addTo(map);
+                    if (feature.geometry && feature.geometry.type && feature.geometry.type === "LineString" || feature.geometry.type === "MultiLineString") {
+                        var style = globalLineApplyStyle(feature);
+                        highlightedTrack = L.geoJson(feature.geometry, {
+                            color: styleConf.line.highlight.color,
+                            weight: style.weight,
+                            opacity: 1
+                        });
+                        highlightedTrack.addTo(map);
+                    }
                 });
 
             map.eachLayer(function (layer) {

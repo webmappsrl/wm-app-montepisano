@@ -71,10 +71,12 @@ angular.module('webmapp')
 
                 if ($state.params.parentId) {
                     MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
-                    $rootScope.highlightTrack = {
-                        id: $state.params.id,
-                        parentId: $state.params.parentId
-                    };
+                    if (vm.geometry && vm.geometry.type && vm.geometry.type === "LineString" || vm.geometry.type === "MultiLineString") {
+                        $rootScope.highlightTrack = {
+                            id: $state.params.id,
+                            parentId: $state.params.parentId
+                        };
+                    }
                 }
 
                 Utils.goBack();

@@ -22,8 +22,7 @@ angular.module('webmapp')
 
         // TODO: add single template overwrite (!)
 
-        // config = CONFIGProvider.$get();
-        config = CONFIGProvider;
+        config = CONFIGProvider.$get();
 
         $stateProvider
             .state('app', {
