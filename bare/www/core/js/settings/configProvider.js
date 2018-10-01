@@ -2,9 +2,27 @@
 angular.module('webmapp')
 
     .provider('CONFIG', function (
-        GENERAL_CONFIG
+        // GENERAL_CONFIG
     ) {
-        var config = angular.extend(this, GENERAL_CONFIG);
+        var config = {};
+
+        var GENERAL_CONFIG = {};
+
+        // Load local config.json
+        function loadConfigJson() {
+            var xobj = new XMLHttpRequest();
+            xobj.overrideMimeType("application/json");
+            xobj.open('GET', './config/config.json', false);
+            xobj.onreadystatechange = function () {
+                if (xobj.readyState == 4 && xobj.status == "200") {
+                    GENERAL_CONFIG = JSON.parse(xobj.responseText);
+                }
+            };
+            xobj.send(null);
+        }
+
+        loadConfigJson();
+        config = angular.extend(this, GENERAL_CONFIG);
 
         if (!!localStorage.$wm_mhildConf) {
             this.MAIN = GENERAL_CONFIG;
@@ -46,7 +64,6 @@ angular.module('webmapp')
 
         this.$get = function (
             $ionicPopup,
-            $ionicPlatform,
             $translate
         ) {
             var mhildBaseUrl;
@@ -61,8 +78,7 @@ angular.module('webmapp')
             }
 
             if (config.INCLUDE && !config.MAIN) {
-                var errors = 0;
-                warnings = 0;
+                var warnings = 0;
 
                 if (config.INCLUDE.url) {
                     var url = config.INCLUDE.url;
@@ -77,11 +93,8 @@ angular.module('webmapp')
                             var tmp = {};
                             tmp[i] = JSON.parse(value);
                             config = angular.extend(config, tmp);
-
-                            warnings++;
-                        } else {
-                            errors++;
                         }
+                        warnings++;
                     } else {
                         config = angular.extend(config, data);
                         localStorage.setItem(url, JSON.stringify(data));
@@ -96,11 +109,8 @@ angular.module('webmapp')
                                 var tmp = {};
                                 tmp[i] = JSON.parse(value);
                                 config = angular.extend(config, tmp);
-
-                                warnings++;
-                            } else {
-                                errors++;
                             }
+                            warnings++;
                         } else {
                             var tmp = {};
                             tmp[i] = data;
@@ -108,19 +118,6 @@ angular.module('webmapp')
                             localStorage.setItem(url, JSON.stringify(data));
                         }
                     }
-                }
-
-                if (errors > 0) {
-                    $ionicPopup.alert({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Si è verificato un errore di comunicazione che non permette il corretto caricamento dell'APP. Controlla di essere online e riprova più tardi"),
-                        buttons: [{
-                            text: 'Ok',
-                            onTap: function (e) {
-                                ionic.Platform.exitApp();
-                            }
-                        }]
-                    });
                 }
 
                 if (warnings > 0) {
@@ -147,7 +144,9 @@ angular.module('webmapp')
                 });
             }
 
-            // console.log(config);
+            console.error(config);
             return config;
         };
+
+        return this.$get();
     });
