@@ -25,7 +25,7 @@
     "cordova-plugin-inappbrowser": "~1.5.0",
     "cordova-plugin-inapppurchase": "^1.2.0",
     "cordova-plugin-insomnia": "4.3.0",
-    "cordova-plugin-mauron85-background-geolocation": "^3.0.0-alpha.39",
+    "cordova-plugin-mauron85-background-geolocation": "^3.0.0-alpha.43",
     "cordova-plugin-network-information": "~1.2.1",
     "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-statusbar": "~2.2.0",
@@ -86,10 +86,10 @@
       "cordova-android-support-gradle-release": {
         "ANDROID_SUPPORT_VERSION": "27.+"
       },
-      "cordova-plugin-mauron85-background-geolocation": {},
       "cordova-plugin-device-orientation": {},
       "cordova-plugin-inapppurchase": {},
-      "cordova-plugin-splashscreen": {}
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-mauron85-background-geolocation": {}
     },
     "platforms": [
       "android",
