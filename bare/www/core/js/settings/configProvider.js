@@ -2,7 +2,6 @@
 angular.module('webmapp')
 
     .provider('CONFIG', function (
-        // GENERAL_CONFIG
     ) {
         var config = {};
 
@@ -148,7 +147,7 @@ angular.module('webmapp')
                 });
             }
 
-            console.log(config);
+            // console.log(config);
             return config;
         };
     });

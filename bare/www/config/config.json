@@ -1,0 +1,219 @@
+{
+    "VERSION": "0.4",
+
+    "OPTIONS": {
+        "title": "Myeasyroute",
+        "startUrl": "/page/home",
+        "useLocalStorageCaching": false,
+        "advancedDebug": false,
+        "avoidModalInDetails": true,
+        "filterIcon": "wm-icon-layers",
+        "hideHowToReach": false,
+        "hideMenuButton": false,
+        "hideExpanderInDetails": false,
+        "hideFiltersInMap": false,
+        "hideDeactiveCentralPointer": true,
+        "hideShowInMapFromSearch": true,
+        "useAlmostOver": true,
+        "showArrows": true,
+        "hideRelatedPoiInDetails": false
+    },
+
+    "STYLE": {
+        "global": {
+            "background": "#F3F6E9",
+            "color": "#60605e",
+            "centralPointerActive": "black",
+            "buttonsBackground": "#F3F6E9",
+            "buttonsColor": "#7ab400"
+        },
+        "details": {
+            "background": "#F3F6E9",
+            "buttons": "rgba(56, 126, 245, 0.78)",
+            "color": "#60605e"
+        },
+        "subnav": {
+            "color": "white",
+            "background": "#7ab400"
+        },
+        "mainBar": {
+            "color": "white",
+            "background": "#7ab400",
+            "overwrite": true
+        },
+        "menu": {
+            "color": "#60605e",
+            "background": "#F3F6E9"
+        },
+        "search": {
+            "color": "#7ab400"
+        },
+        "images": {
+            "background": "#e6e8de"
+        },
+        "line": {
+            "default": {
+                "color": "red",
+                "weight": 5,
+                "opacity": 0.65
+            },
+            "highlight": {
+                "color": "#00FFFF",
+                "weight": 6,
+                "opacity": 1
+            }
+        }
+    },
+
+    "ADVANCED_DEBUG": false,
+
+    "COMMUNICATION": {
+        "downloadJSONUrl": "http://api.webmapp.it/vnauto/",
+        "baseUrl": "http://vn.be.webmapp.it/",
+        "endpoint": "wp-json/webmapp/v1/",
+        "wordPressEndpoint": "wp-json/wp/v2/",
+        "privacy": "http://www.verde-natura.it/privacy/",
+        "voucherUrl": "https://api.webmapp.it/services/merinfo/vn/info.php"
+    },
+
+    "SEARCH": {
+        "active": true,
+        "indexFields": ["name", "body", "email", "address"],
+        "showAllByDefault": true,
+        "stemming": true,
+        "removeStopWords": true,
+        "indexStrategy": "AllSubstringsIndexStrategy",
+        "TFIDFRanking": true
+    },
+
+    "MENU": [{
+            "label": "Home",
+            "type": "home",
+            "color": "#63625D"
+        },
+        {
+            "label": "Itinerari",
+            "type": "packages",
+            "color": "#63625D"
+        },
+        {
+            "label": "Help",
+            "type": "help"
+        },
+        {
+            "label": "Impostazioni",
+            "type": "languages"
+        }
+    ],
+
+    "LOGIN": {
+        "useLogin": true,
+        "forceLogin": false,
+        "showNewsletterCheckbox": true,
+        "passwordRecoveryURL": "http://vn.be.webmapp.it/wp-login.php?action=lostpassword"
+    },
+
+    "OFFLINE": {
+        "pagesUrl": "https://api.webmapp.it/j/vn.j.webmapp.it/pages/"
+    },
+
+    "TRACKING": {
+        "active": false
+    },
+
+    "MAP": {
+        "maxZoom": 16,
+        "minZoom": 10,
+        "defZoom": 11,
+        "center": {
+            "lat": 46.0612,
+            "lng": 11.1357
+        },
+        "bounds": {
+            "southWest": [45.6444, 10.4272],
+            "northEast": [46.5572, 11.9935]
+        },
+        "markerClustersOptions": {
+            "spiderfyOnMaxZoom": true,
+            "showCoverageOnHover": false,
+            "maxClusterRadius": 60,
+            "disableClusteringAtZoom": 17
+        },
+        "showCoordinatesInMap": true,
+        "showScaleInMap": true,
+        "hideZoomControl": true,
+        "hideLocationControl": false,
+        "layers": [
+        ]
+    },
+
+    "DETAIL_MAPPING": {
+        "default": {
+            "fields": {
+                "title": "name",
+                "description": "body",
+                "image": "image",
+                "email": "mail",
+                "phone": "telefono",
+                "address": "via"
+            }
+        }
+    },
+
+    "OVERLAY_LAYERS": [],
+
+    "PAGES": [
+    		{
+            "label": "Myeasyroute",
+            "type": "home",
+            "title": "Myeasyroute"
+        },
+        {
+            "label": "Pacchetti",
+            "type": "packages",
+            "title": "Myeasyroute"
+        },
+        {
+            "label": "Help",
+            "type": "help",
+            "icon": "wm-icon-android-lightbulb",
+            "color": "#204231"
+        },
+        {
+            "label": "Impostazioni",
+            "type": "languages",
+            "title": "Impostazioni"
+        }
+    ],
+
+    "REPORT": {
+        "email": 
+        {
+            "apiUrl": "https://api.webmapp.it/services/share.php",
+            "default": "info@verde-natura.com"
+        },
+        "sms":
+        {
+            "default": "+39 333 9476689"
+        }
+    },
+
+    "LANGUAGES": {
+        "actual": "en",
+        "available": ["it","en","fr","de"]
+    },
+
+    "MULTIMAP": {
+        "useReducedPackages": true,
+        "categoryFiltersOn": true
+    },
+
+    "NAVIGATION": {
+        "activate": true,
+        "defaultSpeedType": "current"
+    },
+
+    "INCLUDE": {
+        "url": "http://vn.j.webmapp.it/config.json"
+    }
+}
