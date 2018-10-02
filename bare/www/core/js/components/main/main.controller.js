@@ -209,8 +209,15 @@ angular.module('webmapp')
             });
 
             saveModalScope.vm.hide = function () {
-                MapService.removeUserPolyline();
-                saveModal.hide();
+                $ionicPopup.confirm({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Stai per eliminare tutti i dati registrati. Vuoi eliminarli definitivamente?")
+                }).then(function (res) {
+                    if (res) {
+                        MapService.removeUserPolyline();
+                        saveModal.hide();
+                    }
+                });
             };
             saveModalScope.vm.title = "";
             saveModalScope.vm.description = "";
