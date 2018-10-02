@@ -50,7 +50,7 @@ angular.module('webmapp')
         }
 
         var taxonomyType = $state.params.parentId,
-            id = $state.params.id * 1; // * 1 is to make id integrer
+            id = +$state.params.id;
 
         var forceDigest = function () {
             setTimeout(function () {
@@ -220,7 +220,7 @@ angular.module('webmapp')
         );
 
         registeredEvents.push(
-            $rootScope.$on('$ionicView.beforeLeave', function () {
+            $scope.$on('$ionicView.beforeLeave', function () {
                 MapService.resetLayers();
                 for (var i in registeredEvents) {
                     registeredEvents[i]();

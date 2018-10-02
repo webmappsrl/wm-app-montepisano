@@ -63,7 +63,7 @@ angular.module('webmapp')
                 vm.isNavigable = false;
                 $rootScope.$emit('item-navigable', vm.isNavigable);
             }
-            
+
             if (vm.geometry.type === "LineString") {
                 Utils.goTo('/'); //Should not enter here
             }
@@ -669,7 +669,7 @@ angular.module('webmapp')
             }
         });
 
-        var beforeLeaveHandler = $rootScope.$on('$ionicView.beforeLeave', function () {
+        var beforeLeaveHandler = $scope.$on('$ionicView.beforeLeave', function () {
             selectedPoi = null;
             handlePoiHighlight(selectedPoi);
             beforeLeaveHandler();

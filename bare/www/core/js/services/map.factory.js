@@ -2304,7 +2304,6 @@ angular.module('webmapp')
                 if (geojsonLayer) {
                     map.removeLayer(geojsonLayer);
                 }
-                console.log(geojsonLayer);
 
                 geojsonLayer = L.geoJSON(geojsonArray).addTo(map);
                 setTimeout(function () {

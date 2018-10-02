@@ -1,7 +1,9 @@
 {
-  "documentRoot": "",
   "name": "mappalo",
-  "app_id": "cf0d8507",
+  "integrations": {
+    "cordova": {}
+  },
+  "documentRoot": "",
   "type": "ionic1",
   "watchPatterns": [
     "scss/**/*",
@@ -9,7 +11,5 @@
     "!www/lib/**/*",
     "!www/**/*.map"
   ],
-  "integrations": {
-    "cordova": {}
-  }
+  "pro_id": "cf0d8507"
 }

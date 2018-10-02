@@ -53,13 +53,13 @@ angular.module('webmapp')
             }
         };
 
-        vm.goToTaxonomy = function(id) {
+        vm.goToTaxonomy = function (id) {
             Utils.goTo('taxonomy/' + $state.params.id + '/' + id);
         };
 
         vm.goTo = Utils.goTo;
 
-        vm.toggleSearch = function() {
+        vm.toggleSearch = function () {
             vm.searchActive = !vm.searchActive;
         };
 
@@ -67,9 +67,7 @@ angular.module('webmapp')
             if (value) {
                 vm.taxonomy = value;
                 setActivityIcons();
-            }
-            else {
-                $ionicLoading.show();
+                $ionicLoading.hide();
             }
         });
 
@@ -78,18 +76,12 @@ angular.module('webmapp')
                 vm.activity = value;
                 setActivityIcons();
             }
-            else {
-                $ionicLoading.show();
-            }
         });
 
         $rootScope.$on('packages-updated', function (e, value) {
             if (value) {
                 vm.packages = value;
                 setActivityIcons();
-            }
-            else {
-                $ionicLoading.show();
             }
         });
 

@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------- *\
  * PACKAGE FACTORY
  * PackageService
- * 
+ *
  * Provide all the function and the metadata for the routes,
  * packages and taxonomies
  * Almost every function does not return directly a value but
@@ -10,7 +10,7 @@
  * The data will be emitted twice, one for the instant data (not
  * yet updated) and one for the final updated data (that are
  * emitted after some time)
- * 
+ *
  * @example
  * getRoutes() update the packages object and notify everyone
  * the updated values
@@ -20,7 +20,6 @@ angular.module('webmapp')
 
     .factory('PackageService', function PackageService(
         $http,
-        $q,
         $rootScope,
         $ionicLoading,
         $ionicModal,
@@ -35,14 +34,12 @@ angular.module('webmapp')
         var packageService = {};
 
         var communicationConf = CONFIG.COMMUNICATION,
-            currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : 'it',
             defaultLang = (CONFIG.LANGUAGE && CONFIG.LANGUAGE.actual) ? CONFIG.LANGUAGE.actual.substring(0, 2) : 'it';
 
         var packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : null,
             userPackagesId = localStorage.$wm_userPackagesId ? JSON.parse(localStorage.$wm_userPackagesId) : null,
             userDownloadedPackages = localStorage.$wm_userDownloadedPackages ? JSON.parse(localStorage.$wm_userDownloadedPackages) : {},
             userPackagesIdRquested = localStorage.$wm_userPackagesIdRquested ? JSON.parse(localStorage.$wm_userPackagesIdRquested) : {},
-            categories = localStorage.$wm_categories ? JSON.parse(localStorage.$wm_categories) : null,
             taxonomy = localStorage.$wm_taxonomy ? JSON.parse(localStorage.$wm_taxonomy) : {
                 activity: null,
                 theme: null,
@@ -55,9 +52,7 @@ angular.module('webmapp')
             asyncTranslations = 0,
             asyncRoutes = 0;
 
-        var modalScope = $rootScope.$new(),
-            modal = {},
-            modalDownloadScope = $rootScope.$new(),
+        var modalDownloadScope = $rootScope.$new(),
             modalDownload = {};
 
         modalDownloadScope.vm = {};
@@ -188,7 +183,7 @@ angular.module('webmapp')
          * @description
          * Update the packages and the categories list and
          * Emit the updated lists
-         * 
+         *
          * @event packages-updated
          */
         packageService.getRoutes = function () {
@@ -232,9 +227,9 @@ angular.module('webmapp')
         /**
          * @description
          * Emit taxonomy of type [taxonomyType] updated
-         * 
+         *
          * @event taxonomy-[taxonomyType]-updated
-         * 
+         *
          * @param {string} taxonomyType
          *      the type of taxonomy to update
          */
@@ -294,9 +289,9 @@ angular.module('webmapp')
          * @description
          * Get the list of packages allowed to a specific user and
          * Emit the updated list of available packages
-         * 
+         *
          * @event userPackagesId-updated
-         * 
+         *
          */
         packageService.getPackagesIdByUserId = function () {
             if (!userData || !userData.ID) {
@@ -328,10 +323,10 @@ angular.module('webmapp')
          * @description
          * Request the package and
          * Emit the new list of requested packages
-         * 
+         *
          * @event userPackagesIdRquested-updated
-         * 
-         * @param {number} packId 
+         *
+         * @param {number} packId
          *      the id of the pack to request
          */
         packageService.requestPack = function (packId) {
@@ -385,12 +380,12 @@ angular.module('webmapp')
          * @description
          * Use a voucher to get permission to download a route and
          * Emit the new list of available packages
-         * 
+         *
          * @event userPackagesId-updated
-         * 
-         * @param {number} packId 
+         *
+         * @param {number} packId
          *      the id of the pack to request
-         * 
+         *
          */
         packageService.requestPackageWithVoucher = function (packId) {
             if (!userData || !userData.ID) {
@@ -450,11 +445,11 @@ angular.module('webmapp')
          * @description
          * Download the requested package and
          * emit the new list of downloaded packages
-         * 
+         *
          * @event userDownloadedPackages-updated
          * @event packages-updated
-         * 
-         * @param {number} packId 
+         *
+         * @param {number} packId
          *      the id of the pack to download
          */
         packageService.downloadPack = function (packId) {
@@ -518,8 +513,8 @@ angular.module('webmapp')
         /**
          * @description
          * Method to open a package already downloaded
-         * 
-         * @param {number} packId 
+         *
+         * @param {number} packId
          *      the id of the pack to open
          */
         packageService.openPackage = function (packId) {
@@ -544,10 +539,10 @@ angular.module('webmapp')
          * @description
          * Delete a package already downloaded and
          * Emit the updated list of downloaded packages
-         * 
+         *
          * @event userDownloadedPackages-updated
-         * 
-         * @param {number} packId 
+         *
+         * @param {number} packId
          *      the id of the pack to remove from storage
          */
         packageService.removePack = function (packId) {
@@ -568,10 +563,10 @@ angular.module('webmapp')
         /**
          * @description
          * Delete and re-download a package already downloaded
-         * 
+         *
          * @event userDownloadedPackages-updated
-         * 
-         * @param {number} packId 
+         *
+         * @param {number} packId
          *      the id of the pack to update
          */
         packageService.updatePack = function (packId) {
@@ -632,9 +627,9 @@ angular.module('webmapp')
          * @description
          * Emit the updated list of downloaded packages
          * and return it
-         * 
+         *
          * @event userDownloadedPackages-updated
-         * 
+         *
          */
         packageService.getDownloadedPackages = function () {
             $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
