@@ -5,6 +5,7 @@ instances/*
 platforms
 bare/res
 bare/.idea
+bare/www/config/config.json
 node_modules
 plugins
 .idea
