@@ -532,7 +532,7 @@ angular.module('webmapp')
 
         console.warn("TODO: complete function positionCallback for realTimeTracking")
         function positionCallback(position) {
-            console.log(position);
+            // console.log(position);
 
             if (!geolocationState.isActive) {
                 return;
