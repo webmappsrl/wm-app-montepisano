@@ -48,6 +48,7 @@ angular.module('webmapp')
         vm.fullDescription = false;
         vm.selectedTab = 'panoramica';
         vm.showAccessibilityButtons = CONFIG.OPTIONS.showAccessibilityButtons;
+        vm.isListExpanded = true;
 
         vm.hideSubMenu = true;
 
@@ -366,7 +367,7 @@ angular.module('webmapp')
 
             vm.selectedTab = 'panoramica';
 
-            console.log(feature, vm)
+            // console.log(feature, vm)
         };
 
         vm.selectTab = function (tabType) {
@@ -555,7 +556,7 @@ angular.module('webmapp')
             else {
                 vm.relatedUrlPopupOpened = !vm.relatedUrlPopupOpened;
             }
-            
+
             Utils.forceDigest();
         }
 
@@ -718,8 +719,6 @@ angular.module('webmapp')
             vm.isListExpanded = !vm.isListExpanded;
             $rootScope.$emit('toggle-list', vm.isListExpanded);
         };
-
-        vm.toggleList();
 
         return vm;
     });

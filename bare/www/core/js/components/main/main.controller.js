@@ -1212,10 +1212,10 @@ angular.module('webmapp')
                 }, 650);
             }, 650);
 
-            vm.hideMap = false;
             vm.mapView = false;
 
             if (currentState === 'app.main.map') {
+                vm.hideMap = false;
                 vm.mapView = true;
                 vm.hideExpander = true;
                 setTimeout(function () {
@@ -1224,16 +1224,20 @@ angular.module('webmapp')
                     }
                 }, 50);
             } else if (currentState === 'app.main.popup') {
+                vm.hideMap = false;
                 vm.mapView = true;
                 vm.hideExpander = true;
             } else if (currentState === 'app.main.events') {
                 MapService.showEventsLayer();
+                vm.hideMap = false;
                 vm.hasShadow = true;
             } else if (currentState === 'app.main.welcome') {
+                vm.hideMap = false;
                 // TODO: show nothing on the map
             } else if (currentState === 'app.main.layer') {
                 realState = $rootScope.currentParams.id.replace(/_/g, ' ');
                 layerState = true;
+                vm.hideMap = true;
                 // vm.hideExpander = true;
 
                 if (typeof overlayMap[realState] !== 'undefined' ||
@@ -1245,7 +1249,7 @@ angular.module('webmapp')
                         }
                     }, 50);
                 } else {
-                    // TODO: go to map? 
+                    // TODO: go to map?
                     // vm.hideMap = true;
                 }
 
@@ -1254,6 +1258,7 @@ angular.module('webmapp')
                 if (MapService.isAPOILayer($rootScope.currentParams.parentId.replace(/_/g, ' '))) {
                     vm.detail = true;
                 }
+                vm.hideMap = false;
                 // TODO: check the shadow
                 // else {
                 //     vm.hasShadow = true;
@@ -1265,11 +1270,14 @@ angular.module('webmapp')
                 vm.detail = true;
                 vm.hasShadow = true;
                 vm.extendShadow = true;
+                vm.hideMap = false;
             } else if (currentState === 'app.main.detailevent') {
                 vm.hasShadow = true;
+                vm.hideMap = false;
             } else if (currentState === 'app.main.detailulayer') {
                 MapService.resetUtfGridLayers();
                 vm.hideExpander = true;
+                vm.hideMap = false;
             } else if (currentState === 'app.main.coupons' ||
                 currentState === 'app.main.packages' ||
                 currentState === 'app.main.route' ||
@@ -1284,6 +1292,9 @@ angular.module('webmapp')
                 currentState === 'app.main.search' ||
                 Model.isAPage(currentState)) {
                 vm.hideMap = true;
+            }
+            else {
+                vm.hideMap = false;
             }
 
             setTimeout(function () {
