@@ -306,14 +306,18 @@ angular.module('webmapp')
         };
 
         function turnOffRotation() {
-            if (state.orientationWatch) {
+            try {
                 state.orientationWatch.clearWatch();
             }
+            catch (e) { }
             delete state.orientationWatch;
             state.orientationWatch = null;
 
             if (state.rotationSwitchTimeout) {
-                clearTimeout(state.rotationSwitchTimeout);
+                try {
+                    clearTimeout(state.rotationSwitchTimeout);
+                }
+                catch (e) { }
                 state.rotationSwitchTimeout = null;
             }
 
