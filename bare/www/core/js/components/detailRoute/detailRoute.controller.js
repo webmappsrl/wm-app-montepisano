@@ -135,12 +135,11 @@ angular.module('webmapp')
             $ionicPopup.confirm({
                 title: $translate.instant("ATTENZIONE"),
                 template: $translate.instant("Devi eseguire l'accesso per poter usufruire di questa funzionalità")
-            })
-                .then(function (res) {
-                    if (res) {
-                        showLogin();
-                    }
-                });
+            }).then(function (res) {
+                if (res) {
+                    showLogin();
+                }
+            });
         };
 
         vm.goToInfo = function () {
@@ -265,7 +264,9 @@ angular.module('webmapp')
                 if ($rootScope.routeDownload) {
                     delete $rootScope.routeDownload;
                     if (Auth.isLoggedIn() && vm.userPackagesId[vm.id]) {
-                        vm.downloadPackage();
+                        setTimeout(function () {
+                            vm.downloadPackage();
+                        }, 500);
                     }
                 }
 

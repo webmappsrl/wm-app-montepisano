@@ -1301,7 +1301,6 @@ angular.module('webmapp')
                 $ionicLoading.hide();
 
                 if (navigator.splashscreen) {
-                    console.log("closing")
                     navigator.splashscreen.hide();
                 }
             }
@@ -1478,7 +1477,6 @@ angular.module('webmapp')
 
             if (!mapConf.layers || mapConf.layers.length === 0) {
                 if (navigator.splashscreen) {
-                    console.log("closing")
                     navigator.splashscreen.hide();
                 }
                 return;
