@@ -12,7 +12,6 @@ exports.config = {
         appPackage: 'it.webmapp.webmappt',
         // setWebContentsDebuggingEnabled: 'true',
         deviceName: 'MyADV'
-
     },
     jasmineNodeOpts: {
         showColors: true,
