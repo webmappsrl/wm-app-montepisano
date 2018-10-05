@@ -2027,6 +2027,12 @@ angular.module('webmapp')
             if (map) {
                 clearLayerHighlight();
                 map.invalidateSize();
+                if ($rootScope.highlightTrack && $rootScope.highlightTrack.parentId && $rootScope.highlightTrack.id) {
+                    mapService.highlightTrack($rootScope.highlightTrack.id, $rootScope.highlightTrack.parentId, true);
+
+                    $rootScope.highlightTrack = null;
+                    delete $rootScope.highlightTrack;
+                }
             }
         };
 
@@ -2090,41 +2096,9 @@ angular.module('webmapp')
                 }
             };
 
-            // if (overlayLayersConfMap[layerName] &&
-            //     overlayLayersConfMap[layerName].type === 'tile_utfgrid_geojson' &&
-            //     overlayLayersConfMap[layerName].featureUrl) {
-            //     $.getJSON(overlayLayersConfMap[layerName].featureUrl + id + '.geojson', function (data) {
-            //         var feature = data.features[0];
-            //         if (feature &&
-            //             feature.properties) {
-            //             feature.parent = overlayLayersConfMap[layerName];
-            //             featureMapById[feature.properties.id] = feature;
-            //             defer.resolve(feature);
-            //         } else {
-            //             defer.reject();
-            //         }
-            //     }).fail(function () {
-            //         defer.reject();
-            //     });
-            // } else {
             if (typeof overlayLayersConfMap[layerName] === 'undefined') {
                 if (typeof featureMapById[id] !== 'undefined') {
                     defer.resolve(featureMapById[id]);
-                    // } else if (singleFeatureUrl) {
-                    //     $.getJSON(singleFeatureUrl + id, function (data) {
-                    //         var feature = data.features;
-                    //         if (feature &&
-                    //             feature.properties) {
-                    //             // feature.parent = overlayLayersConfMap[feature.properties.category];
-                    //             feature.parent = overlayLayersConfMap[layerName];
-                    //             featureMapById[feature.properties.id] = feature;
-                    //             defer.resolve(feature);
-                    //         } else {
-                    //             defer.reject();
-                    //         }
-                    //     }).fail(function () {
-                    //         defer.reject();
-                    //     });
                 } else {
                     defer.reject();
                 }
@@ -2139,7 +2113,6 @@ angular.module('webmapp')
                     initializeLayer(overlayLayersConfMap[layerName]).then(checkNow);
                 }
             }
-            // }
 
             return defer.promise;
         };
@@ -2387,9 +2360,6 @@ angular.module('webmapp')
                     mapService.addFeaturesToFilteredLayer({
                         'detail': featuresToShow
                     }, false);
-                    setTimeout(function () {
-                        mapService.adjust();
-                    }, 2500);
                 });
         };
 
@@ -2471,7 +2441,7 @@ angular.module('webmapp')
             }
         };
 
-        mapService.highlightTrack = function (id, parentId) {
+        mapService.highlightTrack = function (id, parentId, fitBounds) {
             mapService.getFeatureById(id, parentId.replace(/_/g, ' '))
                 .then(function (feature) {
                     if (feature.geometry && feature.geometry.type && feature.geometry.type === "LineString" || feature.geometry.type === "MultiLineString") {
@@ -2482,6 +2452,9 @@ angular.module('webmapp')
                             opacity: 1
                         });
                         highlightedTrack.addTo(map);
+                        if (fitBounds) {
+                            map.fitBounds(highlightedTrack.getBounds());
+                        }
                     }
                 });
 
@@ -2818,10 +2791,6 @@ angular.module('webmapp')
             });
             Utils.goTo('layer/' + parentLabel.replace(/ /g, '_') + '/' + id);
         };
-
-        setTimeout(function () {
-            mapService.adjust();
-        }, 3600);
 
         return mapService;
     });

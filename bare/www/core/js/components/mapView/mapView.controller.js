@@ -29,6 +29,7 @@ angular.module('webmapp')
 
             return allActive;
         };
+
         var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
         MapService.showAllLayers();
@@ -492,17 +493,6 @@ angular.module('webmapp')
                 MapService.addFeaturesToFilteredLayer(features);
             });
         }
-
-        $scope.$on('$ionicView.afterEnter', function () {
-            setTimeout(function () {
-                if ($rootScope.highlightTrack && $rootScope.highlightTrack.parentId && $rootScope.highlightTrack.id) {
-                    MapService.highlightTrack($rootScope.highlightTrack.id, $rootScope.highlightTrack.parentId);
-
-                    $rootScope.highlightTrack = null;
-                    delete $rootScope.highlightTrack;
-                }
-            }, 1000);
-        });
 
         $scope.$on('$ionicView.beforeLeave', function () {
             modal.remove();

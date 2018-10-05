@@ -71,7 +71,7 @@ angular.module('webmapp')
 
                 if ($state.params.parentId) {
                     MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
-                    if (vm.geometry && vm.geometry.type && vm.geometry.type === "LineString" || vm.geometry.type === "MultiLineString") {
+                    if (vm.geometry && vm.geometry.type && (vm.geometry.type === "LineString" || vm.geometry.type === "MultiLineString")) {
                         $rootScope.highlightTrack = {
                             id: $state.params.id,
                             parentId: $state.params.parentId
@@ -531,10 +531,7 @@ angular.module('webmapp')
                 if (centerOnPoint) {
                     MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
                 }
-                setTimeout(function () {
-                    MapService.adjust();
-                }, 100);
-            }, 100);
+            }, 800);
 
             if (vm.feature.accessibility) {
                 vm.feature.accessibility.mobility.icon = 'wm-icon-wheelchair-15';
@@ -712,7 +709,7 @@ angular.module('webmapp')
         vm.openRelatedUrlPopup = function () {
             vm.relatedUrlPopupOpened = !vm.relatedUrlPopupOpened;
             Utils.forceDigest();
-        }
+        };
 
         vm.openRelated = function (item) {
             Utils.goTo('layer/' + item.parent.label.replace(/ /g, '_') + '/' + item.properties.id);

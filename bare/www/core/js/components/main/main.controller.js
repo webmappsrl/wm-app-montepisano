@@ -133,7 +133,8 @@ angular.module('webmapp')
             }
         };
 
-        vm.hideDeactiveCentralPointer = CONFIG.OPTIONS.hideDeactiveCentralPointer;
+        vm.hideDeactiveCentralPointer = CONFIG.OPTIONS && CONFIG.OPTIONS.hideDeactiveCentralPointer;
+        vm.toggleMapInDetails = CONFIG.OPTIONS && CONFIG.OPTIONS.toggleMapInDetails;
 
         vm.isCoordsBlockExpanded = true;
 
@@ -494,13 +495,48 @@ angular.module('webmapp')
             }
         };
 
-        vm.returnToMap = function () {
-            vm.toggleMap();
+        vm.toggleMap = function () {
+            if (!vm.isNavigating) {
+                vm.isMapPage = !vm.isMapPage;
+                vm.mapView = vm.isMapPage;
+                $rootScope.$emit('expand-map', vm.isMapPage);
+
+                setTimeout(function () {
+                    MapService.adjust();
+                }, 100);
+            }
+            else {
+                if (vm.isNavigable) {
+                    vm.isNavigable = false;
+                    $rootScope.isNavigable = false;
+                    $rootScope.$emit('item-navigable', vm.isNavigable);
+                }
+                Utils.goBack();
+            }
         };
 
-        vm.goToMap = function () {
-            console.log("lol")
-            // Utils.goTo('/');
+        vm.returnToMap = function () {
+            if ($state.params.parentId) {
+                MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
+                if (vm.isNavigable) {
+                    vm.isNavigable = false;
+                    $rootScope.isNavigable = false;
+                    $rootScope.$emit('item-navigable', vm.isNavigable);
+                }
+                MapService.getFeatureById($state.params.id, $state.params.parentId).then(function (feature) {
+                    if (feature.geometry && feature.geometry.type && (feature.geometry.type === "LineString" || feature.geometry.type === "MultiLineString")) {
+                        $rootScope.highlightTrack = {
+                            id: $state.params.id,
+                            parentId: $state.params.parentId
+                        };
+                    }
+
+                    Utils.goBack();
+                }).catch(function (err) {
+                    console.error(err)
+                    Utils.goBack();
+                });
+            }
         };
 
         vm.expandCoords = function () {
@@ -525,26 +561,6 @@ angular.module('webmapp')
                     launchnavigator.navigate([coordinates[1], coordinates[0]]);
                 }
             }
-        };
-
-        vm.toggleMap = function () {
-            if (!vm.isNavigating) {
-                vm.isMapPage = !vm.isMapPage;
-                vm.mapView = vm.isMapPage;
-                $rootScope.$emit('expand-map', vm.isMapPage);
-            }
-            else {
-                if (vm.isNavigable) {
-                    vm.isNavigable = false;
-                    $rootScope.isNavigable = false;
-                    $rootScope.$emit('item-navigable', vm.isNavigable);
-                }
-                Utils.goBack();
-            }
-
-            setTimeout(function () {
-                MapService.adjust();
-            }, 350);
         };
 
         var navigationIntervalFunction = function () {
@@ -583,9 +599,6 @@ angular.module('webmapp')
             }
 
             window.plugins.insomnia.keepAwake();
-            setTimeout(function () {
-                MapService.adjust();
-            }, 1000);
 
             Utils.goTo('/');
         };
@@ -608,7 +621,6 @@ angular.module('webmapp')
             });
             vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
             window.plugins.insomnia.keepAwake();
-            MapService.adjust();
         };
 
         vm.stopNavigation = function () {
@@ -726,17 +738,12 @@ angular.module('webmapp')
                     }
                 }
 
-                // TODO: find a way to slow down the animation when the state change
-                MapService.adjust();
                 MapService.resetLoading();
                 MapService.closePopup();
 
                 setTimeout(function () {
                     MapService.adjust();
-                    setTimeout(function () {
-                        MapService.adjust();
-                    }, 650);
-                }, 650);
+                }, 800);
 
                 vm.hideMap = false;
                 vm.mapView = false;

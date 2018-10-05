@@ -47,7 +47,7 @@
         }">
 
         <!-- Map expand -->
-        <a href="" class="btn-expand map-expand map-expand-right" ng-click="vm.toggleMap()" ng-if="!vm.hideExpander">
+        <a href="" class="btn-expand map-expand map-expand-right" ng-click="vm.toggleMapInDetails ? vm.toggleMap() : vm.returnToMap()" ng-if="!vm.hideExpander">
             <i class="icon ion-arrow-expand"></i>
         </a>
 
