@@ -504,34 +504,37 @@ angular.module('webmapp')
                 }
             }
 
+            var centerOnPoint = false;
+            var objData = {
+                'detail': [data]
+            };
+
+            if (vm.related) {
+                var array = angular.copy(vm.related);
+                array.push(data);
+
+                objData['detail'] = array;
+            }
+
+            if (track) {
+                objData['detail'] = [track, data];
+                centerOnPoint = true;
+            }
+
+            if (extras.length > 0) {
+                objData.extras = extras;
+            }
+
+            MapService.addFeaturesToFilteredLayer(objData, true, 0);
+
             setTimeout(function () {
-                var centerOnPoint = false;
-                var objData = {
-                    'detail': [data]
-                };
-
-                if (vm.related) {
-                    var array = angular.copy(vm.related);
-                    array.push(data);
-
-                    objData['detail'] = array;
-                }
-
-                if (track) {
-                    objData['detail'] = [track, data];
-                    centerOnPoint = true;
-                }
-
-                if (extras.length > 0) {
-                    objData.extras = extras;
-                }
-
-                MapService.addFeaturesToFilteredLayer(objData, true, 400);
-
                 if (centerOnPoint) {
                     MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
                 }
-            }, 800);
+                else {
+                    MapService.centerOnFeature(data);
+                }
+            }, 900);
 
             if (vm.feature.accessibility) {
                 vm.feature.accessibility.mobility.icon = 'wm-icon-wheelchair-15';

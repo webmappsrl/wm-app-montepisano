@@ -531,10 +531,10 @@ angular.module('webmapp')
                         };
                     }
 
-                    Utils.goBack();
+                    Utils.goTo('/');
                 }).catch(function (err) {
                     console.error(err)
-                    Utils.goBack();
+                    Utils.goTo('/');
                 });
             }
         };
@@ -743,7 +743,7 @@ angular.module('webmapp')
 
                 setTimeout(function () {
                     MapService.adjust();
-                }, 800);
+                }, 1600);
 
                 vm.hideMap = false;
                 vm.mapView = false;

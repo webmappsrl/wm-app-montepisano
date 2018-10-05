@@ -921,6 +921,7 @@ angular.module('webmapp')
         };
 
         var initializeLayer = function (currentOverlay) {
+            var mp = angular.copy(overlayLayersQueueByLabel)
             if (typeof overlayLayersQueueByLabel[currentOverlay.label] !== 'undefined') {
                 return overlayLayersQueueByLabel[currentOverlay.label];
             }
@@ -1039,7 +1040,7 @@ angular.module('webmapp')
             // } else {
             if (Offline.isActive()) {
                 // var data = JSON.parse(localStorage.getItem(geojsonUrl));
-                getItemFromLocalStorage(geojsonUrl)
+                overlayLayersQueueByLabel[currentOverlay.label] = getItemFromLocalStorage(geojsonUrl)
                     .then(function (localContent) {
                         if (localContent.data) {
                             var data = JSON.parse(localContent.data);
@@ -1077,6 +1078,7 @@ angular.module('webmapp')
                         delete overlayLayersQueueByLabel[currentOverlay.label];
                     }).fail(function (err) {
                         console.warn('An error has occurred downloading geojson \'' + currentOverlay.geojsonUrl + '\'. This file could miss in the server or the app is offline, and will be skipped', err);
+                        delete overlayLayersQueueByLabel[currentOverlay.label];
                         defer.resolve();
                     });
                 });
@@ -1225,6 +1227,8 @@ angular.module('webmapp')
                             utfgridCallback(data, currentOverlay, tileLayer);
                         }
                         delete overlayLayersQueueByLabel[currentOverlay.label];
+                    }).fail(function () {
+                        defer.resolve();
                     });
             } else {
                 overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, function (data) {
@@ -1233,8 +1237,8 @@ angular.module('webmapp')
                         setItemInLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, JSON.stringify(data));
                     }
                     delete overlayLayersQueueByLabel[currentOverlay.label];
-                }).fail(function () {
-                    defer.reject();
+                }).fail(function (err) {
+                    defer.resolve();
                 });
             }
 
@@ -1893,22 +1897,9 @@ angular.module('webmapp')
                 coord;
 
             if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString') {
-                for (var i in feature.geometry.coordinates) {
-                    if (feature.geometry.type == 'MultiLineString') {
-                        for (var j in feature.geometry.coordinates[i]) {
-                            coord = feature.geometry.coordinates[i][j];
-                            latlngs.push(L.GeoJSON.coordsToLatLng(coord));
-                        }
-                    } else {
-                        coord = feature.geometry.coordinates[i];
-                        latlngs.push(L.GeoJSON.coordsToLatLng(coord));
-                    }
-                }
-
-                var bounds = new L.LatLngBounds(latlngs);
-                fitBounds(bounds);
+                map.fitBounds(L.geoJson(feature).getBounds());
             } else {
-                map.setView({
+                map.panTo({
                     lat: feature.geometry.coordinates[1],
                     lng: feature.geometry.coordinates[0]
                 }, mapConf.maxZoom);
@@ -2028,10 +2019,18 @@ angular.module('webmapp')
                 clearLayerHighlight();
                 map.invalidateSize();
                 if ($rootScope.highlightTrack && $rootScope.highlightTrack.parentId && $rootScope.highlightTrack.id) {
-                    mapService.highlightTrack($rootScope.highlightTrack.id, $rootScope.highlightTrack.parentId, true);
-
-                    $rootScope.highlightTrack = null;
-                    delete $rootScope.highlightTrack;
+                    if ($state.current.name === 'app.main.map') {
+                        mapService.highlightTrack($rootScope.highlightTrack.id, $rootScope.highlightTrack.parentId, true);
+                        $rootScope.highlightTrack = null;
+                        delete $rootScope.highlightTrack;
+                    }
+                    else if ($state.current.name === 'app.main.layer') {
+                        mapService.highlightTrack($rootScope.highlightTrack.id, $rootScope.highlightTrack.parentId, false);
+                    }
+                    else {
+                        $rootScope.highlightTrack = null;
+                        delete $rootScope.highlightTrack;
+                    }
                 }
             }
         };
@@ -2096,21 +2095,23 @@ angular.module('webmapp')
                 }
             };
 
-            if (typeof overlayLayersConfMap[layerName] === 'undefined') {
-                if (typeof featureMapById[id] !== 'undefined') {
-                    defer.resolve(featureMapById[id]);
-                } else {
-                    defer.reject();
-                }
+            if (!dataReady) {
+                setTimeout(function () {
+                    mapService.getFeatureById(id, layerName).then(function (feature) {
+                        defer.resolve(feature);
+                    });
+                }, 200);
             }
+            else {
+                if (typeof overlayLayersConfMap[layerName] === 'undefined') {
+                    checkNow();
+                }
+                else {
 
-            if (overlayLayersByLabel[layerName]) {
-                checkNow();
-            } else {
-                if (overlayLayersQueueByLabel[layerName]) {
-                    overlayLayersQueueByLabel[layerName].then(checkNow);
-                } else if (overlayLayersConfMap[layerName]) {
-                    initializeLayer(overlayLayersConfMap[layerName]).then(checkNow);
+                }
+
+                if (overlayLayersByLabel[layerName]) {
+                    checkNow();
                 }
             }
 
