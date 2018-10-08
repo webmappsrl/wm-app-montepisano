@@ -20,7 +20,11 @@ angular.module('webmapp')
     ) {
         var vm = {},
             current = $state.current || {},
-            params = $state.params || {};
+            params = $state.params || {},
+            fitView = {
+                ready: false,
+                centerOnPoint: false
+            };
 
         var modalScope = $rootScope.$new(),
             modal = {},
@@ -140,6 +144,15 @@ angular.module('webmapp')
         }).then(function (modalObj) {
             modalAccessibility = modalObj;
         });
+
+        function fitDataInView(data) {
+            if (fitView.centerOnPoint) {
+                MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
+            }
+            else {
+                MapService.centerOnFeature(data);
+            }
+        };
 
         if (trackRecordingEnabled) {
             vm.isNavigating = $rootScope.isNavigating;
@@ -504,7 +517,6 @@ angular.module('webmapp')
                 }
             }
 
-            var centerOnPoint = false;
             var objData = {
                 'detail': [data]
             };
@@ -518,7 +530,7 @@ angular.module('webmapp')
 
             if (track) {
                 objData['detail'] = [track, data];
-                centerOnPoint = true;
+                fitView.centerOnPoint = true;
             }
 
             if (extras.length > 0) {
@@ -527,14 +539,13 @@ angular.module('webmapp')
 
             MapService.addFeaturesToFilteredLayer(objData, true, 0);
 
-            setTimeout(function () {
-                if (centerOnPoint) {
-                    MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
-                }
-                else {
-                    MapService.centerOnFeature(data);
-                }
-            }, 900);
+            if (fitView.ready) {
+                fitDataInView(data);
+            }
+            else {
+                fitView.ready = true;
+                fitView.data = data;
+            }
 
             if (vm.feature.accessibility) {
                 vm.feature.accessibility.mobility.icon = 'wm-icon-wheelchair-15';
@@ -846,6 +857,17 @@ angular.module('webmapp')
         registeredEvents.push(
             $rootScope.$on('expand-map', function (e, value) {
                 vm.isMapExpanded = value;
+            })
+        );
+
+        registeredEvents.push(
+            $rootScope.$on('map-resize', function () {
+                if (fitView.ready && fitView.data) {
+                    fitDataInView(fitView.data);
+                }
+                else {
+                    fitView.ready = true;
+                }
             })
         );
 

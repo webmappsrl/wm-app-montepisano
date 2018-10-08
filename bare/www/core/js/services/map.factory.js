@@ -252,7 +252,7 @@ angular.module('webmapp')
             var overlayConf = feature.parent || {};
 
             if (feature.parent) {
-                if (feature.parent.type === "tile_utfgrid_geojson" && $state.current.name === "app.main.map") {
+                if (feature.parent.type === "tile_utfgrid_geojson" && ($state.current.name === "app.main.map" || +feature.properties.id !== +$state.params.id)) {
                     return {
                         color: "#ff0000",
                         weight: 5,
@@ -1547,6 +1547,10 @@ angular.module('webmapp')
                 $rootScope.$emit('map-zoomstart');
             });
 
+            map.on('resize', function () {
+                $rootScope.$emit('map-resize');
+            });
+
             if (generalConf.useAlmostOver) {
                 map.on('almost:click', function (e) {
                     lineClick(e);
@@ -1777,14 +1781,16 @@ angular.module('webmapp')
         };
 
         mapService.setFilter = function (layerName, value) {
-            activeFilters[layerName] = value;
-            localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
+            if (activeFilters[layerName] !== value) {
+                activeFilters[layerName] = value;
+                localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
 
-            if (!CONFIG.MAP.filters) {
-                if (activeFilters[layerName]) {
-                    mapService.activateLayer(layerName, true, true);
-                } else {
-                    mapService.removeLayer(layerName);
+                if (!CONFIG.MAP.filters) {
+                    if (activeFilters[layerName]) {
+                        mapService.activateLayer(layerName, true, true);
+                    } else {
+                        mapService.removeLayer(layerName);
+                    }
                 }
             }
         };
@@ -2100,7 +2106,7 @@ angular.module('webmapp')
                     mapService.getFeatureById(id, layerName).then(function (feature) {
                         defer.resolve(feature);
                     });
-                }, 200);
+                }, 100);
             }
             else {
                 if (typeof overlayLayersConfMap[layerName] === 'undefined') {

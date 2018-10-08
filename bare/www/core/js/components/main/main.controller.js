@@ -516,26 +516,19 @@ angular.module('webmapp')
         };
 
         vm.returnToMap = function () {
-            if ($state.params.parentId) {
+            Utils.goTo('/');
+            if ($state.params.parentId && $state.params.id) {
                 MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
                 if (vm.isNavigable) {
                     vm.isNavigable = false;
                     $rootScope.isNavigable = false;
                     $rootScope.$emit('item-navigable', vm.isNavigable);
                 }
-                MapService.getFeatureById($state.params.id, $state.params.parentId).then(function (feature) {
-                    if (feature.geometry && feature.geometry.type && (feature.geometry.type === "LineString" || feature.geometry.type === "MultiLineString")) {
-                        $rootScope.highlightTrack = {
-                            id: $state.params.id,
-                            parentId: $state.params.parentId
-                        };
-                    }
 
-                    Utils.goTo('/');
-                }).catch(function (err) {
-                    console.error(err)
-                    Utils.goTo('/');
-                });
+                $rootScope.highlightTrack = {
+                    id: $state.params.id,
+                    parentId: $state.params.parentId
+                };
             }
         };
 
@@ -678,12 +671,12 @@ angular.module('webmapp')
         registeredEvents.push(
             $scope.$on('$stateChangeStart', function (e, dest) {
                 vm.showRightMenu = false;
-                if ((dest.name === 'app.main.detaillayer' ||
-                    dest.name === 'app.main.detailevent' ||
-                    dest.name === 'app.main.detailulayer') &&
-                    previousBounds === null) {
-                    previousBounds = MapService.getBounds();
-                }
+                // if ((dest.name === 'app.main.detaillayer' ||
+                //     dest.name === 'app.main.detailevent' ||
+                //     dest.name === 'app.main.detailulayer') &&
+                //     previousBounds === null) {
+                //     previousBounds = MapService.getBounds();
+                // }
             })
         );
 
@@ -694,15 +687,15 @@ angular.module('webmapp')
 
                 vm.layerState = false;
 
-                if (currentState !== 'app.main.detaillayer' &&
-                    currentState !== 'app.main.detailevent' &&
-                    currentState !== 'app.main.detailulayer' &&
-                    previousBounds) {
-                    setTimeout(function () {
-                        // MapService.fitBounds(previousBounds);
-                        previousBounds = null;
-                    }, 1250);
-                }
+                // if (currentState !== 'app.main.detaillayer' &&
+                //     currentState !== 'app.main.detailevent' &&
+                //     currentState !== 'app.main.detailulayer' &&
+                //     previousBounds) {
+                //     setTimeout(function () {
+                //         // MapService.fitBounds(previousBounds);
+                //         previousBounds = null;
+                //     }, 1250);
+                // }
 
                 if (currentState !== 'app.main.detaillayer' && $rootScope.track) {
                     delete $rootScope.track;
@@ -740,10 +733,6 @@ angular.module('webmapp')
 
                 MapService.resetLoading();
                 MapService.closePopup();
-
-                setTimeout(function () {
-                    MapService.adjust();
-                }, 1600);
 
                 vm.hideMap = false;
                 vm.mapView = false;
@@ -817,6 +806,13 @@ angular.module('webmapp')
                 MapService.initialize();
             })
         );
+
+        registeredEvents.push(
+            $rootScope.$on('$ionicView.afterEnter', function () {
+                MapService.adjust();
+            })
+        );
+
 
         registeredEvents.push(
             $rootScope.$on('map-click', function () {
