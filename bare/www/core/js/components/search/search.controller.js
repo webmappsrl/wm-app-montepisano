@@ -19,9 +19,10 @@ angular.module('webmapp')
             modal = {},
             lastQuery;
 
-        var options = CONFIG.OPTIONS;
-        var currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
-        var defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';
+        var options = CONFIG.OPTIONS,
+            currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
+            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
+                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
 
         modalScope.vm = {};
 
@@ -102,6 +103,11 @@ angular.module('webmapp')
                             CONFIG.OVERLAY_LAYERS[pos].languages &&
                             CONFIG.OVERLAY_LAYERS[pos].languages[currentLang]) {
                             translatedName = CONFIG.OVERLAY_LAYERS[pos].languages[currentLang];
+                        }
+                        else if (CONFIG.OVERLAY_LAYERS[pos].label === translatedName &&
+                            CONFIG.OVERLAY_LAYERS[pos].languages &&
+                            CONFIG.OVERLAY_LAYERS[pos].languages[defaultLang]) {
+                            translatedName = CONFIG.OVERLAY_LAYERS[pos].languages[defaultLang];
                         }
                     }
 
@@ -211,16 +217,18 @@ angular.module('webmapp')
                 updateClickableCheckBoxes();
                 checkAllTabsState();
             } else {
-                lang = $translate.preferredLanguage(),
-                    tmp = {},
+                var tmp = {},
                     allActive = false,
                     activeFilters = {};
 
                 for (var i in CONFIG.OVERLAY_LAYERS) {
                     var nameTranslated = CONFIG.OVERLAY_LAYERS[i].label;
 
-                    if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[lang]) {
-                        nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[lang];
+                    if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[currentLang]) {
+                        nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[currentLang];
+                    }
+                    else if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[defaultLang]) {
+                        nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[defaultLang];
                     }
 
                     activeFilters[CONFIG.OVERLAY_LAYERS[i].label] = {

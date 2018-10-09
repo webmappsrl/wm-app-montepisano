@@ -25,7 +25,9 @@ angular.module('webmapp')
             overlayLayersConf = CONFIG.OVERLAY_LAYERS,
             styleConf = CONFIG.STYLE,
             offlineConf = CONFIG.OFFLINE,
-            currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+            currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
+            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
+                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
 
         var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
@@ -491,6 +493,8 @@ angular.module('webmapp')
                         category = $translate.instant('Tappe');
                     } else if (e.layer.feature.parent.languages && e.layer.feature.parent.languages[currentLang]) {
                         category = e.layer.feature.parent.languages[currentLang];
+                    } else if (e.layer.feature.parent.languages && e.layer.feature.parent.languages[defaultLang]) {
+                        category = e.layer.feature.parent.languages[defaultLang];
                     }
 
                     content = content +
@@ -915,24 +919,8 @@ angular.module('webmapp')
         };
 
         var initializeLayer = function (currentOverlay) {
-            var mp = angular.copy(overlayLayersQueueByLabel)
             if (typeof overlayLayersQueueByLabel[currentOverlay.label] !== 'undefined') {
                 return overlayLayersQueueByLabel[currentOverlay.label];
-            }
-
-            var languageUrl = "",
-                available = false;
-
-            if (CONFIG.LANGUAGES) {
-                available = true;
-            }
-            var currentLangGeojsonUrl = "";
-
-            if (available && currentOverlay.geojsonUrl) {
-                var split = currentOverlay.geojsonUrl.split("/");
-                languageUrl = "/languages/" + currentLang + "/" + split.pop();
-
-                currentLangGeojsonUrl = split.join("/") + languageUrl;
             }
 
             var defer = $q.defer(),
@@ -1010,28 +998,35 @@ angular.module('webmapp')
                 }, currentOverlay));
             };
 
-            var geojsonUrl = currentOverlay.geojsonUrl;
-            var langGeojsonUrl = currentLangGeojsonUrl;
-            if (offlineConf.resourceBaseUrl !== undefined) {
-                geojsonUrl = offlineConf.resourceBaseUrl + geojsonUrl;
-                langGeojsonUrl = offlineConf.resourceBaseUrl + currentLangGeojsonUrl;
+            var available = false;
+
+
+            if (CONFIG.MAIN && CONFIG.MAIN.LANGUAGES && (CONFIG.MAIN.LANGUAGES.actual || (CONFIG.MAIN.LANGUAGES.available && CONFIG.MAIN.LANGUAGES.available.length > 0))) {
+                available = true;
+            }
+            else if (CONFIG.LANGUAGES && (CONFIG.LANGUAGES.actual || (CONFIG.LANGUAGES.available && CONFIG.LANGUAGES.available.length > 0))) {
+                available = true;
             }
 
-            // if (useLocalCaching && currentFromLocalStorage) {
-            //     if (currentOverlay.type === 'line_geojson') {
-            //         db.get(geojsonUrl).then(function (e) {
-            //             lineCallback(e.data, currentOverlay);
-            //         });
-            //     } else if (currentOverlay.type === 'poi_geojson') {
-            //         poiCallback(JSON.parse(currentFromLocalStorage), currentOverlay);
-            //     }
+            var url = "",
+                success = function (data) {
+                    if (currentOverlay.type === 'line_geojson') {
+                        lineCallback(data, currentOverlay);
+                    } else if (currentOverlay.type === 'poi_geojson') {
+                        poiCallback(data, currentOverlay);
+                    }
+                    if (!Utils.isBrowser()) {
+                        setItemInLocalStorage(url, data);
+                    }
+                    delete overlayLayersQueueByLabel[currentOverlay.label];
+                },
+                fail = function (err) {
+                    // console.warn('An error has occurred downloading geojson \'' + currentOverlay.geojsonUrl + '\'. This file could miss in the server or the app is offline, and will be skipped', err);
+                    delete overlayLayersQueueByLabel[currentOverlay.label];
+                    defer.resolve();
+                };
 
-            //     $.getJSON(geojsonUrl, function (data) {
-            //         setItemInLocalStorage(geojsonUrl, data);
-            //     });
-            // } else {
             if (Offline.isActive()) {
-                // var data = JSON.parse(localStorage.getItem(geojsonUrl));
                 overlayLayersQueueByLabel[currentOverlay.label] = getItemFromLocalStorage(geojsonUrl)
                     .then(function (localContent) {
                         if (localContent.data) {
@@ -1045,48 +1040,46 @@ angular.module('webmapp')
                         delete overlayLayersQueueByLabel[currentOverlay.label];
                     });
             } else {
-                overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(langGeojsonUrl, function (data) {
-                    if (currentOverlay.type === 'line_geojson') {
-                        lineCallback(data, currentOverlay);
-                    } else if (currentOverlay.type === 'poi_geojson') {
-                        poiCallback(data, currentOverlay);
-                    }
-                    if (!Utils.isBrowser()) {
-                        $.getJSON(geojsonUrl, function (data) {
-                            setItemInLocalStorage(geojsonUrl, data);
+                url = currentOverlay.geojsonUrl;
+                if (available) {
+                    var split = currentOverlay.geojsonUrl.split('/');
+                    url = "/languages/" + currentLang + "/" + split.pop();
+                    url = split.join('/') + url;
+                }
+                if (offlineConf.resourceBaseUrl) {
+                    url = offlineConf.resourceBaseUrl + url;
+                }
+                overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
+                    if (available) {
+                        url = currentOverlay.geojsonUrl;
+                        var split = currentOverlay.geojsonUrl.split('/');
+                        url = "/languages/" + defaultLang + "/" + split.pop();
+                        url = split.join('/') + url;
+                        if (offlineConf.resourceBaseUrl) {
+                            url = offlineConf.resourceBaseUrl + url;
+                        }
+                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
+                            url = currentOverlay.geojsonUrl;
+                            if (offlineConf.resourceBaseUrl) {
+                                url = offlineConf.resourceBaseUrl + url;
+                            }
+                            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(fail);
                         });
                     }
-                    delete overlayLayersQueueByLabel[currentOverlay.label];
-                }).fail(function () {
-                    overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(geojsonUrl, function (data) {
-                        if (currentOverlay.type === 'line_geojson') {
-                            lineCallback(data, currentOverlay);
-                        } else if (currentOverlay.type === 'poi_geojson') {
-                            poiCallback(data, currentOverlay);
-                        }
-                        if (!Utils.isBrowser()) {
-                            setItemInLocalStorage(geojsonUrl, JSON.stringify(data));
-                        }
-                        delete overlayLayersQueueByLabel[currentOverlay.label];
-                    }).fail(function (err) {
-                        console.warn('An error has occurred downloading geojson \'' + currentOverlay.geojsonUrl + '\'. This file could miss in the server or the app is offline, and will be skipped', err);
-                        delete overlayLayersQueueByLabel[currentOverlay.label];
-                        defer.resolve();
-                    });
+                    else {
+                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
+                            url = currentOverlay.geojsonUrl;
+                            if (offlineConf.resourceBaseUrl) {
+                                url = offlineConf.resourceBaseUrl + url;
+                            }
+                            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(fail);
+                        });
+                    }
                 });
             }
-            // }
 
             promise.then(function () {
-                if (!geojsonUrl) {
-                    initializeThen(currentOverlay);
-                } else {
-                    var url = geojsonUrl.split('/'),
-                        lang = url[url.length - 2];
-                    if (lang === currentLang || (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual && CONFIG.LANGUAGES.actual.substring(0, 2) === currentLang && lang.length !== 2)) {
-                        initializeThen(currentOverlay);
-                    }
-                }
+                initializeThen(currentOverlay);
             });
 
             return promise;

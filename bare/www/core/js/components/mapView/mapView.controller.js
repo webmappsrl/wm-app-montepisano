@@ -2,7 +2,6 @@ angular.module('webmapp')
 
     .controller('MapController', function MapController(
         $ionicModal,
-        $ionicPlatform,
         $rootScope,
         $scope,
         $translate,
@@ -14,6 +13,12 @@ angular.module('webmapp')
 
         var modalScope = $rootScope.$new(),
             modal = {};
+
+        var currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
+            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
+                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
+
+        var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
         var areAllActive = function (filtersMap) {
             var allActive = true;
@@ -29,8 +34,6 @@ angular.module('webmapp')
 
             return allActive;
         };
-
-        var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
         MapService.showAllLayers();
         MapService.activateUtfGrid();
@@ -121,8 +124,7 @@ angular.module('webmapp')
                 }
                 checkAllTabsState();
             } else {
-                var lang = $translate.preferredLanguage(),
-                    tmp = {},
+                var tmp = {},
                     allActive = false,
                     activeFilters = {};
 
@@ -136,8 +138,10 @@ angular.module('webmapp')
 
                     if (nameTranslated.toLowerCase() === 'tappe' || nameTranslated.toLowerCase() === 'stages') {
                         nameTranslated = $translate.instant('Tappe');
-                    } else if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[lang]) {
-                        nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[lang];
+                    } else if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[currentLang]) {
+                        nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[currentLang];
+                    } else if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[defaultLang]) {
+                        nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[defaultLang];
                     }
 
                     activeFilters[CONFIG.OVERLAY_LAYERS[i].label] = {
