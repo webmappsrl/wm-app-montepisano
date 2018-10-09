@@ -140,7 +140,9 @@ angular.module('webmapp')
                 var results = Search.getByLayersWithDivider(lastQuery, vm.filtersList);
                 updateClickableCheckBoxes();
                 vm.results = vm.translateOverlayInArray(results);
-                MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery, vm.filtersList));
+                if (vm.showInMap) {
+                    MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery, vm.filtersList));
+                }
 
                 vm.results.realLength = 0;
 
@@ -168,7 +170,9 @@ angular.module('webmapp')
                 vm.othersCount = String(vm.filtersList.length - 1);
                 vm.areAllActive = modalScope.vm.areAllActive = areAllActive(Search.getActiveLayersMap());
                 vm.results = vm.translateOverlayInArray(Search.getByLayersWithDivider(lastQuery, vm.filtersList));
-                MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery, vm.filtersList));
+                if (vm.showInMap) {
+                    MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery, vm.filtersList));
+                }
 
                 vm.results.realLength = 0;
 
@@ -260,7 +264,9 @@ angular.module('webmapp')
                 }
             }
 
-            MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(query, Search.getActiveLayers()));
+            if (vm.showInMap) {
+                MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(query, Search.getActiveLayers()));
+            }
             $ionicScrollDelegate.scrollTop();
             lastQuery = query;
         };

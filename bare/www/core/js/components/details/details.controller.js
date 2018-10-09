@@ -146,12 +146,14 @@ angular.module('webmapp')
         });
 
         function fitDataInView(data) {
-            if (fitView.centerOnPoint) {
-                MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
-            }
-            else {
-                MapService.centerOnFeature(data);
-            }
+            setTimeout(function () {
+                if (fitView.centerOnPoint) {
+                    MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
+                }
+                else {
+                    MapService.centerOnFeature(data);
+                }
+            }, 1000);
         };
 
         if (trackRecordingEnabled) {

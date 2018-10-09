@@ -4,7 +4,6 @@ angular.module('webmapp')
 
     .factory('MapService', function MapService(
         $ionicLoading,
-        $ionicPopup,
         $q,
         $rootScope,
         $state,
@@ -46,8 +45,7 @@ angular.module('webmapp')
             useLocalCaching = generalConf.useLocalStorageCaching,
             centerCoords = {},
             centerCoordsUTM32 = {},
-            singleFeatureUrl = CONFIG.COMMUNICATION ? CONFIG.COMMUNICATION.singleFeatureUrl : null,
-            eventsPromise, couponsPromise, pagePromise, positionMarker, positionCircle;
+            eventsPromise, couponsPromise;
 
         var baseLayersByLabel = {},
             tileLayersByLabel = {},
@@ -87,7 +85,6 @@ angular.module('webmapp')
                 duration: 100
             };
 
-        var controlLocate = null;
         var circleLocation = {
             position: null,
             accuracy: null,
@@ -102,12 +99,6 @@ angular.module('webmapp')
             iconUrl: 'core/images/location-icon-arrow.png',
             iconSize: [40, 40],
             iconAnchor: [20, 20],
-        });
-
-        var arrowIcon = L.icon({
-            iconUrl: 'core/images/arrow-icon.png',
-            iconSize: [10, 14],
-            iconAnchor: [5, 7],
         });
 
         var db = new PouchDB('webmapp');
@@ -254,8 +245,8 @@ angular.module('webmapp')
             if (feature.parent) {
                 if (feature.parent.type === "tile_utfgrid_geojson" && ($state.current.name === "app.main.map" || +feature.properties.id !== +$state.params.id)) {
                     return {
-                        color: "#ff0000",
-                        weight: 5,
+                        color: feature.properties.color || overlayConf.color || styleConf.line.default.color,
+                        weight: feature.properties.weight || overlayConf.weight || styleConf.line.default.weight,
                         opacity: 0
                     };
                 }
@@ -421,7 +412,8 @@ angular.module('webmapp')
 
             map.eachLayer(function (layer) {
                 if (layer.feature &&
-                    layer.setStyle) {
+                    layer.setStyle &&
+                    layer.actived) {
                     layer.actived = false;
                     activateHighlight(layer, globalLineApplyStyle(layer.feature));
                 }
@@ -607,42 +599,44 @@ angular.module('webmapp')
         var activateLineHandlers = function (linesLayer) {
             linesLayer.on('click', lineClick);
 
-            linesLayer.on({
-                mouseover: function (e) {
-                    if (isLineLayerDetail()) {
-                        return;
-                    }
-
-                    var layer = e.layer;
-
-                    if (layer.actived) {
-                        return;
-                    }
-
-                    map.eachLayer(function (layer) {
-                        if (layer.feature &&
-                            layer.setStyle &&
-                            !layer.actived) {
-                            activateHighlight(layer, globalLineApplyStyle(layer.feature));
+            if (Utils.isBrowser()) {
+                linesLayer.on({
+                    mouseover: function (e) {
+                        if (isLineLayerDetail()) {
+                            return;
                         }
-                    });
 
-                    activateHighlight(layer, styleConf.line.highlight);
-                    layer.bringToFront();
-                },
-                mouseout: function (e) {
-                    if (isLineLayerDetail()) {
-                        return;
+                        var layer = e.layer;
+
+                        if (layer.actived) {
+                            return;
+                        }
+
+                        map.eachLayer(function (layer) {
+                            if (layer.feature &&
+                                layer.setStyle &&
+                                !layer.actived) {
+                                activateHighlight(layer, globalLineApplyStyle(layer.feature));
+                            }
+                        });
+
+                        activateHighlight(layer, styleConf.line.highlight);
+                        layer.bringToFront();
+                    },
+                    mouseout: function (e) {
+                        if (isLineLayerDetail()) {
+                            return;
+                        }
+
+                        var layer = e.layer;
+
+                        if (layer.actived) {
+                            return;
+                        }
+                        activateHighlight(layer, globalLineApplyStyle(layer.feature));
                     }
-
-                    var layer = e.layer;
-
-                    if (layer.actived) {
-                        return;
-                    }
-                    activateHighlight(layer, globalLineApplyStyle(layer.feature));
-                }
-            });
+                });
+            }
         };
 
         var activatePOIHandlers = function (pointsLayer) {
@@ -940,8 +934,6 @@ angular.module('webmapp')
 
                 currentLangGeojsonUrl = split.join("/") + languageUrl;
             }
-
-            var currentFromLocalStorage = localStorage.getItem(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl);
 
             var defer = $q.defer(),
                 promise = defer.promise;

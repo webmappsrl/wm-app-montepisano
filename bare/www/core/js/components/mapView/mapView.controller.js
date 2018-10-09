@@ -76,6 +76,12 @@ angular.module('webmapp')
                     }, 500);
                 }
             }
+            else {
+                //Force rendering only at the modal close
+                for (var i in modalScope.vm.filters) {
+                    MapService.setFilter(i, modalScope.vm.filters[i].value);
+                }
+            }
         };
 
         modalScope.vm.updateFilter = function (filterName, value) {
@@ -85,10 +91,8 @@ angular.module('webmapp')
                 if (filterName === "Tutte") {
                     for (var i in modalScope.vm.filters) {
                         modalScope.vm.filters[i].value = value;
-                        MapService.setFilter(i, value);
                     }
                 } else {
-                    MapService.setFilter(filterName, value);
                     modalScope.vm.filters[filterName].value = value;
                     modalScope.vm.filters["Tutte"].value = areAllActive(modalScope.vm.filters);
                 }
