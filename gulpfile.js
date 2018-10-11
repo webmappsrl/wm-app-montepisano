@@ -123,21 +123,31 @@ gulp.task('update', ['create'], function () {
     if (argv.instance) {
         instance_name = argv.instance;
     }
-    var dir = 'instances/' + instance_name;
+
+    var dir = 'instances/' + instance_name,
+        url = "";
+
+    if (argv.url) {
+        url = argv.url;
+    } else {
+        warn("missing url");
+        url = "http://api.webmapp.it/j/" + instance_name + ".j.webmapp.it/";
+        info("using default url: " + url);
+    }
 
     // se esiste istanza
     if (fs.existsSync(dir)) {
-        var info = argv.url + '/info.json',
-            config = argv.url + '/config.json',
-            resources = argv.url + '/resources/';
+        var infoUrl = url + '/info.json',
+            config = url + '/config.json',
+            resources = url + '/resources/';
 
         // estraggo le info
         request({
-            url: info,
+            url: infoUrl,
             headers: {
                 'User-Agent': 'request'
             }
-        }).pipe(source(info))
+        }).pipe(source(infoUrl))
             .pipe(streamify(jeditor(function (repositories) {
                 repo = (repositories);
                 config_xml = {
@@ -274,6 +284,18 @@ gulp.task('complete-update', function () {
     });
     sh.exec("gulp update-instance -i " + instance_name);
     sh.exec("gulp update -i " + instance_name + " -u " + url);
+});
+
+gulp.task('sass', function () {
+    var dir = "bare/";
+
+    if (argv.instance) {
+        dir = "instances/" + argv.instance + "/";
+    }
+
+    sh.exec("gulp sass", {
+        cwd: dir
+    });
 });
 
 gulp.copy = function (src, dest) {
