@@ -160,13 +160,14 @@ angular.module('webmapp')
                 modalScope.vm.currentMapLayer = MapService.getCurrentMapLayerName();
             }
 
+            modal.show();
+
             if (modalScope.vm.isNewModal) {
                 collapseAll();
                 vm.initialFilters = angular.copy(MapService.getActiveFilters());
             }
 
             Utils.forceDigest();
-            modal.show();
         };
 
         $scope.$on('$destroy', function () {
