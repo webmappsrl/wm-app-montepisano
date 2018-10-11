@@ -370,12 +370,17 @@ angular.module('webmapp')
         };
 
         // WARNING: ionicToast handle unique instance
-        utils.showToast = function (template) {
-            ionicToast.show(template, 'top', true);
+        utils.showToast = function (template, position) {
+            if (!position) {
+                position = 'top';
+            }
+            ionicToast.show(template, position, true);
+            utils.forceDigest();
         };
 
         utils.hideToast = function () {
             ionicToast.hide();
+            utils.forceDigest();
         };
 
         utils.Stopwatch = function (stopwatchString) {

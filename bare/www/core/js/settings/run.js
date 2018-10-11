@@ -6,7 +6,8 @@ angular.module('webmapp')
         $state,
         $translate,
         CONFIG,
-        Offline) {
+        Offline,
+        Utils) {
         $rootScope.COLORS = CONFIG.STYLE;
         $rootScope.OPTIONS = CONFIG.OPTIONS;
         $rootScope.backButtonPressed = false;
@@ -43,72 +44,44 @@ angular.module('webmapp')
         }
 
         $ionicPlatform.ready(function () {
-            // if (window.cordova && window.cordova.plugins.Keyboard) {
-            //     cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
-            //     window.cordova.plugins.Keyboard.disableScroll(true);
-            // }
             if (window.StatusBar) {
                 StatusBar.styleDefault();
             }
         });
 
-        // if (sessionStorage.$wm_doBack) {
         $ionicPlatform.registerBackButtonAction(function (e) {
             e.preventDefault();
-            if ($state.current.name == 'app.main.map' && sessionStorage.$wm_doBack) {
+            if ($state.current.name === 'app.main.map' && sessionStorage.$wm_doBack) {
                 if ($rootScope.backButtonPressed) {
                     Offline.resetCurrentMapAndGoBack();
                 }
                 else {
                     $rootScope.backButtonPressed = true;
+                    Utils.showToast($translate.instant("Premi di nuovo per uscire dall'itinerario"), 'bottom');
+
                     $rootScope.backButtonPressedTimeout = setTimeout(function () {
                         $rootScope.backButtonPressed = false;
-                    }, 2000);
-                    $ionicPopup.confirm({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Vuoi davvero chiudere l'itinerario?")
-                    }).then(function (res) {
-                        if (res) {
-                            Offline.resetCurrentMapAndGoBack();
-                        }
-                        else {
-                            try {
-                                clearTimeout($rootScope.backButtonPressedTimeout);
-                            }
-                            catch (e) { }
-                        }
-                    });
+                        Utils.hideToast();
+                    }, 5000);
                 }
             }
-            else if ($state.current.name == 'app.main.map') {
+            else if ($state.current.name === 'app.main.map') {
                 if ($rootScope.backButtonPressed) {
                     navigator.app.exitApp();
                 }
                 else {
                     $rootScope.backButtonPressed = true;
+                    Utils.showToast($translate.instant("Premi di nuovo per chiudere l'applicazione"), 'bottom');
+
                     $rootScope.backButtonPressedTimeout = setTimeout(function () {
                         $rootScope.backButtonPressed = false;
-                    }, 2000);
-                    $ionicPopup.confirm({
-                        title: $translate.instant("ATTENZIONE"),
-                        template: $translate.instant("Vuoi davvero chiudere l'applicazione?")
-                    }).then(function (res) {
-                        if (res) {
-                            navigator.app.exitApp();
-                        }
-                        else {
-                            try {
-                                clearTimeout($rootScope.backButtonPressedTimeout);
-                            }
-                            catch (e) { }
-                        }
-                    });
+                        Utils.hideToast();
+                    }, 5000);
                 }
             } else {
                 navigator.app.backHistory();
             }
         }, 101);
-        // }
 
         $rootScope.$on('$stateChangeStart', function (e, toState, toParams) {
             $rootScope.currentState = toState;
