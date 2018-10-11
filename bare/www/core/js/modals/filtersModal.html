@@ -23,8 +23,7 @@
                     <div class="item-content disable-pointer-events">
                         <span ng-if="key !== 'Tutte'" ng-bind-html="obj.name"></span>
                         <strong ng-if="key === 'Tutte'">{{obj.name}}</strong>
-                        <span ng-if="obj.icon !== 'wm-icon-generic'" class="icon {{obj.icon}}" style="float: right"
-                            ng-style="{ 'color': obj.color }"></span>
+                        <span ng-if="obj.icon !== 'wm-icon-generic'" class="icon {{obj.icon}}" style="float: right" ng-style="{ 'color': obj.color }"></span>
                     </div>
                 </label>
             </ion-list>
@@ -50,8 +49,7 @@
 
             <div class="accordion-filters" ng-if="vm.isNewModal">
                 <div class="filters-tab-title-container">
-                    <div ng-repeat="(key, item) in filters" ng-click="switchTab(key)" class="filters-tab-title cols-{{tabNum}}"
-                        ng-class="{
+                    <div ng-repeat="(key, item) in filters" ng-click="switchTab(key)" class="filters-tab-title cols-{{tabNum}}" ng-class="{
                             'selected': currentTab === key
                         }">
                         {{item.languages[vm.currentLang] || item.languages[vm.defaultLang] || item.label}}
@@ -61,15 +59,13 @@
                     <div ng-repeat="(key, item) in filters" class="filters-tab-content" ng-class="{
                         'selected': currentTab === key
                     }">
-                        <div ng-repeat="(sublayerId, sublayer) in item.sublayers" class="filters-sublayer" ng-attr-id="{{'sublayer-' + key + '-' + sublayerId}}"
-                            ng-if="key !== 'base_maps'">
+                        <div ng-repeat="(sublayerId, sublayer) in item.sublayers" class="filters-sublayer" ng-attr-id="{{'sublayer-' + key + '-' + sublayerId}}" ng-if="key !== 'base_maps'">
                             <div>
                                 <i class="left-icon" ng-if="vm.isMapModal" ng-class="{
                                     'wm-icon-outline-check_box': sublayer.checked === 2,
                                     'wm-icon-outline-check_box_outline_blank': sublayer.checked === 0,
                                     'wm-icon-outline-indeterminate_check_box': sublayer.checked === 1
-                                }"
-                                    ng-click="toggleSubTabCheckBox(sublayerId,key)"></i>
+                                }" ng-click="toggleSubTabCheckBox(sublayerId,key)"></i>
                                 <div ng-click=" toggleSubTab(sublayerId, key) ">
                                     <span ng-bind-html="sublayer.label[vm.currentLang] || sublayer.label[vm.defaultLang] || sublayer.label ">
                                     </span>
@@ -79,14 +75,13 @@
 
                             <div class="filters-layer" ng-repeat="(layerId, layer) in sublayer.items" ng-class="{
                                 'disable-checkbox': !layer.clickable
-                            }"
-                                ng-click="toggleLayer(layer.label, sublayerId, key)">
+                            }" ng-click="toggleLayer(layer.label, sublayerId, key)">
                                 <i class="left-icon" ng-class="{
                                     'wm-icon-outline-check_box': layer.checked,
                                     'wm-icon-outline-check_box_outline_blank': !layer.checked
                                 }"></i>
-                                <span ng-bind-html="layer.languages[vm.currentLang] || layer.languages[vm.defaultLang] || layer.label">
-                                </span>
+                                <div ng-bind-html="layer.languages[vm.currentLang] || layer.languages[vm.defaultLang] || layer.label" class="filters-layer-name">
+                                </div>
                             </div>
                         </div>
                         <div ng-repeat="(mapId, mapItem) in item.items" class="filters-sublayer" ng-if="key === 'base_maps'">
@@ -94,8 +89,7 @@
                                 <i class="left-icon" ng-class="{
                                     'wm-icon-outline-radio_button_checked': vm.currentMapLayer === mapItem.label,
                                     'wm-icon-outline-radio_button_unchecked': vm.currentMapLayer !== mapItem.label
-                                }"
-                                    ng-click="vm.updateBaseMap(mapItem.label)"></i>
+                                }" ng-click="vm.updateBaseMap(mapItem.label)"></i>
                                 <div ng-click="vm.updateBaseMap(mapItem.label)">
                                     {{mapItem.label}}
                                 </div>

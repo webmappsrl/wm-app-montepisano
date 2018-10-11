@@ -276,6 +276,18 @@ gulp.task('complete-update', function () {
     sh.exec("gulp update -i " + instance_name + " -u " + url);
 });
 
+gulp.task('sass', function () {
+    var dir = "bare/";
+
+    if (argv.instance) {
+        dir = "instances/" + argv.instance + "/";
+    }
+
+    sh.exec("gulp sass", {
+        cwd: dir
+    });
+});
+
 gulp.copy = function (src, dest) {
     gulp.start('node_modules_link');
 
