@@ -212,7 +212,7 @@ angular.module('webmapp')
             saveModalScope.vm.hide = function () {
                 $ionicPopup.confirm({
                     title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Stai per eliminare tutti i dati registrati. Vuoi eliminarli definitivamente?")
+                    template: $translate.instant("Vuoi cancellare la traccia corrente?")
                 }).then(function (res) {
                     if (res) {
                         MapService.removeUserPolyline();
