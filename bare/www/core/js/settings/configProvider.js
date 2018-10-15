@@ -9,14 +9,15 @@ angular.module('webmapp')
 
         function loadConfigJson() {
             var xobj = new XMLHttpRequest(),
-                url = "./config/config.json";
+                url = "./config/config.json",
+                isIos = window.cordova && window.cordova.platformId === 'ios';
             xobj.overrideMimeType("application/json");
             if (!window.cordova && window.location.hostname !== "localhost") {
                 url = "./config.json";
             }
             xobj.open('GET', url, false);
             xobj.onreadystatechange = function () {
-                if (xobj.readyState == 4 && xobj.status == "200") {
+                if (xobj.readyState == 4 && ((isIos && +xobj.status === 0) || +xobj.status == 200)) {
                     GENERAL_CONFIG = JSON.parse(xobj.responseText);
                 }
             };
@@ -132,6 +133,8 @@ angular.module('webmapp')
             });
         }
 
+        // console.log(config)
+
         this.$get = function (
             $ionicPopup,
             $translate
@@ -147,7 +150,6 @@ angular.module('webmapp')
                 });
             }
 
-            console.log(config);
             return config;
         };
     });
