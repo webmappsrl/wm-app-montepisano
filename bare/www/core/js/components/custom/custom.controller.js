@@ -35,6 +35,15 @@ angular.module('webmapp')
             Utils.goTo('pages/' + category.replace(/ /g, '_'));
         };
 
+        vm.openLink = function (url) {
+            if (url.substring(0, 4) === "http") {
+                vm.openInExternalBrowser(url)
+            }
+            else {
+                Utils.goTo(url);
+            }
+        };
+
         var key = CONFIG.OFFLINE.pagesUrl + currentPageType;
 
         if (currentLang !== defaultLang) {
