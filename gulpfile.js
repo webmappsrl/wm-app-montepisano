@@ -184,7 +184,12 @@ gulp.task('set', function () {
         newConfUrl = '';
 
     if (argv.config) {
-        newConfUrl = argv.config;
+        if (argv.config.substring(0, 4) === "http") {
+            newConfUrl = argv.config;
+        } else {
+            newConfUrl = "http://api.webmapp.it/j/" + argv.config + ".j.webmapp.it/";
+            info("using default url: " + newConfUrl);
+        }
 
         gulp.src(['bare/www/.index.html'])
             .pipe(rename('index.html'))
