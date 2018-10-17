@@ -2598,8 +2598,9 @@ angular.module('webmapp')
                 };
 
                 var geoUserTrack = userTrackPolyline.toGeoJSON();
-                geoUserTrack.properties.name = info.name;
-                geoUserTrack.properties.description = info.description;
+                geoUserTrack.properties = angular.extend(geoUserTrack.properties, info);
+                // geoUserTrack.properties.name = info.name;
+                // geoUserTrack.properties.description = info.description;
                 geoUserTrack.properties.isEditable = true;
 
                 if (CONFIG.routeID) {

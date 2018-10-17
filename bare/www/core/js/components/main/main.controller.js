@@ -233,7 +233,12 @@ angular.module('webmapp')
                 } else {
                     var info = {
                         name: title,
-                        description: description
+                        description: description,
+                        stats: {
+                            time: vm.navigation.stats.time,
+                            distance: Math.round(vm.navigation.stats.distance),
+                            averageSpeed: Math.round(10 * vm.navigation.stats.averageSpeed) / 10
+                        }
                     };
                     MapService.saveUserPolyline(info);
                     MapService.removeUserPolyline();
@@ -565,6 +570,7 @@ angular.module('webmapp')
         };
 
         vm.startNavigation = function (record) {
+            vm.navigation.resetStats();
             var startRecording = function () {
                 GeolocationService.startRecording(vm.stopNavigationUrlParams ? vm.stopNavigationUrlParams : false, record ? true : false);
                 GeolocationService.switchState({
@@ -619,7 +625,6 @@ angular.module('webmapp')
         vm.stopNavigation = function () {
             GeolocationService.stopRecording();
             clearInterval(vm.navigationInterval);
-            vm.navigation.resetStats();
             MapService.adjust();
             vm.isNavigating = false;
             window.plugins.insomnia.allowSleepAgain();

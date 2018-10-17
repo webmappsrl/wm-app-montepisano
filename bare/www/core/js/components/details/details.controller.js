@@ -381,6 +381,63 @@ angular.module('webmapp')
 
                 vm.hasGallery = vm.imageGallery.length > 0;
 
+                if (feature.stats) {
+                    var formatTime = function (time) {
+                        if (!time) {
+                            return "0min";
+                        }
+
+                        var hours = 0,
+                            minutes = 0,
+                            seconds = 0;
+
+                        time = (time - (time % 1000)) / 1000;
+                        seconds = time % 60;
+                        minutes = ((time - seconds) / 60) % 60;
+                        hours = ((time - seconds - minutes * 60) / 3600) % 24;
+
+                        if (seconds > 29) {
+                            minutes++;
+                        }
+
+                        if (hours > 0) {
+                            return hours + 'h ' + minutes + 'min';
+                        } else {
+                            if (minutes > 0) {
+                                return minutes + 'min';
+                            }
+                            else {
+                                return '1min'
+                            }
+                        }
+                    };
+
+                    var formatDistance = function (distance) {
+                        return distance ? ((distance / 1000).toFixed(1) + 'km') : '0km';
+                    };
+
+                    var formatSpeed = function (speed) {
+                        return speed ? (speed.toFixed(0) + "km/h") : '0km/h';
+                    };
+
+                    var content = '<div class="details_stats-container">';
+                    content += '<div class="details_stat">';
+                    content += '<i class="wm-icon-android-clock"></i>';
+                    content += '<span>' + formatTime(feature.stats.time) + '</span>';
+                    content += '</div>';
+                    content += '<div class="details_stat">';
+                    content += '<i class="wm-icon-arrow-right-c"></i>';
+                    content += '<span>' + formatDistance(feature.stats.distance) + '</span>';
+                    content += '</div>';
+                    content += '<div class="details_stat">';
+                    content += '<i class="wm-icon-speedometer"></i>';
+                    content += '<span>' + formatSpeed(feature.stats.averageSpeed) + '</span>';
+                    content += '</div>';
+                    content += '</div>';
+
+                    feature.description = content + feature.description;
+                }
+
                 if (feature.description) {
                     var expandable = false;
                     if (feature.description.length > 200) {
@@ -397,6 +454,7 @@ angular.module('webmapp')
                     });
 
                     vm.mainDescription.html = $sce.trustAsHtml(vm.mainDescription.html);
+
                     feature.description = $sce.trustAsHtml(feature.description);
                     feature.description.expandable = expandable;
                 }

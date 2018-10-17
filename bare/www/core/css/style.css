@@ -1171,6 +1171,18 @@ div.detailRoute-footer {
 .edit-user-track .list a {
   text-transform: capitalize; }
 
+.details_stats-container {
+  padding: 0 10%; }
+  .details_stats-container::after {
+    clear: both; }
+  .details_stats-container .details_stat {
+    font-size: 130%;
+    display: inline-block;
+    text-align: center;
+    width: calc(100% / 3); }
+    .details_stats-container .details_stat i {
+      display: block; }
+
 /* ------------------------------------ *\
    #MEDIA QUERIES
 \* ------------------------------------ */
