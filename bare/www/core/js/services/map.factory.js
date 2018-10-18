@@ -1890,7 +1890,7 @@ angular.module('webmapp')
             if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString') {
                 map.fitBounds(L.geoJson(feature).getBounds());
             } else {
-                map.panTo({
+                map.setView({
                     lat: feature.geometry.coordinates[1],
                     lng: feature.geometry.coordinates[0]
                 }, mapConf.maxZoom);
