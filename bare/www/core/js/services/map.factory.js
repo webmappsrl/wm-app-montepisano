@@ -1016,7 +1016,7 @@ angular.module('webmapp')
                         poiCallback(data, currentOverlay);
                     }
                     if (!Utils.isBrowser()) {
-                        setItemInLocalStorage(url, data);
+                        setItemInLocalStorage(url, JSON.stringify(data));
                     }
                     delete overlayLayersQueueByLabel[currentOverlay.label];
                 },
@@ -1027,7 +1027,7 @@ angular.module('webmapp')
                 };
 
             if (Offline.isActive()) {
-                overlayLayersQueueByLabel[currentOverlay.label] = getItemFromLocalStorage(geojsonUrl)
+                overlayLayersQueueByLabel[currentOverlay.label] = getItemFromLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl)
                     .then(function (localContent) {
                         if (localContent.data) {
                             var data = JSON.parse(localContent.data);
@@ -1038,6 +1038,10 @@ angular.module('webmapp')
                             }
                         }
                         delete overlayLayersQueueByLabel[currentOverlay.label];
+                    }).catch(function (err) {
+                        console.error(err);
+                        delete overlayLayersQueueByLabel[currentOverlay.label];
+                        defer.resolve();
                     });
             } else {
                 url = currentOverlay.geojsonUrl;
