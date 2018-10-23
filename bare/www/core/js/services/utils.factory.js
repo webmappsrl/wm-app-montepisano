@@ -13,7 +13,8 @@ angular.module('webmapp')
         ionicToast
     ) {
         var utils = {},
-            modals = {};
+            modals = {},
+            isAndroid = cordova.platformId === 'android';
 
         utils.createModal = function (path, options, scope) {
             var defer = $q.defer();

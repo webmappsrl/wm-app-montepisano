@@ -18,7 +18,7 @@
             </div> -->
 
             <div class="static-description offline-description">
-                <h2 class="offline-desc-title" ng-if="canBeEnabled && !downloadInProgress && !unzipInProgress">
+                <h2 class="offline-desc-title" ng-if="canBeEnabled && !downloadInProgress && !unzipInProgress && !installationInProgress">
                     {{"Scarica la mappa" | translate}}</h2>
                 <p class="offline-desc-text" ng-if="!active && canBeEnabled">
                     {{"Abilita la funzione di navigazione offline" | translate}}</p>
@@ -27,28 +27,53 @@
                 <p class="offline-desc-text" ng-if="active && canBeEnabled">
                     {{"Disabilita la funzione di navigazione offline" | translate}}</p>
 
-                <p ng-if="!canBeEnabled && !downloadInProgress && !unzipInProgress">
+                <p ng-if="!canBeEnabled && !downloadInProgress && !unzipInProgress && !installationInProgress">
                     {{message}}
                 </p>
             </div>
 
-            <div style="color: black;" ng-if="downloadInProgress">
+            <div style="color: black;" ng-if="downloadInProgress || installationInProgress">
                 <p class="offline-text offline-download">
-                    {{"Download della mappa in corso" | translate}}
+                    {{"Download in corso" | translate}}
                 </p>
-                <div ng-style="{
-                        'border-top': '16px solid ' + COLORS.global.buttonsBackground
-                    }" class="loader">
+                <div class="offline-progress-bar" ng-style="
+                    downloadProgress !== 100 ? {
+                        'background': 'linear-gradient(to right, ' + COLORS.global.buttonsBackground + ' 0%, ' + COLORS.global.buttonsBackground + ' ' + downloadProgress + '%, #FFFFFF ' + downloadProgress + '%, #FFFFFF 100%)',
+                        'background': '-moz-linear-gradient(left, ' + COLORS.global.buttonsBackground + ' 0%, ' + COLORS.global.buttonsBackground + ' ' + downloadProgress + '%, #FFFFFF ' + downloadProgress + '%, #FFFFFF 100%)',
+                        'background': '-webkit-linear-gradient(left, ' + COLORS.global.buttonsBackground + ' 0%, ' + COLORS.global.buttonsBackground + ' ' + downloadProgress + '%, #FFFFFF ' + downloadProgress + '%, #FFFFFF 100%)'
+                    } : {
+                        'background': '#33CC33'
+                    }
+                    ">
                 </div>
-                <!-- TODO: use proper class -->
                 <p class="offline-text offline-install">
+                    {{downloadProgress}}%
+                </p>
+                <div class="button-reset button button-block" ng-click="abortMapDownload()" ng-if="downloadInProgress">
+                    {{"Interrompi" | translate}}
+                </div>
+
+                <p ng-if="installationInProgress" class="offline-text offline-download">
+                    {{"Installazione in corso" | translate}}
+                </p>
+                <div ng-if="installationInProgress" class="offline-progress-bar" ng-style="
+                    installationProgress !== 100 ? {
+                        'background': 'linear-gradient(to right, ' + COLORS.global.buttonsBackground + ' 0%, ' + COLORS.global.buttonsBackground + ' ' + installationProgress + '%, #FFFFFF ' + installationProgress + '%, #FFFFFF 100%)',
+                        'background': '-moz-linear-gradient(left, ' + COLORS.global.buttonsBackground + ' 0%, ' + COLORS.global.buttonsBackground + ' ' + installationProgress + '%, #FFFFFF ' + installationProgress + '%, #FFFFFF 100%)',
+                        'background': '-webkit-linear-gradient(left, ' + COLORS.global.buttonsBackground + ' 0%, ' + COLORS.global.buttonsBackground + ' ' + installationProgress + '%, #FFFFFF ' + installationProgress + '%, #FFFFFF 100%)'
+                    } : {
+                        'background': '#33CC33'
+                    }
+                    ">
+                </div>
+                <p ng-if="installationInProgress" class="offline-text offline-install">
                     {{installationProgress}}%
                 </p>
             </div>
             <button ng-style="{
                     'background': COLORS.global.buttonsBackground,
                     'color': COLORS.global.buttonsColor
-                    }" class="button-download button button-block" ng-if="!canBeEnabled && !downloadInProgress && !unzipInProgress" ng-click="downloadMap()">
+                    }" class="button-download button button-block" ng-if="!canBeEnabled && !downloadInProgress && !unzipInProgress && !installationInProgress" ng-click="downloadMap()">
                 <span>
                     <i class="icon wm-icon-ios7-download-outline"></i> {{"Download" | translate}}
                 </span>
@@ -66,7 +91,7 @@
             <!-- TODO:replace with style -->
             <br />
 
-            <div ng-if="!downloadInProgress && !unzipInProgress && canBeEnabled">
+            <div ng-if="!downloadInProgress && !unzipInProgress && !installationInProgress && canBeEnabled">
                 <span>
                     {{"Premi il tasto Reset per cancellare l'attuale versione della mappa e procedere successivamente al download della nuova versione" | translate}}
                 </span>

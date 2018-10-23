@@ -28,7 +28,7 @@ angular.module('webmapp')
             var retValue;
             var options = {
                 method: 'GET',
-                url: url,
+                url: url + '?date=' + Date.now(),
                 dataType: 'json',
                 // headers: {
                 //     'Access-Control-Allow-Origin': '*'
@@ -133,7 +133,7 @@ angular.module('webmapp')
             });
         }
 
-        // console.log(config)
+        console.log(config)
 
         this.$get = function (
             $ionicPopup,

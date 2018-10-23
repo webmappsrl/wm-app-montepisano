@@ -3444,6 +3444,10 @@ ion-modal-view.modal-download {
     height: 20em;
     margin-top: -8em; }
 
+.offline-progress-bar {
+  width: 100%;
+  height: 5px; }
+
 /* LOADER in MODAL DONWLOAD*/
 .loader {
   border: 16px solid #f8faf3;
