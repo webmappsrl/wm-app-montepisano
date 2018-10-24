@@ -1216,7 +1216,8 @@ angular.module('webmapp')
                             utfgridCallback(data, currentOverlay, tileLayer);
                         }
                         delete overlayLayersQueueByLabel[currentOverlay.label];
-                    }).fail(function () {
+                    }).catch(function (err) {
+                        console.error(err);
                         defer.resolve();
                     });
             } else {

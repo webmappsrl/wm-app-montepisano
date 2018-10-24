@@ -260,6 +260,8 @@ angular.module('webmapp')
 
                     vm.installationProgress = Math.min(Math.round(progress), 99);
                 }
+
+                Utils.forceDigest();
             };
 
             var progressInterval = setInterval(calculateProgress, 100);
@@ -419,6 +421,7 @@ angular.module('webmapp')
                                     defer.resolve();
                                 }
                                 else {
+                                    console.log("join " + mbtilesArray[0] + " - " + mbtilesArray[1]);
                                     return MBTiles.join(mbtilesArray[0], mbtilesArray[1], progressFunction).then(function () {
                                         console.log('done ' + mbtilesArray[1]);
                                         var split = mbtilesArray[1].split('/'),
