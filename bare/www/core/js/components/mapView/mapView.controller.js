@@ -2,7 +2,6 @@ angular.module('webmapp')
 
     .controller('MapController', function MapController(
         $ionicModal,
-        $ionicPlatform,
         $rootScope,
         $scope,
         $translate,
@@ -14,6 +13,12 @@ angular.module('webmapp')
 
         var modalScope = $rootScope.$new(),
             modal = {};
+
+        var currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
+            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
+                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
+
+        var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
         var areAllActive = function (filtersMap) {
             var allActive = true;
@@ -29,7 +34,6 @@ angular.module('webmapp')
 
             return allActive;
         };
-        var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
         MapService.showAllLayers();
         MapService.activateUtfGrid();
@@ -75,6 +79,12 @@ angular.module('webmapp')
                     }, 500);
                 }
             }
+            else {
+                //Force rendering only at the modal close
+                for (var i in modalScope.vm.filters) {
+                    MapService.setFilter(i, modalScope.vm.filters[i].value);
+                }
+            }
         };
 
         modalScope.vm.updateFilter = function (filterName, value) {
@@ -84,10 +94,8 @@ angular.module('webmapp')
                 if (filterName === "Tutte") {
                     for (var i in modalScope.vm.filters) {
                         modalScope.vm.filters[i].value = value;
-                        MapService.setFilter(i, value);
                     }
                 } else {
-                    MapService.setFilter(filterName, value);
                     modalScope.vm.filters[filterName].value = value;
                     modalScope.vm.filters["Tutte"].value = areAllActive(modalScope.vm.filters);
                 }
@@ -116,8 +124,7 @@ angular.module('webmapp')
                 }
                 checkAllTabsState();
             } else {
-                var lang = $translate.preferredLanguage(),
-                    tmp = {},
+                var tmp = {},
                     allActive = false,
                     activeFilters = {};
 
@@ -131,8 +138,10 @@ angular.module('webmapp')
 
                     if (nameTranslated.toLowerCase() === 'tappe' || nameTranslated.toLowerCase() === 'stages') {
                         nameTranslated = $translate.instant('Tappe');
-                    } else if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[lang]) {
-                        nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[lang];
+                    } else if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[currentLang]) {
+                        nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[currentLang];
+                    } else if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[defaultLang]) {
+                        nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[defaultLang];
                     }
 
                     activeFilters[CONFIG.OVERLAY_LAYERS[i].label] = {
@@ -151,13 +160,14 @@ angular.module('webmapp')
                 modalScope.vm.currentMapLayer = MapService.getCurrentMapLayerName();
             }
 
+            modal.show();
+
             if (modalScope.vm.isNewModal) {
                 collapseAll();
                 vm.initialFilters = angular.copy(MapService.getActiveFilters());
             }
 
             Utils.forceDigest();
-            modal.show();
         };
 
         $scope.$on('$destroy', function () {
@@ -492,17 +502,6 @@ angular.module('webmapp')
                 MapService.addFeaturesToFilteredLayer(features);
             });
         }
-
-        $scope.$on('$ionicView.afterEnter', function () {
-            setTimeout(function () {
-                if ($rootScope.highlightTrack && $rootScope.highlightTrack.parentId && $rootScope.highlightTrack.id) {
-                    MapService.highlightTrack($rootScope.highlightTrack.id, $rootScope.highlightTrack.parentId);
-
-                    $rootScope.highlightTrack = null;
-                    delete $rootScope.highlightTrack;
-                }
-            }, 1000);
-        });
 
         $scope.$on('$ionicView.beforeLeave', function () {
             modal.remove();

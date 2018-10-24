@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------- *\
  * PACKAGE FACTORY
  * PackageService
- * 
+ *
  * Provide all the function and the metadata for the routes and
  * packages
  * Every function does not return directly a value but emit an
@@ -10,7 +10,7 @@
  * The data will be emitted twice, one for the instant data (not
  * yet updated) and one for the final updated data (that are
  * emitted after some time)
- * 
+ *
  * @example
  * getRoutes() update the packages object and notify everyone
  * the updated values
@@ -36,12 +36,13 @@ angular.module('webmapp')
 
         var communicationConf = CONFIG.COMMUNICATION,
             currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : 'it',
-            defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
+            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
+                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
 
         var packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : null,
             userPackagesId = localStorage.$wm_userPackagesId ? JSON.parse(localStorage.$wm_userPackagesId) : null,
             userDownloadedPackages = {},
-            packagesToActivate = localStorage.$wm_packagesToActivate ? JSON.parse(localStorage.$wm_packagesToActivate) : null,
+            packagesToActivate = localStorage.$wm_packagesToActivate ? JSON.parse(localStorage.$wm_packagesToActivate) : [],
             taxonomy = localStorage.$wm_taxonomy ? JSON.parse(localStorage.$wm_taxonomy) : {
                 activity: null,
                 theme: null,
@@ -119,14 +120,12 @@ angular.module('webmapp')
             }).success(function (response) {
                 for (var i in packagesToActivate) {
                     if (+packagesToActivate[i] === +data.route_id) {
-                        delete packagesToActivate[i];
+                        packagesToActivate.splice(i, 1);
                         break;
                     }
                 }
                 localStorage.$wm_packagesToActivate = JSON.stringify(packagesToActivate);
             }).error(function (err) {
-                packagesToActivate.push([data.route_id]);
-                localStorage.$wm_packsToActivate = JSON.stringify(packagesToActivate);
             });
         };
 
@@ -299,7 +298,7 @@ angular.module('webmapp')
          * @description
          * Update the packages and the categories list and
          * Emit the updated lists
-         * 
+         *
          * @event packages-updated
          */
         packageService.getRoutes = function (forceUpdate) {
@@ -358,9 +357,9 @@ angular.module('webmapp')
         /**
          * @description
          * Emit taxonomy of type [taxonomyType] updated
-         * 
+         *
          * @event taxonomy-[taxonomyType]-updated
-         * 
+         *
          * @param {string} taxonomyType
          *      the type of taxonomy to update
          */
@@ -428,9 +427,9 @@ angular.module('webmapp')
          * @description
          * Get the list of packages allowed to a specific user and
          * Emit the updated list of available packages
-         * 
+         *
          * @event userPackagesId-updated
-         * 
+         *
          */
         packageService.getPackagesIdByUserId = function () {
             userData = Auth.getUserData();
@@ -465,12 +464,12 @@ angular.module('webmapp')
          * @description
          * Use a voucher to get permission to download a route and
          * Emit the new list of available packages
-         * 
+         *
          * @event userPackagesId-updated
-         * 
-         * @param {number} packId 
+         *
+         * @param {number} packId
          *      the id of the pack to request
-         * 
+         *
          */
         packageService.useVoucher = function (packId) {
             userData = Auth.getUserData();
@@ -532,15 +531,14 @@ angular.module('webmapp')
          * @description
          * Buy the package via in-app purchase and
          * Emit the new list of available packages
-         * 
+         *
          * @event userPackagesId-updated
-         * 
-         * @param {number} packId 
+         *
+         * @param {number} packId
          *      the id of the pack to buy
          */
         packageService.buyPack = function (packId) {
-            var isAndroid = window.cordova.platformId === 'ios' ? false : true;
-
+            $ionicLoading.show();
             userData = Auth.getUserData();
             if (!userData || !userData.ID) {
                 return;
@@ -549,6 +547,7 @@ angular.module('webmapp')
 
             inAppPurchase.getProducts([productId])
                 .then(function (product) {
+                    $ionicLoading.hide();
                     if (product[0]) {
                         product = product[0];
                     }
@@ -561,17 +560,51 @@ angular.module('webmapp')
                                     route_id: packId
                                 };
 
-                                userPackagesId[productId] = true;
+                                userPackagesId[packId] = true;
                                 $rootScope.$emit('userPackagesId-updated', userPackagesId);
                                 localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
 
                                 activatePack(data);
                             })
-                            .catch(err => {
-                                $ionicPopup.alert({
-                                    title: $translate.instant("ATTENZIONE"),
-                                    template: $translate.instant("Si è verificato un errore. Riprova")
-                                });
+                            .catch((err) => {
+                                console.warn(err)
+                                var code = err.code ? err.code : (err.errorCode ? err.errorCode : -1);
+                                switch (code) {
+                                    case -5:
+                                        //User cancelled
+                                        break;
+                                    case -8:
+                                        //item unavailable
+                                        $ionicPopup.alert({
+                                            title: $translate.instant("ATTENZIONE"),
+                                            template: $translate.instant("Questo prodotto non è al momento disponibile")
+                                        });
+                                        break;
+                                    case -9:
+                                        //item already owned
+                                        $ionicPopup.alert({
+                                            title: $translate.instant("ATTENZIONE"),
+                                            template: $translate.instant("Hai già acquistato questo prodotto in precedenza: per te sarà disponibile da subito senza ulteriori spese")
+                                        });
+
+                                        var data = {
+                                            user_id: userData.ID,
+                                            route_id: packId
+                                        };
+
+                                        userPackagesId[packId] = true;
+                                        $rootScope.$emit('userPackagesId-updated', userPackagesId);
+                                        localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
+
+                                        activatePack(data);
+                                        break;
+                                    default:
+                                        $ionicPopup.alert({
+                                            title: $translate.instant("ATTENZIONE"),
+                                            template: $translate.instant("Si è verificato un errore. Riprova")
+                                        });
+                                        break;
+                                }
                             });
                     }
                     else {
@@ -582,18 +615,13 @@ angular.module('webmapp')
                     }
                 })
                 .catch(function (err) {
-                    if (isAndroid) {
-                        $ionicPopup.alert({
-                            title: $translate.instant("ATTENZIONE"),
-                            template: $translate.instant("Questo prodotto non è al momento disponibile")
-                        });
-                    }
-                    else {
-                        $ionicPopup.alert({
-                            title: $translate.instant("ATTENZIONE"),
-                            template: $translate.instant("Si è verificato un errore. Riprova")
-                        });
-                    }
+                    $ionicLoading.hide();
+                    console.err(err);
+                    var code = err.code ? err.code : (err.errorCode ? err.errorCode : -1);
+                    $ionicPopup.alert({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Si è verificato un errore. Riprova") + "<br>Error " + code
+                    });
                 });
         };
 
@@ -601,20 +629,28 @@ angular.module('webmapp')
          * @description
          * Restore the purchases and
          * Emit the new list of purchased packages
-         * 
+         *
          * @event userPackagesId-updated
-         * 
+         *
          */
         packageService.restorePurchases = function () {
+            $ionicLoading.show();
             inAppPurchase.restorePurchases()
                 .then(function (purchases) {
                     for (var i in purchases) {
-                        var id = purchases.productId.split('.')[0];
+                        var id = purchases[i].productId.split('.');
+                        id = id.pop();
                         if (!userPackagesId[id]) {
                             userPackagesId[id] = true;
                             packagesToActivate.push(id);
                         }
                     }
+                    $ionicLoading.hide();
+
+                    $ionicPopup.alert({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Tutti gli acquisti sono stati ripristinati correttamente")
+                    });
 
                     $rootScope.$emit('userPackagesId-updated', userPackagesId);
                     localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);
@@ -622,6 +658,7 @@ angular.module('webmapp')
                     activatePackages();
                 })
                 .catch(function (err) {
+                    $ionicLoading.hide();
                     $ionicPopup.alert({
                         title: $translate.instant("ATTENZIONE"),
                         template: $translate.instant("Si è verificato un errore. Controlla di essere connesso e riprova")
@@ -634,10 +671,10 @@ angular.module('webmapp')
          * @description
          * Download the requested package and
          * emit the new list of downloaded packages
-         * 
+         *
          * @event userDownloadedPackages-updated
-         * 
-         * @param {number} packId 
+         *
+         * @param {number} packId
          *      the id of the pack to download
          */
         packageService.downloadPackage = function (packId) {
@@ -698,8 +735,8 @@ angular.module('webmapp')
         /**
          * @description
          * Method to open a package already downloaded
-         * 
-         * @param {number} packId 
+         *
+         * @param {number} packId
          *      the id of the pack to open
          */
         packageService.openPackage = function (packId) {
@@ -726,10 +763,10 @@ angular.module('webmapp')
          * @description
          * Delete a package already downloaded and
          * Emit the updated list of downloaded packages
-         * 
+         *
          * @event userDownloadedPackages-updated
-         * 
-         * @param {number} packId 
+         *
+         * @param {number} packId
          *      the id of the pack to remove from storage
          */
         packageService.removePack = function (packId) {
@@ -751,9 +788,9 @@ angular.module('webmapp')
          * @description
          * Emit the updated list of downloaded packages
          * and return it
-         * 
+         *
          * @event userDownloadedPackages-updated
-         * 
+         *
          */
         packageService.getDownloadedPackages = function () {
             $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);

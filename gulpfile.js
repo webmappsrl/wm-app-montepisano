@@ -21,7 +21,7 @@ yargs.usage('Usage: $0 <command> [options]')
     .command('update', 'update the istance of Webmapp')
     .command('update', 'update the istance of Webmapp')
     .example('$0 update -i webmapp_demo_app -u http://pnfc.j.webmapp.it/', 'update the istance of Webmapp')
-    .command('set', 'set config.js in bare/index.html e con -c recupera config.js da url remoto')
+    .command('set', 'set config.json e con -c recupera config.json da url remoto')
     .example('$0 config -i webmapp_demo_app -c http://pnfc.j.webmapp.it/config.js', 'update the istance of Webmapp')
     .command('update-instance', 'aggiorna il core dell\'istanza con i files del core')
     .demandCommand(1, '')
@@ -40,11 +40,54 @@ yargs.usage('Usage: $0 <command> [options]')
     .describe('v', 'Type of version to build (internal, beta, minor, major)')
     .epilog('(c) Webmapp 2017');
 
+var CONSOLE_COLORS = {
+    Reset: "\x1b[0m",
+    Bright: "\x1b[1m",
+    Dim: "\x1b[2m",
+    Underscore: "\x1b[4m",
+    Reverse: "\x1b[7m",
+    Hidden: "\x1b[8m",
+
+    FgBlack: "\x1b[30m",
+    FgRed: "\x1b[31m",
+    FgGreen: "\x1b[32m",
+    FgYellow: "\x1b[33m",
+    FgBlue: "\x1b[34m",
+    FgMagenta: "\x1b[35m",
+    FgCyan: "\x1b[36m",
+    FgWhite: "\x1b[37m",
+
+    BgBlack: "\x1b[40m",
+    BgRed: "\x1b[41m",
+    BgGreen: "\x1b[42m",
+    BgYellow: "\x1b[43m",
+    BgBlue: "\x1b[44m",
+    BgMagenta: "\x1b[45m",
+    BgCyan: "\x1b[46m",
+    BgWhite: "\x1b[47m"
+};
+
+function debug(message) {
+    console.debug(CONSOLE_COLORS.Dim + '[DEBUG]' + CONSOLE_COLORS.Reset + ' ' + message)
+}
+function info(message) {
+    console.info(CONSOLE_COLORS.FgCyan + '[INFO] ' + CONSOLE_COLORS.Reset + ' ' + message)
+}
+function log(message) {
+    console.log(CONSOLE_COLORS.FgWhite + '[LOG]  ' + CONSOLE_COLORS.Reset + ' ' + message)
+}
+function warn(message) {
+    console.warn(CONSOLE_COLORS.FgYellow + '[WARN] ' + CONSOLE_COLORS.Reset + ' ' + message)
+}
+function error(message) {
+    console.error(CONSOLE_COLORS.FgRed + '[ERROR]' + CONSOLE_COLORS.Reset + ' ' + message)
+}
+
 var argv = yargs.argv,
     config_xml = '',
     instance_name = 'default';
 
-gulp.task('build', ['create', 'update' /*, 'post-install'*/ ]);
+gulp.task('build', ['create', 'update', 'post-install']);
 
 gulp.task('node_modules_link', function () {
     return gulp.src('bare/node_modules')
@@ -70,7 +113,7 @@ gulp.task('create', function () {
         return gulp.copy('bare', dir)
 
     } else {
-        console.warn('[WARN] instance already exits');
+        warn('instance already exists');
     }
 
 });
@@ -80,22 +123,31 @@ gulp.task('update', ['create'], function () {
     if (argv.instance) {
         instance_name = argv.instance;
     }
-    var dir = 'instances/' + instance_name;
+
+    var dir = 'instances/' + instance_name,
+        url = "";
+
+    if (argv.url) {
+        url = argv.url;
+    } else {
+        warn("missing url");
+        url = "http://api.webmapp.it/j/" + instance_name + ".j.webmapp.it/";
+        info("using default url: " + url);
+    }
+
     // se esiste istanza
     if (fs.existsSync(dir)) {
+        var infoUrl = url + '/info.json',
+            config = url + '/config.json',
+            resources = url + '/resources/';
 
-        var info = argv.url + '/info.json',
-            config = argv.url + '/config.js'
-        resources = argv.url + '/resources/';;
         // estraggo le info
         request({
-                url: info,
-                headers: {
-                    'User-Agent': 'request'
-                }
-            })
-            .pipe(source(info))
-            // .pipe(fs.access(info))
+            url: infoUrl,
+            headers: {
+                'User-Agent': 'request'
+            }
+        }).pipe(source(infoUrl))
             .pipe(streamify(jeditor(function (repositories) {
                 repo = (repositories);
                 config_xml = {
@@ -105,7 +157,7 @@ gulp.task('update', ['create'], function () {
                     version: version["version"]
                 };
 
-                gulp.getUrlFile('config.js', config, dir + '/www/config/')
+                gulp.getUrlFile('config.json', config, dir + '/www/config/')
                     .on('end', function () {
                         gulp.updateConfigXML(config_xml);
                     });
@@ -115,44 +167,41 @@ gulp.task('update', ['create'], function () {
                 gulp.getUrlFile('icon.png', resources + 'icon.png', dir + '/resources/');
                 gulp.getUrlFile('splash.png', resources + 'splash.png', dir + '/resources/');
 
-                // sh.exec('ionic cordova resources', {
-                //     cwd: dir
-                // })
+                sh.exec('ionic cordova resources', {
+                    cwd: dir
+                });
 
                 return repositories;
 
             })));
     } else {
-        console.warn('[WARN] instance doesn\'t exits. Create first.');
+        warn("Instance doesn't exits. Create first.");
     }
 });
 
 gulp.task('set', function () {
-
-    var newConfUrl = 'config/config.js';
-    var destDir = 'bare/www/';
+    var destDir = 'bare/www/',
+        newConfUrl = '';
 
     if (argv.config) {
-        newConfUrl = argv.config;
-
-        if (!newConfUrl.startsWith("http://")) {
-            newConfUrl = "http://" + newConfUrl;
-        }
-        if (!newConfUrl.endsWith('config.js')) {
-            newConfUrl = newConfUrl + '/config.js';
-        } else if (!newConfUrl.endsWith('/') && !newConfUrl.endsWith('config.js')) {
-            newConfUrl = newConfUrl + '/';
+        if (argv.config.substring(0, 4) === "http") {
+            newConfUrl = argv.config;
+        } else {
+            newConfUrl = "http://api.webmapp.it/j/" + argv.config + ".j.webmapp.it/";
+            info("using default url: " + newConfUrl);
         }
 
-    }
-    if (argv.instance) {
-        destDir = 'instances/' + destDir + '/www/';
-    }
+        gulp.src(['bare/www/.index.html'])
+            .pipe(rename('index.html'))
+            .pipe(gulp.dest(destDir));
 
-    gulp.src(['bare/www/.index.html'])
-        .pipe(replace(/\$CONFIG/g, newConfUrl))
-        .pipe(rename('index.html'))
-        .pipe(gulp.dest(destDir));
+        //download the config.json to destDir/config
+        gulp.getUrlFile('config.json', newConfUrl + '/config.json', destDir + '/config/');
+    }
+    else {
+        warn('Missing config base url');
+        error("------------------------- Aborting -------------------------");
+    }
 });
 
 gulp.task('clean', function () {
@@ -163,17 +212,13 @@ gulp.task('clean', function () {
 
 /** copia index in istanza */
 gulp.task('generate-index', function () {
-
-    var newConfUrl = 'config/config.js';
     var destDir = 'bare/www/';
-    var dir = 'instances/' + instance_name;
 
     if (argv.instance) {
         destDir = 'instances/' + argv.instance + "/www";
     }
 
     gulp.src(['bare/www/.index.html'])
-        .pipe(replace(/\$CONFIG/g, newConfUrl))
         .pipe(rename('index.html'))
         .pipe(gulp.dest(destDir));
 });
@@ -184,7 +229,6 @@ gulp.task('edit-config-xml', ['create'], function () {
 });
 
 gulp.task('post-install', ['update'], function (callback) {
-
     var dir = 'instances/' + instance_name;
 
     if (argv.instance) {
@@ -196,14 +240,13 @@ gulp.task('post-install', ['update'], function (callback) {
     sh.exec('ionic cordova platform add android', {
         cwd: dir
     });
-    sh.exec('ionic cordova resources --verbose', {
+    sh.exec('ionic cordova resources --force', {
         cwd: dir
     });
 });
 
 /** genera le risorse */
 gulp.task('add-resources', function (callback) {
-
     var dir = 'instances/' + instance_name;
 
     if (argv.instance) {
@@ -215,7 +258,6 @@ gulp.task('add-resources', function (callback) {
 });
 
 gulp.task('update-instance', function () {
-
     if (argv.instance) {
         instance_name = argv.instance;
     }
@@ -229,17 +271,17 @@ gulp.task('complete-update', function () {
     if (argv.instance) {
         instance_name = argv.instance;
     } else {
-        console.log("missing instance name");
-        console.log("aborting...");
+        log("missing instance name");
+        log("aborting...");
         return;
     }
 
     if (argv.url) {
         url = argv.url;
     } else {
-        console.log("missing url");
-        console.log("aborting...");
-        return
+        warn("missing url");
+        url = "http://api.webmapp.it/j/" + instance_name + ".j.webmapp.it/";
+        info("using default url: " + url);
     }
 
     sh.exec("gulp sass", {
@@ -249,22 +291,33 @@ gulp.task('complete-update', function () {
     sh.exec("gulp update -i " + instance_name + " -u " + url);
 });
 
-gulp.copy = function (src, dest) {
+gulp.task('sass', function () {
+    var dir = "bare/";
 
+    if (argv.instance) {
+        dir = "instances/" + argv.instance + "/";
+    }
+
+    sh.exec("gulp sass", {
+        cwd: dir
+    });
+});
+
+gulp.copy = function (src, dest) {
     gulp.start('node_modules_link');
 
-    return gulp.src([src + '/**', '!' + src + '/node_modules', '!' + src + '/node_modules/**', '!' + src + '/platforms', '!' + src + '/platforms/**'])
+    return gulp.src([src + '/**', '!' + src + '/node_modules', '!' + src + '/node_modules/**', '!' + src + '/platforms', '!' + src + '/platforms/**', '!' + src + '/www/config/*'])
         .pipe(gulp.dest(dest));
 
 };
 
 gulp.getUrlFile = function (file, src, dest) {
     return request({
-            url: src,
-            headers: {
-                'User-Agent': 'request'
-            }
-        })
+        url: src,
+        headers: {
+            'User-Agent': 'request'
+        }
+    })
         .pipe(source(file))
         .pipe(gulp.dest(dest));
 };
@@ -273,17 +326,17 @@ gulp.updateConfigXML = function (config) {
 
     var dir = 'instances/' + instance_name,
         config_file = dir + '/config.xml',
-        configJs_file = dir + '/www/config/config.js';
+        configJson_file = dir + '/www/config/config.json';
 
     var edit_tag = '<widget id="' + config.id + '" version="' + config.version + '"',
         edit_name = '<name>' + config.name + '</name>',
         edit_desc = '<description>' + config.description + '</description>',
-        edit_version = "VERSION: \"" + config.version + "\", \"appId\": \"" + config.id + "\"";
+        edit_version = '"VERSION":"' + config.version + '","appId":"' + config.id + '"';
 
     gulp.start('generate-index');
 
-    gulp.src(configJs_file)
-        .pipe(replace(/VERSION: '0.4'/, edit_version))
+    gulp.src(configJson_file)
+        .pipe(replace(/"VERSION":.*"0.4"/, edit_version))
         .pipe(gulp.dest(dir + '/www/config/'));
 
     return gulp.src(config_file)
@@ -315,7 +368,7 @@ gulp.getChanges = function (oldVersion, newVersion) {
  * Update the version number, takes all the changes from previous version and create
  * changelog.txt and lastChanges.txt, push all the changes to remote and tag the new
  * version
- * 
+ *
  * @param {string} -v [optional]
  *      allow to choose the type of version update:
  *          - internal: increments by 0.0.0001, max x.x.xx99
@@ -339,14 +392,14 @@ gulp.task('push-version', function () {
     switch (versionType) {
         case 'internal':
             if ((+versionArray[2]) % 100 === 99) {
-                console.log("Maximum internal version reached")
+                warn("Maximum internal version reached")
                 return;
             }
             versionArray[2] = +versionArray[2] + 1;
             break;
         case 'beta':
             if (+versionArray[2] >= 9900) {
-                console.log("Maximum beta version reached")
+                warn("Maximum beta version reached")
                 return;
             }
             versionArray[2] = +versionArray[2] + 100;
@@ -383,26 +436,26 @@ gulp.task('push-version', function () {
         })
     ]).then(function () {
         return Promise.all([
-                new Promise(function (resolve, reject) {
-                    sh.exec('touch changelog.txt');
-                    return gulp.src('changelog.txt')
-                        .pipe(header(fs.readFileSync('lastChanges.txt')))
-                        .pipe(header('Version ' + newVersion + '\n'))
-                        .on('error', reject)
-                        .pipe(gulp.dest('./'))
-                        .on('end', resolve);
-                })
-            ])
+            new Promise(function (resolve, reject) {
+                sh.exec('touch changelog.txt');
+                return gulp.src('changelog.txt')
+                    .pipe(header(fs.readFileSync('lastChanges.txt')))
+                    .pipe(header('Version ' + newVersion + '\n'))
+                    .on('error', reject)
+                    .pipe(gulp.dest('./'))
+                    .on('end', resolve);
+            })
+        ])
             .then(function () {
                 return Promise.all([
-                        new Promise(function (resolve, reject) {
-                            return gulp.src('version.json')
-                                .pipe(replace(/"version": "(.{5,10})"/gm, '"version": "' + newVersion + '"'))
-                                .on('error', reject)
-                                .pipe(gulp.dest('./'))
-                                .on('end', resolve);
-                        })
-                    ])
+                    new Promise(function (resolve, reject) {
+                        return gulp.src('version.json')
+                            .pipe(replace(/"version": "(.{5,10})"/gm, '"version": "' + newVersion + '"'))
+                            .on('error', reject)
+                            .pipe(gulp.dest('./'))
+                            .on('end', resolve);
+                    })
+                ])
                     .then(function () {
                         //GIT ADD COMMIT PUSH TAG
                         sh.exec('git add -A');

@@ -4,7 +4,6 @@ angular.module('webmapp')
 
     .factory('MapService', function MapService(
         $ionicLoading,
-        $ionicPopup,
         $q,
         $rootScope,
         $state,
@@ -26,7 +25,9 @@ angular.module('webmapp')
             overlayLayersConf = CONFIG.OVERLAY_LAYERS,
             styleConf = CONFIG.STYLE,
             offlineConf = CONFIG.OFFLINE,
-            currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+            currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
+            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
+                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
 
         var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
@@ -46,8 +47,7 @@ angular.module('webmapp')
             useLocalCaching = generalConf.useLocalStorageCaching,
             centerCoords = {},
             centerCoordsUTM32 = {},
-            singleFeatureUrl = CONFIG.COMMUNICATION ? CONFIG.COMMUNICATION.singleFeatureUrl : null,
-            eventsPromise, couponsPromise, pagePromise, positionMarker, positionCircle;
+            eventsPromise, couponsPromise;
 
         var baseLayersByLabel = {},
             tileLayersByLabel = {},
@@ -87,7 +87,6 @@ angular.module('webmapp')
                 duration: 100
             };
 
-        var controlLocate = null;
         var circleLocation = {
             position: null,
             accuracy: null,
@@ -102,12 +101,6 @@ angular.module('webmapp')
             iconUrl: 'core/images/location-icon-arrow.png',
             iconSize: [40, 40],
             iconAnchor: [20, 20],
-        });
-
-        var arrowIcon = L.icon({
-            iconUrl: 'core/images/arrow-icon.png',
-            iconSize: [10, 14],
-            iconAnchor: [5, 7],
         });
 
         var db = new PouchDB('webmapp');
@@ -252,10 +245,10 @@ angular.module('webmapp')
             var overlayConf = feature.parent || {};
 
             if (feature.parent) {
-                if (feature.parent.type === "tile_utfgrid_geojson" && $state.current.name === "app.main.map") {
+                if (feature.parent.type === "tile_utfgrid_geojson" && ($state.current.name === "app.main.map" || +feature.properties.id !== +$state.params.id)) {
                     return {
-                        color: "#ff0000",
-                        weight: 5,
+                        color: feature.properties.color || overlayConf.color || styleConf.line.default.color,
+                        weight: feature.properties.weight || overlayConf.weight || styleConf.line.default.weight,
                         opacity: 0
                     };
                 }
@@ -422,7 +415,8 @@ angular.module('webmapp')
 
             map.eachLayer(function (layer) {
                 if (layer.feature &&
-                    layer.setStyle) {
+                    layer.setStyle &&
+                    layer.actived) {
                     layer.actived = false;
                     activateHighlight(layer, globalLineApplyStyle(layer.feature));
                 }
@@ -500,6 +494,8 @@ angular.module('webmapp')
                         category = $translate.instant('Tappe');
                     } else if (e.layer.feature.parent.languages && e.layer.feature.parent.languages[currentLang]) {
                         category = e.layer.feature.parent.languages[currentLang];
+                    } else if (e.layer.feature.parent.languages && e.layer.feature.parent.languages[defaultLang]) {
+                        category = e.layer.feature.parent.languages[defaultLang];
                     }
 
                     content = content +
@@ -608,42 +604,44 @@ angular.module('webmapp')
         var activateLineHandlers = function (linesLayer) {
             linesLayer.on('click', lineClick);
 
-            linesLayer.on({
-                mouseover: function (e) {
-                    if (isLineLayerDetail()) {
-                        return;
-                    }
-
-                    var layer = e.layer;
-
-                    if (layer.actived) {
-                        return;
-                    }
-
-                    map.eachLayer(function (layer) {
-                        if (layer.feature &&
-                            layer.setStyle &&
-                            !layer.actived) {
-                            activateHighlight(layer, globalLineApplyStyle(layer.feature));
+            if (Utils.isBrowser()) {
+                linesLayer.on({
+                    mouseover: function (e) {
+                        if (isLineLayerDetail()) {
+                            return;
                         }
-                    });
 
-                    activateHighlight(layer, styleConf.line.highlight);
-                    layer.bringToFront();
-                },
-                mouseout: function (e) {
-                    if (isLineLayerDetail()) {
-                        return;
+                        var layer = e.layer;
+
+                        if (layer.actived) {
+                            return;
+                        }
+
+                        map.eachLayer(function (layer) {
+                            if (layer.feature &&
+                                layer.setStyle &&
+                                !layer.actived) {
+                                activateHighlight(layer, globalLineApplyStyle(layer.feature));
+                            }
+                        });
+
+                        activateHighlight(layer, styleConf.line.highlight);
+                        layer.bringToFront();
+                    },
+                    mouseout: function (e) {
+                        if (isLineLayerDetail()) {
+                            return;
+                        }
+
+                        var layer = e.layer;
+
+                        if (layer.actived) {
+                            return;
+                        }
+                        activateHighlight(layer, globalLineApplyStyle(layer.feature));
                     }
-
-                    var layer = e.layer;
-
-                    if (layer.actived) {
-                        return;
-                    }
-                    activateHighlight(layer, globalLineApplyStyle(layer.feature));
-                }
-            });
+                });
+            }
         };
 
         var activatePOIHandlers = function (pointsLayer) {
@@ -926,23 +924,6 @@ angular.module('webmapp')
                 return overlayLayersQueueByLabel[currentOverlay.label];
             }
 
-            var languageUrl = "",
-                available = false;
-
-            if (CONFIG.LANGUAGES) {
-                available = true;
-            }
-            var currentLangGeojsonUrl = "";
-
-            if (available && currentOverlay.geojsonUrl) {
-                var split = currentOverlay.geojsonUrl.split("/");
-                languageUrl = "/languages/" + currentLang + "/" + split.pop();
-
-                currentLangGeojsonUrl = split.join("/") + languageUrl;
-            }
-
-            var currentFromLocalStorage = localStorage.getItem(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl);
-
             var defer = $q.defer(),
                 promise = defer.promise;
 
@@ -1018,29 +999,36 @@ angular.module('webmapp')
                 }, currentOverlay));
             };
 
-            var geojsonUrl = currentOverlay.geojsonUrl;
-            var langGeojsonUrl = currentLangGeojsonUrl;
-            if (offlineConf.resourceBaseUrl !== undefined) {
-                geojsonUrl = offlineConf.resourceBaseUrl + geojsonUrl;
-                langGeojsonUrl = offlineConf.resourceBaseUrl + currentLangGeojsonUrl;
+            var available = false;
+
+
+            if (CONFIG.MAIN && CONFIG.MAIN.LANGUAGES && (CONFIG.MAIN.LANGUAGES.actual || (CONFIG.MAIN.LANGUAGES.available && CONFIG.MAIN.LANGUAGES.available.length > 0))) {
+                available = true;
+            }
+            else if (CONFIG.LANGUAGES && (CONFIG.LANGUAGES.actual || (CONFIG.LANGUAGES.available && CONFIG.LANGUAGES.available.length > 0))) {
+                available = true;
             }
 
-            // if (useLocalCaching && currentFromLocalStorage) {
-            //     if (currentOverlay.type === 'line_geojson') {
-            //         db.get(geojsonUrl).then(function (e) {
-            //             lineCallback(e.data, currentOverlay);
-            //         });
-            //     } else if (currentOverlay.type === 'poi_geojson') {
-            //         poiCallback(JSON.parse(currentFromLocalStorage), currentOverlay);
-            //     }
+            var url = "",
+                success = function (data) {
+                    if (currentOverlay.type === 'line_geojson') {
+                        lineCallback(data, currentOverlay);
+                    } else if (currentOverlay.type === 'poi_geojson') {
+                        poiCallback(data, currentOverlay);
+                    }
+                    if (!Utils.isBrowser()) {
+                        setItemInLocalStorage(url, JSON.stringify(data));
+                    }
+                    delete overlayLayersQueueByLabel[currentOverlay.label];
+                },
+                fail = function (err) {
+                    // console.warn('An error has occurred downloading geojson \'' + currentOverlay.geojsonUrl + '\'. This file could miss in the server or the app is offline, and will be skipped', err);
+                    delete overlayLayersQueueByLabel[currentOverlay.label];
+                    defer.resolve();
+                };
 
-            //     $.getJSON(geojsonUrl, function (data) {
-            //         setItemInLocalStorage(geojsonUrl, data);
-            //     });
-            // } else {
             if (Offline.isActive()) {
-                // var data = JSON.parse(localStorage.getItem(geojsonUrl));
-                getItemFromLocalStorage(geojsonUrl)
+                overlayLayersQueueByLabel[currentOverlay.label] = getItemFromLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl)
                     .then(function (localContent) {
                         if (localContent.data) {
                             var data = JSON.parse(localContent.data);
@@ -1051,49 +1039,52 @@ angular.module('webmapp')
                             }
                         }
                         delete overlayLayersQueueByLabel[currentOverlay.label];
-                    });
-            } else {
-                overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(langGeojsonUrl, function (data) {
-                    if (currentOverlay.type === 'line_geojson') {
-                        lineCallback(data, currentOverlay);
-                    } else if (currentOverlay.type === 'poi_geojson') {
-                        poiCallback(data, currentOverlay);
-                    }
-                    if (!Utils.isBrowser()) {
-                        $.getJSON(geojsonUrl, function (data) {
-                            setItemInLocalStorage(geojsonUrl, data);
-                        });
-                    }
-                    delete overlayLayersQueueByLabel[currentOverlay.label];
-                }).fail(function () {
-                    overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(geojsonUrl, function (data) {
-                        if (currentOverlay.type === 'line_geojson') {
-                            lineCallback(data, currentOverlay);
-                        } else if (currentOverlay.type === 'poi_geojson') {
-                            poiCallback(data, currentOverlay);
-                        }
-                        if (!Utils.isBrowser()) {
-                            setItemInLocalStorage(geojsonUrl, JSON.stringify(data));
-                        }
+                    }).catch(function (err) {
+                        console.error(err);
                         delete overlayLayersQueueByLabel[currentOverlay.label];
-                    }).fail(function (err) {
-                        console.warn('An error has occurred downloading geojson \'' + currentOverlay.geojsonUrl + '\'. This file could miss in the server or the app is offline, and will be skipped', err);
                         defer.resolve();
                     });
+            } else {
+                url = currentOverlay.geojsonUrl;
+                if (available) {
+                    var split = currentOverlay.geojsonUrl.split('/');
+                    url = "/languages/" + currentLang + "/" + split.pop();
+                    url = split.join('/') + url;
+                }
+                if (offlineConf.resourceBaseUrl) {
+                    url = offlineConf.resourceBaseUrl + url;
+                }
+                overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
+                    if (available) {
+                        url = currentOverlay.geojsonUrl;
+                        var split = currentOverlay.geojsonUrl.split('/');
+                        url = "/languages/" + defaultLang + "/" + split.pop();
+                        url = split.join('/') + url;
+                        if (offlineConf.resourceBaseUrl) {
+                            url = offlineConf.resourceBaseUrl + url;
+                        }
+                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
+                            url = currentOverlay.geojsonUrl;
+                            if (offlineConf.resourceBaseUrl) {
+                                url = offlineConf.resourceBaseUrl + url;
+                            }
+                            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(fail);
+                        });
+                    }
+                    else {
+                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
+                            url = currentOverlay.geojsonUrl;
+                            if (offlineConf.resourceBaseUrl) {
+                                url = offlineConf.resourceBaseUrl + url;
+                            }
+                            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(fail);
+                        });
+                    }
                 });
             }
-            // }
 
             promise.then(function () {
-                if (!geojsonUrl) {
-                    initializeThen(currentOverlay);
-                } else {
-                    var url = geojsonUrl.split('/'),
-                        lang = url[url.length - 2];
-                    if (lang === currentLang || (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual && CONFIG.LANGUAGES.actual.substring(0, 2) === currentLang && lang.length !== 2)) {
-                        initializeThen(currentOverlay);
-                    }
-                }
+                initializeThen(currentOverlay);
             });
 
             return promise;
@@ -1226,6 +1217,8 @@ angular.module('webmapp')
                             utfgridCallback(data, currentOverlay, tileLayer);
                         }
                         delete overlayLayersQueueByLabel[currentOverlay.label];
+                    }).fail(function () {
+                        defer.resolve();
                     });
             } else {
                 overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, function (data) {
@@ -1234,8 +1227,8 @@ angular.module('webmapp')
                         setItemInLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl, JSON.stringify(data));
                     }
                     delete overlayLayersQueueByLabel[currentOverlay.label];
-                }).fail(function () {
-                    defer.reject();
+                }).fail(function (err) {
+                    defer.resolve();
                 });
             }
 
@@ -1302,7 +1295,6 @@ angular.module('webmapp')
                 $ionicLoading.hide();
 
                 if (navigator.splashscreen) {
-                    console.log("closing")
                     navigator.splashscreen.hide();
                 }
             }
@@ -1479,7 +1471,6 @@ angular.module('webmapp')
 
             if (!mapConf.layers || mapConf.layers.length === 0) {
                 if (navigator.splashscreen) {
-                    console.log("closing")
                     navigator.splashscreen.hide();
                 }
                 return;
@@ -1544,6 +1535,10 @@ angular.module('webmapp')
 
             map.on('zoomstart', function () {
                 $rootScope.$emit('map-zoomstart');
+            });
+
+            map.on('resize', function () {
+                $rootScope.$emit('map-resize');
             });
 
             if (generalConf.useAlmostOver) {
@@ -1776,14 +1771,16 @@ angular.module('webmapp')
         };
 
         mapService.setFilter = function (layerName, value) {
-            activeFilters[layerName] = value;
-            localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
+            if (activeFilters[layerName] !== value) {
+                activeFilters[layerName] = value;
+                localStorage.setItem('activeFilters', JSON.stringify(activeFilters));
 
-            if (!CONFIG.MAP.filters) {
-                if (activeFilters[layerName]) {
-                    mapService.activateLayer(layerName, true, true);
-                } else {
-                    mapService.removeLayer(layerName);
+                if (!CONFIG.MAP.filters) {
+                    if (activeFilters[layerName]) {
+                        mapService.activateLayer(layerName, true, true);
+                    } else {
+                        mapService.removeLayer(layerName);
+                    }
                 }
             }
         };
@@ -1896,20 +1893,7 @@ angular.module('webmapp')
                 coord;
 
             if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString') {
-                for (var i in feature.geometry.coordinates) {
-                    if (feature.geometry.type == 'MultiLineString') {
-                        for (var j in feature.geometry.coordinates[i]) {
-                            coord = feature.geometry.coordinates[i][j];
-                            latlngs.push(L.GeoJSON.coordsToLatLng(coord));
-                        }
-                    } else {
-                        coord = feature.geometry.coordinates[i];
-                        latlngs.push(L.GeoJSON.coordsToLatLng(coord));
-                    }
-                }
-
-                var bounds = new L.LatLngBounds(latlngs);
-                fitBounds(bounds);
+                map.fitBounds(L.geoJson(feature).getBounds());
             } else {
                 map.setView({
                     lat: feature.geometry.coordinates[1],
@@ -2030,6 +2014,20 @@ angular.module('webmapp')
             if (map) {
                 clearLayerHighlight();
                 map.invalidateSize();
+                if ($rootScope.highlightTrack && $rootScope.highlightTrack.parentId && $rootScope.highlightTrack.id) {
+                    if ($state.current.name === 'app.main.map') {
+                        mapService.highlightTrack($rootScope.highlightTrack.id, $rootScope.highlightTrack.parentId, true);
+                        $rootScope.highlightTrack = null;
+                        delete $rootScope.highlightTrack;
+                    }
+                    else if ($state.current.name === 'app.main.layer') {
+                        mapService.highlightTrack($rootScope.highlightTrack.id, $rootScope.highlightTrack.parentId, false);
+                    }
+                    else {
+                        $rootScope.highlightTrack = null;
+                        delete $rootScope.highlightTrack;
+                    }
+                }
             }
         };
 
@@ -2093,56 +2091,25 @@ angular.module('webmapp')
                 }
             };
 
-            // if (overlayLayersConfMap[layerName] &&
-            //     overlayLayersConfMap[layerName].type === 'tile_utfgrid_geojson' &&
-            //     overlayLayersConfMap[layerName].featureUrl) {
-            //     $.getJSON(overlayLayersConfMap[layerName].featureUrl + id + '.geojson', function (data) {
-            //         var feature = data.features[0];
-            //         if (feature &&
-            //             feature.properties) {
-            //             feature.parent = overlayLayersConfMap[layerName];
-            //             featureMapById[feature.properties.id] = feature;
-            //             defer.resolve(feature);
-            //         } else {
-            //             defer.reject();
-            //         }
-            //     }).fail(function () {
-            //         defer.reject();
-            //     });
-            // } else {
-            if (typeof overlayLayersConfMap[layerName] === 'undefined') {
-                if (typeof featureMapById[id] !== 'undefined') {
-                    defer.resolve(featureMapById[id]);
-                    // } else if (singleFeatureUrl) {
-                    //     $.getJSON(singleFeatureUrl + id, function (data) {
-                    //         var feature = data.features;
-                    //         if (feature &&
-                    //             feature.properties) {
-                    //             // feature.parent = overlayLayersConfMap[feature.properties.category];
-                    //             feature.parent = overlayLayersConfMap[layerName];
-                    //             featureMapById[feature.properties.id] = feature;
-                    //             defer.resolve(feature);
-                    //         } else {
-                    //             defer.reject();
-                    //         }
-                    //     }).fail(function () {
-                    //         defer.reject();
-                    //     });
-                } else {
-                    defer.reject();
-                }
+            if (!dataReady) {
+                setTimeout(function () {
+                    mapService.getFeatureById(id, layerName).then(function (feature) {
+                        defer.resolve(feature);
+                    });
+                }, 100);
             }
+            else {
+                if (typeof overlayLayersConfMap[layerName] === 'undefined') {
+                    checkNow();
+                }
+                else {
 
-            if (overlayLayersByLabel[layerName]) {
-                checkNow();
-            } else {
-                if (overlayLayersQueueByLabel[layerName]) {
-                    overlayLayersQueueByLabel[layerName].then(checkNow);
-                } else if (overlayLayersConfMap[layerName]) {
-                    initializeLayer(overlayLayersConfMap[layerName]).then(checkNow);
+                }
+
+                if (overlayLayersByLabel[layerName]) {
+                    checkNow();
                 }
             }
-            // }
 
             return defer.promise;
         };
@@ -2390,9 +2357,6 @@ angular.module('webmapp')
                     mapService.addFeaturesToFilteredLayer({
                         'detail': featuresToShow
                     }, false);
-                    setTimeout(function () {
-                        mapService.adjust();
-                    }, 2500);
                 });
         };
 
@@ -2474,16 +2438,21 @@ angular.module('webmapp')
             }
         };
 
-        mapService.highlightTrack = function (id, parentId) {
+        mapService.highlightTrack = function (id, parentId, fitBounds) {
             mapService.getFeatureById(id, parentId.replace(/_/g, ' '))
                 .then(function (feature) {
-                    var style = globalLineApplyStyle(feature);
-                    highlightedTrack = L.geoJson(feature.geometry, {
-                        color: styleConf.line.highlight.color,
-                        weight: style.weight,
-                        opacity: 1
-                    });
-                    highlightedTrack.addTo(map);
+                    if (feature.geometry && feature.geometry.type && feature.geometry.type === "LineString" || feature.geometry.type === "MultiLineString") {
+                        var style = globalLineApplyStyle(feature);
+                        highlightedTrack = L.geoJson(feature.geometry, {
+                            color: styleConf.line.highlight.color,
+                            weight: style.weight,
+                            opacity: 1
+                        });
+                        highlightedTrack.addTo(map);
+                        if (fitBounds) {
+                            map.fitBounds(highlightedTrack.getBounds());
+                        }
+                    }
                 });
 
             map.eachLayer(function (layer) {
@@ -2634,8 +2603,9 @@ angular.module('webmapp')
                 };
 
                 var geoUserTrack = userTrackPolyline.toGeoJSON();
-                geoUserTrack.properties.name = info.name;
-                geoUserTrack.properties.description = info.description;
+                geoUserTrack.properties = angular.extend(geoUserTrack.properties, info);
+                // geoUserTrack.properties.name = info.name;
+                // geoUserTrack.properties.description = info.description;
                 geoUserTrack.properties.isEditable = true;
 
                 if (CONFIG.routeID) {
@@ -2819,10 +2789,6 @@ angular.module('webmapp')
             });
             Utils.goTo('layer/' + parentLabel.replace(/ /g, '_') + '/' + id);
         };
-
-        setTimeout(function () {
-            mapService.adjust();
-        }, 3600);
 
         return mapService;
     });

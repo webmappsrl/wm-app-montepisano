@@ -22,7 +22,7 @@ angular.module('webmapp')
 
         // TODO: add single template overwrite (!)
 
-        config = CONFIGProvider.$get();
+        config = CONFIGProvider;// CONFIGProvider.$get();
 
         $stateProvider
             .state('app', {
@@ -42,6 +42,14 @@ angular.module('webmapp')
                 views: {
                     'inception-top': {
                         templateUrl: basePath + 'js/components/mapView/mapView.html'
+                    }
+                }
+            })
+            .state('app.main.popup', {
+                url: '/:id',
+                views: {
+                    'inception-top': {
+                        templateUrl: basePath + 'js/components/popupOpener/popupOpener.html'
                     }
                 }
             })

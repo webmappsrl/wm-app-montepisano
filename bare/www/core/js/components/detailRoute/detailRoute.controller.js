@@ -34,8 +34,9 @@ angular.module('webmapp')
         vm.imageUrl = CONFIG.OFFLINE.imagesUrl;
         vm.goBack = Utils.goBack;
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
-        vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
-        vm.packages = {};
+        vm.defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
+            ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it'),
+            vm.packages = {};
         vm.userPackagesId = {};
         vm.userDownloadedPackages = {};
         vm.userPackagesIdRquested = {};
@@ -135,12 +136,11 @@ angular.module('webmapp')
             $ionicPopup.confirm({
                 title: $translate.instant("ATTENZIONE"),
                 template: $translate.instant("Devi eseguire l'accesso per poter usufruire di questa funzionalità")
-            })
-                .then(function (res) {
-                    if (res) {
-                        showLogin();
-                    }
-                });
+            }).then(function (res) {
+                if (res) {
+                    showLogin();
+                }
+            });
         };
 
         vm.goToInfo = function () {
@@ -265,7 +265,9 @@ angular.module('webmapp')
                 if ($rootScope.routeDownload) {
                     delete $rootScope.routeDownload;
                     if (Auth.isLoggedIn() && vm.userPackagesId[vm.id]) {
-                        vm.downloadPackage();
+                        setTimeout(function () {
+                            vm.downloadPackage();
+                        }, 500);
                     }
                 }
 

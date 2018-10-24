@@ -14,11 +14,8 @@ angular.module('webmapp')
         var vm = {},
             currentPageType = $state.current.name.split('.').pop(),
             currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
-            defaultLang = "it";
-
-        if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) {
-            defaultLang = CONFIG.LANGUAGES.actual.substring(0, 2);
-        }
+            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
+                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
 
         vm.currentPage = Model.getPageByType(currentPageType);
         vm.isAPageChild = Model.isAPageChild(vm.currentPage.label);
@@ -36,6 +33,15 @@ angular.module('webmapp')
                 return;
             }
             Utils.goTo('pages/' + category.replace(/ /g, '_'));
+        };
+
+        vm.openLink = function (url) {
+            if (url.substring(0, 4) === "http") {
+                vm.openInExternalBrowser(url)
+            }
+            else {
+                Utils.goTo(url);
+            }
         };
 
         var key = CONFIG.OFFLINE.pagesUrl + currentPageType;

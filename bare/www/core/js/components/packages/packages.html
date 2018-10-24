@@ -36,8 +36,7 @@
         <div class="static-content card-content search-bar-content" ng-class="{
             'search-bar-margin-fix': !vm.isBrowser && !vm.isAndroid
         }">
-            <div class="modal-inner-content modal-two-columns coupons-list" ng-if="(vm.isLoggedIn || !vm.useLogin) && vm.type !== 'reduced'"
-                ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search">
+            <div class="modal-inner-content modal-two-columns coupons-list" ng-if="(vm.isLoggedIn || !vm.useLogin) && vm.type !== 'reduced'" ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search">
                 <div class="packages-title" ng-bind-html="item.title.rendered">
                 </div>
                 <div class="details-image">
@@ -62,15 +61,13 @@
                     <button class="button-download button button-block button-half" ng-style="{
                         'background': COLORS.global.buttonsBackground,
                         'color': COLORS.global.buttonsColor
-                    }" ng-if="(vm.userPackagesId[item.id] || item.wm_route_public) && !vm.userDownloadedPackages[item.id]"
-                        ng-click="vm.downloadPackage(item)">
+                    }" ng-if="(vm.userPackagesId[item.id] || item.wm_route_public) && !vm.userDownloadedPackages[item.id]" ng-click="vm.downloadPackage(item)">
                         {{"Scarica" | translate}}
                     </button>
                     <button class="button-block button button-download button-half" ng-style="{
                         'background': COLORS.global.buttonsBackground,
                         'color': COLORS.global.buttonsColor
-                    }" ng-if="!item.wm_route_public && !vm.userDownloadedPackages[item.id] && !vm.userPackagesId[item.id]"
-                        ng-disabled="vm.userPackagesIdRquested[item.id]" ng-click="vm.requestPack(item)">
+                    }" ng-if="!item.wm_route_public && !vm.userDownloadedPackages[item.id] && !vm.userPackagesId[item.id]" ng-disabled="vm.userPackagesIdRquested[item.id]" ng-click="vm.requestPack(item)">
                         <!-- TODO: pulsante con scritto "Richiesta effettuata" senza che vada su due righe -->
                         {{ !vm.userPackagesIdRquested[item.id] ? "Richiedi" : "Richiesto" | translate}}
                     </button>
@@ -84,8 +81,7 @@
 
             </div>
 
-            <div class="modal-inner-content modal-two-columns coupons-list reduced-list" ng-if="vm.type === 'reduced'" ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search"
-                ng-click="vm.openDetailsRoute(item.id)">
+            <div class="modal-inner-content modal-two-columns coupons-list reduced-list" ng-if="vm.type === 'reduced'" ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search" ng-click="vm.openDetailsRoute(item.id)">
                 <div class="details-image-reduced">
                     <img class="modal-image" ng-if="!item.localImageUrl" ng-src="{{item.imgUrl}}">
                     <img class="modal-image" ng-if="item.localImageUrl" ng-src="{{item.localImageUrl}}">
@@ -95,7 +91,9 @@
                 <div class="details-reduced">
                     <div class="packages-title-reduced" ng-if="item.packageTitle[vm.currentLang]" ng-bind-html="vm.truncateTitle(item.packageTitle[vm.currentLang])">
                     </div>
-                    <div class="packages-title-reduced" ng-if="!item.packageTitle[vm.currentLang]" ng-bind-html="vm.truncateTitle(item.title.rendered)">
+                    <div class="packages-title-reduced" ng-if="!item.packageTitle[vm.currentLang] && item.packageTitle[vm.defaultLang]" ng-bind-html="vm.truncateTitle(item.packageTitle[vm.defaultLang])">
+                    </div>
+                    <div class="packages-title-reduced" ng-if="!item.packageTitle[vm.currentLang] && !item.packageTitle[vm.defaultLang]" ng-bind-html="vm.truncateTitle(item.title.rendered)">
                     </div>
 
                     <div class="content-reduced">
@@ -123,8 +121,7 @@
                         <button ng-style="{
                             'background': COLORS.global.buttonsBackground,
                             'color': COLORS.global.buttonsColor
-                        }" class="login-button button button-block" ng-if="(vm.isLoggedIn && vm.userPackagesId[item.id]) || item.wm_route_public"
-                            ng-click="vm.getPack(item, $event)">
+                        }" class="login-button button button-block" ng-if="(vm.isLoggedIn && vm.userPackagesId[item.id]) || item.wm_route_public" ng-click="vm.getPack(item, $event)">
                             <!-- LOGGATO e ITINERARIO COMPRATO (se non scaricato alert e scarica)-->
                             {{"Apri" | translate}}
                         </button>

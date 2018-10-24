@@ -1,0 +1,170 @@
+﻿{
+  "CreationDate": "2018-10-10",
+  "Commands": [
+    {
+      "Command": "echo",
+      "Target": "---------------START---------------",
+      "Value": ""
+    },
+    {
+      "Command": "open",
+      "Target": "https://api.webmapp.it/webmapp-generator/bare/e2e-test/webapp/webapps.json",
+      "Value": ""
+    },
+    {
+      "Command": "storeText",
+      "Target": "css=body > pre",
+      "Value": "webapps"
+    },
+    {
+      "Command": "storeEval",
+      "Target": "JSON.parse(storedVars['webapps'])",
+      "Value": "webapps"
+    },
+    {
+      "Command": "store",
+      "Target": "0",
+      "Value": "index"
+    },
+    {
+      "Command": "while",
+      "Target": "storedVars['index'] < storedVars['webapps'].length",
+      "Value": ""
+    },
+    {
+      "Command": "storeEval",
+      "Target": "storedVars['webapps'][${index}]",
+      "Value": "current"
+    },
+    {
+      "Command": "open",
+      "Target": "${current}/config.json",
+      "Value": ""
+    },
+    {
+      "Command": "storeText",
+      "Target": "css=body > pre",
+      "Value": "config"
+    },
+    {
+      "Command": "storeEval",
+      "Target": "JSON.parse(storedVars['config']).OPTIONS.title",
+      "Value": "title"
+    },
+    {
+      "Command": "storeEval",
+      "Target": "Date.now()",
+      "Value": "startTime"
+    },
+    {
+      "Command": "open",
+      "Target": "${current}",
+      "Value": ""
+    },
+    {
+      "Command": "assertElementPresent",
+      "Target": "css=body > ion-nav-view > ion-side-menus > ion-pane > ion-nav-bar > div:nth-child(2) > ion-header-bar > div.buttons.buttons-left > span > button",
+      "Value": ""
+    },
+    {
+      "Command": "assertElementPresent",
+      "Target": "css=body > ion-nav-view > ion-side-menus > ion-pane > ion-nav-bar > div:nth-child(2) > ion-header-bar > div.title.title-center.header-item > span > span",
+      "Value": ""
+    },
+    {
+      "Command": "assertText",
+      "Target": "css=body > ion-nav-view > ion-side-menus > ion-pane > ion-nav-bar > div:nth-child(2) > ion-header-bar > div.title.title-center.header-item > span > span",
+      "Value": "${title}"
+    },
+    {
+      "Command": "assertElementPresent",
+      "Target": "css=body > ion-nav-view > ion-side-menus > ion-pane > ion-nav-bar > div:nth-child(2) > ion-header-bar > div.buttons.buttons-right > span > button",
+      "Value": ""
+    },
+    {
+      "Command": "assertElementPresent",
+      "Target": "id=map",
+      "Value": ""
+    },
+    {
+      "Command": "assertElementPresent",
+      "Target": "css=#map > div.leaflet-pane.leaflet-map-pane > div.leaflet-pane.leaflet-rotate-pane > div.leaflet-pane.leaflet-tile-pane > div.leaflet-layer > div.leaflet-tile-container.leaflet-zoom-animated > img:nth-child(1)",
+      "Value": ""
+    },
+    {
+      "Command": "assertElementPresent",
+      "Target": "css=body > ion-nav-view > ion-side-menus > ion-pane > ion-nav-view > ion-view > ion-footer-bar > div.coords-block.animate-rightin > span > span",
+      "Value": ""
+    },
+    {
+      "Command": "assertElementPresent",
+      "Target": "css=body > ion-nav-view > ion-side-menus > ion-pane > ion-nav-view > ion-view > ion-footer-bar > div.coords-expander > a > i",
+      "Value": ""
+    },
+    {
+      "Command": "if",
+      "Target": "JSON.parse(storedVars['config']).OPTIONS.activateZoomControl",
+      "Value": ""
+    },
+    {
+      "Command": "assertElementPresent",
+      "Target": "css=#map > div.leaflet-control-container > div.leaflet-top.leaflet-right > div.leaflet-control-zoom.leaflet-bar.leaflet-control > a.leaflet-control-zoom-in",
+      "Value": ""
+    },
+    {
+      "Command": "assertElementPresent",
+      "Target": "css=#map > div.leaflet-control-container > div.leaflet-top.leaflet-right > div.leaflet-control-zoom.leaflet-bar.leaflet-control > a.leaflet-control-zoom-out",
+      "Value": ""
+    },
+    {
+      "Command": "endif",
+      "Target": "",
+      "Value": ""
+    },
+    {
+      "Command": "if",
+      "Target": "storedVars['current'].substring(0, 5) == 'https'",
+      "Value": ""
+    },
+    {
+      "Command": "assertElementPresent",
+      "Target": "css=body > ion-nav-view > ion-side-menus > ion-pane > ion-nav-view > ion-view > ion-footer-bar > div.locate-custom-control > div > a > span",
+      "Value": ""
+    },
+    {
+      "Command": "endif",
+      "Target": "",
+      "Value": ""
+    },
+    {
+      "Command": "storeEval",
+      "Target": "((Date.now() - storedVars['startTime'])/1000).toFixed(1)",
+      "Value": "testTime"
+    },
+    {
+      "Command": "echo",
+      "Target": "OK - ${current} in ${testTime}s",
+      "Value": ""
+    },
+    {
+      "Command": "storeEval",
+      "Target": "${index} + 1",
+      "Value": "index"
+    },
+    {
+      "Command": "endWhile",
+      "Target": "",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "Macro completed in ${!RUNTIME}",
+      "Value": ""
+    },
+    {
+      "Command": "echo",
+      "Target": "----------------END----------------",
+      "Value": ""
+    }
+  ]
+}

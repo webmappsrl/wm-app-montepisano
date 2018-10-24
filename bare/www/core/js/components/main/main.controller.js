@@ -287,7 +287,8 @@ angular.module('webmapp')
             }
         };
 
-        vm.hideDeactiveCentralPointer = CONFIG.OPTIONS.hideDeactiveCentralPointer;
+        vm.hideDeactiveCentralPointer = CONFIG.OPTIONS && CONFIG.OPTIONS.hideDeactiveCentralPointer;
+        vm.toggleMapInDetails = CONFIG.OPTIONS && CONFIG.OPTIONS.toggleMapInDetails;
 
         vm.isCoordsBlockExpanded = true;
 
@@ -365,8 +366,15 @@ angular.module('webmapp')
             });
 
             saveModalScope.vm.hide = function () {
-                MapService.removeUserPolyline();
-                saveModal.hide();
+                $ionicPopup.confirm({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Vuoi cancellare la traccia corrente?")
+                }).then(function (res) {
+                    if (res) {
+                        MapService.removeUserPolyline();
+                        saveModal.hide();
+                    }
+                });
             };
             saveModalScope.vm.title = "";
             saveModalScope.vm.description = "";
@@ -381,7 +389,12 @@ angular.module('webmapp')
                 } else {
                     var info = {
                         name: title,
-                        description: description
+                        description: description,
+                        stats: {
+                            time: vm.navigation.stats.time,
+                            distance: Math.round(vm.navigation.stats.distance),
+                            averageSpeed: Math.round(10 * vm.navigation.stats.averageSpeed) / 10
+                        }
                     };
                     MapService.saveUserPolyline(info);
                     MapService.removeUserPolyline();
@@ -643,13 +656,41 @@ angular.module('webmapp')
             }
         };
 
-        vm.returnToMap = function () {
-            vm.toggleMap();
+        vm.toggleMap = function () {
+            if (!vm.isNavigating) {
+                vm.isMapPage = !vm.isMapPage;
+                vm.mapView = vm.isMapPage;
+                $rootScope.$emit('expand-map', vm.isMapPage);
+
+                setTimeout(function () {
+                    MapService.adjust();
+                }, 100);
+            }
+            else {
+                if (vm.isNavigable) {
+                    vm.isNavigable = false;
+                    $rootScope.isNavigable = false;
+                    $rootScope.$emit('item-navigable', vm.isNavigable);
+                }
+                Utils.goBack();
+            }
         };
 
-        vm.goToMap = function () {
-            console.log("lol")
-            // Utils.goTo('/');
+        vm.returnToMap = function () {
+            Utils.goTo('/');
+            if ($state.params.parentId && $state.params.id) {
+                MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
+                if (vm.isNavigable) {
+                    vm.isNavigable = false;
+                    $rootScope.isNavigable = false;
+                    $rootScope.$emit('item-navigable', vm.isNavigable);
+                }
+
+                $rootScope.highlightTrack = {
+                    id: $state.params.id,
+                    parentId: $state.params.parentId
+                };
+            }
         };
 
         vm.expandCoords = function () {
@@ -676,26 +717,6 @@ angular.module('webmapp')
             }
         };
 
-        vm.toggleMap = function () {
-            if (!vm.isNavigating) {
-                vm.isMapPage = !vm.isMapPage;
-                vm.mapView = vm.isMapPage;
-                $rootScope.$emit('expand-map', vm.isMapPage);
-            }
-            else {
-                if (vm.isNavigable) {
-                    vm.isNavigable = false;
-                    $rootScope.isNavigable = false;
-                    $rootScope.$emit('item-navigable', vm.isNavigable);
-                }
-                Utils.goBack();
-            }
-
-            setTimeout(function () {
-                MapService.adjust();
-            }, 350);
-        };
-
         var navigationIntervalFunction = function () {
             GeolocationService.getStats()
                 .then(function (stats) {
@@ -705,6 +726,7 @@ angular.module('webmapp')
         };
 
         vm.startNavigation = function (record) {
+            vm.navigation.resetStats();
             var startRecording = function () {
                 GeolocationService.startRecording(vm.stopNavigationUrlParams ? vm.stopNavigationUrlParams : false, record ? true : false);
                 GeolocationService.switchState({
@@ -732,9 +754,6 @@ angular.module('webmapp')
             }
 
             window.plugins.insomnia.keepAwake();
-            setTimeout(function () {
-                MapService.adjust();
-            }, 1000);
 
             Utils.goTo('/');
         };
@@ -757,13 +776,11 @@ angular.module('webmapp')
             });
             vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);
             window.plugins.insomnia.keepAwake();
-            MapService.adjust();
         };
 
         vm.stopNavigation = function () {
             GeolocationService.stopRecording();
             clearInterval(vm.navigationInterval);
-            vm.navigation.resetStats();
             MapService.adjust();
             vm.isNavigating = false;
             window.plugins.insomnia.allowSleepAgain();
@@ -815,12 +832,12 @@ angular.module('webmapp')
         registeredEvents.push(
             $scope.$on('$stateChangeStart', function (e, dest) {
                 vm.showRightMenu = false;
-                if ((dest.name === 'app.main.detaillayer' ||
-                    dest.name === 'app.main.detailevent' ||
-                    dest.name === 'app.main.detailulayer') &&
-                    previousBounds === null) {
-                    previousBounds = MapService.getBounds();
-                }
+                // if ((dest.name === 'app.main.detaillayer' ||
+                //     dest.name === 'app.main.detailevent' ||
+                //     dest.name === 'app.main.detailulayer') &&
+                //     previousBounds === null) {
+                //     previousBounds = MapService.getBounds();
+                // }
             })
         );
 
@@ -831,15 +848,15 @@ angular.module('webmapp')
 
                 vm.layerState = false;
 
-                if (currentState !== 'app.main.detaillayer' &&
-                    currentState !== 'app.main.detailevent' &&
-                    currentState !== 'app.main.detailulayer' &&
-                    previousBounds) {
-                    setTimeout(function () {
-                        // MapService.fitBounds(previousBounds);
-                        previousBounds = null;
-                    }, 1250);
-                }
+                // if (currentState !== 'app.main.detaillayer' &&
+                //     currentState !== 'app.main.detailevent' &&
+                //     currentState !== 'app.main.detailulayer' &&
+                //     previousBounds) {
+                //     setTimeout(function () {
+                //         // MapService.fitBounds(previousBounds);
+                //         previousBounds = null;
+                //     }, 1250);
+                // }
 
                 if (currentState !== 'app.main.detaillayer' && $rootScope.track) {
                     delete $rootScope.track;
@@ -875,17 +892,8 @@ angular.module('webmapp')
                     }
                 }
 
-                // TODO: find a way to slow down the animation when the state change
-                MapService.adjust();
                 MapService.resetLoading();
                 MapService.closePopup();
-
-                setTimeout(function () {
-                    MapService.adjust();
-                    setTimeout(function () {
-                        MapService.adjust();
-                    }, 650);
-                }, 650);
 
                 vm.hideMap = false;
                 vm.mapView = false;
@@ -959,6 +967,13 @@ angular.module('webmapp')
                 MapService.initialize();
             })
         );
+
+        registeredEvents.push(
+            $rootScope.$on('$ionicView.afterEnter', function () {
+                MapService.adjust();
+            })
+        );
+
 
         registeredEvents.push(
             $rootScope.$on('map-click', function () {

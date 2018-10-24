@@ -19,9 +19,10 @@ angular.module('webmapp')
             modal = {},
             lastQuery;
 
-        var options = CONFIG.OPTIONS;
-        var currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
-        var defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';
+        var options = CONFIG.OPTIONS,
+            currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
+            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
+                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
 
         modalScope.vm = {};
 
@@ -103,6 +104,11 @@ angular.module('webmapp')
                             CONFIG.OVERLAY_LAYERS[pos].languages[currentLang]) {
                             translatedName = CONFIG.OVERLAY_LAYERS[pos].languages[currentLang];
                         }
+                        else if (CONFIG.OVERLAY_LAYERS[pos].label === translatedName &&
+                            CONFIG.OVERLAY_LAYERS[pos].languages &&
+                            CONFIG.OVERLAY_LAYERS[pos].languages[defaultLang]) {
+                            translatedName = CONFIG.OVERLAY_LAYERS[pos].languages[defaultLang];
+                        }
                     }
 
                     if (array[i].label) {
@@ -140,7 +146,9 @@ angular.module('webmapp')
                 var results = Search.getByLayersWithDivider(lastQuery, vm.filtersList);
                 updateClickableCheckBoxes();
                 vm.results = vm.translateOverlayInArray(results);
-                MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery, vm.filtersList));
+                if (vm.showInMap) {
+                    MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery, vm.filtersList));
+                }
 
                 vm.results.realLength = 0;
 
@@ -168,7 +176,9 @@ angular.module('webmapp')
                 vm.othersCount = String(vm.filtersList.length - 1);
                 vm.areAllActive = modalScope.vm.areAllActive = areAllActive(Search.getActiveLayersMap());
                 vm.results = vm.translateOverlayInArray(Search.getByLayersWithDivider(lastQuery, vm.filtersList));
-                MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery, vm.filtersList));
+                if (vm.showInMap) {
+                    MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(lastQuery, vm.filtersList));
+                }
 
                 vm.results.realLength = 0;
 
@@ -207,16 +217,18 @@ angular.module('webmapp')
                 updateClickableCheckBoxes();
                 checkAllTabsState();
             } else {
-                lang = $translate.preferredLanguage(),
-                    tmp = {},
+                var tmp = {},
                     allActive = false,
                     activeFilters = {};
 
                 for (var i in CONFIG.OVERLAY_LAYERS) {
                     var nameTranslated = CONFIG.OVERLAY_LAYERS[i].label;
 
-                    if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[lang]) {
-                        nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[lang];
+                    if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[currentLang]) {
+                        nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[currentLang];
+                    }
+                    else if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[defaultLang]) {
+                        nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[defaultLang];
                     }
 
                     activeFilters[CONFIG.OVERLAY_LAYERS[i].label] = {
@@ -260,7 +272,9 @@ angular.module('webmapp')
                 }
             }
 
-            MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(query, Search.getActiveLayers()));
+            if (vm.showInMap) {
+                MapService.addFeaturesToFilteredLayer(Search.getByLayersGroupedByLayer(query, Search.getActiveLayers()));
+            }
             $ionicScrollDelegate.scrollTop();
             lastQuery = query;
         };

@@ -574,6 +574,22 @@
   }
 }
 
+.details_stats-container {
+  padding: 0 10%;
+  &::after {
+    clear: both;
+  }
+  .details_stat {
+    font-size: 130%;
+    display: inline-block;
+    text-align: center;
+    width: calc(100% / 3);
+    i {
+      display: block;
+    }
+  }
+}
+
 /* ------------------------------------ *\
    #MEDIA QUERIES
 \* ------------------------------------ */

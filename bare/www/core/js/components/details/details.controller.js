@@ -20,7 +20,11 @@ angular.module('webmapp')
     ) {
         var vm = {},
             current = $state.current || {},
-            params = $state.params || {};
+            params = $state.params || {},
+            fitView = {
+                ready: false,
+                centerOnPoint: false
+            };
 
         var modalScope = $rootScope.$new(),
             modal = {},
@@ -71,10 +75,12 @@ angular.module('webmapp')
 
                 if ($state.params.parentId) {
                     MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);
-                    $rootScope.highlightTrack = {
-                        id: $state.params.id,
-                        parentId: $state.params.parentId
-                    };
+                    if (vm.geometry && vm.geometry.type && (vm.geometry.type === "LineString" || vm.geometry.type === "MultiLineString")) {
+                        $rootScope.highlightTrack = {
+                            id: $state.params.id,
+                            parentId: $state.params.parentId
+                        };
+                    }
                 }
 
                 Utils.goBack();
@@ -138,6 +144,17 @@ angular.module('webmapp')
         }).then(function (modalObj) {
             modalAccessibility = modalObj;
         });
+
+        function fitDataInView(data) {
+            setTimeout(function () {
+                if (fitView.centerOnPoint) {
+                    MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
+                }
+                else {
+                    MapService.centerOnFeature(data);
+                }
+            }, 1000);
+        };
 
         if (trackRecordingEnabled) {
             vm.isNavigating = $rootScope.isNavigating;
@@ -364,6 +381,63 @@ angular.module('webmapp')
 
                 vm.hasGallery = vm.imageGallery.length > 0;
 
+                if (feature.stats) {
+                    var formatTime = function (time) {
+                        if (!time) {
+                            return "0min";
+                        }
+
+                        var hours = 0,
+                            minutes = 0,
+                            seconds = 0;
+
+                        time = (time - (time % 1000)) / 1000;
+                        seconds = time % 60;
+                        minutes = ((time - seconds) / 60) % 60;
+                        hours = ((time - seconds - minutes * 60) / 3600) % 24;
+
+                        if (seconds > 29) {
+                            minutes++;
+                        }
+
+                        if (hours > 0) {
+                            return hours + 'h ' + minutes + 'min';
+                        } else {
+                            if (minutes > 0) {
+                                return minutes + 'min';
+                            }
+                            else {
+                                return '1min'
+                            }
+                        }
+                    };
+
+                    var formatDistance = function (distance) {
+                        return distance ? ((distance / 1000).toFixed(1) + 'km') : '0km';
+                    };
+
+                    var formatSpeed = function (speed) {
+                        return speed ? (speed.toFixed(0) + "km/h") : '0km/h';
+                    };
+
+                    var content = '<div class="details_stats-container">';
+                    content += '<div class="details_stat">';
+                    content += '<i class="wm-icon-android-clock"></i>';
+                    content += '<span>' + formatTime(feature.stats.time) + '</span>';
+                    content += '</div>';
+                    content += '<div class="details_stat">';
+                    content += '<i class="wm-icon-arrow-right-c"></i>';
+                    content += '<span>' + formatDistance(feature.stats.distance) + '</span>';
+                    content += '</div>';
+                    content += '<div class="details_stat">';
+                    content += '<i class="wm-icon-speedometer"></i>';
+                    content += '<span>' + formatSpeed(feature.stats.averageSpeed) + '</span>';
+                    content += '</div>';
+                    content += '</div>';
+
+                    feature.description = content + feature.description;
+                }
+
                 if (feature.description) {
                     var expandable = false;
                     if (feature.description.length > 200) {
@@ -380,6 +454,7 @@ angular.module('webmapp')
                     });
 
                     vm.mainDescription.html = $sce.trustAsHtml(vm.mainDescription.html);
+
                     feature.description = $sce.trustAsHtml(feature.description);
                     feature.description.expandable = expandable;
                 }
@@ -502,37 +577,35 @@ angular.module('webmapp')
                 }
             }
 
-            setTimeout(function () {
-                var centerOnPoint = false;
-                var objData = {
-                    'detail': [data]
-                };
+            var objData = {
+                'detail': [data]
+            };
 
-                if (vm.related) {
-                    var array = angular.copy(vm.related);
-                    array.push(data);
+            if (vm.related) {
+                var array = angular.copy(vm.related);
+                array.push(data);
 
-                    objData['detail'] = array;
-                }
+                objData['detail'] = array;
+            }
 
-                if (track) {
-                    objData['detail'] = [track, data];
-                    centerOnPoint = true;
-                }
+            if (track) {
+                objData['detail'] = [track, data];
+                fitView.centerOnPoint = true;
+            }
 
-                if (extras.length > 0) {
-                    objData.extras = extras;
-                }
+            if (extras.length > 0) {
+                objData.extras = extras;
+            }
 
-                MapService.addFeaturesToFilteredLayer(objData, true, 400);
+            MapService.addFeaturesToFilteredLayer(objData, true, 0);
 
-                if (centerOnPoint) {
-                    MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
-                }
-                setTimeout(function () {
-                    MapService.adjust();
-                }, 100);
-            }, 100);
+            if (fitView.ready) {
+                fitDataInView(data);
+            }
+            else {
+                fitView.ready = true;
+                fitView.data = data;
+            }
 
             if (vm.feature.accessibility) {
                 vm.feature.accessibility.mobility.icon = 'wm-icon-wheelchair-15';
@@ -710,7 +783,7 @@ angular.module('webmapp')
         vm.openRelatedUrlPopup = function () {
             vm.relatedUrlPopupOpened = !vm.relatedUrlPopupOpened;
             Utils.forceDigest();
-        }
+        };
 
         vm.openRelated = function (item) {
             Utils.goTo('layer/' + item.parent.label.replace(/ /g, '_') + '/' + item.properties.id);
@@ -844,6 +917,17 @@ angular.module('webmapp')
         registeredEvents.push(
             $rootScope.$on('expand-map', function (e, value) {
                 vm.isMapExpanded = value;
+            })
+        );
+
+        registeredEvents.push(
+            $rootScope.$on('map-resize', function () {
+                if (fitView.ready && fitView.data) {
+                    fitDataInView(fitView.data);
+                }
+                else {
+                    fitView.ready = true;
+                }
             })
         );
 

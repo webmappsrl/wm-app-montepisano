@@ -1,5 +1,4 @@
 angular.module('webmapp')
-
     .factory('GeolocationService', function GeolocationService(
         $cordovaDeviceOrientation,
         $cordovaGeolocation,
@@ -24,7 +23,7 @@ angular.module('webmapp')
          * 4. {true, false, true, false}    > {true, false, true, true}    - geolocation button clicked
          * 5. {true, false, true, true}     > {true, false, false, false}  - geolocation button clicked
          * 6. {true, false, -, -}           > {false, false, false, false} - geolocation disabled
-         * 
+         *
          * @event geolocationState-changed when change at least one value
          */
         var geolocationState = {
@@ -41,7 +40,7 @@ angular.module('webmapp')
             compassRotationTimeout: 8000, // Time in milliseconds to wait before switching from gps rotation to compass rotation
             currentSpeedTimeWindow: 10000, // Time in milliseconds window of positions to calculate currentSpeed with
             geolocationTimeoutTime: 60000,
-            minSpeedForGpsBearing: 2, // Speed in km/h needed to switch from compass to gps bearing 
+            minSpeedForGpsBearing: 2, // Speed in km/h needed to switch from compass to gps bearing
             outOfTrackToastDelay: 10000,
             outOfTrackDistance: (CONFIG.NAVIGATION && CONFIG.NAVIGATION.trackBoundsDistance) ?
                 CONFIG.NAVIGATION.trackBoundsDistance : (
@@ -153,9 +152,9 @@ angular.module('webmapp')
         /**
          * @description
          * Center the map in [lat, long] position skipping the zoom event handling
-         * 
-         * @param {number} lat 
-         * @param {number} long 
+         *
+         * @param {number} lat
+         * @param {number} long
          */
         function centerOnCoordsWithoutZoomEvent(lat, long) {
             var currentZoom = MapService.getZoom();
@@ -170,7 +169,7 @@ angular.module('webmapp')
          * @description
          * Check if location is authorized and then if GPS is active and
          * eventually ask to activate it
-         * 
+         *
          * @returns {promise}
          */
         function checkGPS() {
@@ -279,8 +278,8 @@ angular.module('webmapp')
         /**
          * @description
          * Handle the case when the gps changes status in live
-         * 
-         * @param {*} GPSState 
+         *
+         * @param {*} GPSState
          */
         function GPSSettingsSwitched(GPSState) {
             console.log("GPS state changed");
@@ -307,14 +306,18 @@ angular.module('webmapp')
         };
 
         function turnOffRotation() {
-            if (state.orientationWatch) {
+            try {
                 state.orientationWatch.clearWatch();
             }
+            catch (e) { }
             delete state.orientationWatch;
             state.orientationWatch = null;
 
             if (state.rotationSwitchTimeout) {
-                clearTimeout(state.rotationSwitchTimeout);
+                try {
+                    clearTimeout(state.rotationSwitchTimeout);
+                }
+                catch (e) { }
                 state.rotationSwitchTimeout = null;
             }
 
@@ -529,7 +532,7 @@ angular.module('webmapp')
 
         console.warn("TODO: complete function positionCallback for realTimeTracking")
         function positionCallback(position) {
-            console.log(position);
+            // console.log(position);
 
             if (!geolocationState.isActive) {
                 return;
@@ -758,7 +761,7 @@ angular.module('webmapp')
         /**
          * @description
          * Check the backgroundGeolocation service status
-         * 
+         *
          * @returns {promise}
          *      resolve true if service is running, false otherwise
          */
@@ -779,7 +782,7 @@ angular.module('webmapp')
          * @description
          * Save the recording state to let application load it if restarted
          * after been active in background
-         * 
+         *
          */
         function saveRecordingState() {
             var polyline = MapService.getUserPolyline();
@@ -806,7 +809,7 @@ angular.module('webmapp')
         /**
          * @description
          * Delete the saved recording state after application load it
-         * 
+         *
          */
         function deleteRecordingState() {
             delete localStorage.$wm_lastRecordingState;
@@ -815,7 +818,7 @@ angular.module('webmapp')
         /**
          * @description
          * Restore the recording state
-         * 
+         *
          */
         function restoreRecordingState() {
             var lastState = localStorage.$wm_lastRecordingState ? JSON.parse(localStorage.$wm_lastRecordingState) : false;
@@ -858,7 +861,7 @@ angular.module('webmapp')
          * Enable the geolocation (if disabled), checking GPS and if defined goes to
          * the specified state (refer to line 8). If the geolocaqtion service is already
          * running it start again the navigation
-         * 
+         *
          * @returns {promise}
          */
         geolocationService.enable = function () {
@@ -1030,13 +1033,14 @@ angular.module('webmapp')
                     geolocationState.isLoading = true;
                     geolocationState.isFollowing = false;
                     geolocationState.isRotating = false;
+                    gpsActive = true;
 
                     $rootScope.$emit("geolocationState-changed", geolocationState);
 
                     $cordovaGeolocation
                         .getCurrentPosition({
                             timeout: constants.geolocationTimeoutTime,
-                            enableHighAccuracy: false
+                            enableHighAccuracy: true
                         }).then(function (pos) {
                             geolocationState.isFollowing = true;
                             geolocationState.isLoading = false;
@@ -1045,20 +1049,22 @@ angular.module('webmapp')
                             state.positionWatch = $cordovaGeolocation
                                 .watchPosition({
                                     timeout: constants.geolocationTimeoutTime,
-                                    enableHighAccuracy: false
+                                    enableHighAccuracy: true
                                 });
 
-                            state.positionWatch.then(function (position) {
-                                positionCallback(position.coords);
-                            }, function (err) {
-                                console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
-                                $ionicPopup.alert({
-                                    title: $translate.instant("ATTENZIONE"),
-                                    template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
-                                });
+                            state.positionWatch.then(null,
+                                function (err) {
+                                    console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
+                                    $ionicPopup.alert({
+                                        title: $translate.instant("ATTENZIONE"),
+                                        template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
+                                    });
 
-                                geolocationService.disable();
-                            });
+                                    geolocationService.disable();
+                                },
+                                function (position) {
+                                    positionCallback(position.coords);
+                                });
                         }, function (err) {
                             console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
                             $ionicPopup.alert({
@@ -1082,7 +1088,7 @@ angular.module('webmapp')
         /**
          * @description
          * Disable the geolocation
-         * 
+         *
          * @returns {boolean}
          *      true if all correct, false otherwise
          */
@@ -1147,17 +1153,17 @@ angular.module('webmapp')
         /**
          * @description
          * Switch between geolocation state
-         * 
+         *
          * @argument {pbject} goalState [optional]
          *      contains the goal state,
          *      isFollowing and isRotating
-         * 
+         *
          * @returns {promise}
          *      geolocationState if all correct, error message otherwise
-         * 
+         *
          * @example geolocationService.enable()
          *      goes to geolocationState 1.1
-         * 
+         *
          * @example geolocationService.enable({isFollowing: true, isRotating: true})
          *      goes to geolocationState 4.1
          */
@@ -1229,13 +1235,13 @@ angular.module('webmapp')
         /**
          * @description
          * Start recording stats
-         * 
+         *
          * @param {boolean} [optional] recordTrack
          *      if true record the track in a geojson feature
-         * 
+         *
          * @param {Object(parentId, id)} [optional] navigationTrack
          *      if set select the navigation track
-         * 
+         *
          * @returns {promise}
          *      resolve the recording state when correct, reject otherwise
          */
@@ -1306,7 +1312,7 @@ angular.module('webmapp')
         /**
          * @description
          * Pause the stats record saving the state
-         * 
+         *
          * @returns {promise}
          *      resolve if all correct, false otherwise
          */
@@ -1342,7 +1348,7 @@ angular.module('webmapp')
         /**
          * @description
          * Resume to record stats from the last saved moment
-         * 
+         *
          * @returns {boolean}
          *      true if all correct, false otherwise
          */
@@ -1379,7 +1385,7 @@ angular.module('webmapp')
         /**
          * @description
          * Stop to record stats from the last saved moment
-         * 
+         *
          * @returns {promise}
          */
         geolocationService.stopRecording = function () {
@@ -1400,10 +1406,10 @@ angular.module('webmapp')
         /**
          * @description
          * Stop to record stats from the last saved moment
-         * 
+         *
          * @throws {NoStatsException}
          *      if record never started
-         * 
+         *
          * @returns {boolean}
          *      all the recorded stats
          */
@@ -1454,7 +1460,7 @@ angular.module('webmapp')
         /**
          * @description
          * Start the remote tracking with our server
-         * 
+         *
          * @returns {boolean}
          *      true if started correctly, false otherwise
          */
@@ -1466,7 +1472,7 @@ angular.module('webmapp')
         /**
          * @description
          * Stop the remote tracking with our server
-         * 
+         *
          * @returns {boolean}
          *      true if correctly executed, false otherwise
          */

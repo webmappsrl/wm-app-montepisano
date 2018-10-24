@@ -20,10 +20,10 @@ angular.module('webmapp')
 					}
 				}
 			}
-			if (lang === "" && CONFIGProvider.LANGUAGES.actual) {
+			if (CONFIGProvider.LANGUAGES.actual) {
 				lang = CONFIGProvider.LANGUAGES.actual.substring(0, 2);
 			}
-			else if (lang === "" && !CONFIGProvider.LANGUAGES.actual) {
+			else {
 				lang = "it";
 			}
 		}
@@ -35,7 +35,6 @@ angular.module('webmapp')
 
 		$translateProvider.useSanitizeValueStrategy('sanitizeParameters');
 		$translateProvider.registerAvailableLanguageKeys(['en', 'it', 'de', 'fr'], {
-
 			'en-*': 'en',
 			'it-*': 'it',
 			'de-*': 'de',
@@ -44,8 +43,7 @@ angular.module('webmapp')
 			'it_*': 'it',
 			'de_*': 'de',
 			'fr_*': 'fr',
-			'*': 'en',
-
+			'*': 'en'
 		});
 		$translateProvider.useStaticFilesLoader({
 			prefix: 'core/languages/locale-',

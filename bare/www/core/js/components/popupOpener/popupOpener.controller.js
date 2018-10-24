@@ -18,7 +18,7 @@ angular.module('webmapp')
                 var timerFunction = function () {
                     if (MapService.isReady()) {
                         var features = MapService.getFeatureIdMap();
-    
+
                         setTimeout(function () {
                             if (features[id]) {
                                 MapService.centerOnFeature(features[id]);
@@ -28,7 +28,7 @@ angular.module('webmapp')
                                         MapService.setZoom(zoom);
                                     }, 100);
                                 }
-    
+
                                 setTimeout(function () {
                                     MapService.triggerFeatureClick(id);
                                 }, 250);
@@ -38,9 +38,9 @@ angular.module('webmapp')
                         setTimeout(timerFunction, 300);
                     }
                 };
-    
+
                 timerFunction();
-    
+
                 MapService.resetView();
                 Utils.goTo('/')
             }, 1000);
