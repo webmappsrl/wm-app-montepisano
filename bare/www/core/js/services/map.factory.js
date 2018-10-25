@@ -1367,7 +1367,13 @@ angular.module('webmapp')
                         resolveLocalFileSystemURL(
                             address,
                             function (ap) {
-                                var bl = L.tileLayer.mbTiles(address, options);
+                                if (address.substring(-7) === 'mbtiles') {
+                                    var bl = L.tileLayer.mbTiles(address, options);
+                                }
+                                else {
+                                    var bl = L.tileLayer.mbTilesCustom(address, options);
+                                }
+
                                 setBaseLayer(baseMap, baseTms, bl);
                                 resolve();
                             },
@@ -1443,6 +1449,7 @@ angular.module('webmapp')
 
                     if (Offline.isActive()) {
                         address = Offline.getOfflineUrl();
+                        console.log("4")
                         setBaseLayer(baseMap, false, L.tileLayer.mbTiles(address, options));
                         resolve();
                     } else {
@@ -1450,6 +1457,7 @@ angular.module('webmapp')
                         resolveLocalFileSystemURL(
                             address,
                             function (ap) {
+                                console.log("5")
                                 var bl = L.tileLayer.mbTiles(address, options);
                                 setBaseLayer(baseMap, baseTms, bl);
                                 resolve();
