@@ -253,7 +253,7 @@ angular.module('webmapp')
 
                 var showPopup = function () {
                     var popup = $ionicPopup.show({
-                        template: '<input type="text" ng-model="data.email">',
+                        template: '<input type="text" ng-model="data.email" placeholder="email">',
                         title: $translate.instant('ATTENZIONE'),
                         subTitle: $translate.instant("Di seguito specifica l'indirizzo email al quale inviare il percorso"),
                         scope: $scope,
