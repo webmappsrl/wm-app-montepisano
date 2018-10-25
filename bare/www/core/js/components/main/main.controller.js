@@ -666,7 +666,7 @@ angular.module('webmapp')
         };
 
         vm.formatDistance = function (distance) {
-            return distance ? ((distance / 1000).toFixed(1) + 'km') : '0km';
+            return distance ? ((distance / 1000).toFixed(1).replace(".", ",") + 'km') : '0km';
         };
 
         vm.formatSpeed = function (speed) {

@@ -413,7 +413,7 @@ angular.module('webmapp')
                     };
 
                     var formatDistance = function (distance) {
-                        return distance ? ((distance / 1000).toFixed(1) + 'km') : '0km';
+                        return distance ? ((distance / 1000).toFixed(1).replace(".", ",") + 'km') : '0km';
                     };
 
                     var formatSpeed = function (speed) {
