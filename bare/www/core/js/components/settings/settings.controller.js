@@ -39,6 +39,7 @@ angular.module('webmapp')
             offlineScope.downloadInProgress = false;
             offlineScope.unzipInProgress = false;
             Offline.reset();
+            offlineScope.hasChunkDownloaded = Offline.hasChunkDownloaded();
         };
 
         offlineScope.hide = function () {
@@ -56,6 +57,7 @@ angular.module('webmapp')
 
         offlineScope.active = Offline.isActive();
         offlineScope.canBeEnabled = Offline.canBeEnabled();
+        offlineScope.hasChunkDownloaded = Offline.hasChunkDownloaded();
         offlineScope.downloadInProgress = false;
         offlineScope.unzipInProgress = false;
         size = CONFIG.OFFLINE.size ? CONFIG.OFFLINE.size : 400;
@@ -73,6 +75,7 @@ angular.module('webmapp')
             });
 
         vm.openOfflinePage = function () {
+            offlineScope.hasChunkDownloaded = Offline.hasChunkDownloaded();
             offlineModal && offlineModal.show();
         };
 

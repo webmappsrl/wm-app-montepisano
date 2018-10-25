@@ -91,7 +91,7 @@
             <!-- TODO:replace with style -->
             <br />
 
-            <div ng-if="!downloadInProgress && !unzipInProgress && !installationInProgress && canBeEnabled">
+            <div ng-if="!downloadInProgress && !unzipInProgress && !installationInProgress && (canBeEnabled || hasChunkDownloaded)">
                 <span>
                     {{"Premi il tasto Reset per cancellare l'attuale versione della mappa e procedere successivamente al download della nuova versione" | translate}}
                 </span>
@@ -100,7 +100,7 @@
                 <br />
 
                 <!-- TODO: add classes for button -->
-                <button class="button button-block button-reset" ng-click="reset()" ng-if="!downloadInProgress && !unzipInProgress && canBeEnabled">
+                <button class="button button-block button-reset" ng-click="reset()" ng-if="!downloadInProgress && !unzipInProgress && (canBeEnabled || hasChunkDownloaded)">
                     <span>{{"Reset" | translate}}</span>
                 </button>
             </div>

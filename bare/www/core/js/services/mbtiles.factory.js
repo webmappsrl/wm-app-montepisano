@@ -66,13 +66,7 @@ angular.module('webmapp')
             var mapCountStmt = "SELECT COUNT(*) AS count FROM map;",
                 imagesCountStmt = "SELECT COUNT(*) AS count FROM images;",
                 metaStmt = "SELECT value FROM metadata WHERE name = ?;",
-                metaUpdateStmt = "UPDATE metadata SET value = ? WHERE name = ?;",
-                mapSelectStmt = "SELECT * FROM map;",
-                mapInsertStmt = "INSERT OR IGNORE INTO map (tile_id, tile_row, tile_column, zoom_level) VALUES",
-                mapInsertValuesStmt = " (?, ?, ?, ?)",
-                imagesSelectStmt = isAndroid ? "SELECT tile_id, BASE64(tile_data) AS base64_tile_data FROM images;" : "SELECT * FROM images;",
-                imagesInsertStmt = "INSERT OR IGNORE INTO images (tile_id, tile_data) VALUES",
-                imagesInsertValuesStmt = " (?, ?)";
+                metaUpdateStmt = "UPDATE metadata SET value = ? WHERE name = ?;";
 
             var progress = {
                 loaded: 0,
@@ -82,8 +76,7 @@ angular.module('webmapp')
 
             var mergeMeta = function () {
                 var updateValue = function (key, value) {
-                    db[baseMbtiles].executeSql(metaUpdateStmt, [value, key], function (res) {
-                        console.log("updated " + key);
+                    db[baseMbtiles].executeSql(metaUpdateStmt, [value, key], function () {
                     }, function (err) {
                         console.error(err);
                     });
@@ -177,84 +170,16 @@ angular.module('webmapp')
                 });
             };
 
-            var mergeTable = function (selectStmt, insertStmt, insertValuesStmt, columns) {
-                var mergeDefer = $q.defer(),
-                    promises = [];
-
-                var tableInsert = function (arrayValues) {
-                    var insertDefer = $q.defer();
-                    var stmt = insertStmt;
-                    var itemLen = arrayValues.length / columns.length;
-                    for (var j = 0; j < itemLen; j++) {
-                        if (j !== 0) {
-                            stmt += ',';
-                        }
-                        stmt += insertValuesStmt;
-                    }
-                    stmt += ";";
-                    // db[baseMbtiles].executeSql(stmt, arrayValues, function () {
-                    //     console.log("Added")
-                    //     progress.loaded += itemLen;
-                    //     progressFunction(progress);
-                    //     insertDefer.resolve();
-                    // }, function (err) {
-                    //     console.error(err);
-                    //     insertDefer.reject();
-                    // });
-                    progress.loaded += itemLen;
-                    progressFunction(progress);
-                    insertDefer.resolve();
-
-                    return insertDefer.promise;
-                }
-
-                db[importMbtiles].executeSql(selectStmt, [], function (table) {
-                    if (table.rows.length > 0) {
-                        var values = [],
-                            i = 0;
-
-                        for (i = 0; i < table.rows.length; i++) {
-                            var item = table.rows.item(i);
-
-                            for (var id in columns) {
-                                values.push(item[columns[id]]);
-                            }
-
-                            if (i % 100 === 99 || i === table.rows.length - 1) {
-                                console.log("INSERT")
-                                promises.push(tableInsert(values));
-                                values.splice(0, values.length);
-                            }
-                        }
-
-                        $q.all(promises).then(function () {
-                            mergeDefer.resolve();
-                        }).catch(function (err) {
-                            console.error(err);
-                            mergeDefer.reject(err);
-                        });
-                    }
-                    else {
-                        mergeDefer.resolve();
-                    }
-                }, function (err) {
-                    console.error(err);
-                    mergeDefer.reject(err);
-                });
-
-                return mergeDefer.promise;
-            };
-
             var transferDb = function () {
                 var transferDefer = $q.defer();
 
                 mergeMeta();
 
-                db[baseMbtiles].executeSql("ATTACH DATABASE ? AS importDb;", [importMbtiles], function (res) {
+                db[baseMbtiles].executeSql("ATTACH DATABASE ? AS importDb;", [importMbtiles], function () {
                     db[baseMbtiles].executeSql("INSERT OR IGNORE INTO images (tile_id, tile_data) SELECT tile_id, BASE64(tile_data) AS tile_data FROM importDb.images;", [], function (imagesRes) {
-                        console.log(imagesRes);
+                        progress.loaded = imagesRes.rowsAffected;
+                        progressFunction(progress);
                         db[baseMbtiles].executeSql("INSERT OR IGNORE INTO map (tile_id, zoom_level, tile_column, tile_row) SELECT tile_id, zoom_level, tile_column, tile_row FROM importDb.map;", [], function (mapRes) {
-                            console.log(mapRes);
                             db[baseMbtiles].executeSql("DETACH DATABASE importDb;", [], function () {
                                 progress.loaded = progress.total;
                                 progressFunction(progress);
@@ -272,25 +197,6 @@ angular.module('webmapp')
                     transferDefer.reject(err);
                 });
 
-                // mergeTable(mapSelectStmt, mapInsertStmt, mapInsertValuesStmt, ['tile_id', 'tile_row', 'tile_column', 'zoom_level']).then(function () {
-                //     var imageColumn = 'tile_data';
-                //     if (isAndroid) {
-                //         imageColumn = 'base64_tile_data';
-                //     }
-                //     mergeTable(imagesSelectStmt, imagesInsertStmt, imagesInsertValuesStmt, ['tile_id', imageColumn]).then(function () {
-                //         setTimeout(function () {
-                //             db[baseMbtiles].close();
-                //             db[importMbtiles].close();
-                //             defer.resolve();
-                //         }, 1000);
-                //     }).catch(function (err) {
-                //         console.error(err);
-                //         defer.reject(err);
-                //     });
-                // }).catch(function (err) {
-                //     console.error(err);
-                //     defer.reject(err);
-                // });
                 return transferDefer.promise;
             };
 
@@ -299,13 +205,11 @@ angular.module('webmapp')
 
             db[baseMbtiles] = openCordovaDB(baseMbtiles);
             db[importMbtiles] = openCordovaDB(importMbtiles);
-            console.log("opened")
 
             db[importMbtiles].executeSql(mapCountStmt, [], function (mapCount) {
                 progress.total += mapCount.rows.item(0).count;
                 db[importMbtiles].executeSql(imagesCountStmt, [], function (imagesCount) {
                     progress.total += imagesCount.rows.item(0).count;
-                    console.log("transfer")
                     transferDb().then(function () {
                         defer.resolve();
                     }, function (err) {
@@ -322,7 +226,7 @@ angular.module('webmapp')
         };
 
         mbtiles.getTotalRecords = function (arrayLink) {
-            /* it counts the sum of all mbtiles map and images table except for the first one
+            /* it counts the sum of all mbtiles map and images table records except for the first one
              * for android it counts the images of the first one, for ios skip the first one
              */
             var defer = $q.defer(),

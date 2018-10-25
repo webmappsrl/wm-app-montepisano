@@ -113,6 +113,10 @@ angular.module('webmapp')
             resetMapView = resetView;
         };
 
+        offline.hasChunkDownloaded = function () {
+            return Object.keys(_state.blocks).length > 0;
+        };
+
         offline.removeMap = function () {
             $cordovaFile
                 .removeRecursively(cordova.file.dataDirectory + 'map')
@@ -196,6 +200,7 @@ angular.module('webmapp')
                     totalDownloadSize: (CONFIG.OFFLINE && CONFIG.OFFLINE.size) ? CONFIG.OFFLINE.size * 1024 * 1024 : -1,
                     mbtiles: {}
                 };
+                vm.hasChunkDownloaded = offline.hasChunkDownloaded();
             };
 
             var calculateProgress = function () {
@@ -421,14 +426,11 @@ angular.module('webmapp')
                                     defer.resolve();
                                 }
                                 else {
-                                    console.log("join " + mbtilesArray[0] + " - " + mbtilesArray[1]);
                                     return MBTiles.join(mbtilesArray[0], mbtilesArray[1], progressFunction).then(function () {
-                                        console.log('done ' + mbtilesArray[1]);
                                         var split = mbtilesArray[1].split('/'),
                                             filename = split.pop(),
                                             path = split.join('/');
                                         $cordovaFile.removeFile(path, filename).then(function () {
-                                            console.log("removed " + filename);
                                         }, function (error) {
                                             console.error(error);
                                         });
