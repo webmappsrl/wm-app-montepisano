@@ -24,47 +24,17 @@ angular.module('webmapp')
             });
         };
 
-        mbtiles.transformImages = function (url, progressFunction) {
-            var defer = $q.defer(),
-                db,
-                progress = {
-                    loaded: 0,
-                    total: 0,
-                    ref: url
-                };
-
-            var imagesCountStmt = "SELECT COUNT(*) AS count FROM images;",
-                updateStmt = "UPDATE images SET tile_data = BASE64(tile_data);";
-
-            if (isAndroid) {
-                db = openCordovaDB(url.substr(7));
-                db.executeSql(imagesCountStmt, [], function (count) {
-                    progress.total = count.rows.item(0).count;
-                    db.executeSql(updateStmt, [], function () {
-                        progress.loaded = progress.total;
-                        progressFunction(progress);
-                        defer.resolve();
-                    }, function (err) {
-                        defer.reject(err);
-                    });
-                }, function (err) {
-                    defer.reject(err);
-                });
-            }
-            else {
-                defer.resolve();
-            }
-
-            return defer.promise;
-        };
-
         mbtiles.join = function (baseMbtiles, importMbtiles, progressFunction) {
             var defer = $q.defer();
 
             var db = {};
 
-            var mapCountStmt = "SELECT COUNT(*) AS count FROM map;",
+            var attachStmt = "ATTACH DATABASE ? AS importDb;",
+                detachStmt = "DETACH DATABASE importDb;",
+                mapCountStmt = "SELECT COUNT(*) AS count FROM map;",
+                mapInsertStmt = "INSERT OR IGNORE INTO map (tile_id, zoom_level, tile_column, tile_row) SELECT tile_id, zoom_level, tile_column, tile_row FROM importDb.map;",
                 imagesCountStmt = "SELECT COUNT(*) AS count FROM images;",
+                imagesInsertStmt = "INSERT OR IGNORE INTO images (tile_id, tile_data) SELECT tile_id, tile_data FROM importDb.images;",
                 metaStmt = "SELECT value FROM metadata WHERE name = ?;",
                 metaUpdateStmt = "UPDATE metadata SET value = ? WHERE name = ?;";
 
@@ -175,12 +145,12 @@ angular.module('webmapp')
 
                 mergeMeta();
 
-                db[baseMbtiles].executeSql("ATTACH DATABASE ? AS importDb;", [importMbtiles], function () {
-                    db[baseMbtiles].executeSql("INSERT OR IGNORE INTO images (tile_id, tile_data) SELECT tile_id, BASE64(tile_data) AS tile_data FROM importDb.images;", [], function (imagesRes) {
+                db[baseMbtiles].executeSql(attachStmt, [importMbtiles], function () {
+                    db[baseMbtiles].executeSql(imagesInsertStmt, [], function (imagesRes) {
                         progress.loaded = imagesRes.rowsAffected;
                         progressFunction(progress);
-                        db[baseMbtiles].executeSql("INSERT OR IGNORE INTO map (tile_id, zoom_level, tile_column, tile_row) SELECT tile_id, zoom_level, tile_column, tile_row FROM importDb.map;", [], function (mapRes) {
-                            db[baseMbtiles].executeSql("DETACH DATABASE importDb;", [], function () {
+                        db[baseMbtiles].executeSql(mapInsertStmt, [], function () {
+                            db[baseMbtiles].executeSql(detachStmt, [], function () {
                                 progress.loaded = progress.total;
                                 progressFunction(progress);
                                 transferDefer.resolve();
@@ -226,8 +196,7 @@ angular.module('webmapp')
         };
 
         mbtiles.getTotalRecords = function (arrayLink) {
-            /* it counts the sum of all mbtiles map and images table records except for the first one
-             * for android it counts the images of the first one, for ios skip the first one
+            /* it counts the sum of all mbtiles map and images table records
              */
             var defer = $q.defer(),
                 mapStmt = "SELECT COUNT(*) AS count FROM map;",
@@ -242,18 +211,13 @@ angular.module('webmapp')
                 db[link] = currentDb;
                 currentDb.executeSql(imagesStmt, [], function (images) {
                     total += images.rows.item(0).count;
-                    if (link !== arrayLink[0].substring(7)) {
-                        currentDb.executeSql(mapStmt, [], function (map) {
-                            total += map.rows.item(0).count;
-                            calcDefer.resolve();
-                        }, function (err) {
-                            console.error(err);
-                            calcDefer.resolve();
-                        });
-                    }
-                    else {
+                    currentDb.executeSql(mapStmt, [], function (map) {
+                        total += map.rows.item(0).count;
                         calcDefer.resolve();
-                    }
+                    }, function (err) {
+                        console.error(err);
+                        calcDefer.resolve();
+                    });
                 }, function (err) {
                     console.error(err);
                     defer.resolve();

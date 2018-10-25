@@ -1216,8 +1216,7 @@ angular.module('webmapp')
                             utfgridCallback(data, currentOverlay, tileLayer);
                         }
                         delete overlayLayersQueueByLabel[currentOverlay.label];
-                    }).catch(function (err) {
-                        console.error(err);
+                    }).catch(function () {
                         defer.resolve();
                     });
             } else {
@@ -1367,13 +1366,7 @@ angular.module('webmapp')
                         resolveLocalFileSystemURL(
                             address,
                             function (ap) {
-                                if (address.substring(-7) === 'mbtiles') {
-                                    var bl = L.tileLayer.mbTiles(address, options);
-                                }
-                                else {
-                                    var bl = L.tileLayer.mbTilesCustom(address, options);
-                                }
-
+                                var bl = L.tileLayer.mbTiles(address, options);
                                 setBaseLayer(baseMap, baseTms, bl);
                                 resolve();
                             },
@@ -1449,7 +1442,6 @@ angular.module('webmapp')
 
                     if (Offline.isActive()) {
                         address = Offline.getOfflineUrl();
-                        console.log("4")
                         setBaseLayer(baseMap, false, L.tileLayer.mbTiles(address, options));
                         resolve();
                     } else {
@@ -1457,7 +1449,6 @@ angular.module('webmapp')
                         resolveLocalFileSystemURL(
                             address,
                             function (ap) {
-                                console.log("5")
                                 var bl = L.tileLayer.mbTiles(address, options);
                                 setBaseLayer(baseMap, baseTms, bl);
                                 resolve();

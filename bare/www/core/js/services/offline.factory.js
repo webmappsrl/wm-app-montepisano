@@ -55,19 +55,18 @@ angular.module('webmapp')
         offline.options = CONFIG.OFFLINE || {};
 
         offline.reset = function () {
-            if (_state.active) {
-                offline.toggleMode();
-            }
-
             localStorage.setItem('offlineUrl', '');
             localStorage.setItem('offlineMode', false);
             localStorage.setItem('offlineAvailable', false);
             localStorage.setItem('offlineTms', offline.options.tms);
-
-            $cordovaFile.removeRecursively(cordova.file.dataDirectory, 'map');
-
-            localStorage.setItem('blocksCompleted', JSON.stringify({}));
             _state.blocks = {};
+            localStorage.setItem('blocksCompleted', JSON.stringify(_state.blocks));
+
+            $cordovaFile.removeRecursively(cordova.file.dataDirectory, 'map').then(function () {
+                if (_state.active) {
+                    offline.toggleMode();
+                }
+            });
         };
 
         offline.getOfflineTms = function () {
@@ -394,7 +393,7 @@ angular.module('webmapp')
                         mbtilesLink[i] = destDirectory + filename;
                     }
 
-                    MBTiles.getTotalRecords(mbtilesLink).then(function (total) {
+                    MBTiles.getTotalRecords(mbtilesLink.slice(1, mbtilesLink.length)).then(function (total) {
                         map.mbtiles.totalSize = total;
                         map.mbtiles.progress = {};
 
@@ -418,48 +417,46 @@ angular.module('webmapp')
                             map.mbtiles.progress[progress.ref].size = progress.total;
                         };
 
-                        MBTiles.transformImages(mbtilesLink[0], progressFunction).then(function () {
-                            var joinMBTilesArray = function (mbtilesArray) {
-                                var defer = $q.defer();
+                        var joinMBTilesArray = function (mbtilesArray) {
+                            var defer = $q.defer();
 
-                                if (mbtilesArray.length <= 1) {
-                                    defer.resolve();
-                                }
-                                else {
-                                    return MBTiles.join(mbtilesArray[0], mbtilesArray[1], progressFunction).then(function () {
-                                        var split = mbtilesArray[1].split('/'),
-                                            filename = split.pop(),
-                                            path = split.join('/');
-                                        $cordovaFile.removeFile(path, filename).then(function () {
-                                        }, function (error) {
-                                            console.error(error);
-                                        });
-                                        mbtilesArray.splice(1, 1);
-                                        return joinMBTilesArray(mbtilesArray);
-                                    }).catch(function (err) {
-                                        console.error(err);
-                                        defer.reject(err);
+                            if (mbtilesArray.length <= 1) {
+                                defer.resolve();
+                            }
+                            else {
+                                return MBTiles.join(mbtilesArray[0], mbtilesArray[1], progressFunction).then(function () {
+                                    var split = mbtilesArray[1].split('/'),
+                                        filename = split.pop(),
+                                        path = split.join('/');
+                                    $cordovaFile.removeFile(path, filename).then(function () {
+                                    }, function (error) {
+                                        console.error(error);
                                     });
-                                }
+                                    mbtilesArray.splice(1, 1);
+                                    return joinMBTilesArray(mbtilesArray);
+                                }).catch(function (err) {
+                                    console.error(err);
+                                    defer.reject(err);
+                                });
+                            }
 
-                                return defer.promise;
-                            };
+                            return defer.promise;
+                        };
 
-                            joinMBTilesArray(mbtilesLink).then(function () {
-                                vm.installationProgress = 100;
-                                clearInterval(progressInterval);
-                                setTimeout(function () {
-                                    delete _state.blocks;
-                                    localStorage.removeItem('blocksCompleted')
-                                    vm.installationProgress = 0;
-                                    vm.installationInProgress = false;
-                                    vm.canBeEnabled = true;
-                                    vm.unzipInProgress = false;
-                                    _state.available = true;
-                                    localStorage.setItem('offlineAvailable', _state.available);
-                                    Utils.forceDigest();
-                                }, 1000);
-                            });
+                        joinMBTilesArray(mbtilesLink).then(function () {
+                            vm.installationProgress = 100;
+                            clearInterval(progressInterval);
+                            setTimeout(function () {
+                                delete _state.blocks;
+                                localStorage.removeItem('blocksCompleted')
+                                vm.installationProgress = 0;
+                                vm.installationInProgress = false;
+                                vm.canBeEnabled = true;
+                                vm.unzipInProgress = false;
+                                _state.available = true;
+                                localStorage.setItem('offlineAvailable', _state.available);
+                                Utils.forceDigest();
+                            }, 1000);
                         });
                     });
                 }
