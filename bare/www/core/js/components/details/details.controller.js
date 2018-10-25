@@ -147,13 +147,8 @@ angular.module('webmapp')
 
         function fitDataInView(data) {
             setTimeout(function () {
-                if (fitView.centerOnPoint) {
-                    MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
-                }
-                else {
-                    MapService.centerOnFeature(data);
-                }
-            }, 1000);
+                MapService.centerOnFeature(data);
+            }, 2000);
         };
 
         if (trackRecordingEnabled) {
@@ -960,7 +955,7 @@ angular.module('webmapp')
         );
 
         registeredEvents.push(
-            $rootScope.$on('map-resize', function () {
+            $scope.$on('$ionicView.afterEnter', function () {
                 if (fitView.ready && fitView.data) {
                     fitDataInView(fitView.data);
                 }

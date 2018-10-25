@@ -1540,6 +1540,10 @@ angular.module('webmapp')
                 $rootScope.$emit('map-resize');
             });
 
+            map.on('moveend', function () {
+                $rootScope.$emit('map-moveend');
+            });
+
             if (generalConf.useAlmostOver) {
                 map.on('almost:click', function (e) {
                     lineClick(e);
@@ -1888,11 +1892,11 @@ angular.module('webmapp')
         };
 
         mapService.centerOnFeature = function (feature) {
-            var latlngs = [],
-                coord;
-
             if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString') {
-                map.fitBounds(L.geoJson(feature).getBounds());
+                var bounds = L.geoJson(feature).getBounds();
+                map.fitBounds(bounds);
+                var actual = map.getBounds();
+                console.log(bounds, actual)
             } else {
                 map.setView({
                     lat: feature.geometry.coordinates[1],
