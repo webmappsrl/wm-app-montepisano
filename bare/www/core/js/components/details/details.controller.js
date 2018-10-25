@@ -243,47 +243,86 @@ angular.module('webmapp')
             };
 
             vm.exportTrack = function () {
+                $scope.data = {
+                    email: ""
+                };
+
                 if (vm.isLoggedIn) {
-                    var userData = Auth.getUserData();
+                    $scope.data.email = Auth.getUserData().user_email;
+                }
 
-                    $ionicPopup.confirm({
+                var showPopup = function () {
+                    var popup = $ionicPopup.show({
+                        template: '<input type="text" ng-model="data.email">',
                         title: $translate.instant('ATTENZIONE'),
-                        subTitle: $translate.instant('Ti verrà inviata una mail con allegato il file in formato gpx di questo percorso. Vuoi procedere?'),
-                    }).then(function (res) {
-                        if (res) {
-                            MapService.getUserTrackGeoJSON(params.id).then(function (geojson) {
-                                var url = 'https://api.webmapp.it/services/share.php';
-
-                                var app = CONFIG.OPTIONS.title;
-                                if (CONFIG.MAIN) {
-                                    app = CONFIG.MAIN.OPTIONS.title + " - " + app;
+                        subTitle: $translate.instant("Di seguito specifica l'indirizzo email al quale inviare il percorso"),
+                        scope: $scope,
+                        buttons: [
+                            { text: 'Cancel' },
+                            {
+                                text: $translate.instant('INVIA'),
+                                type: 'button-positive',
+                                onTap: function (e) {
+                                    return $scope.data.email;
                                 }
-
-                                var currentRequest = Communication.callAPI(url, {
-                                    to: userData.user_email,
-                                    firstName: userData.first_name,
-                                    lastName: userData.last_name,
-                                    type: "export",
-                                    geojson: JSON.stringify(geojson),
-                                    app: app
+                            }
+                        ]
+                    })
+                    popup.then(function (res) {
+                        if (res) {
+                            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                            if (!re.test(res)) {
+                                $ionicPopup.alert({
+                                    title: $translate.instant('ATTENZIONE'),
+                                    subTitle: $translate.instant("Inserisci un'email valida per continuare")
+                                }).then(function () {
+                                    $scope.data.email = res;
+                                    vm.exportTrack();
                                 });
+                            }
+                            else {
+                                MapService.setItemInLocalStorage("$wm_export_email", res);
+                                MapService.getUserTrackGeoJSON(params.id).then(function (geojson) {
+                                    var url = 'https://api.webmapp.it/services/share.php';
 
-                                currentRequest
-                                    .then(function (data) {
-                                        console.log(data)
-                                        return;
-                                    }).catch(function (error) {
-                                        console.warn(error);
-                                        return;
+                                    var app = CONFIG.OPTIONS.title;
+                                    if (CONFIG.MAIN) {
+                                        app = CONFIG.MAIN.OPTIONS.title + " - " + app;
+                                    }
+
+                                    var currentRequest = Communication.callAPI(url, {
+                                        to: res,
+                                        type: "export",
+                                        geojson: JSON.stringify(geojson),
+                                        app: app
                                     });
-                            }).catch(function (err) {
-                                console.warn(err);
-                            });
-                        } else {
-                            vm.exportTrack();
+
+                                    currentRequest
+                                        .then(function (data) {
+                                            console.log(data)
+                                            return;
+                                        }).catch(function (error) {
+                                            console.warn(error);
+                                            return;
+                                        });
+                                }).catch(function (err) {
+                                    console.warn(err);
+                                });
+                            }
                         }
                     });
                 }
+
+                MapService.getItemFromLocalStorage("$wm_export_email").then(function (data) {
+                    if (data.data) {
+                        $scope.data.email = data.data;
+                    }
+                    showPopup();
+                }).catch(function () {
+                    showPopup();
+                });
+
+
             };
 
             vm.editTrack = function () {
@@ -413,7 +452,7 @@ angular.module('webmapp')
                     };
 
                     var formatDistance = function (distance) {
-                        return distance ? ((distance / 1000).toFixed(1) + 'km') : '0km';
+                        return distance ? ((distance / 1000).toFixed(1).replace(".", ",") + 'km') : '0km';
                     };
 
                     var formatSpeed = function (speed) {
