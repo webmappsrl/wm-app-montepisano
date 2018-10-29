@@ -157,12 +157,14 @@ angular.module('webmapp')
          * @param {number} long
          */
         function centerOnCoordsWithoutZoomEvent(lat, long) {
-            var currentZoom = MapService.getZoom();
-            if (currentZoom < CONFIG.MAP.maxZoom) {
-                state.skipZoomEvent = true;
-            }
+            if (MapService.hasMap()) {
+                var currentZoom = MapService.getZoom();
+                if (currentZoom < CONFIG.MAP.maxZoom) {
+                    state.skipZoomEvent = true;
+                }
 
-            MapService.centerOnCoords(lat, long);
+                MapService.centerOnCoords(lat, long);
+            }
         };
 
         /**
@@ -559,55 +561,57 @@ angular.module('webmapp')
                 $rootScope.$emit("geolocationState-changed", geolocationState);
             }
 
-            if (!MapService.isInBoundingBox(lat, long)) {
-                state.lastPosition = null;
-                state.isOutsideBoundingBox = true;
-                $ionicPopup.alert({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa")
-                });
-                if (recordingState.isActive) {
-                    geolocationService.stopRecording();
-                }
-                geolocationService.disable();
-                return;
-            }
-
-            if (geolocationState.isRotating && bearing !== false) {
-                if (speed > constants.minSpeedForGpsBearing) {
-                    if (!state.useGpsBearing) { //first valid position: keep compass
-                        state.useGpsBearing = true;
+            if (MapService.hasMap()) {
+                if (!MapService.isInBoundingBox(lat, long)) {
+                    state.lastPosition = null;
+                    state.isOutsideBoundingBox = true;
+                    $ionicPopup.alert({
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa")
+                    });
+                    if (recordingState.isActive) {
+                        geolocationService.stopRecording();
                     }
-                    else { //valid position confirmation: change to gps
-                        MapService.togglePositionIcon("locationIconArrow");
-                        if (state.orientationWatch) {
-                            state.orientationWatch.clearWatch();
-                            delete state.orientationWatch;
-                            state.orientationWatch = null;
-                        }
-                        MapService.animateBearing(-bearing, 600);
-                        state.lastHeading = -bearing;
-                        $rootScope.$emit("heading-changed", state.lastHeading);
+                    geolocationService.disable();
+                    return;
+                }
 
+                if (geolocationState.isRotating && bearing !== false) {
+                    if (speed > constants.minSpeedForGpsBearing) {
+                        if (!state.useGpsBearing) { //first valid position: keep compass
+                            state.useGpsBearing = true;
+                        }
+                        else { //valid position confirmation: change to gps
+                            MapService.togglePositionIcon("locationIconArrow");
+                            if (state.orientationWatch) {
+                                state.orientationWatch.clearWatch();
+                                delete state.orientationWatch;
+                                state.orientationWatch = null;
+                            }
+                            MapService.animateBearing(-bearing, 600);
+                            state.lastHeading = -bearing;
+                            $rootScope.$emit("heading-changed", state.lastHeading);
+
+                            if (state.rotationSwitchTimeout) {
+                                clearTimeout(state.rotationSwitchTimeout);
+                            }
+                            state.rotationSwitchTimeout = setTimeout(function () {
+                                enableCompassRotation();
+                                MapService.togglePositionIcon("locationIcon");
+
+                                state.useGpsBearing = false;
+
+                                delete state.rotationSwitchTimeout;
+                                state.rotationSwitchTimeout = null;
+                            }, constants.compassRotationTimeout);
+                        }
+                    }
+                    else {
                         if (state.rotationSwitchTimeout) {
-                            clearTimeout(state.rotationSwitchTimeout);
+                            MapService.animateBearing(-bearing, 600);
+                            state.lastHeading = -bearing;
+                            $rootScope.$emit("heading-changed", state.lastHeading);
                         }
-                        state.rotationSwitchTimeout = setTimeout(function () {
-                            enableCompassRotation();
-                            MapService.togglePositionIcon("locationIcon");
-
-                            state.useGpsBearing = false;
-
-                            delete state.rotationSwitchTimeout;
-                            state.rotationSwitchTimeout = null;
-                        }, constants.compassRotationTimeout);
-                    }
-                }
-                else {
-                    if (state.rotationSwitchTimeout) {
-                        MapService.animateBearing(-bearing, 600);
-                        state.lastHeading = -bearing;
-                        $rootScope.$emit("heading-changed", state.lastHeading);
                     }
                 }
             }
@@ -617,92 +621,94 @@ angular.module('webmapp')
             }
 
             if (doCenter) {
-                MapService.drawPosition(position);
-                if (geolocationState.isFollowing) {
-                    centerOnCoordsWithoutZoomEvent(lat, long);
-                }
+                if (MapService.hasMap()) {
+                    MapService.drawPosition(position);
+                    if (geolocationState.isFollowing) {
+                        centerOnCoordsWithoutZoomEvent(lat, long);
+                    }
 
-                if (recordingState.isActive && !recordingState.isPaused) {
-                    if (false && realTimeTracking.enabled && vm.userData.ID) {
-                        // vm.positionsToSend.push({
-                        //     lat: lat,
-                        //     lng: long,
-                        //     altitude: altitude,
-                        //     heading: position.coords.heading,
-                        //     speed: position.coords.speed,
-                        //     timestamp: position.timestamp
-                        // });
+                    if (recordingState.isActive && !recordingState.isPaused) {
+                        if (false && realTimeTracking.enabled && vm.userData.ID) {
+                            // vm.positionsToSend.push({
+                            //     lat: lat,
+                            //     lng: long,
+                            //     altitude: altitude,
+                            //     heading: position.coords.heading,
+                            //     speed: position.coords.speed,
+                            //     timestamp: position.timestamp
+                            // });
 
-                        realTimeTracking.positionsToSend.push([
-                            long,
-                            lat,
-                            altitude
-                            // ,
-                            // position.timestamp,
-                            // position.coords.speed,
-                            // position.coords.heading
-                        ]);
+                            realTimeTracking.positionsToSend.push([
+                                long,
+                                lat,
+                                altitude
+                                // ,
+                                // position.timestamp,
+                                // position.coords.speed,
+                                // position.coords.heading
+                            ]);
 
-                        if (realTimeTracking.positionsToSend.length >= realTimeTracking.minPositionsToSend) {
-                            var currentRequest = Communication.callAPI(realTimeTracking.url, {
-                                type: "FeatureCollection",
-                                features: [{
-                                    type: "Feature",
-                                    properties: {
-                                        type: "tracking",
-                                        app: realTimeTracking.appUrl,
-                                        routeId: vm.routeId,
-                                        trackId: vm.stopNavigationUrlParams.id,
-                                        email: vm.userData.user_email,
-                                        firstName: vm.userData.first_name,
-                                        lastName: vm.userData.last_name
-                                    },
-                                    geometry: {
-                                        type: "LineString",
-                                        coordinates: realTimeTracking.positionsToSend
-                                    }
-                                }]
-                            });
+                            if (realTimeTracking.positionsToSend.length >= realTimeTracking.minPositionsToSend) {
+                                var currentRequest = Communication.callAPI(realTimeTracking.url, {
+                                    type: "FeatureCollection",
+                                    features: [{
+                                        type: "Feature",
+                                        properties: {
+                                            type: "tracking",
+                                            app: realTimeTracking.appUrl,
+                                            routeId: vm.routeId,
+                                            trackId: vm.stopNavigationUrlParams.id,
+                                            email: vm.userData.user_email,
+                                            firstName: vm.userData.first_name,
+                                            lastName: vm.userData.last_name
+                                        },
+                                        geometry: {
+                                            type: "LineString",
+                                            coordinates: realTimeTracking.positionsToSend
+                                        }
+                                    }]
+                                });
 
-                            currentRequest
-                                .then(function () {
-                                    realTimeTracking.positionsToSend = [];
-                                    return;
-                                },
-                                    function (error) {
+                                currentRequest
+                                    .then(function () {
+                                        realTimeTracking.positionsToSend = [];
                                         return;
-                                    });
+                                    },
+                                        function (error) {
+                                            return;
+                                        });
+                            }
                         }
-                    }
 
-                    if (trackRecordingEnabled && recordingState.isRecordingPolyline) {
-                        MapService.updateUserPolyline([lat, long, altitude]);
-                    }
+                        if (trackRecordingEnabled && recordingState.isRecordingPolyline) {
+                            MapService.updateUserPolyline([lat, long, altitude]);
+                        }
 
-                    recordingState.currentSpeedPositions.push({
-                        lat: lat,
-                        long: long,
-                        altitude: altitude,
-                        timestamp: position.time ? position.time : Date.now()
-                    });
-
-                    if (recordingState.firstPositionSet) {
-                        updateNavigationValues(lat, long);
-                    } else {
-                        recordingState.firstPositionSet = true;
-                    }
-
-                    if (recordingState.currentTrack) {
-                        handleToast(lat, long);
-                    }
-
-                    try {
-                        MapService.triggerNearestPopup({
+                        recordingState.currentSpeedPositions.push({
                             lat: lat,
-                            long: long
+                            long: long,
+                            altitude: altitude,
+                            timestamp: position.time ? position.time : Date.now()
                         });
-                    } catch (e) { }
 
+                        if (recordingState.firstPositionSet) {
+                            updateNavigationValues(lat, long);
+                        } else {
+                            recordingState.firstPositionSet = true;
+                        }
+
+                        if (recordingState.currentTrack) {
+                            handleToast(lat, long);
+                        }
+
+                        try {
+                            MapService.triggerNearestPopup({
+                                lat: lat,
+                                long: long
+                            });
+                        } catch (e) { }
+
+                    }
                 }
 
                 state.lastPosition = {

@@ -1914,93 +1914,107 @@ angular.module('webmapp')
         };
 
         mapService.drawPosition = function (position) {
-            var newLatLng = new L.LatLng(position.latitude, position.longitude);
+            if (map) {
+                var newLatLng = new L.LatLng(position.latitude, position.longitude);
 
-            if (!circleLocation.position) {
-                circleLocation.icon = "locationIcon";
-                circleLocation.position = L.marker([position.latitude, position.longitude], {
-                    icon: locationIcon
-                }).addTo(map);
-            } else {
-                circleLocation.position.setLatLng(newLatLng);
-            }
-
-            if (!circleLocation.accuracy && position.accuracy > 10) {
-                circleLocation.accuracy = L.circle([position.latitude, position.longitude], {
-                    weight: 1,
-                    color: '#3E82F7',
-                    fillColor: '#3E82F7',
-                    fillOpacity: 0.2,
-                    radius: position.accuracy
-                }).addTo(map);
-            } else if (circleLocation.accuracy && position.accuracy > 10) {
-                circleLocation.accuracy.setLatLng(newLatLng);
-                circleLocation.accuracy.setRadius(position.accuracy);
-            } else if (circleLocation.accuracy && position.accuracy <= 10) {
-                try {
-                    map.removeLayer(circleLocation.accuracy);
-                } catch (e) {
-                    console.warn("Removing accuracy", e);
+                if (!circleLocation.position) {
+                    circleLocation.icon = "locationIcon";
+                    circleLocation.position = L.marker([position.latitude, position.longitude], {
+                        icon: locationIcon
+                    }).addTo(map);
+                } else {
+                    circleLocation.position.setLatLng(newLatLng);
                 }
-                circleLocation.accuracy = null;
+
+                if (!circleLocation.accuracy && position.accuracy > 10) {
+                    circleLocation.accuracy = L.circle([position.latitude, position.longitude], {
+                        weight: 1,
+                        color: '#3E82F7',
+                        fillColor: '#3E82F7',
+                        fillOpacity: 0.2,
+                        radius: position.accuracy
+                    }).addTo(map);
+                } else if (circleLocation.accuracy && position.accuracy > 10) {
+                    circleLocation.accuracy.setLatLng(newLatLng);
+                    circleLocation.accuracy.setRadius(position.accuracy);
+                } else if (circleLocation.accuracy && position.accuracy <= 10) {
+                    try {
+                        map.removeLayer(circleLocation.accuracy);
+                    } catch (e) {
+                        console.warn("Removing accuracy", e);
+                    }
+                    circleLocation.accuracy = null;
+                }
             }
         };
 
         mapService.drawAccuracy = function (accuracy) {
-            if (circleLocation && !circleLocation.accuracy && accuracy > 10) {
-                var latLng = circleLocation.position.getLatLng();
-                circleLocation.accuracy = L.circle(latLng, {
-                    weight: 1,
-                    color: '#3E82F7',
-                    fillColor: '#3E82F7',
-                    fillOpacity: 0.2,
-                    radius: accuracy
-                }).addTo(map);
-            }
-            else if (circleLocation && circleLocation.accuracy && accuracy > 10) {
-                circleLocation.accuracy.setRadius(accuracy);
-            }
-            else if (circleLocation && circleLocation.accuracy && accuracy <= 10) {
-                try {
-                    map.removeLayer(circleLocation.accuracy);
-                } catch (e) {
-                    console.warn("Removing accuracy", e);
+            if (map) {
+                if (circleLocation && !circleLocation.accuracy && accuracy > 10) {
+                    var latLng = circleLocation.position.getLatLng();
+                    circleLocation.accuracy = L.circle(latLng, {
+                        weight: 1,
+                        color: '#3E82F7',
+                        fillColor: '#3E82F7',
+                        fillOpacity: 0.2,
+                        radius: accuracy
+                    }).addTo(map);
                 }
-                circleLocation.accuracy = null;
+                else if (circleLocation && circleLocation.accuracy && accuracy > 10) {
+                    circleLocation.accuracy.setRadius(accuracy);
+                }
+                else if (circleLocation && circleLocation.accuracy && accuracy <= 10) {
+                    try {
+                        map.removeLayer(circleLocation.accuracy);
+                    } catch (e) {
+                        console.warn("Removing accuracy", e);
+                    }
+                    circleLocation.accuracy = null;
+                }
             }
         };
 
         mapService.togglePositionIcon = function (icon) {
-            if (icon !== circleLocation.icon) {
-                if (circleLocation.icon === "locationIcon") {
-                    circleLocation.icon = "locationIconArrow";
-                    circleLocation.position.setIcon(locationIconArrow);
-                } else {
-                    circleLocation.icon = "locationIcon";
-                    circleLocation.position.setIcon(locationIcon);
+            if (map) {
+                if (icon !== circleLocation.icon) {
+                    if (circleLocation.icon === "locationIcon") {
+                        circleLocation.icon = "locationIconArrow";
+                        circleLocation.position.setIcon(locationIconArrow);
+                    } else {
+                        circleLocation.icon = "locationIcon";
+                        circleLocation.position.setIcon(locationIcon);
+                    }
                 }
             }
         };
 
         mapService.removePosition = function () {
-            if (circleLocation.position !== null) {
-                map.removeLayer(circleLocation.position);
-                circleLocation.position = null;
-            }
-            if (circleLocation.accuracy !== null) {
-                map.removeLayer(circleLocation.accuracy);
-                circleLocation.accuracy = null;
+            if (map) {
+                if (circleLocation.position !== null) {
+                    map.removeLayer(circleLocation.position);
+                    circleLocation.position = null;
+                }
+                if (circleLocation.accuracy !== null) {
+                    map.removeLayer(circleLocation.accuracy);
+                    circleLocation.accuracy = null;
+                }
             }
         };
 
         mapService.isInBoundingBox = function (lat, long) {
-            var bounds = new L.latLngBounds(
-                new L.latLng(mapConf.bounds.southWest),
-                new L.latLng(mapConf.bounds.northEast));
+            // If !Multimap
+            if (map) {
+                var bounds = new L.latLngBounds(
+                    new L.latLng(mapConf.bounds.southWest),
+                    new L.latLng(mapConf.bounds.northEast));
 
-            return bounds.contains(
-                new L.latLng(lat, long)
-            );
+                return bounds.contains(
+                    new L.latLng(lat, long)
+                );
+            }
+            else {
+                return true;
+            }
         };
 
         mapService.precacheOverlaysData = function () {
@@ -2033,6 +2047,15 @@ angular.module('webmapp')
                 }
             }
         };
+
+        mapService.hasMap = function () {
+            if (map) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
 
         mapService.initialize = function () {
             if (Utils.isBrowser()) {

@@ -28,6 +28,7 @@ angular.module('webmapp')
         CONFIG,
         Auth,
         Communication,
+        GeolocationService,
         MapService,
         Offline,
         Utils
@@ -270,6 +271,38 @@ angular.module('webmapp')
             });
         };
 
+        /**
+         * @description
+         * Update the packages start point to order the routes
+         * Emit the updated lists
+         *
+         * @event packages-updated
+         */
+        var getRoutePoint = function () {
+            var baseUrl = communicationConf.baseUrl.replace(/http(s)?:\/\//, "");
+            var url = "https://api.webmapp.it/a/" + baseUrl + "geojson/route_index.geojson";
+            Communication.getJSON(url).then(function (data) {
+                for (var i in data.features) {
+                    var id = data.features[i].properties.id;
+
+                    if (packages[id] && data.features[i].geometry && data.features[i].geometry.coordinates && data.features[i].geometry.coordinates.length === 2) {
+                        packages[id].startPoi = {
+                            lat: data.features[i].geometry.coordinates[1],
+                            long: data.features[i].geometry.coordinates[0]
+                        }
+                    }
+                }
+
+                $rootScope.$emit('packages-updated', {
+                    packages: packages,
+                    loading: asyncRoutes > 0
+                });
+                localStorage.$wm_packages = JSON.stringify(packages);
+            }, function (err) {
+                console.warn(err);
+            });
+        };
+
         var getTaxonomyTranslated = function (taxonomyType, id, lang) {
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '/' + id + '?lang=' + lang)
                 .then(function (data) {
@@ -325,6 +358,7 @@ angular.module('webmapp')
                     }
 
                     mergePackages(data);
+                    getRoutePoint();
 
                     asyncRoutes = 0;
                     asyncRouteTranslations = 0;
@@ -346,12 +380,12 @@ angular.module('webmapp')
                     }
 
                     localStorage.$wm_packages = JSON.stringify(packages);
-                },
-                    function (err) {
-                        if (!packages) {
-                            console.warn("No routes available. Restart the app with an open connection");
-                        }
-                    });
+                }, function (err) {
+                    getRoutePoint();
+                    if (!packages) {
+                        console.warn("No routes available. Restart the app with an open connection");
+                    }
+                });
         };
 
         /**
@@ -740,6 +774,10 @@ angular.module('webmapp')
          *      the id of the pack to open
          */
         packageService.openPackage = function (packId) {
+            if (GeolocationService.isActive()) {
+                GeolocationService.disable();
+            }
+
             var basePackUrl = Offline.getOfflineMhildBasePathById(packId);
 
             Communication.getLocalFile(basePackUrl + 'config.json')
