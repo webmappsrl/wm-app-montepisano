@@ -2,6 +2,7 @@ angular.module('webmapp')
 
     .controller('DetailController', function DetailController(
         $cordovaSocialSharing,
+        $ionicLoading,
         $ionicModal,
         $ionicPopup,
         $ionicSlideBoxDelegate,
@@ -147,13 +148,8 @@ angular.module('webmapp')
 
         function fitDataInView(data) {
             setTimeout(function () {
-                if (fitView.centerOnPoint) {
-                    MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
-                }
-                else {
-                    MapService.centerOnFeature(data);
-                }
-            }, 1000);
+                MapService.centerOnFeature(data);
+            }, 2000);
         };
 
         if (trackRecordingEnabled) {
@@ -290,6 +286,10 @@ angular.module('webmapp')
                                         app = CONFIG.MAIN.OPTIONS.title + " - " + app;
                                     }
 
+                                    $ionicLoading.show({
+                                        template: '<ion-spinner></ion-spinner>'
+                                    });
+
                                     var currentRequest = Communication.callAPI(url, {
                                         to: res,
                                         type: "export",
@@ -299,10 +299,18 @@ angular.module('webmapp')
 
                                     currentRequest
                                         .then(function (data) {
-                                            console.log(data)
+                                            $ionicPopup.alert({
+                                                title: $translate.instant("ATTENZIONE"),
+                                                template: $translate.instant("Traccia esportata con successo")
+                                            });
+                                            $ionicLoading.hide();
                                             return;
                                         }).catch(function (error) {
-                                            console.warn(error);
+                                            $ionicPopup.alert({
+                                                title: $translate.instant("ATTENZIONE"),
+                                                template: $translate.instant("Si è verificato un errore, riprova")
+                                            });
+                                            $ionicLoading.hide();
                                             return;
                                         });
                                 }).catch(function (err) {
@@ -960,7 +968,7 @@ angular.module('webmapp')
         );
 
         registeredEvents.push(
-            $rootScope.$on('map-resize', function () {
+            $scope.$on('$ionicView.afterEnter', function () {
                 if (fitView.ready && fitView.data) {
                     fitDataInView(fitView.data);
                 }
