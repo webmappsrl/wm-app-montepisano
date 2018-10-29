@@ -2,6 +2,7 @@ angular.module('webmapp')
 
     .controller('DetailController', function DetailController(
         $cordovaSocialSharing,
+        $ionicLoading,
         $ionicModal,
         $ionicPopup,
         $ionicSlideBoxDelegate,
@@ -285,6 +286,10 @@ angular.module('webmapp')
                                         app = CONFIG.MAIN.OPTIONS.title + " - " + app;
                                     }
 
+                                    $ionicLoading.show({
+                                        template: '<ion-spinner></ion-spinner>'
+                                    });
+
                                     var currentRequest = Communication.callAPI(url, {
                                         to: res,
                                         type: "export",
@@ -294,10 +299,18 @@ angular.module('webmapp')
 
                                     currentRequest
                                         .then(function (data) {
-                                            console.log(data)
+                                            $ionicPopup.alert({
+                                                title: $translate.instant("ATTENZIONE"),
+                                                template: $translate.instant("Traccia esportata con successo")
+                                            });
+                                            $ionicLoading.hide();
                                             return;
                                         }).catch(function (error) {
-                                            console.warn(error);
+                                            $ionicPopup.alert({
+                                                title: $translate.instant("ATTENZIONE"),
+                                                template: $translate.instant("Si è verificato un errore, riprova")
+                                            });
+                                            $ionicLoading.hide();
                                             return;
                                         });
                                 }).catch(function (err) {
