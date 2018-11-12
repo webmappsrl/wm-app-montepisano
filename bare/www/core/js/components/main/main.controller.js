@@ -955,7 +955,6 @@ angular.module('webmapp')
             }
 
             if (CONFIG.OPTIONS.mapLogoUrl) {
-                console.log("ok")
                 vm.mapLogoUrl = CONFIG.OPTIONS.mapLogoUrl;
 
                 var updateLogo = function (url) {
@@ -974,11 +973,8 @@ angular.module('webmapp')
                                     base64: vm.mapLogoUrl
                                 }
                             ));
-
-                            console.log("updated")
                         }
                     }, function (err) {
-                        console.log("error download")
                     });
                 };
 
@@ -989,7 +985,6 @@ angular.module('webmapp')
                     }
                     else {
                         vm.mapLogoUrl = data.base64;
-                        console.log("cached")
                     }
                 }, function (err) {
                     updateLogo(CONFIG.OPTIONS.mapLogoUrl);
