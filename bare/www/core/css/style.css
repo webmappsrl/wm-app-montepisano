@@ -2782,7 +2782,8 @@ div.leaflet-top.leaflet-right {
 .leaflet-bar,
 .coords-block,
 .coords-expander,
-.report-control {
+.report-control,
+#map-logo {
   display: none; }
   .map-page .leaflet-bar,
   .map-search .leaflet-bar, .map-page
@@ -2794,7 +2795,10 @@ div.leaflet-top.leaflet-right {
   .coords-expander, .map-page
   .report-control,
   .map-search
-  .report-control {
+  .report-control, .map-page
+  #map-logo,
+  .map-search
+  #map-logo {
     display: block; }
 
 .leaflet-control-attribution {
