@@ -2727,7 +2727,7 @@ div.leaflet-top.leaflet-right {
   position: absolute;
   right: 37px;
   bottom: 24px;
-  z-index: 400;
+  z-index: 799;
   font-size: 20px;
   text-align: center; }
   .coords-block > span {
@@ -2748,6 +2748,20 @@ div.leaflet-top.leaflet-right {
     color: inherit; }
   .coords-block .icon {
     vertical-align: middle; }
+
+#map-logo {
+  position: absolute;
+  bottom: 20px;
+  width: 60vw;
+  z-index: 600;
+  left: 20vw;
+  opacity: 0.75; }
+  #map-logo div {
+    width: auto;
+    margin: 0 auto; }
+    #map-logo div img {
+      max-width: 60vw;
+      max-height: 10vh; }
 
 .start-navigation {
   height: 45px;
