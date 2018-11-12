@@ -1,11 +1,13 @@
 angular.module('webmapp')
     .run(function (
         $ionicPlatform,
-        $ionicPopup,
+        $ionicModal,
         $rootScope,
         $state,
         $translate,
+        Communication,
         CONFIG,
+        MapService,
         Offline,
         Utils) {
         $rootScope.COLORS = CONFIG.STYLE;
@@ -46,6 +48,39 @@ angular.module('webmapp')
         $ionicPlatform.ready(function () {
             if (window.StatusBar) {
                 StatusBar.styleDefault();
+            }
+
+            if (CONFIG.OPTIONS.warningMessageUrl) {
+                var warningModalScope = $rootScope.$new(),
+                    warningModal;
+
+                Utils.createModal('core/js/modals/warningModal.html', {
+                    backdropClickToClose: true,
+                    hardwareBackButtonClose: false
+                }, warningModalScope).then(function (modal) {
+                    warningModal = modal;
+                    warningModal.show();
+                });
+
+                warningModalScope.vm = {};
+                warningModalScope.vm.hide = function () {
+                    warningModal.hide();
+                };
+
+                var updateWarningBody = function (url) {
+                    $.get(url + "?ts=" + Date.now()).then(function (response) {
+                        warningModalScope.vm.body = response
+                    }, function (err) {
+                        warningModalScope.vm.hide();
+                    });
+                };
+
+                MapService.getItemFromLocalStorage("$wm_warningBody").then(function (warning) {
+                    warningModalScope.vm.body = JSON.parse(warning.data);
+                    updateWarningBody(CONFIG.OPTIONS.warningMessageUrl);
+                }, function (err) {
+                    updateWarningBody(CONFIG.OPTIONS.warningMessageUrl);
+                });
             }
         });
 

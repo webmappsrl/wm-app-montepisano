@@ -449,6 +449,8 @@ ion-slide.slider-slide {
 .loading-spinner {
   text-align: center;
   width: 100%; }
+  .loading-spinner.small-margin {
+    margin-top: 10%; }
 
 .search-spinner {
   position: relative;
@@ -3449,6 +3451,13 @@ button.popup-close {
       font-size: 15px; }
   .modal-tappa-poi .tappa-poi-list .event-list-item {
     color: #80181e; }
+
+/* Waarning modal */
+.warning-modal-close {
+  width: fit-content;
+  text-transform: uppercase;
+  margin: 0 auto;
+  padding: 10px 20px; }
 
 /* MODAL DOWNLOAD */
 ion-modal-view.modal-download {

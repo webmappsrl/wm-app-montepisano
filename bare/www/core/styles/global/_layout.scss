@@ -1,6 +1,9 @@
 .loading-spinner {
     text-align: center;
     width: 100%;
+    &.small-margin {
+        margin-top: 10%;
+    }
 }
 
 .search-spinner {

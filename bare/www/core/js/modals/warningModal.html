@@ -1,0 +1,19 @@
+<!-- TODO: For image only, add class  modal-details-gallery - for table only add modal-details-table -->
+<ion-modal-view class="modal-mappalo modal-accessibility">
+    <ion-content ng-style="{
+       'background': COLORS.global.background
+    }">
+        <div class="modal-content">
+            <div ng-if="vm.body" compile="vm.body"></div>
+            <div ng-if="!vm.body" class="loading-spinner small-margin">
+                <ion-spinner></ion-spinner>
+            </div>
+            <div ng-if="vm.body" ng-click="vm.hide()" class="warning-modal-close" ng-style="{
+                'background': COLORS.mainBar.background,
+                'color': COLORS.mainBar.color
+            }">
+                OK
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>
