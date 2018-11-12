@@ -575,12 +575,13 @@ ion-content div.static-content.card-content {
 ion-content.fullView {
   padding: 0;
   margin: 0; }
-  ion-content.fullView .custom-page-padding {
-    padding: 0 10px;
+  ion-content.fullView .custom-page-limited-width {
     margin: 0 auto; }
+  ion-content.fullView .custom-page-padding {
+    padding: 0 10px; }
 
 @media screen and (min-width: 768px) {
-  .custom-page-padding {
+  .custom-page-limited-width {
     width: 500px; } }
 
 /**
