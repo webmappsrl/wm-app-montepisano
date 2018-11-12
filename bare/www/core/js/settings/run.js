@@ -1,11 +1,9 @@
 angular.module('webmapp')
     .run(function (
         $ionicPlatform,
-        $ionicModal,
         $rootScope,
         $state,
         $translate,
-        Communication,
         CONFIG,
         MapService,
         Offline,
@@ -60,26 +58,29 @@ angular.module('webmapp')
                 }, warningModalScope).then(function (modal) {
                     warningModal = modal;
                     warningModal.show();
-                });
 
-                warningModalScope.vm = {};
-                warningModalScope.vm.hide = function () {
-                    warningModal.hide();
-                };
+                    warningModalScope.vm = {};
+                    warningModalScope.vm.hide = function () {
+                        warningModal.hide();
+                    };
 
-                var updateWarningBody = function (url) {
-                    $.get(url + "?ts=" + Date.now()).then(function (response) {
-                        warningModalScope.vm.body = response
+                    var updateWarningBody = function (url) {
+                        $.get(url + "?ts=" + Date.now()).then(function (response) {
+                            warningModalScope.vm.body = response;
+                            MapService.setItemInLocalStorage("$wm_warningBody", JSON.stringify(warningModalScope.vm.body));
+                        }, function () {
+                            if (!warningModalScope.vm.body) {
+                                warningModalScope.vm.hide();
+                            }
+                        });
+                    };
+
+                    MapService.getItemFromLocalStorage("$wm_warningBody").then(function (warning) {
+                        warningModalScope.vm.body = JSON.parse(warning.data);
+                        updateWarningBody(CONFIG.OPTIONS.warningMessageUrl);
                     }, function (err) {
-                        warningModalScope.vm.hide();
+                        updateWarningBody(CONFIG.OPTIONS.warningMessageUrl);
                     });
-                };
-
-                MapService.getItemFromLocalStorage("$wm_warningBody").then(function (warning) {
-                    warningModalScope.vm.body = JSON.parse(warning.data);
-                    updateWarningBody(CONFIG.OPTIONS.warningMessageUrl);
-                }, function (err) {
-                    updateWarningBody(CONFIG.OPTIONS.warningMessageUrl);
                 });
             }
         });
