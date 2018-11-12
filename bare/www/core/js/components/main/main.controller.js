@@ -958,7 +958,7 @@ angular.module('webmapp')
                 vm.mapLogoUrl = CONFIG.OPTIONS.mapLogoUrl;
 
                 var updateLogo = function (url) {
-                    Communication.get(url).then(function (response) {
+                    Communication.get(url + "?ts=" + Date.now()).then(function (response) {
                         var urlCreator = window.URL || window.webkitURL;
 
                         vm.mapLogoUrl = urlCreator.createObjectURL(response);
@@ -974,18 +974,14 @@ angular.module('webmapp')
                                 }
                             ));
                         }
-                    }, function (err) {
+                    }, function () {
                     });
                 };
 
                 MapService.getItemFromLocalStorage("$wm_mapLogo").then(function (saved) {
                     var data = JSON.parse(saved.data);
-                    if (CONFIG.OPTIONS.mapLogoUrl !== data.url) {
-                        updateLogo(CONFIG.OPTIONS.mapLogoUrl);
-                    }
-                    else {
-                        vm.mapLogoUrl = data.base64;
-                    }
+                    vm.mapLogoUrl = data.base64;
+                    updateLogo(CONFIG.OPTIONS.mapLogoUrl);
                 }, function (err) {
                     updateLogo(CONFIG.OPTIONS.mapLogoUrl);
                 });
