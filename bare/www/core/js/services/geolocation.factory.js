@@ -1104,8 +1104,10 @@ angular.module('webmapp')
                     return BackgroundGeolocation.removeAllListeners(event);
                 });
 
-                turnOffRotationAndFollow();
-                MapService.removePosition();
+                if (MapService.hasMap()) {
+                    turnOffRotationAndFollow();
+                    MapService.removePosition();
+                }
                 BackgroundGeolocation.stop();
                 state.reset();
                 recordingState.reset();
