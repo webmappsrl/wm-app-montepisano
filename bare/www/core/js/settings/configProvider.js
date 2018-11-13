@@ -30,7 +30,7 @@ angular.module('webmapp')
             var retValue;
             var options = {
                 method: 'GET',
-                url: url,
+                url: url + "?ts=" + Date.now(),
                 dataType: 'json',
                 // headers: {
                 //     'Access-Control-Allow-Origin': '*'
@@ -54,16 +54,15 @@ angular.module('webmapp')
 
         if (!!localStorage.$wm_mhildConf) {
             this.MAIN = GENERAL_CONFIG;
+            var version = config.VERSION;
             if (this.MAIN.INCLUDE && this.MAIN.INCLUDE.url) {
-                var url = this.MAIN.INCLUDE.url;
-                if (url.substring(0, 4) !== "http") {
-                    url = this.MAIN.COMMUNICATION.baseUrl + url;
-                }
-                var mainInclude = localStorage.getItem(this.MAIN.INCLUDE.url) ? JSON.parse(localStorage.getItem(this.MAIN.INCLUDE.url)) : {};
+                var mainInclude = localStorage.getItem("$wm_config_json") ? JSON.parse(localStorage.getItem("$wm_config_json")) : {};
                 this.MAIN = angular.extend(this.MAIN, mainInclude);
+                this.MAIN.VERSION = version;
                 // console.log(this.MAIN, mainInclude);
             }
             config = angular.extend(this, JSON.parse(localStorage.$wm_mhildConf));
+            config.VERSION = version;
         }
 
         var mhildBaseUrl;
@@ -104,7 +103,7 @@ angular.module('webmapp')
             config.VERSION = version;
         }
 
-        if (window.cordova && config.NAVIGATION && config.NAVIGATION.enableTrackRecording) {
+        if (window.cordova && (config.NAVIGATION && config.NAVIGATION.enableTrackRecording) || (config.MAIN && config.MAIN.NAVIGATION && config.MAIN.NAVIGATION.enableTrackRecording)) {
             config.OVERLAY_LAYERS.push({
                 id: "userTracks",
                 label: "I miei percorsi",
@@ -121,7 +120,7 @@ angular.module('webmapp')
             $ionicPopup,
             $translate
         ) {
-            if (warnings > 0 && !localStorage.offlineMode) {
+            if (warnings > 0 && !localStorage.offlineMode && !localStorage.$wm_mhildConf) {
                 $ionicPopup.alert({
                     title: $translate.instant("ATTENZIONE"),
                     template: $translate.instant("C'è stato un problema di comunicazione con il server: i dati potrebbero non essere aggiornati"),
