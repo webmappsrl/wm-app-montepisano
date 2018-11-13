@@ -371,7 +371,7 @@ angular.module('webmapp')
                     BackgroundGeolocation.stop();
                     BackgroundGeolocation.start();
                     break;
-                case 2: default:
+                case 2:
                     console.warn("Geolocation unavailable");
                     $ionicPopup.alert({
                         title: $translate.instant("ATTENZIONE"),
@@ -382,6 +382,8 @@ angular.module('webmapp')
                         geolocationService.stopRecording();
                     }
                     geolocationService.disable();
+                    break;
+                default:
                     break;
             }
         };

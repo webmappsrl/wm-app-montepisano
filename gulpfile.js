@@ -87,7 +87,7 @@ var argv = yargs.argv,
     config_xml = '',
     instance_name = 'default';
 
-gulp.task('build', ['create', 'update', 'post-install']);
+gulp.task('build', ['create', 'update'/*, 'post-install'*/]);
 
 gulp.task('node_modules_link', function () {
     return gulp.src('bare/node_modules')
