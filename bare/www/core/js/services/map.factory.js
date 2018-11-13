@@ -1353,8 +1353,7 @@ angular.module('webmapp')
                     options = {
                         minZoom: mapConf.minZoom,
                         maxZoom: mapConf.maxZoom,
-                        // reuseTiles: true,
-                        bounds: maxBounds
+                        // bounds: maxBounds
                     };
 
                     if (typeof baseMap.tms !== undefined && baseMap.tms) {
@@ -1436,7 +1435,6 @@ angular.module('webmapp')
                     options = {
                         minZoom: mapConf.minZoom,
                         maxZoom: mapConf.maxZoom,
-                        // reuseTiles: true,
                         bounds: maxBounds
                     };
 
