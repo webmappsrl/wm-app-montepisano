@@ -27,7 +27,8 @@ angular.module('webmapp')
             offlineConf = CONFIG.OFFLINE,
             currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
             defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
-                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
+                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it'),
+            routeDefaultLang = (CONFIG.MAIN && CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual : 'it';
 
         var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
@@ -1000,7 +1001,6 @@ angular.module('webmapp')
 
             var available = false;
 
-
             if (CONFIG.MAIN && CONFIG.MAIN.LANGUAGES && (CONFIG.MAIN.LANGUAGES.actual || (CONFIG.MAIN.LANGUAGES.available && CONFIG.MAIN.LANGUAGES.available.length > 0))) {
                 available = true;
             }
@@ -1045,7 +1045,7 @@ angular.module('webmapp')
                     });
             } else {
                 url = currentOverlay.geojsonUrl;
-                if (available) {
+                if (available && routeDefaultLang !== currentLang) {
                     var split = currentOverlay.geojsonUrl.split('/');
                     url = "/languages/" + currentLang + "/" + split.pop();
                     url = split.join('/') + url;
@@ -1056,9 +1056,11 @@ angular.module('webmapp')
                 overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
                     if (available) {
                         url = currentOverlay.geojsonUrl;
-                        var split = currentOverlay.geojsonUrl.split('/');
-                        url = "/languages/" + defaultLang + "/" + split.pop();
-                        url = split.join('/') + url;
+                        if (defaultLang !== routeDefaultLang) {
+                            var split = currentOverlay.geojsonUrl.split('/');
+                            url = "/languages/" + defaultLang + "/" + split.pop();
+                            url = split.join('/') + url;
+                        }
                         if (offlineConf.resourceBaseUrl) {
                             url = offlineConf.resourceBaseUrl + url;
                         }
