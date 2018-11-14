@@ -66,13 +66,16 @@ angular.module('webmapp')
         // To let update from old version
         if (localStorage.$wm_userDownloadedPackages) {
             userDownloadedPackages = JSON.parse(localStorage.$wm_userDownloadedPackages);
-            MapService.setItemInLocalStorage("$wm_userDownloadedPackages", JSON.stringify(userDownloadedPackages));
+            if (userDownloadedPackages) {
+                MapService.setItemInLocalStorage("$wm_userDownloadedPackages", JSON.stringify(userDownloadedPackages));
+            }
             delete localStorage.$wm_userDownloadedPackages;
         }
 
         MapService.getItemFromLocalStorage("$wm_userDownloadedPackages")
             .then(function (item) {
                 userDownloadedPackages = JSON.parse(item.data);
+                $rootScope.$emit("userDownloadedPackages-updated", userDownloadedPackages);
             })
             .catch(function (err) {
                 console.warn("$wm_userDownloadedPackages: " + err.message);

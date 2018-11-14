@@ -345,15 +345,11 @@ angular.module('webmapp')
             console.log("Restarting geolocation");
             try {
                 watchInterval.clearWatch();
-            } catch (e) {
-                console.log(e);
-            }
+            } catch (e) { }
 
             try {
                 $cordovaGeolocation.clearWatch();
-            } catch (e) {
-                console.log(e);
-            }
+            } catch (e) { }
 
             /**
              * error.code === 1 => position denied
@@ -586,7 +582,10 @@ angular.module('webmapp')
                         else { //valid position confirmation: change to gps
                             MapService.togglePositionIcon("locationIconArrow");
                             if (state.orientationWatch) {
-                                state.orientationWatch.clearWatch();
+                                try {
+                                    state.orientationWatch.clearWatch();
+                                }
+                                catch (e) { }
                                 delete state.orientationWatch;
                                 state.orientationWatch = null;
                             }
@@ -1037,53 +1036,57 @@ angular.module('webmapp')
                 });
             } else {
                 if (Utils.isBrowser() && window.location.protocol === "https:") {
-                    geolocationState.isActive = true;
-                    geolocationState.isLoading = true;
-                    geolocationState.isFollowing = false;
-                    geolocationState.isRotating = false;
-                    gpsActive = true;
+                    checkGPS().then(function () {
+                        geolocationState.isActive = true;
+                        geolocationState.isLoading = true;
+                        geolocationState.isFollowing = false;
+                        geolocationState.isRotating = false;
+                        gpsActive = true;
 
-                    $rootScope.$emit("geolocationState-changed", geolocationState);
+                        $rootScope.$emit("geolocationState-changed", geolocationState);
 
-                    $cordovaGeolocation
-                        .getCurrentPosition({
-                            timeout: constants.geolocationTimeoutTime,
-                            enableHighAccuracy: true
-                        }).then(function (pos) {
-                            geolocationState.isFollowing = true;
-                            geolocationState.isLoading = false;
-                            positionCallback(pos.coords);
+                        $cordovaGeolocation
+                            .getCurrentPosition({
+                                timeout: constants.geolocationTimeoutTime,
+                                enableHighAccuracy: true
+                            }).then(function (pos) {
+                                geolocationState.isFollowing = true;
+                                geolocationState.isLoading = false;
+                                positionCallback(pos.coords);
 
-                            state.positionWatch = $cordovaGeolocation
-                                .watchPosition({
-                                    timeout: constants.geolocationTimeoutTime,
-                                    enableHighAccuracy: true
-                                });
-
-                            state.positionWatch.then(null,
-                                function (err) {
-                                    console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
-                                    $ionicPopup.alert({
-                                        title: $translate.instant("ATTENZIONE"),
-                                        template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
+                                state.positionWatch = $cordovaGeolocation
+                                    .watchPosition({
+                                        timeout: constants.geolocationTimeoutTime,
+                                        enableHighAccuracy: true
                                     });
 
-                                    geolocationService.disable();
-                                },
-                                function (position) {
-                                    positionCallback(position.coords);
+                                state.positionWatch.then(null,
+                                    function (err) {
+                                        console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
+                                        $ionicPopup.alert({
+                                            title: $translate.instant("ATTENZIONE"),
+                                            template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
+                                        });
+
+                                        geolocationService.disable();
+                                    },
+                                    function (position) {
+                                        positionCallback(position.coords);
+                                    });
+                            }, function (err) {
+                                console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
+                                $ionicPopup.alert({
+                                    title: $translate.instant("ATTENZIONE"),
+                                    template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
                                 });
-                        }, function (err) {
-                            console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
-                            $ionicPopup.alert({
-                                title: $translate.instant("ATTENZIONE"),
-                                template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
+
+                                geolocationService.disable();
                             });
 
-                            geolocationService.disable();
-                        });
-
-                    defer.resolve(geolocationState);
+                        defer.resolve(geolocationState);
+                    }, function () {
+                        defer.reject(ERRORS.GPS_PERMISSIONS_DENIED)
+                    });
                 }
                 else {
                     defer.reject(ERRORS.CORDOVA_UNAVAILABLE);
@@ -1124,9 +1127,7 @@ angular.module('webmapp')
                 try {
                     state.positionWatch.clearWatch();
                 }
-                catch (e) {
-                    console.warn(e);
-                }
+                catch (e) { }
 
                 state.reset();
                 recordingState.reset();

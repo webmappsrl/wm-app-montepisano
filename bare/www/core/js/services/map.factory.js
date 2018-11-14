@@ -1291,13 +1291,16 @@ angular.module('webmapp')
                 }
 
                 dataReady = true;
+
+                setTimeout(function () {
+                    $ionicLoading.hide();
+
+                    if (navigator.splashscreen) {
+                        navigator.splashscreen.hide();
+                    }
+                }, 500);
+
                 $rootScope.$$phase || $rootScope.$digest();
-
-                $ionicLoading.hide();
-
-                if (navigator.splashscreen) {
-                    navigator.splashscreen.hide();
-                }
             }
 
             $q.all(promises).then(function () {
