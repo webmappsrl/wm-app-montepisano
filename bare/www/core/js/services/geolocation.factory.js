@@ -53,6 +53,7 @@ angular.module('webmapp')
         //Contains all the global variables
         var state = {
             appState: 0,
+            config: {},
             isOutsideBoundingBox: false,
             lastHeading: 0,
             lastPosition: null,
@@ -284,7 +285,6 @@ angular.module('webmapp')
          * @param {*} GPSState
          */
         function GPSSettingsSwitched(GPSState) {
-            console.log("GPS state changed");
             if ((device.platform === "Android" && GPSState !== cordova.plugins.diagnostic.locationMode.LOCATION_OFF) ||
                 (device.platform === "iOS" && (GPSState === cordova.plugins.diagnostic.permissionStatus.GRANTED ||
                     GPSState === cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE))
@@ -748,7 +748,10 @@ angular.module('webmapp')
                         BackgroundGeolocation.switchMode(BackgroundGeolocation.FOREGROUND_MODE);
                     }
                 } else {
-                    BackgroundGeolocation.stop();
+                    // BackgroundGeolocation.stop();
+                    BackgroundGeolocation.configure({
+                        locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER
+                    });
                 }
             });
             BackgroundGeolocation.on('foreground', function () {
@@ -760,7 +763,10 @@ angular.module('webmapp')
 
                     deleteRecordingState();
                 } else {
-                    BackgroundGeolocation.start();
+                    BackgroundGeolocation.configure({
+                        locationProvider: BackgroundGeolocation.RAW_PROVIDER
+                    });
+                    // BackgroundGeolocation.start();
                 }
             });
         };
@@ -877,7 +883,6 @@ angular.module('webmapp')
 
             if (window.cordova) {
                 return checkStatus().then(function (isRunningInBackground) {
-
                     if (isRunningInBackground) {
                         var restored = restoreRecordingState();
 
@@ -940,26 +945,7 @@ angular.module('webmapp')
                                 MapService.drawPosition(lastLocation);
 
                                 activateBackgroundGeolocationHandlers();
-                                BackgroundGeolocation.configure({
-                                    locationProvider: BackgroundGeolocation.RAW_PROVIDER,
-                                    desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
-                                    // stationaryRadius: 25, // for DISTANCE_FILTER_PROVIDER
-                                    distanceFilter: 5, // for DISTANCE_FILTER_PROVIDER and RAW_PROVIDER
-                                    stopOnTerminate: true,
-                                    startOnBoot: false, // Android only
-                                    interval: 500, // Android only
-                                    // fastestInterval: 100, // Android only, for ACTIVITY location provider
-                                    // activitiesInterval: 10000, // Android only, for ACTIVITY location provider
-                                    // stopOnStillActivity: false, // Android only, for ACTIVITY location provider
-                                    startForeground: false, // Android only
-                                    notificationTitle: $translate.instant("Navigazione attiva"), // Android only
-                                    notificationText: "", // Android only
-                                    notificationIconColor: "#FF00FF", // Android only
-                                    activityType: "OtherNavigation", // iOS only
-                                    pauseLocationUpdates: false, // iOS only
-                                    saveBatteryOnBackground: false, // iOS only
-                                    maxLocations: 10000
-                                });
+                                BackgroundGeolocation.configure(state.BackgroundGeolocationConfig);
                                 state.appState = BackgroundGeolocation.FOREGROUND;
 
                                 checkGPS().then(function () {
@@ -994,26 +980,7 @@ angular.module('webmapp')
 
                             activateBackgroundGeolocationHandlers();
 
-                            BackgroundGeolocation.configure({
-                                locationProvider: BackgroundGeolocation.RAW_PROVIDER,
-                                desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
-                                // stationaryRadius: 25, // for DISTANCE_FILTER_PROVIDER
-                                distanceFilter: 5, // for DISTANCE_FILTER_PROVIDER and RAW_PROVIDER
-                                stopOnTerminate: true,
-                                startOnBoot: false, // Android only
-                                interval: 500, // Android only
-                                // fastestInterval: 100, // Android only, for ACTIVITY location provider
-                                // activitiesInterval: 10000, // Android only, for ACTIVITY location provider
-                                // stopOnStillActivity: false, // Android only, for ACTIVITY location provider
-                                startForeground: false, // Android only
-                                notificationTitle: $translate.instant("Navigazione attiva"), // Android only
-                                notificationText: "", // Android only
-                                notificationIconColor: "#FF00FF", // Android only
-                                activityType: "OtherNavigation", // iOS only
-                                pauseLocationUpdates: false, // iOS only
-                                saveBatteryOnBackground: false, // iOS only
-                                maxLocations: 10000
-                            });
+                            BackgroundGeolocation.configure(state.BackgroundGeolocationConfig);
 
                             BackgroundGeolocation.start();
 
@@ -1508,6 +1475,26 @@ angular.module('webmapp')
             if (window.cordova) {
                 cordova.plugins.diagnostic.registerLocationStateChangeHandler(GPSSettingsSwitched);
                 state.appState = BackgroundGeolocation.FOREGROUND;
+                state.BackgroundGeolocationConfig = {
+                    locationProvider: BackgroundGeolocation.RAW_PROVIDER,
+                    desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
+                    stationaryRadius: 25, // for DISTANCE_FILTER_PROVIDER
+                    distanceFilter: 5, // for DISTANCE_FILTER_PROVIDER and RAW_PROVIDER
+                    stopOnTerminate: true,
+                    startOnBoot: false, // Android only
+                    interval: 500, // Android only
+                    // fastestInterval: 100, // Android only, for ACTIVITY location provider
+                    // activitiesInterval: 10000, // Android only, for ACTIVITY location provider
+                    // stopOnStillActivity: false, // Android only, for ACTIVITY location provider
+                    startForeground: false, // Android only
+                    notificationTitle: $translate.instant("Navigazione attiva"), // Android only
+                    notificationText: "", // Android only
+                    notificationIconColor: "#FF00FF", // Android only
+                    activityType: "OtherNavigation", // iOS only
+                    pauseLocationUpdates: false, // iOS only
+                    saveBatteryOnBackground: false, // iOS only
+                    maxLocations: 10000
+                };
             }
         });
 
