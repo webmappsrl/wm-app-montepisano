@@ -157,10 +157,6 @@
   .vector-marker {
     margin-left: -18px!important;
     margin-top: -43px!important;
-    svg {
-      //width: 50px !important;
-      //height: 70px !important;
-    }
 
     &.vector-marker-shadow {
       &::before {
@@ -174,12 +170,7 @@
       stroke-width: 2px;
       // fill: $color-orange;
     }
-
-    .wm.icon {
-      //width: 50px !important;
-    }
   }
-
 }
 
 /* Marker icons */
@@ -201,10 +192,6 @@
   z-index: 401;
   font-size: 48px;
   color: transparentize($color-brown, 0.3);
-
-  .map-page & {
-    //display: none;
-  }
 }
 
 /* ------------------------------------ *\
@@ -230,7 +217,7 @@
       text-align: center!important;
       text-decoration: none;
       color: transparentize($color-brown,0.3);
-      vertical-align: middle!important;
+      // vertical-align: middle!important;
       outline: none !important;
       @include box-shadow(none !important);
 
@@ -268,7 +255,7 @@
   .leaflet-control-zoom-out {
     //display: table;
     font-family: 'webmapp' !important;
-    speak: none;
+    // speak: none;
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
@@ -359,7 +346,7 @@ div.leaflet-top.leaflet-right {
       width: 45px;
       height: 45px;
       font-family: 'webmapp' !important;
-      speak: none;
+      // speak: none;
       border-radius: 50%;
       font-style: normal;
       font-weight: normal;
@@ -398,9 +385,6 @@ div.leaflet-top.leaflet-right {
 
       &.fa-spinner {
         font-family: 'webmapp' !important;
-
-        &::after {
-        }
       }
     }
   }
@@ -927,9 +911,6 @@ button.popup-close {
 }
 
 .is-a-poi {
-  path {
-    // fill: #605846 !important;
-  }
   .vector-marker {
     cursor: default !important;
   }
