@@ -132,13 +132,6 @@ angular.module('webmapp')
             }
         };
 
-        Utils.createModal('core/js/modals/reportModal.html', {
-            backdropClickToClose: true,
-            hardwareBackButtonClose: true
-        }, reportScope).then(function (modal) {
-            reportModal = modal;
-        });
-
         reportScope.vm = {
             notes: "",
             picture: "",
@@ -264,25 +257,26 @@ angular.module('webmapp')
         };
 
         vm.openReportModal = function () {
-            var position = GeolocationService.getCurrentPosition();
-            if (GeolocationService.isActive() && position && position.lat && position.long) {
-                reportScope.vm.position = {
-                    lat: position.lat,
-                    long: position.long
-                };
+            Utils.goTo('report');
+            // var position = GeolocationService.getCurrentPosition();
+            // if (GeolocationService.isActive() && position && position.lat && position.long) {
+            //     reportScope.vm.position = {
+            //         lat: position.lat,
+            //         long: position.long
+            //     };
 
-                reportModal.show();
-            } else if (position === ERRORS.OUTSIDE_BOUNDING_BOX) {
-                $ionicPopup.alert({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa: la richiesta di aiuto non è disponibile.")
-                });
-            } else {
-                $ionicPopup.alert({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Devi essere localizzato per segnalare la tua posizione")
-                });
-            }
+            //     reportModal.show();
+            // } else if (position === ERRORS.OUTSIDE_BOUNDING_BOX) {
+            //     $ionicPopup.alert({
+            //         title: $translate.instant("ATTENZIONE"),
+            //         template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa: la richiesta di aiuto non è disponibile.")
+            //     });
+            // } else {
+            //     $ionicPopup.alert({
+            //         title: $translate.instant("ATTENZIONE"),
+            //         template: $translate.instant("Devi essere localizzato per segnalare la tua posizione")
+            //     });
+            // }
         };
 
         vm.hideDeactiveCentralPointer = CONFIG.OPTIONS && CONFIG.OPTIONS.hideDeactiveCentralPointer;
@@ -831,12 +825,6 @@ angular.module('webmapp')
         registeredEvents.push(
             $scope.$on('$stateChangeStart', function (e, dest) {
                 vm.showRightMenu = false;
-                // if ((dest.name === 'app.main.detaillayer' ||
-                //     dest.name === 'app.main.detailevent' ||
-                //     dest.name === 'app.main.detailulayer') &&
-                //     previousBounds === null) {
-                //     previousBounds = MapService.getBounds();
-                // }
             })
         );
 
@@ -846,16 +834,6 @@ angular.module('webmapp')
                     realState;
 
                 vm.layerState = false;
-
-                // if (currentState !== 'app.main.detaillayer' &&
-                //     currentState !== 'app.main.detailevent' &&
-                //     currentState !== 'app.main.detailulayer' &&
-                //     previousBounds) {
-                //     setTimeout(function () {
-                //         // MapService.fitBounds(previousBounds);
-                //         previousBounds = null;
-                //     }, 1250);
-                // }
 
                 if (currentState !== 'app.main.detaillayer' && $rootScope.track) {
                     delete $rootScope.track;
@@ -948,7 +926,8 @@ angular.module('webmapp')
                     currentState === 'app.main.taxonomy' ||
                     currentState === 'app.main.languages' ||
                     currentState === 'app.main.webmappInternal' ||
-                    currentState === 'app.main.attributionInternal') {
+                    currentState === 'app.main.attributionInternal' ||
+                    currentState === 'app.main.report') {
                     vm.hideMap = true;
                     vm.hasShadow = true;
                     vm.extendShadow = true;
@@ -972,7 +951,6 @@ angular.module('webmapp')
                 MapService.adjust();
             })
         );
-
 
         registeredEvents.push(
             $rootScope.$on('map-click', function () {

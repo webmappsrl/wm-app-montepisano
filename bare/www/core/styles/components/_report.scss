@@ -1,0 +1,132 @@
+.report-page {
+    ion-content {
+        padding: 10px;
+        .report__items-container {
+            .report__item {
+                margin-bottom: 10px;
+                position: relative;
+                @include box-shadow(0px 2px 5px #aaaaaa);
+                .report__item-content {
+                    width: calc(100% - 30px);
+                    .report__item-title,
+                    .report__item-subtitle {
+                        width: 100%;
+                    }
+                    .report__item-title {
+                        font-size: 25px;
+                        font-weight: bold;
+                        padding: 10px 10px 0px 15px;
+                    }
+                    .report__item-subtitle {
+                        font-size: 15px;
+                        padding: 5px 10px 5px 20px;
+                    }
+                }
+                .report__item-arrow {
+                    position: absolute;
+                    @include vertical-centering;
+                    right: 10px;
+                }
+                &:last-child {
+                    margin-bottom: 0;
+                }
+                &::after {
+                    clear: both;
+                }
+            }
+        }
+        .report__form {
+            .report__form-field {
+                margin-bottom: 15px;
+
+                label {
+                    font-size: 20px;
+                    padding-left: 5px;
+                    font-weight: bold;
+                    margin-top: 10px;
+                }
+
+                input,
+                textarea {
+                    font-size: 16px;
+                    width: 90%;
+                    margin: 5px 5%;
+                    @include box-shadow(0px 2px 5px #aaaaaa);
+                }
+                input {
+                    padding: 3px 8px;
+                }
+                textarea {
+                    padding: 10px;
+                    height: 200px;
+                    max-height: 25vh;
+                    max-width: 90%;
+                    min-width: 90%;
+                }
+
+                .image-picker {
+                    width: 90%;
+                    margin: 5px 5%;
+                    line-height: 50px;
+                    vertical-align: middle;
+                    font-size: 120%;
+
+                    .picture-pickers {
+                        width: 40%;
+                        display: inline-block;
+                        .picture-picker {
+                            display: inline;
+                            font-size: 120%;
+                        }
+                    }
+
+                    a {
+                        margin: 0 5px;
+                        font-size: 120%;
+                    }
+
+                    .image-picker-value {
+                        display: inline-block;
+                    }
+                }
+                &:last-child::after {
+                    content: "";
+                    display: block;
+                    height: 60px;
+                }
+            }
+        }
+    }
+
+    .report__send {
+        position: absolute;
+        bottom: 0;
+        width: 50%;
+        margin: 0 25%;
+        @include box-shadow(0px -2px 5px #aaaaaa);
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 25px;
+        padding: 15px;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .image-picker {
+        font-size: 100%;
+        .picture-pickers {
+            width: 50%;
+        }
+    }
+}
+
+@media screen and (min-width: 350px) and (max-width: 380px) {
+    .image-picker {
+        font-size: 105%;
+        .picture-pickers {
+            width: 45%;
+        }
+    }
+}

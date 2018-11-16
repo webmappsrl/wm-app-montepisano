@@ -2549,7 +2549,6 @@ a.item {
     text-align: center !important;
     text-decoration: none;
     color: rgba(96, 88, 70, 0.7);
-    vertical-align: middle !important;
     outline: none !important;
     -webkit-box-shadow: none !important;
     -moz-box-shadow: none !important;
@@ -2572,7 +2571,6 @@ a.item {
   .leaflet-bar .leaflet-control-zoom-in,
   .leaflet-bar .leaflet-control-zoom-out {
     font-family: 'webmapp' !important;
-    speak: none;
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
@@ -2638,7 +2636,6 @@ div.leaflet-top.leaflet-right {
     width: 45px;
     height: 45px;
     font-family: 'webmapp' !important;
-    speak: none;
     border-radius: 50%;
     font-style: normal;
     font-weight: normal;
@@ -3461,21 +3458,6 @@ button.popup-close {
   .modal-tappa-poi .tappa-poi-list .event-list-item {
     color: #80181e; }
 
-.image-picker {
-  width: 100%;
-  line-height: 50px;
-  vertical-align: middle;
-  font-size: 120%; }
-  .image-picker .report-buttons {
-    width: 40%;
-    float: left; }
-    .image-picker .report-buttons .report-button {
-      display: inline;
-      font-size: 120%; }
-  .image-picker a {
-    margin: 0 5px;
-    font-size: 120%; }
-
 /* Waarning modal */
 .warning-modal-close {
   width: fit-content;
@@ -3508,18 +3490,6 @@ ion-modal-view.modal-download {
     transform: rotate(0deg); }
   100% {
     transform: rotate(360deg); } }
-
-@media screen and (max-width: 350px) {
-  .image-picker {
-    font-size: 100%; }
-    .image-picker .report-buttons {
-      width: 50%; } }
-
-@media screen and (min-width: 350px) and (max-width: 380px) {
-  .image-picker {
-    font-size: 105%; }
-    .image-picker .report-buttons {
-      width: 45%; } }
 
 @media (min-width: 1025px) {
   .modal.modal-details-gallery {
@@ -3728,6 +3698,108 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
     height: 1.6em; }
     .buttons-reduced i {
       font-size: 1.6em; } }
+
+.report-page ion-content {
+  padding: 10px; }
+  .report-page ion-content .report__items-container .report__item {
+    margin-bottom: 10px;
+    position: relative;
+    -webkit-box-shadow: 0px 2px 5px #aaaaaa;
+    -moz-box-shadow: 0px 2px 5px #aaaaaa;
+    box-shadow: 0px 2px 5px #aaaaaa; }
+    .report-page ion-content .report__items-container .report__item .report__item-content {
+      width: calc(100% - 30px); }
+      .report-page ion-content .report__items-container .report__item .report__item-content .report__item-title,
+      .report-page ion-content .report__items-container .report__item .report__item-content .report__item-subtitle {
+        width: 100%; }
+      .report-page ion-content .report__items-container .report__item .report__item-content .report__item-title {
+        font-size: 25px;
+        font-weight: bold;
+        padding: 10px 10px 0px 15px; }
+      .report-page ion-content .report__items-container .report__item .report__item-content .report__item-subtitle {
+        font-size: 15px;
+        padding: 5px 10px 5px 20px; }
+    .report-page ion-content .report__items-container .report__item .report__item-arrow {
+      position: absolute;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 10px; }
+    .report-page ion-content .report__items-container .report__item:last-child {
+      margin-bottom: 0; }
+    .report-page ion-content .report__items-container .report__item::after {
+      clear: both; }
+  .report-page ion-content .report__form .report__form-field {
+    margin-bottom: 15px; }
+    .report-page ion-content .report__form .report__form-field label {
+      font-size: 20px;
+      padding-left: 5px;
+      font-weight: bold;
+      margin-top: 10px; }
+    .report-page ion-content .report__form .report__form-field input,
+    .report-page ion-content .report__form .report__form-field textarea {
+      font-size: 16px;
+      width: 90%;
+      margin: 5px 5%;
+      -webkit-box-shadow: 0px 2px 5px #aaaaaa;
+      -moz-box-shadow: 0px 2px 5px #aaaaaa;
+      box-shadow: 0px 2px 5px #aaaaaa; }
+    .report-page ion-content .report__form .report__form-field input {
+      padding: 3px 8px; }
+    .report-page ion-content .report__form .report__form-field textarea {
+      padding: 10px;
+      height: 200px;
+      max-height: 25vh;
+      max-width: 90%;
+      min-width: 90%; }
+    .report-page ion-content .report__form .report__form-field .image-picker {
+      width: 90%;
+      margin: 5px 5%;
+      line-height: 50px;
+      vertical-align: middle;
+      font-size: 120%; }
+      .report-page ion-content .report__form .report__form-field .image-picker .picture-pickers {
+        width: 40%;
+        display: inline-block; }
+        .report-page ion-content .report__form .report__form-field .image-picker .picture-pickers .picture-picker {
+          display: inline;
+          font-size: 120%; }
+      .report-page ion-content .report__form .report__form-field .image-picker a {
+        margin: 0 5px;
+        font-size: 120%; }
+      .report-page ion-content .report__form .report__form-field .image-picker .image-picker-value {
+        display: inline-block; }
+    .report-page ion-content .report__form .report__form-field:last-child::after {
+      content: "";
+      display: block;
+      height: 60px; }
+
+.report-page .report__send {
+  position: absolute;
+  bottom: 0;
+  width: 50%;
+  margin: 0 25%;
+  -webkit-box-shadow: 0px -2px 5px #aaaaaa;
+  -moz-box-shadow: 0px -2px 5px #aaaaaa;
+  box-shadow: 0px -2px 5px #aaaaaa;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 25px;
+  padding: 15px; }
+
+@media screen and (max-width: 350px) {
+  .image-picker {
+    font-size: 100%; }
+    .image-picker .picture-pickers {
+      width: 50%; } }
+
+@media screen and (min-width: 350px) and (max-width: 380px) {
+  .image-picker {
+    font-size: 105%; }
+    .image-picker .picture-pickers {
+      width: 45%; } }
 
 /**
  * SEARCH PAGE

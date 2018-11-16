@@ -1,0 +1,75 @@
+<ion-view class="report-page" cache-view="false" ng-controller="ReportController as vm">
+    <ion-nav-title>
+        <span>
+            {{vm.title | translate}}
+        </span>
+    </ion-nav-title>
+    <ion-nav-buttons side="left">
+        <button class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left" ng-click="vm.goBack()"></button>
+    </ion-nav-buttons>
+
+    <ion-content ng-style="{
+        'background': COLORS.global.background,
+        'color': COLORS.global.color
+    }">
+        <div ng-if="vm.selectedReport < 0" class="report__items-container">
+            <div ng-repeat="(itemKey, item) in vm.reports" ng-click="vm.selectReport(itemKey)" class="report__item" ng-style="{
+                    'background': COLORS.mainBar.background + '12'
+                }">
+                <div class="report__item-content">
+                    <div class="report__item-title">
+                        {{item.title}}
+                    </div>
+                    <div class="report__item-subtitle">
+                        {{item.excerpt}}
+                    </div>
+                </div>
+                <div class="report__item-arrow">
+                    <i class="wm-icon-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+        <div ng-if="vm.selectedReport >= 0" class="report__form">
+            <div ng-repeat="(fieldKey, field) in vm.reports[vm.selectedReport].fields" class="report__form-field">
+                <label>{{field.label}} <i class="wm-icon-help-circled" ng-if="field.help && field.help !== ''" ng-click="vm.showHelp(field.help)"></i></label>
+                <input ng-if="field.type === 'text'" type="text" placeholder="{{field.placeholder}}" ng-model="field.value" ng-change="vm.validateForm()">
+                <textarea ng-if="field.type === 'textarea'" placeholder="{{field.placeholder}}" ng-model="field.value" ng-change="vm.validateForm()"></textarea>
+                <div ng-if="field.type === 'picture'" class="image-picker">
+                    <div class="picture-pickers">
+                        <button ng-click="vm.getPicture(true, fieldKey)" ng-style="{
+                                'background': vm.colors.global.buttonsBackground,
+                                'color': vm.colors.global.buttonsColor
+                            }" class="picture-picker button">
+                            <i class="icon wm-icon-fu_camera"></i>
+                        </button>
+                        <button ng-click="vm.getPicture(false, fieldKey)" ng-style="{
+                                'background': vm.colors.global.buttonsBackground,
+                                'color': vm.colors.global.buttonsColor
+                            }" class="picture-picker button">
+                            <i class="icon wm-icon-images"></i>
+                        </button>
+                    </div>
+                    <div ng-if="field.value !== ''" class="image-picker-value">
+                        img.jpg
+                        <a ng-click="vm.resetPicture(fieldKey)">
+                            <i class="icon wm-icon-close-circled"></i>
+                        </a>
+                    </div>
+                    <div ng-if="field.value === ''" class="image-picker-value">{{"Nessuna immagine" | translate}}</div>
+                    <div ng-if="field.value !== ''" class="image-picker__img">
+                        <img ng-src="data:image/png;base64,{{field.value}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+    <div ng-if="vm.selectedReport >= 0" ng-style="{
+            'background': vm.isValid ? COLORS.global.buttonsBackground : '#aaaaaa',
+            'color': COLORS.global.buttonsColor
+        }" class="report__send" ng-class="{
+            'slide-up': vm.reportFilled,
+            'slide-down': !vm.reportFilled,
+        }" ng-click="vm.sendReport()">
+        Invia
+    </div>
+</ion-view>

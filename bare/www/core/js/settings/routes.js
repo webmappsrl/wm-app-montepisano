@@ -110,6 +110,18 @@ angular.module('webmapp')
                 }
             });
 
+        if (config.USER_COMMUNICATION && config.USER_COMMUNICATION.REPORT && config.USER_COMMUNICATION.REPORT.items && config.USER_COMMUNICATION.REPORT.items.length > 0) {
+            $stateProvider
+                .state('app.main.report', {
+                    url: '/report',
+                    views: {
+                        'inception-top': {
+                            templateUrl: basePath + 'js/components/report/report.html'
+                        }
+                    }
+                });
+        }
+
         if (config.SEARCH && config.SEARCH.active) {
             $stateProvider
                 .state('app.main.search', {
