@@ -32,15 +32,15 @@ angular.module('webmapp')
             var defer = $q.defer();
 
             $http({
-                    method: 'POST',
-                    url: url,
-                    dataType: 'json',
-                    crossDomain: true,
-                    data: data,
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                })
+                method: 'POST',
+                url: url,
+                dataType: 'json',
+                crossDomain: true,
+                data: data,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
                 .success(function (data) {
                     defer.resolve(data);
                 })
@@ -55,13 +55,13 @@ angular.module('webmapp')
             var defer = $q.defer();
 
             $http.get(url, {
-                    responseType: 'blob',
-                    headers: {
-                        'Access-Control-Allow-Origin': '*'
-                    }
-                }).success(function (data) {
-                    defer.resolve(data);
-                })
+                responseType: 'blob',
+                headers: {
+                    'Access-Control-Allow-Origin': '*'
+                }
+            }).success(function (data) {
+                defer.resolve(data);
+            })
                 .error(function (error) {
                     defer.reject(error);
                 });

@@ -344,7 +344,6 @@ div.leaflet-top.leaflet-right {
   }
 }
 
-
 .leaflet-shadow-pane {
   z-index: 0!important;
 }
@@ -485,7 +484,7 @@ div.leaflet-top.leaflet-right {
   position: absolute;
   right: 37px;
   bottom: 24px;
-  z-index: 400;
+  z-index: 799;
   font-size: 20px;
   text-align: center;
   > span {
@@ -513,6 +512,22 @@ div.leaflet-top.leaflet-right {
   }
 }
 
+#map-logo {
+  position: absolute;
+  bottom: 20px;
+  width: 60vw;
+  z-index: 600;
+  left: 20vw;
+  & div {
+    width: fit-content;
+    margin: 0 auto;
+    & img {
+      max-width: 60vw;
+      max-height: 10vh;
+    }
+  }
+}
+
 .start-navigation {
   height: 45px;
   position: absolute;
@@ -537,7 +552,8 @@ div.leaflet-top.leaflet-right {
 .leaflet-bar,
 .coords-block,
 .coords-expander,
-.report-control {
+.report-control,
+#map-logo {
   display: none;
 
   .map-page &,

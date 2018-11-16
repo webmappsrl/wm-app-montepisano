@@ -449,6 +449,8 @@ ion-slide.slider-slide {
 .loading-spinner {
   text-align: center;
   width: 100%; }
+  .loading-spinner.small-margin {
+    margin-top: 10%; }
 
 .search-spinner {
   position: relative;
@@ -573,12 +575,13 @@ ion-content div.static-content.card-content {
 ion-content.fullView {
   padding: 0;
   margin: 0; }
-  ion-content.fullView .custom-page-padding {
-    padding: 0 10px;
+  ion-content.fullView .custom-page-limited-width {
     margin: 0 auto; }
+  ion-content.fullView .custom-page-padding {
+    padding: 0 10px; }
 
 @media screen and (min-width: 768px) {
-  .custom-page-padding {
+  .custom-page-limited-width {
     width: 500px; } }
 
 /**
@@ -2735,7 +2738,7 @@ div.leaflet-top.leaflet-right {
   position: absolute;
   right: 37px;
   bottom: 24px;
-  z-index: 400;
+  z-index: 799;
   font-size: 20px;
   text-align: center; }
   .coords-block > span {
@@ -2757,6 +2760,19 @@ div.leaflet-top.leaflet-right {
   .coords-block .icon {
     vertical-align: middle; }
 
+#map-logo {
+  position: absolute;
+  bottom: 20px;
+  width: 60vw;
+  z-index: 600;
+  left: 20vw; }
+  #map-logo div {
+    width: fit-content;
+    margin: 0 auto; }
+    #map-logo div img {
+      max-width: 60vw;
+      max-height: 10vh; }
+
 .start-navigation {
   height: 45px;
   position: absolute;
@@ -2777,7 +2793,8 @@ div.leaflet-top.leaflet-right {
 .leaflet-bar,
 .coords-block,
 .coords-expander,
-.report-control {
+.report-control,
+#map-logo {
   display: none; }
   .map-page .leaflet-bar,
   .map-search .leaflet-bar, .map-page
@@ -2789,7 +2806,10 @@ div.leaflet-top.leaflet-right {
   .coords-expander, .map-page
   .report-control,
   .map-search
-  .report-control {
+  .report-control, .map-page
+  #map-logo,
+  .map-search
+  #map-logo {
     display: block; }
 
 .leaflet-control-attribution {
@@ -3455,6 +3475,13 @@ button.popup-close {
   .image-picker a {
     margin: 0 5px;
     font-size: 120%; }
+
+/* Waarning modal */
+.warning-modal-close {
+  width: fit-content;
+  text-transform: uppercase;
+  margin: 0 auto;
+  padding: 10px 20px; }
 
 /* MODAL DOWNLOAD */
 ion-modal-view.modal-download {

@@ -88,3 +88,38 @@ angular.module('webmapp')
             return results;
         };
     });
+
+angular.module('webmapp')
+    .filter('orderPackagesFilter', function (
+        Utils
+    ) {
+        return function (input, search) {
+            if (!search) {
+                return input;
+            }
+            else {
+                var array = [];
+
+                for (var i in input) {
+                    array.push(input[i]);
+                }
+
+                array.sort(function (a, b) {
+                    if (!a.startPoi) {
+                        return 1;
+                    }
+                    else if (!b.startPoi) {
+                        return -1;
+                    }
+                    else {
+                        var distA = Utils.distanceInMeters(search.lat, search.long, a.startPoi.lat, a.startPoi.long),
+                            distB = Utils.distanceInMeters(search.lat, search.long, b.startPoi.lat, b.startPoi.long);
+
+                        return distA >= distB ? 1 : -1;
+                    }
+                });
+
+                return array;
+            }
+        };
+    });

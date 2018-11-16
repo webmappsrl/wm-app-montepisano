@@ -12,19 +12,24 @@ angular.module('webmapp')
 		userLang = userLang.substring(0, 2);
 
 		if (CONFIGProvider.LANGUAGES) {
+			var found = false;
 			if (CONFIGProvider.LANGUAGES.available) {
 				for (var i in CONFIGProvider.LANGUAGES.available) {
 					if (CONFIGProvider.LANGUAGES.available[i].substring(0, 2) === userLang) {
 						lang = userLang;
+						found = true;
 						break;
 					}
 				}
 			}
-			if (CONFIGProvider.LANGUAGES.actual) {
-				lang = CONFIGProvider.LANGUAGES.actual.substring(0, 2);
-			}
-			else {
-				lang = "it";
+
+			if (!found) {
+				if (CONFIGProvider.LANGUAGES.actual) {
+					lang = CONFIGProvider.LANGUAGES.actual.substring(0, 2);
+				}
+				else {
+					lang = "it";
+				}
 			}
 		}
 

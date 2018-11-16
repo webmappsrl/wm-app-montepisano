@@ -27,7 +27,8 @@ angular.module('webmapp')
             offlineConf = CONFIG.OFFLINE,
             currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
             defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
-                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
+                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it'),
+            routeDefaultLang = (CONFIG.MAIN && CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual : 'it';
 
         var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
@@ -1001,7 +1002,6 @@ angular.module('webmapp')
 
             var available = false;
 
-
             if (CONFIG.MAIN && CONFIG.MAIN.LANGUAGES && (CONFIG.MAIN.LANGUAGES.actual || (CONFIG.MAIN.LANGUAGES.available && CONFIG.MAIN.LANGUAGES.available.length > 0))) {
                 available = true;
             }
@@ -1046,7 +1046,7 @@ angular.module('webmapp')
                     });
             } else {
                 url = currentOverlay.geojsonUrl;
-                if (available) {
+                if (available && routeDefaultLang !== currentLang) {
                     var split = currentOverlay.geojsonUrl.split('/');
                     url = "/languages/" + currentLang + "/" + split.pop();
                     url = split.join('/') + url;
@@ -1057,9 +1057,11 @@ angular.module('webmapp')
                 overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
                     if (available) {
                         url = currentOverlay.geojsonUrl;
-                        var split = currentOverlay.geojsonUrl.split('/');
-                        url = "/languages/" + defaultLang + "/" + split.pop();
-                        url = split.join('/') + url;
+                        if (defaultLang !== routeDefaultLang) {
+                            var split = currentOverlay.geojsonUrl.split('/');
+                            url = "/languages/" + defaultLang + "/" + split.pop();
+                            url = split.join('/') + url;
+                        }
                         if (offlineConf.resourceBaseUrl) {
                             url = offlineConf.resourceBaseUrl + url;
                         }
@@ -1290,13 +1292,16 @@ angular.module('webmapp')
                 }
 
                 dataReady = true;
+
+                setTimeout(function () {
+                    $ionicLoading.hide();
+
+                    if (navigator.splashscreen) {
+                        navigator.splashscreen.hide();
+                    }
+                }, 500);
+
                 $rootScope.$$phase || $rootScope.$digest();
-
-                $ionicLoading.hide();
-
-                if (navigator.splashscreen) {
-                    navigator.splashscreen.hide();
-                }
             }
 
             $q.all(promises).then(function () {
@@ -1354,8 +1359,7 @@ angular.module('webmapp')
                     options = {
                         minZoom: mapConf.minZoom,
                         maxZoom: mapConf.maxZoom,
-                        // reuseTiles: true,
-                        bounds: maxBounds
+                        // bounds: maxBounds
                     };
 
                     if (typeof baseMap.tms !== undefined && baseMap.tms) {
@@ -1437,7 +1441,6 @@ angular.module('webmapp')
                     options = {
                         minZoom: mapConf.minZoom,
                         maxZoom: mapConf.maxZoom,
-                        // reuseTiles: true,
                         bounds: maxBounds
                     };
 
@@ -1539,6 +1542,10 @@ angular.module('webmapp')
 
             map.on('resize', function () {
                 $rootScope.$emit('map-resize');
+            });
+
+            map.on('moveend', function () {
+                $rootScope.$emit('map-moveend');
             });
 
             if (generalConf.useAlmostOver) {
@@ -1889,11 +1896,11 @@ angular.module('webmapp')
         };
 
         mapService.centerOnFeature = function (feature) {
-            var latlngs = [],
-                coord;
-
             if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString') {
-                map.fitBounds(L.geoJson(feature).getBounds());
+                var bounds = L.geoJson(feature).getBounds();
+                map.fitBounds(bounds);
+                var actual = map.getBounds();
+                console.log(bounds, actual)
             } else {
                 map.setView({
                     lat: feature.geometry.coordinates[1],
@@ -1911,93 +1918,107 @@ angular.module('webmapp')
         };
 
         mapService.drawPosition = function (position) {
-            var newLatLng = new L.LatLng(position.latitude, position.longitude);
+            if (map) {
+                var newLatLng = new L.LatLng(position.latitude, position.longitude);
 
-            if (!circleLocation.position) {
-                circleLocation.icon = "locationIcon";
-                circleLocation.position = L.marker([position.latitude, position.longitude], {
-                    icon: locationIcon
-                }).addTo(map);
-            } else {
-                circleLocation.position.setLatLng(newLatLng);
-            }
-
-            if (!circleLocation.accuracy && position.accuracy > 10) {
-                circleLocation.accuracy = L.circle([position.latitude, position.longitude], {
-                    weight: 1,
-                    color: '#3E82F7',
-                    fillColor: '#3E82F7',
-                    fillOpacity: 0.2,
-                    radius: position.accuracy
-                }).addTo(map);
-            } else if (circleLocation.accuracy && position.accuracy > 10) {
-                circleLocation.accuracy.setLatLng(newLatLng);
-                circleLocation.accuracy.setRadius(position.accuracy);
-            } else if (circleLocation.accuracy && position.accuracy <= 10) {
-                try {
-                    map.removeLayer(circleLocation.accuracy);
-                } catch (e) {
-                    console.warn("Removing accuracy", e);
+                if (!circleLocation.position) {
+                    circleLocation.icon = "locationIcon";
+                    circleLocation.position = L.marker([position.latitude, position.longitude], {
+                        icon: locationIcon
+                    }).addTo(map);
+                } else {
+                    circleLocation.position.setLatLng(newLatLng);
                 }
-                circleLocation.accuracy = null;
+
+                if (!circleLocation.accuracy && position.accuracy > 10) {
+                    circleLocation.accuracy = L.circle([position.latitude, position.longitude], {
+                        weight: 1,
+                        color: '#3E82F7',
+                        fillColor: '#3E82F7',
+                        fillOpacity: 0.2,
+                        radius: position.accuracy
+                    }).addTo(map);
+                } else if (circleLocation.accuracy && position.accuracy > 10) {
+                    circleLocation.accuracy.setLatLng(newLatLng);
+                    circleLocation.accuracy.setRadius(position.accuracy);
+                } else if (circleLocation.accuracy && position.accuracy <= 10) {
+                    try {
+                        map.removeLayer(circleLocation.accuracy);
+                    } catch (e) {
+                        console.warn("Removing accuracy", e);
+                    }
+                    circleLocation.accuracy = null;
+                }
             }
         };
 
         mapService.drawAccuracy = function (accuracy) {
-            if (circleLocation && !circleLocation.accuracy && accuracy > 10) {
-                var latLng = circleLocation.position.getLatLng();
-                circleLocation.accuracy = L.circle(latLng, {
-                    weight: 1,
-                    color: '#3E82F7',
-                    fillColor: '#3E82F7',
-                    fillOpacity: 0.2,
-                    radius: accuracy
-                }).addTo(map);
-            }
-            else if (circleLocation && circleLocation.accuracy && accuracy > 10) {
-                circleLocation.accuracy.setRadius(accuracy);
-            }
-            else if (circleLocation && circleLocation.accuracy && accuracy <= 10) {
-                try {
-                    map.removeLayer(circleLocation.accuracy);
-                } catch (e) {
-                    console.warn("Removing accuracy", e);
+            if (map) {
+                if (circleLocation && !circleLocation.accuracy && accuracy > 10) {
+                    var latLng = circleLocation.position.getLatLng();
+                    circleLocation.accuracy = L.circle(latLng, {
+                        weight: 1,
+                        color: '#3E82F7',
+                        fillColor: '#3E82F7',
+                        fillOpacity: 0.2,
+                        radius: accuracy
+                    }).addTo(map);
                 }
-                circleLocation.accuracy = null;
+                else if (circleLocation && circleLocation.accuracy && accuracy > 10) {
+                    circleLocation.accuracy.setRadius(accuracy);
+                }
+                else if (circleLocation && circleLocation.accuracy && accuracy <= 10) {
+                    try {
+                        map.removeLayer(circleLocation.accuracy);
+                    } catch (e) {
+                        console.warn("Removing accuracy", e);
+                    }
+                    circleLocation.accuracy = null;
+                }
             }
         };
 
         mapService.togglePositionIcon = function (icon) {
-            if (icon !== circleLocation.icon) {
-                if (circleLocation.icon === "locationIcon") {
-                    circleLocation.icon = "locationIconArrow";
-                    circleLocation.position.setIcon(locationIconArrow);
-                } else {
-                    circleLocation.icon = "locationIcon";
-                    circleLocation.position.setIcon(locationIcon);
+            if (map) {
+                if (icon !== circleLocation.icon) {
+                    if (circleLocation.icon === "locationIcon") {
+                        circleLocation.icon = "locationIconArrow";
+                        circleLocation.position.setIcon(locationIconArrow);
+                    } else {
+                        circleLocation.icon = "locationIcon";
+                        circleLocation.position.setIcon(locationIcon);
+                    }
                 }
             }
         };
 
         mapService.removePosition = function () {
-            if (circleLocation.position !== null) {
-                map.removeLayer(circleLocation.position);
-                circleLocation.position = null;
-            }
-            if (circleLocation.accuracy !== null) {
-                map.removeLayer(circleLocation.accuracy);
-                circleLocation.accuracy = null;
+            if (map) {
+                if (circleLocation.position !== null) {
+                    map.removeLayer(circleLocation.position);
+                    circleLocation.position = null;
+                }
+                if (circleLocation.accuracy !== null) {
+                    map.removeLayer(circleLocation.accuracy);
+                    circleLocation.accuracy = null;
+                }
             }
         };
 
         mapService.isInBoundingBox = function (lat, long) {
-            var bounds = new L.latLngBounds(
-                new L.latLng(mapConf.bounds.southWest),
-                new L.latLng(mapConf.bounds.northEast));
+            // If !Multimap
+            if (map) {
+                var bounds = new L.latLngBounds(
+                    new L.latLng(mapConf.bounds.southWest),
+                    new L.latLng(mapConf.bounds.northEast));
 
-            return bounds.contains(
-                new L.latLng(lat, long)
-            );
+                return bounds.contains(
+                    new L.latLng(lat, long)
+                );
+            }
+            else {
+                return true;
+            }
         };
 
         mapService.precacheOverlaysData = function () {
@@ -2030,6 +2051,15 @@ angular.module('webmapp')
                 }
             }
         };
+
+        mapService.hasMap = function () {
+            if (map) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
 
         mapService.initialize = function () {
             if (Utils.isBrowser()) {

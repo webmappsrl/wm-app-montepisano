@@ -2,6 +2,7 @@ angular.module('webmapp')
 
     .controller('DetailController', function DetailController(
         $cordovaSocialSharing,
+        $ionicLoading,
         $ionicModal,
         $ionicPopup,
         $ionicSlideBoxDelegate,
@@ -147,13 +148,8 @@ angular.module('webmapp')
 
         function fitDataInView(data) {
             setTimeout(function () {
-                if (fitView.centerOnPoint) {
-                    MapService.centerOnCoords(data.geometry.coordinates[1], data.geometry.coordinates[0]);
-                }
-                else {
-                    MapService.centerOnFeature(data);
-                }
-            }, 1000);
+                MapService.centerOnFeature(data);
+            }, 2000);
         };
 
         if (trackRecordingEnabled) {
@@ -243,47 +239,98 @@ angular.module('webmapp')
             };
 
             vm.exportTrack = function () {
+                $scope.data = {
+                    email: ""
+                };
+
                 if (vm.isLoggedIn) {
-                    var userData = Auth.getUserData();
+                    $scope.data.email = Auth.getUserData().user_email;
+                }
 
-                    $ionicPopup.confirm({
+                var showPopup = function () {
+                    var popup = $ionicPopup.show({
+                        template: '<input type="text" ng-model="data.email" placeholder="email">',
                         title: $translate.instant('ATTENZIONE'),
-                        subTitle: $translate.instant('Ti verrà inviata una mail con allegato il file in formato gpx di questo percorso. Vuoi procedere?'),
-                    }).then(function (res) {
-                        if (res) {
-                            MapService.getUserTrackGeoJSON(params.id).then(function (geojson) {
-                                var url = 'https://api.webmapp.it/services/share.php';
-
-                                var app = CONFIG.OPTIONS.title;
-                                if (CONFIG.MAIN) {
-                                    app = CONFIG.MAIN.OPTIONS.title + " - " + app;
+                        subTitle: $translate.instant("Di seguito specifica l'indirizzo email al quale inviare il percorso"),
+                        scope: $scope,
+                        buttons: [
+                            { text: 'Cancel' },
+                            {
+                                text: $translate.instant('INVIA'),
+                                type: 'button-positive',
+                                onTap: function (e) {
+                                    return $scope.data.email;
                                 }
-
-                                var currentRequest = Communication.callAPI(url, {
-                                    to: userData.user_email,
-                                    firstName: userData.first_name,
-                                    lastName: userData.last_name,
-                                    type: "export",
-                                    geojson: JSON.stringify(geojson),
-                                    app: app
+                            }
+                        ]
+                    })
+                    popup.then(function (res) {
+                        if (res) {
+                            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                            if (!re.test(res)) {
+                                $ionicPopup.alert({
+                                    title: $translate.instant('ATTENZIONE'),
+                                    subTitle: $translate.instant("Inserisci un'email valida per continuare")
+                                }).then(function () {
+                                    $scope.data.email = res;
+                                    vm.exportTrack();
                                 });
+                            }
+                            else {
+                                MapService.setItemInLocalStorage("$wm_export_email", res);
+                                MapService.getUserTrackGeoJSON(params.id).then(function (geojson) {
+                                    var url = 'https://api.webmapp.it/services/share.php';
 
-                                currentRequest
-                                    .then(function (data) {
-                                        console.log(data)
-                                        return;
-                                    }).catch(function (error) {
-                                        console.warn(error);
-                                        return;
+                                    var app = CONFIG.OPTIONS.title;
+                                    if (CONFIG.MAIN) {
+                                        app = CONFIG.MAIN.OPTIONS.title + " - " + app;
+                                    }
+
+                                    $ionicLoading.show({
+                                        template: '<ion-spinner></ion-spinner>'
                                     });
-                            }).catch(function (err) {
-                                console.warn(err);
-                            });
-                        } else {
-                            vm.exportTrack();
+
+                                    var currentRequest = Communication.callAPI(url, {
+                                        to: res,
+                                        type: "export",
+                                        geojson: JSON.stringify(geojson),
+                                        app: app
+                                    });
+
+                                    currentRequest
+                                        .then(function (data) {
+                                            $ionicPopup.alert({
+                                                title: $translate.instant("ATTENZIONE"),
+                                                template: $translate.instant("Traccia esportata con successo")
+                                            });
+                                            $ionicLoading.hide();
+                                            return;
+                                        }).catch(function (error) {
+                                            $ionicPopup.alert({
+                                                title: $translate.instant("ATTENZIONE"),
+                                                template: $translate.instant("Si è verificato un errore, riprova")
+                                            });
+                                            $ionicLoading.hide();
+                                            return;
+                                        });
+                                }).catch(function (err) {
+                                    console.warn(err);
+                                });
+                            }
                         }
                     });
                 }
+
+                MapService.getItemFromLocalStorage("$wm_export_email").then(function (data) {
+                    if (data.data) {
+                        $scope.data.email = data.data;
+                    }
+                    showPopup();
+                }).catch(function () {
+                    showPopup();
+                });
+
+
             };
 
             vm.editTrack = function () {
@@ -413,7 +460,7 @@ angular.module('webmapp')
                     };
 
                     var formatDistance = function (distance) {
-                        return distance ? ((distance / 1000).toFixed(1) + 'km') : '0km';
+                        return distance ? ((distance / 1000).toFixed(1).replace(".", ",") + 'km') : '0km';
                     };
 
                     var formatSpeed = function (speed) {
@@ -921,7 +968,7 @@ angular.module('webmapp')
         );
 
         registeredEvents.push(
-            $rootScope.$on('map-resize', function () {
+            $scope.$on('$ionicView.afterEnter', function () {
                 if (fitView.ready && fitView.data) {
                     fitDataInView(fitView.data);
                 }

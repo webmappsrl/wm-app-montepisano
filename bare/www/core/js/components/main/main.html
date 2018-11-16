@@ -128,6 +128,12 @@
             </a>
         </div>
 
+        <div id="map-logo" ng-if="vm.mapLogoUrl">
+            <div>
+                <img ng-src="{{vm.mapLogoUrl}}">
+            </div>
+        </div>
+
         <!-- Navigation interface -->
         <div class="navigator-div-controller" ng-if="vm.navigation.state.isActive">
             <div class="content-div" ng-if="!vm.navigation.state.isPaused">
