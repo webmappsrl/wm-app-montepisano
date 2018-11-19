@@ -3731,12 +3731,12 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
       clear: both; }
   .report-page ion-content .report__form .report__form-field {
     margin-bottom: 15px; }
-    .report-page ion-content .report__form .report__form-field label {
+    .report-page ion-content .report__form .report__form-field .report__label {
       font-size: 20px;
       padding-left: 5px;
       font-weight: bold;
       margin-top: 10px; }
-    .report-page ion-content .report__form .report__form-field input,
+    .report-page ion-content .report__form .report__form-field input[type^=text],
     .report-page ion-content .report__form .report__form-field textarea {
       font-size: 16px;
       width: 90%;
@@ -3744,7 +3744,7 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
       -webkit-box-shadow: 0px 2px 5px #aaaaaa;
       -moz-box-shadow: 0px 2px 5px #aaaaaa;
       box-shadow: 0px 2px 5px #aaaaaa; }
-    .report-page ion-content .report__form .report__form-field input {
+    .report-page ion-content .report__form .report__form-field input[type^=text] {
       padding: 3px 8px; }
     .report-page ion-content .report__form .report__form-field textarea {
       padding: 10px;
@@ -3752,6 +3752,10 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
       max-height: 25vh;
       max-width: 90%;
       min-width: 90%; }
+    .report-page ion-content .report__form .report__form-field .report__checkbox,
+    .report-page ion-content .report__form .report__form-field .report__radio {
+      margin: 3px 5%;
+      width: 90%; }
     .report-page ion-content .report__form .report__form-field .image-picker {
       width: 90%;
       margin: 5px 5%;
@@ -3788,6 +3792,8 @@ ion-content ion-content.withSearchBar.scroll-content div#whitespace {
   text-transform: uppercase;
   font-size: 25px;
   padding: 15px; }
+  .report-page .report__send ion-spinner {
+    color: #fff; }
 
 @media screen and (max-width: 350px) {
   .image-picker {

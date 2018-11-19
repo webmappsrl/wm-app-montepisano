@@ -113,11 +113,11 @@
         </div>
 
         <!-- Report -->
-        <div class="report-control" ng-if="vm.useReport && vm.isInMap" ng-click="vm.openReportModal()">
+        <div class="report-control" ng-if="vm.useReport && vm.isInMap" ng-click="vm.goToReport()">
 
             <i class="icon wm-icon-alert-circled">
             </i>
-            <span ng-if="vm.reportInQueue > 0" class="report-queue-length">{{vm.reportInQueue}}</span>
+            <span ng-if="vm.reportQueue.length > 0" class="report-queue-length">{{vm.reportQueue.length}}</span>
         </div>
 
         <!-- Start navigation -->

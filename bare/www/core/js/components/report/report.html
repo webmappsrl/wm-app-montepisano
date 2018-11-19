@@ -13,9 +13,7 @@
         'color': COLORS.global.color
     }">
         <div ng-if="vm.selectedReport < 0" class="report__items-container">
-            <div ng-repeat="(itemKey, item) in vm.reports" ng-click="vm.selectReport(itemKey)" class="report__item" ng-style="{
-                    'background': COLORS.mainBar.background + '12'
-                }">
+            <div ng-repeat="(itemKey, item) in vm.reports" ng-click="vm.selectReport(itemKey)" class="report__item">
                 <div class="report__item-content">
                     <div class="report__item-title">
                         {{item.title}}
@@ -31,7 +29,12 @@
         </div>
         <div ng-if="vm.selectedReport >= 0" class="report__form">
             <div ng-repeat="(fieldKey, field) in vm.reports[vm.selectedReport].fields" class="report__form-field">
-                <label>{{field.label}} <i class="wm-icon-help-circled" ng-if="field.help && field.help !== ''" ng-click="vm.showHelp(field.help)"></i></label>
+                <div class="report__label">
+                    {{field.label}}
+                    <span ng-if="field.help && field.help !== ''" ng-click="vm.showHelp(fieldKey)">
+                        <i class="wm-icon-help-circled"></i>
+                    </span>
+                </div>
                 <input ng-if="field.type === 'text'" type="text" placeholder="{{field.placeholder}}" ng-model="field.value" ng-change="vm.validateForm()">
                 <textarea ng-if="field.type === 'textarea'" placeholder="{{field.placeholder}}" ng-model="field.value" ng-change="vm.validateForm()"></textarea>
                 <div ng-if="field.type === 'picture'" class="image-picker">
@@ -60,6 +63,24 @@
                         <img ng-src="data:image/png;base64,{{field.value}}">
                     </div>
                 </div>
+                <div ng-if="field.type ==='checkbox'" class="report__checkbox">
+                    <div ng-repeat="(optionKey, option) in field.options" ng-click="vm.toggleOption(fieldKey, optionKey)">
+                        <i ng-class="{
+                            'wm-icon-outline-check_box': vm.isSelected(fieldKey, optionKey),
+                            'wm-icon-outline-check_box_outline_blank': !vm.isSelected(fieldKey, optionKey)
+                        }"></i>
+                        {{option}}
+                    </div>
+                </div>
+                <div ng-if="field.type ==='radio'" class="report__radio">
+                    <div ng-repeat="(optionKey, option) in field.options" ng-click="vm.toggleOption(fieldKey, optionKey)">
+                        <i ng-class="{
+                                'wm-icon-ion-android-checkmark-circle': vm.isSelected(fieldKey, optionKey),
+                                'wm-icon-ion-android-checkmark-circle-empty': !vm.isSelected(fieldKey, optionKey)
+                            }"></i>
+                        {{option}}
+                    </div>
+                </div>
             </div>
         </div>
     </ion-content>
@@ -69,7 +90,8 @@
         }" class="report__send" ng-class="{
             'slide-up': vm.reportFilled,
             'slide-down': !vm.reportFilled,
-        }" ng-click="vm.sendReport()">
-        Invia
+        }" ng-click="vm.isValid ? vm.sendReport() : null">
+        <span ng-if="!vm.isLoading">Invia</span>
+        <ion-spinner ng-if="vm.isLoading"></ion-spinner>
     </div>
 </ion-view>

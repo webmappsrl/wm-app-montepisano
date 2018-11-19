@@ -748,10 +748,7 @@ angular.module('webmapp')
                         BackgroundGeolocation.switchMode(BackgroundGeolocation.FOREGROUND_MODE);
                     }
                 } else {
-                    // BackgroundGeolocation.stop();
-                    BackgroundGeolocation.configure({
-                        locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER
-                    });
+                    BackgroundGeolocation.stop();
                 }
             });
             BackgroundGeolocation.on('foreground', function () {
@@ -763,10 +760,7 @@ angular.module('webmapp')
 
                     deleteRecordingState();
                 } else {
-                    BackgroundGeolocation.configure({
-                        locationProvider: BackgroundGeolocation.RAW_PROVIDER
-                    });
-                    // BackgroundGeolocation.start();
+                    BackgroundGeolocation.start();
                 }
             });
         };

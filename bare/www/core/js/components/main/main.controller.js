@@ -29,9 +29,7 @@ angular.module('webmapp')
         var hideExpanderInDetails = CONFIG.OPTIONS.hideExpanderInDetails;
 
         var shareScope = $rootScope.$new(),
-            shareModal,
-            reportScope = $rootScope.$new(),
-            reportModal;
+            shareModal;
 
         var registeredEvents = [];
 
@@ -66,6 +64,10 @@ angular.module('webmapp')
         vm.userData = {};
 
         vm.speedTextType = 'average';
+        vm.reportQueue = {
+            length: 0,
+            interval: null
+        };
 
         if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.defaultSpeedType && CONFIG.MAIN.NAVIGATION.defaultSpeedType === 'current') {
             vm.speedTextType = 'current';
@@ -132,151 +134,36 @@ angular.module('webmapp')
             }
         };
 
-        reportScope.vm = {
-            notes: "",
-            picture: "",
-            picName: "",
-            colors: CONFIG.STYLE
-        };
-
-        reportScope.queueToSend = [];
-        reportScope.queueInterval = null;
-        reportScope.intervalDelay = 10000;
-        vm.reportInQueue = 0;
-
-        MapService.getItemFromLocalStorage("$wm_queueReportToSend").then(function (data) {
-            var queue = JSON.parse(data.data);
-            if (queue && queue.length > 0) {
-                reportScope.queueToSend = queue;
-                vm.reportInQueue = reportScope.queueToSend.length;
-                reportScope.queueInterval = setInterval(reportScope.queueIntervalFunction, reportScope.intervalDelay);
-            }
-        },
-            function (err) { }
-        );
-
-        var sendReport = function (url, data, index) {
-            var currentRequest = Communication.callAPI(url, data);
-
-            currentRequest
-                .then(function () {
-                    reportScope.queueToSend.splice(index, 1)
-                    vm.reportInQueue = reportScope.queueToSend.length;
-                    MapService.setItemInLocalStorage("$wm_queueReportToSend", JSON.stringify(reportScope.queueToSend));
-                    if (reportScope.queueToSend.length <= 0) {
-                        try {
-                            clearInterval(reportScope.queueInterval)
-                        }
-                        catch (e) { }
-
-                        reportScope.queueInterval = null;
+        var reportQueueLengthFunction = function () {
+            var url = CONFIG.USER_COMMUNICATION.REPORT.apiUrl ? CONFIG.USER_COMMUNICATION.REPORT.apiUrl : "https://api.webmapp.it/services/share.php";
+            Communication.getPostQueueLength(url).then(function (length) {
+                vm.reportQueue.length = length;
+                if (vm.reportQueue.length === 0) {
+                    try {
+                        clearInterval(vm.reportQueue.interval);
                     }
-                }, function (error) {
-                    console.log(error)
-                });
+                    catch (e) { }
+                    vm.reportQueue.interval = null;
+                }
+            });
         };
 
-        reportScope.queueIntervalFunction = function () {
-            var url = "";
-            if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.apiUrl) {
-                url = CONFIG.REPORT.email.apiUrl;
-            } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl) {
-                url = CONFIG.MAIN.REPORT.email.apiUrl;
-            }
-
-            for (var index in reportScope.queueToSend) {
-                sendReport(url, reportScope.queueToSend[index], index);
-            }
-        };
-
-        reportScope.vm.reset = function () {
-            reportScope.vm.notes = "";
-            reportScope.vm.picture = "";
-            reportScope.vm.picName = "";
-            Utils.forceDigest();
-        };
-
-        reportScope.vm.resetPicture = function () {
-            reportScope.vm.picture = "";
-            reportScope.vm.picName = "";
-            Utils.forceDigest();
-        };
-
-        reportScope.vm.hide = function () {
-            reportScope.vm.reset();
-            reportModal.hide();
-        };
-
-        reportScope.vm.getPicture = function (sourceType) {
-            if (navigator.camera) {
-                var options = {
-                    quality: 10,
-                    destinationType: navigator.camera.DestinationType.DATA_URL,
-                    sourceType: sourceType ? navigator.camera.PictureSourceType.CAMERA : navigator.camera.PictureSourceType.PHOTOLIBRARY,
-                    saveToPhotoAlbum: true
-                };
-
-                navigator.camera.getPicture(function (data) {
-                    reportScope.vm.picture = data;
-                    reportScope.vm.picName = "img.jpg";
-                    Utils.forceDigest();
-                    console.log(data.length);
-                }, function (err) {
-                    console.warn(err);
-                }, options);
-            }
-        };
-
-        reportScope.vm.addReportToQueue = function () {
-            var data = localStorage.userData ? JSON.parse(localStorage.userData) : {
-                username: "",
-                email: "",
-                telephone: ""
-            };
-
-            var toSend = {
-                email: data.email,
-                username: data.username,
-                lat: reportScope.vm.position.lat,
-                lng: reportScope.vm.position.long,
-                timestamp: Date.now(),
-                type: "reportTicket",
-                notes: reportScope.vm.notes,
-                picture: reportScope.vm.picture
-            };
-
-            reportScope.queueToSend.push(toSend);
-            vm.reportInQueue = reportScope.queueToSend.length;
-            MapService.setItemInLocalStorage("$wm_queueReportToSend", JSON.stringify(reportScope.queueToSend));
-
-            if (!reportScope.queueInterval) {
-                reportScope.queueIntervalFunction();
-                reportScope.queueInterval = setInterval(reportScope.queueIntervalFunction, reportScope.intervalDelay);
-            }
-            reportScope.vm.hide();
-        };
-
-        vm.openReportModal = function () {
+        vm.goToReport = function () {
             Utils.goTo('report');
-            // var position = GeolocationService.getCurrentPosition();
-            // if (GeolocationService.isActive() && position && position.lat && position.long) {
-            //     reportScope.vm.position = {
-            //         lat: position.lat,
-            //         long: position.long
-            //     };
-
-            //     reportModal.show();
-            // } else if (position === ERRORS.OUTSIDE_BOUNDING_BOX) {
-            //     $ionicPopup.alert({
-            //         title: $translate.instant("ATTENZIONE"),
-            //         template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa: la richiesta di aiuto non è disponibile.")
-            //     });
-            // } else {
-            //     $ionicPopup.alert({
-            //         title: $translate.instant("ATTENZIONE"),
-            //         template: $translate.instant("Devi essere localizzato per segnalare la tua posizione")
-            //     });
-            // }
+            var position = GeolocationService.getCurrentPosition();
+            if (GeolocationService.isActive() && position && position.lat && position.long) {
+                Utils.goTo('report');
+            } else if (position === ERRORS.OUTSIDE_BOUNDING_BOX) {
+                $ionicPopup.alert({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa: la richiesta di aiuto non è disponibile.")
+                });
+            } else {
+                $ionicPopup.alert({
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Devi essere localizzato per segnalare la tua posizione")
+                });
+            }
         };
 
         vm.hideDeactiveCentralPointer = CONFIG.OPTIONS && CONFIG.OPTIONS.hideDeactiveCentralPointer;
@@ -1063,6 +950,21 @@ angular.module('webmapp')
                 }
                 if (vm.navigation.state.isPaused !== value.isPaused) {
                     vm.navigation.state.isPaused = value.isPaused;
+                }
+            })
+        );
+
+        registeredEvents.push(
+            $scope.$on('$ionicView.afterEnter', function () {
+                if (CONFIG.USER_COMMUNICATION && CONFIG.USER_COMMUNICATION.REPORT) {
+                    var url = CONFIG.USER_COMMUNICATION.REPORT.apiUrl ? CONFIG.USER_COMMUNICATION.REPORT.apiUrl : "https://api.webmapp.it/services/share.php";
+
+                    Communication.getPostQueueLength(url).then(function (length) {
+                        vm.reportQueue.length = length;
+                        if (vm.reportQueue.length > 0) {
+                            vm.reportQueue.interval = setInterval(reportQueueLengthFunction);
+                        }
+                    });
                 }
             })
         );
