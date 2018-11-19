@@ -181,11 +181,15 @@ gulp.task('update', ['create'], function () {
 
 gulp.task('set', function () {
     var destDir = 'bare/www/',
-        newConfUrl = '';
+        newConfUrl = '',
+        infoUrl = '';
 
     if (argv.config) {
         if (argv.config.substring(0, 4) === "http") {
             newConfUrl = argv.config;
+            if (newConfUrl.substring(-1) !== '/') {
+                newConfUrl += '/';
+            }
         } else {
             newConfUrl = "http://api.webmapp.it/j/" + argv.config + ".j.webmapp.it/";
             info("using default url: " + newConfUrl);
@@ -195,8 +199,29 @@ gulp.task('set', function () {
             .pipe(rename('index.html'))
             .pipe(gulp.dest(destDir));
 
-        //download the config.json to destDir/config
-        gulp.getUrlFile('config.json', newConfUrl + '/config.json', destDir + '/config/');
+        request({
+            url: newConfUrl + 'info.json',
+            headers: {
+                'User-Agent': 'request'
+            }
+        })
+            .pipe(source(newConfUrl + 'info.json'))
+            .pipe(streamify(jeditor(function (repositories) {
+                repo = (repositories);
+                config_xml = {
+                    id: repo["config.xml"].id,
+                    name: repo["config.xml"].name,
+                    description: repo["config.xml"].description,
+                    version: version["version"]
+                };
+
+                gulp.getUrlFile('config.json', newConfUrl + '/config.json', destDir + '/config/')
+                    .on('end', function () {
+                        gulp.updateConfigXML(config_xml);
+                    });
+
+                return repositories;
+            })));
     }
     else {
         warn('Missing config base url');
@@ -323,9 +348,13 @@ gulp.getUrlFile = function (file, src, dest) {
 };
 
 gulp.updateConfigXML = function (config) {
+    var dir = 'instances/' + instance_name;
 
-    var dir = 'instances/' + instance_name,
-        config_file = dir + '/config.xml',
+    if (instance_name === 'default') {
+        dir = 'bare/';
+    }
+
+    var config_file = dir + '/config.xml',
         configJson_file = dir + '/www/config/config.json';
 
     var edit_tag = '<widget id="' + config.id + '" version="' + config.version + '"',
