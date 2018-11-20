@@ -644,7 +644,7 @@ angular.module('webmapp')
                 objData.extras = extras;
             }
 
-            MapService.addFeaturesToFilteredLayer(objData, true, 0);
+            MapService.addFeaturesToFilteredLayer(objData, true, 200);
 
             if (fitView.ready) {
                 fitDataInView(data);
