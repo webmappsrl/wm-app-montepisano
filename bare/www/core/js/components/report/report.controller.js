@@ -46,7 +46,7 @@ angular.module('webmapp')
                 if (vm.reports[key].fields[i].type === 'checkbox') {
                     vm.reports[key].fields[i].value = [];
                 }
-                else {
+                else if (vm.reports[key].fields[i].type !== 'hidden') {
                     vm.reports[key].fields[i].value = "";
                 }
 

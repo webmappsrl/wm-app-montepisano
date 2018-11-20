@@ -149,7 +149,6 @@ angular.module('webmapp')
         };
 
         vm.goToReport = function () {
-            Utils.goTo('report');
             var position = GeolocationService.getCurrentPosition();
             if (GeolocationService.isActive() && position && position.lat && position.long) {
                 Utils.goTo('report');
