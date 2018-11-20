@@ -3,8 +3,6 @@
 angular.module('webmapp')
 
     .factory('Model', function Model(
-        $http,
-        $rootScope,
         CONFIG,
         Utils,
         Search
@@ -112,7 +110,7 @@ angular.module('webmapp')
         model.getOverlayParent = function (name) {
             for (var parent in overlaysGroupMap) {
                 for (var child in overlaysGroupMap[parent].items) {
-                    if (overlaysMap[overlaysGroupMap[parent].items[child]].label === name) {
+                    if (overlaysMap[overlaysGroupMap[parent].items[child]] && overlaysMap[overlaysGroupMap[parent].items[child]].label === name) {
                         return overlaysGroupMap[parent];
                     }
                 }
@@ -159,6 +157,20 @@ angular.module('webmapp')
             }
 
             return name === 'pages' || pagesMap[name] || pagesMapByType[name];
+        };
+
+        // To prevent memory overload, get only overlay metadata
+        model.getOverlayMeta = function (name) {
+            return overlaysMap[name] ? {
+                alert: overlaysMap[name].alert,
+                color: overlaysMap[name].color,
+                geojsonUrl: overlaysMap[name].geojsonUrl,
+                icon: overlaysMap[name].icon,
+                id: overlaysMap[name].id,
+                label: overlaysMap[name].label,
+                showByDefault: overlaysMap[name].showByDefault,
+                type: overlaysMap[name].type
+            } : undefined;
         };
 
         model.getOverlay = function (name) {
