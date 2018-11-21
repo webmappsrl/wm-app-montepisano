@@ -26,8 +26,6 @@ angular.module('webmapp')
         var overlaysGroupMap = Model.getOverlaysGroupMap(),
             overlayMap = Model.getOverlaysMap();
 
-        var previousBounds = null;
-
         var hideExpanderInDetails = CONFIG.OPTIONS.hideExpanderInDetails;
 
         var shareScope = $rootScope.$new(),
@@ -79,10 +77,9 @@ angular.module('webmapp')
         Utils.createModal('core/js/modals/shareModal.html', {
             backdropClickToClose: true,
             hardwareBackButtonClose: true
-        }, shareScope)
-            .then(function (modal) {
-                shareModal = modal;
-            });
+        }, shareScope).then(function (modal) {
+            shareModal = modal;
+        });
 
         shareScope.vm = {};
         shareScope.vm.textblock = '';
@@ -136,7 +133,7 @@ angular.module('webmapp')
         vm.hideDeactiveCentralPointer = CONFIG.OPTIONS && CONFIG.OPTIONS.hideDeactiveCentralPointer;
         vm.toggleMapInDetails = CONFIG.OPTIONS && CONFIG.OPTIONS.toggleMapInDetails;
 
-        vm.isCoordsBlockExpanded = true;
+        vm.isCoordsBlockExpanded = CONFIG.OPTIONS.coordsNotExpanded ? false : true;
 
         vm.navigationAvailable = false;
         vm.isNavigating = false;
@@ -181,9 +178,10 @@ angular.module('webmapp')
         vm.showRightMenu = false;
         vm.filterIcon = CONFIG.OPTIONS.filterIcon;
 
-        $scope.$watch(function () {
-            return $ionicSideMenuDelegate.isOpenLeft();
-        },
+        $scope.$watch(
+            function () {
+                return $ionicSideMenuDelegate.isOpenLeft();
+            },
             function (isOpen) {
                 if (isOpen) {
                     vm.showRightMenu = false;
@@ -954,6 +952,39 @@ angular.module('webmapp')
                 if (window !== top) {
                     MapService.disableWheelZoom();
                 }
+            }
+
+            if (CONFIG.OPTIONS.mapLogoUrl) {
+                vm.mapLogoUrl = CONFIG.OPTIONS.mapLogoUrl;
+
+                var updateLogo = function (url) {
+                    Communication.get(url + "?ts=" + Date.now()).then(function (response) {
+                        var urlCreator = window.URL || window.webkitURL;
+
+                        vm.mapLogoUrl = urlCreator.createObjectURL(response);
+
+                        var reader = new FileReader();
+                        reader.readAsDataURL(response);
+                        reader.onloadend = function () {
+                            vm.mapLogoUrl = reader.result;
+                            MapService.setItemInLocalStorage("$wm_mapLogo", JSON.stringify(
+                                {
+                                    url: url,
+                                    base64: vm.mapLogoUrl
+                                }
+                            ));
+                        }
+                    }, function () {
+                    });
+                };
+
+                MapService.getItemFromLocalStorage("$wm_mapLogo").then(function (saved) {
+                    var data = JSON.parse(saved.data);
+                    vm.mapLogoUrl = data.base64;
+                    updateLogo(CONFIG.OPTIONS.mapLogoUrl);
+                }, function (err) {
+                    updateLogo(CONFIG.OPTIONS.mapLogoUrl);
+                });
             }
 
             // Note: route's first argument can take any kind of object as its data,

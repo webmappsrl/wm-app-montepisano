@@ -464,6 +464,15 @@
   }
 }
 
+/* Waarning modal */
+
+.warning-modal-close {
+  width: fit-content;
+  text-transform: uppercase;
+  margin: 0 auto;
+  padding: 10px 20px;
+}
+
 /* MODAL DOWNLOAD */
 ion-modal-view.modal-download {
   position: relative;

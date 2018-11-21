@@ -12,7 +12,7 @@
   height: 100%;
   width: 100%;
   background-color: white;
-  
+
   img.leaflet-tile.leaflet-tile-loaded[src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="] {
     visibility: hidden;
   }
@@ -46,7 +46,7 @@
   // background-color: rgba(200, 20, 20, 0.6);
   border: none;
   border-radius: 50%;
-  
+
   a {
     i::before {
       font-size: 27px;
@@ -318,7 +318,7 @@
 div.leaflet-top.leaflet-right {
   right: 15px;
   top: 50%;
-  
+
   div.leaflet-control-zoom.leaflet-bar.leaflet-control {
     right: 0;
     top: 0;
@@ -335,7 +335,6 @@ div.leaflet-top.leaflet-right {
     display:none !important;
   }
 }
-
 
 .leaflet-shadow-pane {
   z-index: 0!important;
@@ -362,7 +361,7 @@ div.leaflet-top.leaflet-right {
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       color: $color-white;
-      
+
       &::before {
         display: none;
       }
@@ -477,7 +476,7 @@ div.leaflet-top.leaflet-right {
   position: absolute;
   right: 37px;
   bottom: 24px;
-  z-index: 400;
+  z-index: 799;
   font-size: 20px;
   text-align: center;
   > span {
@@ -505,6 +504,22 @@ div.leaflet-top.leaflet-right {
   }
 }
 
+#map-logo {
+  position: absolute;
+  bottom: 20px;
+  width: 60vw;
+  z-index: 600;
+  left: 20vw;
+  & div {
+    width: fit-content;
+    margin: 0 auto;
+    & img {
+      max-width: 60vw;
+      max-height: 10vh;
+    }
+  }
+}
+
 .start-navigation {
   height: 45px;
   position: absolute;
@@ -529,7 +544,8 @@ div.leaflet-top.leaflet-right {
 .leaflet-bar,
 .coords-block,
 .coords-expander,
-.report-control {
+.report-control,
+#map-logo {
   display: none;
 
   .map-page &,
@@ -579,7 +595,7 @@ div.leaflet-top.leaflet-right {
       }
       padding: 11.5px;
     }
-  
+
     div.time-section,
     div.distance-section,
     div.speed-section {
@@ -656,7 +672,7 @@ ion-side-menus.navigation-interface {
   }
 }
 
-// TODO: find a way to set popup bg via js ?! 
+// TODO: find a way to set popup bg via js ?!
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {
   background: rgba(96,88,70,.8);
@@ -710,7 +726,7 @@ ion-side-menus.navigation-interface {
           }
         }
       }
-  
+
       div.popup-content-full,
       div.popup-content-img {
         display: inline-block;
@@ -733,7 +749,7 @@ ion-side-menus.navigation-interface {
           // To center vertically
           // display: table;
         }
-      
+
         .popup-title {
           font-size: 23px;
           line-height: 27px;
@@ -763,7 +779,7 @@ ion-side-menus.navigation-interface {
           overflow: hidden;
           text-overflow: ellipsis;
         }
-      
+
         .popup-description {
           font-size: 15px;
         }

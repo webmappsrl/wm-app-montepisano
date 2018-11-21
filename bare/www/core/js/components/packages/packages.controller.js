@@ -9,6 +9,7 @@ angular.module('webmapp')
         $translate,
         Auth,
         CONFIG,
+        GeolocationService,
         Model,
         PackageService,
         Utils
@@ -16,6 +17,8 @@ angular.module('webmapp')
         var vm = {};
 
         var registeredEvents = [];
+
+        var watchPosition = null;
 
         var modalFiltersScope = $rootScope.$new(),
             modalFilters = {};
@@ -52,6 +55,7 @@ angular.module('webmapp')
         vm.pageConf = Model.getPage('Pacchetti');
         vm.search = "";
         vm.filters = {};
+        vm.currentPosition = {};
 
         vm.isMultilanguage = false;
 
@@ -278,6 +282,11 @@ angular.module('webmapp')
                     registeredEvents[i]();
                 }
                 delete registeredEvents;
+
+                try {
+                    clearInterval(watchPosition);
+                }
+                catch (e) { }
             })
         );
 
@@ -288,6 +297,26 @@ angular.module('webmapp')
             }
             PackageService.getTaxonomy('activity');
             PackageService.getRoutes();
+            if (!GeolocationService.isActive()) {
+                GeolocationService.enable().then(function () {
+                    watchPosition = setInterval(function () {
+                        var position = GeolocationService.getCurrentPosition();
+                        if (position.lat && position.long) {
+                            vm.currentPosition = position;
+                            Utils.forceDigest();
+                        }
+                    }, 5000);
+                });
+            }
+            else {
+                watchPosition = setInterval(function () {
+                    var position = GeolocationService.getCurrentPosition();
+                    if (position.lat && position.long) {
+                        vm.currentPosition = position;
+                        Utils.forceDigest();
+                    }
+                }, 5000);
+            }
         });
 
         return vm;

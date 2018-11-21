@@ -8,7 +8,7 @@ var templateBasePath = 'core/',
  *   0- 99: Global errors
  * 100-200: Geolocation errors
  */
-var ERRORS = {
+const ERRORS = {
     GENERIC: {
         code: 0,
         message: "An error has occurred"

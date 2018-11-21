@@ -36,7 +36,7 @@
         <div class="static-content card-content search-bar-content" ng-class="{
             'search-bar-margin-fix': !vm.isBrowser && !vm.isAndroid
         }">
-            <div class="modal-inner-content modal-two-columns coupons-list" ng-if="(vm.isLoggedIn || !vm.useLogin) && vm.type !== 'reduced'" ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search">
+            <div class="modal-inner-content modal-two-columns coupons-list" ng-if="(vm.isLoggedIn || !vm.useLogin) && vm.type !== 'reduced'" ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search | orderPackagesFilter : vm.currentPosition">
                 <div class="packages-title" ng-bind-html="item.title.rendered">
                 </div>
                 <div class="details-image">
@@ -81,7 +81,7 @@
 
             </div>
 
-            <div class="modal-inner-content modal-two-columns coupons-list reduced-list" ng-if="vm.type === 'reduced'" ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search" ng-click="vm.openDetailsRoute(item.id)">
+            <div class="modal-inner-content modal-two-columns coupons-list reduced-list" ng-if="vm.type === 'reduced'" ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search | orderPackagesFilter : vm.currentPosition" ng-click="vm.openDetailsRoute(item.id)">
                 <div class="details-image-reduced">
                     <img class="modal-image" ng-if="!item.localImageUrl" ng-src="{{item.imgUrl}}">
                     <img class="modal-image" ng-if="item.localImageUrl" ng-src="{{item.localImageUrl}}">

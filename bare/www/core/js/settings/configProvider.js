@@ -7,7 +7,9 @@ angular.module('webmapp')
 
         var GENERAL_CONFIG = {};
 
-        function loadConfigJson() {
+        var warnings = 0;
+
+        function loadLocalConfigJson() {
             var xobj = new XMLHttpRequest(),
                 url = "./config/config.json",
                 isIos = window.cordova && window.cordova.platformId === 'ios';
@@ -24,11 +26,11 @@ angular.module('webmapp')
             xobj.send(null);
         }
 
-        function getAsyncJSON(url) {
+        function getSyncJSON(url) {
             var retValue;
             var options = {
                 method: 'GET',
-                url: url + '?date=' + Date.now(),
+                url: url + "?ts=" + Date.now(),
                 dataType: 'json',
                 // headers: {
                 //     'Access-Control-Allow-Origin': '*'
@@ -47,21 +49,20 @@ angular.module('webmapp')
             return retValue;
         };
 
-        loadConfigJson();
+        loadLocalConfigJson();
         config = angular.extend(this, GENERAL_CONFIG);
 
         if (!!localStorage.$wm_mhildConf) {
             this.MAIN = GENERAL_CONFIG;
+            var version = config.VERSION;
             if (this.MAIN.INCLUDE && this.MAIN.INCLUDE.url) {
-                var url = this.MAIN.INCLUDE.url;
-                if (url.substring(0, 4) !== "http") {
-                    url = this.MAIN.COMMUNICATION.baseUrl + url;
-                }
-                var mainInclude = localStorage.getItem(this.MAIN.INCLUDE.url) ? JSON.parse(localStorage.getItem(this.MAIN.INCLUDE.url)) : {};
+                var mainInclude = localStorage.getItem("$wm_config_json") ? JSON.parse(localStorage.getItem("$wm_config_json")) : {};
                 this.MAIN = angular.extend(this.MAIN, mainInclude);
+                this.MAIN.VERSION = version;
                 // console.log(this.MAIN, mainInclude);
             }
             config = angular.extend(this, JSON.parse(localStorage.$wm_mhildConf));
+            config.VERSION = version;
         }
 
         var mhildBaseUrl;
@@ -75,7 +76,6 @@ angular.module('webmapp')
             }
         }
 
-        var warnings = 0;
         if (config.INCLUDE && !config.MAIN) {
             var version = config.VERSION;
 
@@ -84,10 +84,10 @@ angular.module('webmapp')
                 if (url.substring(0, 4) !== "http") {
                     url = config.COMMUNICATION.baseUrl + url;
                 }
-                var data = getAsyncJSON(url);
+                var data = getSyncJSON(url);
 
                 if (data === "ERROR") {
-                    var value = localStorage.getItem(url);
+                    var value = localStorage.getItem("$wm_config_json");
                     if (value) {
                         var tmp = {};
                         tmp[i] = JSON.parse(value);
@@ -96,33 +96,14 @@ angular.module('webmapp')
                     warnings++;
                 } else {
                     config = angular.extend(config, data);
-                    localStorage.setItem(url, JSON.stringify(data));
-                }
-            } else {
-                for (var i in config.INCLUDE) {
-                    var url = config.COMMUNICATION.baseUrl + config.INCLUDE[i];
-                    var data = getAsyncJSON(url);
-                    if (data === "ERROR") {
-                        var value = localStorage.getItem(url);
-                        if (value) {
-                            var tmp = {};
-                            tmp[i] = JSON.parse(value);
-                            config = angular.extend(config, tmp);
-                        }
-                        warnings++;
-                    } else {
-                        var tmp = {};
-                        tmp[i] = data;
-                        config = angular.extend(config, tmp);
-                        localStorage.setItem(url, JSON.stringify(data));
-                    }
+                    localStorage.setItem("$wm_config_json", JSON.stringify(data));
                 }
             }
 
             config.VERSION = version;
         }
 
-        if (window.cordova && config.NAVIGATION && config.NAVIGATION.enableTrackRecording) {
+        if (window.cordova && (config.NAVIGATION && config.NAVIGATION.enableTrackRecording) || (config.MAIN && config.MAIN.NAVIGATION && config.MAIN.NAVIGATION.enableTrackRecording)) {
             config.OVERLAY_LAYERS.push({
                 id: "userTracks",
                 label: "I miei percorsi",
@@ -139,7 +120,7 @@ angular.module('webmapp')
             $ionicPopup,
             $translate
         ) {
-            if (warnings > 0) {
+            if (warnings > 0 && !localStorage.offlineMode && !localStorage.$wm_mhildConf) {
                 $ionicPopup.alert({
                     title: $translate.instant("ATTENZIONE"),
                     template: $translate.instant("C'è stato un problema di comunicazione con il server: i dati potrebbero non essere aggiornati"),
