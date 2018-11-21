@@ -103,7 +103,8 @@ angular.module('webmapp')
             }
             else if ($state.current.name === 'app.main.map') {
                 if ($rootScope.backButtonPressed) {
-                    navigator.app.exitApp();
+                    // navigator.app.exitApp();
+                    window.plugins.appMinimize.minimize();
                 }
                 else {
                     $rootScope.backButtonPressed = true;

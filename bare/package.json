@@ -16,6 +16,7 @@
     "cordova-android-support-gradle-release": "^1.4.2",
     "cordova-ios": "4.5.4",
     "cordova-plugin-actionsheet": "^2.3.3",
+    "cordova-plugin-appminimize": "^1.0.0",
     "cordova-plugin-compat": "~1.0.0",
     "cordova-plugin-device": "^1.1.7",
     "cordova-plugin-device-orientation": "^2.0.1",
@@ -89,7 +90,8 @@
       "cordova-plugin-device-orientation": {},
       "cordova-plugin-inapppurchase": {},
       "cordova-plugin-splashscreen": {},
-      "cordova-plugin-mauron85-background-geolocation": {}
+      "cordova-plugin-mauron85-background-geolocation": {},
+      "cordova-plugin-appminimize": {}
     },
     "platforms": [
       "android",
