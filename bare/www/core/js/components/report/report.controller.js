@@ -214,6 +214,13 @@ angular.module('webmapp')
                             route: CONFIG.MAIN ? CONFIG.OPTIONS.title : null
                         };
 
+                        var device = ionic.Platform.device();
+
+                        report.device = {
+                            os: device.platform,
+                            version: device.version
+                        };
+
                         userData = Auth.getUserData();
                         if (userData && userData.ID) {
                             report.user = {

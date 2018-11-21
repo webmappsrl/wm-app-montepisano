@@ -31,6 +31,7 @@
             <div ng-repeat="(fieldKey, field) in vm.reports[vm.selectedReport].fields" class="report__form-field">
                 <div class="report__label">
                     {{field.label}}
+                    <span ng-if="field.mandatory">*</span>
                     <span ng-if="field.help && field.help !== ''" ng-click="vm.showHelp(fieldKey)">
                         <i class="wm-icon-help-circled"></i>
                     </span>
