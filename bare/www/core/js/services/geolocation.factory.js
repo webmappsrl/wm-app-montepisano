@@ -997,57 +997,53 @@ angular.module('webmapp')
                 });
             } else {
                 if (Utils.isBrowser() && window.location.protocol === "https:") {
-                    checkGPS().then(function () {
-                        geolocationState.isActive = true;
-                        geolocationState.isLoading = true;
-                        geolocationState.isFollowing = false;
-                        geolocationState.isRotating = false;
-                        gpsActive = true;
+                    geolocationState.isActive = true;
+                    geolocationState.isLoading = true;
+                    geolocationState.isFollowing = false;
+                    geolocationState.isRotating = false;
+                    gpsActive = true;
 
-                        $rootScope.$emit("geolocationState-changed", geolocationState);
+                    $rootScope.$emit("geolocationState-changed", geolocationState);
 
-                        $cordovaGeolocation
-                            .getCurrentPosition({
-                                timeout: constants.geolocationTimeoutTime,
-                                enableHighAccuracy: true
-                            }).then(function (pos) {
-                                geolocationState.isFollowing = true;
-                                geolocationState.isLoading = false;
-                                positionCallback(pos.coords);
+                    $cordovaGeolocation
+                        .getCurrentPosition({
+                            timeout: constants.geolocationTimeoutTime,
+                            enableHighAccuracy: true
+                        }).then(function (pos) {
+                            geolocationState.isFollowing = true;
+                            geolocationState.isLoading = false;
+                            positionCallback(pos.coords);
 
-                                state.positionWatch = $cordovaGeolocation
-                                    .watchPosition({
-                                        timeout: constants.geolocationTimeoutTime,
-                                        enableHighAccuracy: true
-                                    });
-
-                                state.positionWatch.then(null,
-                                    function (err) {
-                                        console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
-                                        $ionicPopup.alert({
-                                            title: $translate.instant("ATTENZIONE"),
-                                            template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
-                                        });
-
-                                        geolocationService.disable();
-                                    },
-                                    function (position) {
-                                        positionCallback(position.coords);
-                                    });
-                            }, function (err) {
-                                console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
-                                $ionicPopup.alert({
-                                    title: $translate.instant("ATTENZIONE"),
-                                    template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
+                            state.positionWatch = $cordovaGeolocation
+                                .watchPosition({
+                                    timeout: constants.geolocationTimeoutTime,
+                                    enableHighAccuracy: true
                                 });
 
-                                geolocationService.disable();
+                            state.positionWatch.then(null,
+                                function (err) {
+                                    console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
+                                    $ionicPopup.alert({
+                                        title: $translate.instant("ATTENZIONE"),
+                                        template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
+                                    });
+
+                                    geolocationService.disable();
+                                },
+                                function (position) {
+                                    positionCallback(position.coords);
+                                });
+                        }, function (err) {
+                            console.warn("CordovaGeolocation.watchPosition has been rejected: ", err);
+                            $ionicPopup.alert({
+                                title: $translate.instant("ATTENZIONE"),
+                                template: $translate.instant("Si è verificato un errore durante la geolocalizzazione, riprova")
                             });
 
-                        defer.resolve(geolocationState);
-                    }, function () {
-                        defer.reject(ERRORS.GPS_PERMISSIONS_DENIED)
-                    });
+                            geolocationService.disable();
+                        });
+
+                    defer.resolve(geolocationState);
                 }
                 else {
                     defer.reject(ERRORS.CORDOVA_UNAVAILABLE);

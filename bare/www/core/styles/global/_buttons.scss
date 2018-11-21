@@ -81,6 +81,7 @@ button {
   }
 
   &.login-button {
+    white-space: initial;
     max-width: 215px;
     display: block;
     .icon {
@@ -93,7 +94,7 @@ button {
 .button {
   text-transform: uppercase !important;
   font-weight: bold !important;
-  
+
   &.button-full {
     margin-top: 0;
     margin-bottom: 0;
@@ -170,7 +171,7 @@ button {
     left: initial;
 
   }
-  
+
   &.map-shrink {
     display: none;
     .icon {
