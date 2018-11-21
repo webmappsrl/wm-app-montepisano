@@ -653,7 +653,7 @@ angular.module('webmapp')
                 })
                 .catch(function (err) {
                     $ionicLoading.hide();
-                    console.err(err);
+                    console.error(err);
                     var code = err.code ? err.code : (err.errorCode ? err.errorCode : -1);
                     $ionicPopup.alert({
                         title: $translate.instant("ATTENZIONE"),
