@@ -52,8 +52,9 @@ module.exports = function (config) {
             'core/lib/ionic-toast/dist/ionic-toast.bundle.min.js',
             'core/lib/ng-country-select/dist/ng-country-select.js',
             'core/js/app.js',
-            'config/config.js',
+            'test/mocks/config.js',
             // 'core/js/settings/*.js',
+            'core/js/services/*.spec.js',
             'core/js/settings/globalVariables.js',
             'core/js/settings/configProvider.js',
             'core/js/settings/translate.js',
@@ -94,7 +95,7 @@ module.exports = function (config) {
 
         // level of logging
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_INFO,
+        logLevel: config.LOG_DISABLE,
 
         // Configure how the browser console is logged, all optional values
         // level: define the desire log level
@@ -108,7 +109,7 @@ module.exports = function (config) {
         //      %m - message
         // path: set the path of the log file
         browserConsoleLogOptions: {
-            terminal: true
+            terminal: false
         },
 
 

@@ -4,12 +4,13 @@ describe('Auth.Factory Test', function () {
     var authService;
     var MapService;
     var db = {};
+
     beforeEach(inject(function (Auth, _MapService_) {
         authService = Auth;
         MapService = _MapService_;
     }));
-    beforeEach(function () {
 
+    beforeEach(function () {
         spyOn(MapService, 'setItemInLocalStorage').and.callFake(function (key, value) {
             db[key] = value;
         });
@@ -24,11 +25,11 @@ describe('Auth.Factory Test', function () {
 
             return deferred;
         })
-
         spyOn(MapService, 'removeItemFromLocalStorage').and.callFake(function (value) {
             delete db[value];
-        })
-    })
+        });
+    });
+
     describe('Auth.Factory.setUserData', function () {
         it('Should set user data successfully', function () {
             var data = {
@@ -77,7 +78,7 @@ describe('Auth.Factory Test', function () {
     });
 
     describe('Auth.Factory.isLoggedIn', function () {
-        it('user is not logged  =>Should return false', function () {
+        it('user is not logged => Should return false', function () {
             var udata = {
                 user: 'user',
                 pass: 'pass',
@@ -92,7 +93,7 @@ describe('Auth.Factory Test', function () {
             expect(authService.isLoggedIn()).toBe(false);
         });
 
-        it('user is logged =>Should return true', function () {
+        it('user is logged => Should return true', function () {
             var udata = {
                 user: 'user',
                 pass: 'pass',

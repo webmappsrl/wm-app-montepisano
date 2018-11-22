@@ -1,5 +1,4 @@
-describe('MainController', function () {
-
+xdescribe('MainController', function () {
     beforeEach(module('webmapp'));
 
     var GeolocationService,
@@ -66,8 +65,8 @@ describe('MainController', function () {
                         // console.log("MOCK isLocationEnabled");
                         callback(this.locationEnableParam);
                     },
-                    switchToSettings: function () {},
-                    switchToLocationSettings: function () {}
+                    switchToSettings: function () { },
+                    switchToLocationSettings: function () { }
                 }
             },
             platformId: 'android'
@@ -75,20 +74,20 @@ describe('MainController', function () {
 
         window.plugins = {
             insomnia: {
-                allowSleepAgain: function () {},
-                keepAwake: function () {}
+                allowSleepAgain: function () { },
+                keepAwake: function () { }
             }
         }
         BackgroundGeolocation = {
-            start: function () {},
-            stop: function () {},
-            removeAllListeners: function () {},
+            start: function () { },
+            stop: function () { },
+            removeAllListeners: function () { },
             events: [],
             startTask: function (callback) {
                 callback();
             },
-            endTask: function () {},
-            configure: function (params) {},
+            endTask: function () { },
+            configure: function (params) { },
             on: function (event, callback) {
                 if (event === 'location') {
                     this.callbackFun = callback;
@@ -119,17 +118,17 @@ describe('MainController', function () {
         spyOn($ionicModal, 'fromTemplateUrl').and.callFake(function () {
             var deferred = $q.defer();
             deferred.resolve({
-                show: function () {},
-                hide: function () {}
+                show: function () { },
+                hide: function () { }
             });
             return deferred.promise;
         });
         spyOn(Utils, 'createModal').and.callFake(function () {
             var deferred = $q.defer();
             deferred.resolve({
-                show: function () {},
-                hide: function () {},
-                remove: function () {}
+                show: function () { },
+                hide: function () { },
+                remove: function () { }
             });
             return deferred.promise;
         })
@@ -140,7 +139,7 @@ describe('MainController', function () {
         });
 
         userPoly = null;
-        $httpBackend.whenGET().respond(404);
+        $httpBackend.whenGET().respond(301);
     }));
 
     beforeEach(function () {
@@ -172,19 +171,6 @@ describe('MainController', function () {
             // console.log("MOCK MapService.mapIsRotating");
             return true;
         });
-        spyOn($ionicPopup, 'confirm').and.callFake(function () {
-            // console.log("MOCK $ionicPopup.confirm")
-            var defer = $q.defer();
-            defer.resolve(true);
-            return defer.promise;
-        });
-        spyOn($ionicPopup, 'alert').and.callFake(function () {
-            // console.log("MOCK $ionicPopup.alert")
-            var defer = $q.defer();
-            defer.resolve(true);
-            return defer.promise;
-        });
-
         spyOn(MapService, 'createUserPolyline').and.callFake(function (value) {
             if (userPoly == null) {
                 userPoly = {
@@ -204,19 +190,29 @@ describe('MainController', function () {
         spyOn(MapService, 'removeUserPolyline').and.callFake(function () {
             userPoly = null;
         });
-
-
-    })
-
+        spyOn($ionicPopup, 'confirm').and.callFake(function () {
+            // console.log("MOCK $ionicPopup.confirm")
+            var defer = $q.defer();
+            defer.resolve(true);
+            return defer.promise;
+        });
+        spyOn($ionicPopup, 'alert').and.callFake(function () {
+            // console.log("MOCK $ionicPopup.alert")
+            var defer = $q.defer();
+            defer.resolve(true);
+            return defer.promise;
+        });
+        spyOn(GeolocationService, 'enable').and.callFake(function () {
+            var defer = $q.defer();
+            defer.resolve(true);
+            return defer.promise;
+        });
+    });
 
     describe('recordingTrack', function () {
-
         it('submbitData', function () {
-
             GeolocationService.enable().then(function () {
-
                 MainController.startNavigation(true);
-
                 BackgroundGeolocation.callbackFun({
                     latitude: currentLat,
                     longitude: currentLong,
@@ -231,27 +227,15 @@ describe('MainController', function () {
                     accuracy: 10
                 });
 
-
-
                 MainController.stopNavigation();
-
-
-            })
-
+            });
 
             $httpBackend.flush();
-
-        })
+        });
 
         afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
-
-    })
-
-
-
-
-
+    });
 });

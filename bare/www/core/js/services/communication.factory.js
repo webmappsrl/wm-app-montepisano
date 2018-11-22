@@ -37,7 +37,7 @@ angular.module('webmapp')
                     queueInterval = null;
                 }
             }, function (error) {
-                console.log(error)
+                // console.log(error)
             });
         };
 
@@ -104,7 +104,7 @@ angular.module('webmapp')
                 });
 
             return defer.promise;
-        }
+        };
 
         communication.getJSON = function (url) {
             var defer = $q.defer();
@@ -170,11 +170,11 @@ angular.module('webmapp')
 
                 if (!queueInterval) {
                     queueInterval = setInterval(queueIntervalFunction, intervalDelay);
+                    console.log(queueInterval)
                 }
 
                 defer.resolve(false);
             });
-
 
             return defer.promise;
         };
@@ -212,8 +212,8 @@ angular.module('webmapp')
             $rootScope.$on('$destroy', function () {
                 MapService.setItemInLocalStorage("$wm_queueToSend", JSON.stringify(queueToSend)).then(function () {
                 }, function () {
-
                 });
+
                 for (var i in registeredEvents) {
                     registeredEvents[i]();
                 }

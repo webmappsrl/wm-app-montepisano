@@ -1,4 +1,4 @@
-describe('Package.Factory', function() {
+xdescribe('Package.Factory', function () {
 
     beforeEach(module('webmapp'));
 
@@ -14,7 +14,7 @@ describe('Package.Factory', function() {
     var $ionicPopup;
     var config;
     var baseUrl, endpoint;
-    beforeEach(inject(function(
+    beforeEach(inject(function (
         _PackageService_,
         _$httpBackend_,
         _$q_,
@@ -50,9 +50,9 @@ describe('Package.Factory', function() {
 
 
 
-    describe('getImage', function() {
+    describe('getImage', function () {
 
-        it('it should update package image', function() {
+        it('it should update package image', function () {
 
 
 
@@ -62,7 +62,7 @@ describe('Package.Factory', function() {
     });
 
 
-    afterEach(function() {
+    afterEach(function () {
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
     });

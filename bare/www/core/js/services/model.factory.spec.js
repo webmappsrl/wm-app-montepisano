@@ -1,14 +1,9 @@
-describe('Model.Factory', function() {
-
-
-
-    beforeEach(module('webmapp'));
-
+describe('Model.Factory', function () {
     var modelService;
     var Search;
     var $httpBackend;
     var $rootScope;
-    var config;
+    var CONFIG;
     var Utils;
 
     var menuLayerGroupLabel = "LayerGroupTest";
@@ -25,11 +20,11 @@ describe('Model.Factory', function() {
     var menuPageGroupColor = "menuPageGroupColor";
     var menuLayerGroupColor = "menuLayerGroupColor";
 
-    //set fake CONFIG before inject the provider
-    beforeEach(inject(function(_CONFIG_) {
-        config = _CONFIG_;
+    beforeEach(module('webmapp'));
 
-        config.OPTIONS = {
+    beforeEach(function () {
+        CONFIG = angular.copy(MOCK_CONFIG);
+        CONFIG.OPTIONS = {
             "title": "CONFIGTEST",
             "startUrl": "/",
             "useLocalStorageCaching": false,
@@ -48,159 +43,137 @@ describe('Model.Factory', function() {
             "mainMenuHideAttributionPage": true,
             "showAccessibilityButtons": true
         };
-
-        if (config.OVERLAY_LAYERS) {
-            config.OVERLAY_LAYERS = [{
-                    "id": 1,
-                    "geojsonUrl": "pois_1.geojson",
-                    "label": poiLayerLabel,
-                    "color": poiColor,
-                    "icon": "wm-icon-siti-interesse",
-                    "showByDefault": true,
-                    "type": "poi_geojson",
-                    "alert": false,
-                    "languages": {
-                        "it": poiLayerLabel,
-                        "en": poiLayerLabel
-                    }
-                }, {
-                    "id": 3,
-                    "geojsonUrl": "pois_1.geojson",
-                    "label": poiLayerLabel1,
-                    "showByDefault": true,
-                    "type": "poi_geojson",
-                    "alert": false,
-                    "languages": {
-                        "it": poiLayerLabel1,
-                        "en": poiLayerLabel1
-                    }
-                },
-                {
-                    "id": 2,
-                    "geojsonUrl": "tracks_2.geojson",
-                    "label": trackLayerLabel,
-                    "color": "#dd3333",
-                    "icon": "wm-icon-trail",
-                    "showByDefault": false,
-                    "type": "line_geojson",
-                    "alert": false,
-                    "languages": {
-                        "it": trackLayerLabel,
-                        "en": trackLayerLabel
-                    }
+        CONFIG.OVERLAY_LAYERS = [
+            {
+                "id": 1,
+                "geojsonUrl": "pois_1.geojson",
+                "label": poiLayerLabel,
+                "color": poiColor,
+                "icon": "wm-icon-siti-interesse",
+                "showByDefault": true,
+                "type": "poi_geojson",
+                "alert": false,
+                "languages": {
+                    "it": poiLayerLabel,
+                    "en": poiLayerLabel
                 }
-            ];
-        }
-
-        if (config.MENU) {
-            config.MENU = [{
-                    "label": menuMapLabel,
-                    "type": "map",
-                    "color": mapColor,
-                    "icon": "wm-icon-generic"
-                },
-                {
-                    "label": menuLayerGroupLabel,
-                    "type": "layerGroup",
-                    "icon": "wm-icon-generic",
-                    "items": [
-                        poiLayerLabel
-                    ]
-                },
-                {
-                    "label": "menuLayerGroupLabel1",
-                    "type": "layerGroup",
-                    "color": menuLayerGroupColor,
-                    "icon": "wm-icon-generic",
-                    "items": [
-                        poiLayerLabel1
-                    ]
-                },
-                {
-                    "label": menuPageLabel,
-                    "type": "page"
-                },
-                {
-                    "label": menuPageGroupLabel,
-                    "type": "pageGroup",
-                    "color": menuPageGroupColor,
-                    "items": [
-                        pageLabel
-                    ]
+            },
+            {
+                "id": 3,
+                "geojsonUrl": "pois_1.geojson",
+                "label": poiLayerLabel1,
+                "showByDefault": true,
+                "type": "poi_geojson",
+                "alert": false,
+                "languages": {
+                    "it": poiLayerLabel1,
+                    "en": poiLayerLabel1
                 }
-            ];
-        }
+            },
+            {
+                "id": 2,
+                "geojsonUrl": "tracks_2.geojson",
+                "label": trackLayerLabel,
+                "color": "#dd3333",
+                "icon": "wm-icon-trail",
+                "showByDefault": false,
+                "type": "line_geojson",
+                "alert": false,
+                "languages": {
+                    "it": trackLayerLabel,
+                    "en": trackLayerLabel
+                }
+            }
+        ];
+        CONFIG.MENU = [
+            {
+                "label": menuMapLabel,
+                "type": "map",
+                "color": mapColor,
+                "icon": "wm-icon-generic"
+            },
+            {
+                "label": menuLayerGroupLabel,
+                "type": "layerGroup",
+                "icon": "wm-icon-generic",
+                "items": [
+                    poiLayerLabel
+                ]
+            },
+            {
+                "label": "menuLayerGroupLabel1",
+                "type": "layerGroup",
+                "color": menuLayerGroupColor,
+                "icon": "wm-icon-generic",
+                "items": [
+                    poiLayerLabel1
+                ]
+            },
+            {
+                "label": menuPageLabel,
+                "type": "page"
+            },
+            {
+                "label": menuPageGroupLabel,
+                "type": "pageGroup",
+                "color": menuPageGroupColor,
+                "items": [
+                    pageLabel
+                ]
+            }
+        ];
+        CONFIG.PAGES = [{
+            "label": pageLabel,
+            "type": pageLabelType,
+            "isCustom": true
+        }];
 
+        module(function ($provide) {
+            $provide.value('CONFIG', CONFIG);
+        });
 
+        // console.log(CONFIG);
+    });
 
-        if (config.PAGES) {
-            config.PAGES = [{
-                "label": pageLabel,
-                "type": pageLabelType,
-                "isCustom": true
-            }];
-        }
-
-
-        if (config.LANGUAGES)
-            delete config.LANGUAGES;
-        if (config.OFFLINE)
-            delete config.OFFLINE;
-        if (config.REPORT)
-            delete config.REPORT;
-        if (config.OPTIONS)
-            delete config.OPTIONS;
-        if (config.SHARE)
-            delete config.SHARE;
-        if (config.COMMUNICATION)
-            delete config.COMMUNICATION;
-        if (config.DETAIL_MAPPING)
-            delete config.DETAIL_MAPPING;
-
-        // console.log(config);
-    }));
-
-    beforeEach(inject(function(Model, _$httpBackend_, _$rootScope_, _Search_, _Utils_) {
+    beforeEach(inject(function (Model, _$httpBackend_, _$rootScope_, _Search_, _Utils_) {
         $httpBackend = _$httpBackend_;
         $rootScope = _$rootScope_;
         Utils = _Utils_;
-        modelService = Model
+        modelService = Model;
         Search = _Search_;
         $httpBackend.whenGET().respond(404);
     }));
 
-
-    describe('isLayerInMenu', function() {
-        it('it should be defined', function() {
+    describe('isLayerInMenu', function () {
+        it('it should be defined', function () {
             expect(modelService.isLayerInMenu(menuLayerGroupLabel)).toBeDefined();
             expect(modelService.isLayerInMenu(poiLayerLabel)).toBeDefined();
             $httpBackend.flush();
         });
-        it('it should not be defined', function() {
+        it('it should not be defined', function () {
             expect(modelService.isLayerInMenu("test123")).not.toBeDefined();
             expect(modelService.isLayerInMenu(trackLayerLabel)).not.toBeDefined();
             $httpBackend.flush();
         });
-    })
+    });
 
-    describe('getItemType', function() {
-        it('it should be defined', function() {
+    describe('getItemType', function () {
+        it('it should be defined', function () {
             expect(modelService.isLayerInMenu(menuLayerGroupLabel)).toBeDefined();
             $httpBackend.flush();
         });
-        it('it should not be defined', function() {
+        it('it should not be defined', function () {
             expect(modelService.isLayerInMenu("test123")).not.toBeDefined();
             $httpBackend.flush();
         });
-        afterEach(function() {
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
-    })
+    });
 
-
-    describe('getItemType', function() {
-        it('it should be return correct type', function() {
+    describe('getItemType', function () {
+        it('it should be return correct type', function () {
             expect(modelService.getItemType(menuLayerGroupLabel)).toEqual("layerGroup");
             expect(modelService.getItemType(poiLayerLabel)).toEqual("layer");
             expect(modelService.getItemType(pageLabel)).toEqual("page");
@@ -208,22 +181,22 @@ describe('Model.Factory', function() {
             // expect(modelService.getItemType(menuPageLabel)).toEqual("page");
             $httpBackend.flush();
         });
-        it('it should return undefined', function() {
+        it('it should return undefined', function () {
             expect(modelService.getItemType("wrongLabel")).not.toBeDefined();
             expect(modelService.getItemType("wrongLabel")).not.toBeDefined();
             expect(modelService.getItemType("wrongLabel")).not.toBeDefined();
             expect(modelService.getItemType("wrongLabel")).not.toBeDefined();
             $httpBackend.flush();
         });
-        afterEach(function() {
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
 
-    })
+    });
 
-    describe('buildItemUrl', function() {
-        it('it should build correct url', function() {
+    describe('buildItemUrl', function () {
+        it('it should build correct url', function () {
             var separator = '/';
             var item = {};
 
@@ -246,18 +219,15 @@ describe('Model.Factory', function() {
             expect(modelService.buildItemUrl(item)).toEqual("layer" + separator + item.label.replace(/ /g, '_'));
             $httpBackend.flush();
         });
-        afterEach(function() {
+
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
-
     });
 
-
-    describe('addItemToLayer', function() {
-
-
-        it('it should add item successfully to Model and Search', function() {
+    describe('addItemToLayer', function () {
+        it('it should add item successfully to Model and Search', function () {
             var item = {
                 properties: {
                     name: "featureName"
@@ -276,7 +246,7 @@ describe('Model.Factory', function() {
             $httpBackend.flush();
         });
 
-        it('it should add item to Model but not to Search', function() {
+        it('it should add item to Model but not to Search', function () {
             var item = {
                 properties: {
                     name: "featureName"
@@ -293,10 +263,9 @@ describe('Model.Factory', function() {
             expect(Search.addToIndex).not.toHaveBeenCalled();
             expect(temp.items).toContain(item);
             $httpBackend.flush();
+        });
 
-        })
-
-        it('it should not add item to Model or Search', function() {
+        it('it should not add item to Model or Search', function () {
             var item = {};
             var layer = {
                 label: poiLayerLabel
@@ -324,15 +293,14 @@ describe('Model.Factory', function() {
             $httpBackend.flush();
         });
 
-        afterEach(function() {
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
     });
 
-    describe('isAChild', function() {
-
-        it('it should return correct values', function() {
+    describe('isAChild', function () {
+        it('it should return correct values', function () {
             expect(modelService.isAChild(poiLayerLabel)).toBeDefined();
             expect(modelService.isAChild(trackLayerLabel)).not.toBeDefined();
             expect(modelService.isAChild("wrongLabel")).not.toBeDefined();
@@ -340,86 +308,85 @@ describe('Model.Factory', function() {
             $httpBackend.flush();
         });
 
-        afterEach(function() {
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
 
     });
 
-
-    describe('isAPageChild', function() {
-        it('it should return correct values', function() {
+    describe('isAPageChild', function () {
+        it('it should return correct values', function () {
             expect(modelService.isAPageChild(pageLabel)).toBeDefined();
             expect(modelService.isAPageChild("wrongLabel")).not.toBeDefined();
             $httpBackend.flush();
         });
 
-        afterEach(function() {
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
-
-
     });
 
-    describe('isAPageGroup', function() {
-        it('it should return correct values', function() {
+    describe('isAPageGroup', function () {
+        it('it should return correct values', function () {
             expect(modelService.isAPageGroup(menuPageGroupLabel)).toBeDefined();
             expect(modelService.isAPageGroup("wrongLabel")).not.toBeDefined();
             $httpBackend.flush();
         });
 
-        afterEach(function() {
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
     });
 
-    describe('isAnOverlayGroup', function() {
-        it('it should return correct values', function() {
+    describe('isAnOverlayGroup', function () {
+        it('it should return correct values', function () {
             expect(modelService.isAnOverlayGroup(menuLayerGroupLabel)).toBeDefined();
             expect(modelService.isAnOverlayGroup("wrongLabel")).not.toBeDefined();
             $httpBackend.flush();
         });
 
-        afterEach(function() {
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
     });
 
-
-    describe('getListColor', function() {
-
-        it("it should return the rigth color", function() {
-
+    describe('getListColor', function () {
+        it("it should return the rigth color", function () {
             expect(modelService.getListColor(menuMapLabel)).toEqual(mapColor);
 
-            config.MAIN = { STYLE: { menu: { color: "someColor" } } }
+            CONFIG.MAIN = { STYLE: { menu: { color: "someColor" } } }
             expect(modelService.getListColor(menuPageLabel)).toEqual("someColor");
-            delete config.MAIN;
+            delete CONFIG.MAIN;
 
-            config.STYLE.menu.color = "anotherColor";
+            CONFIG.STYLE.menu = {
+                color: "anotherColor"
+            };
             expect(modelService.getListColor(menuLayerGroupLabel)).toEqual("anotherColor");
 
             expect(modelService.getListColor(poiLayerLabel)).toEqual(poiColor);
             expect(modelService.getListColor(poiLayerLabel1)).toEqual(menuLayerGroupColor);
 
-            config.STYLE.global.color = "globalColor";
+            CONFIG.STYLE.global = {
+                color: "globalColor"
+            };
             expect(modelService.getListColor("unknown")).toEqual("globalColor");
 
             expect(modelService.getListColor(pageLabel)).toEqual(menuPageGroupColor);
 
             $httpBackend.flush();
-        })
-        afterEach(function() {
+        });
+
+        afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
     });
