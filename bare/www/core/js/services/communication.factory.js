@@ -152,42 +152,29 @@ angular.module('webmapp')
         };
 
         communication.queuedPost = function (url, data) {
-            var defer = $q.defer();
-            queueToSend.push({
-                url: url,
-                data: data
-            });
-            try {
-                MapService.setItemInLocalStorage("$wm_queueToSend", JSON.stringify(queueToSend));
-            }
-            catch (e) { }
+            var defer = $q.defer(),
+                currentRequest = communication.callAPI(url, data);
 
-            if (!queueInterval) {
-                var index = queueToSend.length - 1,
-                    currentRequest = communication.callAPI(url, data);
-
-                currentRequest.then(function () {
-                    queueToSend.splice(index, 1);
-                    try {
-                        MapService.setItemInLocalStorage("$wm_queueToSend", JSON.stringify(queueToSend));
-                    }
-                    catch (e) { }
-
-                    if (queueToSend.length <= 0) {
-                        try {
-                            clearInterval(queueInterval)
-                        }
-                        catch (e) { }
-
-                        queueInterval = null;
-                    }
-
-                    defer.resolve(true);
-                }, function (error) {
-                    queueInterval = setInterval(queueIntervalFunction, intervalDelay);
-                    defer.resolve(false);
+            currentRequest.then(function () {
+                defer.resolve(true);
+            }, function (error) {
+                queueToSend.push({
+                    url: url,
+                    data: data
                 });
-            }
+
+                try {
+                    MapService.setItemInLocalStorage("$wm_queueToSend", JSON.stringify(queueToSend));
+                }
+                catch (e) { }
+
+                if (!queueInterval) {
+                    queueInterval = setInterval(queueIntervalFunction, intervalDelay);
+                }
+
+                defer.resolve(false);
+            });
+
 
             return defer.promise;
         };
