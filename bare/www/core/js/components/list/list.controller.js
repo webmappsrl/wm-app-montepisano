@@ -33,7 +33,7 @@ angular.module('webmapp')
 
             if (group) {
                 for (var i in group.items) {
-                    currentOverlay = Model.getOverlay(group.items[i]);
+                    currentOverlay = Model.getOverlayMeta(group.items[i]);
                     if (currentOverlay) {
                         currentOverlay.url = currentOverlay.label.replace(/ /g, '_');
                         res.push(currentOverlay);
@@ -148,9 +148,6 @@ angular.module('webmapp')
             // console.log(vm)
         };
 
-        init();
-        // $scope.$on('$stateChangeSuccess', init);
-
         vm.renderDate = function (date) {
             var parsedDate,
                 month, year;
@@ -179,6 +176,8 @@ angular.module('webmapp')
 
             vm.goTo('search');
         };
+
+        init();
 
         return vm;
     });

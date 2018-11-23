@@ -213,6 +213,7 @@ button.button-reset {
   text-shadow: 0 0 1px rgba(34, 28, 18, 0.4); }
 
 button.login-button {
+  white-space: initial;
   max-width: 215px;
   display: block; }
   button.login-button .icon {
@@ -601,7 +602,7 @@ div.detailRoute-footer {
   border-top: 1px solid #605846;
   padding: 12px; }
   div.detailRoute-footer button.login-button.button {
-    height: 54px;
+    min-height: 54px;
     width: auto;
     max-width: initial;
     font-size: 20px; }
@@ -1612,18 +1613,17 @@ button.login-button {
   border-radius: 0;
   line-height: 42px;
   vertical-align: middle; }
+  button.login-button.skip-login {
+    color: #918f75;
+    margin: 0 auto;
+    height: auto;
+    padding: 5px 30px;
+    text-transform: uppercase; }
   button.login-button i {
     line-height: 42px;
     font-size: 21px;
     position: absolute;
     right: 20px; }
-
-button.login-button.skip-login {
-  color: #918f75;
-  margin: 0 auto;
-  height: auto;
-  padding: 5px 30px;
-  text-transform: uppercase; }
 
 .login-page {
   background: #f8faf3; }
@@ -3580,8 +3580,9 @@ button.no-animate.button.button-icon.icon.wm-icon-funnel-wm {
     padding: 0 15px;
     background-color: #FCFDF7; }
 
-ion-content ion-content.withSearchBar.scroll-content div#whitespace {
-  height: 55px; }
+.bottom-whitespace {
+  height: 35px;
+  width: 100%; }
 
 .packages-title {
   margin: 10px 0;

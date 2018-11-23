@@ -1899,8 +1899,6 @@ angular.module('webmapp')
             if (feature.geometry.type === 'LineString' || feature.geometry.type === 'MultiLineString') {
                 var bounds = L.geoJson(feature).getBounds();
                 map.fitBounds(bounds);
-                var actual = map.getBounds();
-                console.log(bounds, actual)
             } else {
                 map.setView({
                     lat: feature.geometry.coordinates[1],

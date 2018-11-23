@@ -19,12 +19,9 @@ button.no-animate.button.button-icon.icon.wm-icon-funnel-wm {
   }
 }
 
-ion-content {
-  ion-content.withSearchBar.scroll-content {
-    div#whitespace {
-      height: 55px;
-    }
-  }
+.bottom-whitespace {
+  height: 35px;
+  width: 100%;
 }
 
 .packages-title {
