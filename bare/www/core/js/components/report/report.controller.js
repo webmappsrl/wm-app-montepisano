@@ -154,13 +154,13 @@ angular.module('webmapp')
         };
 
         vm.sendReport = function () {
-            report.type = vm.reports[vm.selectedReport].type;
-            report.form_data = {};
+            report.properties.type = vm.reports[vm.selectedReport].type;
+            report.properties.form_data = {};
 
             vm.isLoading = true;
 
             for (var i in vm.reports[vm.selectedReport].fields) {
-                report.form_data[vm.reports[vm.selectedReport].fields[i].name] = vm.reports[vm.selectedReport].fields[i].value;
+                report.properties.form_data[vm.reports[vm.selectedReport].fields[i].name] = vm.reports[vm.selectedReport].fields[i].value;
             }
 
             var url = CONFIG.USER_COMMUNICATION.apiUrl ? CONFIG.USER_COMMUNICATION.apiUrl : "https://api.webmapp.it/services/share.php";
@@ -207,7 +207,16 @@ angular.module('webmapp')
                         Utils.goBack();
                     }
                     else {
-                        report.app = {
+                        report = {
+                            type: "Feature",
+                            geometry: {
+                                type: "Point"
+                            },
+                            properties: {
+                            }
+                        };
+
+                        report.properties.app = {
                             id: CONFIG.appId,
                             routeId: CONFIG.routeID ? CONFIG.routeID : null,
                             name: CONFIG.MAIN ? CONFIG.MAIN.OPTIONS.title : CONFIG.OPTIONS.title,
@@ -216,14 +225,14 @@ angular.module('webmapp')
 
                         var device = ionic.Platform.device();
 
-                        report.device = {
+                        report.properties.device = {
                             os: device.platform,
                             version: device.version
                         };
 
                         userData = Auth.getUserData();
                         if (userData && userData.ID) {
-                            report.user = {
+                            report.properties.user = {
                                 id: userData.ID,
                                 email: userData.user_email,
                                 first_name: userData.first_name,
@@ -231,16 +240,16 @@ angular.module('webmapp')
                             };
                         }
                         else {
-                            report.user = {};
+                            report.properties.user = {};
                         }
 
-                        report.timestamp = Date.now();
+                        report.properties.timestamp = Date.now();
 
                         if (position.altitude) {
-                            report.position = [position.long, position.lat, position.altitude];
+                            report.geometry.coordinates = [position.long, position.lat, position.altitude];
                         }
                         else {
-                            report.position = [position.long, position.lat];
+                            report.geometry.coordinates = [position.long, position.lat];
                         }
                     }
                 }
