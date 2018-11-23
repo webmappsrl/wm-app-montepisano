@@ -3575,8 +3575,9 @@ button.no-animate.button.button-icon.icon.wm-icon-funnel-wm {
     padding: 0 15px;
     background-color: #FCFDF7; }
 
-ion-content ion-content.withSearchBar.scroll-content div#whitespace {
-  height: 55px; }
+.bottom-whitespace {
+  height: 35px;
+  width: 100%; }
 
 .packages-title {
   margin: 10px 0;

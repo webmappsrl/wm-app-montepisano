@@ -53,14 +53,14 @@
     <div ng-style="{
         'background': vm.colors.global.background
     }" class="detailRoute-footer">
-        <div ng-if="true || !vm.isPublic &&
+        <div ng-if="!vm.isPublic &&
                 (
                     (
                         vm.isLoggedIn && !vm.userPackagesId[vm.id]
                     ) ||
                     !vm.isLoggedIn
                 )">
-            <button ng-if="true || vm.voucherAvailable" ng-style="{
+            <button ng-if="vm.voucherAvailable" ng-style="{
                     'background': COLORS.global.buttonsBackground,
                     'color': COLORS.global.buttonsColor
                 }" class="login-button button left" ng-class="{
@@ -68,7 +68,7 @@
                 }" ng-click="vm.applyVoucherFunction()">
                 {{vm.isAndroid ? "Codice Viaggio" : "Cliente Verde Natura" | translate}}
             </button>
-            <button ng-if="true || vm.purchaseAvailable" ng-style="{
+            <button ng-if="vm.purchaseAvailable" ng-style="{
                     'background': COLORS.global.buttonsBackground,
                     'color': COLORS.global.buttonsColor
                 }" class="login-button button right" ng-class="{
@@ -77,7 +77,7 @@
                 {{"Acquista" | translate}}
             </button>
         </div>
-        <div ng-if="false && (
+        <div ng-if="(
                     !vm.userDownloadedPackages[vm.id] &&
                     (
                         (
@@ -95,7 +95,7 @@
                 {{"Scarica" | translate}}
             </button>
         </div>
-        <div ng-if="false && vm.userDownloadedPackages[vm.id] &&
+        <div ng-if="vm.userDownloadedPackages[vm.id] &&
                 (
                     (
                         vm.isLoggedIn &&

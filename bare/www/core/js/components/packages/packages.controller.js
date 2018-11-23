@@ -50,7 +50,7 @@ angular.module('webmapp')
         vm.firstLoading = true;
         vm.isLoggedIn = Auth.isLoggedIn();
         vm.isBrowser = Utils.isBrowser();
-        vm.isAndroid = !window.cordova || window.cordova.platformId === 'ios' ? false : true;
+        vm.isAndroid = window.cordova && window.cordova.platformId === 'android' ? true : false;
         vm.openInAppBrowser = Utils.openInAppBrowser;
         vm.pageConf = Model.getPage('Pacchetti');
         vm.search = "";
