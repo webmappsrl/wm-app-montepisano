@@ -661,7 +661,7 @@ angular.module('webmapp')
                                 var dataToSend = {
                                     type: "Feature",
                                     properties: {
-                                        type: "tracking",
+                                        type: "realTimeTracking",
                                         app: realTimeTracking.app,
                                         device: realTimeTracking.device,
                                         user: realTimeTracking.user
