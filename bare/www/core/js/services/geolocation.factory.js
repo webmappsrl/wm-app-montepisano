@@ -7,6 +7,8 @@ angular.module('webmapp')
         $q,
         $rootScope,
         $translate,
+        Auth,
+        Communication,
         CONFIG,
         MapService,
         Utils
@@ -131,7 +133,19 @@ angular.module('webmapp')
             url: "https://api.webmapp.it/services/share.php",
             positionsToSend: [],
             minPositionsToSend: 1,
-            appUrl: CONFIG.COMMUNICATION.baseUrl
+            // appUrl: CONFIG.COMMUNICATION.baseUrl,
+            app: {
+                id: CONFIG.appId,
+                routeId: CONFIG.routeID ? CONFIG.routeID : null,
+                name: CONFIG.MAIN ? CONFIG.MAIN.OPTIONS.title : CONFIG.OPTIONS.title,
+                route: CONFIG.MAIN ? CONFIG.OPTIONS.title : null
+            },
+            device: {
+                os: ionic.Platform.device().platform,
+                version: ionic.Platform.device().version
+            },
+            user: {},
+            isActive: false
         };
 
         if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.realTimeTrackingUrl) {
@@ -530,9 +544,8 @@ angular.module('webmapp')
             });
         };
 
-        console.warn("TODO: complete function positionCallback for realTimeTracking")
         function positionCallback(position) {
-            // console.log(position);
+            console.log(position);
 
             if (!geolocationState.isActive) {
                 return;
@@ -629,7 +642,7 @@ angular.module('webmapp')
                     }
 
                     if (recordingState.isActive && !recordingState.isPaused) {
-                        if (false && realTimeTracking.enabled && vm.userData.ID) {
+                        if (realTimeTracking.isActive) {
                             // vm.positionsToSend.push({
                             //     lat: lat,
                             //     lng: long,
@@ -639,45 +652,32 @@ angular.module('webmapp')
                             //     timestamp: position.timestamp
                             // });
 
-                            realTimeTracking.positionsToSend.push([
-                                long,
-                                lat,
-                                altitude
-                                // ,
-                                // position.timestamp,
-                                // position.coords.speed,
-                                // position.coords.heading
-                            ]);
+                            realTimeTracking.positionsToSend.push({
+                                timestamp: Date.now(),
+                                coordinates: altitude ? [long, lat, altitude] : [long, lat]
+                            });
 
                             if (realTimeTracking.positionsToSend.length >= realTimeTracking.minPositionsToSend) {
-                                var currentRequest = Communication.callAPI(realTimeTracking.url, {
-                                    type: "FeatureCollection",
-                                    features: [{
-                                        type: "Feature",
-                                        properties: {
-                                            type: "tracking",
-                                            app: realTimeTracking.appUrl,
-                                            routeId: vm.routeId,
-                                            trackId: vm.stopNavigationUrlParams.id,
-                                            email: vm.userData.user_email,
-                                            firstName: vm.userData.first_name,
-                                            lastName: vm.userData.last_name
-                                        },
-                                        geometry: {
-                                            type: "LineString",
-                                            coordinates: realTimeTracking.positionsToSend
-                                        }
-                                    }]
-                                });
-
-                                currentRequest
-                                    .then(function () {
-                                        realTimeTracking.positionsToSend = [];
-                                        return;
+                                var dataToSend = {
+                                    type: "Feature",
+                                    properties: {
+                                        type: "tracking",
+                                        app: realTimeTracking.app,
+                                        device: realTimeTracking.device,
+                                        user: realTimeTracking.user
                                     },
-                                        function (error) {
-                                            return;
-                                        });
+                                    geometry: {
+                                        type: "Point"
+                                    }
+                                };
+                                for (var i in realTimeTracking.positionsToSend) {
+                                    dataToSend.geometry.coordinates = realTimeTracking.positionsToSend[i].coordinates;
+                                    dataToSend.properties.timestamp = realTimeTracking.positionsToSend[i].timestamp;
+
+                                    Communication.queuedPost(realTimeTracking.url, dataToSend);
+                                }
+
+                                realTimeTracking.positionsToSend.splice(0, realTimeTracking.positionsToSend.length);
                             }
                         }
 
@@ -1266,6 +1266,10 @@ angular.module('webmapp')
                     }
                 }
 
+                if (realTimeTracking.enabled) {
+                    geolocationService.startRemoteTracking();
+                }
+
                 defer.resolve({
                     isActive: recordingState.isActive,
                     isPaused: recordingState.isPaused
@@ -1296,6 +1300,10 @@ angular.module('webmapp')
                 });
 
                 recordingState.toast.reset();
+
+                if (realTimeTracking.isActive) {
+                    geolocationService.stopRemoteTracking();
+                }
 
                 defer.resolve({
                     isActive: recordingState.isActive,
@@ -1334,11 +1342,17 @@ angular.module('webmapp')
                     handleToast(state.lastPosition.lat, state.lastPosition.long);
                 }
 
+                if (realTimeTracking.enabled) {
+                    geolocationService.startRemoteTracking();
+                }
+
                 defer.resolve({
                     isActive: recordingState.isActive,
                     isPaused: recordingState.isPaused
                 });
             } else if (recordingState.isActive && !recordingState.isPaused) {
+                geolocationService.startRemoteTracking();
+
                 defer.resolve({
                     isActive: recordingState.isActive,
                     isPaused: recordingState.isPaused
@@ -1363,6 +1377,11 @@ angular.module('webmapp')
                 isActive: recordingState.isActive,
                 isPaused: recordingState.isPaused
             });
+
+            if (realTimeTracking.isActive) {
+                geolocationService.stopRemoteTracking();
+            }
+
             defer.resolve({
                 isActive: recordingState.isActive,
                 isPaused: recordingState.isPaused
@@ -1432,8 +1451,8 @@ angular.module('webmapp')
          * @returns {boolean}
          *      true if started correctly, false otherwise
          */
-        console.warn("TODO: implement function startRemoteTracking");
         geolocationService.startRemoteTracking = function () {
+            realTimeTracking.isActive = true;
             return false;
         };
 
@@ -1444,8 +1463,8 @@ angular.module('webmapp')
          * @returns {boolean}
          *      true if correctly executed, false otherwise
          */
-        console.warn("TODO: implement function stopRemoteTracking");
         geolocationService.stopRemoteTracking = function () {
+            realTimeTracking.isActive = false;
             return false;
         };
 
@@ -1458,6 +1477,23 @@ angular.module('webmapp')
                 turnOffRotationAndFollow();
             } else {
                 state.skipZoomEvent = false;
+            }
+        });
+
+        $rootScope.$on('logged-in', function () {
+            if (Auth.isLoggedIn()) {
+                var userData = Auth.getUserData();
+                if (userData && userData.ID) {
+                    realTimeTracking.user = {
+                        id: userData.ID,
+                        email: userData.user_email,
+                        first_name: userData.first_name,
+                        last_name: userData.last_name
+                    };
+                }
+                else {
+                    realTimeTracking.user = {};
+                }
             }
         });
 
@@ -1485,6 +1521,19 @@ angular.module('webmapp')
                     saveBatteryOnBackground: false, // iOS only
                     maxLocations: 10000
                 };
+
+                var userData = Auth.getUserData();
+                if (userData && userData.ID) {
+                    realTimeTracking.user = {
+                        id: userData.ID,
+                        email: userData.user_email,
+                        first_name: userData.first_name,
+                        last_name: userData.last_name
+                    };
+                }
+                else {
+                    realTimeTracking.user = {};
+                }
             }
         });
 
