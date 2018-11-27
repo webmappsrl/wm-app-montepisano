@@ -228,8 +228,6 @@ angular.module('webmapp')
                 (CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl && CONFIG.MAIN.REPORT.email.default) ||
                 (CONFIG.MAIN.REPORT.sms && CONFIG.MAIN.REPORT.sms.default)));
 
-        vm.useReport = true;
-
         vm.showRightMenu = false;
         vm.filterIcon = CONFIG.OPTIONS.filterIcon;
 
@@ -315,32 +313,71 @@ angular.module('webmapp')
             );
         }
 
+        vm.validBibNumber = function () {
+            if ($scope.data.bibNumber === '') {
+                return true;
+            }
+            else {
+                var re = /^[0-9]+$/;
+
+                return re.test($scope.data.bibNumber);
+            }
+        };
+
         vm.login = function () {
-            $scope.data = {
-                bibNumber: -1,
-                password: ""
-            };
+            if (!$scope.data) {
+                $scope.data = {
+                    bibNumber: "",
+                    password: ""
+                };
+            }
 
             var popup = $ionicPopup.show({
-                template: '<input type="text" ng-model="data.bibNumber" placeholder="number"><br><input type="password" ng-model="data.password" placeholder="password">',
-                title: $translate.instant('ATTENZIONE'),
-                subTitle: $translate.instant("Di seguito specifica l'indirizzo email al quale inviare il percorso"),
+                template: '<input type="text" ng-class="{\'red\': !vm.validBibNumber()}" ng-model="data.bibNumber" placeholder="' + $translate.instant("Numero di gara") + '"><br><input type="password" ng-model="data.password" placeholder="' + $translate.instant("Password") + '">',
+                title: $translate.instant('LOGIN'),
+                subTitle: $translate.instant("Inserisci il tuo numero di gara e la password che ti è stata fornita"),
                 scope: $scope,
                 buttons: [
-                    { text: 'Cancel' },
+                    { text: $translate.instant('annulla') },
                     {
-                        text: $translate.instant('INVIA'),
+                        text: $translate.instant('Inizia'),
                         type: 'button-positive',
                         onTap: function (e) {
-                            return true;
+                            if (vm.validBibNumber()) {
+                                return true;
+                            }
+                            else {
+                                e.preventDefault();
+                            }
                         }
                     }
                 ]
             })
             popup.then(function (res) {
-                console.log($scope.data);
                 if (res) {
-                    vm.startNavigation(true);
+                    if ($scope.data.bibNumber && marathonUsers[+$scope.data.bibNumber] === $scope.data.password) {
+                        Auth.setUserData({
+                            bibNumber: $scope.data.bibNumber,
+                            password: $scope.data.password
+                        });
+                        vm.startNavigation(true);
+                    }
+                    else {
+                        var message = ""
+                        if ($scope.data.password === '') {
+                            message = "Inserisci una password valida e riprova";
+                        }
+                        else {
+                            message = "Password errata, riprova";
+                        }
+
+                        $ionicPopup.alert({
+                            title: $translate.instant("ATTENZIONE"),
+                            template: $translate.instant(message)
+                        }).then(function () {
+                            vm.login();
+                        }, function () { });
+                    }
                 }
             });
         };
@@ -1050,6 +1087,12 @@ angular.module('webmapp')
 
         $ionicPlatform.ready(function () {
             vm.userData = Auth.getUserData();
+            if (vm.userData.bibNumber) {
+                $scope.data = {
+                    bibNumber: vm.userData.bibNumber,
+                    password: vm.userData.password
+                }
+            }
             if (CONFIG.MAIN || !CONFIG.MULTIMAP) {
                 if (!GeolocationService.isActive()) {
                     GeolocationService.enable();

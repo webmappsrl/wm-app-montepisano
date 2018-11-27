@@ -573,24 +573,23 @@ angular.module('webmapp')
                     var collectionToSend = {
                         type: "FeatureCollection",
                         features: []
-                    },
-                        featureTemplate = {
+                    };
+
+                    for (var i in realTimeTracking.positionsToSend) {
+                        collectionToSend.features.push({
                             type: "Feature",
                             properties: {
                                 type: "realTimeTracking",
                                 app: realTimeTracking.app,
                                 device: realTimeTracking.device,
-                                user: realTimeTracking.user
+                                user: realTimeTracking.user,
+                                timestamp: realTimeTracking.positionsToSend[i].timestamp
                             },
                             geometry: {
-                                type: "Point"
+                                type: "Point",
+                                coordinates: realTimeTracking.positionsToSend[i].coordinates
                             }
-                        };
-
-                    for (var i in realTimeTracking.positionsToSend) {
-                        featureTemplate.geometry.coordinates = realTimeTracking.positionsToSend[i].coordinates;
-                        featureTemplate.properties.timestamp = realTimeTracking.positionsToSend[i].timestamp;
-                        collectionToSend.features.push(featureTemplate);
+                        });
                     }
 
                     Communication.queuedPost(realTimeTracking.url, collectionToSend, false);
