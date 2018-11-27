@@ -154,17 +154,17 @@ angular.module('webmapp')
         };
 
         vm.sendReport = function () {
-            report.properties.type = vm.reports[vm.selectedReport].type;
-            report.properties.form_data = {};
+            report.features[0].properties.type = vm.reports[vm.selectedReport].type;
+            report.features[0].properties.form_data = {};
 
             vm.isLoading = true;
 
             for (var i in vm.reports[vm.selectedReport].fields) {
-                report.properties.form_data[vm.reports[vm.selectedReport].fields[i].name] = vm.reports[vm.selectedReport].fields[i].value;
+                report.features[0].properties.form_data[vm.reports[vm.selectedReport].fields[i].name] = vm.reports[vm.selectedReport].fields[i].value;
             }
 
             var url = CONFIG.USER_COMMUNICATION.apiUrl ? CONFIG.USER_COMMUNICATION.apiUrl : "https://api.webmapp.it/services/share.php";
-            Communication.queuedPost(url, report).then(function (res) {
+            Communication.queuedPost(url, report, true).then(function (res) {
                 vm.isLoading = false;
                 if (res) {
                     $ionicPopup.alert({
@@ -208,15 +208,18 @@ angular.module('webmapp')
                     }
                     else {
                         report = {
-                            type: "Feature",
-                            geometry: {
-                                type: "Point"
-                            },
-                            properties: {
-                            }
+                            type: "FeatureCollection",
+                            features: [{
+                                type: "Feature",
+                                geometry: {
+                                    type: "Point"
+                                },
+                                properties: {
+                                }
+                            }]
                         };
 
-                        report.properties.app = {
+                        report.features[0].properties.app = {
                             id: CONFIG.appId,
                             routeId: CONFIG.routeID ? CONFIG.routeID : null,
                             name: CONFIG.MAIN ? CONFIG.MAIN.OPTIONS.title : CONFIG.OPTIONS.title,
@@ -225,14 +228,14 @@ angular.module('webmapp')
 
                         var device = ionic.Platform.device();
 
-                        report.properties.device = {
+                        report.features[0].properties.device = {
                             os: device.platform,
                             version: device.version
                         };
 
                         userData = Auth.getUserData();
                         if (userData && userData.ID) {
-                            report.properties.user = {
+                            report.features[0].properties.user = {
                                 id: userData.ID,
                                 email: userData.user_email,
                                 first_name: userData.first_name,
@@ -240,16 +243,16 @@ angular.module('webmapp')
                             };
                         }
                         else {
-                            report.properties.user = {};
+                            report.features[0].properties.user = {};
                         }
 
-                        report.properties.timestamp = Date.now();
+                        report.features[0].properties.timestamp = Date.now();
 
                         if (position.altitude) {
-                            report.geometry.coordinates = [position.long, position.lat, position.altitude];
+                            report.features[0].geometry.coordinates = [position.long, position.lat, position.altitude];
                         }
                         else {
-                            report.geometry.coordinates = [position.long, position.lat];
+                            report.features[0].geometry.coordinates = [position.long, position.lat];
                         }
                     }
                 }

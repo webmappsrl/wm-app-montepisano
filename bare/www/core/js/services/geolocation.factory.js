@@ -133,6 +133,8 @@ angular.module('webmapp')
             url: "https://api.webmapp.it/services/share.php",
             positionsToSend: [],
             minPositionsToSend: 1,
+            minDistanceBetweenPosition: 6,
+            lastPosition: null,
             app: {
                 id: CONFIG.appId,
                 routeId: CONFIG.routeID ? CONFIG.routeID : null,
@@ -141,21 +143,33 @@ angular.module('webmapp')
             },
             device: {},
             user: {},
-            isActive: false
+            isActive: false,
+            reset: function () {
+                realTimeTracking.positionsToSend = [];
+                realTimeTracking.lastPosition = null;
+                realTimeTracking.isActive = false;
+            }
         };
 
-        if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.realTimeTrackingUrl) {
-            realTimeTracking.url = CONFIG.MAIN.NAVIGATION.TRACKING.realTimeTrackingUrl;
-        }
         if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.realTimeTrackingUrl) {
             realTimeTracking.url = CONFIG.NAVIGATION.TRACKING.realTimeTrackingUrl;
         }
-
-        if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.TRACKING.minPositionsToSend) {
-            realTimeTracking.minPositionsToSend = CONFIG.MAIN.NAVIGATION.TRACKING.minPositionsToSend;
+        else if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.realTimeTrackingUrl) {
+            realTimeTracking.url = CONFIG.MAIN.NAVIGATION.TRACKING.realTimeTrackingUrl;
         }
+
         if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.TRACKING.minPositionsToSend) {
             realTimeTracking.minPositionsToSend = CONFIG.NAVIGATION.TRACKING.minPositionsToSend;
+        }
+        else if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.TRACKING.minPositionsToSend) {
+            realTimeTracking.minPositionsToSend = CONFIG.MAIN.NAVIGATION.TRACKING.minPositionsToSend;
+        }
+
+        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.TRACKING.minDistanceBetweenPosition) {
+            realTimeTracking.minDistanceBetweenPosition = CONFIG.NAVIGATION.TRACKING.minDistanceBetweenPosition;
+        }
+        else if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.TRACKING.minDistanceBetweenPosition) {
+            realTimeTracking.minDistanceBetweenPosition = CONFIG.MAIN.NAVIGATION.TRACKING.minDistanceBetweenPosition;
         }
 
         var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
@@ -540,8 +554,54 @@ angular.module('webmapp')
             });
         };
 
+        function realTimeTrackingFunction(lat, long, altitude) {
+            var currentDistance = realTimeTracking.lastPosition ? Utils.distanceInMeters(realTimeTracking.lastPosition.lat, realTimeTracking.lastPosition.long, lat, long) : -1;
+
+            if (currentDistance === -1 || currentDistance > realTimeTracking.minDistanceBetweenPosition) {
+                realTimeTracking.lastPosition = {
+                    lat: lat,
+                    long: long,
+                    altitude: altitude
+                };
+
+                realTimeTracking.positionsToSend.push({
+                    timestamp: Date.now(),
+                    coordinates: altitude ? [long, lat, altitude] : [long, lat]
+                });
+
+                if (realTimeTracking.positionsToSend.length >= realTimeTracking.minPositionsToSend) {
+                    var collectionToSend = {
+                        type: "FeatureCollection",
+                        features: []
+                    },
+                        featureTemplate = {
+                            type: "Feature",
+                            properties: {
+                                type: "realTimeTracking",
+                                app: realTimeTracking.app,
+                                device: realTimeTracking.device,
+                                user: realTimeTracking.user
+                            },
+                            geometry: {
+                                type: "Point"
+                            }
+                        };
+
+                    for (var i in realTimeTracking.positionsToSend) {
+                        featureTemplate.geometry.coordinates = realTimeTracking.positionsToSend[i].coordinates;
+                        featureTemplate.properties.timestamp = realTimeTracking.positionsToSend[i].timestamp;
+                        collectionToSend.features.push(featureTemplate);
+                    }
+
+                    Communication.queuedPost(realTimeTracking.url, collectionToSend, false);
+
+                    realTimeTracking.positionsToSend.splice(0, realTimeTracking.positionsToSend.length);
+                }
+            }
+        }
+
         function positionCallback(position) {
-            console.log(position);
+            // console.log(position);
 
             if (!geolocationState.isActive) {
                 return;
@@ -639,42 +699,7 @@ angular.module('webmapp')
 
                     if (recordingState.isActive && !recordingState.isPaused) {
                         if (realTimeTracking.isActive) {
-                            // vm.positionsToSend.push({
-                            //     lat: lat,
-                            //     lng: long,
-                            //     altitude: altitude,
-                            //     heading: position.coords.heading,
-                            //     speed: position.coords.speed,
-                            //     timestamp: position.timestamp
-                            // });
-
-                            realTimeTracking.positionsToSend.push({
-                                timestamp: Date.now(),
-                                coordinates: altitude ? [long, lat, altitude] : [long, lat]
-                            });
-
-                            if (realTimeTracking.positionsToSend.length >= realTimeTracking.minPositionsToSend) {
-                                var dataToSend = {
-                                    type: "Feature",
-                                    properties: {
-                                        type: "realTimeTracking",
-                                        app: realTimeTracking.app,
-                                        device: realTimeTracking.device,
-                                        user: realTimeTracking.user
-                                    },
-                                    geometry: {
-                                        type: "Point"
-                                    }
-                                };
-                                for (var i in realTimeTracking.positionsToSend) {
-                                    dataToSend.geometry.coordinates = realTimeTracking.positionsToSend[i].coordinates;
-                                    dataToSend.properties.timestamp = realTimeTracking.positionsToSend[i].timestamp;
-
-                                    Communication.queuedPost(realTimeTracking.url, dataToSend);
-                                }
-
-                                realTimeTracking.positionsToSend.splice(0, realTimeTracking.positionsToSend.length);
-                            }
+                            realTimeTrackingFunction(lat, long, altitude);
                         }
 
                         if (trackRecordingEnabled && recordingState.isRecordingPolyline) {
@@ -1450,6 +1475,7 @@ angular.module('webmapp')
          *      true if started correctly, false otherwise
          */
         var startRemoteTracking = function () {
+            realTimeTracking.reset();
             realTimeTracking.isActive = true;
             return true;
         };
@@ -1463,7 +1489,8 @@ angular.module('webmapp')
          */
         var stopRemoteTracking = function () {
             realTimeTracking.isActive = false;
-            return true;
+            realTimeTracking.reset();
+            return false;
         };
 
         $rootScope.$on('map-dragstart', function (e, value) {

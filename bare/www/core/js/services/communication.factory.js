@@ -151,17 +151,42 @@ angular.module('webmapp')
             return defer.promise;
         };
 
-        communication.queuedPost = function (url, data) {
-            var defer = $q.defer(),
-                currentRequest = communication.callAPI(url, data);
+        /**
+         * Create a queue to handle post communication. Same types of communication
+         * can be merged to prevent server overload
+         */
+        communication.queuedPost = function (url, data, mergeGeojson) {
+            var defer = $q.defer();
+            currentRequest = communication.callAPI(url, data);
 
             currentRequest.then(function () {
                 defer.resolve(true);
             }, function (error) {
-                queueToSend.push({
-                    url: url,
-                    data: data
-                });
+                var merged = false;
+
+                if (mergeGeojson) {
+                    for (var i in queueToSend) {
+                        if (url === queueToSend[i].url &&
+                            queueToSend[i].data.features && data.features &&
+                            queueToSend[i].data.features[0].properties && data.features[0].properties &&
+                            queueToSend[i].data.features[0].properties.type === data.features[0].properties.type) {
+
+                            for (var j in data.features) {
+                                queueToSend[i].data.features.push(data.features[j]);
+                            }
+
+                            merged = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!merged) {
+                    queueToSend.push({
+                        url: url,
+                        data: data
+                    });
+                }
 
                 try {
                     MapService.setItemInLocalStorage("$wm_queueToSend", JSON.stringify(queueToSend));
@@ -170,7 +195,6 @@ angular.module('webmapp')
 
                 if (!queueInterval) {
                     queueInterval = setInterval(queueIntervalFunction, intervalDelay);
-                    console.log(queueInterval)
                 }
 
                 defer.resolve(false);
@@ -179,14 +203,35 @@ angular.module('webmapp')
             return defer.promise;
         };
 
-        communication.getPostQueueLength = function (url) {
-            var defer = $q.defer()
+        communication.getPostQueueLength = function (url, types) {
+            var defer = $q.defer();
             if (queueLoaded) {
                 if (url) {
                     var count = 0;
-                    for (var i in queueToSend) {
-                        if (queueToSend[i].url === url) {
-                            count++;
+                    if (types) {
+                        for (var i in queueToSend) {
+                            if (queueToSend[i].url === url) {
+                                for (var j in types) {
+                                    if (queueToSend[i].data.features &&
+                                        queueToSend[i].data.features[0].properties.type === types[j]) {
+                                        count += queueToSend[i].data.features.length;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        for (var i in queueToSend) {
+                            if (queueToSend[i].url === url) {
+                                if (queueToSend[i].data.features &&
+                                    queueToSend[i].data.features.length > 0) {
+                                    count += queueToSend[i].data.features.length;
+                                }
+                                else {
+                                    count++;
+                                }
+                            }
                         }
                     }
 
@@ -198,7 +243,7 @@ angular.module('webmapp')
             }
             else {
                 setTimeout(function () {
-                    communication.getPostQueueLength(url).then(function (length) {
+                    communication.getPostQueueLength(url, types).then(function (length) {
                         defer.resolve(length)
                     }, function (err) {
                         defer.resolve(0)

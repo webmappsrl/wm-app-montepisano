@@ -136,7 +136,25 @@ angular.module('webmapp')
 
         var reportQueueLengthFunction = function () {
             var url = CONFIG.USER_COMMUNICATION.REPORT.apiUrl ? CONFIG.USER_COMMUNICATION.REPORT.apiUrl : "https://api.webmapp.it/services/share.php";
-            Communication.getPostQueueLength(url).then(function (length) {
+            var types = [];
+
+            for (var i in CONFIG.USER_COMMUNICATION.REPORT.items) {
+                var type = CONFIG.USER_COMMUNICATION.REPORT.items[i].type,
+                    found = false;
+
+                for (var j in types) {
+                    if (types[j] === type) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    types.push(type);
+                }
+            }
+
+            Communication.getPostQueueLength(url, types).then(function (length) {
                 vm.reportQueue.length = length;
                 if (vm.reportQueue.length === 0) {
                     try {
@@ -987,10 +1005,31 @@ angular.module('webmapp')
             $scope.$on('$ionicView.afterEnter', function () {
                 if (CONFIG.USER_COMMUNICATION && CONFIG.USER_COMMUNICATION.REPORT) {
                     var url = CONFIG.USER_COMMUNICATION.REPORT.apiUrl ? CONFIG.USER_COMMUNICATION.REPORT.apiUrl : "https://api.webmapp.it/services/share.php";
+                    var types = [];
 
-                    Communication.getPostQueueLength(url).then(function (length) {
+                    for (var i in CONFIG.USER_COMMUNICATION.REPORT.items) {
+                        var type = CONFIG.USER_COMMUNICATION.REPORT.items[i].type,
+                            found = false;
+
+                        for (var j in types) {
+                            if (types[j] === type) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (!found) {
+                            types.push(type);
+                        }
+                    }
+
+                    Communication.getPostQueueLength(url, types).then(function (length) {
                         vm.reportQueue.length = length;
                         if (vm.reportQueue.length > 0) {
+                            try {
+                                clearInterval(vm.reportQueue.interval);
+                            }
+                            catch (e) { }
                             vm.reportQueue.interval = setInterval(reportQueueLengthFunction);
                         }
                     });
