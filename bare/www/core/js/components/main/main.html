@@ -66,9 +66,9 @@
         <div id="map" class="advanced-layout advanced-map"></div>
 
         <!-- Control locate -->
-        <div class="locate-custom-control" ng-if="vm.showLocate">
+        <div class="locate-custom-control" ng-if="vm.showLocate" ng-click="vm.centerOnMe()">
             <div class="leaflet-control-locate leaflet-bar leaflet-control">
-                <a class="leaflet-bar-part leaflet-bar-part-single" href="" ng-click="vm.centerOnMe()">
+                <a class="leaflet-bar-part leaflet-bar-part-single" href="">
                     <span class="icon" ng-class="{
                             'wm-icon-android-locate-full': !vm.geolocationState.isRotating,
                             'fa-spin': vm.geolocationState.isLoading && !vm.geolocationState.isRotating && !vm.geolocationState.isFollowing,
@@ -86,16 +86,25 @@
             </div>
         </div>
 
+        <!-- Start button -->
+        <div class="marathon__start" ng-if="vm.showLocate">
+            <div ng-style="{
+                'background': vm.colors.mainBar.background
+            }" ng-click="vm.login()">
+                <i class="wm-icon-record"></i><span>Registra</span>
+            </div>
+        </div>
+
         <!-- Arrow to expand coordinates -->
-        <div class="coords-expander">
+        <!-- <div class="coords-expander">
             <a href="" ng-click="vm.expandCoords()">
                 <i ng-if="!vm.isCoordsBlockExpanded" class="wm-icon-ios7-arrow-back"></i>
                 <i ng-if="vm.isCoordsBlockExpanded" class="wm-icon-ios7-arrow-forward"></i>
             </a>
-        </div>
+        </div> -->
 
         <!-- Coordinates -->
-        <div class="coords-block" ng-class="{
+        <!-- <div class="coords-block" ng-class="{
                 'animate-rightin': vm.isCoordsBlockExpanded,
                 'animate-rightout': !vm.isCoordsBlockExpanded
             }" ng-if="vm.centerCoords" ng-click="vm.switchCoords()">
@@ -110,7 +119,7 @@
                     {{vm.centerCoords.lat}}, {{vm.centerCoords.lng}}
                 </span>
             </span>
-        </div>
+        </div> -->
 
         <!-- Report -->
         <div class="report-control" ng-if="vm.useReport && vm.isInMap" ng-click="vm.goToReport()">

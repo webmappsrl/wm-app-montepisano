@@ -297,6 +297,36 @@ angular.module('webmapp')
             );
         }
 
+        vm.login = function () {
+            $scope.data = {
+                bibNumber: -1,
+                password: ""
+            };
+
+            var popup = $ionicPopup.show({
+                template: '<input type="text" ng-model="data.bibNumber" placeholder="number"><br><input type="password" ng-model="data.password" placeholder="password">',
+                title: $translate.instant('ATTENZIONE'),
+                subTitle: $translate.instant("Di seguito specifica l'indirizzo email al quale inviare il percorso"),
+                scope: $scope,
+                buttons: [
+                    { text: 'Cancel' },
+                    {
+                        text: $translate.instant('INVIA'),
+                        type: 'button-positive',
+                        onTap: function (e) {
+                            return true;
+                        }
+                    }
+                ]
+            })
+            popup.then(function (res) {
+                console.log($scope.data);
+                if (res) {
+                    vm.startNavigation(true);
+                }
+            });
+        };
+
         vm.openFilters = function () {
             vm.showRightMenu = false;
             $rootScope.$emit("openFilters");

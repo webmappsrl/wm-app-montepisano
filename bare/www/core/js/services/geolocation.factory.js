@@ -133,17 +133,13 @@ angular.module('webmapp')
             url: "https://api.webmapp.it/services/share.php",
             positionsToSend: [],
             minPositionsToSend: 1,
-            // appUrl: CONFIG.COMMUNICATION.baseUrl,
             app: {
                 id: CONFIG.appId,
                 routeId: CONFIG.routeID ? CONFIG.routeID : null,
                 name: CONFIG.MAIN ? CONFIG.MAIN.OPTIONS.title : CONFIG.OPTIONS.title,
                 route: CONFIG.MAIN ? CONFIG.OPTIONS.title : null
             },
-            device: {
-                os: ionic.Platform.device().platform,
-                version: ionic.Platform.device().version
-            },
+            device: {},
             user: {},
             isActive: false
         };
@@ -1267,7 +1263,7 @@ angular.module('webmapp')
                 }
 
                 if (realTimeTracking.enabled) {
-                    geolocationService.startRemoteTracking();
+                    startRemoteTracking();
                 }
 
                 defer.resolve({
@@ -1302,7 +1298,7 @@ angular.module('webmapp')
                 recordingState.toast.reset();
 
                 if (realTimeTracking.isActive) {
-                    geolocationService.stopRemoteTracking();
+                    stopRemoteTracking();
                 }
 
                 defer.resolve({
@@ -1343,7 +1339,7 @@ angular.module('webmapp')
                 }
 
                 if (realTimeTracking.enabled) {
-                    geolocationService.startRemoteTracking();
+                    startRemoteTracking();
                 }
 
                 defer.resolve({
@@ -1351,7 +1347,9 @@ angular.module('webmapp')
                     isPaused: recordingState.isPaused
                 });
             } else if (recordingState.isActive && !recordingState.isPaused) {
-                geolocationService.startRemoteTracking();
+                if (realTimeTracking.enabled) {
+                    startRemoteTracking();
+                }
 
                 defer.resolve({
                     isActive: recordingState.isActive,
@@ -1379,7 +1377,7 @@ angular.module('webmapp')
             });
 
             if (realTimeTracking.isActive) {
-                geolocationService.stopRemoteTracking();
+                stopRemoteTracking();
             }
 
             defer.resolve({
@@ -1451,9 +1449,9 @@ angular.module('webmapp')
          * @returns {boolean}
          *      true if started correctly, false otherwise
          */
-        geolocationService.startRemoteTracking = function () {
+        var startRemoteTracking = function () {
             realTimeTracking.isActive = true;
-            return false;
+            return true;
         };
 
         /**
@@ -1463,9 +1461,9 @@ angular.module('webmapp')
          * @returns {boolean}
          *      true if correctly executed, false otherwise
          */
-        geolocationService.stopRemoteTracking = function () {
+        var stopRemoteTracking = function () {
             realTimeTracking.isActive = false;
-            return false;
+            return true;
         };
 
         $rootScope.$on('map-dragstart', function (e, value) {
@@ -1534,6 +1532,11 @@ angular.module('webmapp')
                 else {
                     realTimeTracking.user = {};
                 }
+
+                realTimeTracking.device = {
+                    os: ionic.Platform.device().platform,
+                    version: ionic.Platform.device().version
+                };
             }
         });
 

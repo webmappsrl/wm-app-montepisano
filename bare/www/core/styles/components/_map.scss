@@ -23,8 +23,9 @@
 }
 
 .locate-custom-control {
+  z-index: 850;
   position: absolute;
-  bottom: 100px;
+  bottom: 25px;
   right: 15px;
   .leaflet-control-locate a span.blu-icon, .leaflet-control-locate a:hover span.blu-icon {
     // color: #689DF6;
@@ -32,6 +33,31 @@
   }
   a {
     cursor: pointer;
+  }
+}
+
+.marathon__start {
+  position: absolute;
+  bottom: 23px;
+  z-index: 800;
+  font-size: 25px;
+  text-transform: uppercase;
+  width: 100%;
+  text-align: center;
+  &>div {
+    border-radius: 10px;
+    width: auto;
+    display: inline-block;
+    // text-align: center;
+    padding: 12px 25px;
+    margin: 0 auto;
+    i {
+      margin-right: 10px;
+    }
+    span {
+      position: relative;
+      top: -2px;
+    }
   }
 }
 
@@ -560,7 +586,7 @@ div.leaflet-top.leaflet-right {
 
 .locate-custom-control {
   .navigation-interface & {
-    bottom: 150px;
+    bottom: 105px;
   }
 }
 
