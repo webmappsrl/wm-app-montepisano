@@ -362,7 +362,7 @@ angular.module('webmapp')
                     var layer = searchLayersMap[label];
                     if (layer.type === 'poi_geojson') {
                         var macroCategories = modalScope.filters["pois"].sublayers;
-                        for (let i = 0; i < macroCategories.length; i++) {
+                        for (var i = 0; i < macroCategories.length; i++) {
                             var macroCat = macroCategories[i];
                             if (macroCat.label.it === 'altri') {
                                 poiIndex = i;
@@ -401,7 +401,7 @@ angular.module('webmapp')
                     } else if (layer.type === 'line_geojson') {
                         var macroCategories = modalScope.filters["tracks"].sublayers;
                         if (trackIndex == -1) {
-                            for (let i = 0; i < macroCategories.length; i++) {
+                            for (var i = 0; i < macroCategories.length; i++) {
                                 var macroCat = macroCategories[i];
                                 if (macroCat.label.it === 'altri') {
                                     trackIndex = i;
@@ -603,7 +603,7 @@ angular.module('webmapp')
 
                             Search.setActiveLayers(baseFilters);
                             var results = Search.getFeatures(lastQuery, Search.getActiveLayers());
-                            for (let k = 0; k < results.length; k++) {
+                            for (var k = 0; k < results.length; k++) {
                                 var layer = results[k];
 
                                 if (layer.properties && layer.properties.taxonomy && layer.properties.taxonomy.webmapp_category) {

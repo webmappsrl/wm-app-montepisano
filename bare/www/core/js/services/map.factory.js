@@ -2667,7 +2667,7 @@ angular.module('webmapp')
                 if (collection) {
                     var tmp = collection.features;
                     var find = false;
-                    for (let i = 0; i < tmp.length; i++) {
+                    for (var i = 0; i < tmp.length; i++) {
                         var feature = tmp[i];
                         if (feature.properties.id == id) {
                             tmp.splice(i, 1);
@@ -2710,7 +2710,7 @@ angular.module('webmapp')
                 if (collection) {
                     var tmp = collection.features;
                     var featureGeoJSON;
-                    for (let i = 0; i < tmp.length; i++) {
+                    for (var i = 0; i < tmp.length; i++) {
                         var feature = tmp[i];
                         if (feature.properties.id == id) {
                             featureGeoJSON = feature;
@@ -2740,7 +2740,7 @@ angular.module('webmapp')
                     var tmp = collection.features;
                     var find = false;
 
-                    for (let i = 0; i < tmp.length; i++) {
+                    for (var i = 0; i < tmp.length; i++) {
                         var feature = tmp[i];
 
                         if (feature.properties.id == id) {

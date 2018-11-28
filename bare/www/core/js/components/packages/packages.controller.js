@@ -279,7 +279,11 @@ angular.module('webmapp')
         registeredEvents.push(
             $scope.$on('$destroy', function () {
                 for (var i in registeredEvents) {
-                    registeredEvents[i]();
+                    try {
+                        registeredEvents[i]();
+                    }
+                    catch (e) { }
+
                 }
                 delete registeredEvents;
 

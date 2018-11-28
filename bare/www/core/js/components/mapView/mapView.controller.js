@@ -254,7 +254,7 @@ angular.module('webmapp')
                     var layer = overlayLayerConfMap[label];
                     if (layer.type === 'poi_geojson') {
                         var macroCategories = modalScope.filters["pois"].sublayers;
-                        for (let i = 0; i < macroCategories.length; i++) {
+                        for (var i = 0; i < macroCategories.length; i++) {
                             var macroCat = macroCategories[i];
                             if (macroCat.label.it === 'altri') {
                                 poiIndex = i;
@@ -293,7 +293,7 @@ angular.module('webmapp')
                     } else if (layer.type === 'line_geojson') {
                         var macroCategories = modalScope.filters["tracks"].sublayers;
                         if (trackIndex == -1) {
-                            for (let i = 0; i < macroCategories.length; i++) {
+                            for (var i = 0; i < macroCategories.length; i++) {
                                 var macroCat = macroCategories[i];
                                 if (macroCat.label.it === 'altri') {
                                     trackIndex = i;
@@ -454,13 +454,13 @@ angular.module('webmapp')
 
                     ids = tmp;
 
-                    for (let i = 0; i < ids.length; i++) {
+                    for (var i = 0; i < ids.length; i++) {
                         var feature = featureMap[ids[i]];
 
                         if (feature && feature.properties && feature.properties.taxonomy &&
                             feature.properties.taxonomy.webmapp_category) {
                             var categories = feature.properties.taxonomy.webmapp_category;
-                            for (let j = 0; j < categories.length; j++) {
+                            for (var j = 0; j < categories.length; j++) {
                                 var overlayLayer = MapService.getOverlayLayerById(categories[j]);
                                 if (overlayLayer && filt[overlayLayer.label]) {
                                     if (!result[overlayLayer.label]) {
