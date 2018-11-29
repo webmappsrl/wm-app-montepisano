@@ -61,7 +61,8 @@ angular.module('webmapp')
             areaMapById = {},
             geojsonByLabel = {},
             itineraryRefByFeatureId = {},
-            featuresIdByLayersMap = {};
+            featuresIdByLayersMap = {},
+            layersToUpdate = {};
 
         var overlayLayersQueueByLabel = {},
             queueLayerToActivate = null,
@@ -920,6 +921,149 @@ angular.module('webmapp')
             }
         };
 
+        var updateLayer = function (currentOverlay) {
+            if (typeof overlayLayersQueueByLabel[currentOverlay.label] !== 'undefined') {
+                return overlayLayersQueueByLabel[currentOverlay.label];
+            }
+
+            var defer = $q.defer(),
+                promise = defer.promise;
+
+            var poiCallback = function (data, currentOverlay) {
+                var added = false;
+                for (var i in data.features) {
+                    if (layersToUpdate[currentOverlay.id][data.features[i].properties.id]) {
+                        if (data.features[i].geometry.coordinates !== layersToUpdate[currentOverlay.id][data.features[i].properties.id].feature.geometry.coordinates) {
+                            layersToUpdate[currentOverlay.id][data.features[i].properties.id].setLatLng(
+                                L.latLng([data.features[i].geometry.coordinates[1], data.features[i].geometry.coordinates[0]])
+                            );
+                        }
+                    }
+                    else {
+                        added = true;
+                        overlayLayersByLabel[currentOverlay.label].addData(data.features[i])
+                    }
+                }
+
+                // To force redraw of the layer as there are more features
+                if (added) {
+                    removeLayer(currentOverlay.label);
+                    addLayer(currentOverlay.label);
+                }
+            };
+
+            var lineCallback = function (data, currentOverlay) {
+                //TOOD: Find a way to manipulate coordinates of lines
+                // var added = false;
+                // for (var i in data.features) {
+                //     if (layersToUpdate[currentOverlay.id][data.features[i].properties.id]) {
+                //         layersToUpdate[currentOverlay.id][data.features[i].properties.id].setLatLng(
+                //             L.latLng([data.features[i].geometry.coordinates[1], data.features[0].geometry.coordinates[0]])
+                //         );
+                //     }
+                //     else {
+                //         added = true;
+                //         overlayLayersByLabel[currentOverlay.label].addData(data.features[i])
+                //     }
+                // }
+
+                // // To force redraw of the layer as there are more features
+                // if (added) {
+                //     removeLayer(currentOverlay.label)
+                //     addLayer(currentOverlay.label);
+                // }
+            };
+
+            var available = false;
+
+            if (CONFIG.MAIN && CONFIG.MAIN.LANGUAGES && (CONFIG.MAIN.LANGUAGES.actual || (CONFIG.MAIN.LANGUAGES.available && CONFIG.MAIN.LANGUAGES.available.length > 0))) {
+                available = true;
+            }
+            else if (CONFIG.LANGUAGES && (CONFIG.LANGUAGES.actual || (CONFIG.LANGUAGES.available && CONFIG.LANGUAGES.available.length > 0))) {
+                available = true;
+            }
+
+            var url = "",
+                success = function (data) {
+                    if (currentOverlay.type === 'line_geojson') {
+                        lineCallback(data, currentOverlay);
+                    } else if (currentOverlay.type === 'poi_geojson') {
+                        poiCallback(data, currentOverlay);
+                    }
+                    if (!Utils.isBrowser()) {
+                        setItemInLocalStorage(url, JSON.stringify(data));
+                    }
+                    delete overlayLayersQueueByLabel[currentOverlay.label];
+                },
+                fail = function (err) {
+                    // console.warn('An error has occurred downloading geojson \'' + currentOverlay.geojsonUrl + '\'. This file could miss in the server or the app is offline, and will be skipped', err);
+                    delete overlayLayersQueueByLabel[currentOverlay.label];
+                    defer.resolve();
+                };
+
+            if (Offline.isActive()) {
+                overlayLayersQueueByLabel[currentOverlay.label] = getItemFromLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl)
+                    .then(function (localContent) {
+                        if (localContent.data) {
+                            var data = JSON.parse(localContent.data);
+                            if (currentOverlay.type === 'line_geojson') {
+                                lineCallback(data, currentOverlay);
+                            } else if (currentOverlay.type === 'poi_geojson') {
+                                poiCallback(data, currentOverlay);
+                            }
+                        }
+                        delete overlayLayersQueueByLabel[currentOverlay.label];
+                    }).catch(function (err) {
+                        console.error(err);
+                        delete overlayLayersQueueByLabel[currentOverlay.label];
+                        defer.resolve();
+                    });
+            } else {
+                url = currentOverlay.geojsonUrl;
+                if (available && routeDefaultLang !== currentLang) {
+                    var split = currentOverlay.geojsonUrl.split('/');
+                    url = "/languages/" + currentLang + "/" + split.pop();
+                    url = split.join('/') + url;
+                }
+                if (offlineConf.resourceBaseUrl) {
+                    url = offlineConf.resourceBaseUrl + url;
+                }
+                overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(function (err) {
+                    if (available) {
+                        url = currentOverlay.geojsonUrl;
+                        if (defaultLang !== routeDefaultLang) {
+                            var split = currentOverlay.geojsonUrl.split('/');
+                            url = "/languages/" + defaultLang + "/" + split.pop();
+                            url = split.join('/') + url;
+                        }
+                        if (offlineConf.resourceBaseUrl) {
+                            url = offlineConf.resourceBaseUrl + url;
+                        }
+                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(function (err) {
+                            url = currentOverlay.geojsonUrl;
+                            if (offlineConf.resourceBaseUrl) {
+                                url = offlineConf.resourceBaseUrl + url;
+                            }
+                            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(fail);
+                        });
+                    }
+                    else {
+                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(function (err) {
+                            url = currentOverlay.geojsonUrl;
+                            if (offlineConf.resourceBaseUrl) {
+                                url = offlineConf.resourceBaseUrl + url;
+                            }
+                            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(fail);
+                        });
+                    }
+                });
+            }
+
+            // promise.then(function () {
+            //     initializeThen(currentOverlay);
+            // });
+        };
+
         var initializeLayer = function (currentOverlay) {
             if (typeof overlayLayersQueueByLabel[currentOverlay.label] !== 'undefined') {
                 return overlayLayersQueueByLabel[currentOverlay.label];
@@ -931,7 +1075,14 @@ angular.module('webmapp')
             var poiCallback = function (data, currentOverlay) {
                 var geoJsonOptions = {
                     pointToLayer: function (feature, latlng) {
-                        return genericPointToLayer(currentOverlay, feature, latlng);
+                        var layer = genericPointToLayer(currentOverlay, feature, latlng);
+                        if (currentOverlay.keepUpdated) {
+                            if (!layersToUpdate[currentOverlay.id]) {
+                                layersToUpdate[currentOverlay.id] = {};
+                            }
+                            layersToUpdate[currentOverlay.id][feature.properties.id] = layer;
+                        }
+                        return layer;
                     },
                     onEachFeature: function (feature) {
                         feature.parent = currentOverlay;
@@ -1054,7 +1205,7 @@ angular.module('webmapp')
                 if (offlineConf.resourceBaseUrl) {
                     url = offlineConf.resourceBaseUrl + url;
                 }
-                overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
+                overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(function (err) {
                     if (available) {
                         url = currentOverlay.geojsonUrl;
                         if (defaultLang !== routeDefaultLang) {
@@ -1065,21 +1216,21 @@ angular.module('webmapp')
                         if (offlineConf.resourceBaseUrl) {
                             url = offlineConf.resourceBaseUrl + url;
                         }
-                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
+                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(function (err) {
                             url = currentOverlay.geojsonUrl;
                             if (offlineConf.resourceBaseUrl) {
                                 url = offlineConf.resourceBaseUrl + url;
                             }
-                            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(fail);
+                            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(fail);
                         });
                     }
                     else {
-                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
+                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(function (err) {
                             url = currentOverlay.geojsonUrl;
                             if (offlineConf.resourceBaseUrl) {
                                 url = offlineConf.resourceBaseUrl + url;
                             }
-                            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(fail);
+                            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(fail);
                         });
                     }
                 });
@@ -1088,6 +1239,17 @@ angular.module('webmapp')
             promise.then(function () {
                 initializeThen(currentOverlay);
             });
+
+            if (currentOverlay.keepUpdated) {
+                setInterval(function () {
+                    updateLayer(currentOverlay);
+                }, currentOverlay.keepUpdated * 1000)
+            }
+            else if (CONFIG.OPTIONS.keepGeojsonUpdatedTime) {
+                setInterval(function () {
+                    updateLayer(currentOverlay);
+                }, CONFIG.OPTIONS.keepGeojsonUpdatedTime * 1000);
+            }
 
             return promise;
         };
