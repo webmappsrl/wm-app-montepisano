@@ -376,7 +376,6 @@ angular.module('webmapp')
 
             Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/?per_page=100')
                 .then(function (data) {
-                    console.log(data);
                     if (!packages) {
                         packages = {};
                     }
@@ -741,55 +740,55 @@ angular.module('webmapp')
             $ionicPopup.confirm({
                 title: $translate.instant("ATTENZIONE"),
                 template: $translate.instant("Stai per scaricare l'itinerario sul dispositivo, vuoi procedere?")
-            })
-                .then(function (res) {
-                    if (res) {
-                        $.ajaxSetup({
-                            cache: false
-                        });
-                        modalDownload.show();
-                        Communication.getJSON(communicationConf.downloadJSONUrl + packId + '/app.json')
-                            .then(function (data) {
-                                var arrayLink = [];
+            }).then(function (res) {
+                if (res) {
+                    $.ajaxSetup({
+                        cache: false
+                    });
+                    modalDownload.show();
+                    Communication.getJSON(communicationConf.downloadJSONUrl + packId + '/app.json').then(function (data) {
+                        var arrayLink = [];
 
-                                var downloadSuccess = function () {
-                                    modalDownload.hide();
-                                    userDownloadedPackages[packId] = true;
-                                    $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
-                                    MapService.setItemInLocalStorage("$wm_userDownloadedPackages", JSON.stringify(userDownloadedPackages));
-                                };
+                        var downloadSuccess = function () {
+                            modalDownload.hide();
+                            userDownloadedPackages[packId] = true;
+                            $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
+                            MapService.setItemInLocalStorage("$wm_userDownloadedPackages", JSON.stringify(userDownloadedPackages));
+                        };
 
-                                var downloadFail = function () {
-                                    // TODO: add ionic alert
-                                    // TODO: rimuovere cartella, verificare interuzzione altri dowload
-                                    alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, riprova"));
-                                    modalDownload.hide();
-                                    // updateDownloadedPackagesInStorage();
-                                };
+                        var downloadFail = function () {
+                            // TODO: add ionic alert
+                            // TODO: rimuovere cartella, verificare interuzzione altri dowload
+                            alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, riprova"));
+                            modalDownload.hide();
+                            // updateDownloadedPackagesInStorage();
+                        };
 
-                                for (var i in data) {
-                                    if (typeof data[i] === 'string') {
-                                        arrayLink.push(data[i]);
-                                    } else if (typeof data[i] === 'object') {
-                                        for (var j in data[i]) {
-                                            arrayLink.push(data[i][j]);
-                                        }
+                        for (var i in data) {
+                            if (typeof data[i] === 'string' && data[i].substring(0, 4) === "http") {
+                                arrayLink.push(data[i]);
+                            } else if (typeof data[i] === 'object') {
+                                for (var j in data[i]) {
+                                    if (data[i][j] && data[i][j].substring && data[i][j].substring(0, 4) === "http") {
+                                        arrayLink.push(data[i][j]);
                                     }
                                 }
+                            }
+                        }
 
-                                Offline
-                                    .downloadUserMap(packId, arrayLink, modalDownloadScope.vm)
-                                    .then(downloadSuccess, downloadFail);
+                        Offline
+                            .downloadUserMap(packId, arrayLink, modalDownloadScope.vm)
+                            .then(downloadSuccess, downloadFail);
 
-                                $.ajaxSetup();
-                            },
-                                function () {
-                                    // TODO: add ionic alert
-                                    modalDownload.hide();
-                                    alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova"));
-                                });
-                    }
-                });
+                        $.ajaxSetup();
+                    },
+                        function () {
+                            // TODO: add ionic alert
+                            modalDownload.hide();
+                            alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova"));
+                        });
+                }
+            });
         };
 
         /**
