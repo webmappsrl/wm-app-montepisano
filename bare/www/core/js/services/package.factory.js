@@ -36,7 +36,7 @@ angular.module('webmapp')
         var packageService = {};
 
         var communicationConf = CONFIG.COMMUNICATION,
-            currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : 'it',
+            // currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : 'it',
             defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
                 ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
 
@@ -156,35 +156,53 @@ angular.module('webmapp')
             var result = {};
             var packId = 0;
             for (var i in newPackages) {
-                var packId = newPackages[i].id;
-                result[packId] = newPackages[i];
-                if (packages[packId]) {
-                    result[packId].imgUrl = packages[packId].imgUrl ? packages[packId].imgUrl : "core/images/image-loading.gif";
+                if (i !== 'length') {
+                    var packId = newPackages[i].id;
+                    result[packId] = newPackages[i];
+                    if (packages[packId]) {
+                        result[packId].imgUrl = packages[packId].imgUrl ? packages[packId].imgUrl : "core/images/image-loading.gif";
 
-                    if (packages[packId].localImageUrl) {
-                        result[packId].localImageUrl = packages[packId].localImageUrl;
+                        if (packages[packId].localImageUrl) {
+                            result[packId].localImageUrl = packages[packId].localImageUrl;
+                        }
+                    }
+
+                    if (!result[packId].packageTitle) {
+                        result[packId].packageTitle = {};
+                    }
+
+                    if (result[packId].wpml_current_locale && result[packId].title && result[packId].title.rendered) {
+                        result[packId].packageTitle[result[packId].wpml_current_locale.substring(0, 2)] = result[packId].title.rendered;
+                    }
+                    else {
+                        if (result[packId].title && result[packId].title.rendered) {
+                            result[packId].packageTitle[defaultLang] = result[packId].title.rendered;
+                        }
+                    }
+
+                    if (result[packId].wpml_translations) {
+                        for (var p in result[packId].wpml_translations) {
+                            if (result[packId].wpml_translations[p].locale) {
+                                var lang = result[packId].wpml_translations[p].locale.substring(0, 2);
+                                result[packId].packageTitle[lang] = result[packId].wpml_translations[p].post_title;
+                            }
+                        }
+                    }
+
+                    if (!result[packId].packageDescription) {
+                        result[packId].packageDescription = {};
+                    }
+                    if (packages[packId] && packages[packId].packageDescription) {
+                        result[packId].packageDescription = packages[packId].packageDescription;
+                    }
+
+                    if (result[packId].wpml_current_locale) {
+                        result[packId].packageDescription[result[packId].wpml_current_locale.substring(0, 2)] = result[packId].content.rendered;
+                    }
+                    else if (result[packId].content && result[packId].content.rendered) {
+                        result[packId].packageDescription[defaultLang] = result[packId].content.rendered;
                     }
                 }
-
-                if (!result[packId].packageTitle) {
-                    result[packId].packageTitle = {};
-                }
-                result[packId].packageTitle[result[packId].wpml_current_locale.substring(0, 2)] = result[packId].title.rendered;
-
-                if (result[packId].wpml_translations) {
-                    for (var p in result[packId].wpml_translations) {
-                        var lang = result[packId].wpml_translations[p].locale.substring(0, 2);
-                        result[packId].packageTitle[lang] = result[packId].wpml_translations[p].post_title;
-                    }
-                }
-
-                if (!result[packId].packageDescription) {
-                    result[packId].packageDescription = {};
-                }
-                if (packages[packId] && packages[packId].packageDescription) {
-                    result[packId].packageDescription = packages[packId].packageDescription;
-                }
-                result[packId].packageDescription[result[packId].wpml_current_locale.substring(0, 2)] = result[packId].content.rendered;
             }
 
             packages = result;
@@ -286,12 +304,14 @@ angular.module('webmapp')
             var url = "https://api.webmapp.it/a/" + baseUrl + "geojson/route_index.geojson";
             Communication.getJSON(url).then(function (data) {
                 for (var i in data.features) {
-                    var id = data.features[i].properties.id;
+                    if (data.features[i].properties && data.features[i].properties.id) {
+                        var id = data.features[i].properties.id;
 
-                    if (packages[id] && data.features[i].geometry && data.features[i].geometry.coordinates && data.features[i].geometry.coordinates.length === 2) {
-                        packages[id].startPoi = {
-                            lat: data.features[i].geometry.coordinates[1],
-                            long: data.features[i].geometry.coordinates[0]
+                        if (packages[id] && data.features[i].geometry && data.features[i].geometry.coordinates && data.features[i].geometry.coordinates.length === 2) {
+                            packages[id].startPoi = {
+                                lat: data.features[i].geometry.coordinates[1],
+                                long: data.features[i].geometry.coordinates[0]
+                            }
                         }
                     }
                 }
@@ -370,8 +390,10 @@ angular.module('webmapp')
                         asyncRoutes++;
                         getImage(i);
                         for (var j in packages[i].wpml_translations) {
-                            asyncRouteTranslations++;
-                            getTranslatedRoute(i, packages[i].wpml_translations[j].id, packages[i].wpml_translations[j].locale.substring(0, 2));
+                            if (packages[i].wpml_translations[j].locale) {
+                                asyncRouteTranslations++;
+                                getTranslatedRoute(i, packages[i].wpml_translations[j].id, packages[i].wpml_translations[j].locale.substring(0, 2));
+                            }
                         }
                     }
 
@@ -591,7 +613,7 @@ angular.module('webmapp')
 
                     if (product && product.productId) {
                         inAppPurchase.buy(product.productId)
-                            .then((res) => {
+                            .then(function () {
                                 var data = {
                                     user_id: userData.ID,
                                     route_id: packId
@@ -603,7 +625,7 @@ angular.module('webmapp')
 
                                 activatePack(data);
                             })
-                            .catch((err) => {
+                            .catch(function (err) {
                                 console.warn(err)
                                 var code = err.code ? err.code : (err.errorCode ? err.errorCode : -1);
                                 switch (code) {
@@ -718,55 +740,55 @@ angular.module('webmapp')
             $ionicPopup.confirm({
                 title: $translate.instant("ATTENZIONE"),
                 template: $translate.instant("Stai per scaricare l'itinerario sul dispositivo, vuoi procedere?")
-            })
-                .then(function (res) {
-                    if (res) {
-                        $.ajaxSetup({
-                            cache: false
-                        });
-                        modalDownload.show();
-                        Communication.getJSON(communicationConf.downloadJSONUrl + packId + '/app.json')
-                            .then(function (data) {
-                                var arrayLink = [];
+            }).then(function (res) {
+                if (res) {
+                    $.ajaxSetup({
+                        cache: false
+                    });
+                    modalDownload.show();
+                    Communication.getJSON(communicationConf.downloadJSONUrl + packId + '/app.json').then(function (data) {
+                        var arrayLink = [];
 
-                                var downloadSuccess = function () {
-                                    modalDownload.hide();
-                                    userDownloadedPackages[packId] = true;
-                                    $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
-                                    MapService.setItemInLocalStorage("$wm_userDownloadedPackages", JSON.stringify(userDownloadedPackages));
-                                };
+                        var downloadSuccess = function () {
+                            modalDownload.hide();
+                            userDownloadedPackages[packId] = true;
+                            $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);
+                            MapService.setItemInLocalStorage("$wm_userDownloadedPackages", JSON.stringify(userDownloadedPackages));
+                        };
 
-                                var downloadFail = function () {
-                                    // TODO: add ionic alert
-                                    // TODO: rimuovere cartella, verificare interuzzione altri dowload
-                                    alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, riprova"));
-                                    modalDownload.hide();
-                                    // updateDownloadedPackagesInStorage();
-                                };
+                        var downloadFail = function () {
+                            // TODO: add ionic alert
+                            // TODO: rimuovere cartella, verificare interuzzione altri dowload
+                            alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, riprova"));
+                            modalDownload.hide();
+                            // updateDownloadedPackagesInStorage();
+                        };
 
-                                for (var i in data) {
-                                    if (typeof data[i] === 'string') {
-                                        arrayLink.push(data[i]);
-                                    } else if (typeof data[i] === 'object') {
-                                        for (var j in data[i]) {
-                                            arrayLink.push(data[i][j]);
-                                        }
+                        for (var i in data) {
+                            if (typeof data[i] === 'string' && data[i].substring(0, 4) === "http") {
+                                arrayLink.push(data[i]);
+                            } else if (typeof data[i] === 'object') {
+                                for (var j in data[i]) {
+                                    if (data[i][j] && data[i][j].substring && data[i][j].substring(0, 4) === "http") {
+                                        arrayLink.push(data[i][j]);
                                     }
                                 }
+                            }
+                        }
 
-                                Offline
-                                    .downloadUserMap(packId, arrayLink, modalDownloadScope.vm)
-                                    .then(downloadSuccess, downloadFail);
+                        Offline
+                            .downloadUserMap(packId, arrayLink, modalDownloadScope.vm)
+                            .then(downloadSuccess, downloadFail);
 
-                                $.ajaxSetup();
-                            },
-                                function () {
-                                    // TODO: add ionic alert
-                                    modalDownload.hide();
-                                    alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova"));
-                                });
-                    }
-                });
+                        $.ajaxSetup();
+                    },
+                        function () {
+                            // TODO: add ionic alert
+                            modalDownload.hide();
+                            alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova"));
+                        });
+                }
+            });
         };
 
         /**

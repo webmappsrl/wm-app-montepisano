@@ -78,7 +78,7 @@ angular.module('webmapp')
                     var poiIndex = -1;
                     if (layer.type === 'poi_geojson') {
                         var macroCategories = currentFilterMap["pois"].sublayers;
-                        for (let i = 0; i < macroCategories.length; i++) {
+                        for (var i = 0; i < macroCategories.length; i++) {
                             var macroCat = macroCategories[i];
                             if (macroCat.label.it === 'altri') {
                                 poiIndex = i;
@@ -109,7 +109,7 @@ angular.module('webmapp')
 
                     } else if (layer.type === 'line_geojson') {
                         var macroCategories = currentFilterMap["tracks"].sublayers;
-                        for (let i = 0; i < macroCategories.length; i++) {
+                        for (var i = 0; i < macroCategories.length; i++) {
                             var macroCat = macroCategories[i];
                             if (macroCat.label.it === 'altri') {
                                 trackIndex = i;
