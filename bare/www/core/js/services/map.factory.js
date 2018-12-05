@@ -826,7 +826,8 @@ angular.module('webmapp')
                 if (item.isCustom) {
                     if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.available) {
                         for (var pos in CONFIG.LANGUAGES.available) {
-                            var url = CONFIG.OFFLINE.pagesUrl + item.type;
+                            var url = (CONFIG.OFFLINE && CONFIG.OFFLINE.pagesUrl) ? CONFIG.OFFLINE.pagesUrl : (CONFIG.COMMUNICATION.baseUrl.substring(-1) === '/') ? CONFIG.COMMUNICATION.baseUrl + 'pages/' : CONFIG.COMMUNICATION.baseUrl + '/pages/';
+                            url += item.type;
 
                             if (CONFIG.LANGUAGES.available[pos].substring(0, 2) !== CONFIG.LANGUAGES.actual.substring(0, 2)) {
                                 url = url + "_" + CONFIG.LANGUAGES.available[pos].substring(0, 2);
