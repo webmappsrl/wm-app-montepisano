@@ -114,6 +114,16 @@ angular.module('webmapp')
             });
         }
 
+        // config.MENU.push({
+        //     label: "Impostazioni",
+        //     type: "page"
+        // });
+
+        // config.PAGES.push({
+        //     label: "Impostazioni",
+        //     type: "languages"
+        // });
+
         // console.log(config)
 
         this.$get = function (

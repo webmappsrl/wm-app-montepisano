@@ -36,7 +36,7 @@ angular.module('webmapp')
         var packageService = {};
 
         var communicationConf = CONFIG.COMMUNICATION,
-            currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : 'it',
+            // currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : 'it',
             defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
                 ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
 

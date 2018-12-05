@@ -25,6 +25,7 @@ angular.module('webmapp')
             overlayLayersConf = CONFIG.OVERLAY_LAYERS,
             styleConf = CONFIG.STYLE,
             offlineConf = CONFIG.OFFLINE,
+            communicationConf = CONFIG.COMMUNICATION,
             currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
             defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
                 ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it'),
@@ -1026,8 +1027,12 @@ angular.module('webmapp')
                     defer.resolve();
                 };
 
+            var baseUrl = offlineConf.resourceBaseUrl || communicationConf.resourceBaseUrl || '';
+            if (baseUrl.substring(-1) !== '/') {
+                baseUrl += '/';
+            }
             if (Offline.isActive()) {
-                overlayLayersQueueByLabel[currentOverlay.label] = getItemFromLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl)
+                overlayLayersQueueByLabel[currentOverlay.label] = getItemFromLocalStorage(baseUrl + currentOverlay.geojsonUrl)
                     .then(function (localContent) {
                         if (localContent.data) {
                             var data = JSON.parse(localContent.data);
@@ -1050,9 +1055,7 @@ angular.module('webmapp')
                     url = "/languages/" + currentLang + "/" + split.pop();
                     url = split.join('/') + url;
                 }
-                if (offlineConf.resourceBaseUrl) {
-                    url = offlineConf.resourceBaseUrl + url;
-                }
+                url = baseUrl + url;
                 overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
                     if (available) {
                         url = currentOverlay.geojsonUrl;
@@ -1061,23 +1064,15 @@ angular.module('webmapp')
                             url = "/languages/" + defaultLang + "/" + split.pop();
                             url = split.join('/') + url;
                         }
-                        if (offlineConf.resourceBaseUrl) {
-                            url = offlineConf.resourceBaseUrl + url;
-                        }
+                        url = baseUrl + url;
                         overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
-                            url = currentOverlay.geojsonUrl;
-                            if (offlineConf.resourceBaseUrl) {
-                                url = offlineConf.resourceBaseUrl + url;
-                            }
+                            url = baseUrl + currentOverlay.geojsonUrl;
                             overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(fail);
                         });
                     }
                     else {
                         overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
-                            url = currentOverlay.geojsonUrl;
-                            if (offlineConf.resourceBaseUrl) {
-                                url = offlineConf.resourceBaseUrl + url;
-                            }
+                            url = baseUrl + currentOverlay.geojsonUrl;
                             overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(fail);
                         });
                     }
@@ -1655,6 +1650,15 @@ angular.module('webmapp')
             }
 
             return map;
+        };
+
+        var reloadOverlayLayers = function () {
+            if (!mapConf.layers || mapConf.layers.length === 0) {
+                return;
+            }
+
+            resetLayers();
+            initializeLayers();
         };
 
         mapService.arePagesReady = function () {
@@ -2775,6 +2779,11 @@ angular.module('webmapp')
                 console.warn(err);
             });
         };
+
+        $rootScope.$on('language-changed', function () {
+            currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+            reloadOverlayLayers();
+        });
 
         window.closePopup = mapService.closePopup = function (e) {
             map && map.closePopup();
