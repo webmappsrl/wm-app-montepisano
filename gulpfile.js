@@ -229,6 +229,10 @@ gulp.task('set', function () {
     }
 });
 
+gulp.task('test', function () {
+    sh.exec('npm test');
+})
+
 gulp.task('clean', function () {
     return del('instances/**/*', {
         force: true

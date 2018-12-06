@@ -2,16 +2,16 @@ describe('Geolocation.Factory', function () {
 
     beforeEach(module('webmapp'));
 
-    var GeolocationService,
-        CONFIG,
-        $cordovaDeviceOrientation,
+    var $cordovaDeviceOrientation,
         $cordovaGeolocation,
+        $httpBackend,
         $ionicPopup,
         $q,
-        $translate,
         $rootScope,
+        $translate,
+        CONFIG,
+        GeolocationService,
         MapService,
-        $httpBackend,
         Utils;
     var currentLat, currentLong;
 
@@ -1095,7 +1095,7 @@ describe('Geolocation.Factory', function () {
 
 
             $httpBackend.flush();
-        })
+        });
 
         it('!recordingState.isActive and navigationTrack defined => it should start recording emitting a recordingState-changed and resolving with current state', function (done) {
             var expectedValue = {
@@ -1119,9 +1119,9 @@ describe('Geolocation.Factory', function () {
             });
 
             $httpBackend.flush();
-        })
+        });
 
-        it('recordingState.isActive &&  params defined  => it should not restart recording and reject promise with error code', function (done) {
+        it('recordingState.isActive &&  params defined => it should not restart recording and reject promise with error code', function (done) {
             var expectedValue = {
                 isActive: true,
                 isPaused: false
@@ -1151,7 +1151,39 @@ describe('Geolocation.Factory', function () {
             });
 
             $httpBackend.flush();
-        })
+        });
+
+        it('recordingState.isActive &&  params defined => it should not restart recording and reject promise with error code', function (done) {
+            var expectedValue = {
+                isActive: true,
+                isPaused: false
+            };
+            var spy = spyOn($rootScope, '$emit');
+            GeolocationService.enable().then(function () {
+                GeolocationService.startRecording({
+                    parentId: 1,
+                    id: 1
+                }).then(function (val) {
+                    expect(val).toEqual(expectedValue);
+                    expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
+                    spy.calls.reset();
+                    GeolocationService.startRecording({
+                        parentId: 1,
+                        id: 1
+                    }).then(function (val) {
+                        fail('it should reject promise');
+                    }).catch(function (err) {
+                        expect($rootScope.$emit).not.toHaveBeenCalled();
+                        expect(err).toEqual(ERRORS.ALREADY_ACTIVE);
+                        done();
+                    });
+                })
+            }).catch(function (err) {
+                fail("it should resolve promise" + err);
+            });
+
+            $httpBackend.flush();
+        });
 
         afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();

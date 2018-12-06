@@ -696,11 +696,11 @@ angular.module('webmapp')
                         centerOnCoordsWithoutZoomEvent(lat, long);
                     }
 
-                    if (recordingState.isActive && !recordingState.isPaused) {
-                        if (realTimeTracking.isActive) {
-                            realTimeTrackingFunction(lat, long, altitude);
-                        }
+                    if (realTimeTracking.isActive) {
+                        realTimeTrackingFunction(lat, long, altitude);
+                    }
 
+                    if (recordingState.isActive && !recordingState.isPaused) {
                         if (trackRecordingEnabled && recordingState.isRecordingPolyline) {
                             MapService.updateUserPolyline([lat, long, altitude]);
                         }
@@ -1489,7 +1489,7 @@ angular.module('webmapp')
         var stopRemoteTracking = function () {
             realTimeTracking.isActive = false;
             realTimeTracking.reset();
-            return false;
+            return true;
         };
 
         $rootScope.$on('map-dragstart', function (e, value) {

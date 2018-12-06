@@ -16,9 +16,6 @@ describe('Communication.Factory', function () {
         MapService = _MapService_;
 
         $httpBackend.whenGET(/^core.*/).respond(404);
-
-        // jasmine.clock().uninstall();
-        // jasmine.clock().install();
     }));
 
     beforeEach(function () {
@@ -27,6 +24,9 @@ describe('Communication.Factory', function () {
             defer.resolve();
             return defer.promise;
         });
+
+        // jasmine.clock().uninstall();
+        // jasmine.clock().install();
     });
 
     describe('post', function () {

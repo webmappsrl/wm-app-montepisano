@@ -19,8 +19,8 @@ angular.module('webmapp')
             realState = '';
 
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
-        vm.isListExpanded = false,
-            vm.layersMap = Model.getLayersMap();
+        vm.isListExpanded = false;
+        vm.layersMap = Model.getLayersMap();
         vm.goTo = Utils.goTo;
         vm.useSearch = CONFIG.SEARCH && CONFIG.SEARCH.active ? CONFIG.SEARCH.active : false;
 

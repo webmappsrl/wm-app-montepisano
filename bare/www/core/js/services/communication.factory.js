@@ -255,9 +255,10 @@ angular.module('webmapp')
 
         registeredEvents.push(
             $rootScope.$on('$destroy', function () {
-                MapService.setItemInLocalStorage("$wm_queueToSend", JSON.stringify(queueToSend)).then(function () {
-                }, function () {
-                });
+                try {
+                    MapService.setItemInLocalStorage("$wm_queueToSend", JSON.stringify(queueToSend))
+                }
+                catch (e) { }
 
                 for (var i in registeredEvents) {
                     registeredEvents[i]();

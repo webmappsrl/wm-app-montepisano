@@ -465,7 +465,7 @@ angular.module('webmapp')
                 //     return;
                 // }
 
-                // Shows the 'loading' gif or message 
+                // Shows the 'loading' gif or message
                 loginScope.logging = true;
 
                 Account.login(username, password)
@@ -659,6 +659,12 @@ angular.module('webmapp')
         );
 
         registeredEvents.push(
+            $rootScope.$on('language-changed', function (e, value) {
+                vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+            })
+        );
+
+        registeredEvents.push(
             $scope.$on('$destroy', function () {
                 for (var i in registeredEvents) {
                     registeredEvents[i]();
@@ -668,7 +674,6 @@ angular.module('webmapp')
                 modalImage.remove();
             })
         );
-
 
         return vm;
     });
