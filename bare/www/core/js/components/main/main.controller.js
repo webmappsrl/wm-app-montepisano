@@ -356,10 +356,10 @@ angular.module('webmapp')
             popup.then(function (res) {
                 if (res) {
                     if ($scope.data.bibNumber && marathonUsers[+$scope.data.bibNumber] === $scope.data.password) {
-                        localStorage.$wm_userData = {
+                        localStorage.$wm_userData = JSON.stringify({
                             bibNumber: $scope.data.bibNumber,
                             password: $scope.data.password
-                        };
+                        });
                         vm.startNavigation(true);
                     }
                     else {
