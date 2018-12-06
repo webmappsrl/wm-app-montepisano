@@ -23,10 +23,6 @@ angular.module('webmapp')
         var modalFiltersScope = $rootScope.$new(),
             modalFilters = {};
 
-        if (CONFIG.MULTIMAP && CONFIG.MULTIMAP.useReducedPackages) {
-            vm.type = "reduced";
-        }
-
         if (CONFIG.MULTIMAP && CONFIG.MULTIMAP.categoryFiltersOn) {
             vm.categoryFiltersOn = CONFIG.MULTIMAP.categoryFiltersOn;
         }

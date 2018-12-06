@@ -95,6 +95,10 @@
             </div>
         </div>
 
+        <div class="marathon__number" ng-if="vm.navigation.state.isActive">
+            {{vm.userData.bibNumber}}
+        </div>
+
         <!-- Arrow to expand coordinates -->
         <!-- <div class="coords-expander">
             <a href="" ng-click="vm.expandCoords()">

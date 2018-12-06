@@ -269,6 +269,8 @@ angular.module('webmapp')
             }
         };
 
+        var poiN = 0;
+
         var globalOnEachPOI = function (feature) {
             if (typeof feature.properties === 'undefined') {
                 return;
@@ -344,13 +346,17 @@ angular.module('webmapp')
         };
 
         var setItemInLocalStorage = function (key, data) {
+            var defer = $q.defer();
+
             var insert = function () {
                 db.put({
                     _id: key,
                     data: data
                 }).then(function () {
                     // console.log('Cached ' + key);
+                    defer.resolve();
                 }, function (err) {
+                    defer.reject();
                 });
             };
 
@@ -362,6 +368,8 @@ angular.module('webmapp')
             }).catch(function () {
                 insert();
             });
+
+            return defer.promise;
         };
 
         var getItemFromLocalStorage = function (key) {
@@ -940,6 +948,10 @@ angular.module('webmapp')
                             layersToUpdate[currentOverlay.id][data.features[i].properties.id].setLatLng(
                                 L.latLng([data.features[i].geometry.coordinates[1], data.features[i].geometry.coordinates[0]])
                             );
+
+                            var feature = data.features[i];
+                            feature.parent = currentOverlay;
+                            globalOnEachPOI(data.features[i]);
                         }
                     }
                     else {
@@ -1061,10 +1073,6 @@ angular.module('webmapp')
                     }
                 });
             }
-
-            // promise.then(function () {
-            //     initializeThen(currentOverlay);
-            // });
         };
 
         var initializeLayer = function (currentOverlay) {
@@ -2699,7 +2707,7 @@ angular.module('webmapp')
         };
 
         mapService.setItemInLocalStorage = function (key, item) {
-            setItemInLocalStorage(key, item);
+            return setItemInLocalStorage(key, item);
         };
 
         mapService.getItemFromLocalStorage = function (key) {

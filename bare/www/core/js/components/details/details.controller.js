@@ -61,6 +61,7 @@ angular.module('webmapp')
         vm.showAccessibilityButtons = CONFIG.OPTIONS.showAccessibilityButtons;
         vm.useLogin = CONFIG.LOGIN && CONFIG.LOGIN.useLogin;
         vm.isLoggedIn = Auth.isLoggedIn();
+        vm.updateTimeout = null;
 
         vm.hideSubMenu = true;
 
@@ -367,6 +368,10 @@ angular.module('webmapp')
                 phoneMatch;
 
             var track = undefined;
+
+            if (parent.keepUpdated) {
+                vm.updateTimeout = setTimeout(init, parent.keepUpdated * 1000);
+            }
 
             if ($rootScope.track) {
                 track = angular.copy($rootScope.track);
@@ -704,74 +709,6 @@ angular.module('webmapp')
             modalAccessibility && modalAccessibility.hide();
         };
 
-        if (current.name === 'app.main.detaillayer') {
-            MapService.getFeatureById(params.id, params.parentId.replace(/_/g, ' '))
-                .then(buildDetail, function () {
-                    console.error('Retrive feature error');
-                    // TODO: go to the start url
-                    Utils.goTo('map');
-                });
-        } else if (current.name === 'app.main.detailulayer') {
-            vm.isAreaDetail = true;
-            MapService.getAreaById(params.id)
-                .then(function (data) {
-                    buildDetail(data);
-                    setTimeout(function () {
-                        if (data.properties && data.properties.BBOX) {
-                            MapService.fitBoundsFromString(data.properties.BBOX);
-                        }
-                    }, 1000);
-                }, function () {
-                    console.error('Area not found');
-                    // TODO: go to the start url
-                    Utils.goTo('map');
-                });
-        } else if (current.name === 'app.main.detailevent') {
-            MapService.getEventById(params.id)
-                .then(function (evt) {
-                    var event = angular.extend({}, evt);
-
-                    vm.mainTitle = event.title;
-
-                    // TODO: make it generalized with feature
-                    if (event.body) {
-                        event.body = event.body.replace(new RegExp(/src="\//g), 'src="' + CONFIG.COMMUNICATION.baseUrl);
-                        event.body = event.body.replace(new RegExp(/href="([^\'\"]+)"/g), '');
-                        // event.body = event.body.replace(new RegExp(/href="\//g), 'href="' + CONFIG.COMMUNICATION.baseUrl);
-                        // event.body = event.body.replace(new RegExp(/href="([^\'\"]+)"/g), 'href="" onclick="window.open(\'$1\', \'_system\', \'\')"');
-                        // event.body = event.body.replace(new RegExp(/window.open\(\'#\', \'_system\', \'\'\)/g), '');
-
-                        vm.mainDescription = Utils.trimHtml(event.body, {
-                            limit: 120
-                        });
-
-                        vm.mainDescription.html = $sce.trustAsHtml(vm.mainDescription.html);
-                        event.body = $sce.trustAsHtml(event.body);
-                    }
-
-                    vm.feature = event;
-                    vm.feature.img = event.field_image;
-                    vm.relatedPlaces = [];
-
-                    for (var i in event.pois) {
-                        MapService.getFeatureById(event.pois[i])
-                            .then(function (data) {
-                                vm.relatedPlaces.push(data);
-                            });
-                    }
-
-                    setTimeout(function () {
-                        MapService.addFeaturesToFilteredLayer({
-                            'detail': vm.relatedPlaces
-                        }, true);
-                    }, 1000);
-                }, function () {
-                    console.error('Retrive feature error');
-                    // TODO: go to the start url
-                    Utils.goTo('map');
-                });
-        };
-
         vm.openLink = function (link) {
             if (link.substring(0, 4) !== 'http') {
                 link = 'http://' + link;
@@ -994,6 +931,13 @@ angular.module('webmapp')
                     $ionicSlideBoxDelegate.update();
                 }
 
+                if (vm.updateTimeout) {
+                    try {
+                        clearTimeout(vm.updateTimeout);
+                    }
+                    catch (e) { }
+                }
+
                 for (var i in registeredEvents) {
                     registeredEvents[i]();
                 }
@@ -1009,6 +953,78 @@ angular.module('webmapp')
             vm.isListExpanded = !vm.isListExpanded;
             $rootScope.$emit('toggle-list', vm.isListExpanded);
         };
+
+        var init = function () {
+            if (current.name === 'app.main.detaillayer') {
+                MapService.getFeatureById(params.id, params.parentId.replace(/_/g, ' '))
+                    .then(buildDetail, function () {
+                        console.error('Retrive feature error');
+                        // TODO: go to the start url
+                        Utils.goTo('map');
+                    });
+            } else if (current.name === 'app.main.detailulayer') {
+                vm.isAreaDetail = true;
+                MapService.getAreaById(params.id)
+                    .then(function (data) {
+                        buildDetail(data);
+                        setTimeout(function () {
+                            if (data.properties && data.properties.BBOX) {
+                                MapService.fitBoundsFromString(data.properties.BBOX);
+                            }
+                        }, 1000);
+                    }, function () {
+                        console.error('Area not found');
+                        // TODO: go to the start url
+                        Utils.goTo('map');
+                    });
+            } else if (current.name === 'app.main.detailevent') {
+                MapService.getEventById(params.id)
+                    .then(function (evt) {
+                        var event = angular.extend({}, evt);
+
+                        vm.mainTitle = event.title;
+
+                        // TODO: make it generalized with feature
+                        if (event.body) {
+                            event.body = event.body.replace(new RegExp(/src="\//g), 'src="' + CONFIG.COMMUNICATION.baseUrl);
+                            event.body = event.body.replace(new RegExp(/href="([^\'\"]+)"/g), '');
+                            // event.body = event.body.replace(new RegExp(/href="\//g), 'href="' + CONFIG.COMMUNICATION.baseUrl);
+                            // event.body = event.body.replace(new RegExp(/href="([^\'\"]+)"/g), 'href="" onclick="window.open(\'$1\', \'_system\', \'\')"');
+                            // event.body = event.body.replace(new RegExp(/window.open\(\'#\', \'_system\', \'\'\)/g), '');
+
+                            vm.mainDescription = Utils.trimHtml(event.body, {
+                                limit: 120
+                            });
+
+                            vm.mainDescription.html = $sce.trustAsHtml(vm.mainDescription.html);
+                            event.body = $sce.trustAsHtml(event.body);
+                        }
+
+                        vm.feature = event;
+                        vm.feature.img = event.field_image;
+                        vm.relatedPlaces = [];
+
+                        for (var i in event.pois) {
+                            MapService.getFeatureById(event.pois[i])
+                                .then(function (data) {
+                                    vm.relatedPlaces.push(data);
+                                });
+                        }
+
+                        setTimeout(function () {
+                            MapService.addFeaturesToFilteredLayer({
+                                'detail': vm.relatedPlaces
+                            }, true);
+                        }, 1000);
+                    }, function () {
+                        console.error('Retrive feature error');
+                        // TODO: go to the start url
+                        Utils.goTo('map');
+                    });
+            };
+        };
+
+        init();
 
         return vm;
     });

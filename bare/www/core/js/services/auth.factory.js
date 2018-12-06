@@ -38,8 +38,12 @@ angular.module('webmapp')
 
         auth.setUserData = function (value) {
             userData = value;
-            MapService.setItemInLocalStorage("$wm_userData", JSON.stringify(value));
-            isLoggedIn = true;
+            MapService.setItemInLocalStorage("$wm_userData", JSON.stringify(value)).then(function () {
+                isLoggedIn = true;
+                $rootScope.$emit('logged-in');
+            }, function () {
+                auth.setUserData(value);
+            });
         };
 
         auth.resetUserData = function () {

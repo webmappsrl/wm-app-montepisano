@@ -356,10 +356,12 @@ angular.module('webmapp')
             popup.then(function (res) {
                 if (res) {
                     if ($scope.data.bibNumber && marathonUsers[+$scope.data.bibNumber] === $scope.data.password) {
-                        localStorage.$wm_userData = JSON.stringify({
+                        vm.userData = {
                             bibNumber: $scope.data.bibNumber,
                             password: $scope.data.password
-                        });
+                        }
+
+                        Auth.setUserData(vm.userData);
                         vm.startNavigation(true);
                     }
                     else {
@@ -1075,6 +1077,18 @@ angular.module('webmapp')
         );
 
         registeredEvents.push(
+            $rootScope.$on('logged-in', function () {
+                vm.userData = Auth.getUserData();
+                if (vm.userData && vm.userData.bibNumber) {
+                    $scope.data = {
+                        bibNumber: vm.userData.bibNumber,
+                        password: vm.userData.password
+                    }
+                }
+            })
+        );
+
+        registeredEvents.push(
             $scope.$on('$destroy', function () {
                 for (var i in registeredEvents) {
                     registeredEvents[i]();
@@ -1086,13 +1100,15 @@ angular.module('webmapp')
         );
 
         $ionicPlatform.ready(function () {
-            vm.userData = localStorage.$wm_userData ? JSON.parse(localStorage.$wm_userData) : {};
-            if (vm.userData.bibNumber) {
+            // vm.userData = localStorage.$wm_userData ? JSON.parse(localStorage.$wm_userData) : {};
+            vm.userData = Auth.getUserData();
+            if (vm.userData && vm.userData.bibNumber) {
                 $scope.data = {
                     bibNumber: vm.userData.bibNumber,
                     password: vm.userData.password
                 }
             }
+
             if (CONFIG.MAIN || !CONFIG.MULTIMAP) {
                 if (!GeolocationService.isActive()) {
                     GeolocationService.enable();

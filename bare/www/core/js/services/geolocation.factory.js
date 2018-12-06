@@ -575,6 +575,8 @@ angular.module('webmapp')
                         features: []
                     };
 
+                    // realTimeTracking.user = localStorage.$wm_userData ? JSON.parse(localStorage.$wm_userData) : {};
+
                     for (var i in realTimeTracking.positionsToSend) {
                         collectionToSend.features.push({
                             type: "Feature",
@@ -592,7 +594,7 @@ angular.module('webmapp')
                         });
                     }
 
-                    Communication.queuedPost(realTimeTracking.url, collectionToSend, false);
+                    Communication.queuedPost(realTimeTracking.url, collectionToSend, true);
 
                     realTimeTracking.positionsToSend.splice(0, realTimeTracking.positionsToSend.length);
                 }
@@ -1507,12 +1509,9 @@ angular.module('webmapp')
         $rootScope.$on('logged-in', function () {
             if (Auth.isLoggedIn()) {
                 var userData = Auth.getUserData();
-                if (userData && userData.ID) {
+                if (userData && userData.bibNumber) {
                     realTimeTracking.user = {
-                        id: userData.ID,
-                        email: userData.user_email,
-                        first_name: userData.first_name,
-                        last_name: userData.last_name
+                        bibNumber: userData.bibNumber
                     };
                 }
                 else {
@@ -1547,12 +1546,9 @@ angular.module('webmapp')
                 };
 
                 var userData = Auth.getUserData();
-                if (userData && userData.ID) {
+                if (userData && userData.bibNumber) {
                     realTimeTracking.user = {
-                        id: userData.ID,
-                        email: userData.user_email,
-                        first_name: userData.first_name,
-                        last_name: userData.last_name
+                        bibNumber: userData.bibNumber
                     };
                 }
                 else {
