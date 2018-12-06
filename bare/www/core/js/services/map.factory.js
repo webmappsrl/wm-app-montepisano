@@ -12,6 +12,7 @@ angular.module('webmapp')
         CONFIG,
         Model,
         Offline,
+        Search,
         Utils
     ) {
         var mapService = {};
@@ -1055,7 +1056,6 @@ angular.module('webmapp')
                     var split = currentOverlay.geojsonUrl.split('/');
                     url = "languages/" + currentLang + "/" + split.pop();
                     url = split.join('/') + url;
-                    console.log(baseUrl, url)
                 }
                 url = baseUrl + url;
                 overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
@@ -1660,6 +1660,22 @@ angular.module('webmapp')
             }
 
             resetLayers();
+
+            utfGridBaseLayerByLabel = {};
+            utfGridOverlayLayersByLabel = {};
+            overlayLayersByLabel = {};
+            overlayLayersById = {};
+            extraLayersByLabel = {};
+            featureMapById = {};
+            featuresIdByLayersMap = {};
+
+            overlayLayersQueueByLabel = {};
+            queueLayerToActivate = null;
+
+            polylineDecoratorLayers = {};
+
+            Search.clearEngine();
+            Model.reloadLayers();
             initializeLayers();
         };
 

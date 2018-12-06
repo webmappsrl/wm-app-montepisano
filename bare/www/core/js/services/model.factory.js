@@ -127,6 +127,18 @@ angular.module('webmapp')
             }
         };
 
+        model.reloadLayers = function () {
+            // console.log(confOverlays, overlaysMap);
+            overlaysMap = {};
+            for (var n in confOverlays) {
+                if (!confOverlays[n].skipRedering) {
+                    overlaysMap[confOverlays[n].label] = angular.extend({
+                        items: []
+                    }, confOverlays[n]);
+                }
+            }
+        };
+
         model.getLayersMap = function () {
             return overlaysMap;
         };
@@ -213,13 +225,26 @@ angular.module('webmapp')
         model.addItemToLayer = function (item, layer) {
             if (typeof item.properties !== 'undefined' &&
                 typeof overlaysMap[layer.label] !== 'undefined') {
+                var found = false;
                 if (typeof item.properties.name === 'undefined') {
                     item.properties.name = item.properties.ref;
                 }
+
                 if (CONFIG.SEARCH && CONFIG.SEARCH.active && !layer.skipSearch) {
                     Search.addToIndex(item, layer.label);
                 }
-                overlaysMap[layer.label].items.push(item);
+
+                for (var i in overlaysMap[layer.label].items) {
+                    if (overlaysMap[layer.label].items[i].properties.id.toString() === item.properties.id.toString()) {
+                        found = true;
+                        //Update existing overlay
+                        overlaysMap[layer.label].items[i] = item;
+                    }
+                }
+
+                if (!found) {
+                    overlaysMap[layer.label].items.push(item);
+                }
             }
         };
 
