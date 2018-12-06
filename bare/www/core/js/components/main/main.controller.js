@@ -356,10 +356,10 @@ angular.module('webmapp')
             popup.then(function (res) {
                 if (res) {
                     if ($scope.data.bibNumber && marathonUsers[+$scope.data.bibNumber] === $scope.data.password) {
-                        Auth.setUserData({
+                        localStorage.$wm_userData = {
                             bibNumber: $scope.data.bibNumber,
                             password: $scope.data.password
-                        });
+                        };
                         vm.startNavigation(true);
                     }
                     else {
@@ -1086,7 +1086,7 @@ angular.module('webmapp')
         );
 
         $ionicPlatform.ready(function () {
-            vm.userData = Auth.getUserData();
+            vm.userData = localStorage.$wm_userData ? JSON.parse(localStorage.$wm_userData) : {};
             if (vm.userData.bibNumber) {
                 $scope.data = {
                     bibNumber: vm.userData.bibNumber,
