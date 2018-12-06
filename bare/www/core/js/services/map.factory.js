@@ -12,6 +12,7 @@ angular.module('webmapp')
         CONFIG,
         Model,
         Offline,
+        Search,
         Utils
     ) {
         var mapService = {};
@@ -25,6 +26,7 @@ angular.module('webmapp')
             overlayLayersConf = CONFIG.OVERLAY_LAYERS,
             styleConf = CONFIG.STYLE,
             offlineConf = CONFIG.OFFLINE,
+            communicationConf = CONFIG.COMMUNICATION,
             currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
             defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
                 ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it'),
@@ -827,7 +829,8 @@ angular.module('webmapp')
                 if (item.isCustom) {
                     if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.available) {
                         for (var pos in CONFIG.LANGUAGES.available) {
-                            var url = CONFIG.OFFLINE.pagesUrl + item.type;
+                            var url = (CONFIG.OFFLINE && CONFIG.OFFLINE.pagesUrl) ? CONFIG.OFFLINE.pagesUrl : (CONFIG.COMMUNICATION.baseUrl.substring(-1) === '/') ? CONFIG.COMMUNICATION.baseUrl + 'pages/' : CONFIG.COMMUNICATION.baseUrl + '/pages/';
+                            url += item.type;
 
                             if (CONFIG.LANGUAGES.available[pos].substring(0, 2) !== CONFIG.LANGUAGES.actual.substring(0, 2)) {
                                 url = url + "_" + CONFIG.LANGUAGES.available[pos].substring(0, 2);
@@ -1178,8 +1181,12 @@ angular.module('webmapp')
                     defer.resolve();
                 };
 
+            var baseUrl = offlineConf.resourceBaseUrl || communicationConf.resourceBaseUrl || '';
+            if (baseUrl.substring(-1) !== '/') {
+                baseUrl += '/';
+            }
             if (Offline.isActive()) {
-                overlayLayersQueueByLabel[currentOverlay.label] = getItemFromLocalStorage(offlineConf.resourceBaseUrl + currentOverlay.geojsonUrl)
+                overlayLayersQueueByLabel[currentOverlay.label] = getItemFromLocalStorage(baseUrl + currentOverlay.geojsonUrl)
                     .then(function (localContent) {
                         if (localContent.data) {
                             var data = JSON.parse(localContent.data);
@@ -1202,10 +1209,8 @@ angular.module('webmapp')
                     url = "/languages/" + currentLang + "/" + split.pop();
                     url = split.join('/') + url;
                 }
-                if (offlineConf.resourceBaseUrl) {
-                    url = offlineConf.resourceBaseUrl + url;
-                }
-                overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(function (err) {
+                url = baseUrl + url;
+                overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
                     if (available) {
                         url = currentOverlay.geojsonUrl;
                         if (defaultLang !== routeDefaultLang) {
@@ -1213,24 +1218,16 @@ angular.module('webmapp')
                             url = "/languages/" + defaultLang + "/" + split.pop();
                             url = split.join('/') + url;
                         }
-                        if (offlineConf.resourceBaseUrl) {
-                            url = offlineConf.resourceBaseUrl + url;
-                        }
-                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(function (err) {
-                            url = currentOverlay.geojsonUrl;
-                            if (offlineConf.resourceBaseUrl) {
-                                url = offlineConf.resourceBaseUrl + url;
-                            }
-                            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(fail);
+                        url = baseUrl + url;
+                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
+                            url = baseUrl + currentOverlay.geojsonUrl;
+                            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(fail);
                         });
                     }
                     else {
-                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(function (err) {
-                            url = currentOverlay.geojsonUrl;
-                            if (offlineConf.resourceBaseUrl) {
-                                url = offlineConf.resourceBaseUrl + url;
-                            }
-                            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url + "?timestamp=" + Date.now(), success).fail(fail);
+                        overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(function (err) {
+                            url = baseUrl + currentOverlay.geojsonUrl;
+                            overlayLayersQueueByLabel[currentOverlay.label] = $.getJSON(url, success).fail(fail);
                         });
                     }
                 });
@@ -1404,6 +1401,7 @@ angular.module('webmapp')
         };
 
         var initializeLayers = function () {
+            var defer = $q.defer();
             var promises = [];
 
             for (var i = overlayLayersConf.length - 1; i >= 0; i--) {
@@ -1464,6 +1462,7 @@ angular.module('webmapp')
                 }, 500);
 
                 $rootScope.$$phase || $rootScope.$digest();
+                defer.resolve();
             }
 
             $q.all(promises).then(function () {
@@ -1475,6 +1474,8 @@ angular.module('webmapp')
                     promiseCallback();
                 }, 2000);
             });
+
+            return defer.promise;
         };
 
         var getMaxBounds = function () {
@@ -1818,6 +1819,33 @@ angular.module('webmapp')
             }
 
             return map;
+        };
+
+        var reloadOverlayLayers = function () {
+            if (!mapConf.layers || mapConf.layers.length === 0) {
+                return;
+            }
+
+            resetLayers();
+
+            utfGridBaseLayerByLabel = {};
+            utfGridOverlayLayersByLabel = {};
+            overlayLayersByLabel = {};
+            overlayLayersById = {};
+            extraLayersByLabel = {};
+            featureMapById = {};
+            featuresIdByLayersMap = {};
+
+            overlayLayersQueueByLabel = {};
+            queueLayerToActivate = null;
+
+            polylineDecoratorLayers = {};
+
+            Search.clearEngine();
+            Model.reloadLayers();
+            initializeLayers().then(function () {
+
+            });
         };
 
         mapService.arePagesReady = function () {
@@ -2830,7 +2858,7 @@ angular.module('webmapp')
                 if (collection) {
                     var tmp = collection.features;
                     var find = false;
-                    for (let i = 0; i < tmp.length; i++) {
+                    for (var i = 0; i < tmp.length; i++) {
                         var feature = tmp[i];
                         if (feature.properties.id == id) {
                             tmp.splice(i, 1);
@@ -2873,7 +2901,7 @@ angular.module('webmapp')
                 if (collection) {
                     var tmp = collection.features;
                     var featureGeoJSON;
-                    for (let i = 0; i < tmp.length; i++) {
+                    for (var i = 0; i < tmp.length; i++) {
                         var feature = tmp[i];
                         if (feature.properties.id == id) {
                             featureGeoJSON = feature;
@@ -2903,7 +2931,7 @@ angular.module('webmapp')
                     var tmp = collection.features;
                     var find = false;
 
-                    for (let i = 0; i < tmp.length; i++) {
+                    for (var i = 0; i < tmp.length; i++) {
                         var feature = tmp[i];
 
                         if (feature.properties.id == id) {
@@ -2938,6 +2966,11 @@ angular.module('webmapp')
                 console.warn(err);
             });
         };
+
+        $rootScope.$on('language-changed', function () {
+            currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+            reloadOverlayLayers();
+        });
 
         window.closePopup = mapService.closePopup = function (e) {
             map && map.closePopup();
