@@ -946,8 +946,10 @@ angular.module('webmapp')
         $ionicPlatform.ready(function () {
             vm.userData = Auth.getUserData();
             if (CONFIG.MAIN || !CONFIG.MULTIMAP) {
-                if (!GeolocationService.isActive()) {
-                    GeolocationService.enable();
+                if (vm.showLocate) {
+                    if (!GeolocationService.isActive()) {
+                        GeolocationService.enable();
+                    }
                 }
                 if (window !== top) {
                     MapService.disableWheelZoom();
