@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="it.webmapp.default" version="0.1.1800" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Volterratur</name>
-    <description>App description</description>
+<widget id="it.webmapp.mdp" version="0.1.1800" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Maratona di Pisa</name>
+    <description>Questa APP permette di attivare la funzionalità "tracciamento" dedicata agli atleti che partecipano ad eventi outdoor. Questa funzionalità verrà attivata esclusivamente durante lo svolgimento della gara e richiede una password che verrà consegnata dagli organizzatori.
+</description>
     <author email="alessiopiccioli@webmapp.it" href="http://webmapp.it/">
     Webmapp
   </author>

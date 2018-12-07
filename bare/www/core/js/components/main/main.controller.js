@@ -185,6 +185,7 @@ angular.module('webmapp')
 
         vm.hideDeactiveCentralPointer = CONFIG.OPTIONS && CONFIG.OPTIONS.hideDeactiveCentralPointer;
         vm.toggleMapInDetails = CONFIG.OPTIONS && CONFIG.OPTIONS.toggleMapInDetails;
+        vm.openInExternalBrowser = Utils.openInExternalBrowser;
 
         vm.isCoordsBlockExpanded = CONFIG.OPTIONS.coordsNotExpanded ? false : true;
 
@@ -324,16 +325,39 @@ angular.module('webmapp')
             }
         };
 
+        var validatePrivacy = false;
+
+        vm.validPrivacy = function () {
+            if (validatePrivacy) {
+                return $scope.data.privacyCheck;
+            }
+            else {
+                return true;
+            }
+        };
+
+        vm.togglePrivacy = function () {
+            validatePrivacy = false;
+            $scope.data.privacyCheck = !$scope.data.privacyCheck;
+            Utils.forceDigest();
+        };
+
         vm.login = function () {
             if (!$scope.data) {
                 $scope.data = {
                     bibNumber: "",
-                    password: ""
+                    password: "",
+                    privacyCheck: false
                 };
             }
 
             var popup = $ionicPopup.show({
-                template: '<input type="text" ng-class="{\'red\': !vm.validBibNumber()}" ng-model="data.bibNumber" placeholder="' + $translate.instant("Numero di gara") + '"><br><input type="password" ng-model="data.password" placeholder="' + $translate.instant("Password") + '">',
+                template: '<input type="text" ng-class="{\'red\': !vm.validBibNumber()}" ng-model="data.bibNumber" placeholder="' + $translate.instant("Numero di gara") + '"><br>' +
+                    '<input type="password" ng-model="data.password" placeholder="' + $translate.instant("Password") + '">' +
+                    '<div class="privacy-div">' +
+                    '<i ng-click="vm.togglePrivacy()" ng-class="{\'red\': !vm.validPrivacy(), \'wm-icon-outline-check_box_outline_blank\': !data.privacyCheck, \'wm-icon-outline-check_box\': data.privacyCheck}"></i>' +
+                    '<span>' + $translate.instant("Accetto le condizioni dell'informativa sulla") + '<a href="" ng-click="vm.openInExternalBrowser(\'' + CONFIG.OPTIONS.privacyUrl + '\')">' + $translate.instant("privacy") + '<a></span>' +
+                    '</div>',
                 title: $translate.instant('LOGIN'),
                 subTitle: $translate.instant("Inserisci il tuo numero di gara e la password che ti è stata fornita"),
                 scope: $scope,
@@ -343,7 +367,8 @@ angular.module('webmapp')
                         text: $translate.instant('Inizia'),
                         type: 'button-positive',
                         onTap: function (e) {
-                            if (vm.validBibNumber()) {
+                            validatePrivacy = true;
+                            if (vm.validPrivacy() && vm.validBibNumber()) {
                                 return true;
                             }
                             else {
@@ -358,7 +383,8 @@ angular.module('webmapp')
                     if ($scope.data.bibNumber && marathonUsers[+$scope.data.bibNumber] === $scope.data.password) {
                         vm.userData = {
                             bibNumber: $scope.data.bibNumber,
-                            password: $scope.data.password
+                            password: $scope.data.password,
+                            privacyCheck: $scope.data.privacyCheck
                         }
 
                         Auth.setUserData(vm.userData);
@@ -1082,7 +1108,8 @@ angular.module('webmapp')
                 if (vm.userData && vm.userData.bibNumber) {
                     $scope.data = {
                         bibNumber: vm.userData.bibNumber,
-                        password: vm.userData.password
+                        password: vm.userData.password,
+                        privacyCheck: vm.userData.privacyCheck
                     }
                 }
             })
@@ -1105,7 +1132,8 @@ angular.module('webmapp')
             if (vm.userData && vm.userData.bibNumber) {
                 $scope.data = {
                     bibNumber: vm.userData.bibNumber,
-                    password: vm.userData.password
+                    password: vm.userData.password,
+                    privacyCheck: vm.userData.privacyCheck
                 }
             }
 

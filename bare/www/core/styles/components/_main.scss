@@ -13,6 +13,17 @@
 input.red {
   border: 1px solid #ff0000;
 }
+i.red {
+  color: red;
+}
+
+.privacy-div {
+  padding: 10px 10px 0;
+  i {
+    margin-right: 10px;
+    font-size: 110%;
+  }
+}
 
 /*
     CSS styles to eliminate the annoying flickering header when changing tabs in an Ionic app on Android:
