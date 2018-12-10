@@ -1029,10 +1029,15 @@ angular.module('webmapp')
                     defer.resolve();
                 };
 
-            var baseUrl = offlineConf.resourceBaseUrl || communicationConf.resourceBaseUrl || '';
-            if (baseUrl[baseUrl.length - 1] !== '/') {
-                baseUrl += '/';
+            var baseUrl = '';
+            if (currentOverlay.geojsonUrl.substring(0, 4) !== 'file') {
+                baseUrl = offlineConf.resourceBaseUrl || communicationConf.resourceBaseUrl || '';
+
+                if (baseUrl.substring(-1) !== '/') {
+                    baseUrl += '/';
+                }
             }
+
             if (Offline.isActive()) {
                 overlayLayersQueueByLabel[currentOverlay.label] = getItemFromLocalStorage(baseUrl + currentOverlay.geojsonUrl)
                     .then(function (localContent) {
