@@ -106,29 +106,7 @@ angular.module('webmapp')
             iconAnchor: [20, 20],
         });
 
-        var elevationControl = L.control.elevation({
-            position: "bottomleft",
-            theme: "steelblue-theme", //default: lime-theme
-            width: 600,
-            height: 125,
-            margins: {
-                top: 10,
-                right: 20,
-                bottom: 30,
-                left: 50
-            },
-            useHeightIndicator: true, //if false a marker is drawn at map position
-            interpolation: "linear", //see https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-area_interpolate
-            hoverNumber: {
-                decimalsX: 3, //decimals on distance (always in km)
-                decimalsY: 0, //deciamls on hehttps://www.npmjs.com/package/leaflet.coordinatesight (always in m)
-                formatter: undefined //custom formatter function may be injected
-            },
-            xTicks: undefined, //number of ticks in x axis, calculated by default according to width
-            yTicks: undefined, //number of ticks on y axis, calculated by default according to height
-            collapsed: true,  //collapsed mode, show chart on click or mouseover
-            imperial: false    //display imperial units instead of metric
-        });
+        var elevationControl = null;
 
         var db = new PouchDB('webmapp');
 
@@ -1648,6 +1626,38 @@ angular.module('webmapp')
                 }
             });
 
+            var width = +window.screen.availWidth * 70 / 100;
+            var height = width / 2.5;
+
+            if (window.screen.availHeight < window.screen.availWidth) {
+                height = +window.screen.availHeight * 25 / 100;
+                width = 2.5 * height;
+            }
+
+            elevationControl = L.control.elevation({
+                position: "bottomleft",
+                theme: "steelblue-theme", //default: lime-theme
+                width: width,
+                height: height,
+                margins: {
+                    top: 10,
+                    right: 20,
+                    bottom: 30,
+                    left: 40
+                },
+                // useHeightIndicator: true, //if false a marker is drawn at map position
+                // interpolation: "linear", //see https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-area_interpolate
+                hoverNumber: {
+                    decimalsX: 2, //decimals on distance (always in km)
+                    decimalsY: 0, //deciamls on hehttps://www.npmjs.com/package/leaflet.coordinatesight (always in m)
+                    formatter: undefined //custom formatter function may be injected
+                },
+                // xTicks: Utils.isBrowser() ? 10 : 5, //number of ticks in x axis, calculated by default according to width
+                // yTicks: Utils.isBrowser() ? 5 : 3, //number of ticks on y axis, calculated by default according to height
+                collapsed: Utils.isBrowser() ? false : true,  //collapsed mode, show chart on click or mouseover
+                // imperial: false    //display imperial units instead of metric
+            });
+
             var baseLayersPromises = [];
             for (var i = 0; i < mapConf.layers.length; i++) {
                 baseLayersPromises.push(buildBaseLayer(maxBounds, i));
@@ -2049,9 +2059,16 @@ angular.module('webmapp')
         };
 
         mapService.toggleElevationControl = function (data) {
-
-
-            elevationControl.addTo(map);
+            elevationControl.clear();
+            if (data) {
+                L.geoJson(data, {
+                    onEachFeature: elevationControl.addData.bind(elevationControl)
+                });
+                elevationControl.addTo(map);
+            }
+            else {
+                map.removeControl(elevationControl);
+            }
         };
 
         mapService.isInBoundingBox = function (lat, long) {

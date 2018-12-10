@@ -149,6 +149,7 @@ angular.module('webmapp')
         function fitDataInView(data) {
             setTimeout(function () {
                 MapService.centerOnFeature(data);
+                MapService.toggleElevationControl(data);
             }, 2000);
         };
 
@@ -668,6 +669,7 @@ angular.module('webmapp')
                 }
             }
 
+            MapService.toggleElevationControl(data);
             // console.log(feature, vm)
         };
 

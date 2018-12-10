@@ -674,6 +674,7 @@ angular.module('webmapp')
         registeredEvents.push(
             $scope.$on('$stateChangeStart', function (e, dest) {
                 vm.showRightMenu = false;
+                MapService.toggleElevationControl(false);
                 // if ((dest.name === 'app.main.detaillayer' ||
                 //     dest.name === 'app.main.detailevent' ||
                 //     dest.name === 'app.main.detailulayer') &&
