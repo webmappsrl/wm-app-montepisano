@@ -1540,7 +1540,12 @@ angular.module('webmapp')
             });
 
             map.on('zoomstart', function () {
+                mapService.closePopup();
                 $rootScope.$emit('map-zoomstart');
+                try {
+                    elevationControl._hidePositionMarker();
+                }
+                catch (e) { }
             });
 
             map.on('resize', function () {
@@ -1571,10 +1576,6 @@ angular.module('webmapp')
                 centerCoordsUTM32.lat = Math.round(etrs89coords[1]);
 
                 Utils.forceDigest();
-            });
-
-            map.on('zoomstart', function () {
-                mapService.closePopup();
             });
 
             map.on('zoomend', function () {
@@ -1639,29 +1640,26 @@ angular.module('webmapp')
                 width = 2.5 * height;
             }
 
-            elevationControl = L.control.elevation({
-                position: "bottomleft",
-                theme: "steelblue-theme", //default: lime-theme
-                width: width,
-                height: height,
-                margins: {
-                    top: 10,
-                    right: 20,
-                    bottom: 30,
-                    left: 40
-                },
-                // useHeightIndicator: true, //if false a marker is drawn at map position
-                // interpolation: "linear", //see https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-area_interpolate
-                hoverNumber: {
-                    decimalsX: 2, //decimals on distance (always in km)
-                    decimalsY: 0, //deciamls on hehttps://www.npmjs.com/package/leaflet.coordinatesight (always in m)
-                    formatter: undefined //custom formatter function may be injected
-                },
-                // xTicks: Utils.isBrowser() ? 10 : 5, //number of ticks in x axis, calculated by default according to width
-                // yTicks: Utils.isBrowser() ? 5 : 3, //number of ticks on y axis, calculated by default according to height
-                collapsed: Utils.isBrowser() ? false : true,  //collapsed mode, show chart on click or mouseover
-                // imperial: false    //display imperial units instead of metric
-            });
+            if (CONFIG.OPTIONS.activateElevationControl) {
+                elevationControl = L.control.elevation({
+                    position: "bottomleft",
+                    theme: "steelblue-theme", //default: lime-theme
+                    width: width,
+                    height: height,
+                    margins: {
+                        top: 10,
+                        right: 20,
+                        bottom: 30,
+                        left: 40
+                    },
+                    hoverNumber: {
+                        decimalsX: 2, //decimals on distance (always in km)
+                        decimalsY: 0, //deciamls on hehttps://www.npmjs.com/package/leaflet.coordinatesight (always in m)
+                        formatter: undefined //custom formatter function may be injected
+                    },
+                    collapsed: Utils.isBrowser() ? false : true  //collapsed mode, show chart on click or mouseover
+                });
+            }
 
             var baseLayersPromises = [];
             for (var i = 0; i < mapConf.layers.length; i++) {
@@ -2064,15 +2062,26 @@ angular.module('webmapp')
         };
 
         mapService.toggleElevationControl = function (data) {
-            elevationControl.clear();
-            if (data) {
-                L.geoJson(data, {
-                    onEachFeature: elevationControl.addData.bind(elevationControl)
-                });
-                elevationControl.addTo(map);
-            }
-            else {
-                map.removeControl(elevationControl);
+            if (CONFIG.OPTIONS.activateElevationControl) {
+                try {
+                    elevationControl.clear();
+                }
+                catch (e) { }
+
+                if (data) {
+                    L.geoJson(data, {
+                        onEachFeature: elevationControl.addData.bind(elevationControl)
+                    });
+                    elevationControl.addTo(map);
+                }
+                else {
+                    try {
+                        elevationControl._hidePositionMarker();
+                    }
+                    catch (e) { }
+
+                    map.removeControl(elevationControl);
+                }
             }
         };
 

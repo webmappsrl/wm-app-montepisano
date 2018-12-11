@@ -6,6 +6,7 @@ Leaflet.Elevation
 3. [Install](https://github.com/MrMufflon/Leaflet.Elevation#install-with-bower)
 4. [Setup development environment](https://github.com/MrMufflon/Leaflet.Elevation#setup-development-environment)
 5. [Customizing styles](https://github.com/MrMufflon/Leaflet.Elevation#customizing-styles)
+6. Custom changes
 
 ### What is this?
 A [Leaflet](http://leafletjs.com) plugin to view an interactive height profile of polylines lines using [d3](http://d3js.org). This plugin is under development.
@@ -100,7 +101,7 @@ To generate different themes [lessCSS](http://lesscss.org/) is used. Create your
 @theme : lime-theme;
 @base-color : #9CC222; //basecolor to derive other colors from
 @highlight-color : #637E0B; //basecolor to derive selections from
-@background : fade(@base-color,20%); //background-color 
+@background : fade(@base-color,20%); //background-color
 @drag-color : fade(@highlight-color,40%); //drag selection color
 @axis-color : darken(@base-color,20%); //color of axes
 @stroke-color : darken(@base-color,40%); //color for mouse highlight
@@ -109,3 +110,15 @@ To generate different themes [lessCSS](http://lesscss.org/) is used. Create your
 @stroke-width-axis : 2; //stroke width for axes;
 ```
 Add the theme file to the less- and cssmin task in the Gruntfile and you´re good to go.
+
+
+### CUSTOM CHANGES
+
+Files changed:
+	./dist/Leaflet.Elevation-0.0.2.min.js
+	./dist/Leaflet.Elevation-0.0.2.src.js
+
+Replaced all L.Browser.touch occurrences with L.Browser.mobile
+Fixed bug in src, added check for items value between rows #214 and #221
+
+Use ./dist/Leaflet.Elevation-0.0.2.src.js for fixed version
