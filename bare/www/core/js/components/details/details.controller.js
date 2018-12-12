@@ -483,7 +483,13 @@ angular.module('webmapp')
                     content += '</div>';
                     content += '</div>';
 
-                    feature.description = content + feature.description;
+                    if (feature.description) {
+                        feature.description = content + feature.description;
+                    }
+                    else {
+                        feature.description = content;
+                    }
+
                 }
 
                 if (feature.description) {
@@ -494,7 +500,24 @@ angular.module('webmapp')
                     feature.description = feature.description.replace(new RegExp(/src="\//g), 'src="' + CONFIG.COMMUNICATION.baseUrl);
                     // feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), '');
                     // feature.description = feature.description.replace(new RegExp(/href="\//g), 'href="' + CONFIG.COMMUNICATION.baseUrl);
-                    feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'onclick="window.open(\'$1\', \'_system\', \'\')"');
+                    if (!Utils.isBrowser()) {
+                        feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'onclick="window.open(\'$1\', \'_system\', \'\')"');
+                    }
+                    else {
+                        // href="http(s)?:\/\/([^\'\"]+)(\.gpx|\.kml|\.geojson)" match WITH extension
+                        feature.description = feature.description.replace(new RegExp(/href="http(s)?:\/\/([^\'\"]+)"/g), function (val, g0, g1) {
+                            var re = /\.(gpx|kml|geojson)"/;
+                            if (!g0) {
+                                g0 = '';
+                            }
+                            if (re.test(val)) {
+                                return 'href="https://api.webmapp.it/services/downloadResource.php?url=' + g1 + '" target="_self"';
+                            }
+                            else {
+                                return 'onclick="window.open(\'http' + g0 + '://' + g1 + '\', \'_system\', \'\')"';
+                            }
+                        });
+                    }
                     // feature.description = feature.description.replace(new RegExp(/window.open\(\'#\', \'_system\', \'\'\)/g), '');
 
                     vm.mainDescription = Utils.trimHtml(feature.description, {
