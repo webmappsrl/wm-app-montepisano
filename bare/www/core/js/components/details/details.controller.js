@@ -151,6 +151,15 @@ angular.module('webmapp')
             if (node) {
                 MapService.centerOnFeature(data);
                 MapService.toggleElevationControl(data, node);
+                vm.fitRefresh = 0;
+                var refresh = function () {
+                    MapService.centerOnFeature(data);
+                    if (vm.fitRefresh <= 15) {
+                        vm.fitRefresh++;
+                        setTimeout(refresh, 100);
+                    }
+                };
+                refresh();
             }
             else {
                 setTimeout(function () {

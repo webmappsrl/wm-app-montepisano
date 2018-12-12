@@ -1640,8 +1640,8 @@ angular.module('webmapp')
                     width = width / 2;
                 }
 
-                width = width * 85 / 100;
-                height = width / 2.7;
+                width = ((width * 96 / 100) - 14);
+                height = width / 3;
 
                 elevationControl = L.control.elevation({
                     position: "bottomleft",
@@ -1650,7 +1650,7 @@ angular.module('webmapp')
                     height: height,
                     margins: {
                         top: 20,
-                        right: 40,
+                        right: 35,
                         bottom: 30,
                         left: 40
                     },

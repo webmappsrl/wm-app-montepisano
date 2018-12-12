@@ -127,8 +127,6 @@
                         <img ng-if="vm.isAreaDetail" style="max-height: 125px; margin-left: 20%;" ng-src="{{vm.feature.image}}">
                     </div>
 
-                    <div id="elevation-control-container"></div>
-
                     <ul class="details-related">
                         <li class="details-related-element related-itinerari" ng-if="vm.relatedItinerary.length > 0" ng-click="vm.openItineraryRelatedFeatures()">
                             <a href="">
@@ -167,6 +165,8 @@
                         </li>
                     </ul>
                 </div>
+
+                <div id="elevation-control-container"></div>
 
                 <div class="accessibility-buttons-container" ng-if="vm.showAccessibilityButtons">
                     <a href="" ng-click="vm.openAccessibilityModal('mobility')">
