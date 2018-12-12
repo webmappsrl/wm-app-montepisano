@@ -825,6 +825,13 @@ div.detailRoute-footer {
     display: table;
     clear: both; }
 
+#elevation-control-container {
+  width: 100%;
+  padding: 0 5%;
+  display: block;
+  margin: 0 auto;
+  overflow: hidden; }
+
 .details-howtoreach {
   display: none;
   height: 45px;

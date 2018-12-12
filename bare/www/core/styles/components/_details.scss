@@ -123,6 +123,15 @@
   @include clearfix;
 }
 
+#elevation-control-container {
+  width: 100%;
+  padding: 0 5%;
+  display: block;
+  margin: 0 auto;
+  // height: 22%;
+  overflow: hidden;
+}
+
 .details-howtoreach {
   display: none;
   height: 45px;

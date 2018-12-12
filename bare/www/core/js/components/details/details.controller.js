@@ -147,10 +147,16 @@ angular.module('webmapp')
         });
 
         function fitDataInView(data) {
-            setTimeout(function () {
+            var node = document.getElementById("elevation-control-container");
+            if (node) {
                 MapService.centerOnFeature(data);
-                MapService.toggleElevationControl(data);
-            }, 2000);
+                MapService.toggleElevationControl(data, node);
+            }
+            else {
+                setTimeout(function () {
+                    fitDataInView(data);
+                }, 100);
+            }
         };
 
         if (trackRecordingEnabled) {
@@ -692,7 +698,7 @@ angular.module('webmapp')
                 }
             }
 
-            MapService.toggleElevationControl(data);
+            // MapService.toggleElevationControl(data);
             // console.log(feature, vm)
         };
 

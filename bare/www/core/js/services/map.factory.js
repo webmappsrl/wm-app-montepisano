@@ -1632,23 +1632,25 @@ angular.module('webmapp')
                 }
             });
 
-            var width = +window.screen.availWidth * 70 / 100;
-            var height = width / 2.5;
-
-            if (window.screen.availHeight < window.screen.availWidth) {
-                height = +window.screen.availHeight * 25 / 100;
-                width = 2.5 * height;
-            }
-
             if (CONFIG.OPTIONS.activateElevationControl) {
+                var width = +window.visualViewport.width;
+                var height = +window.visualViewport.height;
+
+                if (width > 1024) {
+                    width = width / 2;
+                }
+
+                width = width * 85 / 100;
+                height = width / 2.7;
+
                 elevationControl = L.control.elevation({
                     position: "bottomleft",
                     theme: "steelblue-theme", //default: lime-theme
                     width: width,
                     height: height,
                     margins: {
-                        top: 10,
-                        right: 20,
+                        top: 20,
+                        right: 40,
                         bottom: 30,
                         left: 40
                     },
@@ -1657,7 +1659,7 @@ angular.module('webmapp')
                         decimalsY: 0, //deciamls on hehttps://www.npmjs.com/package/leaflet.coordinatesight (always in m)
                         formatter: undefined //custom formatter function may be injected
                     },
-                    collapsed: Utils.isBrowser() ? false : true  //collapsed mode, show chart on click or mouseover
+                    collapsed: false  //collapsed mode, show chart on click or mouseover
                 });
             }
 
@@ -2061,7 +2063,7 @@ angular.module('webmapp')
             }
         };
 
-        mapService.toggleElevationControl = function (data) {
+        mapService.toggleElevationControl = function (data, node) {
             if (CONFIG.OPTIONS.activateElevationControl) {
                 try {
                     elevationControl.clear();
@@ -2073,6 +2075,15 @@ angular.module('webmapp')
                         onEachFeature: elevationControl.addData.bind(elevationControl)
                     });
                     elevationControl.addTo(map);
+
+                    if (node) {
+                        var htmlObject = elevationControl.getContainer();
+
+                        function setParent(el, newParent) {
+                            newParent.appendChild(el);
+                        }
+                        setParent(htmlObject, node);
+                    }
                 }
                 else {
                     try {
