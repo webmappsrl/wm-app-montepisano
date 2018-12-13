@@ -52,12 +52,24 @@ angular.module('webmapp')
         };
 
         var addToIndex = function (item, layerName) {
-            var itemModel = {};
+            var itemModel = {},
+                found = false;
 
             itemModel = angular.extend({
                 id: item.properties.id || Utils.generateUID()
             }, item);
+            // console.log(layersEngine[layerName]);
+            // for (var i in layersEngine[layerName].documents) {
+            //     if (layersEngine[layerName].documents[i].id === itemModel.id) {
+            //         console.log(layersEngine[layerName].documents[i])
+            //         found = true;
+            //         break;
+            //     }
+            // }
+
+            // if (!found) {
             layersEngine[layerName].addDocument(itemModel);
+            // }
         };
 
         var getAllByLayer = function (layerName) {
@@ -552,6 +564,7 @@ angular.module('webmapp')
         };
 
         search.clearEngine = function (layerName) {
+            console.log(layerName)
             if (!layerName) {
                 for (var i in layersEngine) {
                     delete layersEngine[i];

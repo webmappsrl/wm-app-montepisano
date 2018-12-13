@@ -937,6 +937,8 @@ angular.module('webmapp')
                 return overlayLayersQueueByLabel[currentOverlay.label];
             }
 
+            Search.clearEngine(currentOverlay.label);
+
             var defer = $q.defer(),
                 promise = defer.promise;
 
@@ -1101,6 +1103,10 @@ angular.module('webmapp')
                     }
                 },
                     pointsLayer = L.geoJson(data, geoJsonOptions);
+
+                if (!layersToUpdate[currentOverlay.id]) {
+                    layersToUpdate[currentOverlay.id] = {};
+                }
 
                 geojsonByLabel[currentOverlay.label] = data;
                 overlayLayersByLabel[currentOverlay.label] = pointsLayer;
@@ -1851,9 +1857,7 @@ angular.module('webmapp')
 
             Search.clearEngine();
             Model.reloadLayers();
-            initializeLayers().then(function () {
-
-            });
+            initializeLayers();
         };
 
         mapService.arePagesReady = function () {
