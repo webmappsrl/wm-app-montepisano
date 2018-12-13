@@ -564,7 +564,6 @@ angular.module('webmapp')
         };
 
         search.clearEngine = function (layerName) {
-            console.log(layerName)
             if (!layerName) {
                 for (var i in layersEngine) {
                     delete layersEngine[i];
