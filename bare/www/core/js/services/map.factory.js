@@ -1633,8 +1633,8 @@ angular.module('webmapp')
             });
 
             if (CONFIG.OPTIONS.activateElevationControl) {
-                var width = +window.visualViewport.width;
-                var height = +window.visualViewport.height;
+                var width = +window.innerWidth,
+                    height;
 
                 if (width > 1024) {
                     width = width / 2;
