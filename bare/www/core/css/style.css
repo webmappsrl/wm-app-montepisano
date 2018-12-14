@@ -729,7 +729,6 @@ div.detailRoute-footer {
 .subnav-list__element,
 .contacts-list__element {
   display: inline-block;
-  width: 32%;
   margin: 0;
   padding: 0;
   text-align: left;
@@ -737,6 +736,31 @@ div.detailRoute-footer {
   .subnav-list__element.center,
   .contacts-list__element.center {
     text-align: center; }
+  .single-contact .subnav-list__element, .single-contact
+  .contacts-list__element {
+    width: 100%; }
+  .double-contact .subnav-list__element, .double-contact
+  .contacts-list__element {
+    width: 49%; }
+  .triple-contact .subnav-list__element, .triple-contact
+  .contacts-list__element {
+    width: 32%; }
+  .single-contact.contact-include-edit .subnav-list__element, .single-contact.contact-include-edit
+  .contacts-list__element {
+    width: 85%; }
+  .double-contact.contact-include-edit .subnav-list__element, .double-contact.contact-include-edit
+  .contacts-list__element {
+    width: 42%; }
+  .triple-contact.contact-include-edit .subnav-list__element, .triple-contact.contact-include-edit
+  .contacts-list__element {
+    width: 28%; }
+  .contact-include-edit .subnav-list__element.wp-edit-link, .contact-include-edit
+  .contacts-list__element.wp-edit-link {
+    float: right;
+    width: 13%; }
+    .contact-include-edit .subnav-list__element.wp-edit-link a, .contact-include-edit
+    .contacts-list__element.wp-edit-link a {
+      text-overflow: unset; }
   .subnav-list__element a,
   .contacts-list__element a {
     border: 0;

@@ -2070,7 +2070,7 @@ angular.module('webmapp')
                 }
                 catch (e) { }
 
-                if (data) {
+                if (data && data.geometry.coordinates[0][2]) {
                     L.geoJson(data, {
                         onEachFeature: elevationControl.addData.bind(elevationControl)
                     });

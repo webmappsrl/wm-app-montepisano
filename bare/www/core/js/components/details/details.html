@@ -48,7 +48,12 @@
                 <!-- <li class="subnav-list__element"><a href=""><i class="icon ion-ios-arrow-left"></i>  Prodotti tipici</a></li> -->
             </div>
             <!-- TODO: for single back to category element add details-contact-single - for two elements add details-contact-rows -->
-            <div class="details-contacts details-contact-rows" ng-if="vm.feature.email || vm.feature.phone || vm.feature.address || vm.feature.related_url">
+            <div class="details-contacts details-contact-rows" ng-if="vm.feature.email || vm.feature.phone || vm.feature.address || vm.feature.related_url || vm.feature.wp_edit" ng-class="{
+                'single-contact': vm.contactCount === 1,
+                'double-contact': vm.contactCount === 2,
+                'triple-contact': vm.contactCount === 3,
+                'contact-include-edit': vm.feature.wp_edit
+            }">
                 <ul class="details-contacts__list">
                     <li class="contacts-list__element center" ng-if="vm.feature.phone">
                         <a href="" style="cursor: default" ng-if="!vm.availablePhoneNumber">
@@ -71,6 +76,11 @@
                     <li class="contacts-list__element center" ng-if="vm.feature.related_url">
                         <a href="" ng-click="vm.openRelatedUrlPopup()">
                             <i class="icon wm-icon-ios7-world-outline"></i> {{"web" | translate}}
+                        </a>
+                    </li>
+                    <li class="contacts-list__element center wp-edit-link" ng-if="vm.feature.wp_edit">
+                        <a href="" ng-click="vm.openLink(vm.feature.wp_edit)">
+                            <i class="icon wm-icon-edit"></i>
                         </a>
                     </li>
                     <div ng-if="(vm.feature.related_url) && vm.relatedUrlPopupOpened" class="related-url-div">

@@ -17,7 +17,6 @@
 .subnav-list__element,
 .contacts-list__element {
   display: inline-block;
-  width: 32%;
   margin: 0;
   padding: 0;
   text-align: left;
@@ -25,6 +24,34 @@
   &.center {
     text-align: center;
   }
+  .single-contact & {
+    width: 100%;
+  }
+  .double-contact & {
+    width: 49%;
+  }
+  .triple-contact & {
+    width: 32%;
+  }
+  .single-contact.contact-include-edit & {
+    width: 85%;
+  }
+  .double-contact.contact-include-edit & {
+    width: 42%;
+  }
+  .triple-contact.contact-include-edit & {
+    width: 28%;
+  }
+  .contact-include-edit & {
+    &.wp-edit-link {
+      float: right;
+      width: 13%;
+      a {
+        text-overflow: unset;
+      }
+    }
+  }
+
   a {
     border: 0;
     border-image-width: 0;

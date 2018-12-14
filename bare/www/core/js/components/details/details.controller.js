@@ -640,13 +640,49 @@ angular.module('webmapp')
                     return url;
                 };
 
-                vm.relatedUrlLeftValue = 11;
-
-                if (vm.feature.phone) {
-                    vm.relatedUrlLeftValue = vm.relatedUrlLeftValue + 32;
-                }
+                vm.contactCount = 0;
                 if (vm.feature.email) {
-                    vm.relatedUrlLeftValue = vm.relatedUrlLeftValue + 32;
+                    vm.contactCount++;
+                }
+                if (vm.feature.phone) {
+                    vm.contactCount++;
+                }
+
+                if (!CONFIG.OPTIONS.activateEditLink) {
+                    vm.feature.wp_edit = "";
+                }
+
+                if (vm.feature.related_url) {
+                    vm.contactCount++;
+
+                    switch (vm.contactCount) {
+                        case 1:
+                            if (vm.feature.wp_edit) {
+                                vm.relatedUrlLeftValue = 37;
+                            }
+                            else {
+                                vm.relatedUrlLeftValue = 45;
+                            }
+                            break;
+                        case 2:
+                            if (vm.feature.wp_edit) {
+                                vm.relatedUrlLeftValue = 58;
+                            }
+                            else {
+                                vm.relatedUrlLeftValue = 69;
+                            }
+                            break;
+                        case 3:
+                            if (vm.feature.wp_edit) {
+                                vm.relatedUrlLeftValue = 67;
+                            }
+                            else {
+                                vm.relatedUrlLeftValue = 77;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
                 if (CONFIG.routeID && feature.routeID && CONFIG.routeID !== feature.routeID) {
@@ -707,7 +743,6 @@ angular.module('webmapp')
                 }
             }
 
-            // MapService.toggleElevationControl(data);
             // console.log(feature, vm)
         };
 
@@ -868,8 +903,13 @@ angular.module('webmapp')
         };
 
         vm.openRelatedUrlPopup = function () {
-            vm.relatedUrlPopupOpened = !vm.relatedUrlPopupOpened;
-            Utils.forceDigest();
+            if (typeof vm.feature.related_url === 'string') {
+                vm.openLink(vm.feature.related_url);
+            }
+            else {
+                vm.relatedUrlPopupOpened = !vm.relatedUrlPopupOpened;
+                Utils.forceDigest();
+            }
         };
 
         vm.openRelated = function (item) {
