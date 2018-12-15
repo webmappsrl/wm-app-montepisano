@@ -48,6 +48,7 @@ angular.module('webmapp')
         modalScope.vm = {};
         modalScope.parent = vm;
 
+        vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
         vm.avoidModal = CONFIG.OPTIONS.avoidModalInDetails;
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.imageUrl = CONFIG.OFFLINE.imagesUrl;
@@ -740,6 +741,36 @@ angular.module('webmapp')
                     if (!vm.feature.accessibility[i].description || vm.feature.accessibility[i].description === "") {
                         vm.feature.accessibility[i].description = "Questa descrizione non è ancora stata inserita e sarà disponibile a breve.";
                     }
+                }
+            }
+
+
+            if (vm.featureDetails.opening_hours) {
+                var openingHours = function () {
+                    var oh = new opening_hours(vm.featureDetails.opening_hours);
+                    vm.featureDetails['opening_hours:string'] = oh.prettifyValue({
+                        conf: {
+                            locale: vm.currentLang,
+                            rule_sep_string: '<br>',
+                            print_semicolon: false,
+                            leave_off_closed: false
+                        }
+                    });
+                    vm.featureDetails['opening_hours:state'] = oh.getState();
+                }
+
+                if (i18n.isInitialized()) {
+                    openingHours();
+                }
+                else {
+                    i18n.init({
+                        fallbackLng: 'en',
+                        resStore: {},
+                        getAsync: true,
+                        useCookie: false,
+                        debug: false,
+                        format: 'dd'
+                    }, openingHours);
                 }
             }
 
