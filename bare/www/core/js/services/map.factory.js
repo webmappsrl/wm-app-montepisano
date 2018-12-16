@@ -1781,8 +1781,8 @@ angular.module('webmapp')
                 showCoverageOnHover: mapConf.markerClustersOptions.showCoverageOnHover,
                 zoomToBoundsOnClick: false, // used markerClusters.on clusterclick instead
                 maxClusterRadius: function (zoom) {
-                    // return (zoom < +mapConf.maxZoom) ? mapConf.markerClustersOptions.maxClusterRadius : 1;
-                    return mapConf.markerClustersOptions.maxClusterRadius
+                    return (zoom < +mapConf.markerClustersOptions.disableClusteringAtZoom) ? mapConf.markerClustersOptions.maxClusterRadius : 1;
+                    // return mapConf.markerClustersOptions.maxClusterRadius
                 }
                 // disableClusteringAtZoom: mapConf.markerClustersOptions.disableClusteringAtZoom // Create problems with spiderify
             });
