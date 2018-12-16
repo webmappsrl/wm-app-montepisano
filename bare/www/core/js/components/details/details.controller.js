@@ -747,16 +747,22 @@ angular.module('webmapp')
 
             if (vm.featureDetails.opening_hours) {
                 var openingHours = function () {
-                    var oh = new opening_hours(vm.featureDetails.opening_hours);
-                    vm.featureDetails['opening_hours:string'] = oh.prettifyValue({
-                        conf: {
-                            locale: vm.currentLang,
-                            rule_sep_string: '<br>',
-                            print_semicolon: false,
-                            leave_off_closed: false
-                        }
-                    });
-                    vm.featureDetails['opening_hours:state'] = oh.getState();
+                    try {
+                        var oh = new opening_hours(vm.featureDetails.opening_hours);
+                        vm.featureDetails['opening_hours:string'] = oh.prettifyValue({
+                            conf: {
+                                locale: vm.currentLang,
+                                rule_sep_string: '<br>',
+                                print_semicolon: false,
+                                leave_off_closed: false
+                            }
+                        });
+                        vm.featureDetails['opening_hours:state'] = oh.getState() ? 'aperto' : 'chiuso';
+                    }
+                    catch (e) {
+                        vm.featureDetails['opening_hours:string'] = vm.featureDetails.opening_hours;
+                        vm.featureDetails['opening_hours:state'] = 'Orari di Apertura';
+                    }
                 }
 
                 if (i18n.isInitialized()) {

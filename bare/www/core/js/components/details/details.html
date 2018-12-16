@@ -200,7 +200,7 @@
 
                     <div class="opening-hours" ng-if="vm.featureDetails.opening_hours">
                         <i class="icon ion-clock"></i>
-                        <span class="label">{{vm.featureDetails['opening_hours:state'] ? "aperto" : "chiuso" | translate}}</span><br>
+                        <span class="label">{{vm.featureDetails['opening_hours:state'] | translate}}</span><br>
                         <span ng-bind-html="vm.featureDetails['opening_hours:string']"></span>
                     </div>
 
@@ -221,7 +221,7 @@
                 <div class="details-description details-rows" ng-if="vm.avoidModal">
                     <div class="opening-hours" ng-if="vm.featureDetails.opening_hours">
                         <i class="icon ion-clock"></i>
-                        <span class="label">{{vm.featureDetails['opening_hours:state'] ? "aperto" : "chiuso" | translate}}</span><br>
+                        <span class="label">{{vm.featureDetails['opening_hours:state'] | translate}}</span><br>
                         <span ng-bind-html="vm.featureDetails['opening_hours:string']"></span>
                     </div>
                     <div class="details-description-expandable" ng-class="{'show-full': vm.fullDescription}" ng-if="vm.feature.description && vm.feature.description.expandable">
