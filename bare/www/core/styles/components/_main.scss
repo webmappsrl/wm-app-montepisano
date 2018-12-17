@@ -211,13 +211,6 @@
    #CONTENT & SCROLLING ELEMENT
 \* ------------------------------------ */
 
-.pane {
-  // top: -1px;
-  // &.menu-content {
-  //   // ..
-  // }
-}
-
 .scroll-content {
   background: inherit;
 }
@@ -238,31 +231,12 @@
     @include calc(height, '100% - 42px');
     /* 2 pixel? */
   }
-  .welcome-page & {
-    // z-index: 10;
-  }
   .map-page & {
     z-index: 0;
   }
   .has-howtoreach & {
     margin-bottom: 30px;
     height: calc(60% - 45px);
-  }
-  .details-page & {
-    &::before {
-      // TODO: solve android bug
-      // content: '';
-      // display: block;
-      // height: 18px;
-      // background: transparent url('../images/shadow-details.png') left top no-repeat;
-      // background-size: cover;
-      // position: absolute;
-      // right: 0;
-      // bottom: 0;
-      // left: 0;
-      // z-index: 10;
-      // opacity: 0.8;
-    }
   }
 }
 
@@ -289,9 +263,6 @@
   &.has-show-more {
     margin-bottom: 35px;
     /* .arrow-show-more height */
-  }
-  .menu-content & {
-    //background: $color-light-green;
   }
 }
 
@@ -410,7 +381,6 @@
         left: 60px !important;
       }
     }
-    .nav-bar-title {}
   }
   .title-inner {
     line-height: 32px;
