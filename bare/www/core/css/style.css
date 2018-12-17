@@ -1378,13 +1378,13 @@ div.detailRoute-footer {
     opacity: 1;
     left: 0vw; }
   @media screen and (max-height: 600px) {
-    .help-page.pane p {
+    .help-page.pane div.tab p {
       font-size: 2.1em; } }
   @media screen and (min-height: 700px) {
-    .help-page.pane p {
+    .help-page.pane div.tab p {
       font-size: 2.5em; }
-    .help-page.pane p,
-    .help-page.pane p.large {
+    .help-page.pane div.tab p,
+    .help-page.pane div.tab p.large {
       padding: 9% 5%; } }
 
 /**

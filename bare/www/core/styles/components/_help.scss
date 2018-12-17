@@ -138,16 +138,16 @@
     left: 0vw;
   }
   @media screen and (max-height: 600px) {
-    p {
+    div.tab p {
       font-size: 2.1em;
     }
   }
   @media screen and (min-height: 700px) {
-    p {
+    div.tab p {
       font-size: 2.5em;
     }
-    p,
-    p.large {
+    div.tab p,
+    div.tab p.large {
       padding: 9% 5%;
     }
   }
