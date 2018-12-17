@@ -27,13 +27,38 @@
     border: none;
     border-radius: 50%;
     display: inline-block;
-    opacity: 0.4;
+    transition-duration: 0.6s;
+    transition-timing-function: ease-in-out;
+    transition-property: opacity;
     &.active {
       opacity: 1;
     }
+    &.inactive {
+      opacity: 0.4;
+    }
   }
+
+  .help__previous,
+  .help__next {
+    position: fixed;
+    bottom: 0;
+    font-size: 2em;
+    padding: 15px;
+    z-index: 100;
+  }
+  .help__previous {
+    left: 0;
+  }
+  .help__next {
+    right: 0;
+  }
+
   div.tab {
-    display: none;
+    display: block;
+    position: absolute;
+    width: 100%;
+    transition-duration: 0.4s;
+    transition-timing-function: ease-in-out;
     p {
       width: 100%;
       padding: 5% 5%;
@@ -48,7 +73,7 @@
     div.help-img {
       width: 100%;
       position: fixed;
-      max-height: 60vh;
+      height: 60vh;
       bottom: 50px;
       padding: 0 5%;
       &>img {
@@ -100,33 +125,17 @@
   .left {
     float: left;
   }
-  .animate-leftin {
-    position: relative;
-    animation: animateleftin 0.4s;
+  .right-out {
+    opacity: 0;
+    left: 100vw;
   }
-  .animate-rightin {
-    position: relative;
-    animation: animaterightin 0.4s;
+  .left-out {
+    opacity: 0;
+    left: -100vw;
   }
-  @keyframes animateleftin {
-    from {
-      left: -300px;
-      opacity: 0;
-    }
-    to {
-      left: 0;
-      opacity: 1;
-    }
-  }
-  @keyframes animaterightin {
-    from {
-      right: -300px;
-      opacity: 0;
-    }
-    to {
-      right: 0;
-      opacity: 1;
-    }
+  .middle-in {
+    opacity: 1;
+    left: 0vw;
   }
   @media screen and (max-height: 600px) {
     p {

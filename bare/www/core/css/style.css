@@ -1291,11 +1291,30 @@ div.detailRoute-footer {
     border: none;
     border-radius: 50%;
     display: inline-block;
-    opacity: 0.4; }
+    transition-duration: 0.6s;
+    transition-timing-function: ease-in-out;
+    transition-property: opacity; }
     .help-page.pane .step.active {
       opacity: 1; }
+    .help-page.pane .step.inactive {
+      opacity: 0.4; }
+  .help-page.pane .help__previous,
+  .help-page.pane .help__next {
+    position: fixed;
+    bottom: 0;
+    font-size: 2em;
+    padding: 15px;
+    z-index: 100; }
+  .help-page.pane .help__previous {
+    left: 0; }
+  .help-page.pane .help__next {
+    right: 0; }
   .help-page.pane div.tab {
-    display: none; }
+    display: block;
+    position: absolute;
+    width: 100%;
+    transition-duration: 0.4s;
+    transition-timing-function: ease-in-out; }
     .help-page.pane div.tab p {
       width: 100%;
       padding: 5% 5%;
@@ -1308,7 +1327,7 @@ div.detailRoute-footer {
     .help-page.pane div.tab div.help-img {
       width: 100%;
       position: fixed;
-      max-height: 60vh;
+      height: 60vh;
       bottom: 50px;
       padding: 0 5%; }
       .help-page.pane div.tab div.help-img > img {
@@ -1349,28 +1368,15 @@ div.detailRoute-footer {
     float: right; }
   .help-page.pane .left {
     float: left; }
-  .help-page.pane .animate-leftin {
-    position: relative;
-    animation: animateleftin 0.4s; }
-  .help-page.pane .animate-rightin {
-    position: relative;
-    animation: animaterightin 0.4s; }
-
-@keyframes animateleftin {
-  from {
-    left: -300px;
-    opacity: 0; }
-  to {
-    left: 0;
-    opacity: 1; } }
-
-@keyframes animaterightin {
-  from {
-    right: -300px;
-    opacity: 0; }
-  to {
-    right: 0;
-    opacity: 1; } }
+  .help-page.pane .right-out {
+    opacity: 0;
+    left: 100vw; }
+  .help-page.pane .left-out {
+    opacity: 0;
+    left: -100vw; }
+  .help-page.pane .middle-in {
+    opacity: 1;
+    left: 0vw; }
   @media screen and (max-height: 600px) {
     .help-page.pane p {
       font-size: 2.1em; } }
