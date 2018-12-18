@@ -90,7 +90,9 @@ angular.module('webmapp')
     });
 
 angular.module('webmapp')
-    .filter('orderPackagesFilter', function (
+    .filter('packagesSortFilter', function (
+        $translate,
+        CONFIG,
         Utils
     ) {
         return function (input, search) {
@@ -98,26 +100,47 @@ angular.module('webmapp')
                 return input;
             }
             else {
-                var array = [];
+                var array = [],
+                    type = search.type;
 
                 for (var i in input) {
                     array.push(input[i]);
                 }
 
-                array.sort(function (a, b) {
-                    if (!a.startPoi) {
-                        return 1;
-                    }
-                    else if (!b.startPoi) {
-                        return -1;
-                    }
-                    else {
-                        var distA = Utils.distanceInMeters(search.lat, search.long, a.startPoi.lat, a.startPoi.long),
-                            distB = Utils.distanceInMeters(search.lat, search.long, b.startPoi.lat, b.startPoi.long);
+                if (search.type === 'distance' && search.loading) {
+                    type = 'alpha';
+                }
 
-                        return distA >= distB ? 1 : -1;
-                    }
-                });
+                switch (type) {
+                    case 'distance':
+                        array.sort(function (a, b) {
+                            if (!a.startPoi) {
+                                return 1;
+                            }
+                            else if (!b.startPoi) {
+                                return -1;
+                            }
+                            else {
+                                var distA = Utils.distanceInMeters(search.position.lat, search.position.long, a.startPoi.lat, a.startPoi.long),
+                                    distB = Utils.distanceInMeters(search.position.lat, search.position.long, b.startPoi.lat, b.startPoi.long);
+
+                                return distA >= distB ? 1 : -1;
+                            }
+                        });
+                        break;
+                    case 'alpha':
+                    default:
+                        var currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
+                            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
+                                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
+                        array.sort(function (a, b) {
+                            var titleA = a.packageTitle[currentLang] || a.packageTitle[defaultLang] || a.packageTitle['it'] || a.title.rendered,
+                                titleB = b.packageTitle[currentLang] || b.packageTitle[defaultLang] || b.packageTitle['it'] || b.title.rendered;
+
+                            return titleA.localeCompare(titleB);
+                        });
+                        break;
+                }
 
                 return array;
             }

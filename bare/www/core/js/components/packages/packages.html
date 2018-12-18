@@ -16,6 +16,14 @@
 
     <div id="search-fixed">
         <input type="search" placeholder="{{'Cerca' | translate}}" ng-model="vm.search" />
+        <div class="packages__sort" ng-click="vm.toggleSort()">
+            <i ng-class="{
+                'wm-icon-distance': vm.sortPackage.type === 'distance',
+                'wm-icon-alpha-sort': vm.sortPackage.type === 'alpha',
+                'semitransparent': vm.sortPackage.loading
+            }"></i>
+            <ion-spinner ng-if="vm.sortPackage.loading"></ion-spinner>
+        </div>
     </div>
 
     <ion-content class="withSearchBar" ng-style="{
@@ -36,7 +44,7 @@
         <div class="static-content card-content search-bar-content" ng-class="{
             'search-bar-margin-fix': !vm.isBrowser && !vm.isAndroid
         }">
-            <div class="modal-inner-content modal-two-columns coupons-list reduced-list" ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search | orderPackagesFilter : vm.currentPosition" ng-click="vm.openDetailsRoute(item.id)">
+            <div class="modal-inner-content modal-two-columns coupons-list reduced-list" ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search | packagesSortFilter : vm.sortPackage" ng-click="vm.openDetailsRoute(item.id)">
                 <div class="details-image-reduced">
                     <img class="modal-image" ng-if="!item.localImageUrl" ng-src="{{item.imgUrl}}">
                     <img class="modal-image" ng-if="item.localImageUrl" ng-src="{{item.localImageUrl}}">

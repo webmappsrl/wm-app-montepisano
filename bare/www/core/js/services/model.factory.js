@@ -4,8 +4,8 @@ angular.module('webmapp')
 
     .factory('Model', function Model(
         CONFIG,
-        Utils,
-        Search
+        Search,
+        Utils
     ) {
         var model = {};
 
