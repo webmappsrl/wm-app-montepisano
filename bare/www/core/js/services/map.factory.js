@@ -2064,7 +2064,6 @@ angular.module('webmapp')
         };
 
         mapService.toggleElevationControl = function (data, node) {
-            console.log(data, node)
             if (CONFIG.OPTIONS.activateElevationControl) {
                 try {
                     elevationControl.clear();
@@ -2082,9 +2081,7 @@ angular.module('webmapp')
 
                         function setParent(el, newParent) {
                             newParent.appendChild(el);
-                            console.log("stop")
                         }
-                        console.log("start")
                         setParent(htmlObject, node);
                     }
                 }
@@ -2094,12 +2091,10 @@ angular.module('webmapp')
                     }
                     catch (e) { }
 
-                    console.log("removing")
                     try {
                         map.removeControl(elevationControl);
                     }
                     catch (e) { }
-                    console.log("removed")
                 }
             }
         };

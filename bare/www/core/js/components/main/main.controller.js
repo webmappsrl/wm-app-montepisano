@@ -674,6 +674,7 @@ angular.module('webmapp')
         registeredEvents.push(
             $scope.$on('$stateChangeStart', function (e, dest) {
                 vm.showRightMenu = false;
+                MapService.toggleElevationControl(false);
             })
         );
 
@@ -685,7 +686,6 @@ angular.module('webmapp')
                 vm.layerState = false;
 
                 if (currentState !== 'app.main.detaillayer') {
-                    MapService.toggleElevationControl(false);
                     if ($rootScope.track) {
                         delete $rootScope.track;
                     }

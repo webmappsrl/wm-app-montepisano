@@ -144,9 +144,7 @@ angular.module('webmapp')
             node = node[node.length - 1];
             if (node) {
                 MapService.centerOnFeature(data);
-                setTimeout(function () {
-                    MapService.toggleElevationControl(data, node);
-                }, 100);
+                MapService.toggleElevationControl(data, node);
                 vm.fitRefresh = 0;
                 var refresh = function () {
                     MapService.centerOnFeature(data);
