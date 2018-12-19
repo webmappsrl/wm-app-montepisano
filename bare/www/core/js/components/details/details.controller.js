@@ -514,13 +514,11 @@ angular.module('webmapp')
                         expandable = true;
                     }
                     feature.description = feature.description.replace(new RegExp(/src="\//g), 'src="' + CONFIG.COMMUNICATION.baseUrl);
-                    // feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), '');
-                    // feature.description = feature.description.replace(new RegExp(/href="\//g), 'href="' + CONFIG.COMMUNICATION.baseUrl);
+
                     if (!Utils.isBrowser()) {
                         feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'onclick="window.open(\'$1\', \'_system\', \'\')"');
                     }
                     else {
-                        // href="http(s)?:\/\/([^\'\"]+)(\.gpx|\.kml|\.geojson)" match WITH extension
                         feature.description = feature.description.replace(new RegExp(/href="http(s)?:\/\/([^\'\"]+)"/g), function (val, g0, g1) {
                             var re = /\.(gpx|kml|geojson)"/;
                             if (!g0) {
@@ -534,8 +532,11 @@ angular.module('webmapp')
                             }
                         });
                     }
-                    // feature.description = feature.description.replace(new RegExp(/window.open\(\'#\', \'_system\', \'\'\)/g), '');
 
+
+                    if (expandable) {
+                        feature.description += '<br><br>';
+                    }
                     vm.mainDescription = Utils.trimHtml(feature.description, {
                         limit: 120
                     });

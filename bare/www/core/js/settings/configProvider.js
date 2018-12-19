@@ -114,7 +114,6 @@ angular.module('webmapp')
             });
         }
 
-        console.log(config.MENU, config.PAGES)
         var addPage = function (type, label, isCustom) {
             var found = false;
             for (var i in config.PAGES) {
