@@ -19,22 +19,13 @@
                                 {{value | translate}}
                             </th>
                             <td class="table-row-desc" ng-if="parent.feature[key] && value.toLowerCase() !== 'lunghezza'">
-                                {{parent.feature[key]}} <span ng-if="value.toLowerCase() !== 'difficoltà' && value.toLowerCase() !== 'percorso'">m</span>
+                                {{parent.feature[key]}} <span ng-if="value.toLowerCase() !== 'difficoltà' && value.toLowerCase() !== 'percorso' && value.toLowerCase() !== 'durata andata' && value.toLowerCase() !== 'durata ritorno'">m</span>
                             </td>
                             <td class="table-row-desc" ng-if="parent.feature[key] && value.toLowerCase() === 'lunghezza'">
                                 {{parent.feature[key].toFixed(2)}} km
                             </td>
                         </tr>
                     </table>
-
-                    <!-- <div style="width: 100%; text-align: center;">
-                        <a
-                            href=""
-                            download
-                            ng-click="parent.openInExternalBrowser('http://api.webmapp.it/elba/media/Legenda_Elba.pdf')">
-                            Scarica la legenda completa in formato PDF
-                        </a>
-                    </div> -->
                 </div>
             </div>
         </div>

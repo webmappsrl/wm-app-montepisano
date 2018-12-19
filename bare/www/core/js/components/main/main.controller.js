@@ -674,13 +674,6 @@ angular.module('webmapp')
         registeredEvents.push(
             $scope.$on('$stateChangeStart', function (e, dest) {
                 vm.showRightMenu = false;
-                MapService.toggleElevationControl(false);
-                // if ((dest.name === 'app.main.detaillayer' ||
-                //     dest.name === 'app.main.detailevent' ||
-                //     dest.name === 'app.main.detailulayer') &&
-                //     previousBounds === null) {
-                //     previousBounds = MapService.getBounds();
-                // }
             })
         );
 
@@ -691,18 +684,11 @@ angular.module('webmapp')
 
                 vm.layerState = false;
 
-                // if (currentState !== 'app.main.detaillayer' &&
-                //     currentState !== 'app.main.detailevent' &&
-                //     currentState !== 'app.main.detailulayer' &&
-                //     previousBounds) {
-                //     setTimeout(function () {
-                //         // MapService.fitBounds(previousBounds);
-                //         previousBounds = null;
-                //     }, 1250);
-                // }
-
-                if (currentState !== 'app.main.detaillayer' && $rootScope.track) {
-                    delete $rootScope.track;
+                if (currentState !== 'app.main.detaillayer') {
+                    MapService.toggleElevationControl(false);
+                    if ($rootScope.track) {
+                        delete $rootScope.track;
+                    }
                 }
 
                 if (!$rootScope.stateCounter) {

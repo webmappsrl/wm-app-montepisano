@@ -2064,7 +2064,7 @@ angular.module('webmapp')
         };
 
         mapService.toggleElevationControl = function (data, node) {
-            // console.log(data, node)
+            console.log(data, node)
             if (CONFIG.OPTIONS.activateElevationControl) {
                 try {
                     elevationControl.clear();
@@ -2072,7 +2072,6 @@ angular.module('webmapp')
                 catch (e) { }
 
                 if (data && data.geometry.type === 'LineString' && data.geometry.coordinates[0][2]) {
-                    // console.log("ok")
                     L.geoJson(data, {
                         onEachFeature: elevationControl.addData.bind(elevationControl)
                     });
@@ -2083,7 +2082,9 @@ angular.module('webmapp')
 
                         function setParent(el, newParent) {
                             newParent.appendChild(el);
+                            console.log("stop")
                         }
+                        console.log("start")
                         setParent(htmlObject, node);
                     }
                 }
@@ -2093,7 +2094,12 @@ angular.module('webmapp')
                     }
                     catch (e) { }
 
-                    map.removeControl(elevationControl);
+                    console.log("removing")
+                    try {
+                        map.removeControl(elevationControl);
+                    }
+                    catch (e) { }
+                    console.log("removed")
                 }
             }
         };

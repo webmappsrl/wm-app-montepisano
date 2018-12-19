@@ -28,7 +28,6 @@ angular.module('webmapp')
             };
 
         var modalScope = $rootScope.$new(),
-            modal = {},
             modalImage = {},
             modalText = {},
             modalEvent = {},
@@ -133,13 +132,6 @@ angular.module('webmapp')
             modalCoupons = modalObj;
         });
 
-        $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/detailModal.html', {
-            scope: modalScope,
-            animation: 'slide-in-up'
-        }).then(function (modalObj) {
-            modal = modalObj;
-        });
-
         $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/accessibilityModal.html', {
             scope: modalScope,
             animation: 'slide-in-up'
@@ -148,10 +140,13 @@ angular.module('webmapp')
         });
 
         function fitDataInView(data) {
-            var node = document.getElementById("elevation-control-container");
+            var node = document.getElementsByClassName("elevation-control-container");
+            node = node[node.length - 1];
             if (node) {
                 MapService.centerOnFeature(data);
-                MapService.toggleElevationControl(data, node);
+                setTimeout(function () {
+                    MapService.toggleElevationControl(data, node);
+                }, 100);
                 vm.fitRefresh = 0;
                 var refresh = function () {
                     MapService.centerOnFeature(data);
@@ -807,7 +802,6 @@ angular.module('webmapp')
         };
 
         modalScope.vm.hide = function () {
-            modal && modal.hide();
             modalImage && modalImage.hide();
             modalText && modalText.hide();
             modalEvent && modalEvent.hide();
@@ -1098,7 +1092,6 @@ angular.module('webmapp')
 
         registeredEvents.push(
             $scope.$on('$destroy', function () {
-                modal && modal.remove();
                 modalImage && modalImage.remove();
                 modalText && modalText.remove();
                 modalEvent && modalEvent.remove();
