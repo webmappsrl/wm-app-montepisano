@@ -2064,7 +2064,7 @@ angular.module('webmapp')
         };
 
         mapService.toggleElevationControl = function (data, node) {
-            console.log(data, node)
+            // console.log(data, node)
             if (CONFIG.OPTIONS.activateElevationControl) {
                 try {
                     elevationControl.clear();
@@ -2072,7 +2072,7 @@ angular.module('webmapp')
                 catch (e) { }
 
                 if (data && data.geometry.type === 'LineString' && data.geometry.coordinates[0][2]) {
-                    console.log("ok")
+                    // console.log("ok")
                     L.geoJson(data, {
                         onEachFeature: elevationControl.addData.bind(elevationControl)
                     });
