@@ -1632,7 +1632,7 @@ angular.module('webmapp')
                 }
             });
 
-            if (mainConf.OPTIONS.activateElevationControl || CONFIGgeneralConf.activateElevationControl) {
+            if (mainConf.OPTIONS.activateElevationControl || generalConf.activateElevationControl) {
                 var width = +window.innerWidth,
                     height;
 
