@@ -20,6 +20,7 @@ angular.module('webmapp')
         var map = null,
             baseView = {},
             layerControl = null,
+            mainConf = CONFIG.MAIN ? CONFIG.MAIN : {},
             mapConf = CONFIG.MAP,
             menuConf = CONFIG.MENU,
             generalConf = CONFIG.OPTIONS,
@@ -1604,14 +1605,13 @@ angular.module('webmapp')
             }
 
             markerClusters = new L.MarkerClusterGroup({
-                spiderfyOnMaxZoom: mapConf.markerClustersOptions.spiderfyOnMaxZoom,
-                showCoverageOnHover: mapConf.markerClustersOptions.showCoverageOnHover,
+                spiderfyOnMaxZoom: (mainConf.MAP && mainConf.MAP.markerClustersOptions && mainConf.MAP.markerClustersOptions.spiderifyOnMaxZoom) ? mainConf.MAP.markerClustersOptions.spiderifyOnMaxZoom : mapConf.markerClustersOptions.spiderfyOnMaxZoom,
+                showCoverageOnHover: (mainConf.MAP && mainConf.MAP.markerClustersOptions && mainConf.MAP.markerClustersOptions.showCoverageOnHover) ? mainConf.MAP.markerClustersOptions.showCoverageOnHover : mapConf.markerClustersOptions.showCoverageOnHover,
                 zoomToBoundsOnClick: false, // used markerClusters.on clusterclick instead
                 maxClusterRadius: function (zoom) {
-                    // return (zoom < +mapConf.maxZoom) ? mapConf.markerClustersOptions.maxClusterRadius : 1;
-                    return mapConf.markerClustersOptions.maxClusterRadius
+                    var disableAtZoom = (mainConf.MAP && mainConf.MAP.markerClustersOptions && mainConf.MAP.markerClustersOptions.disableClusteringAtZoom) ? mainConf.MAP.markerClustersOptions.disableClusteringAtZoom : mapConf.markerClustersOptions.disableClusteringAtZoom;
+                    return (zoom < +disableAtZoom) ? ((mainConf.MAP && mainConf.MAP.markerClustersOptions && mainConf.MAP.markerClustersOptions.maxClusterRadius) ? mainConf.MAP.markerClustersOptions.maxClusterRadius : mapConf.markerClustersOptions.maxClusterRadius) : 1;
                 }
-                // disableClusteringAtZoom: mapConf.markerClustersOptions.disableClusteringAtZoom // Create problems with spiderify
             });
 
             markerClusters.addTo(map);
@@ -1632,7 +1632,7 @@ angular.module('webmapp')
                 }
             });
 
-            if (CONFIG.OPTIONS.activateElevationControl) {
+            if (mainConf.OPTIONS.activateElevationControl || CONFIGgeneralConf.activateElevationControl) {
                 var width = +window.innerWidth,
                     height;
 
@@ -2064,7 +2064,7 @@ angular.module('webmapp')
         };
 
         mapService.toggleElevationControl = function (data, node) {
-            if (CONFIG.OPTIONS.activateElevationControl) {
+            if (mainConf.OPTIONS.activateElevationControl || generalConf.activateElevationControl) {
                 try {
                     elevationControl.clear();
                 }
