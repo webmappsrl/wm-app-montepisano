@@ -708,7 +708,7 @@ angular.module('webmapp')
             pointsLayer.addData(poiCollection);
             linesLayer.addData(linesCollection);
 
-            if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
+            if (generalConf.showArrows || (mainConf && mainConf.OPTIONS && mainConf.OPTIONS.showArrows)) {
                 var featureIds = [];
                 for (var pos in linesCollection.features) {
                     featureIds = featureIds.concat([{
@@ -1520,7 +1520,7 @@ angular.module('webmapp')
                 rotate: true
             });
 
-            if (CONFIG.OPTIONS.activateZoomControl || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.activateZoomControl)) {
+            if (generalConf.activateZoomControl || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.activateZoomControl)) {
                 L.control.zoom({
                     position: 'topright'
                 }).addTo(map);

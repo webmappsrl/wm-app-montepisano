@@ -158,7 +158,6 @@ angular.module('webmapp')
         vm.heading = 0;
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
-        vm.useExandMapInDetails = CONFIG.OPTIONS.useExandMapInDetails;
         vm.showLocate = !CONFIG.MAP.hideLocationControl && !Utils.isBrowser() ||
             Utils.isBrowser() && !CONFIG.MAP.hideLocationControl && window.location.protocol === "https:";
 
