@@ -2064,7 +2064,7 @@ angular.module('webmapp')
         };
 
         mapService.toggleElevationControl = function (data, node) {
-            if (mainConf.OPTIONS.activateElevationControl || generalConf.activateElevationControl) {
+            if (mainConf && mainConf.OPTIONS && mainConf.OPTIONS.activateElevationControl || generalConf.activateElevationControl) {
                 try {
                     elevationControl.clear();
                 }
