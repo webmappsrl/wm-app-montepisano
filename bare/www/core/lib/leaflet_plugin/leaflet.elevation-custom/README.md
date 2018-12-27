@@ -120,5 +120,6 @@ Files changed:
 
 Replaced all L.Browser.touch occurrences with L.Browser.mobile
 Fixed bug in src, added check for items value between rows #214 and #221
+Changed y-axis metric position in src
 
 Use ./dist/Leaflet.Elevation-0.0.2.src.js for fixed version

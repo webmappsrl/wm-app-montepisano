@@ -362,8 +362,8 @@ L.Control.Elevation = L.Control.extend({
                 .ticks(this.options.yTicks)
                 .orient("left"))
             .append("text")
-            .attr("x", -45)
-            .attr("y", 3)
+            .attr("x", 5)
+            .attr("y", -5)
             .style("text-anchor", "end")
             .text("m");
     },

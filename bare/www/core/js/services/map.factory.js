@@ -1641,7 +1641,7 @@ angular.module('webmapp')
                 }
 
                 width = ((width * 96 / 100) - 14);
-                height = width / 4;
+                height = width / 3.5;
 
                 elevationControl = L.control.elevation({
                     position: "bottomleft",
@@ -1649,14 +1649,14 @@ angular.module('webmapp')
                     width: width,
                     height: height,
                     margins: {
-                        top: 20,
+                        top: 30,
                         right: 35,
                         bottom: 30,
-                        left: 40
+                        left: 50
                     },
                     hoverNumber: {
                         decimalsX: 2, //decimals on distance (always in km)
-                        decimalsY: 0, //deciamls on hehttps://www.npmjs.com/package/leaflet.coordinatesight (always in m)
+                        decimalsY: 0, //deciamls on height (always in m)
                         formatter: undefined //custom formatter function may be injected
                     },
                     collapsed: false  //collapsed mode, show chart on click or mouseover
