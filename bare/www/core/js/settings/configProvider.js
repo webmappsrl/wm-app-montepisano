@@ -19,12 +19,17 @@ angular.module('webmapp')
             }
             xobj.open('GET', url, false);
             xobj.onreadystatechange = function () {
-                if (xobj.readyState == 4 && ((isIos && +xobj.status === 0) || +xobj.status == 200)) {
+                if (xobj.readyState === 4 && ((isIos && +xobj.status === 0) || +xobj.status === 200)) {
                     GENERAL_CONFIG = JSON.parse(xobj.responseText);
+                }
+                else if (+xobj.status === 404) {
+                    if (MOCK_CONFIG) {
+                        GENERAL_CONFIG = MOCK_CONFIG;
+                    }
                 }
             };
             xobj.send(null);
-        }
+        };
 
         function getSyncJSON(url) {
             var retValue;

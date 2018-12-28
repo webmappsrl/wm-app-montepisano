@@ -1,7 +1,4 @@
 describe('Geolocation.Factory', function () {
-
-    beforeEach(module('webmapp'));
-
     var GeolocationService,
         CONFIG,
         $cordovaDeviceOrientation,
@@ -15,18 +12,23 @@ describe('Geolocation.Factory', function () {
         Utils;
     var currentLat, currentLong;
 
-    beforeEach(inject(function (_CONFIG_) {
-        CONFIG = _CONFIG_;
-        if (CONFIG.NAVIGATION) {
-            CONFIG.NAVIGATION.enableTrackRecording = true;
-        } else {
-            CONFIG.NAVIGATION = {
-                enableTrackRecording: true
-            }
+    beforeEach(module('webmapp'));
+
+    beforeEach(function () {
+        CONFIG = angular.copy(MOCK_CONFIG);
+
+        if (!CONFIG.NAVIGATION) {
+            CONFIG.NAVIGATION = {}
+
         }
+        CONFIG.NAVIGATION.enableTrackRecording = true;
         currentLat = CONFIG.MAP.bounds.northEast[0] + (CONFIG.MAP.bounds.southWest[0] - CONFIG.MAP.bounds.northEast[0]) / 2;
         currentLong = CONFIG.MAP.bounds.northEast[1] + (CONFIG.MAP.bounds.southWest[1] - CONFIG.MAP.bounds.northEast[1]) / 2;
-    }));
+
+        module(function ($provide) {
+            $provide.value('CONFIG', CONFIG);
+        });
+    });
 
     beforeEach(function () {
         window.cordova = {
@@ -147,23 +149,16 @@ describe('Geolocation.Factory', function () {
             defer.resolve(true);
             return defer.promise;
         });
-
+        spyOn(MapService, 'hasMap').and.callFake(function () {
+            return true;
+        });
         spyOn(MapService, 'createUserPolyline').and.callFake(function () { });
         spyOn(MapService, 'updateUserPolyline').and.callFake(function () { });
         spyOn(MapService, 'getUserPolyline').and.callFake(function () { });
         spyOn(MapService, 'removeUserPolyline').and.callFake(function () { });
-        // spyOn($cordovaDeviceOrientation, 'watchHeading').and.callFake(function() {
-        //     console.log("MOCK $cordovaDeviceOrientation.watchHeading")
-        //     var defer = $q.defer();
-
-        //     defer.promise.clearWatch = function() {};
-
-        //     return defer.promise;
-        // })
     })
 
     describe('enable', function () {
-
         it('cordova is not defined => it should reject promise', function (done) {
             window.cordova = undefined;
             expect(GeolocationService.isActive()).toBe(false);
@@ -374,7 +369,6 @@ describe('Geolocation.Factory', function () {
     });
 
     describe('disable', function () {
-
         it('window.cordova is defined => it should disable geolocation, call MapService.removePosition', function () {
             var value = GeolocationService.disable();
             expect(value).toBe(true);

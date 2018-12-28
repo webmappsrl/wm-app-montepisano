@@ -1,4 +1,4 @@
-describe('MainController', function () {
+xdescribe('MainController', function () {
 
     beforeEach(module('webmapp'));
 
@@ -66,8 +66,8 @@ describe('MainController', function () {
                         // console.log("MOCK isLocationEnabled");
                         callback(this.locationEnableParam);
                     },
-                    switchToSettings: function () {},
-                    switchToLocationSettings: function () {}
+                    switchToSettings: function () { },
+                    switchToLocationSettings: function () { }
                 }
             },
             platformId: 'android'
@@ -75,20 +75,20 @@ describe('MainController', function () {
 
         window.plugins = {
             insomnia: {
-                allowSleepAgain: function () {},
-                keepAwake: function () {}
+                allowSleepAgain: function () { },
+                keepAwake: function () { }
             }
         }
         BackgroundGeolocation = {
-            start: function () {},
-            stop: function () {},
-            removeAllListeners: function () {},
+            start: function () { },
+            stop: function () { },
+            removeAllListeners: function () { },
             events: [],
             startTask: function (callback) {
                 callback();
             },
-            endTask: function () {},
-            configure: function (params) {},
+            endTask: function () { },
+            configure: function (params) { },
             on: function (event, callback) {
                 if (event === 'location') {
                     this.callbackFun = callback;
@@ -119,17 +119,17 @@ describe('MainController', function () {
         spyOn($ionicModal, 'fromTemplateUrl').and.callFake(function () {
             var deferred = $q.defer();
             deferred.resolve({
-                show: function () {},
-                hide: function () {}
+                show: function () { },
+                hide: function () { }
             });
             return deferred.promise;
         });
         spyOn(Utils, 'createModal').and.callFake(function () {
             var deferred = $q.defer();
             deferred.resolve({
-                show: function () {},
-                hide: function () {},
-                remove: function () {}
+                show: function () { },
+                hide: function () { },
+                remove: function () { }
             });
             return deferred.promise;
         })

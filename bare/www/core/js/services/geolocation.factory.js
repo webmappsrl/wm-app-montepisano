@@ -427,7 +427,7 @@ angular.module('webmapp')
                     state.lastHeading = 0;
                     MapService.animateBearing(0, 800);
                     $rootScope.$emit("heading-changed", state.lastHeading);
-                    console.error(error);
+                    console.warn(error);
                 },
                 rotationCallback
             );
