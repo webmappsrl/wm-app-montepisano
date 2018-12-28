@@ -1,10 +1,19 @@
 describe('Map.Factory', function () {
-    beforeEach(module('webmapp'));
-
     var mapService;
     var $httpBackend;
     var $q;
     var $rootScope;
+
+    beforeEach(module('webmapp'));
+
+    beforeEach(function () {
+        CONFIG = angular.copy(MOCK_CONFIG);
+
+        module(function ($provide) {
+            $provide.value('CONFIG', CONFIG);
+        });
+    });
+
     beforeEach(inject(function (MapService, _$httpBackend_, _$q_, _$rootScope_) {
         mapService = MapService;
         $httpBackend = _$httpBackend_;
@@ -20,8 +29,10 @@ describe('Map.Factory', function () {
         spyOn(L.control, 'groupedLayers').and.callFake(function () {
             return { addTo: function () { } };
         });
-
         spyOn(L.control, 'locate').and.callFake(function () {
+            return { addTo: function () { } };
+        });
+        spyOn(L.control, 'elevation').and.callFake(function ({ options }) {
             return { addTo: function () { } };
         });
         spyOn(L, 'MarkerClusterGroup').and.callFake(function () {
@@ -50,7 +61,7 @@ describe('Map.Factory', function () {
         mapService.initialize();
     }));
 
-    xit('it should create a polyline', function () {
+    it('it should create a polyline', function () {
         var cord = [
             [43.718, 10.4],
             [43.718, 10.41]

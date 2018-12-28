@@ -16,6 +16,7 @@ var MOCK_CONFIG = {
         "useAlmostOver": true,
         "filterIcon": "wm-icon-layers",
         "activateZoomControl": true,
+        "activateElevationControl": true,
         "mainMenuHideWebmappPage": false,
         "mainMenuHideAttributionPage": false,
         "showAccessibilityButtons": true,
