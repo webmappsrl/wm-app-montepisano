@@ -2147,12 +2147,7 @@ angular.module('webmapp')
         };
 
         mapService.hasMap = function () {
-            if (map) {
-                return true;
-            }
-            else {
-                return false;
-            }
+            return map ? true : false;
         }
 
         mapService.initialize = function () {
@@ -2677,10 +2672,12 @@ angular.module('webmapp')
         };
 
         mapService.createUserPolyline = function (coordsArray) {
-            if (userTrackPolyline) {
-                map.removeLayer(userTrackPolyline);
+            if (mapService.hasMap()) {
+                if (userTrackPolyline) {
+                    map.removeLayer(userTrackPolyline);
+                }
+                userTrackPolyline = L.polyline(coordsArray).addTo(map);
             }
-            userTrackPolyline = L.polyline(coordsArray).addTo(map);
         };
 
         mapService.updateUserPolyline = function (latLng) {

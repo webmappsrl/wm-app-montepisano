@@ -2,7 +2,6 @@ describe('Map.Factory', function () {
     var mapService;
     var $httpBackend;
     var $q;
-    var $rootScope;
 
     beforeEach(module('webmapp'));
 
@@ -14,10 +13,9 @@ describe('Map.Factory', function () {
         });
     });
 
-    beforeEach(inject(function (MapService, _$httpBackend_, _$q_, _$rootScope_) {
+    beforeEach(inject(function (MapService, _$httpBackend_, _$q_) {
         mapService = MapService;
         $httpBackend = _$httpBackend_;
-        $rootScope = _$rootScope_;
         $q = _$q_;
 
         $httpBackend.whenGET().respond(404);
@@ -30,6 +28,9 @@ describe('Map.Factory', function () {
             return { addTo: function () { } };
         });
         spyOn(L.control, 'locate').and.callFake(function () {
+            return { addTo: function () { } };
+        });
+        spyOn(L.control, 'zoom').and.callFake(function () {
             return { addTo: function () { } };
         });
         spyOn(L.control, 'elevation').and.callFake(function ({ options }) {
@@ -57,108 +58,107 @@ describe('Map.Factory', function () {
                 tmp: []
             };
         });
+        spyOn(mapService, 'hasMap').and.callFake(function () {
+            return true;
+        });
 
-        mapService.initialize();
+        // mapService.initialize();
     }));
 
     it('it should create a polyline', function () {
-        var cord = [
+        var coord = [
             [43.718, 10.4],
             [43.718, 10.41]
         ];
 
         mapService.createUserPolyline([
-            cord
+            coord
         ]);
         var tmp = mapService.getUserPolyline();
 
         expect(L.polyline).toHaveBeenCalled();
-        expect(tmp.coords).toEqual([cord]);
+        expect(tmp.coords).toEqual([coord]);
     });
 
-    xit('it should create a polyline and remove previous one ', function () {
-        var cord = [
-            [43.718, 10.4],
-            [43.718, 10.41]
-        ];
-        var cord1 = [
+    xit('it should create a polyline and remove previous one', function () {
+        var mapReady = function () {
+            if (mapService.isReady()) {
+                var coord = [
+                    [43.718, 10.4],
+                    [43.718, 10.41]
+                ];
+                var coord1 = [
+                    [43.718, 10.5],
+                    [43.718, 10.51]
+                ];
+
+                mapService.createUserPolyline([
+                    coord
+                ]);
+                var tmp = mapService.getUserPolyline();
+
+                expect(L.polyline).toHaveBeenCalled();
+                expect(tmp.coords).toEqual([coord]);
+
+                mapService.createUserPolyline([
+                    coord1
+                ]);
+                var tmp1 = mapService.getUserPolyline();
+
+                expect(L.polyline).toHaveBeenCalled();
+                expect(tmp.coords).not.toEqual(tmp1.coords);
+                expect(tmp1.coords).toEqual([coord1]);
+            }
+            else {
+                setTimeout(mapReady, 100);
+            }
+        };
+
+        mapReady();
+    });
+
+    it('it should update the current polyline', function () {
+        var coord = [
             [43.718, 10.5],
             [43.718, 10.51]
         ];
 
         mapService.createUserPolyline([
-            cord
-        ]);
-        var tmp = mapService.getUserPolyline();
-
-        mapService.createUserPolyline([
-            cord1
-        ]);
-        var tmp1 = mapService.getUserPolyline();
-
-        expect(L.polyline).toHaveBeenCalled();
-        expect(tmp.coords).not.toEqual(tmp1.coords);
-        expect(tmp1.coords).toEqual([cord1]);
-    });
-
-    xit('it should create a polyline and remove previous one ', function () {
-        var cord = [
-            [43.718, 10.4],
-            [43.718, 10.41]
-        ];
-        var cord1 = [
-            [43.718, 10.5],
-            [43.718, 10.51]
-        ];
-
-        mapService.createUserPolyline([
-            cord
-        ]);
-        var tmp = mapService.getUserPolyline();
-
-        mapService.createUserPolyline([
-            cord1
-        ]);
-        var tmp1 = mapService.getUserPolyline();
-
-        expect(L.polyline).toHaveBeenCalled();
-        expect(tmp.coords).not.toEqual(tmp1.coords);
-        expect(tmp1.coords).toEqual([cord1]);
-    });
-
-    xit('it should update the current polyline', function () {
-        var cord = [
-            [43.718, 10.5],
-            [43.718, 10.51]
-        ];
-
-        mapService.createUserPolyline([
-            cord
+            coord
         ]);
 
-        var updateCord = [43.718, 10.44];
+        var updateCoord = [43.718, 10.44];
         mapService.updateUserPolyline([
-            updateCord
+            updateCoord
         ]);
 
         var tmp = mapService.getUserPolyline();
-        expect(tmp.coords[tmp.coords.length - 1]).toEqual(updateCord);
+        expect(tmp.coords[tmp.coords.length - 1]).toEqual(updateCoord);
     });
 
-    xit('it should remove  the current polyline', function () {
-        var cord = [
-            [43.718, 10.5],
-            [43.718, 10.51]
-        ];
+    xit('it should remove the current polyline', function () {
+        var mapReady = function () {
+            if (mapService.isReady()) {
+                var coord = [
+                    [43.718, 10.5],
+                    [43.718, 10.51]
+                ];
 
-        mapService.createUserPolyline([
-            cord
-        ]);
+                mapService.createUserPolyline([
+                    coord
+                ]);
 
-        mapService.removeUserPolyline();
+                mapService.removeUserPolyline();
 
-        var tmp = mapService.getUserPolyline();
-        expect(tmp).toEqual(null);
+                var tmp = mapService.getUserPolyline();
+                expect(tmp).toEqual(null);
+            }
+            else {
+                setTimeout(mapReady, 100);
+            }
+        };
+
+        mapReady();
     });
 
     afterEach(function () {
