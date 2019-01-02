@@ -78,7 +78,8 @@ xdescribe('MainController', function () {
                 allowSleepAgain: function () { },
                 keepAwake: function () { }
             }
-        }
+        };
+
         BackgroundGeolocation = {
             start: function () { },
             stop: function () { },
@@ -99,7 +100,6 @@ xdescribe('MainController', function () {
             },
             callbackFun: null
         };
-
     });
 
     beforeEach(inject(function ($controller, _GeolocationService_, _$cordovaGeolocation_, _$cordovaDeviceOrientation_, _$ionicModal_, _$ionicPopup_, _$q_, _$translate_, _$rootScope_, _MapService_, _$httpBackend_, _Utils_) {
@@ -184,7 +184,6 @@ xdescribe('MainController', function () {
             defer.resolve(true);
             return defer.promise;
         });
-
         spyOn(MapService, 'createUserPolyline').and.callFake(function (value) {
             if (userPoly == null) {
                 userPoly = {
@@ -204,17 +203,11 @@ xdescribe('MainController', function () {
         spyOn(MapService, 'removeUserPolyline').and.callFake(function () {
             userPoly = null;
         });
-
-
-    })
-
+    });
 
     describe('recordingTrack', function () {
-
         it('submbitData', function () {
-
             GeolocationService.enable().then(function () {
-
                 MainController.startNavigation(true);
 
                 BackgroundGeolocation.callbackFun({
@@ -231,27 +224,15 @@ xdescribe('MainController', function () {
                     accuracy: 10
                 });
 
-
-
                 MainController.stopNavigation();
-
-
             })
 
-
             $httpBackend.flush();
-
-        })
+        });
 
         afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
-
-    })
-
-
-
-
-
+    });
 });

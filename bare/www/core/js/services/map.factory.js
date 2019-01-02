@@ -262,7 +262,8 @@ angular.module('webmapp')
                     return {
                         color: feature.properties.color || overlayConf.color || styleConf.line.default.color,
                         weight: feature.properties.weight || overlayConf.weight || styleConf.line.default.weight,
-                        opacity: feature.properties.opacity || overlayConf.opacity || styleConf.line.default.opacity
+                        opacity: feature.properties.opacity || overlayConf.opacity || styleConf.line.default.opacity,
+                        dashArray: feature.properties.dashArray || overlayConf.dashArray || styleConf.line.default.dashArray || []
                     };
                 }
             }
