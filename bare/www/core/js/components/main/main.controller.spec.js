@@ -1,4 +1,4 @@
-xdescribe('MainController', function () {
+describe('MainController', function () {
 
     beforeEach(module('webmapp'));
 

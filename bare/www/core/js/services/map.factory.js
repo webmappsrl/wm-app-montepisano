@@ -2149,7 +2149,7 @@ angular.module('webmapp')
 
         mapService.hasMap = function () {
             return map ? true : false;
-        }
+        };
 
         mapService.initialize = function () {
             if (Utils.isBrowser()) {

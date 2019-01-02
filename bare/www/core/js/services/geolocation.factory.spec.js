@@ -7,9 +7,11 @@ describe('Geolocation.Factory', function () {
         $q,
         $translate,
         $rootScope,
+        $ionicPlatform,
         MapService,
         $httpBackend,
-        Utils;
+        Utils,
+        spy = {};
     var currentLat, currentLong;
 
     beforeEach(module('webmapp'));
@@ -43,26 +45,28 @@ describe('Geolocation.Factory', function () {
                     locationAuthorizationMode: {
                         ALWAYS: 1
                     },
+                    locationMode: {
+                        LOCATION_ON: 1,
+                        LOCATION_OFF: 0
+                    },
                     status: 1,
                     locationEnableParam: true,
-                    registerLocationStateChangeHandler: function (value) {
-                        // console.log("MOCK registerLocationStateChangeHandler");
-                        return value
+                    locationAuthorized: false,
+                    gpsStateChangeCallback: null,
+                    registerLocationStateChangeHandler: function (callback) {
+                        this.gpsStateChangeCallback = callback;
+                        return true;
                     },
                     isLocationAuthorized: function (callback) {
-                        // console.log("MOCK isLocationAuthorized");
                         callback()
                     },
                     requestLocationAuthorization: function (callback, error, param) {
-                        // console.log("MOCK requestLocationAuthorization");
                         callback(this.status)
                     },
                     isGpsLocationEnabled: function (callback, err, param) {
-                        // console.log("MOCK isGpsLocationEnabled");
                         callback(this.locationEnableParam);
                     },
                     isLocationEnabled: function (callback, err, param) {
-                        // console.log("MOCK isLocationEnabled");
                         callback(this.locationEnableParam);
                     },
                     switchToSettings: function () { },
@@ -82,16 +86,28 @@ describe('Geolocation.Factory', function () {
             endTask: function () { },
             configure: function (params) { },
             on: function (event, callback) {
+                switch (event) {
+                    case 'location':
+                    case 'error':
+                        this.callbackFun[event] = callback;
+                        break;
+                    default:
+                        break;
+                }
                 if (event === 'location') {
-                    this.callbackFun = callback;
                 }
             },
             checkStatus: function (callback) {
                 callback({})
             },
-            callbackFun: null
+            callbackFun: {}
         };
-
+        $ionicPlatform = {
+            ready: function (callback) {
+                callback();
+                return;
+            }
+        };
     });
 
     beforeEach(inject(function (_GeolocationService_, _$cordovaGeolocation_, _$cordovaDeviceOrientation_, _$ionicPopup_, _$q_, _$translate_, _$rootScope_, _MapService_, _$httpBackend_, _Utils_) {
@@ -110,44 +126,25 @@ describe('Geolocation.Factory', function () {
 
     beforeEach(function () {
         spyOn(MapService, 'drawPosition').and.callFake(function () {
-            // console.log("MOCK MapService.drawPosition");
             return true;
         });
         spyOn(MapService, 'drawAccuracy').and.callFake(function () {
-            // console.log("MOCK MapService.drawAccuracy");
             return true;
         });
         spyOn(MapService, 'removePosition').and.callFake(function () {
-            // console.log("MOCK MapService.removePosition");
             return true;
         });
         spyOn(MapService, 'centerOnCoords').and.callFake(function () {
-            // console.log("MOCK MapService.centerOnCoords");
             return true;
         });
         spyOn(MapService, 'getZoom').and.callFake(function () {
-            // console.log("MOCK MapService.getZoom");
             return true;
         });
-        spyOn(MapService, 'mapIsRotating').and.callFake(function () {
-            // console.log("MOCK MapService.mapIsRotating");
+        spy['mapIsRotating'] = spyOn(MapService, 'mapIsRotating').and.callFake(function () {
             return true;
         });
         spyOn(MapService, 'triggerNearestPopup').and.callFake(function () {
-            // console.log("MOCK MapService.mapIsRotating");
             return true;
-        });
-        spyOn($ionicPopup, 'confirm').and.callFake(function () {
-            // console.log("MOCK $ionicPopup.confirm")
-            var defer = $q.defer();
-            defer.resolve(true);
-            return defer.promise;
-        });
-        spyOn($ionicPopup, 'alert').and.callFake(function () {
-            // console.log("MOCK $ionicPopup.alert")
-            var defer = $q.defer();
-            defer.resolve(true);
-            return defer.promise;
         });
         spyOn(MapService, 'hasMap').and.callFake(function () {
             return true;
@@ -156,6 +153,16 @@ describe('Geolocation.Factory', function () {
         spyOn(MapService, 'updateUserPolyline').and.callFake(function () { });
         spyOn(MapService, 'getUserPolyline').and.callFake(function () { });
         spyOn(MapService, 'removeUserPolyline').and.callFake(function () { });
+        spyOn($ionicPopup, 'confirm').and.callFake(function () {
+            var defer = $q.defer();
+            defer.resolve(true);
+            return defer.promise;
+        });
+        spyOn($ionicPopup, 'alert').and.callFake(function () {
+            var defer = $q.defer();
+            defer.resolve(true);
+            return defer.promise;
+        });
     })
 
     describe('enable', function () {
@@ -250,7 +257,7 @@ describe('Geolocation.Factory', function () {
             $httpBackend.flush();
         });
 
-        it('cordova is defined, platform android, permission allow, not isGPSLocationEnable => it should not resolve promise and return error message', function (done) {
+        it('cordova is defined, platform android, permission granted, not isGPSLocationEnabled => it should not resolve promise and return error message', function (done) {
             localStorage.clear();
 
             window.cordova.plugins.diagnostic.locationEnableParam = false;
@@ -267,7 +274,7 @@ describe('Geolocation.Factory', function () {
             $httpBackend.flush();
         });
 
-        it('cordova is defined, platform ios, permission allow, not isLocationEnable => it should not resolve promise and return error message', function (done) {
+        it('cordova is defined, platform ios, permission granted, not isLocationEnabled => it should not resolve promise and return error message', function (done) {
             localStorage.clear();
 
             window.cordova.platformId = 'ios';
@@ -314,6 +321,93 @@ describe('Geolocation.Factory', function () {
                     expect(GeolocationService.isActive()).toBe(false);
                     done();
                 })
+
+            $httpBackend.flush();
+        });
+
+        it('cordova is defined, platform android, permission DENIED_ALWAYS => it should not resolve promise and return error message', function (done) {
+            localStorage.clear();
+
+            window.cordova.platformId = 'android';
+            window.cordova.plugins.diagnostic.status = window.cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS;
+            GeolocationService.enable()
+                .then(function (value) {
+                    fail("it should not be resolved");
+                }).catch(function (err) {
+                    expect(err).toEqual(ERRORS.GPS_PERMISSIONS_DENIED);
+                    expect(GeolocationService.isActive()).toBe(false);
+                    done();
+                })
+
+            $httpBackend.flush();
+        });
+
+        it('cordova is defined, platform ios, permission DENIED_ALWAYS => it should not resolve promise and return error message', function (done) {
+            localStorage.clear();
+
+            window.cordova.platformId = 'ios';
+            window.cordova.plugins.diagnostic.status = window.cordova.plugins.diagnostic.permissionStatus.DENIED;
+            localStorage.$wm_ios_location_permission_denied = JSON.stringify(true);
+            GeolocationService.enable()
+                .then(function (value) {
+                    fail("it should not be resolved");
+                }).catch(function (err) {
+                    expect(err).toEqual(ERRORS.GPS_PERMISSIONS_DENIED);
+                    expect(GeolocationService.isActive()).toBe(false);
+                    done();
+                })
+
+            $httpBackend.flush();
+        });
+
+        it('cordova is defined, platform android, permission already granted => it should resolve promise and return status', function (done) {
+            localStorage.clear();
+
+            window.cordova.platformId = 'android';
+            window.cordova.plugins.diagnostic.isLocationAuthorized = function (callback) {
+                callback(true);
+            };
+
+            var expectedStatus = {
+                isActive: true,
+                isLoading: true,
+                isFollowing: false,
+                isRotating: false
+            };
+
+            GeolocationService.enable()
+                .then(function (value) {
+                    expect(value).toEqual(expectedStatus);
+                    done();
+                }).catch(function (err) {
+                    fail("it should not be rejected");
+                });
+
+            $httpBackend.flush();
+        });
+
+        it('cordova is defined, platform ios, permission already granted => it should resolve and return status', function (done) {
+            localStorage.clear();
+
+            window.cordova.platformId = 'ios';
+            window.cordova.plugins.diagnostic.isLocationAuthorized = function (callback) {
+                callback(true);
+            };
+
+            var expectedStatus = {
+                isActive: true,
+                isLoading: true,
+                isFollowing: false,
+                isRotating: false
+            };
+
+            GeolocationService.enable()
+                .then(function (value) {
+                    expect(value).toEqual(expectedStatus);
+                    done();
+                }).catch(function (err) {
+                    fail("it should not be rejected");
+                });
 
             $httpBackend.flush();
         });
@@ -1069,7 +1163,6 @@ describe('Geolocation.Factory', function () {
     });
 
     describe("startRecording", function () {
-
         it('no params defined => it should reject with an error', function (done) {
             GeolocationService.enable().then(function () {
                 GeolocationService.startRecording().then(function (val) {
@@ -1085,7 +1178,7 @@ describe('Geolocation.Factory', function () {
 
 
             $httpBackend.flush();
-        })
+        });
 
         it('!recordingState.isActive and navigationTrack defined => it should start recording emitting a recordingState-changed and resolving with current state', function (done) {
             var expectedValue = {
@@ -1109,7 +1202,7 @@ describe('Geolocation.Factory', function () {
             });
 
             $httpBackend.flush();
-        })
+        });
 
         it('recordingState.isActive &&  params defined  => it should not restart recording and reject promise with error code', function (done) {
             var expectedValue = {
@@ -1141,13 +1234,13 @@ describe('Geolocation.Factory', function () {
             });
 
             $httpBackend.flush();
-        })
+        });
 
         afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
-    })
+    });
 
     describe("pauseRecording", function () {
         it("!recordingState.isActive => it should reject promise with error code and  not emit recordingState-changed", function (done) {
@@ -1319,7 +1412,7 @@ describe('Geolocation.Factory', function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
-    })
+    });
 
     describe('stopRecording', function () {
         it('!recordingState.isActive => it should resolve with state and emit recordingState-changed', function (done) {
@@ -1381,7 +1474,6 @@ describe('Geolocation.Factory', function () {
     });
 
     describe('getStats', function () {
-
         it('!recordingState.isActive => it should reject promise with false', function (done) {
             GeolocationService.getStats().then(function (val) {
                 fail('it should reject promise');
@@ -1417,7 +1509,7 @@ describe('Geolocation.Factory', function () {
                     var requestDate = new Date(Date.now() + timeToTick);
                     jasmine.clock().mockDate(requestDate)
                     var distanceExpected = Utils.distanceInMeters(currentLat, currentLong, currentLat + 0.001, currentLong);
-                    BackgroundGeolocation.callbackFun({
+                    BackgroundGeolocation.callbackFun['location']({
                         latitude: (currentLat + 0.001),
                         longitude: currentLong,
                         altitude: 0,
@@ -1451,7 +1543,7 @@ describe('Geolocation.Factory', function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
-    })
+    });
 
     describe("handleToast", function () {
         var outOfTrackToastDelay = 10000;
@@ -1459,7 +1551,7 @@ describe('Geolocation.Factory', function () {
         var spyHideToast;
         var spyMakeSound;
         var callPositionCallback = function (lat, long) {
-            BackgroundGeolocation.callbackFun({
+            BackgroundGeolocation.callbackFun['location']({
                 latitude: lat,
                 longitude: long,
                 altitude: 0,
@@ -1675,7 +1767,6 @@ describe('Geolocation.Factory', function () {
         });
     });
 
-
     describe('recordingUserTrack', function () {
         it('!recordingState.isActive && recordTrack && !firstPositionIsSet => it should start recording emitting a recordingState-changed, creating a new user polyline and resolving with current state', function (done) {
             var expectedValue = {
@@ -1706,7 +1797,7 @@ describe('Geolocation.Factory', function () {
             };
             spyOn($rootScope, '$emit');
             GeolocationService.enable().then(function () {
-                BackgroundGeolocation.callbackFun({
+                BackgroundGeolocation.callbackFun['location']({
                     latitude: currentLat,
                     longitude: currentLong,
                     altitude: 0,
@@ -1740,7 +1831,7 @@ describe('Geolocation.Factory', function () {
                     expect(val).toEqual(expectedValue);
                     expect($rootScope.$emit).toHaveBeenCalledWith('recordingState-changed', expectedValue);
                     expect(MapService.createUserPolyline).toHaveBeenCalledWith([]);
-                    BackgroundGeolocation.callbackFun({
+                    BackgroundGeolocation.callbackFun['location']({
                         latitude: currentLat,
                         longitude: currentLong,
                         altitude: 0,
@@ -1762,8 +1853,220 @@ describe('Geolocation.Factory', function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
+    });
 
-    })
+    describe('GPSSettingsSwitched', function () {
+        var enableSpy, disableSpy, recordingStateChangedSpy;
+        beforeEach(function () {
+            enableSpy = spyOn(GeolocationService, 'enable').and.callThrough();
+            disableSpy = spyOn(GeolocationService, 'disable').and.callThrough();
+            recordingStateChangedSpy = spyOn($rootScope, '$emit').and.callThrough();
+        });
+
+        describe('platform android', function () {
+            beforeEach(function () {
+                window.platformId = 'android';
+            });
+
+            it('turned on => geolocation should be enabled', function () {
+                enableSpy.calls.reset();
+                disableSpy.calls.reset();
+                recordingStateChangedSpy.calls.reset();
+                window.cordova.plugins.diagnostic.gpsStateChangeCallback(window.cordova.plugins.diagnostic.locationMode.LOCATION_ON);
+                expect(enableSpy).toHaveBeenCalledTimes(1);
+                expect(disableSpy).not.toHaveBeenCalled();
+                expect(recordingStateChangedSpy).not.toHaveBeenCalledWith('recordingState-changed', {
+                    isActive: false,
+                    isPaused: false
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('not recording, turned off => geolocation should be enabled', function (done) {
+                GeolocationService.enable().then(function (value) {
+                    enableSpy.calls.reset();
+                    disableSpy.calls.reset();
+                    recordingStateChangedSpy.calls.reset();
+                    window.cordova.plugins.diagnostic.gpsStateChangeCallback(window.cordova.plugins.diagnostic.locationMode.LOCATION_OFF)
+                    expect(enableSpy).not.toHaveBeenCalled();
+                    expect(disableSpy).toHaveBeenCalledTimes(1);
+                    expect(recordingStateChangedSpy).not.toHaveBeenCalledWith('recordingState-changed', {
+                        isActive: false,
+                        isPaused: false
+                    });
+                    done();
+                }).catch(function () {
+                    fail('it should resolve first');
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('not recording, turned off => geolocation should be enabled', function (done) {
+                GeolocationService.enable().then(function (value) {
+                    enableSpy.calls.reset();
+                    disableSpy.calls.reset();
+                    recordingStateChangedSpy.calls.reset();
+                    GeolocationService.startRecording(null, true).then(function () {
+                        window.cordova.plugins.diagnostic.gpsStateChangeCallback(window.cordova.plugins.diagnostic.locationMode.LOCATION_OFF)
+                        expect(enableSpy).not.toHaveBeenCalled();
+                        expect(disableSpy).toHaveBeenCalledTimes(1);
+                        expect(recordingStateChangedSpy).toHaveBeenCalledWith('recordingState-changed', {
+                            isActive: false,
+                            isPaused: false
+                        });
+                        done();
+                    });
+                }).catch(function () {
+                    fail('it should resolve first');
+                });
+
+                $httpBackend.flush();
+            });
+
+            afterEach(function () {
+                $httpBackend.verifyNoOutstandingExpectation();
+                $httpBackend.verifyNoOutstandingRequest();
+            });
+        });
+
+        describe('platform ios', function () {
+            beforeEach(function () {
+                window.platformId = 'ios';
+            });
+
+            it('turned on with permission granted => geolocation should be enabled', function () {
+                enableSpy.calls.reset();
+                disableSpy.calls.reset();
+                recordingStateChangedSpy.calls.reset();
+                window.cordova.plugins.diagnostic.gpsStateChangeCallback(window.cordova.plugins.diagnostic.permissionStatus.GRANTED);
+                expect(enableSpy).toHaveBeenCalledTimes(1);
+                expect(disableSpy).not.toHaveBeenCalled();
+                expect(recordingStateChangedSpy).not.toHaveBeenCalledWith('recordingState-changed', {
+                    isActive: false,
+                    isPaused: false
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('turned on with permissions granted when in use => geolocation should be enabled', function () {
+                enableSpy.calls.reset();
+                disableSpy.calls.reset();
+                recordingStateChangedSpy.calls.reset();
+                window.cordova.plugins.diagnostic.gpsStateChangeCallback(window.cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE);
+                expect(enableSpy).toHaveBeenCalledTimes(1);
+                expect(disableSpy).not.toHaveBeenCalled();
+                expect(recordingStateChangedSpy).not.toHaveBeenCalledWith('recordingState-changed', {
+                    isActive: false,
+                    isPaused: false
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('not recording, turned off => geolocation should be enabled', function (done) {
+                GeolocationService.enable().then(function (value) {
+                    enableSpy.calls.reset();
+                    disableSpy.calls.reset();
+                    recordingStateChangedSpy.calls.reset();
+                    window.cordova.plugins.diagnostic.gpsStateChangeCallback(window.cordova.plugins.diagnostic.locationMode.LOCATION_OFF)
+                    expect(enableSpy).not.toHaveBeenCalled();
+                    expect(disableSpy).toHaveBeenCalledTimes(1);
+                    expect(recordingStateChangedSpy).not.toHaveBeenCalledWith('recordingState-changed', {
+                        isActive: false,
+                        isPaused: false
+                    });
+                    done();
+                }).catch(function () {
+                    fail('it should resolve first');
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('not recording, turned off => geolocation should be enabled', function (done) {
+                GeolocationService.enable().then(function (value) {
+                    enableSpy.calls.reset();
+                    disableSpy.calls.reset();
+                    recordingStateChangedSpy.calls.reset();
+                    GeolocationService.startRecording(null, true).then(function () {
+                        window.cordova.plugins.diagnostic.gpsStateChangeCallback(window.cordova.plugins.diagnostic.locationMode.LOCATION_OFF)
+                        expect(enableSpy).not.toHaveBeenCalled();
+                        expect(disableSpy).toHaveBeenCalledTimes(1);
+                        expect(recordingStateChangedSpy).toHaveBeenCalledWith('recordingState-changed', {
+                            isActive: false,
+                            isPaused: false
+                        });
+                        done();
+                    });
+                }).catch(function () {
+                    fail('it should resolve first');
+                });
+
+                $httpBackend.flush();
+            });
+
+            afterEach(function () {
+                $httpBackend.verifyNoOutstandingExpectation();
+                $httpBackend.verifyNoOutstandingRequest();
+            });
+        });
+    });
+
+    describe('map-event', function () {
+        var togglePositionIconSpy, animateBearingSpy, stateChangedSpy;
+
+        beforeEach(function () {
+            togglePositionIconSpy = spyOn(MapService, 'togglePositionIcon');
+            animateBearingSpy = spyOn(MapService, 'animateBearing');
+            stateChangedSpy = spyOn($rootScope, '$emit').and.callThrough();
+            spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
+                var defer = $q.defer();
+                defer.resolve({
+                    coords: {
+                        latitude: currentLat,
+                        longitude: currentLong,
+                        altitude: 0,
+                        accuracy: 10
+                    }
+                });
+                return defer.promise;
+            });
+        });
+
+        it('only following, should stop at map-drag', function (done) {
+            GeolocationService.enable().then(function (value) {
+                togglePositionIconSpy.calls.reset();
+                spy['mapIsRotating'].calls.reset();
+                animateBearingSpy.calls.reset();
+                stateChangedSpy.calls.reset();
+
+                $rootScope.$emit('map-dragstart');
+
+                expect(togglePositionIconSpy).toHaveBeenCalledWith('locationIcon');
+                expect(spy['mapIsRotating']).toHaveBeenCalledWith(false);
+                expect(animateBearingSpy).toHaveBeenCalledWith(0, 800);
+                expect(stateChangedSpy).toHaveBeenCalledWith('geolocationState-changed', {
+                    isActive: true,
+                    isLoading: false,
+                    isFollowing: false,
+                    isRotating: false
+                });
+
+                $httpBackend.flush();
+                done();
+            }).catch(function () {
+                fail("it should not trigger any exception");
+            });
+        });
+
+        afterEach(function () {
+            $httpBackend.verifyNoOutstandingExpectation();
+            $httpBackend.verifyNoOutstandingRequest();
+        });
+    });
 
     afterEach(function () {
         $httpBackend.verifyNoOutstandingExpectation();

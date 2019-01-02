@@ -59,15 +59,17 @@ module.exports = function (config) {
             'core/lib/ng-country-select/dist/ng-country-select.js',
             'core/js/app.js',
             'test/mocks/config.js',
-            'core/js/settings/globalVariables.js',
-            'core/js/settings/configProvider.js',
-            'core/js/settings/translate.js',
-            'core/js/settings/overwrite.js',
-            'core/js/settings/run.js',
-            'core/js/settings/filters.js',
-            'core/js/settings/compile.js',
-            'core/js/settings/routes.js',
-            'core/js/services/*.js',
+            // 'core/js/settings/compile.js',
+            // 'core/js/settings/configProvider.js',
+            // 'core/js/settings/filters.js',
+            // 'core/js/settings/globalVariables.js',
+            // 'core/js/settings/overwrite.js',
+            // 'core/js/settings/routes.js',
+            // 'core/js/settings/run.js',
+            // 'core/js/settings/translate.js',
+            'core/js/settings/*.js',
+            'core/js/services/*.factory.js',
+            'core/js/services/*.factory.spec.js',
             'core/js/components/**/*.js'
         ],
 
@@ -77,16 +79,25 @@ module.exports = function (config) {
         ],
 
 
-        // preprocess matching files before serving them to the browser
-        // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-        preprocessors: {
-        },
-
-
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress'],
+        reporters: ['progress', 'coverage'],
+
+
+        // preprocess matching files before serving them to the browser
+        // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+        preprocessors: {
+            'core/js/components/**/*.controller.js': ['coverage'],
+            'core/js/services/*.factory.js': ['coverage']
+        },
+
+
+        // configuration for coverage reporter
+        coverageReporter: {
+            type: 'html',
+            dir: 'coverage/'
+        },
 
 
         // web server port
@@ -113,7 +124,7 @@ module.exports = function (config) {
         //      %m - message
         // path: set the path of the log file
         browserConsoleLogOptions: {
-            terminal: false
+            terminal: true
         },
 
 

@@ -200,6 +200,7 @@ angular.module('webmapp')
                 }
             };
 
+            /* istanbul ignore next */
             var onError = function (e) {
                 console.error(e);
                 defer.reject(ERRORS.GENERIC_GPS);
@@ -285,8 +286,8 @@ angular.module('webmapp')
          * @param {*} GPSState
          */
         function GPSSettingsSwitched(GPSState) {
-            if ((device.platform === "Android" && GPSState !== cordova.plugins.diagnostic.locationMode.LOCATION_OFF) ||
-                (device.platform === "iOS" && (GPSState === cordova.plugins.diagnostic.permissionStatus.GRANTED ||
+            if ((window.cordova.platformId === "android" && GPSState !== cordova.plugins.diagnostic.locationMode.LOCATION_OFF) ||
+                (window.cordova.platformId === "ios" && (GPSState === cordova.plugins.diagnostic.permissionStatus.GRANTED ||
                     GPSState === cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE))
             ) {
                 geolocationService.enable();
@@ -530,7 +531,7 @@ angular.module('webmapp')
             });
         };
 
-        console.warn("TODO: complete function positionCallback for realTimeTracking")
+        // console.warn("TODO: complete function positionCallback for realTimeTracking")
         function positionCallback(position) {
             // console.log(position);
 
@@ -1432,7 +1433,7 @@ angular.module('webmapp')
          * @returns {boolean}
          *      true if started correctly, false otherwise
          */
-        console.warn("TODO: implement function startRemoteTracking");
+        // console.warn("TODO: implement function startRemoteTracking");
         geolocationService.startRemoteTracking = function () {
             return false;
         };
@@ -1444,7 +1445,7 @@ angular.module('webmapp')
          * @returns {boolean}
          *      true if correctly executed, false otherwise
          */
-        console.warn("TODO: implement function stopRemoteTracking");
+        // console.warn("TODO: implement function stopRemoteTracking");
         geolocationService.stopRemoteTracking = function () {
             return false;
         };

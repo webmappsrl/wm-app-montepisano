@@ -1,34 +1,38 @@
 describe('Auth.Factory Test', function () {
-    beforeEach(module('webmapp'));
-
     var authService;
     var MapService;
+    var $rootScope;
     var db = {};
-    beforeEach(inject(function (Auth, _MapService_) {
+
+    beforeEach(module('webmapp'));
+
+    beforeEach(inject(function (Auth, _MapService_, _$rootScope_) {
         authService = Auth;
         MapService = _MapService_;
+        $rootScope = _$rootScope_;
     }));
-    beforeEach(function () {
 
+    beforeEach(function () {
         spyOn(MapService, 'setItemInLocalStorage').and.callFake(function (key, value) {
             db[key] = value;
         });
-        spyOn(MapService, 'getItemFromLocalStorage').and.callFake(function (value) {
-            var deferred = $q.defer();
+        spyOn(MapService, 'getItemFromLocalStorage').and.callFake(function (key) {
+            var defer = $q.defer();
+            console.log('ciaociaoc')
 
             if (db[key]) {
-                deferred.resolve(db[key])
+                defer.resolve(db[key])
             } else {
-                deferred.reject({});
+                defer.reject({});
             }
 
-            return deferred;
-        })
-
+            return defer;
+        });
         spyOn(MapService, 'removeItemFromLocalStorage').and.callFake(function (value) {
             delete db[value];
-        })
-    })
+        });
+    });
+
     describe('Auth.Factory.setUserData', function () {
         it('Should set user data successfully', function () {
             var data = {
@@ -45,8 +49,6 @@ describe('Auth.Factory Test', function () {
 
             authService.setUserData(data);
             expect(MapService.setItemInLocalStorage).toHaveBeenCalledWith("$wm_userData", value);
-
-
         });
     });
 
