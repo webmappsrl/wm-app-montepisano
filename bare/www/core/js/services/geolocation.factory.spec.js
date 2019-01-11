@@ -104,7 +104,9 @@ describe('Geolocation.Factory', function () {
             backgroundSavedPositions: [],
             start: function () { },
             stop: function () { },
-            removeAllListeners: function () { },
+            removeAllListeners: function (event) {
+                delete this.callbackFun[event];
+            },
             events: [],
             startTask: function (callback) {
                 callback();
@@ -119,6 +121,7 @@ describe('Geolocation.Factory', function () {
                     case 'background':
                     case 'foreground':
                         this.callbackFun[event] = callback;
+                        this.events.push(event);
                         break;
                     default:
                         break;
@@ -160,7 +163,9 @@ describe('Geolocation.Factory', function () {
                 position.time = time;
             }
 
-            BackgroundGeolocation.callbackFun['location'](position);
+            if (BackgroundGeolocation.callbackFun['location']) {
+                BackgroundGeolocation.callbackFun['location'](position);
+            }
         };
     });
 
@@ -505,175 +510,6 @@ describe('Geolocation.Factory', function () {
                 })
 
             $httpBackend.flush();
-        });
-
-        xdescribe('is browser', function () {
-            var localContext,
-                getCurrentPositionSpy,
-                watchPositionSpy;
-
-            beforeEach(function () {
-                window.cordova = undefined;
-                spyOn(Utils, 'isBrowser').and.callFake(function () {
-                    return true;
-                });
-
-                getCurrentPositionSpy = spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
-                    var defer = $q.defer();
-                    defer.resolve({
-                        coords: {
-                            latitude: currentLat,
-                            longitude: currentLong,
-                            altitude: 0,
-                            accuracy: 10
-                        }
-                    });
-                    return defer.promise;
-                });
-                watchPositionSpy = spyOn($cordovaGeolocation, 'watchPosition').and.callFake(function () {
-                    var defer = $q.defer();
-                    defer.resolve();
-                    return defer.promise;
-                });
-            });
-
-            it('no https, should reject promise', function (done) {
-                // var context = {
-                //     window: {
-                //         location: {
-                //             protocol: 'http:'
-                //         }
-                //     }
-                // };
-                // with (context) {
-                GeolocationService.enable().then(function () {
-                    done.fail();
-                }).catch(function (err) {
-                    expect(err).toEqual(ERRORS.CORDOVA_UNAVAILABLE);
-                    done();
-                });
-                // }
-
-                $httpBackend.flush();
-            });
-
-            it('https, should emit loading state, get current position', function (done) {
-                // var context = {
-                //     window: {
-                //         location: {
-                //             protocol: 'https:'
-                //         }
-                //     }
-                // };
-
-                window.location.protocol = 'https:';
-
-                // with (context) {
-                GeolocationService.enable().then(function (state) {
-                    done();
-                }).catch(function (err) {
-                    done.fail(err);
-                });
-                // }
-
-                $httpBackend.flush();
-            });
-        });
-
-        xdescribe('geolocation already enabled, need to restore state', function () {
-            var showPathSpy,
-                bgConfigureSpy,
-                switchStateSpy;
-            var backgroundSavedState;
-
-            beforeEach(function () {
-                backgroundSavedState = {
-                    "currentTrack": null,
-                    "isActive": true,
-                    "isPaused": false,
-                    "isRecordingPolyline": true,
-                    "stats": {
-                        "time": "{\"startTime\":1547044578911,\"totalTime\":0,\"isPaused\":false}",
-                        "distance": 75.00014248366331,
-                        "averageSpeed": 3.1359299800826386,
-                        "currentSpeed": 0
-                    },
-                    "lastPosition": { "lat": 43.71457927705038, "long": 10.407626830254738, "accuracy": 2, "altitude": 55, "heading": 1, "timestamp": 1547044657849 },
-                    "userPolyline": [
-                        { "lat": 43.71467243831859, "lng": 10.407692563643108, "alt": 0 },
-                        { "lat": 43.71474318346589, "lng": 10.40781343287734, "alt": 55 },
-                        { "lat": 43.71475100602621, "lng": 10.407736424824773, "alt": 55 },
-                        { "lat": 43.71475882858653, "lng": 10.40765941676215, "alt": 55 },
-                        { "lat": 43.71473930784037, "lng": 10.407812583608541, "alt": 55 },
-                        { "lat": 43.714657092541444, "lng": 10.407918654485563, "alt": 55 },
-                        { "lat": 43.71461772536058, "lng": 10.407772979979764, "alt": 55 },
-                        { "lat": 43.71459850120549, "lng": 10.40769990510553, "alt": 55 },
-                        { "lat": 43.71457927705038, "lng": 10.407626830254738, "alt": 55 }
-                    ]
-                };
-
-                BackgroundGeolocation.activeInBackground = true;
-
-                localStorage.$wm_lastRecordingState = JSON.stringify(backgroundSavedState);
-
-                spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
-                    var defer = $q.defer();
-                    defer.resolve({
-                        coords: {
-                            latitude: currentLat,
-                            longitude: currentLong,
-                            altitude: 0,
-                            accuracy: 10
-                        }
-                    });
-                    return defer.promise;
-                });
-                showPathSpy = spyOn(MapService, 'showPathAndRelated');
-                bgConfigureSpy = spyOn(BackgroundGeolocation, 'configure');
-                switchStateSpy = spyOn(GeolocationService, 'switchState').and.callFake(function () {
-                    var defer = $q.defer();
-                    defer.resolve();
-                    return defer.promise;
-                });
-            });
-
-            it('should restore the correct geolocation state and the correct polyline', function (done) {
-                console.log("----------------------------------------------------------------")
-                GeolocationService.enable().then(function (state) {
-                    console.log("in")
-                    expect(state).toEqual({
-                        isActive: true,
-                        isLoading: false,
-                        isFollowing: true,
-                        isRotating: false
-                    });
-                    expect(spy['drawPosition']).toHaveBeenCalledWith({
-                        latitude: backgroundSavedState.lastPosition.lat,
-                        longitude: backgroundSavedState.lastPosition.long,
-                        accuracy: backgroundSavedState.lastPosition.accuracy
-                    });
-                    expect(bgConfigureSpy).toHaveBeenCalled();
-                    expect(showPathSpy).not.toHaveBeenCalled();
-                    expect(localStorage.$wm_lastRecordingState).toBe(undefined);
-                    expect(spy['createUserPolyline']).toHaveBeenCalledWith(backgroundSavedState.userPolyline);
-                    console.log("----------------------------------------------------------------")
-                    done();
-                }).catch(function () {
-                    done.fail();
-                });
-
-                $httpBackend.flush();
-            });
-
-            xit('should restart geolocation if the state is not defined', function (done) {
-                GeolocationService.enable().then(function (state) {
-                    done();
-                }).catch(function () {
-                    done.fail();
-                });
-
-                $httpBackend.flush();
-            });
         });
 
         afterEach(function () {
@@ -1461,7 +1297,7 @@ describe('Geolocation.Factory', function () {
                     expect($rootScope.$emit).not.toHaveBeenCalled();
                     expect(err).toEqual(ERRORS.DISABLED);
                     done();
-                })
+                });
             }).catch(function (err) {
                 fail("it should resolve promise" + err);
             });
@@ -2808,6 +2644,20 @@ describe('Geolocation.Factory', function () {
     });
 
     describe('backgroundGeolocation handlers', function () {
+        var bgStartSpy,
+            bgStopSpy,
+            geolocationEnableSpy,
+            geolocationDisableSpy,
+            geolocationStopRecordingSpy;
+
+        beforeEach(function () {
+            bgStartSpy = spyOn(BackgroundGeolocation, 'start');
+            bgStopSpy = spyOn(BackgroundGeolocation, 'stop');
+            geolocationEnableSpy = spyOn(GeolocationService, 'enable').and.callThrough();
+            geolocationDisableSpy = spyOn(GeolocationService, 'disable').and.callThrough();
+            geolocationStopRecordingSpy = spyOn(GeolocationService, 'stopRecording');
+        });
+
         it('should register all the handlers', function (done) {
             GeolocationService.enable().then(function () {
                 expect(BackgroundGeolocation.callbackFun['location']).toEqual(jasmine.any(Function));
@@ -2823,23 +2673,33 @@ describe('Geolocation.Factory', function () {
             $httpBackend.flush();
         });
 
+        it('should unregister all the handlers', function (done) {
+            var removeSpy = spyOn(BackgroundGeolocation, 'removeAllListeners');
+            GeolocationService.enable().then(function () {
+                GeolocationService.disable();
+
+                expect(removeSpy).toHaveBeenCalledTimes(5);
+                done();
+            }).catch(function () {
+                done.fail();
+            });
+
+            $httpBackend.flush();
+        });
+
         describe('should change BackgroundGeolocation state', function () {
-            var startSpy,
-                stopSpy,
-                configurationSpy,
+            var configurationSpy,
                 modeSpy;
 
             beforeEach(function () {
-                startSpy = spyOn(BackgroundGeolocation, 'start');
-                stopSpy = spyOn(BackgroundGeolocation, 'stop');
                 configurationSpy = spyOn(BackgroundGeolocation, 'configure');
                 modeSpy = spyOn(BackgroundGeolocation, 'switchMode');
             });
 
             it('going to background state should stop', function (done) {
                 GeolocationService.enable().then(function () {
-                    startSpy.calls.reset();
-                    stopSpy.calls.reset();
+                    bgStartSpy.calls.reset();
+                    bgStopSpy.calls.reset();
                     configurationSpy.calls.reset();
                     modeSpy.calls.reset();
 
@@ -2847,8 +2707,8 @@ describe('Geolocation.Factory', function () {
 
                     expect(configurationSpy).not.toHaveBeenCalled();
                     expect(modeSpy).not.toHaveBeenCalled();
-                    expect(startSpy).not.toHaveBeenCalled();
-                    expect(stopSpy).toHaveBeenCalledTimes(1);
+                    expect(bgStartSpy).not.toHaveBeenCalled();
+                    expect(bgStopSpy).toHaveBeenCalledTimes(1);
 
                     done();
                 }).catch(function () {
@@ -2862,8 +2722,8 @@ describe('Geolocation.Factory', function () {
                 GeolocationService.enable().then(function () {
                     BackgroundGeolocation.callbackFun['background']();
 
-                    startSpy.calls.reset();
-                    stopSpy.calls.reset();
+                    bgStartSpy.calls.reset();
+                    bgStopSpy.calls.reset();
                     configurationSpy.calls.reset();
                     modeSpy.calls.reset();
 
@@ -2871,8 +2731,8 @@ describe('Geolocation.Factory', function () {
 
                     expect(configurationSpy).not.toHaveBeenCalled();
                     expect(modeSpy).not.toHaveBeenCalled();
-                    expect(startSpy).toHaveBeenCalledTimes(1);
-                    expect(stopSpy).not.toHaveBeenCalled();
+                    expect(bgStartSpy).toHaveBeenCalledTimes(1);
+                    expect(bgStopSpy).not.toHaveBeenCalled();
 
                     done();
                 }).catch(function () {
@@ -2885,8 +2745,8 @@ describe('Geolocation.Factory', function () {
             it('going to background state while recording should change configuration', function (done) {
                 GeolocationService.enable().then(function () {
                     GeolocationService.startRecording({ parentId: 1, id: 1 }).then(function () {
-                        startSpy.calls.reset();
-                        stopSpy.calls.reset();
+                        bgStartSpy.calls.reset();
+                        bgStopSpy.calls.reset();
                         configurationSpy.calls.reset();
                         modeSpy.calls.reset();
 
@@ -2894,8 +2754,8 @@ describe('Geolocation.Factory', function () {
 
                         expect(configurationSpy).toHaveBeenCalledTimes(1);
                         expect(modeSpy).not.toHaveBeenCalledWith(BackgroundGeolocation.FOREGROUND_MODE);
-                        expect(startSpy).not.toHaveBeenCalled();
-                        expect(stopSpy).not.toHaveBeenCalled();
+                        expect(bgStartSpy).not.toHaveBeenCalled();
+                        expect(bgStopSpy).not.toHaveBeenCalled();
 
                         done();
                     });
@@ -2911,8 +2771,8 @@ describe('Geolocation.Factory', function () {
                     GeolocationService.startRecording({ parentId: 1, id: 1 }).then(function () {
                         BackgroundGeolocation.callbackFun['background']();
 
-                        startSpy.calls.reset();
-                        stopSpy.calls.reset();
+                        bgStartSpy.calls.reset();
+                        bgStopSpy.calls.reset();
                         configurationSpy.calls.reset();
                         modeSpy.calls.reset();
 
@@ -2920,11 +2780,121 @@ describe('Geolocation.Factory', function () {
 
                         expect(configurationSpy).toHaveBeenCalledTimes(1);
                         expect(modeSpy).not.toHaveBeenCalledWith(BackgroundGeolocation.BACKGROUND_MODE);
-                        expect(startSpy).not.toHaveBeenCalled();
-                        expect(stopSpy).not.toHaveBeenCalled();
+                        expect(bgStartSpy).not.toHaveBeenCalled();
+                        expect(bgStopSpy).not.toHaveBeenCalled();
 
                         done();
                     });
+                }).catch(function () {
+                    done.fail();
+                });
+
+                $httpBackend.flush();
+            });
+        });
+
+        describe('should handle geolocation errors', function () {
+            it('for position denied (code:1) it should restart BackgroundGeolocation', function (done) {
+                GeolocationService.enable().then(function () {
+                    geolocationEnableSpy.calls.reset();
+                    geolocationDisableSpy.calls.reset();
+                    geolocationStopRecordingSpy.calls.reset();
+
+                    BackgroundGeolocation.callbackFun['error']({ code: 1, message: 'Position denied' });
+
+                    expect(geolocationEnableSpy).toHaveBeenCalledTimes(1);
+                    expect(geolocationDisableSpy).toHaveBeenCalledTimes(1);
+                    expect(geolocationStopRecordingSpy).not.toHaveBeenCalled();
+                    done();
+                }).catch(function () {
+                    done.fail();
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('for position unavailable (code:2) while not recording it should stop geolocation', function (done) {
+                GeolocationService.enable().then(function () {
+                    geolocationEnableSpy.calls.reset();
+                    geolocationDisableSpy.calls.reset();
+                    geolocationStopRecordingSpy.calls.reset();
+
+                    BackgroundGeolocation.callbackFun['error']({ code: 2, message: 'position unavailable' });
+
+                    expect(geolocationEnableSpy).not.toHaveBeenCalled();
+                    expect(geolocationDisableSpy).toHaveBeenCalledTimes(1);
+                    expect(geolocationStopRecordingSpy).not.toHaveBeenCalled();
+                    done();
+                }).catch(function () {
+                    done.fail();
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('for position unavailable (code:2) while recording it should stop recording and geolocation', function (done) {
+                GeolocationService.enable().then(function () {
+                    GeolocationService.startRecording({
+                        parentId: 1,
+                        id: 1
+                    }).then(function () {
+                        geolocationEnableSpy.calls.reset();
+                        geolocationDisableSpy.calls.reset();
+                        geolocationStopRecordingSpy.calls.reset();
+
+                        BackgroundGeolocation.callbackFun['error']({ code: 2, message: 'position unavailable' });
+
+                        expect(geolocationEnableSpy).not.toHaveBeenCalled();
+                        expect(geolocationDisableSpy).toHaveBeenCalledTimes(1);
+                        expect(geolocationStopRecordingSpy).toHaveBeenCalledTimes(1);
+                        done();
+                    });
+                }).catch(function () {
+                    done.fail();
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('for position timed out (code:3) it should reboot BackgroundGeolocation', function (done) {
+                GeolocationService.enable().then(function () {
+                    bgStartSpy.calls.reset();
+                    bgStopSpy.calls.reset();
+                    geolocationEnableSpy.calls.reset();
+                    geolocationDisableSpy.calls.reset();
+                    geolocationStopRecordingSpy.calls.reset();
+
+                    BackgroundGeolocation.callbackFun['error']({ code: 3, message: 'timeout reached' });
+
+                    expect(geolocationEnableSpy).not.toHaveBeenCalled();
+                    expect(geolocationDisableSpy).not.toHaveBeenCalled();
+                    expect(geolocationStopRecordingSpy).not.toHaveBeenCalled();
+                    expect(bgStopSpy).toHaveBeenCalledTimes(1);
+                    expect(bgStartSpy).toHaveBeenCalledTimes(1);
+                    done();
+                }).catch(function () {
+                    done.fail();
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('for unknown error (code:?) it should reboot BackgroundGeolocation', function (done) {
+                GeolocationService.enable().then(function () {
+                    bgStartSpy.calls.reset();
+                    bgStopSpy.calls.reset();
+                    geolocationEnableSpy.calls.reset();
+                    geolocationDisableSpy.calls.reset();
+                    geolocationStopRecordingSpy.calls.reset();
+
+                    BackgroundGeolocation.callbackFun['error']({ code: 1000, message: 'unknown' });
+
+                    expect(geolocationEnableSpy).not.toHaveBeenCalled();
+                    expect(geolocationDisableSpy).not.toHaveBeenCalled();
+                    expect(geolocationStopRecordingSpy).not.toHaveBeenCalled();
+                    expect(bgStopSpy).toHaveBeenCalledTimes(1);
+                    expect(bgStartSpy).toHaveBeenCalledTimes(1);
+                    done();
                 }).catch(function () {
                     done.fail();
                 });

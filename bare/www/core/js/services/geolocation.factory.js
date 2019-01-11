@@ -342,7 +342,6 @@ angular.module('webmapp')
         };
 
         function geolocationErrorCallback(error) {
-            console.log("Restarting geolocation");
             try {
                 watchInterval.clearWatch();
             } catch (e) { }
@@ -355,20 +354,14 @@ angular.module('webmapp')
              * error.code === 1 => position denied
              * error.code === 2 => position unavailable
              * error.code === 3 => position timed out
+             * default          => try to reboot BackgroundGeolocation
              */
-            console.error(error);
             switch (+error.code) {
                 case 1:
                     geolocationService.disable();
                     geolocationService.enable();
                     break;
-                case 3:
-                    console.warn("Geolocation timed out");
-                    BackgroundGeolocation.stop();
-                    BackgroundGeolocation.start();
-                    break;
                 case 2:
-                    console.warn("Geolocation unavailable");
                     $ionicPopup.alert({
                         title: $translate.instant("ATTENZIONE"),
                         template: $translate.instant("Si è verificato un errore durante la geolocalizzazione") + '<br>code: ' + error.code + '<br>message: ' + error.message
@@ -379,7 +372,10 @@ angular.module('webmapp')
                     }
                     geolocationService.disable();
                     break;
+                case 3:
                 default:
+                    BackgroundGeolocation.stop();
+                    BackgroundGeolocation.start();
                     break;
             }
         };
@@ -996,7 +992,8 @@ angular.module('webmapp')
                     }
                 });
             } else {
-                console.log(Utils.isBrowser, window.location.protocol)
+                // TODO: find a way to mock window.location.protocol in karma
+                /* istanbul ignore if */
                 if (Utils.isBrowser() && window.location.protocol === "https:") {
                     geolocationState.isActive = true;
                     geolocationState.isLoading = true;
@@ -1062,6 +1059,8 @@ angular.module('webmapp')
          *      true if all correct, false otherwise
          */
         geolocationService.disable = function () {
+            // TODO: find a way to mock window.location.protocol in karma
+            /* istanbul ignore else */
             if (window.cordova) {
                 BackgroundGeolocation.events.forEach(function (event) {
                     return BackgroundGeolocation.removeAllListeners(event);

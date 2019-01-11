@@ -124,7 +124,9 @@ module.exports = function (config) {
         //      %m - message
         // path: set the path of the log file
         browserConsoleLogOptions: {
-            terminal: true
+            terminal: true,
+            path: 'www/test/log',
+            format: '%T - %m - %t - %b'
         },
 
 
