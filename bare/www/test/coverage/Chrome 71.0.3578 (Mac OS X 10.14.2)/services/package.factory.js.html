@@ -1,0 +1,2663 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for services/package.factory.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">services/</a> package.factory.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">10.37% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>36/347</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">5.79% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>11/190</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">5.17% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>3/58</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">10.37% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>36/347</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811
+812
+813
+814
+815
+816
+817
+818
+819
+820
+821
+822
+823
+824
+825
+826
+827
+828
+829
+830
+831
+832
+833
+834
+835
+836
+837
+838
+839
+840
+841
+842
+843
+844
+845
+846
+847
+848
+849
+850
+851
+852
+853
+854
+855
+856
+857
+858
+859
+860
+861
+862
+863
+864
+865
+866
+867</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/* ---------------------------------------------------------- *\
+ * PACKAGE FACTORY
+ * PackageService
+ *
+ * Provide all the function and the metadata for the routes and
+ * packages
+ * Every function does not return directly a value but emit an
+ * event to notify the update of the specified data
+ * Make sure to listen to the specific event to update your data
+ * The data will be emitted twice, one for the instant data (not
+ * yet updated) and one for the final updated data (that are
+ * emitted after some time)
+ *
+ * @example
+ * getRoutes() update the packages object and notify everyone
+ * the updated values
+\* ---------------------------------------------------------- */
+&nbsp;
+angular.module('webmapp')
+&nbsp;
+    .factory('PackageService', function PackageService(
+        $http,
+        $rootScope,
+        $ionicLoading,
+        $ionicModal,
+        $ionicPopup,
+        $translate,
+        CONFIG,
+        Auth,
+        Communication,
+        GeolocationService,
+        MapService,
+        Offline,
+        Utils
+    ) {
+        var packageService = {};
+&nbsp;
+        var communicationConf = CONFIG.COMMUNICATION,
+            // currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : 'it',
+            defaultLang = CONFIG.MAIN ? (<span class="branch-0 cbranch-no" title="branch not covered" >CONFIG.MAIN.LANGUAGES &amp;&amp; CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it")</span> :
+                ((CONFIG.LANGUAGES &amp;&amp; CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : <span class="branch-1 cbranch-no" title="branch not covered" >'it')</span>;
+&nbsp;
+        var packages = localStorage.$wm_packages ? <span class="branch-0 cbranch-no" title="branch not covered" >JSON.parse(localStorage.$wm_packages) </span>: null,
+            userPackagesId = localStorage.$wm_userPackagesId ? <span class="branch-0 cbranch-no" title="branch not covered" >JSON.parse(localStorage.$wm_userPackagesId) </span>: null,
+            userDownloadedPackages = {},
+            packagesToActivate = localStorage.$wm_packagesToActivate ? <span class="branch-0 cbranch-no" title="branch not covered" >JSON.parse(localStorage.$wm_packagesToActivate) </span>: [],
+            taxonomy = localStorage.$wm_taxonomy ? <span class="branch-0 cbranch-no" title="branch not covered" >JSON.parse(localStorage.$wm_taxonomy) </span>: {
+                activity: null,
+                theme: null,
+                when: null,
+                where: null,
+                who: null
+            };
+&nbsp;
+        var updated = {
+            packages: false,
+            taxonomy: {
+                activity: false,
+                theme: false,
+                when: false,
+                where: false,
+                who: false
+            }
+        };
+&nbsp;
+        // To let update from old version
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (localStorage.$wm_userDownloadedPackages) {
+<span class="cstat-no" title="statement not covered" >            userDownloadedPackages = JSON.parse(localStorage.$wm_userDownloadedPackages);</span>
+<span class="cstat-no" title="statement not covered" >            if (userDownloadedPackages) {</span>
+<span class="cstat-no" title="statement not covered" >                MapService.setItemInLocalStorage("$wm_userDownloadedPackages", JSON.stringify(userDownloadedPackages));</span>
+            }
+<span class="cstat-no" title="statement not covered" >            delete localStorage.$wm_userDownloadedPackages;</span>
+        }
+&nbsp;
+        MapService.getItemFromLocalStorage("$wm_userDownloadedPackages")
+            .then(<span class="fstat-no" title="function not covered" >function (item) {</span>
+<span class="cstat-no" title="statement not covered" >                userDownloadedPackages = JSON.parse(item.data);</span>
+<span class="cstat-no" title="statement not covered" >                $rootScope.$emit("userDownloadedPackages-updated", userDownloadedPackages);</span>
+            })
+            .catch(function (err) {
+                console.warn("$wm_userDownloadedPackages: " + err.message);
+                userDownloadedPackages = {};
+            });
+&nbsp;
+        var userData = Auth.isLoggedIn() ? <span class="branch-0 cbranch-no" title="branch not covered" >Auth.getUserData() </span>: null,
+            asyncTranslations = 0,
+            asyncRoutes = 0,
+            asyncRouteTranslations = 0;
+&nbsp;
+        var modalDownloadScope = $rootScope.$new(),
+            modalDownload = {};
+&nbsp;
+        modalDownloadScope.vm = {};
+        modalDownloadScope.vm.hide = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            modalDownload &amp;&amp; modalDownload.hide();</span>
+        };
+&nbsp;
+        $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/downloadModal.html', {
+            scope: modalDownloadScope,
+            animation: 'slide-in-up'
+        }).then(<span class="fstat-no" title="function not covered" >function (modalObj) {</span>
+<span class="cstat-no" title="statement not covered" >            modalDownload = modalObj;</span>
+        });
+&nbsp;
+        //Keep userData updated
+        $rootScope.$on('logged-in', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            if (Auth.isLoggedIn()) {</span>
+<span class="cstat-no" title="statement not covered" >                userData = Auth.getUserData();</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                userData = null;</span>
+            }
+        });
+&nbsp;
+        var activatePack = <span class="fstat-no" title="function not covered" >function (data) {</span>
+<span class="cstat-no" title="statement not covered" >            $http({</span>
+                method: 'POST',
+                url: communicationConf.baseUrl + communicationConf.endpoint + 'purchase',
+                dataType: 'json',
+                crossDomain: true,
+                data: data,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).success(<span class="fstat-no" title="function not covered" >function (response) {</span>
+<span class="cstat-no" title="statement not covered" >                for (var i in packagesToActivate) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (+packagesToActivate[i] === +data.route_id) {</span>
+<span class="cstat-no" title="statement not covered" >                        packagesToActivate.splice(i, 1);</span>
+<span class="cstat-no" title="statement not covered" >                        break;</span>
+                    }
+                }
+<span class="cstat-no" title="statement not covered" >                localStorage.$wm_packagesToActivate = JSON.stringify(packagesToActivate);</span>
+            }).error(<span class="fstat-no" title="function not covered" >function (err) {</span>
+            });
+        };
+&nbsp;
+        var activatePackages = function () {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (!Auth.isLoggedIn()) {
+                return;
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            userData = Auth.getUserData();</span>
+<span class="cstat-no" title="statement not covered" >            for (var i in packagesToActivate) {</span>
+<span class="cstat-no" title="statement not covered" >                var data = {</span>
+                    user_id: userData.ID,
+                    route_id: packagesToActivate[i]
+                };
+<span class="cstat-no" title="statement not covered" >                activatePack(data);</span>
+<span class="cstat-no" title="statement not covered" >                userPackagesId[packagesToActivate[i]] = true;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            $rootScope.$emit('userPackagesId-updated', userPackagesId);</span>
+<span class="cstat-no" title="statement not covered" >            localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);</span>
+        };
+&nbsp;
+        var mergePackages = <span class="fstat-no" title="function not covered" >function (newPackages) {</span>
+<span class="cstat-no" title="statement not covered" >            var result = {};</span>
+<span class="cstat-no" title="statement not covered" >            var packId = 0;</span>
+<span class="cstat-no" title="statement not covered" >            for (var i in newPackages) {</span>
+<span class="cstat-no" title="statement not covered" >                if (i !== 'length') {</span>
+<span class="cstat-no" title="statement not covered" >                    var packId = newPackages[i].id;</span>
+<span class="cstat-no" title="statement not covered" >                    result[packId] = newPackages[i];</span>
+<span class="cstat-no" title="statement not covered" >                    if (packages[packId]) {</span>
+<span class="cstat-no" title="statement not covered" >                        result[packId].imgUrl = packages[packId].imgUrl ? packages[packId].imgUrl : "core/images/image-loading.gif";</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        if (packages[packId].localImageUrl) {</span>
+<span class="cstat-no" title="statement not covered" >                            result[packId].localImageUrl = packages[packId].localImageUrl;</span>
+                        }
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (!result[packId].packageTitle) {</span>
+<span class="cstat-no" title="statement not covered" >                        result[packId].packageTitle = {};</span>
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (result[packId].wpml_current_locale &amp;&amp; result[packId].title &amp;&amp; result[packId].title.rendered) {</span>
+<span class="cstat-no" title="statement not covered" >                        result[packId].packageTitle[result[packId].wpml_current_locale.substring(0, 2)] = result[packId].title.rendered;</span>
+                    }
+                    else {
+<span class="cstat-no" title="statement not covered" >                        if (result[packId].title &amp;&amp; result[packId].title.rendered) {</span>
+<span class="cstat-no" title="statement not covered" >                            result[packId].packageTitle[defaultLang] = result[packId].title.rendered;</span>
+                        }
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (result[packId].wpml_translations) {</span>
+<span class="cstat-no" title="statement not covered" >                        for (var p in result[packId].wpml_translations) {</span>
+<span class="cstat-no" title="statement not covered" >                            if (result[packId].wpml_translations[p].locale) {</span>
+<span class="cstat-no" title="statement not covered" >                                var lang = result[packId].wpml_translations[p].locale.substring(0, 2);</span>
+<span class="cstat-no" title="statement not covered" >                                result[packId].packageTitle[lang] = result[packId].wpml_translations[p].post_title;</span>
+                            }
+                        }
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (!result[packId].packageDescription) {</span>
+<span class="cstat-no" title="statement not covered" >                        result[packId].packageDescription = {};</span>
+                    }
+<span class="cstat-no" title="statement not covered" >                    if (packages[packId] &amp;&amp; packages[packId].packageDescription) {</span>
+<span class="cstat-no" title="statement not covered" >                        result[packId].packageDescription = packages[packId].packageDescription;</span>
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (result[packId].wpml_current_locale) {</span>
+<span class="cstat-no" title="statement not covered" >                        result[packId].packageDescription[result[packId].wpml_current_locale.substring(0, 2)] = result[packId].content.rendered;</span>
+                    }
+                    else <span class="cstat-no" title="statement not covered" >if (result[packId].content &amp;&amp; result[packId].content.rendered) {</span>
+<span class="cstat-no" title="statement not covered" >                        result[packId].packageDescription[defaultLang] = result[packId].content.rendered;</span>
+                    }
+                }
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            packages = result;</span>
+        };
+&nbsp;
+        var getImage = <span class="fstat-no" title="function not covered" >function (packId) {</span>
+<span class="cstat-no" title="statement not covered" >            if (!packages[packId].imgUrl) {</span>
+<span class="cstat-no" title="statement not covered" >                packages[packId].imgUrl = "core/images/image-loading.gif";</span>
+            }
+<span class="cstat-no" title="statement not covered" >            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'media/' + packages[packId].featured_media)</span>
+                .then(<span class="fstat-no" title="function not covered" >function (data) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (packages[packId].imgUrl !== data.media_details.sizes.thumbnail.source_url) {</span>
+<span class="cstat-no" title="statement not covered" >                        packages[packId].imgUrl = data.media_details.sizes.thumbnail.source_url;</span>
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    Communication.get(packages[packId].imgUrl)</span>
+                        .then(<span class="fstat-no" title="function not covered" >function (response) {</span>
+<span class="cstat-no" title="statement not covered" >                            var imageDownloaded = response;</span>
+<span class="cstat-no" title="statement not covered" >                            var urlCreator = window.URL || window.webkitURL;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                            packages[packId].localImageUrl = urlCreator.createObjectURL(imageDownloaded);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                            var reader = new FileReader();</span>
+<span class="cstat-no" title="statement not covered" >                            reader.readAsDataURL(imageDownloaded);</span>
+<span class="cstat-no" title="statement not covered" >                            reader.onloadend = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                                base64data = reader.result;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                packages[packId].localImageUrl = base64data;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                asyncRoutes--;</span>
+<span class="cstat-no" title="statement not covered" >                                if (asyncRoutes === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                    $rootScope.$emit('packages-updated', { packages: packages, loading: false });</span>
+                                }
+                                else {
+<span class="cstat-no" title="statement not covered" >                                    $rootScope.$emit('packages-updated', { packages: packages, loading: true });</span>
+                                }
+<span class="cstat-no" title="statement not covered" >                                localStorage.$wm_packages = JSON.stringify(packages);</span>
+                            }
+                        },
+<span class="fstat-no" title="function not covered" >                            function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                                asyncRoutes--;</span>
+<span class="cstat-no" title="statement not covered" >                                if (asyncRoutes === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                    $rootScope.$emit('packages-updated', { packages: packages, loading: false });</span>
+                                }
+                                else {
+<span class="cstat-no" title="statement not covered" >                                    $rootScope.$emit('packages-updated', { packages: packages, loading: true });</span>
+                                }
+<span class="cstat-no" title="statement not covered" >                                console.warn("Error downloading image for " + packId)</span>
+                            });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    localStorage.$wm_packages = JSON.stringify(packages);</span>
+                },
+<span class="fstat-no" title="function not covered" >                    function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                        asyncRoutes--;</span>
+<span class="cstat-no" title="statement not covered" >                        if (asyncRoutes === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                            $rootScope.$emit('packages-updated', { packages: packages, loading: false });</span>
+                        }
+                        else {
+<span class="cstat-no" title="statement not covered" >                            $rootScope.$emit('packages-updated', { packages: packages, loading: true });</span>
+                        }
+<span class="cstat-no" title="statement not covered" >                        console.error('Unable to download images');</span>
+                    });
+        };
+&nbsp;
+        var getTranslatedRoute = <span class="fstat-no" title="function not covered" >function (id, apiId, lang) {</span>
+<span class="cstat-no" title="statement not covered" >            $.getJSON(CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.wordPressEndpoint + 'route/' + apiId, <span class="fstat-no" title="function not covered" >function (data) {</span></span>
+<span class="cstat-no" title="statement not covered" >                packages[id].packageTitle[lang] = data.title.rendered;</span>
+<span class="cstat-no" title="statement not covered" >                packages[id].packageDescription[lang] = data.content.rendered;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                asyncRouteTranslations--;</span>
+<span class="cstat-no" title="statement not covered" >                if (asyncRouteTranslations === 0 &amp;&amp; asyncRoutes === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                    $rootScope.$emit('packages-updated', { packages: packages, loading: false });</span>
+                }
+                else {
+<span class="cstat-no" title="statement not covered" >                    $rootScope.$emit('packages-updated', { packages: packages, loading: true });</span>
+                }
+<span class="cstat-no" title="statement not covered" >                localStorage.$wm_packages = JSON.stringify(packages);</span>
+            }).fail(<span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                asyncRouteTranslations--;</span>
+<span class="cstat-no" title="statement not covered" >                if (asyncRouteTranslations === 0 &amp;&amp; asyncRoutes === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                    $rootScope.$emit('packages-updated', { packages: packages, loading: false });</span>
+                }
+                else {
+<span class="cstat-no" title="statement not covered" >                    $rootScope.$emit('packages-updated', { packages: packages, loading: true });</span>
+                }
+<span class="cstat-no" title="statement not covered" >                console.error('Route translation retrive error');</span>
+            });
+        };
+&nbsp;
+        /**
+         * @description
+         * Update the packages start point to order the routes
+         * Emit the updated lists
+         *
+         * @event packages-updated
+         */
+        var getRoutePoint = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            var baseUrl = communicationConf.baseUrl.replace(/http(s)?:\/\//, "");</span>
+<span class="cstat-no" title="statement not covered" >            var url = "https://api.webmapp.it/a/" + baseUrl + "geojson/route_index.geojson";</span>
+<span class="cstat-no" title="statement not covered" >            Communication.getJSON(url).then(<span class="fstat-no" title="function not covered" >function (data) {</span></span>
+<span class="cstat-no" title="statement not covered" >                for (var i in data.features) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (data.features[i].properties &amp;&amp; data.features[i].properties.id) {</span>
+<span class="cstat-no" title="statement not covered" >                        var id = data.features[i].properties.id;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        if (packages[id] &amp;&amp; data.features[i].geometry &amp;&amp; data.features[i].geometry.coordinates &amp;&amp; data.features[i].geometry.coordinates.length === 2) {</span>
+<span class="cstat-no" title="statement not covered" >                            packages[id].startPoi = {</span>
+                                lat: data.features[i].geometry.coordinates[1],
+                                long: data.features[i].geometry.coordinates[0]
+                            }
+                        }
+                    }
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                $rootScope.$emit('packages-updated', {</span>
+                    packages: packages,
+                    loading: asyncRoutes &gt; 0
+                });
+<span class="cstat-no" title="statement not covered" >                localStorage.$wm_packages = JSON.stringify(packages);</span>
+            }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                console.warn(err);</span>
+            });
+        };
+&nbsp;
+        var getTaxonomyTranslated = <span class="fstat-no" title="function not covered" >function (taxonomyType, id, lang) {</span>
+<span class="cstat-no" title="statement not covered" >            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '/' + id + '?lang=' + lang)</span>
+                .then(<span class="fstat-no" title="function not covered" >function (data) {</span>
+<span class="cstat-no" title="statement not covered" >                    taxonomy[taxonomyType][id].name[lang] = data.name;</span>
+<span class="cstat-no" title="statement not covered" >                    taxonomy[taxonomyType][id].description[lang] = data.description;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    asyncTranslations--;</span>
+<span class="cstat-no" title="statement not covered" >                    if (asyncTranslations === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: false });</span>
+                    }
+                    else {
+<span class="cstat-no" title="statement not covered" >                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: true });</span>
+                    }
+<span class="cstat-no" title="statement not covered" >                    localStorage.$wm_taxonomy = JSON.stringify(taxonomy);</span>
+                })
+                .catch(<span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    asyncTranslations--;</span>
+<span class="cstat-no" title="statement not covered" >                    if (asyncTranslations === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: false });</span>
+                    }
+<span class="cstat-no" title="statement not covered" >                    console.warn("Unable to update taxonomy. Using local data")</span>
+                });
+        };
+&nbsp;
+        /**
+         * @description
+         * Update the packages and the categories list and
+         * Emit the updated lists
+         *
+         * @event packages-updated
+         */
+        packageService.getRoutes = <span class="fstat-no" title="function not covered" >function (forceUpdate) {</span>
+            //Prevent multiple requests
+<span class="cstat-no" title="statement not covered" >            if (forceUpdate) {</span>
+<span class="cstat-no" title="statement not covered" >                updated.packages = false;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (updated.packages) {</span>
+<span class="cstat-no" title="statement not covered" >                $rootScope.$emit('packages-updated', { packages: packages, loading: asyncRoutes &gt; 0 || asyncTranslations &gt; 0 });</span>
+<span class="cstat-no" title="statement not covered" >                return;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            updated.packages = true;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (packages) {</span>
+<span class="cstat-no" title="statement not covered" >                $rootScope.$emit('packages-updated', { packages: packages, loading: true });</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + 'route/?per_page=100')</span>
+                .then(<span class="fstat-no" title="function not covered" >function (data) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (!packages) {</span>
+<span class="cstat-no" title="statement not covered" >                        packages = {};</span>
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    mergePackages(data);</span>
+<span class="cstat-no" title="statement not covered" >                    getRoutePoint();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    asyncRoutes = 0;</span>
+<span class="cstat-no" title="statement not covered" >                    asyncRouteTranslations = 0;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    for (var i in packages) {</span>
+<span class="cstat-no" title="statement not covered" >                        asyncRoutes++;</span>
+<span class="cstat-no" title="statement not covered" >                        getImage(i);</span>
+<span class="cstat-no" title="statement not covered" >                        for (var j in packages[i].wpml_translations) {</span>
+<span class="cstat-no" title="statement not covered" >                            if (packages[i].wpml_translations[j].locale) {</span>
+<span class="cstat-no" title="statement not covered" >                                asyncRouteTranslations++;</span>
+<span class="cstat-no" title="statement not covered" >                                getTranslatedRoute(i, packages[i].wpml_translations[j].id, packages[i].wpml_translations[j].locale.substring(0, 2));</span>
+                            }
+                        }
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (asyncRoutes === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                        $rootScope.$emit('packages-updated', { packages: packages, loading: false });</span>
+                    }
+                    else {
+<span class="cstat-no" title="statement not covered" >                        $rootScope.$emit('packages-updated', { packages: packages, loading: true });</span>
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    localStorage.$wm_packages = JSON.stringify(packages);</span>
+                }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    getRoutePoint();</span>
+<span class="cstat-no" title="statement not covered" >                    if (!packages) {</span>
+<span class="cstat-no" title="statement not covered" >                        console.warn("No routes available. Restart the app with an open connection");</span>
+                    }
+                });
+        };
+&nbsp;
+        /**
+         * @description
+         * Emit taxonomy of type [taxonomyType] updated
+         *
+         * @event taxonomy-[taxonomyType]-updated
+         *
+         * @param {string} taxonomyType
+         *      the type of taxonomy to update
+         */
+        packageService.getTaxonomy = <span class="fstat-no" title="function not covered" >function (taxonomyType, forceUpdate) {</span>
+<span class="cstat-no" title="statement not covered" >            if (forceUpdate) {</span>
+<span class="cstat-no" title="statement not covered" >                updated.taxonomy[taxonomyType] = false;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (updated.taxonomy[taxonomyType]) {</span>
+<span class="cstat-no" title="statement not covered" >                $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: asyncTranslations !== 0 });</span>
+<span class="cstat-no" title="statement not covered" >                return;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            updated.taxonomy[taxonomyType] = true;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (taxonomy[taxonomyType]) {</span>
+<span class="cstat-no" title="statement not covered" >                $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: true });</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            Communication.getJSON(communicationConf.baseUrl + communicationConf.wordPressEndpoint + taxonomyType + '?per_page=100')</span>
+                .then(<span class="fstat-no" title="function not covered" >function (data) {</span>
+<span class="cstat-no" title="statement not covered" >                    asyncTranslations = 0;</span>
+<span class="cstat-no" title="statement not covered" >                    taxonomy[taxonomyType] = {};</span>
+<span class="cstat-no" title="statement not covered" >                    for (var i in data) {</span>
+<span class="cstat-no" title="statement not covered" >                        if (data[i].count &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                            taxonomy[taxonomyType][data[i].id] = data[i];</span>
+<span class="cstat-no" title="statement not covered" >                            if (CONFIG.LANGUAGES) {</span>
+<span class="cstat-no" title="statement not covered" >                                var tmpName = taxonomy[taxonomyType][data[i].id].name;</span>
+<span class="cstat-no" title="statement not covered" >                                taxonomy[taxonomyType][data[i].id].name = {};</span>
+<span class="cstat-no" title="statement not covered" >                                taxonomy[taxonomyType][data[i].id].name[defaultLang] = tmpName;</span>
+<span class="cstat-no" title="statement not covered" >                                delete tmpName;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                var tmpDescription = taxonomy[taxonomyType][data[i].id].description;</span>
+<span class="cstat-no" title="statement not covered" >                                taxonomy[taxonomyType][data[i].id].description = {};</span>
+<span class="cstat-no" title="statement not covered" >                                taxonomy[taxonomyType][data[i].id].description[defaultLang] = tmpDescription;</span>
+<span class="cstat-no" title="statement not covered" >                                delete tmpDescription;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                if (CONFIG.LANGUAGES.available) {</span>
+<span class="cstat-no" title="statement not covered" >                                    for (var langId in CONFIG.LANGUAGES.available) {</span>
+<span class="cstat-no" title="statement not covered" >                                        asyncTranslations++;</span>
+<span class="cstat-no" title="statement not covered" >                                        getTaxonomyTranslated(taxonomyType, data[i].id, CONFIG.LANGUAGES.available[langId]);</span>
+                                    }
+                                }
+                            }
+                        }
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (asyncTranslations === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: false });</span>
+                    }
+                    else {
+<span class="cstat-no" title="statement not covered" >                        $rootScope.$emit('taxonomy-' + taxonomyType + '-updated', { taxonomy: taxonomy[taxonomyType], loading: true });</span>
+                    }
+<span class="cstat-no" title="statement not covered" >                    localStorage.$wm_taxonomy = JSON.stringify(taxonomy);</span>
+                })
+                .catch(<span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (!taxonomy[taxonomyType]) {</span>
+<span class="cstat-no" title="statement not covered" >                        console.warn("No taxonomy " + taxonomyType);</span>
+<span class="cstat-no" title="statement not covered" >                        return;</span>
+                    }
+                });
+        };
+&nbsp;
+        /**
+         * @description
+         * Get the list of packages allowed to a specific user and
+         * Emit the updated list of available packages
+         *
+         * @event userPackagesId-updated
+         *
+         */
+        packageService.getPackagesIdByUserId = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            userData = Auth.getUserData();</span>
+<span class="cstat-no" title="statement not covered" >            if (!userData || !userData.ID) {</span>
+<span class="cstat-no" title="statement not covered" >                userPackagesId = {};</span>
+<span class="cstat-no" title="statement not covered" >                $rootScope.$emit('userPackagesId-updated', {});</span>
+<span class="cstat-no" title="statement not covered" >                return;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (userPackagesId) {</span>
+<span class="cstat-no" title="statement not covered" >                $rootScope.$emit('userPackagesId-updated', userPackagesId);</span>
+            }
+<span class="cstat-no" title="statement not covered" >            Communication.getJSON(communicationConf.baseUrl + communicationConf.endpoint + 'route_id/' + userData.ID)</span>
+                .then(<span class="fstat-no" title="function not covered" >function (data) {</span>
+<span class="cstat-no" title="statement not covered" >                    userPackagesId = {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    for (var key in data) {</span>
+<span class="cstat-no" title="statement not covered" >                        userPackagesId[key] = true;</span>
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    $rootScope.$emit('userPackagesId-updated', userPackagesId);</span>
+<span class="cstat-no" title="statement not covered" >                    localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);</span>
+                },
+<span class="fstat-no" title="function not covered" >                    function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                        if (!userPackagesId) {</span>
+<span class="cstat-no" title="statement not covered" >                            console.warn("No userPackagesId available. Shutting down...");</span>
+                        }
+                    });
+        };
+&nbsp;
+        /**
+         * @description
+         * Use a voucher to get permission to download a route and
+         * Emit the new list of available packages
+         *
+         * @event userPackagesId-updated
+         *
+         * @param {number} packId
+         *      the id of the pack to request
+         *
+         */
+        packageService.useVoucher = <span class="fstat-no" title="function not covered" >function (packId) {</span>
+<span class="cstat-no" title="statement not covered" >            userData = Auth.getUserData();</span>
+<span class="cstat-no" title="statement not covered" >            if (!userData || !userData.ID) {</span>
+<span class="cstat-no" title="statement not covered" >                return;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            $ionicPopup.prompt({</span>
+                title: $translate.instant('Codice Viaggio'),
+                subTitle: $translate.instant('Inserisci il codice del tuo pacchetto di viaggio'),
+                inputType: 'text',
+                inputPlaceholder: $translate.instant('Codice Viaggio')
+            }).then(<span class="fstat-no" title="function not covered" >function (res) {</span>
+<span class="cstat-no" title="statement not covered" >                if (res) {</span>
+<span class="cstat-no" title="statement not covered" >                    var data = $.param({</span>
+                        route_id: packId,
+                        user_id: userData.ID,
+                        code: res
+                    });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    var config = {</span>
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+                        }
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    $ionicLoading.show({</span>
+                        template: '&lt;ion-spinner&gt;&lt;/ion-spinner&gt;'
+                    });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    $http.post(</span>
+                        CONFIG.COMMUNICATION.baseUrl + CONFIG.COMMUNICATION.endpoint + 'voucher',
+                        data,
+                        config
+                    )
+                        .success(<span class="fstat-no" title="function not covered" >function (data, status, headers, config) {</span>
+<span class="cstat-no" title="statement not covered" >                            $ionicLoading.hide();</span>
+                            ///Update offline data
+<span class="cstat-no" title="statement not covered" >                            userPackagesId[packId] = true;</span>
+<span class="cstat-no" title="statement not covered" >                            localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);</span>
+                        })
+                        .error(<span class="fstat-no" title="function not covered" >function (data, status, header, config) {</span>
+<span class="cstat-no" title="statement not covered" >                            $ionicLoading.hide();</span>
+<span class="cstat-no" title="statement not covered" >                            if (data.error === "Voucher Expired") {</span>
+<span class="cstat-no" title="statement not covered" >                                $ionicPopup.alert({</span>
+                                    template: $translate.instant("Il codice di viaggio che hai utilizzato è scaduto")
+                                });
+                            } else {
+<span class="cstat-no" title="statement not covered" >                                $ionicPopup.alert({</span>
+                                    template: $translate.instant("Il codice di viaggio che hai inserito non è valido. Controlla di averlo inserito correttamente e inseriscilo nuovamente.")
+                                });
+                            }
+                        });
+                }
+            });
+        };
+&nbsp;
+        /**
+         * @description
+         * Buy the package via in-app purchase and
+         * Emit the new list of available packages
+         *
+         * @event userPackagesId-updated
+         *
+         * @param {number} packId
+         *      the id of the pack to buy
+         */
+        packageService.buyPack = <span class="fstat-no" title="function not covered" >function (packId) {</span>
+<span class="cstat-no" title="statement not covered" >            $ionicLoading.show();</span>
+<span class="cstat-no" title="statement not covered" >            userData = Auth.getUserData();</span>
+<span class="cstat-no" title="statement not covered" >            if (!userData || !userData.ID) {</span>
+<span class="cstat-no" title="statement not covered" >                return;</span>
+            }
+<span class="cstat-no" title="statement not covered" >            var productId = CONFIG.appId + '.' + packId;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            inAppPurchase.getProducts([productId])</span>
+                .then(<span class="fstat-no" title="function not covered" >function (product) {</span>
+<span class="cstat-no" title="statement not covered" >                    $ionicLoading.hide();</span>
+<span class="cstat-no" title="statement not covered" >                    if (product[0]) {</span>
+<span class="cstat-no" title="statement not covered" >                        product = product[0];</span>
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (product &amp;&amp; product.productId) {</span>
+<span class="cstat-no" title="statement not covered" >                        inAppPurchase.buy(product.productId)</span>
+                            .then(<span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                                var data = {</span>
+                                    user_id: userData.ID,
+                                    route_id: packId
+                                };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                userPackagesId[packId] = true;</span>
+<span class="cstat-no" title="statement not covered" >                                $rootScope.$emit('userPackagesId-updated', userPackagesId);</span>
+<span class="cstat-no" title="statement not covered" >                                localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                activatePack(data);</span>
+                            })
+                            .catch(<span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                                console.warn(err)</span>
+<span class="cstat-no" title="statement not covered" >                                var code = err.code ? err.code : (err.errorCode ? err.errorCode : -1);</span>
+<span class="cstat-no" title="statement not covered" >                                switch (code) {</span>
+                                    case -5:
+                                        //User cancelled
+<span class="cstat-no" title="statement not covered" >                                        break;</span>
+                                    case -8:
+                                        //item unavailable
+<span class="cstat-no" title="statement not covered" >                                        $ionicPopup.alert({</span>
+                                            title: $translate.instant("ATTENZIONE"),
+                                            template: $translate.instant("Questo prodotto non è al momento disponibile")
+                                        });
+<span class="cstat-no" title="statement not covered" >                                        break;</span>
+                                    case -9:
+                                        //item already owned
+<span class="cstat-no" title="statement not covered" >                                        $ionicPopup.alert({</span>
+                                            title: $translate.instant("ATTENZIONE"),
+                                            template: $translate.instant("Hai già acquistato questo prodotto in precedenza: per te sarà disponibile da subito senza ulteriori spese")
+                                        });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                        var data = {</span>
+                                            user_id: userData.ID,
+                                            route_id: packId
+                                        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                        userPackagesId[packId] = true;</span>
+<span class="cstat-no" title="statement not covered" >                                        $rootScope.$emit('userPackagesId-updated', userPackagesId);</span>
+<span class="cstat-no" title="statement not covered" >                                        localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                        activatePack(data);</span>
+<span class="cstat-no" title="statement not covered" >                                        break;</span>
+                                    default:
+<span class="cstat-no" title="statement not covered" >                                        $ionicPopup.alert({</span>
+                                            title: $translate.instant("ATTENZIONE"),
+                                            template: $translate.instant("Si è verificato un errore. Riprova")
+                                        });
+<span class="cstat-no" title="statement not covered" >                                        break;</span>
+                                }
+                            });
+                    }
+                    else {
+<span class="cstat-no" title="statement not covered" >                        $ionicPopup.alert({</span>
+                            title: $translate.instant("ATTENZIONE"),
+                            template: $translate.instant("Questo prodotto non è al momento disponibile")
+                        });
+                    }
+                })
+                .catch(<span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    $ionicLoading.hide();</span>
+<span class="cstat-no" title="statement not covered" >                    console.error(err);</span>
+<span class="cstat-no" title="statement not covered" >                    var code = err.code ? err.code : (err.errorCode ? err.errorCode : -1);</span>
+<span class="cstat-no" title="statement not covered" >                    $ionicPopup.alert({</span>
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Si è verificato un errore. Riprova") + "&lt;br&gt;Error " + code
+                    });
+                });
+        };
+&nbsp;
+        /**
+         * @description
+         * Restore the purchases and
+         * Emit the new list of purchased packages
+         *
+         * @event userPackagesId-updated
+         *
+         */
+        packageService.restorePurchases = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            $ionicLoading.show();</span>
+<span class="cstat-no" title="statement not covered" >            inAppPurchase.restorePurchases()</span>
+                .then(<span class="fstat-no" title="function not covered" >function (purchases) {</span>
+<span class="cstat-no" title="statement not covered" >                    for (var i in purchases) {</span>
+<span class="cstat-no" title="statement not covered" >                        var id = purchases[i].productId.split('.');</span>
+<span class="cstat-no" title="statement not covered" >                        id = id.pop();</span>
+<span class="cstat-no" title="statement not covered" >                        if (!userPackagesId[id]) {</span>
+<span class="cstat-no" title="statement not covered" >                            userPackagesId[id] = true;</span>
+<span class="cstat-no" title="statement not covered" >                            packagesToActivate.push(id);</span>
+                        }
+                    }
+<span class="cstat-no" title="statement not covered" >                    $ionicLoading.hide();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    $ionicPopup.alert({</span>
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Tutti gli acquisti sono stati ripristinati correttamente")
+                    });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    $rootScope.$emit('userPackagesId-updated', userPackagesId);</span>
+<span class="cstat-no" title="statement not covered" >                    localStorage.$wm_userPackagesId = JSON.stringify(userPackagesId);</span>
+<span class="cstat-no" title="statement not covered" >                    localStorage.$wm_packagesToActivate = JSON.stringify(packagesToActivate);</span>
+<span class="cstat-no" title="statement not covered" >                    activatePackages();</span>
+                })
+                .catch(<span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    $ionicLoading.hide();</span>
+<span class="cstat-no" title="statement not covered" >                    $ionicPopup.alert({</span>
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Si è verificato un errore. Controlla di essere connesso e riprova")
+                    });
+<span class="cstat-no" title="statement not covered" >                    console.log("Error restoring purchases", err);</span>
+                });
+        };
+&nbsp;
+        /**
+         * @description
+         * Download the requested package and
+         * emit the new list of downloaded packages
+         *
+         * @event userDownloadedPackages-updated
+         *
+         * @param {number} packId
+         *      the id of the pack to download
+         */
+        packageService.downloadPackage = <span class="fstat-no" title="function not covered" >function (packId) {</span>
+<span class="cstat-no" title="statement not covered" >            $ionicPopup.confirm({</span>
+                title: $translate.instant("ATTENZIONE"),
+                template: $translate.instant("Stai per scaricare l'itinerario sul dispositivo, vuoi procedere?")
+            }).then(<span class="fstat-no" title="function not covered" >function (res) {</span>
+<span class="cstat-no" title="statement not covered" >                if (res) {</span>
+<span class="cstat-no" title="statement not covered" >                    $.ajaxSetup({</span>
+                        cache: false
+                    });
+<span class="cstat-no" title="statement not covered" >                    modalDownload.show();</span>
+<span class="cstat-no" title="statement not covered" >                    Communication.getJSON(communicationConf.downloadJSONUrl + packId + '/app.json').then(<span class="fstat-no" title="function not covered" >function (data) {</span></span>
+<span class="cstat-no" title="statement not covered" >                        var arrayLink = [];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        var downloadSuccess = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                            modalDownload.hide();</span>
+<span class="cstat-no" title="statement not covered" >                            userDownloadedPackages[packId] = true;</span>
+<span class="cstat-no" title="statement not covered" >                            $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);</span>
+<span class="cstat-no" title="statement not covered" >                            MapService.setItemInLocalStorage("$wm_userDownloadedPackages", JSON.stringify(userDownloadedPackages));</span>
+                        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        var downloadFail = <span class="fstat-no" title="function not covered" >function () {</span></span>
+                            // TODO: add ionic alert
+                            // TODO: rimuovere cartella, verificare interuzzione altri dowload
+<span class="cstat-no" title="statement not covered" >                            alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, riprova"));</span>
+<span class="cstat-no" title="statement not covered" >                            modalDownload.hide();</span>
+                            // updateDownloadedPackagesInStorage();
+                        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        for (var i in data) {</span>
+<span class="cstat-no" title="statement not covered" >                            if (typeof data[i] === 'string' &amp;&amp; data[i].substring(0, 4) === "http") {</span>
+<span class="cstat-no" title="statement not covered" >                                arrayLink.push(data[i]);</span>
+                            } else <span class="cstat-no" title="statement not covered" >if (typeof data[i] === 'object') {</span>
+<span class="cstat-no" title="statement not covered" >                                for (var j in data[i]) {</span>
+<span class="cstat-no" title="statement not covered" >                                    if (data[i][j] &amp;&amp; data[i][j].substring &amp;&amp; data[i][j].substring(0, 4) === "http") {</span>
+<span class="cstat-no" title="statement not covered" >                                        arrayLink.push(data[i][j]);</span>
+                                    }
+                                }
+                            }
+                        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        Offline</span>
+                            .downloadUserMap(packId, arrayLink, modalDownloadScope.vm)
+                            .then(downloadSuccess, downloadFail);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        $.ajaxSetup();</span>
+                    },
+<span class="fstat-no" title="function not covered" >                        function () {</span>
+                            // TODO: add ionic alert
+<span class="cstat-no" title="statement not covered" >                            modalDownload.hide();</span>
+<span class="cstat-no" title="statement not covered" >                            alert($translate.instant("Si è verificato un errore nello scaricamento del pacchetto, assicurati di essere online e riprova"));</span>
+                        });
+                }
+            });
+        };
+&nbsp;
+        /**
+         * @description
+         * Method to open a package already downloaded
+         *
+         * @param {number} packId
+         *      the id of the pack to open
+         */
+        packageService.openPackage = <span class="fstat-no" title="function not covered" >function (packId) {</span>
+<span class="cstat-no" title="statement not covered" >            if (GeolocationService.isActive()) {</span>
+<span class="cstat-no" title="statement not covered" >                GeolocationService.disable();</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var basePackUrl = Offline.getOfflineMhildBasePathById(packId);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            Communication.getLocalFile(basePackUrl + 'config.json')</span>
+                .then(<span class="fstat-no" title="function not covered" >function (data) {</span>
+<span class="cstat-no" title="statement not covered" >                    localStorage.$wm_mhildConf = data;</span>
+<span class="cstat-no" title="statement not covered" >                    localStorage.$wm_mhildBaseUrl = Offline.getOfflineMhildBasePathById(packId);</span>
+<span class="cstat-no" title="statement not covered" >                    localStorage.$wm_mhildId = packId;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    sessionStorage.$wm_doBack = 'allowed';</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    $ionicLoading.show({</span>
+                        template: '&lt;ion-spinner&gt;&lt;/ion-spinner&gt;'
+                    });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    location.reload();</span>
+<span class="cstat-no" title="statement not covered" >                    Utils.forceDigest();</span>
+                });
+        };
+&nbsp;
+        /**
+         * @description
+         * Delete a package already downloaded and
+         * Emit the updated list of downloaded packages
+         *
+         * @event userDownloadedPackages-updated
+         *
+         * @param {number} packId
+         *      the id of the pack to remove from storage
+         */
+        packageService.removePack = <span class="fstat-no" title="function not covered" >function (packId) {</span>
+<span class="cstat-no" title="statement not covered" >            $ionicPopup.confirm({</span>
+                title: $translate.instant("ATTENZIONE"),
+                template: $translate.instant("Stai per rimuovere l'itinerario dal dispositivo, vuoi procedere?&lt;br /&gt;") + $translate.instant("Questo itinerario è riservato ai clienti Verde Natura che hanno acquistato questo viaggio. Terminata la fase di sperimentazione, gli itinerari saranno disponibili a tutti")
+            })
+                .then(<span class="fstat-no" title="function not covered" >function (res) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (res) {</span>
+<span class="cstat-no" title="statement not covered" >                        Offline.removePackById(packId);</span>
+<span class="cstat-no" title="statement not covered" >                        delete userDownloadedPackages[packId];</span>
+<span class="cstat-no" title="statement not covered" >                        $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);</span>
+<span class="cstat-no" title="statement not covered" >                        MapService.setItemInLocalStorage("$wm_userDownloadedPackages", JSON.stringify(userDownloadedPackages));</span>
+                    }
+                });
+        };
+&nbsp;
+        /**
+         * @description
+         * Emit the updated list of downloaded packages
+         * and return it
+         *
+         * @event userDownloadedPackages-updated
+         *
+         */
+        packageService.getDownloadedPackages = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            $rootScope.$emit('userDownloadedPackages-updated', userDownloadedPackages);</span>
+<span class="cstat-no" title="statement not covered" >            return userDownloadedPackages;</span>
+        };
+&nbsp;
+        activatePackages();
+&nbsp;
+        return packageService;
+    });
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 09:34:49 GMT+0100 (CET)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for components/help/help.controller.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">components/help/</a> help.controller.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">3.77% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>2/53</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/29</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">3.77% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>2/53</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">angular.module('webmapp')
+&nbsp;
+    .controller('HelpController', <span class="fstat-no" title="function not covered" >function HelpController(</span>
+        $translate,
+        CONFIG,
+        Utils
+    ) {
+<span class="cstat-no" title="statement not covered" >        var vm = {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.title = "Help";</span>
+<span class="cstat-no" title="statement not covered" >        vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";</span>
+<span class="cstat-no" title="statement not covered" >        vm.tabCount = [0, 1, 2, 3, 4, 5, 6];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.goToMainPage = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            if (CONFIG.OPTIONS.startUrl.indexOf('packages') !== -1) {</span>
+<span class="cstat-no" title="statement not covered" >                Utils.goTo('packages');</span>
+            }
+            else <span class="cstat-no" title="statement not covered" >if (CONFIG.OPTIONS.startUrl.indexOf('home') !== -1) {</span>
+<span class="cstat-no" title="statement not covered" >                Utils.goTo('home');</span>
+            }
+            else {
+<span class="cstat-no" title="statement not covered" >                Utils.goTo('/');</span>
+            }
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.switchTab = <span class="fstat-no" title="function not covered" >function (dir) {</span></span>
+<span class="cstat-no" title="statement not covered" >            switch (dir) {</span>
+                case 'left':
+<span class="cstat-no" title="statement not covered" >                    if (vm.currentTab &lt; vm.tabCount.length - 1) {</span>
+<span class="cstat-no" title="statement not covered" >                        vm.previousTab = vm.currentTab;</span>
+<span class="cstat-no" title="statement not covered" >                        vm.currentTab++;</span>
+<span class="cstat-no" title="statement not covered" >                        Utils.forceDigest();</span>
+                    }
+<span class="cstat-no" title="statement not covered" >                    break;</span>
+                case 'right':
+<span class="cstat-no" title="statement not covered" >                    if (vm.currentTab &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                        vm.previousTab = vm.currentTab;</span>
+<span class="cstat-no" title="statement not covered" >                        vm.currentTab--;</span>
+<span class="cstat-no" title="statement not covered" >                        Utils.forceDigest();</span>
+                    }
+<span class="cstat-no" title="statement not covered" >                    break;</span>
+                default:
+<span class="cstat-no" title="statement not covered" >                    break;</span>
+            }
+        }
+&nbsp;
+        // credit: http://www.javascriptkit.com/javatutors/touchevents2.shtml
+<span class="fstat-no" title="function not covered" >        function swipedetect(el, callback) {</span>
+<span class="cstat-no" title="statement not covered" >            var touchsurface = el,</span>
+                swipedir,
+                startX,
+                startY,
+                distX,
+                distY,
+                threshold = 50, //required min distance traveled to be considered swipe
+                restraint = 100, // maximum distance allowed at the same time in perpendicular direction
+                allowedTime = 500, // maximum time allowed to travel that distance
+                elapsedTime,
+                startTime,
+                handleswipe = callback || <span class="fstat-no" title="function not covered" >function (swipedir) {</span> }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            touchsurface.addEventListener('touchstart', <span class="fstat-no" title="function not covered" >function (e) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var touchobj = e.changedTouches[0]</span>
+<span class="cstat-no" title="statement not covered" >                swipedir = 'none'</span>
+<span class="cstat-no" title="statement not covered" >                dist = 0</span>
+<span class="cstat-no" title="statement not covered" >                startX = touchobj.pageX</span>
+<span class="cstat-no" title="statement not covered" >                startY = touchobj.pageY</span>
+<span class="cstat-no" title="statement not covered" >                startTime = new Date().getTime() </span>// record time when finger first makes contact with surface
+<span class="cstat-no" title="statement not covered" >                e.preventDefault()</span>
+            }, false)
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            touchsurface.addEventListener('touchmove', <span class="fstat-no" title="function not covered" >function (e) {</span></span>
+<span class="cstat-no" title="statement not covered" >                e.preventDefault() </span>// prevent scrolling when inside DIV
+            }, false)
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            touchsurface.addEventListener('touchend', <span class="fstat-no" title="function not covered" >function (e) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var touchobj = e.changedTouches[0]</span>
+<span class="cstat-no" title="statement not covered" >                distX = touchobj.pageX - startX </span>// get horizontal dist traveled by finger while in contact with surface
+<span class="cstat-no" title="statement not covered" >                distY = touchobj.pageY - startY </span>// get vertical dist traveled by finger while in contact with surface
+<span class="cstat-no" title="statement not covered" >                elapsedTime = new Date().getTime() - startTime </span>// get time elapsed
+<span class="cstat-no" title="statement not covered" >                if (elapsedTime &lt;= allowedTime) { // first condition for awipe met</span>
+<span class="cstat-no" title="statement not covered" >                    if (Math.abs(distX) &gt;= threshold &amp;&amp; Math.abs(distY) &lt;= restraint) { // 2nd condition for horizontal swipe met</span>
+<span class="cstat-no" title="statement not covered" >                        swipedir = (distX &lt; 0) ? 'left' : 'right' </span>// if dist traveled is negative, it indicates left swipe
+                    } else <span class="cstat-no" title="statement not covered" >if (Math.abs(distY) &gt;= threshold &amp;&amp; Math.abs(distX) &lt;= restraint) { // 2nd condition for vertical swipe met</span>
+<span class="cstat-no" title="statement not covered" >                        swipedir = (distY &lt; 0) ? 'up' : 'down' </span>// if dist traveled is negative, it indicates up swipe
+                    }
+                }
+<span class="cstat-no" title="statement not covered" >                handleswipe(swipedir)</span>
+<span class="cstat-no" title="statement not covered" >                e.preventDefault()</span>
+            }, false)
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var el = document.getElementById('help-content');</span>
+<span class="cstat-no" title="statement not covered" >        swipedetect(el, vm.switchTab);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.currentTab = 0;</span>
+<span class="cstat-no" title="statement not covered" >        vm.previousTab = -2;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return vm;</span>
+    });
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 09:34:49 GMT+0100 (CET)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

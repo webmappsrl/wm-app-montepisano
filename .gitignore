@@ -6,7 +6,6 @@ platforms
 bare/res
 bare/.idea
 bare/www/config/config.json
-bare/www/coverage
 node_modules
 plugins
 .idea

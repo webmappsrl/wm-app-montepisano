@@ -1,0 +1,1079 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for components/detailRoute/detailRoute.controller.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">components/detailRoute/</a> detailRoute.controller.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0.61% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>1/165</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/122</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/25</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0.61% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>1/165</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">angular.module('webmapp')
+&nbsp;
+    .controller('DetailRouteController', <span class="fstat-no" title="function not covered" >function DetailRouteController(</span>
+        $ionicLoading,
+        $ionicModal,
+        $ionicPopup,
+        $ionicSlideBoxDelegate,
+        $rootScope,
+        $sce,
+        $scope,
+        $state,
+        $translate,
+        Auth,
+        CONFIG,
+        md5,
+        PackageService,
+        Utils
+    ) {
+<span class="cstat-no" title="statement not covered" >        var vm = {},</span>
+            params = $state.params || {};
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var registeredEvents = [];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var modalScope = $rootScope.$new(),</span>
+            modalImage = {};
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var routeDetail;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        modalScope.vm = {};</span>
+<span class="cstat-no" title="statement not covered" >        modalScope.parent = vm;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;</span>
+<span class="cstat-no" title="statement not covered" >        vm.imageUrl = CONFIG.OFFLINE.imagesUrl;</span>
+<span class="cstat-no" title="statement not covered" >        vm.goBack = Utils.goBack;</span>
+<span class="cstat-no" title="statement not covered" >        vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";</span>
+<span class="cstat-no" title="statement not covered" >        vm.defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES &amp;&amp; CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :</span>
+            ((CONFIG.LANGUAGES &amp;&amp; CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it'),
+            vm.packages = {};
+<span class="cstat-no" title="statement not covered" >        vm.userPackagesId = {};</span>
+<span class="cstat-no" title="statement not covered" >        vm.userDownloadedPackages = {};</span>
+<span class="cstat-no" title="statement not covered" >        vm.userPackagesIdRquested = {};</span>
+<span class="cstat-no" title="statement not covered" >        vm.isLoggedIn = Auth.isLoggedIn();</span>
+<span class="cstat-no" title="statement not covered" >        vm.isPublic = false;</span>
+<span class="cstat-no" title="statement not covered" >        vm.id = params.id;</span>
+<span class="cstat-no" title="statement not covered" >        vm.openInAppBrowser = Utils.openInAppBrowser;</span>
+<span class="cstat-no" title="statement not covered" >        vm.openInExternalBrowser = Utils.openInExternalBrowser;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.voucherAvailable = false;</span>
+<span class="cstat-no" title="statement not covered" >        vm.purchaseAvailable = false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (CONFIG.MULTIMAP &amp;&amp; CONFIG.MULTIMAP.purchaseType) {</span>
+<span class="cstat-no" title="statement not covered" >            for (var i in CONFIG.MULTIMAP.purchaseType) {</span>
+<span class="cstat-no" title="statement not covered" >                switch (CONFIG.MULTIMAP.purchaseType[i]) {</span>
+                    case 'purchase':
+<span class="cstat-no" title="statement not covered" >                        vm.purchaseAvailable = true;</span>
+<span class="cstat-no" title="statement not covered" >                        break;</span>
+                    case 'voucher':
+<span class="cstat-no" title="statement not covered" >                        vm.voucherAvailable = true</span>
+<span class="cstat-no" title="statement not covered" >                        break;</span>
+                    default:
+<span class="cstat-no" title="statement not covered" >                        break;</span>
+                }
+            }
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (!vm.voucherAvailable &amp;&amp; !vm.purchaseAvailable) {</span>
+<span class="cstat-no" title="statement not covered" >            vm.voucherAvailable = true;</span>
+<span class="cstat-no" title="statement not covered" >            vm.purchaseAvailable = true;</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.maxDifficulty = CONFIG.MULTIMAP.maxDifficulty ? CONFIG.MULTIMAP.maxDifficulty : 5;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/imagesModal.html', {</span>
+            scope: modalScope,
+            animation: 'slide-in-up'
+        }).then(<span class="fstat-no" title="function not covered" >function (modalObj) {</span>
+<span class="cstat-no" title="statement not covered" >            modalImage = modalObj;</span>
+        });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.openImageModal = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            if (vm.imageGallery.length &gt; 1 || (vm.imageGallery.length === 1 &amp;&amp; vm.imageGallery[0].caption &amp;&amp; vm.imageGallery[0].caption !== "")) {</span>
+<span class="cstat-no" title="statement not covered" >                modalImage.show();</span>
+            }
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        modalScope.vm.hide = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            modalImage &amp;&amp; modalImage.hide();</span>
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        modalScope.vm.nextImage = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            if ($ionicSlideBoxDelegate._instances &amp;&amp;</span>
+                $ionicSlideBoxDelegate._instances.length &gt; 0) {
+<span class="cstat-no" title="statement not covered" >                $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].next();</span>
+            }
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        modalScope.vm.prevImage = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            if ($ionicSlideBoxDelegate._instances &amp;&amp;</span>
+                $ionicSlideBoxDelegate._instances.length &gt; 0) {
+<span class="cstat-no" title="statement not covered" >                $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].previous();</span>
+            }
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.showLeft = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            if (!vm.hasGallery) {</span>
+<span class="cstat-no" title="statement not covered" >                return false;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if ($ionicSlideBoxDelegate._instances &amp;&amp;</span>
+                $ionicSlideBoxDelegate._instances.length &gt; 0) {
+<span class="cstat-no" title="statement not covered" >                return $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].currentIndex() !== 0;</span>
+            }
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.showRight = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            if (!vm.hasGallery) {</span>
+<span class="cstat-no" title="statement not covered" >                return false;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (vm.imageGallery.length === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                return false;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if ($ionicSlideBoxDelegate._instances &amp;&amp;</span>
+                $ionicSlideBoxDelegate._instances.length &gt; 0) {
+<span class="cstat-no" title="statement not covered" >                return $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].currentIndex() !== vm.imageGallery.length - 1;</span>
+            }
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var showLogin = <span class="fstat-no" title="function not covered" >function (isRegistration) {</span></span>
+<span class="cstat-no" title="statement not covered" >            $rootScope.showLogin(isRegistration);</span>
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var notLoggedIn = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            $ionicPopup.confirm({</span>
+                title: $translate.instant("ATTENZIONE"),
+                template: $translate.instant("Devi eseguire l'accesso per poter usufruire di questa funzionalità")
+            }).then(<span class="fstat-no" title="function not covered" >function (res) {</span>
+<span class="cstat-no" title="statement not covered" >                if (res) {</span>
+<span class="cstat-no" title="statement not covered" >                    showLogin();</span>
+                }
+            });
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.goToInfo = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            if (vm.isLoggedIn) {</span>
+<span class="cstat-no" title="statement not covered" >                var md5Hash = privateKey.voucher + '-' + vm.id + '-' + userData.ID;</span>
+<span class="cstat-no" title="statement not covered" >                md5Hash = md5.createHash(md5Hash);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var data = '?routeId=' + vm.id + '&amp;userId=' + userData.ID + '&amp;lang=' + vm.currentLang + '&amp;hash=' + md5Hash;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                Utils.openInExternalBrowser("https://api.webmapp.it/services/merinfo/vn/info.php" + data);</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                notLoggedIn();</span>
+            }
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.useVoucher = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            if (vm.isLoggedIn) {</span>
+<span class="cstat-no" title="statement not covered" >                PackageService.useVoucher(routeDetail.id);</span>
+            }
+            else {
+<span class="cstat-no" title="statement not covered" >                notLoggedIn();</span>
+            }
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.applyVoucherFunction = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            if (vm.isAndroid) {</span>
+<span class="cstat-no" title="statement not covered" >                vm.useVoucher();</span>
+            }
+            else {
+<span class="cstat-no" title="statement not covered" >                vm.goToInfo();</span>
+            }
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.buyRoute = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            if (vm.isLoggedIn) {</span>
+<span class="cstat-no" title="statement not covered" >                PackageService.buyPack(routeDetail.id);</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                notLoggedIn();</span>
+            }
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.downloadPackage = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            if ((CONFIG.OPTIONS.skipLoginPublicRoutesDownload &amp;&amp; routeDetail.wm_route_public) || vm.isLoggedIn) {</span>
+<span class="cstat-no" title="statement not covered" >                PackageService.downloadPackage(routeDetail.id);</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                notLoggedIn();</span>
+            }
+&nbsp;
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.openPackage = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            if ((CONFIG.OPTIONS.skipLoginPublicRoutesDownload &amp;&amp; routeDetail.wm_route_public) || vm.isLoggedIn) {</span>
+<span class="cstat-no" title="statement not covered" >                PackageService.openPackage(routeDetail.id);</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                notLoggedIn();</span>
+            }
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.removePack = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            PackageService.removePack(routeDetail.id);</span>
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        registeredEvents.push(</span>
+            $rootScope.$on('packages-updated', <span class="fstat-no" title="function not covered" >function (e, value) {</span>
+<span class="cstat-no" title="statement not covered" >                routeDetail = value.packages[vm.id];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                vm.isPublic = routeDetail.wm_route_public;</span>
+<span class="cstat-no" title="statement not covered" >                vm.skipLogin = CONFIG.OPTIONS.skipLoginPublicRoutesDownload ? CONFIG.OPTIONS.skipLoginPublicRoutesDownload : false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (routeDetail) {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.title = routeDetail.title.rendered;</span>
+<span class="cstat-no" title="statement not covered" >                    if (routeDetail.packageTitle) {</span>
+<span class="cstat-no" title="statement not covered" >                        if (routeDetail.packageTitle[vm.currentLang]) {</span>
+<span class="cstat-no" title="statement not covered" >                            vm.title = routeDetail.packageTitle[vm.currentLang];</span>
+                        }
+                        else <span class="cstat-no" title="statement not covered" >if (routeDetail.packageTitle[vm.defaultLang]) {</span>
+<span class="cstat-no" title="statement not covered" >                            vm.title = routeDetail.packageTitle[vm.defaultLang];</span>
+                        }
+                        else <span class="cstat-no" title="statement not covered" >if (typeof routeDetail.packageTitle !== 'string') {</span>
+<span class="cstat-no" title="statement not covered" >                            vm.title = routeDetail.packageTitle[Object.keys(routeDetail.packageTitle)[0]];</span>
+                        }
+                    }
+<span class="cstat-no" title="statement not covered" >                    vm.description = "";</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (routeDetail.packageDescription) {</span>
+<span class="cstat-no" title="statement not covered" >                        if (routeDetail.packageDescription[vm.currentLang]) {</span>
+<span class="cstat-no" title="statement not covered" >                            vm.description = routeDetail.packageDescription[vm.currentLang];</span>
+                        }
+                        else <span class="cstat-no" title="statement not covered" >if (routeDetail.packageDescription[vm.defaultLang]) {</span>
+<span class="cstat-no" title="statement not covered" >                            vm.description = routeDetail.packageDescription[vm.defaultLang];</span>
+                        }
+                        else <span class="cstat-no" title="statement not covered" >if (typeof routeDetail.packageDescription !== 'string') {</span>
+<span class="cstat-no" title="statement not covered" >                            vm.description = routeDetail.packageDescription[Object.keys(routeDetail.packageDescription)[0]];</span>
+                        }
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    vm.description = vm.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'onclick="window.open(\'$1\', \'_system\', \'\')"');</span>
+<span class="cstat-no" title="statement not covered" >                    vm.description = $sce.trustAsHtml(vm.description);</span>
+<span class="cstat-no" title="statement not covered" >                    vm.gallery = routeDetail.n7webmap_route_media_gallery;</span>
+<span class="cstat-no" title="statement not covered" >                    if (vm.gallery &amp;&amp; vm.gallery[0] &amp;&amp; vm.gallery[0].sizes) {</span>
+<span class="cstat-no" title="statement not covered" >                        vm.featureImage = vm.gallery[0].sizes.medium_large;</span>
+                    }
+<span class="cstat-no" title="statement not covered" >                    vm.codeRoute = routeDetail.n7webmapp_route_cod;</span>
+<span class="cstat-no" title="statement not covered" >                    vm.difficulty = routeDetail.n7webmapp_route_difficulty;</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                vm.imageGallery = [];</span>
+<span class="cstat-no" title="statement not covered" >                for (var g = 0; g &lt; vm.gallery.length; g++) {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.imageGallery.push({ src: vm.gallery[g].sizes.medium_large });</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                vm.hasGallery = vm.imageGallery.length &gt; 0;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                $ionicLoading.hide();</span>
+            })
+        );
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        registeredEvents.push(</span>
+            $rootScope.$on('userPackagesId-updated', <span class="fstat-no" title="function not covered" >function (e, value) {</span>
+<span class="cstat-no" title="statement not covered" >                vm.userPackagesId = value;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if ($rootScope.routeDownload) {</span>
+<span class="cstat-no" title="statement not covered" >                    delete $rootScope.routeDownload;</span>
+<span class="cstat-no" title="statement not covered" >                    if (Auth.isLoggedIn() &amp;&amp; vm.userPackagesId[vm.id]) {</span>
+<span class="cstat-no" title="statement not covered" >                        setTimeout(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                            vm.downloadPackage();</span>
+                        }, 500);
+                    }
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                Utils.forceDigest();</span>
+            })
+        );
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        registeredEvents.push(</span>
+            $rootScope.$on('userDownloadedPackages-updated', <span class="fstat-no" title="function not covered" >function (e, value) {</span>
+<span class="cstat-no" title="statement not covered" >                vm.userDownloadedPackages = value;</span>
+<span class="cstat-no" title="statement not covered" >                Utils.forceDigest();</span>
+            })
+        );
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        registeredEvents.push(</span>
+            $rootScope.$on('userPackagesIdRquested-updated', <span class="fstat-no" title="function not covered" >function (e, value) {</span>
+<span class="cstat-no" title="statement not covered" >                vm.userPackagesIdRquested = value;</span>
+<span class="cstat-no" title="statement not covered" >                Utils.forceDigest();</span>
+            })
+        );
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        registeredEvents.push(</span>
+            $rootScope.$on('logged-in', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                if (Auth.isLoggedIn()) {</span>
+<span class="cstat-no" title="statement not covered" >                    userData = Auth.getUserData();</span>
+<span class="cstat-no" title="statement not covered" >                    vm.isLoggedIn = true;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    PackageService.getPackagesIdByUserId();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    Utils.forceDigest();</span>
+                }
+            })
+        );
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        registeredEvents.push(</span>
+            $scope.$on('$destroy', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                if ($ionicSlideBoxDelegate._instances &amp;&amp;</span>
+                    $ionicSlideBoxDelegate._instances.length &gt; 0) {
+<span class="cstat-no" title="statement not covered" >                    $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();</span>
+<span class="cstat-no" title="statement not covered" >                    $ionicSlideBoxDelegate.update();</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                for (var i in registeredEvents) {</span>
+<span class="cstat-no" title="statement not covered" >                    registeredEvents[i]();</span>
+                }
+<span class="cstat-no" title="statement not covered" >                delete registeredEvents;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                modalImage.remove();</span>
+            })
+        );
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        $ionicLoading.show({</span>
+            template: '&lt;ion-spinner&gt;&lt;/ion-spinner&gt;'
+        });
+<span class="cstat-no" title="statement not covered" >        PackageService.getRoutes();</span>
+<span class="cstat-no" title="statement not covered" >        PackageService.getDownloadedPackages();</span>
+<span class="cstat-no" title="statement not covered" >        vm.isAndroid = !window.cordova || window.cordova.platformId === 'ios' ? false : true;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (Auth.isLoggedIn()) {</span>
+<span class="cstat-no" title="statement not covered" >            userData = Auth.getUserData();</span>
+<span class="cstat-no" title="statement not covered" >            vm.isLoggedIn = true;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            PackageService.getPackagesIdByUserId();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            Utils.forceDigest();</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return vm;</span>
+    });
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 09:34:49 GMT+0100 (CET)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

@@ -11,8 +11,22 @@ describe('Geolocation.Factory', function () {
         MapService,
         $httpBackend,
         Utils,
-        spy = {};
+        spy = {},
+        callPositionCallback;
     var currentLat, currentLong;
+
+    /* Copied from geolocation factory. It must be a copy of the original
+     * one in the factory except for the outOfTrackDistance, that is initialized
+     * in a beforeEach
+     */
+    var constants = {
+        compassRotationTimeout: 8000, // Time in milliseconds to wait before switching from gps rotation to compass rotation
+        currentSpeedTimeWindow: 10000, // Time in milliseconds window of positions to calculate currentSpeed with
+        geolocationTimeoutTime: 60000,
+        minSpeedForGpsBearing: 2, // Speed in km/h needed to switch from compass to gps bearing
+        outOfTrackToastDelay: 10000,
+        outOfTrackDistance: 200
+    };
 
     beforeEach(module('webmapp'));
 
@@ -24,6 +38,14 @@ describe('Geolocation.Factory', function () {
 
         }
         CONFIG.NAVIGATION.enableTrackRecording = true;
+
+        constants.outOfTrackDistance = (CONFIG.NAVIGATION && CONFIG.NAVIGATION.trackBoundsDistance) ?
+            CONFIG.NAVIGATION.trackBoundsDistance : (
+                (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) ?
+                    CONFIG.MAIN.NAVIGATION.trackBoundsDistance :
+                    200
+            );
+
         currentLat = CONFIG.MAP.bounds.northEast[0] + (CONFIG.MAP.bounds.southWest[0] - CONFIG.MAP.bounds.northEast[0]) / 2;
         currentLong = CONFIG.MAP.bounds.northEast[1] + (CONFIG.MAP.bounds.southWest[1] - CONFIG.MAP.bounds.northEast[1]) / 2;
 
@@ -76,6 +98,10 @@ describe('Geolocation.Factory', function () {
             platformId: 'android'
         };
         BackgroundGeolocation = {
+            FOREGROUND_MODE: 1,
+            BACKGROUND_MODE: 0,
+            activeInBackground: false,
+            backgroundSavedPositions: [],
             start: function () { },
             stop: function () { },
             removeAllListeners: function () { },
@@ -88,18 +114,23 @@ describe('Geolocation.Factory', function () {
             on: function (event, callback) {
                 switch (event) {
                     case 'location':
+                    case 'stationary':
                     case 'error':
+                    case 'background':
+                    case 'foreground':
                         this.callbackFun[event] = callback;
                         break;
                     default:
                         break;
                 }
-                if (event === 'location') {
-                }
             },
             checkStatus: function (callback) {
-                callback({})
+                callback({ isRunning: this.activeInBackground })
             },
+            getLocations: function (callback) {
+                callback(this.backgroundSavedPositions);
+            },
+            switchMode: function (params) { },
             callbackFun: {}
         };
         $ionicPlatform = {
@@ -107,6 +138,29 @@ describe('Geolocation.Factory', function () {
                 callback();
                 return;
             }
+        };
+
+        callPositionCallback = function (lat, long, bearing, speed, time, altitude, accuracy) {
+            var position = {
+                latitude: lat,
+                longitude: long,
+                bearing: bearing ? bearing : null,
+                speed: speed ? speed : 0,
+                altitude: altitude ? altitude : 0,
+                accuracy: accuracy ? accuracy : 10
+            };
+
+            if (bearing) {
+                position.bearing = bearing;
+            }
+            if (speed) {
+                position.speed = speed;
+            }
+            if (time) {
+                position.time = time;
+            }
+
+            BackgroundGeolocation.callbackFun['location'](position);
         };
     });
 
@@ -125,7 +179,7 @@ describe('Geolocation.Factory', function () {
     }));
 
     beforeEach(function () {
-        spyOn(MapService, 'drawPosition').and.callFake(function () {
+        spy['drawPosition'] = spyOn(MapService, 'drawPosition').and.callFake(function () {
             return true;
         });
         spyOn(MapService, 'drawAccuracy').and.callFake(function () {
@@ -146,10 +200,10 @@ describe('Geolocation.Factory', function () {
         spyOn(MapService, 'triggerNearestPopup').and.callFake(function () {
             return true;
         });
-        spyOn(MapService, 'hasMap').and.callFake(function () {
+        spy['hasMap'] = spyOn(MapService, 'hasMap').and.callFake(function () {
             return true;
         });
-        spyOn(MapService, 'createUserPolyline').and.callFake(function () { });
+        spy['createUserPolyline'] = spyOn(MapService, 'createUserPolyline').and.callFake(function () { });
         spyOn(MapService, 'updateUserPolyline').and.callFake(function () { });
         spyOn(MapService, 'getUserPolyline').and.callFake(function () { });
         spyOn(MapService, 'removeUserPolyline').and.callFake(function () { });
@@ -163,14 +217,14 @@ describe('Geolocation.Factory', function () {
             defer.resolve(true);
             return defer.promise;
         });
-    })
+    });
 
     describe('enable', function () {
         it('cordova is not defined => it should reject promise', function (done) {
             window.cordova = undefined;
             expect(GeolocationService.isActive()).toBe(false);
             GeolocationService.enable().then(function () {
-                fail("it should not be resolved");
+                done.fail("it should not be resolved");
             }).catch(function (err) {
                 expect(err).toEqual(ERRORS.CORDOVA_UNAVAILABLE);
                 done();
@@ -182,7 +236,6 @@ describe('Geolocation.Factory', function () {
         it('cordova is defined, platform android, permission granted, isGpsLocationEnabled => it should resolve promise and return true', function (done) {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -221,7 +274,6 @@ describe('Geolocation.Factory', function () {
         it('cordova is defined, platform ios, permission granted, isLocationEnabled => it should resolve promise and return true', function (done) {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -415,7 +467,6 @@ describe('Geolocation.Factory', function () {
         it('cordova is defined, gps already active => it should not resolve promise and return error message', function (done) {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -454,6 +505,175 @@ describe('Geolocation.Factory', function () {
                 })
 
             $httpBackend.flush();
+        });
+
+        xdescribe('is browser', function () {
+            var localContext,
+                getCurrentPositionSpy,
+                watchPositionSpy;
+
+            beforeEach(function () {
+                window.cordova = undefined;
+                spyOn(Utils, 'isBrowser').and.callFake(function () {
+                    return true;
+                });
+
+                getCurrentPositionSpy = spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
+                    var defer = $q.defer();
+                    defer.resolve({
+                        coords: {
+                            latitude: currentLat,
+                            longitude: currentLong,
+                            altitude: 0,
+                            accuracy: 10
+                        }
+                    });
+                    return defer.promise;
+                });
+                watchPositionSpy = spyOn($cordovaGeolocation, 'watchPosition').and.callFake(function () {
+                    var defer = $q.defer();
+                    defer.resolve();
+                    return defer.promise;
+                });
+            });
+
+            it('no https, should reject promise', function (done) {
+                // var context = {
+                //     window: {
+                //         location: {
+                //             protocol: 'http:'
+                //         }
+                //     }
+                // };
+                // with (context) {
+                GeolocationService.enable().then(function () {
+                    done.fail();
+                }).catch(function (err) {
+                    expect(err).toEqual(ERRORS.CORDOVA_UNAVAILABLE);
+                    done();
+                });
+                // }
+
+                $httpBackend.flush();
+            });
+
+            it('https, should emit loading state, get current position', function (done) {
+                // var context = {
+                //     window: {
+                //         location: {
+                //             protocol: 'https:'
+                //         }
+                //     }
+                // };
+
+                window.location.protocol = 'https:';
+
+                // with (context) {
+                GeolocationService.enable().then(function (state) {
+                    done();
+                }).catch(function (err) {
+                    done.fail(err);
+                });
+                // }
+
+                $httpBackend.flush();
+            });
+        });
+
+        xdescribe('geolocation already enabled, need to restore state', function () {
+            var showPathSpy,
+                bgConfigureSpy,
+                switchStateSpy;
+            var backgroundSavedState;
+
+            beforeEach(function () {
+                backgroundSavedState = {
+                    "currentTrack": null,
+                    "isActive": true,
+                    "isPaused": false,
+                    "isRecordingPolyline": true,
+                    "stats": {
+                        "time": "{\"startTime\":1547044578911,\"totalTime\":0,\"isPaused\":false}",
+                        "distance": 75.00014248366331,
+                        "averageSpeed": 3.1359299800826386,
+                        "currentSpeed": 0
+                    },
+                    "lastPosition": { "lat": 43.71457927705038, "long": 10.407626830254738, "accuracy": 2, "altitude": 55, "heading": 1, "timestamp": 1547044657849 },
+                    "userPolyline": [
+                        { "lat": 43.71467243831859, "lng": 10.407692563643108, "alt": 0 },
+                        { "lat": 43.71474318346589, "lng": 10.40781343287734, "alt": 55 },
+                        { "lat": 43.71475100602621, "lng": 10.407736424824773, "alt": 55 },
+                        { "lat": 43.71475882858653, "lng": 10.40765941676215, "alt": 55 },
+                        { "lat": 43.71473930784037, "lng": 10.407812583608541, "alt": 55 },
+                        { "lat": 43.714657092541444, "lng": 10.407918654485563, "alt": 55 },
+                        { "lat": 43.71461772536058, "lng": 10.407772979979764, "alt": 55 },
+                        { "lat": 43.71459850120549, "lng": 10.40769990510553, "alt": 55 },
+                        { "lat": 43.71457927705038, "lng": 10.407626830254738, "alt": 55 }
+                    ]
+                };
+
+                BackgroundGeolocation.activeInBackground = true;
+
+                localStorage.$wm_lastRecordingState = JSON.stringify(backgroundSavedState);
+
+                spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
+                    var defer = $q.defer();
+                    defer.resolve({
+                        coords: {
+                            latitude: currentLat,
+                            longitude: currentLong,
+                            altitude: 0,
+                            accuracy: 10
+                        }
+                    });
+                    return defer.promise;
+                });
+                showPathSpy = spyOn(MapService, 'showPathAndRelated');
+                bgConfigureSpy = spyOn(BackgroundGeolocation, 'configure');
+                switchStateSpy = spyOn(GeolocationService, 'switchState').and.callFake(function () {
+                    var defer = $q.defer();
+                    defer.resolve();
+                    return defer.promise;
+                });
+            });
+
+            it('should restore the correct geolocation state and the correct polyline', function (done) {
+                console.log("----------------------------------------------------------------")
+                GeolocationService.enable().then(function (state) {
+                    console.log("in")
+                    expect(state).toEqual({
+                        isActive: true,
+                        isLoading: false,
+                        isFollowing: true,
+                        isRotating: false
+                    });
+                    expect(spy['drawPosition']).toHaveBeenCalledWith({
+                        latitude: backgroundSavedState.lastPosition.lat,
+                        longitude: backgroundSavedState.lastPosition.long,
+                        accuracy: backgroundSavedState.lastPosition.accuracy
+                    });
+                    expect(bgConfigureSpy).toHaveBeenCalled();
+                    expect(showPathSpy).not.toHaveBeenCalled();
+                    expect(localStorage.$wm_lastRecordingState).toBe(undefined);
+                    expect(spy['createUserPolyline']).toHaveBeenCalledWith(backgroundSavedState.userPolyline);
+                    console.log("----------------------------------------------------------------")
+                    done();
+                }).catch(function () {
+                    done.fail();
+                });
+
+                $httpBackend.flush();
+            });
+
+            xit('should restart geolocation if the state is not defined', function (done) {
+                GeolocationService.enable().then(function (state) {
+                    done();
+                }).catch(function () {
+                    done.fail();
+                });
+
+                $httpBackend.flush();
+            });
         });
 
         afterEach(function () {
@@ -506,7 +726,6 @@ describe('Geolocation.Factory', function () {
                 var defer = $q.defer();
                 GeolocationService.switchState()
                     .then(function (val) {
-                        // console.log(val);
                         expect(expectedState).toEqual(val);
                         defer.resolve({
                             coords: {
@@ -541,7 +760,6 @@ describe('Geolocation.Factory', function () {
         it('no param, state === isActive && !isLoading && !isFollowing && !isRotating  => it should switch state to follow and return modified state', function (done) {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -606,7 +824,6 @@ describe('Geolocation.Factory', function () {
         it('no param, state === isActive && !isLoading && isFollowing && !isRotating  => it should enable rotation and return modified state', function (done) {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -705,7 +922,6 @@ describe('Geolocation.Factory', function () {
         it('goalState = isFollowing && !isRotating, state === isActive && !isLoading && isFollowing && isRotating  => it should disable rotation and return modified state', function (done) {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -767,7 +983,6 @@ describe('Geolocation.Factory', function () {
 
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -823,7 +1038,6 @@ describe('Geolocation.Factory', function () {
         it('goalState = !isFollowing && !isRotating, state === isActive && !isLoading && isFollowing && isRotating  => it should disable rotation and follow and resolve with modified state', function (done) {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -875,7 +1089,6 @@ describe('Geolocation.Factory', function () {
         it('goalState = isFollowing && !isRotating, state === isActive && !isLoading && isFollowing && !isRotating  => it should stay on the same state and resolve with current state', function (done) {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -911,7 +1124,6 @@ describe('Geolocation.Factory', function () {
         it('goalState = isFollowing && isRotating, state === isActive && !isLoading && isFollowing && !isRotating  => it should start rotating and resolve with current state', function (done) {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -958,7 +1170,6 @@ describe('Geolocation.Factory', function () {
         it('goalState = !isFollowing && !isRotating, state === isActive && !isLoading && isFollowing && !isRotating  => it should disable rotation and follow and resolve with modified state', function (done) {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -1006,7 +1217,6 @@ describe('Geolocation.Factory', function () {
         it('goalState = isFollowing && !isRotating, state === isActive && !isLoading && !isFollowing && !isRotating  => it should start following and resolve with current state', function (done) {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -1049,7 +1259,6 @@ describe('Geolocation.Factory', function () {
         it('goalState = isFollowing && isRotating, state === isActive && !isLoading && !isFollowing && !isRotating  => it should start rotating and following and resolve with current state', function (done) {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -1104,7 +1313,6 @@ describe('Geolocation.Factory', function () {
         it('goalState = !isFollowing && !isRotating, state === isActive && !isLoading && !isFollowing && !isRotating  => it should stay on the same state and resolve with current state', function (done) {
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -1488,7 +1696,6 @@ describe('Geolocation.Factory', function () {
             spyOn($rootScope, '$emit');
             spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
                 var defer = $q.defer();
-                // console.log("MOCK cordovaGeolocation.getCurrentPosition: " + currentLat + "," + currentLong);
                 defer.resolve({
                     coords: {
                         latitude: currentLat,
@@ -1550,14 +1757,6 @@ describe('Geolocation.Factory', function () {
         var spyShowToast;
         var spyHideToast;
         var spyMakeSound;
-        var callPositionCallback = function (lat, long) {
-            BackgroundGeolocation.callbackFun['location']({
-                latitude: lat,
-                longitude: long,
-                altitude: 0,
-                accuracy: 10
-            });
-        };
 
         beforeEach(function () {
             jasmine.clock().install();
@@ -1610,7 +1809,6 @@ describe('Geolocation.Factory', function () {
                     parentId: 1,
                     id: 1
                 }).then(function () {
-
                     callPositionCallback((currentLat - 0.001), currentLong);
                     jasmine.clock().tick(outOfTrackToastDelay + 1);
 
@@ -1625,21 +1823,22 @@ describe('Geolocation.Factory', function () {
 
                     done();
                 }).catch(function (err) {
-                    fail("it should resolve promise and start recording")
+                    done.fail("it should resolve promise and start recording")
                 })
             }).catch(function (err) {
-                fail("it should resolve promise and enable gps")
+                done.fail("it should resolve promise and enable gps")
             })
             $httpBackend.flush();
         });
 
-        it("out of track  since (outOfTrackToastDelay+1) sec => it should show toast", function (done) {
+        it("out of track for (outOfTrackToastDelay + 1) ms => it should show toast", function (done) {
             spyOn(window.turf.pointToLineDistance, 'default').and.callThrough();
             GeolocationService.enable().then(function (val) {
                 GeolocationService.startRecording({
                     parentId: 1,
                     id: 1
                 }).then(function () {
+                    expect(Utils.showToast).not.toHaveBeenCalled();
                     callPositionCallback((currentLat - 0.002), currentLong);
                     jasmine.clock().tick(outOfTrackToastDelay + 1);
                     expect(Utils.showToast).toHaveBeenCalled();
@@ -1654,7 +1853,7 @@ describe('Geolocation.Factory', function () {
             $httpBackend.flush();
         });
 
-        it("out of track since (outOfTrackToastDelay-1) sec => it should not show toast", function (done) {
+        it("Back out from re-entering track in (outOfTrackToastDelay - 1) ms => it should not hide the open toast", function (done) {
             spyOn(window.turf.pointToLineDistance, 'default').and.callThrough();
             GeolocationService.enable().then(function (val) {
                 GeolocationService.startRecording({
@@ -1662,20 +1861,31 @@ describe('Geolocation.Factory', function () {
                     id: 1
                 }).then(function () {
                     callPositionCallback(currentLat - 0.002, currentLong);
-                    jasmine.clock().tick(outOfTrackToastDelay - 1);
-                    expect(Utils.showToast).not.toHaveBeenCalled();
-                    expect(Utils.makeNotificationSound).not.toHaveBeenCalled();
+                    jasmine.clock().tick(outOfTrackToastDelay + 1);
+                    expect(Utils.showToast).toHaveBeenCalled();
+                    expect(Utils.makeNotificationSound).toHaveBeenCalled();
+
+                    callPositionCallback(currentLat - 0.001, currentLong);
+                    spyHideToast.calls.reset();
+                    jasmine.clock().tick((outOfTrackToastDelay - 1) / 2);
+                    expect(Utils.hideToast).not.toHaveBeenCalled();
+
+                    callPositionCallback(currentLat - 0.002, currentLong);
+                    spyHideToast.calls.reset();
+                    jasmine.clock().tick((outOfTrackToastDelay - 1) / 2);
+                    expect(Utils.hideToast).not.toHaveBeenCalled();
+
                     done();
                 }).catch(function (err) {
                     fail("it should resolve promise and start recording")
-                })
+                });
             }).catch(function (err) {
                 fail("it should resolve promise and enable gps")
             })
             $httpBackend.flush();
         });
 
-        it("Back in from outside track since (outOfTrackToastDelay+1) sec => it should not show (hide if open) toast ", function (done) {
+        it("Back in from outside track for (outOfTrackToastDelay + 1) ms => it should hide the open) toast ", function (done) {
             spyOn(window.turf.pointToLineDistance, 'default').and.callThrough();
             GeolocationService.enable().then(function (val) {
                 GeolocationService.startRecording({
@@ -1702,7 +1912,7 @@ describe('Geolocation.Factory', function () {
             $httpBackend.flush();
         });
 
-        it("Back in from outside track since (outOfTrackToastDelay-1) sec => it should continue to show toast", function (done) {
+        it("Back in from outside track for (outOfTrackToastDelay - 1) ms => it should continue to show toast", function (done) {
             spyOn(window.turf.pointToLineDistance, 'default').and.callThrough();
             GeolocationService.enable().then(function (val) {
                 GeolocationService.startRecording({
@@ -1731,7 +1941,28 @@ describe('Geolocation.Factory', function () {
             $httpBackend.flush();
         });
 
-        it("Back in from outside track before (outOfTrackToastDelay) interval  => it should not show toast", function (done) {
+        it("Back out from inside of track before (outOfTrackToastDelay) ms => it should not show toast", function (done) {
+            spyOn(window.turf.pointToLineDistance, 'default').and.callThrough();
+            GeolocationService.enable().then(function (val) {
+                GeolocationService.startRecording({
+                    parentId: 1,
+                    id: 1
+                }).then(function () {
+                    callPositionCallback(currentLat - 0.002, currentLong);
+                    jasmine.clock().tick(outOfTrackToastDelay - 1);
+                    expect(Utils.showToast).not.toHaveBeenCalled();
+                    expect(Utils.makeNotificationSound).not.toHaveBeenCalled();
+                    done();
+                }).catch(function (err) {
+                    fail("it should resolve promise and start recording")
+                })
+            }).catch(function (err) {
+                fail("it should resolve promise and enable gps")
+            })
+            $httpBackend.flush();
+        });
+
+        it("Back in from outside track before (outOfTrackToastDelay) ms  => it should not show toast", function (done) {
             spyOn(window.turf.pointToLineDistance, 'default').and.callThrough();
             GeolocationService.enable().then(function (val) {
                 GeolocationService.startRecording({
@@ -2015,7 +2246,7 @@ describe('Geolocation.Factory', function () {
         });
     });
 
-    describe('map-event', function () {
+    describe('at map', function () {
         var togglePositionIconSpy, animateBearingSpy, stateChangedSpy;
 
         beforeEach(function () {
@@ -2034,37 +2265,672 @@ describe('Geolocation.Factory', function () {
                 });
                 return defer.promise;
             });
+            spyOn($cordovaDeviceOrientation, 'watchHeading').and.callFake(function () {
+                var defer = $q.defer();
+                var obj = {};
+                defer.resolve(
+                    obj
+                );
+                defer.promise.watch = obj;
+                defer.promise.clearWatch = function () {
+                    delete defer.promise.watch
+                };
+                return defer.promise;
+            });
         });
 
-        it('only following, should stop at map-drag', function (done) {
-            GeolocationService.enable().then(function (value) {
-                togglePositionIconSpy.calls.reset();
-                spy['mapIsRotating'].calls.reset();
-                animateBearingSpy.calls.reset();
-                stateChangedSpy.calls.reset();
-
-                $rootScope.$emit('map-dragstart');
-
-                expect(togglePositionIconSpy).toHaveBeenCalledWith('locationIcon');
-                expect(spy['mapIsRotating']).toHaveBeenCalledWith(false);
-                expect(animateBearingSpy).toHaveBeenCalledWith(0, 800);
-                expect(stateChangedSpy).toHaveBeenCalledWith('geolocationState-changed', {
+        describe('drag start', function () {
+            it('if only following should stop following', function (done) {
+                var expectedStartingState = {
                     isActive: true,
-                    isLoading: false,
-                    isFollowing: false,
-                    isRotating: false
+                    isFollowing: true,
+                    isRotating: false,
+                    isLoading: false
+                };
+                GeolocationService.enable().then(function (value) {
+                    expect(value).toEqual(expectedStartingState);
+
+                    togglePositionIconSpy.calls.reset();
+                    spy['mapIsRotating'].calls.reset();
+                    animateBearingSpy.calls.reset();
+                    stateChangedSpy.calls.reset();
+
+                    $rootScope.$emit('map-dragstart');
+
+                    expect(togglePositionIconSpy).toHaveBeenCalledWith('locationIcon');
+                    expect(spy['mapIsRotating']).toHaveBeenCalledWith(false);
+                    expect(animateBearingSpy).toHaveBeenCalledWith(0, 800);
+                    expect(stateChangedSpy).toHaveBeenCalledWith('geolocationState-changed', {
+                        isActive: true,
+                        isLoading: false,
+                        isFollowing: false,
+                        isRotating: false
+                    });
+                    done();
+                }).catch(function () {
+                    done.fail("it should not trigger any exception");
                 });
 
                 $httpBackend.flush();
-                done();
-            }).catch(function () {
-                fail("it should not trigger any exception");
+            });
+
+            it('if following and rotating should stop both', function (done) {
+                var expectedStartingState = {
+                    isActive: true,
+                    isFollowing: true,
+                    isRotating: true,
+                    isLoading: false
+                };
+
+                GeolocationService.enable().then(function (value) {
+                    GeolocationService.switchState().then(function (state) {
+                        expect(state).toEqual(expectedStartingState);
+
+                        togglePositionIconSpy.calls.reset();
+                        spy['mapIsRotating'].calls.reset();
+                        animateBearingSpy.calls.reset();
+                        stateChangedSpy.calls.reset();
+
+                        $rootScope.$emit('map-dragstart');
+
+                        expect(togglePositionIconSpy).toHaveBeenCalledWith('locationIcon');
+                        expect(spy['mapIsRotating']).toHaveBeenCalledWith(false);
+                        expect(animateBearingSpy).toHaveBeenCalledWith(0, 800);
+                        expect(stateChangedSpy).toHaveBeenCalledWith('geolocationState-changed', {
+                            isActive: true,
+                            isLoading: false,
+                            isFollowing: false,
+                            isRotating: false
+                        });
+                        done();
+                    });
+                }).catch(function () {
+                    done.fail("it should not trigger any exception");
+                });
+
+                $httpBackend.flush();
+            });
+        });
+
+        describe('zoom start without custom programmatically triggered events', function () {
+            it('if only following should stop following', function (done) {
+                var expectedStartingState = {
+                    isActive: true,
+                    isFollowing: true,
+                    isRotating: false,
+                    isLoading: false
+                };
+                GeolocationService.enable().then(function (value) {
+                    expect(value).toEqual(expectedStartingState);
+
+                    togglePositionIconSpy.calls.reset();
+                    spy['mapIsRotating'].calls.reset();
+                    animateBearingSpy.calls.reset();
+                    stateChangedSpy.calls.reset();
+
+                    $rootScope.$emit('map-zoomstart');
+                    $rootScope.$emit('map-zoomstart');
+
+                    expect(togglePositionIconSpy).toHaveBeenCalledWith('locationIcon');
+                    expect(spy['mapIsRotating']).toHaveBeenCalledWith(false);
+                    expect(animateBearingSpy).toHaveBeenCalledWith(0, 800);
+                    expect(stateChangedSpy).toHaveBeenCalledWith('geolocationState-changed', {
+                        isActive: true,
+                        isLoading: false,
+                        isFollowing: false,
+                        isRotating: false
+                    });
+                    done();
+                }).catch(function () {
+                    done.fail("it should not trigger any exception");
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('if following and rotating should stop both', function () {
+                var expectedStartingState = {
+                    isActive: true,
+                    isFollowing: true,
+                    isRotating: true,
+                    isLoading: false
+                };
+
+                GeolocationService.enable().then(function (value) {
+                    GeolocationService.switchState().then(function (state) {
+                        expect(state).toEqual(expectedStartingState);
+
+                        togglePositionIconSpy.calls.reset();
+                        spy['mapIsRotating'].calls.reset();
+                        animateBearingSpy.calls.reset();
+                        stateChangedSpy.calls.reset();
+
+                        $rootScope.$emit('map-zoomstart');
+                        $rootScope.$emit('map-zoomstart');
+
+                        expect(togglePositionIconSpy).toHaveBeenCalledWith('locationIcon');
+                        expect(spy['mapIsRotating']).toHaveBeenCalledWith(false);
+                        expect(animateBearingSpy).toHaveBeenCalledWith(0, 800);
+                        expect(stateChangedSpy).toHaveBeenCalledWith('geolocationState-changed', {
+                            isActive: true,
+                            isLoading: false,
+                            isFollowing: false,
+                            isRotating: false
+                        });
+                    });
+                }).catch(function () {
+                    fail("it should not trigger any exception");
+                });
+
+                $httpBackend.flush();
+            });
+        });
+
+        describe('zoom start with custom programmatically triggered events', function () {
+            it('if only following should stop following', function (done) {
+                var expectedStartingState = {
+                    isActive: true,
+                    isFollowing: true,
+                    isRotating: false,
+                    isLoading: false
+                };
+                GeolocationService.enable().then(function (value) {
+                    expect(value).toEqual(expectedStartingState);
+
+                    togglePositionIconSpy.calls.reset();
+                    spy['mapIsRotating'].calls.reset();
+                    animateBearingSpy.calls.reset();
+                    stateChangedSpy.calls.reset();
+
+                    $rootScope.$emit('map-zoomstart');
+
+                    expect(togglePositionIconSpy).not.toHaveBeenCalledWith('locationIcon');
+                    expect(spy['mapIsRotating']).not.toHaveBeenCalledWith(false);
+                    expect(animateBearingSpy).not.toHaveBeenCalledWith(0, 800);
+                    expect(stateChangedSpy).not.toHaveBeenCalledWith('geolocationState-changed', {
+                        isActive: true,
+                        isLoading: false,
+                        isFollowing: false,
+                        isRotating: false
+                    });
+                    done();
+                }).catch(function () {
+                    done.fail("it should not trigger any exception");
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('if following and rotating should stop both', function (done) {
+                var expectedStartingState = {
+                    isActive: true,
+                    isFollowing: true,
+                    isRotating: true,
+                    isLoading: false
+                };
+
+                GeolocationService.enable().then(function (value) {
+                    GeolocationService.switchState().then(function (state) {
+                        expect(state).toEqual(expectedStartingState);
+
+                        togglePositionIconSpy.calls.reset();
+                        spy['mapIsRotating'].calls.reset();
+                        animateBearingSpy.calls.reset();
+                        stateChangedSpy.calls.reset();
+
+                        $rootScope.$emit('map-zoomstart');
+
+                        expect(togglePositionIconSpy).not.toHaveBeenCalledWith('locationIcon');
+                        expect(spy['mapIsRotating']).not.toHaveBeenCalledWith(false);
+                        expect(animateBearingSpy).not.toHaveBeenCalledWith(0, 800);
+                        expect(stateChangedSpy).not.toHaveBeenCalledWith('geolocationState-changed', {
+                            isActive: true,
+                            isLoading: false,
+                            isFollowing: false,
+                            isRotating: false
+                        });
+                        done();
+                    });
+                }).catch(function () {
+                    done.fail("it should not trigger any exception");
+                });
+
+                $httpBackend.flush();
             });
         });
 
         afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
+        });
+    });
+
+    describe('positionCallback', function () {
+        beforeEach(function () {
+            spyOn($cordovaDeviceOrientation, 'watchHeading').and.callFake(function () {
+                var defer = $q.defer();
+                var obj = {};
+                defer.resolve(
+                    obj
+                );
+                defer.promise.watch = obj;
+                defer.promise.clearWatch = function () {
+                    delete defer.promise.watch
+                };
+                return defer.promise;
+            });
+        });
+
+        it('should not update position if geolocation has been disabled', function (done) {
+            GeolocationService.enable().then(function () {
+                callPositionCallback(currentLat, currentLong);
+                expect(spy['hasMap']).toHaveBeenCalled();
+                spy['hasMap'].calls.reset();
+
+                GeolocationService.disable();
+
+                spy['hasMap'].calls.reset();
+
+                callPositionCallback(currentLat, currentLong);
+
+                expect(spy['hasMap']).not.toHaveBeenCalled();
+                done();
+            }).catch(function () {
+                done.fail('it should resolve the enable');
+            });
+
+            $httpBackend.flush();
+        });
+
+        it('should not update position after position found outside bounding box', function (done) {
+            var disableSpy = spyOn(GeolocationService, 'disable').and.callThrough();
+            spyOn(MapService, 'isInBoundingBox').and.callFake(function () {
+                return false;
+            });
+
+            GeolocationService.enable().then(function () {
+                expect(disableSpy).not.toHaveBeenCalled();
+                callPositionCallback(90, 90);
+                expect(disableSpy).toHaveBeenCalledTimes(1);
+                done();
+            }).catch(function () {
+                done.fail('it should resolve the enable');
+            });
+
+            $httpBackend.flush();
+        });
+
+        it('should disable geolocation and recording if outside bounding box', function (done) {
+            var disableSpy = spyOn(GeolocationService, 'disable').and.callThrough();
+            var stopRecordingSpy = spyOn(GeolocationService, 'stopRecording').and.callThrough();
+            spyOn(MapService, 'isInBoundingBox').and.callFake(function () {
+                return false;
+            });
+
+            GeolocationService.enable().then(function () {
+                GeolocationService.startRecording({
+                    parentId: 1,
+                    id: 1
+                }).then(function () {
+                    expect(disableSpy).not.toHaveBeenCalled();
+                    expect(stopRecordingSpy).not.toHaveBeenCalled();
+                    callPositionCallback(90, 90);
+                    expect(disableSpy).toHaveBeenCalledTimes(1);
+                    expect(stopRecordingSpy).toHaveBeenCalledTimes(1);
+
+                    done();
+                });
+            }).catch(function () {
+                done.fail('it should resolve the enable');
+            });
+
+            $httpBackend.flush();
+        });
+
+        describe('rotation type switch', function () {
+            var toggleSpy;
+
+            beforeEach(function () {
+                jasmine.clock().install();
+
+                toggleSpy = spyOn(MapService, 'togglePositionIcon').and.callThrough();
+                spyOn($cordovaGeolocation, 'getCurrentPosition').and.callFake(function () {
+                    var defer = $q.defer();
+                    defer.resolve({
+                        coords: {
+                            latitude: currentLat,
+                            longitude: currentLong,
+                            altitude: 0,
+                            accuracy: 10,
+                            bearing: 10
+                        }
+                    });
+                    return defer.promise;
+                });
+            });
+
+            afterEach(function () {
+                jasmine.clock().uninstall();
+            });
+
+            it('should use cordova-device-orientation for low speed', function (done) {
+                GeolocationService.enable().then(function () {
+                    GeolocationService.switchState().then(function (state) {
+                        expect(state).toEqual({
+                            isActive: true,
+                            isLoading: false,
+                            isFollowing: true,
+                            isRotating: true
+                        });
+
+                        callPositionCallback(currentLat, currentLong, 10, 0);
+                        expect(toggleSpy).not.toHaveBeenCalled();
+
+                        callPositionCallback(currentLat - 0.001, currentLong, 10, 0);
+                        expect(toggleSpy).not.toHaveBeenCalled();
+
+                        callPositionCallback(currentLat - 0.001, currentLong, 10, 0);
+                        expect(toggleSpy).not.toHaveBeenCalled();
+                        done();
+                    });
+                }).catch(function () {
+                    done.fail("An error has occurred");
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('should not change from cordova-device-orientation for just one position at high speed', function (done) {
+                GeolocationService.enable().then(function () {
+                    GeolocationService.switchState().then(function (state) {
+                        expect(state).toEqual({
+                            isActive: true,
+                            isLoading: false,
+                            isFollowing: true,
+                            isRotating: true
+                        });
+
+                        callPositionCallback(currentLat, currentLong, 10, 0);
+                        expect(toggleSpy).not.toHaveBeenCalled();
+
+                        callPositionCallback(currentLat - 0.001, currentLong, 10, 10);
+                        expect(toggleSpy).not.toHaveBeenCalled();
+
+                        callPositionCallback(currentLat - 0.001, currentLong, 10, 0);
+                        expect(toggleSpy).not.toHaveBeenCalled();
+
+                        callPositionCallback(currentLat - 0.001, currentLong, 10, 0);
+                        expect(toggleSpy).not.toHaveBeenCalled();
+                        done();
+                    });
+                }).catch(function () {
+                    done.fail("An error has occurred");
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('should change from cordova-device-orientation to gps speed after two positions at high speed', function (done) {
+                GeolocationService.enable().then(function () {
+                    GeolocationService.switchState().then(function (state) {
+                        expect(state).toEqual({
+                            isActive: true,
+                            isLoading: false,
+                            isFollowing: true,
+                            isRotating: true
+                        });
+
+                        callPositionCallback(currentLat - 0.001, currentLong, 10, 10);
+                        expect(toggleSpy).not.toHaveBeenCalled();
+
+                        callPositionCallback(currentLat - 0.001, currentLong, 10, 10);
+                        expect(toggleSpy).toHaveBeenCalledWith('locationIconArrow');
+                        done();
+                    });
+                }).catch(function () {
+                    done.fail("An error has occurred");
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('should change from gps orientation back to cordova-device-orientation after constants.compassRotationTimeout ms of inactivity', function (done) {
+                var start = Date.now();
+                jasmine.clock().mockDate(start);
+
+                GeolocationService.enable().then(function () {
+                    GeolocationService.switchState().then(function (state) {
+                        expect(state).toEqual({
+                            isActive: true,
+                            isLoading: false,
+                            isFollowing: true,
+                            isRotating: true
+                        });
+
+                        callPositionCallback(currentLat, currentLong, 10, 0);
+                        callPositionCallback(currentLat, currentLong, 10, 10);
+                        expect(toggleSpy).not.toHaveBeenCalled();
+
+                        callPositionCallback(currentLat, currentLong, 10, 10);
+                        expect(toggleSpy).toHaveBeenCalledWith('locationIconArrow');
+                        toggleSpy.calls.reset();
+
+                        jasmine.clock().tick(constants.compassRotationTimeout);
+                        expect(toggleSpy).toHaveBeenCalledWith('locationIcon');
+                        done();
+                    });
+                }).catch(function () {
+                    done.fail("An error has occurred");
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('should change from gps orientation back to cordova-device-orientation after constants.compassRotationTimeout ms of slow gps speed', function (done) {
+                var start = Date.now();
+                jasmine.clock().mockDate(start);
+
+                GeolocationService.enable().then(function () {
+                    GeolocationService.switchState().then(function (state) {
+                        expect(state).toEqual({
+                            isActive: true,
+                            isLoading: false,
+                            isFollowing: true,
+                            isRotating: true
+                        });
+
+                        callPositionCallback(currentLat, currentLong, 10, 0);
+                        callPositionCallback(currentLat, currentLong, 10, 10);
+                        expect(toggleSpy).not.toHaveBeenCalled();
+
+                        callPositionCallback(currentLat, currentLong, 10, 10);
+                        expect(toggleSpy).toHaveBeenCalledWith('locationIconArrow');
+                        toggleSpy.calls.reset();
+
+                        callPositionCallback(currentLat, currentLong, 10, 0);
+                        expect(toggleSpy).not.toHaveBeenCalled();
+
+                        jasmine.clock().tick(constants.compassRotationTimeout + 1);
+
+                        expect(toggleSpy).toHaveBeenCalledWith('locationIcon');
+                        toggleSpy.calls.reset();
+                        callPositionCallback(currentLat, currentLong, 10, 10);
+                        expect(toggleSpy).not.toHaveBeenCalled();
+
+                        done();
+                    });
+                }).catch(function () {
+                    done.fail("An error has occurred");
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('should not change from gps orientation back to cordova-device-orientation after less than constants.compassRotationTimeout ms of slow gps speed', function (done) {
+                var start = Date.now();
+                jasmine.clock().mockDate(start);
+
+                GeolocationService.enable().then(function () {
+                    GeolocationService.switchState().then(function (state) {
+                        expect(state).toEqual({
+                            isActive: true,
+                            isLoading: false,
+                            isFollowing: true,
+                            isRotating: true
+                        });
+
+                        callPositionCallback(currentLat, currentLong, 10, 0);
+                        callPositionCallback(currentLat, currentLong, 10, 10);
+                        expect(toggleSpy).not.toHaveBeenCalled();
+
+                        callPositionCallback(currentLat, currentLong, 10, 10);
+                        expect(toggleSpy).toHaveBeenCalledWith('locationIconArrow');
+                        toggleSpy.calls.reset();
+
+                        callPositionCallback(currentLat, currentLong, 10, 0);
+                        expect(toggleSpy).not.toHaveBeenCalled();
+
+                        jasmine.clock().tick(constants.compassRotationTimeout - 1);
+
+                        expect(toggleSpy).not.toHaveBeenCalled();
+                        callPositionCallback(currentLat, currentLong, 10, 10);
+                        expect(toggleSpy).toHaveBeenCalledWith('locationIconArrow');
+
+                        done();
+                    });
+                }).catch(function () {
+                    done.fail("An error has occurred");
+                });
+
+                $httpBackend.flush();
+            });
+        });
+    });
+
+    describe('backgroundGeolocation handlers', function () {
+        it('should register all the handlers', function (done) {
+            GeolocationService.enable().then(function () {
+                expect(BackgroundGeolocation.callbackFun['location']).toEqual(jasmine.any(Function));
+                expect(BackgroundGeolocation.callbackFun['stationary']).toEqual(jasmine.any(Function));
+                expect(BackgroundGeolocation.callbackFun['error']).toEqual(jasmine.any(Function));
+                expect(BackgroundGeolocation.callbackFun['background']).toEqual(jasmine.any(Function));
+                expect(BackgroundGeolocation.callbackFun['foreground']).toEqual(jasmine.any(Function));
+                done();
+            }).catch(function () {
+                done.fail();
+            });
+
+            $httpBackend.flush();
+        });
+
+        describe('should change BackgroundGeolocation state', function () {
+            var startSpy,
+                stopSpy,
+                configurationSpy,
+                modeSpy;
+
+            beforeEach(function () {
+                startSpy = spyOn(BackgroundGeolocation, 'start');
+                stopSpy = spyOn(BackgroundGeolocation, 'stop');
+                configurationSpy = spyOn(BackgroundGeolocation, 'configure');
+                modeSpy = spyOn(BackgroundGeolocation, 'switchMode');
+            });
+
+            it('going to background state should stop', function (done) {
+                GeolocationService.enable().then(function () {
+                    startSpy.calls.reset();
+                    stopSpy.calls.reset();
+                    configurationSpy.calls.reset();
+                    modeSpy.calls.reset();
+
+                    BackgroundGeolocation.callbackFun['background']();
+
+                    expect(configurationSpy).not.toHaveBeenCalled();
+                    expect(modeSpy).not.toHaveBeenCalled();
+                    expect(startSpy).not.toHaveBeenCalled();
+                    expect(stopSpy).toHaveBeenCalledTimes(1);
+
+                    done();
+                }).catch(function () {
+                    done.fail();
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('going to foreground state should restart', function (done) {
+                GeolocationService.enable().then(function () {
+                    BackgroundGeolocation.callbackFun['background']();
+
+                    startSpy.calls.reset();
+                    stopSpy.calls.reset();
+                    configurationSpy.calls.reset();
+                    modeSpy.calls.reset();
+
+                    BackgroundGeolocation.callbackFun['foreground']();
+
+                    expect(configurationSpy).not.toHaveBeenCalled();
+                    expect(modeSpy).not.toHaveBeenCalled();
+                    expect(startSpy).toHaveBeenCalledTimes(1);
+                    expect(stopSpy).not.toHaveBeenCalled();
+
+                    done();
+                }).catch(function () {
+                    done.fail();
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('going to background state while recording should change configuration', function (done) {
+                GeolocationService.enable().then(function () {
+                    GeolocationService.startRecording({ parentId: 1, id: 1 }).then(function () {
+                        startSpy.calls.reset();
+                        stopSpy.calls.reset();
+                        configurationSpy.calls.reset();
+                        modeSpy.calls.reset();
+
+                        BackgroundGeolocation.callbackFun['background']();
+
+                        expect(configurationSpy).toHaveBeenCalledTimes(1);
+                        expect(modeSpy).not.toHaveBeenCalledWith(BackgroundGeolocation.FOREGROUND_MODE);
+                        expect(startSpy).not.toHaveBeenCalled();
+                        expect(stopSpy).not.toHaveBeenCalled();
+
+                        done();
+                    });
+                }).catch(function () {
+                    done.fail();
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('going back to foreground state while recording should change configuration ', function (done) {
+                GeolocationService.enable().then(function () {
+                    GeolocationService.startRecording({ parentId: 1, id: 1 }).then(function () {
+                        BackgroundGeolocation.callbackFun['background']();
+
+                        startSpy.calls.reset();
+                        stopSpy.calls.reset();
+                        configurationSpy.calls.reset();
+                        modeSpy.calls.reset();
+
+                        BackgroundGeolocation.callbackFun['foreground']();
+
+                        expect(configurationSpy).toHaveBeenCalledTimes(1);
+                        expect(modeSpy).not.toHaveBeenCalledWith(BackgroundGeolocation.BACKGROUND_MODE);
+                        expect(startSpy).not.toHaveBeenCalled();
+                        expect(stopSpy).not.toHaveBeenCalled();
+
+                        done();
+                    });
+                }).catch(function () {
+                    done.fail();
+                });
+
+                $httpBackend.flush();
+            });
         });
     });
 

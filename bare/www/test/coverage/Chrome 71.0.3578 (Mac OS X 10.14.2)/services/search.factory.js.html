@@ -1,0 +1,1769 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for services/search.factory.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">services/</a> search.factory.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">10.1% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>29/287</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0.9% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>2/222</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">19.23% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>5/26</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">10.1% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>29/287</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-yes">1195×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-yes">1195×</span>
+<span class="cline-any cline-yes">1195×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-yes">1195×</span>
+<span class="cline-any cline-yes">1195×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-yes">1195×</span>
+<span class="cline-any cline-yes">1195×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1195×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">148×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/*global angular, JsSearch, stemmer*/
+&nbsp;
+angular.module('webmapp')
+&nbsp;
+    .factory('Search', function Search(
+        Utils,
+        CONFIG
+    ) {
+        var search = {},
+            layersEngine = {},
+            searchConf = CONFIG.SEARCH,
+            confLayers = CONFIG.OVERLAY_LAYERS;
+&nbsp;
+        var confLayersList = confLayers.map(function (layer) {
+            return layer.label;
+        });
+&nbsp;
+        var confLayersMap = confLayers.reduce(function (prev, curr) {
+            prev[curr.label] = curr;
+            return prev;
+        }, {});
+&nbsp;
+        var confLayersMapById = confLayers.reduce(function (prev, curr) {
+            prev[curr.id] = curr;
+            return prev;
+        }, {});
+&nbsp;
+        var activeLayersMap = confLayers.reduce(function (prev, curr) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (!curr.skipSearch) {
+                prev[curr.label] = {
+                    state: false
+                };
+            }
+            return prev;
+        }, {});
+&nbsp;
+        var setupEngine = <span class="fstat-no" title="function not covered" >function (layerName) {</span>
+<span class="cstat-no" title="statement not covered" >            layersEngine[layerName] = new JsSearch.Search('id');</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (searchConf.stemming) {</span>
+<span class="cstat-no" title="statement not covered" >                layersEngine[layerName].tokenizer = new JsSearch.StemmingTokenizer(stemmer, layersEngine[layerName].tokenizer);</span>
+            }
+<span class="cstat-no" title="statement not covered" >            if (searchConf.indexStrategy) {</span>
+<span class="cstat-no" title="statement not covered" >                layersEngine[layerName].indexStrategy = new JsSearch[searchConf.indexStrategy]();</span>
+            }
+<span class="cstat-no" title="statement not covered" >            if (searchConf.TFIDFRanking) {</span>
+<span class="cstat-no" title="statement not covered" >                layersEngine[layerName].searchIndex = new JsSearch.TfIdfSearchIndex('id');</span>
+            }
+<span class="cstat-no" title="statement not covered" >            for (var i in searchConf.indexFields) {</span>
+<span class="cstat-no" title="statement not covered" >                layersEngine[layerName].addIndex(['properties', searchConf.indexFields[i]]);</span>
+            }
+        };
+&nbsp;
+        var addToIndex = <span class="fstat-no" title="function not covered" >function (item, layerName) {</span>
+<span class="cstat-no" title="statement not covered" >            var itemModel = {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            itemModel = angular.extend({</span>
+                id: item.properties.id || Utils.generateUID()
+            }, item);
+<span class="cstat-no" title="statement not covered" >            layersEngine[layerName].addDocument(itemModel);</span>
+        };
+&nbsp;
+        var getAllByLayer = <span class="fstat-no" title="function not covered" >function (layerName) {</span>
+<span class="cstat-no" title="statement not covered" >            return layersEngine[layerName].documents_;</span>
+        };
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (CONFIG.MAP.filters) {
+<span class="cstat-no" title="statement not covered" >            var layerFilterMap = {};</span>
+<span class="cstat-no" title="statement not covered" >            var currentFilterMap = angular.copy(CONFIG.MAP.filters);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            for (var superCategoryId in currentFilterMap) {</span>
+<span class="cstat-no" title="statement not covered" >                if (superCategoryId !== "base_maps" &amp;&amp; currentFilterMap[superCategoryId].sublayers) {</span>
+<span class="cstat-no" title="statement not covered" >                    var sublayers = currentFilterMap[superCategoryId].sublayers;</span>
+<span class="cstat-no" title="statement not covered" >                    for (macroCategoryId in sublayers) {</span>
+<span class="cstat-no" title="statement not covered" >                        if (sublayers[macroCategoryId].items &amp;&amp; sublayers[macroCategoryId].items.length) {</span>
+<span class="cstat-no" title="statement not covered" >                            var layers = sublayers[macroCategoryId].items;</span>
+<span class="cstat-no" title="statement not covered" >                            for (var layerId in layers) {</span>
+<span class="cstat-no" title="statement not covered" >                                var label = confLayersMapById[layers[layerId]] &amp;&amp; confLayersMapById[layers[layerId]].label;</span>
+<span class="cstat-no" title="statement not covered" >                                if (activeLayersMap[label]) {</span>
+<span class="cstat-no" title="statement not covered" >                                    var info = {</span>
+                                        label: label,
+                                        id: layers[layerId]
+                                    };
+<span class="cstat-no" title="statement not covered" >                                    layers[layerId] = info;</span>
+<span class="cstat-no" title="statement not covered" >                                    layerFilterMap[label] = info;</span>
+                                }
+                                else {
+<span class="cstat-no" title="statement not covered" >                                    console.warn("Filter id " + layerId + " missing in OVERLAY_LAYERS");</span>
+                                }
+                            }
+                        } else {
+<span class="cstat-no" title="statement not covered" >                            delete sublayers[macroCategoryId];</span>
+                        }
+                    }
+                } else {
+<span class="cstat-no" title="statement not covered" >                    delete currentFilterMap[superCategoryId];</span>
+                }
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            for (var label in confLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                if (activeLayersMap[label] &amp;&amp; !layerFilterMap[label]) {</span>
+<span class="cstat-no" title="statement not covered" >                    var layer = confLayersMap[label];</span>
+<span class="cstat-no" title="statement not covered" >                    var trackIndex = -1;</span>
+<span class="cstat-no" title="statement not covered" >                    var poiIndex = -1;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (layer.type === 'poi_geojson') {</span>
+<span class="cstat-no" title="statement not covered" >                        var macroCategories = currentFilterMap["pois"].sublayers;</span>
+<span class="cstat-no" title="statement not covered" >                        for (var i = 0; i &lt; macroCategories.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >                            var macroCat = macroCategories[i];</span>
+<span class="cstat-no" title="statement not covered" >                            if (macroCat.label.it === 'altri') {</span>
+<span class="cstat-no" title="statement not covered" >                                poiIndex = i;</span>
+<span class="cstat-no" title="statement not covered" >                                break;</span>
+                            }
+                        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        if (poiIndex == -1) {</span>
+<span class="cstat-no" title="statement not covered" >                            poiIndex = macroCategories.length;</span>
+<span class="cstat-no" title="statement not covered" >                            macroCategories[poiIndex] = {</span>
+                                label: {
+                                    it: "altri",
+                                    en: "others"
+                                },
+                                items: [],
+                                isMacroCategoryGroup: true
+                            };
+                        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        if (poiIndex &gt; -1 &amp;&amp; macroCategories[poiIndex].isMacroCategoryGroup) {</span>
+<span class="cstat-no" title="statement not covered" >                            var layers = macroCategories[poiIndex].items;</span>
+<span class="cstat-no" title="statement not covered" >                            var info = {</span>
+                                label: label,
+                                id: layers[layer.id]
+                            };
+<span class="cstat-no" title="statement not covered" >                            layers.push(info);</span>
+<span class="cstat-no" title="statement not covered" >                            layerFilterMap[label] = info;</span>
+                        }
+                    } else <span class="cstat-no" title="statement not covered" >if (layer.type === 'line_geojson') {</span>
+<span class="cstat-no" title="statement not covered" >                        var macroCategories = currentFilterMap["tracks"].sublayers;</span>
+<span class="cstat-no" title="statement not covered" >                        for (var i = 0; i &lt; macroCategories.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >                            var macroCat = macroCategories[i];</span>
+<span class="cstat-no" title="statement not covered" >                            if (macroCat.label.it === 'altri') {</span>
+<span class="cstat-no" title="statement not covered" >                                trackIndex = i;</span>
+<span class="cstat-no" title="statement not covered" >                                break;</span>
+                            }
+                        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        if (trackIndex == -1) {</span>
+<span class="cstat-no" title="statement not covered" >                            trackIndex = macroCategories.length;</span>
+<span class="cstat-no" title="statement not covered" >                            macroCategories[trackIndex] = {</span>
+                                label: {
+                                    it: "altri",
+                                    en: "others"
+                                },
+                                items: [],
+                                isMacroCategoryGroup: true
+                            };
+                        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        if (trackIndex &gt; -1 &amp;&amp; macroCategories[trackIndex].isMacroCategoryGroup) {</span>
+<span class="cstat-no" title="statement not covered" >                            var layers = macroCategories[trackIndex].items;</span>
+<span class="cstat-no" title="statement not covered" >                            var info = {</span>
+                                label: label,
+                                id: layers[layer.id]
+                            };
+<span class="cstat-no" title="statement not covered" >                            layers.push(info);</span>
+<span class="cstat-no" title="statement not covered" >                            layerFilterMap[label] = info;</span>
+                        }
+                    }
+                }
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var featuresIdByLayerMap = {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            search.setFeaturesIdByLayerMap = <span class="fstat-no" title="function not covered" >function (newMap) {</span></span>
+<span class="cstat-no" title="statement not covered" >                if (typeof newMap === 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                    return;</span>
+                }
+<span class="cstat-no" title="statement not covered" >                featuresIdByLayerMap = newMap;</span>
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            search.getByLayersWithDivider = <span class="fstat-no" title="function not covered" >function (query, layers) {</span></span>
+<span class="cstat-no" title="statement not covered" >                if (!query &amp;&amp; !layers) {</span>
+<span class="cstat-no" title="statement not covered" >                    return [];</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (!query &amp;&amp; !layers.length) {</span>
+<span class="cstat-no" title="statement not covered" >                    return [];</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var results = [],</span>
+                    currentResult = [],
+                    filteredIds = getFilteredFeaturesIds(),
+                    //filterById will change array length
+                    filterBool = filteredIds.length ? true : false;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (query) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (layers.length) {</span>
+<span class="cstat-no" title="statement not covered" >                        for (var c in confLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                            if (typeof layersEngine[c] !== 'undefined' &amp;&amp;</span>
+                                layers.indexOf(c) !== -1) {
+<span class="cstat-no" title="statement not covered" >                                currentResult = layersEngine[c].search(query);</span>
+<span class="cstat-no" title="statement not covered" >                                if (filterBool) {</span>
+<span class="cstat-no" title="statement not covered" >                                    currentResult = filterById(currentResult, filteredIds);</span>
+                                }
+<span class="cstat-no" title="statement not covered" >                                if (currentResult.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                    results.push({</span>
+                                        label: c,
+                                        divider: true
+                                    });
+<span class="cstat-no" title="statement not covered" >                                    results = results.concat(currentResult);</span>
+                                }
+                            }
+                        }
+                    } else {
+<span class="cstat-no" title="statement not covered" >                        for (var c in confLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                            if (typeof layersEngine[c] !== 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                                currentResult = layersEngine[c].search(query);</span>
+<span class="cstat-no" title="statement not covered" >                                if (filterBool) {</span>
+<span class="cstat-no" title="statement not covered" >                                    currentResult = filterById(currentResult, filteredIds);</span>
+                                }
+<span class="cstat-no" title="statement not covered" >                                if (currentResult.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                    results.push({</span>
+                                        label: c,
+                                        divider: true
+                                    });
+<span class="cstat-no" title="statement not covered" >                                    results = results.concat(currentResult);</span>
+                                }
+                            }
+                        }
+                    }
+                } else <span class="cstat-no" title="statement not covered" >if (searchConf.showAllByDefault || filteredIds.length) {</span>
+<span class="cstat-no" title="statement not covered" >                    for (var l in confLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                        if (typeof layersEngine[l] !== 'undefined' &amp;&amp;</span>
+                            layers.indexOf(l) !== -1) {
+<span class="cstat-no" title="statement not covered" >                            currentResult = getAllByLayer(l);</span>
+<span class="cstat-no" title="statement not covered" >                            if (filterBool) {</span>
+<span class="cstat-no" title="statement not covered" >                                currentResult = filterById(currentResult, filteredIds);</span>
+                            }
+<span class="cstat-no" title="statement not covered" >                            if (currentResult.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                results.push({</span>
+                                    label: l,
+                                    divider: true
+                                });
+<span class="cstat-no" title="statement not covered" >                                results = results.concat(currentResult);</span>
+                            }
+                        }
+                    }
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                return results;</span>
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            search.getFeatures = <span class="fstat-no" title="function not covered" >function (query) {</span></span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var results = [],</span>
+                    currentResult = [];
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var filteredIds = getFilteredFeaturesIds();</span>
+<span class="cstat-no" title="statement not covered" >                var filterBool = filteredIds.length ? true : false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                for (var c in confLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (typeof layersEngine[c] !== 'undefined') {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        if (query) {</span>
+<span class="cstat-no" title="statement not covered" >                            currentResult = layersEngine[c].search(query);</span>
+                        } else {
+<span class="cstat-no" title="statement not covered" >                            currentResult = getAllByLayer(c);</span>
+                        }
+<span class="cstat-no" title="statement not covered" >                        if (filterBool) {</span>
+<span class="cstat-no" title="statement not covered" >                            currentResult = filterById(currentResult, filteredIds);</span>
+                        }
+<span class="cstat-no" title="statement not covered" >                        if (currentResult.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                            results = results.concat(currentResult);</span>
+                        }
+                    }
+                }
+&nbsp;
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                return results;</span>
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            search.getByLayersGroupedByLayer = <span class="fstat-no" title="function not covered" >function (query, layers) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var results = {},</span>
+                    currentResult = [];
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var filteredIds = getFilteredFeaturesIds();</span>
+<span class="cstat-no" title="statement not covered" >                var filterBool = filteredIds.length ? true : false;</span>
+<span class="cstat-no" title="statement not covered" >                if (query) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (layers.length) {</span>
+<span class="cstat-no" title="statement not covered" >                        for (var c in confLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                            if (typeof layersEngine[c] !== 'undefined' &amp;&amp;</span>
+                                layers.indexOf(c) !== -1) {
+<span class="cstat-no" title="statement not covered" >                                currentResult = layersEngine[c].search(query);</span>
+<span class="cstat-no" title="statement not covered" >                                if (filterBool) {</span>
+<span class="cstat-no" title="statement not covered" >                                    currentResult = filterById(currentResult, filteredIds);</span>
+                                }
+<span class="cstat-no" title="statement not covered" >                                if (currentResult.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                    results[c] = currentResult;</span>
+                                }
+                            }
+                        }
+                    } else {
+<span class="cstat-no" title="statement not covered" >                        for (var c in confLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                            if (typeof layersEngine[c] !== 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                                currentResult = layersEngine[c].search(query);</span>
+<span class="cstat-no" title="statement not covered" >                                if (filterBool) {</span>
+<span class="cstat-no" title="statement not covered" >                                    currentResult = filterById(currentResult, filteredIds);</span>
+                                }
+<span class="cstat-no" title="statement not covered" >                                if (currentResult.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                    results[c] = currentResult;</span>
+                                }
+                            }
+                        }
+                    }
+&nbsp;
+                } else <span class="cstat-no" title="statement not covered" >if (searchConf.showAllByDefault || filteredIds.length) {</span>
+<span class="cstat-no" title="statement not covered" >                    for (var l in confLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                        if (typeof layersEngine[l] !== 'undefined' &amp;&amp;</span>
+                            layers.indexOf(l) !== -1) {
+<span class="cstat-no" title="statement not covered" >                            currentResult = getAllByLayer(l);</span>
+<span class="cstat-no" title="statement not covered" >                            if (filterBool) {</span>
+<span class="cstat-no" title="statement not covered" >                                currentResult = filterById(currentResult, filteredIds);</span>
+                            }
+<span class="cstat-no" title="statement not covered" >                            if (currentResult.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                results[l] = currentResult;</span>
+                            }
+                        }
+                    }
+                }
+<span class="cstat-no" title="statement not covered" >                return results;</span>
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var getFilteredFeaturesIds = <span class="fstat-no" title="function not covered" >function (type) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var allLayers = false;</span>
+<span class="cstat-no" title="statement not covered" >                if (search.getActiveLayers().length === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                    allLayers = true;</span>
+                }
+<span class="cstat-no" title="statement not covered" >                var result = [];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                for (var superId in currentFilterMap) {</span>
+<span class="cstat-no" title="statement not covered" >                    var filter = [];</span>
+<span class="cstat-no" title="statement not covered" >                    var superCat = currentFilterMap[superId];</span>
+<span class="cstat-no" title="statement not covered" >                    for (var macroId in superCat.sublayers) {</span>
+<span class="cstat-no" title="statement not covered" >                        var macroCat = superCat.sublayers[macroId];</span>
+<span class="cstat-no" title="statement not covered" >                        var cat = []</span>
+<span class="cstat-no" title="statement not covered" >                        for (var catIndex in macroCat.items) {</span>
+<span class="cstat-no" title="statement not covered" >                            var label = macroCat.items[catIndex].label;</span>
+<span class="cstat-no" title="statement not covered" >                            if (macroCat.isMacroCategoryGroup) {</span>
+<span class="cstat-no" title="statement not covered" >                                if (allLayers || activeLayersMap[label].state) {</span>
+<span class="cstat-no" title="statement not covered" >                                    cat.push([label]);</span>
+                                }
+                            } else {
+<span class="cstat-no" title="statement not covered" >                                if (allLayers || activeLayersMap[label].state) {</span>
+<span class="cstat-no" title="statement not covered" >                                    cat.push(label);</span>
+                                }
+                            }
+                        }
+<span class="cstat-no" title="statement not covered" >                        if (cat.length) {</span>
+<span class="cstat-no" title="statement not covered" >                            filter.push(cat);</span>
+                        }
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    var superIds = [];</span>
+<span class="cstat-no" title="statement not covered" >                    for (var i = 0; i &lt; filter.length; i++) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        var arrayOR = [];</span>
+<span class="cstat-no" title="statement not covered" >                        for (var j = 0; j &lt; filter[i].length; j++) {</span>
+<span class="cstat-no" title="statement not covered" >                            var layerId = filter[i][j];</span>
+<span class="cstat-no" title="statement not covered" >                            if (featuresIdByLayerMap[layerId]) {</span>
+<span class="cstat-no" title="statement not covered" >                                arrayOR = arrayOR.concat(featuresIdByLayerMap[layerId]);</span>
+                            }
+                        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        if (type || allLayers) {</span>
+<span class="cstat-no" title="statement not covered" >                            if (superIds.length === 0 &amp;&amp; i === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                superIds = arrayOR;</span>
+                            } else {
+<span class="cstat-no" title="statement not covered" >                                superIds = superIds.concat(arrayOR);</span>
+                            }
+                        } else {
+<span class="cstat-no" title="statement not covered" >                            if (superIds.length === 0 &amp;&amp; i === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                superIds = arrayOR;</span>
+                            } else {
+<span class="cstat-no" title="statement not covered" >                                superIds = superIds.filter(<span class="fstat-no" title="function not covered" >function (n) {</span></span>
+<span class="cstat-no" title="statement not covered" >                                    return arrayOR.indexOf(n) &gt; -1;</span>
+                                });
+                            }
+                        }
+&nbsp;
+                    }
+<span class="cstat-no" title="statement not covered" >                    result = result.concat(superIds);</span>
+                }
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (result &amp;&amp; result.length) {</span>
+<span class="cstat-no" title="statement not covered" >                    var tmp = result.filter(<span class="fstat-no" title="function not covered" >function (ele, pos, result) {</span></span>
+<span class="cstat-no" title="statement not covered" >                        return result.indexOf(ele) === pos;</span>
+                    })
+<span class="cstat-no" title="statement not covered" >                    result = tmp;</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                return result;</span>
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var filterById = <span class="fstat-no" title="function not covered" >function (arrayIds, filterIds) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var newResult = [];</span>
+<span class="cstat-no" title="statement not covered" >                for (var index in arrayIds) {</span>
+<span class="cstat-no" title="statement not covered" >                    var id = arrayIds[index].id;</span>
+<span class="cstat-no" title="statement not covered" >                    var filterId = filterIds.indexOf(id);</span>
+<span class="cstat-no" title="statement not covered" >                    if (filterId &gt; -1) {</span>
+<span class="cstat-no" title="statement not covered" >                        newResult.push(arrayIds[index]);</span>
+<span class="cstat-no" title="statement not covered" >                        filterIds.splice(filterId, 1);</span>
+                    }
+                }
+<span class="cstat-no" title="statement not covered" >                return newResult;</span>
+            };
+        } else {
+            search.getByLayersWithDivider = <span class="fstat-no" title="function not covered" >function (query, layers) {</span>
+<span class="cstat-no" title="statement not covered" >                var results = [],</span>
+                    currentResult = [];
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (query) {</span>
+<span class="cstat-no" title="statement not covered" >                    for (var c in confLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                        if (typeof layersEngine[c] !== 'undefined' &amp;&amp;</span>
+                            layers.indexOf(c) !== -1) {
+<span class="cstat-no" title="statement not covered" >                            currentResult = layersEngine[c].search(query);</span>
+<span class="cstat-no" title="statement not covered" >                            if (currentResult.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                results.push({</span>
+                                    label: c,
+                                    divider: true
+                                });
+<span class="cstat-no" title="statement not covered" >                                results = results.concat(currentResult);</span>
+                            }
+                        }
+                    }
+                } else <span class="cstat-no" title="statement not covered" >if (searchConf.showAllByDefault) {</span>
+<span class="cstat-no" title="statement not covered" >                    for (var l in confLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                        if (typeof layersEngine[l] !== 'undefined' &amp;&amp;</span>
+                            layers.indexOf(l) !== -1) {
+<span class="cstat-no" title="statement not covered" >                            results.push({</span>
+                                label: l,
+                                divider: true
+                            });
+<span class="cstat-no" title="statement not covered" >                            results = results.concat(getAllByLayer(l));</span>
+                        }
+                    }
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                return results;</span>
+            };
+&nbsp;
+            search.getByLayersGroupedByLayer = <span class="fstat-no" title="function not covered" >function (query, layers) {</span>
+<span class="cstat-no" title="statement not covered" >                var results = {},</span>
+                    currentResult = [];
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (query) {</span>
+<span class="cstat-no" title="statement not covered" >                    for (var c in confLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                        if (typeof layersEngine[c] !== 'undefined' &amp;&amp;</span>
+                            layers.indexOf(c) !== -1) {
+<span class="cstat-no" title="statement not covered" >                            currentResult = layersEngine[c].search(query);</span>
+<span class="cstat-no" title="statement not covered" >                            if (currentResult.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                results[c] = currentResult;</span>
+                            }
+                        }
+                    }
+                } else <span class="cstat-no" title="statement not covered" >if (searchConf.showAllByDefault) {</span>
+<span class="cstat-no" title="statement not covered" >                    for (var l in confLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                        if (typeof layersEngine[l] !== 'undefined' &amp;&amp;</span>
+                            layers.indexOf(l) !== -1) {
+<span class="cstat-no" title="statement not covered" >                            results[l] = getAllByLayer(l);</span>
+                        }
+                    }
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                return results;</span>
+            };
+        }
+&nbsp;
+        search.addToIndex = <span class="fstat-no" title="function not covered" >function (item, layerName) {</span>
+<span class="cstat-no" title="statement not covered" >            if (typeof confLayersMap[layerName] !== 'undefined' &amp;&amp;</span>
+                typeof layersEngine[layerName] === 'undefined') {
+<span class="cstat-no" title="statement not covered" >                setupEngine(layerName);</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (typeof layersEngine[layerName] !== 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                addToIndex(item, layerName);</span>
+            }
+        };
+&nbsp;
+        search.setActiveLayers = <span class="fstat-no" title="function not covered" >function (layersName) {</span>
+<span class="cstat-no" title="statement not covered" >            if (typeof layersName === 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                return;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            for (var i in activeLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                if (layersName.indexOf(i) !== -1) {</span>
+<span class="cstat-no" title="statement not covered" >                    activeLayersMap[i].state = true;</span>
+                } else {
+<span class="cstat-no" title="statement not covered" >                    activeLayersMap[i].state = false;</span>
+                }
+            }
+        };
+&nbsp;
+        search.getActiveLayers = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            var res = [];</span>
+<span class="cstat-no" title="statement not covered" >            for (var i in activeLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                if (activeLayersMap[i].state) {</span>
+<span class="cstat-no" title="statement not covered" >                    res.push(i);</span>
+                }
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return res;</span>
+        };
+&nbsp;
+        search.setActiveAllLayers = <span class="fstat-no" title="function not covered" >function () {</span>
+            // for (var i in activeLayersMap) {
+            //     activeLayersMap[i].state = true;
+            // }
+        };
+&nbsp;
+        search.getActiveLayersMap = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            return activeLayersMap;</span>
+        };
+&nbsp;
+        search.getAllWithDivider = <span class="fstat-no" title="function not covered" >function (query) {</span>
+<span class="cstat-no" title="statement not covered" >            return search.getByLayersWithDivider(query, confLayersList);</span>
+        };
+&nbsp;
+        search.getAllGroupedByLayer = <span class="fstat-no" title="function not covered" >function (query) {</span>
+<span class="cstat-no" title="statement not covered" >            var results = {},</span>
+                currentResult = [];
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (query) {</span>
+<span class="cstat-no" title="statement not covered" >                for (var c in confLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (typeof layersEngine[c] !== 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                        currentResult = layersEngine[c].search(query);</span>
+<span class="cstat-no" title="statement not covered" >                        if (currentResult.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                            results[c] = currentResult;</span>
+                        }
+                    }
+                }
+            } else <span class="cstat-no" title="statement not covered" >if (searchConf.showAllByDefault) {</span>
+<span class="cstat-no" title="statement not covered" >                for (var l in confLayersMap) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (typeof layersEngine[l] !== 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                        results[l] = getAllByLayer(l);</span>
+                    }
+                }
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return results;</span>
+        };
+&nbsp;
+        search.clearEngine = <span class="fstat-no" title="function not covered" >function (layerName) {</span>
+<span class="cstat-no" title="statement not covered" >            if (!layerName) {</span>
+<span class="cstat-no" title="statement not covered" >                for (var i in layersEngine) {</span>
+<span class="cstat-no" title="statement not covered" >                    delete layersEngine[i];</span>
+                }
+<span class="cstat-no" title="statement not covered" >                layersEngine = {};</span>
+            }
+            else <span class="cstat-no" title="statement not covered" >if (typeof confLayersMap[layerName] !== 'undefined' &amp;&amp;</span>
+                typeof layersEngine[layerName] !== 'undefined') {
+<span class="cstat-no" title="statement not covered" >                delete layersEngine[layerName];</span>
+            }
+        };
+&nbsp;
+        return search;
+    });
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 09:34:49 GMT+0100 (CET)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

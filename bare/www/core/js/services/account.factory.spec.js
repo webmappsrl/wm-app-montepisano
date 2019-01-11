@@ -728,6 +728,31 @@ describe('Account.Factory', function () {
             $httpBackend.flush();
         });
 
+        it('it should reject as request fail', function (done) {
+            spyOn(Auth, 'getUserData').and.returnValue(udata);
+            spyOn(Auth, 'setUserData').and.returnValue(true);
+
+            var data = {};
+            var expectedResponse = 'not found';
+
+            $httpBackend.expect('POST', baseUrl + endpoint + 'get-user-card', data, {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json, text/plain, */*',
+                'X-USER-SESSION-TOKEN': udata.sessid,
+                'X-CSRF-Token': udata.api_token
+            }).respond(404, expectedResponse);
+
+            var promise = accountService.refreshCard();
+            promise.then(function (response) {
+                done.fail('it should reject');
+            }).catch(function (error) {
+                expect(error).toEqual(expectedResponse);
+                done();
+            });
+
+            $httpBackend.flush();
+        });
+
         afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();

@@ -1,0 +1,3107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for components/main/main.controller.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">components/main/</a> main.controller.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">33.12% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>152/459</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">19.13% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>57/298</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">19.51% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>16/82</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">33.12% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>152/459</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811
+812
+813
+814
+815
+816
+817
+818
+819
+820
+821
+822
+823
+824
+825
+826
+827
+828
+829
+830
+831
+832
+833
+834
+835
+836
+837
+838
+839
+840
+841
+842
+843
+844
+845
+846
+847
+848
+849
+850
+851
+852
+853
+854
+855
+856
+857
+858
+859
+860
+861
+862
+863
+864
+865
+866
+867
+868
+869
+870
+871
+872
+873
+874
+875
+876
+877
+878
+879
+880
+881
+882
+883
+884
+885
+886
+887
+888
+889
+890
+891
+892
+893
+894
+895
+896
+897
+898
+899
+900
+901
+902
+903
+904
+905
+906
+907
+908
+909
+910
+911
+912
+913
+914
+915
+916
+917
+918
+919
+920
+921
+922
+923
+924
+925
+926
+927
+928
+929
+930
+931
+932
+933
+934
+935
+936
+937
+938
+939
+940
+941
+942
+943
+944
+945
+946
+947
+948
+949
+950
+951
+952
+953
+954
+955
+956
+957
+958
+959
+960
+961
+962
+963
+964
+965
+966
+967
+968
+969
+970
+971
+972
+973
+974
+975
+976
+977
+978
+979
+980
+981
+982
+983
+984
+985
+986
+987
+988
+989
+990
+991
+992
+993
+994
+995
+996
+997
+998
+999
+1000
+1001
+1002
+1003
+1004
+1005
+1006
+1007
+1008
+1009
+1010
+1011
+1012
+1013
+1014
+1015</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">angular.module('webmapp')
+&nbsp;
+    .controller('MainController', function MainController(
+        $cordovaDeeplinks,
+        $cordovaSocialSharing,
+        $ionicModal,
+        $ionicPlatform,
+        $ionicPopup,
+        $ionicSideMenuDelegate,
+        $ionicScrollDelegate,
+        $rootScope,
+        $scope,
+        $state,
+        $translate,
+        Auth,
+        Communication,
+        CONFIG,
+        GeolocationService,
+        MapService,
+        Model,
+        Utils
+    ) {
+        var vm = {},
+            registeredEvents = [];
+&nbsp;
+        var overlaysGroupMap = Model.getOverlaysGroupMap(),
+            overlayMap = Model.getOverlaysMap();
+&nbsp;
+        var hideExpanderInDetails = CONFIG.OPTIONS.hideExpanderInDetails;
+&nbsp;
+        var shareScope = $rootScope.$new(),
+            shareModal;
+&nbsp;
+        var registeredEvents = [];
+&nbsp;
+        var trackRecordingEnabled = !Utils.isBrowser() &amp;&amp; CONFIG.NAVIGATION &amp;&amp; CONFIG.NAVIGATION.enableTrackRecording;
+&nbsp;
+        vm.geolocationState = {
+            isActive: false,
+            isLoading: false,
+            isFollowing: false,
+            isRotating: false
+        };
+        vm.navigation = {
+            state: {
+                isActive: false,
+                isPaused: false
+            },
+            stats: {
+                time: 0,
+                distance: 0,
+                averageSpeed: 0,
+                currentSpeed: 0
+            },
+            resetStats: function () {
+                vm.navigation.stats.time = 0;
+                vm.navigation.stats.distance = 0;
+                vm.navigation.stats.averageSpeed = 0;
+                vm.navigation.stats.currentSpeed = 0;
+            }
+        };
+        vm.navigationInterval = null;
+&nbsp;
+        vm.userData = {};
+&nbsp;
+        vm.speedTextType = 'average';
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (CONFIG.MAIN &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION </span>&amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION.defaultSpeedType </span>&amp;&amp; <span class="branch-3 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION.defaultSpeedType === 'current')</span> {
+<span class="cstat-no" title="statement not covered" >            vm.speedTextType = 'current';</span>
+        }
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (CONFIG.NAVIGATION &amp;&amp; CONFIG.NAVIGATION.defaultSpeedType &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >CONFIG.NAVIGATION.defaultSpeedType === 'current')</span> {
+<span class="cstat-no" title="statement not covered" >            vm.speedTextType = 'current';</span>
+        } else {
+            vm.speedTextType = 'average';
+        }
+&nbsp;
+        Utils.createModal('core/js/modals/shareModal.html', {
+            backdropClickToClose: true,
+            hardwareBackButtonClose: true
+        }, shareScope).then(function (modal) {
+            shareModal = modal;
+        });
+&nbsp;
+        shareScope.vm = {};
+        shareScope.vm.textblock = '';
+        shareScope.vm.emailblock = '';
+&nbsp;
+        shareScope.vm.hide = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            if (!shareScope.shareInProgress) {</span>
+<span class="cstat-no" title="statement not covered" >                shareModal.hide();</span>
+            }
+        };
+&nbsp;
+        shareScope.vm.sendText = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            var currentRequest;</span>
+<span class="cstat-no" title="statement not covered" >            var re = /^(([^&lt;&gt;()\[\]\\.,;:\s@"]+(\.[^&lt;&gt;()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;</span>
+<span class="cstat-no" title="statement not covered" >            if (shareScope.vm.emailblock === '' || !re.test(shareScope.vm.emailblock)) {</span>
+<span class="cstat-no" title="statement not covered" >                $ionicPopup.alert({</span>
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Inserisci un'email valida per continuare")
+                });
+            } else {
+<span class="cstat-no" title="statement not covered" >                shareScope.vm.sendInProgress = true;</span>
+<span class="cstat-no" title="statement not covered" >                currentRequest = Communication.post(CONFIG.REPORT.apiUrl, {</span>
+                    email: shareScope.vm.emailblock,
+                    to: CONFIG.REPORT.defaultEmail,
+                    content: shareScope.vm.textblock,
+                    lat: vm.centerCoords.lat,
+                    lng: vm.centerCoords.lng,
+                    phone: shareScope.vm.phoneNumber,
+                    type: 'email'
+                });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                currentRequest</span>
+                    .then(<span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                        shareScope.vm.sendInProgress = false;</span>
+<span class="cstat-no" title="statement not covered" >                        shareScope.vm.sendSuccess = true;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        setTimeout(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                            shareModal.hide();</span>
+                        }, 1000);
+                    },
+<span class="fstat-no" title="function not covered" >                        function (error) {</span>
+<span class="cstat-no" title="statement not covered" >                            $ionicPopup.alert({</span>
+                                title: $translate.instant("ATTENZIONE"),
+                                template: $translate.instant("Si è verificato un errore di connessione, riprova più tardi")
+                            });
+<span class="cstat-no" title="statement not covered" >                            shareScope.vm.sendInProgress = false;</span>
+                        });
+            }
+        };
+&nbsp;
+        vm.hideDeactiveCentralPointer = CONFIG.OPTIONS &amp;&amp; CONFIG.OPTIONS.hideDeactiveCentralPointer;
+        vm.toggleMapInDetails = CONFIG.OPTIONS &amp;&amp; CONFIG.OPTIONS.toggleMapInDetails;
+&nbsp;
+        vm.isCoordsBlockExpanded = CONFIG.OPTIONS.coordsNotExpanded ? <span class="branch-0 cbranch-no" title="branch not covered" >false </span>: true;
+&nbsp;
+        vm.navigationAvailable = false;
+        vm.isNavigating = false;
+        vm.isPaused = false;
+        vm.stopNavigationUrlParams = {
+            parentId: null,
+            id: null
+        };
+&nbsp;
+        vm.routeId = CONFIG.routeID ? <span class="branch-0 cbranch-no" title="branch not covered" >CONFIG.routeID </span>: 0;
+&nbsp;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!Date.now) {
+<span class="cstat-no" title="statement not covered" >            Date.now = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                return new Date().getTime();</span>
+            };
+        }
+&nbsp;
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (CONFIG.NAVIGATION &amp;&amp; CONFIG.NAVIGATION.activate &amp;&amp; !Utils.isBrowser()) {
+            vm.navigationAvailable = true;
+        }
+&nbsp;
+        vm.heading = 0;
+        vm.colors = CONFIG.MAIN ? <span class="branch-0 cbranch-no" title="branch not covered" >CONFIG.MAIN.STYLE </span>: CONFIG.STYLE;
+        vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
+        vm.showLocate = !CONFIG.MAP.hideLocationControl &amp;&amp; !Utils.isBrowser() ||
+<span class="branch-2 cbranch-no" title="branch not covered" >            Utils.isBrowser() </span>&amp;&amp; <span class="branch-3 cbranch-no" title="branch not covered" >!CONFIG.MAP.hideLocationControl </span>&amp;&amp; <span class="branch-4 cbranch-no" title="branch not covered" >window.location.protocol === "https:";</span>
+&nbsp;
+        vm.viewTitle = $translate.instant("MAPPA");
+        vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
+        vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
+        vm.useUTM32 = false;
+        vm.useShare = Utils.isBrowser() ? <span class="branch-0 cbranch-no" title="branch not covered" >false </span>: (CONFIG.OPTIONS.allowCoordsShare || (<span class="branch-1 cbranch-no" title="branch not covered" >CONFIG.MAIN </span>&amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >CONFIG.MAIN.OPTIONS.allowCoordsShare)</span>);
+        vm.useReport =
+            (CONFIG.REPORT &amp;&amp; (
+                (CONFIG.REPORT.email &amp;&amp; CONFIG.REPORT.email.apiUrl &amp;&amp; CONFIG.REPORT.email.default) ||
+                (<span class="branch-4 cbranch-no" title="branch not covered" >CONFIG.REPORT.sms </span>&amp;&amp; <span class="branch-5 cbranch-no" title="branch not covered" >CONFIG.REPORT.sms.default)</span>)) ||
+            (<span class="branch-6 cbranch-no" title="branch not covered" >CONFIG.MAIN </span>&amp;&amp; <span class="branch-7 cbranch-no" title="branch not covered" >CONFIG.MAIN.REPORT </span>&amp;&amp; (
+                (<span class="branch-8 cbranch-no" title="branch not covered" >CONFIG.MAIN.REPORT.email </span>&amp;&amp; <span class="branch-9 cbranch-no" title="branch not covered" >CONFIG.MAIN.REPORT.email.apiUrl </span>&amp;&amp; <span class="branch-10 cbranch-no" title="branch not covered" >CONFIG.MAIN.REPORT.email.default)</span> ||
+                (<span class="branch-11 cbranch-no" title="branch not covered" >CONFIG.MAIN.REPORT.sms </span>&amp;&amp; <span class="branch-12 cbranch-no" title="branch not covered" >CONFIG.MAIN.REPORT.sms.default)</span>));
+&nbsp;
+        vm.showRightMenu = false;
+        vm.filterIcon = CONFIG.OPTIONS.filterIcon;
+&nbsp;
+        $scope.$watch(
+            function () {
+                return $ionicSideMenuDelegate.isOpenLeft();
+            },
+            function (isOpen) {
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (isOpen) {
+<span class="cstat-no" title="statement not covered" >                    vm.showRightMenu = false;</span>
+                }
+            });
+&nbsp;
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (trackRecordingEnabled) {
+            var saveModalScope = $rootScope.$new();
+            var saveModal = {};
+&nbsp;
+            saveModalScope.vm = {};
+            saveModalScope.vm.operation = 'salva';
+            saveModalScope.vm.COLORS = vm.colors;
+            saveModalScope.vm.inputError = false;
+            saveModalScope.vm.errorMessage = "";
+&nbsp;
+            $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/saveRecordModal.html', {
+                scope: saveModalScope,
+                animation: 'slide-in-up',
+                hardwareBackButtonClose: false,
+                backdropClickToClose: false
+            }).then(function (modalObj) {
+                saveModal = modalObj;
+            });
+&nbsp;
+            saveModalScope.vm.hide = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                $ionicPopup.confirm({</span>
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Vuoi cancellare la traccia corrente?")
+                }).then(<span class="fstat-no" title="function not covered" >function (res) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (res) {</span>
+<span class="cstat-no" title="statement not covered" >                        MapService.removeUserPolyline();</span>
+<span class="cstat-no" title="statement not covered" >                        saveModal.hide();</span>
+                    }
+                });
+            };
+            saveModalScope.vm.title = "";
+            saveModalScope.vm.description = "";
+&nbsp;
+            saveModalScope.submitData = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                var title = saveModalScope.vm.title;</span>
+<span class="cstat-no" title="statement not covered" >                title = title.trim();</span>
+<span class="cstat-no" title="statement not covered" >                var description = saveModalScope.vm.description.trim();</span>
+<span class="cstat-no" title="statement not covered" >                if (title === "") {</span>
+<span class="cstat-no" title="statement not covered" >                    saveModalScope.vm.errorMessage = "Compila tutti i campi richiesti";</span>
+<span class="cstat-no" title="statement not covered" >                    saveModalScope.vm.inputError = true;</span>
+                } else {
+<span class="cstat-no" title="statement not covered" >                    var info = {</span>
+                        name: title,
+                        description: description,
+                        stats: {
+                            time: vm.navigation.stats.time,
+                            distance: Math.round(vm.navigation.stats.distance),
+                            averageSpeed: Math.round(10 * vm.navigation.stats.averageSpeed) / 10
+                        }
+                    };
+<span class="cstat-no" title="statement not covered" >                    MapService.saveUserPolyline(info);</span>
+<span class="cstat-no" title="statement not covered" >                    MapService.removeUserPolyline();</span>
+<span class="cstat-no" title="statement not covered" >                    saveModal.hide();</span>
+                }
+&nbsp;
+            }
+&nbsp;
+            registeredEvents.push(
+                $rootScope.$on('recordingState-changed', function (e, value) {
+                    <span class="missing-if-branch" title="if path not taken" >I</span>if (value.isActive == false &amp;&amp; MapService.getUserPolyline() !== null &amp;&amp; MapService.getUserPolyline().getLatLngs().length &gt;= 2) {
+<span class="cstat-no" title="statement not covered" >                        saveModalScope.vm.title = "";</span>
+<span class="cstat-no" title="statement not covered" >                        saveModalScope.vm.description = "";</span>
+<span class="cstat-no" title="statement not covered" >                        saveModalScope.vm.operation = "salva";</span>
+<span class="cstat-no" title="statement not covered" >                        saveModalScope.vm.featureId = "";</span>
+<span class="cstat-no" title="statement not covered" >                        saveModal.show();</span>
+<span class="cstat-no" title="statement not covered" >                        saveModalScope.vm.inputError = false;</span>
+<span class="cstat-no" title="statement not covered" >                        saveModalScope.vm.errorMessage = "";</span>
+                    }
+                })
+            );
+        }
+&nbsp;
+        vm.openFilters = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            vm.showRightMenu = false;</span>
+<span class="cstat-no" title="statement not covered" >            $rootScope.$emit("openFilters");</span>
+        }
+&nbsp;
+        vm.shareCurrentPosition = <span class="fstat-no" title="function not covered" >function ($event) {</span>
+<span class="cstat-no" title="statement not covered" >            $event.stopPropagation();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (!navigator.onLine) {</span>
+<span class="cstat-no" title="statement not covered" >                $ionicPopup.alert({</span>
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Questa funzionalità è disponibile solo con una connessione attiva. Controlla la tua connessione e riprova")
+                });
+<span class="cstat-no" title="statement not covered" >                return;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (!vm.useShare) {</span>
+<span class="cstat-no" title="statement not covered" >                return;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var currentPosition = GeolocationService.getCurrentPosition();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var title = CONFIG.MAIN ? CONFIG.MAIN.OPTIONS.title + ' ' + CONFIG.OPTIONS.title : CONFIG.OPTIONS.title;</span>
+<span class="cstat-no" title="statement not covered" >            title = Utils.decodeHtml(title);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var message = $translate.instant("Ciao. Sto usando l'app") + ' ' + title + '. ';</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (CONFIG.OPTIONS.shareInternalUrl) {</span>
+<span class="cstat-no" title="statement not covered" >                message += '';</span>
+<span class="cstat-no" title="statement not covered" >                title += ' - ' + $translate.instant("Dove sono");</span>
+            }
+            else {
+<span class="cstat-no" title="statement not covered" >                message += $translate.instant("Dai un'occhiata a questo posto");</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (CONFIG.OPTIONS.sharePositionCoords ||</span>
+                (CONFIG.MAIN &amp;&amp; CONFIG.MAIN.OPTIONS.sharePositionCoords &amp;&amp; CONFIG.OPTIONS.sharePositionCoords !== false)) {
+<span class="cstat-no" title="statement not covered" >                if (currentPosition &amp;&amp; currentPosition.lat &amp;&amp; currentPosition.long) {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.sharePosition({</span>
+                        lat: currentPosition.lat,
+                        long: currentPosition.long,
+                        zoom: CONFIG.MAP.maxZoom
+                    }, message, title);
+                }
+                else {
+<span class="cstat-no" title="statement not covered" >                    $ionicPopup.alert({</span>
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Per poter condividere la tua posizione attuale assicurati di essere geolocalizzato")
+                    });
+                }
+            }
+            else {
+<span class="cstat-no" title="statement not covered" >                if (currentPosition &amp;&amp; (Utils.distanceInMeters(currentPosition.lat, currentPosition.long, vm.centerCoords.lat, vm.centerCoords.lng) &gt; 40)) {</span>
+<span class="cstat-no" title="statement not covered" >                    $ionicPopup.confirm({</span>
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("La posizione che stai per condividere non è la tua posizione attuale ma la posizione segnata dalla croce nel centro della mappa. Per condividere la tua posizione attuale assicurati di avere il centro della mappa vicino alla tua posizione. Vuoi condividere comunque queste coordinate?")
+                    }).then(<span class="fstat-no" title="function not covered" >function (res) {</span>
+<span class="cstat-no" title="statement not covered" >                        if (res) {</span>
+<span class="cstat-no" title="statement not covered" >                            vm.sharePosition({</span>
+                                lat: vm.centerCoords.lat,
+                                long: vm.centerCoords.lng,
+                                zoom: MapService.getZoom()
+                            }, message, title);
+                        }
+                    });
+                } else {
+<span class="cstat-no" title="statement not covered" >                    vm.sharePosition({</span>
+                        lat: vm.centerCoords.lat,
+                        long: vm.centerCoords.lng,
+                        zoom: MapService.getZoom()
+                    }, message, title);
+                }
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            shareOptions = {</span>
+                message: message,
+                mailSubject: title,
+            };
+        };
+&nbsp;
+        vm.sharePosition = <span class="fstat-no" title="function not covered" >function (position, message, title) {</span>
+<span class="cstat-no" title="statement not covered" >            var url = '';</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (CONFIG.OPTIONS.shareInternalUrl) {</span>
+<span class="cstat-no" title="statement not covered" >                url = CONFIG.COMMUNICATION.baseUrl + "#/?map=" + position.zoom + "/" + position.lat + "/" + position.long;</span>
+            }
+            else {
+<span class="cstat-no" title="statement not covered" >                url = "http://www.google.com/maps/place/" +</span>
+                    position.lat + ',' +
+                    position.long;
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            $cordovaSocialSharing</span>
+                .share(
+                    message,
+                    title,
+                    undefined,
+                    url)
+                .then(<span class="fstat-no" title="function not covered" >function (result) {</span>
+                    // Success!
+                }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    console.err(err);</span>
+                });
+        };
+&nbsp;
+        var sendSMS = <span class="fstat-no" title="function not covered" >function (text) {</span>
+<span class="cstat-no" title="statement not covered" >            if (CONFIG.REPORT.sms || (CONFIG.MAIN &amp;&amp; CONFIG.MAIN.REPORT.sms)) {</span>
+<span class="cstat-no" title="statement not covered" >                var smsTo = '';</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (CONFIG.REPORT &amp;&amp; CONFIG.REPORT.sms &amp;&amp; CONFIG.REPORT.sms.default) {</span>
+<span class="cstat-no" title="statement not covered" >                    smsTo = CONFIG.REPORT.sms.default;</span>
+                } else <span class="cstat-no" title="statement not covered" >if (CONFIG.MAIN &amp;&amp; CONFIG.MAIN.REPORT &amp;&amp; CONFIG.MAIN.REPORT.sms &amp;&amp; CONFIG.MAIN.REPORT.sms.default) {</span>
+<span class="cstat-no" title="statement not covered" >                    smsTo = CONFIG.MAIN.REPORT.sms.default;</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (smsTo !== '') {</span>
+<span class="cstat-no" title="statement not covered" >                    $cordovaSocialSharing</span>
+                        .shareViaSMS(text, smsTo)
+                        .then(<span class="fstat-no" title="function not covered" >function (result) {</span>
+<span class="cstat-no" title="statement not covered" >                            return;</span>
+                        }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                            return;</span>
+                        });
+                }
+            }
+        };
+&nbsp;
+        vm.reportCurrentPosition = <span class="fstat-no" title="function not covered" >function ($event) {</span>
+<span class="cstat-no" title="statement not covered" >            var reportPosition = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                var position = GeolocationService.getCurrentPosition();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (position &amp;&amp; position.lat &amp;&amp; position.long) {</span>
+<span class="cstat-no" title="statement not covered" >                    text = "ALERT MSG - Myeasyroute user: " +</span>
+                        vm.userData.user_email + " nome: " + vm.userData.first_name + " cognome: " + vm.userData.last_name + " https://www.google.com/maps/search/?api=1&amp;query=" +
+                        position.lat + ',' +
+                        position.long;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (CONFIG.REPORT.email || (CONFIG.MAIN &amp;&amp; CONFIG.MAIN.REPORT.email)) {</span>
+<span class="cstat-no" title="statement not covered" >                        $ionicPopup.confirm({</span>
+                            title: $translate.instant("ATTENZIONE"),
+                            template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                        })
+                            .then(<span class="fstat-no" title="function not covered" >function (res) {</span>
+<span class="cstat-no" title="statement not covered" >                                if (res) {</span>
+<span class="cstat-no" title="statement not covered" >                                    var emailTo = '',</span>
+                                        url = '';
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                    if (CONFIG.REPORT &amp;&amp; CONFIG.REPORT.email &amp;&amp; CONFIG.REPORT.email.default) {</span>
+<span class="cstat-no" title="statement not covered" >                                        emailTo = CONFIG.REPORT.email.default;</span>
+                                    } else <span class="cstat-no" title="statement not covered" >if (CONFIG.MAIN &amp;&amp; CONFIG.MAIN.REPORT &amp;&amp; CONFIG.MAIN.REPORT.email &amp;&amp; CONFIG.MAIN.REPORT.email.default) {</span>
+<span class="cstat-no" title="statement not covered" >                                        emailTo = CONFIG.MAIN.REPORT.email.default;</span>
+                                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                    if (CONFIG.REPORT &amp;&amp; CONFIG.REPORT.email &amp;&amp; CONFIG.REPORT.email.apiUrl) {</span>
+<span class="cstat-no" title="statement not covered" >                                        url = CONFIG.REPORT.email.apiUrl;</span>
+                                    } else <span class="cstat-no" title="statement not covered" >if (CONFIG.MAIN &amp;&amp; CONFIG.MAIN.REPORT &amp;&amp; CONFIG.MAIN.REPORT.email &amp;&amp; CONFIG.MAIN.REPORT.email.apiUrl) {</span>
+<span class="cstat-no" title="statement not covered" >                                        url = CONFIG.MAIN.REPORT.email.apiUrl;</span>
+                                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                    var app = CONFIG.OPTIONS.title;</span>
+<span class="cstat-no" title="statement not covered" >                                    if (CONFIG.MAIN) {</span>
+<span class="cstat-no" title="statement not covered" >                                        app = CONFIG.MAIN.OPTIONS.title + " - " + app;</span>
+                                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                    if (emailTo !== '' &amp;&amp; url !== '') {</span>
+<span class="cstat-no" title="statement not covered" >                                        var currentRequest = Communication.callAPI(url, {</span>
+                                            email: vm.userData.user_email,
+                                            firstName: vm.userData.first_name,
+                                            lastName: vm.userData.last_name,
+                                            to: emailTo,
+                                            lat: position.lat,
+                                            lng: position.long,
+                                            type: "alert",
+                                            app: app
+                                        });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                        currentRequest</span>
+                                            .then(<span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                                                return;</span>
+                                            },
+<span class="fstat-no" title="function not covered" >                                                function (error) {</span>
+<span class="cstat-no" title="statement not covered" >                                                    return;</span>
+                                                });
+                                    }
+<span class="cstat-no" title="statement not covered" >                                    sendSMS(text);</span>
+                                }
+                            });
+                    } else {
+<span class="cstat-no" title="statement not covered" >                        $ionicPopup.confirm({</span>
+                            title: $translate.instant("ATTENZIONE"),
+                            template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
+                        })
+                            .then(<span class="fstat-no" title="function not covered" >function (res) {</span>
+<span class="cstat-no" title="statement not covered" >                                if (res) {</span>
+<span class="cstat-no" title="statement not covered" >                                    sendSMS(text);</span>
+                                }
+                            });
+                    }
+                } else <span class="cstat-no" title="statement not covered" >if (position === ERRORS.OUTSIDE_BOUNDING_BOX) {</span>
+<span class="cstat-no" title="statement not covered" >                    $ionicPopup.alert({</span>
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa: la richiesta di aiuto non è disponibile.")
+                    });
+                } else {
+<span class="cstat-no" title="statement not covered" >                    $ionicPopup.alert({</span>
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Devi essere localizzato per segnalare la tua posizione")
+                    });
+                }
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (GeolocationService.isActive()) {</span>
+<span class="cstat-no" title="statement not covered" >                reportPosition();</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                GeolocationService.enable().then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                    reportPosition();</span>
+                });
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            $event.stopPropagation();</span>
+        };
+&nbsp;
+        vm.centerOnMe = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            if (!GeolocationService.isActive()) {</span>
+<span class="cstat-no" title="statement not covered" >                GeolocationService.enable();</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                GeolocationService.switchState();</span>
+            }
+        };
+&nbsp;
+        vm.goBack = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            if (history.length &gt; 1) {</span>
+<span class="cstat-no" title="statement not covered" >                history.back();</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                Utils.goTo('/');</span>
+            }
+        };
+&nbsp;
+        vm.toggleMap = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            if (!vm.isNavigating) {</span>
+<span class="cstat-no" title="statement not covered" >                vm.isMapPage = !vm.isMapPage;</span>
+<span class="cstat-no" title="statement not covered" >                vm.mapView = vm.isMapPage;</span>
+<span class="cstat-no" title="statement not covered" >                $rootScope.$emit('expand-map', vm.isMapPage);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                setTimeout(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                    MapService.adjust();</span>
+                }, 100);
+            }
+            else {
+<span class="cstat-no" title="statement not covered" >                if (vm.isNavigable) {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.isNavigable = false;</span>
+<span class="cstat-no" title="statement not covered" >                    $rootScope.isNavigable = false;</span>
+<span class="cstat-no" title="statement not covered" >                    $rootScope.$emit('item-navigable', vm.isNavigable);</span>
+                }
+<span class="cstat-no" title="statement not covered" >                Utils.goBack();</span>
+            }
+        };
+&nbsp;
+        vm.returnToMap = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            Utils.goTo('/');</span>
+<span class="cstat-no" title="statement not covered" >            if ($state.params.parentId &amp;&amp; $state.params.id) {</span>
+<span class="cstat-no" title="statement not covered" >                MapService.setFilter($state.params.parentId.replace(/_/g, " "), true);</span>
+<span class="cstat-no" title="statement not covered" >                if (vm.isNavigable) {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.isNavigable = false;</span>
+<span class="cstat-no" title="statement not covered" >                    $rootScope.isNavigable = false;</span>
+<span class="cstat-no" title="statement not covered" >                    $rootScope.$emit('item-navigable', vm.isNavigable);</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                $rootScope.highlightTrack = {</span>
+                    id: $state.params.id,
+                    parentId: $state.params.parentId
+                };
+            }
+        };
+&nbsp;
+        vm.expandCoords = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            vm.isCoordsBlockExpanded = !vm.isCoordsBlockExpanded;</span>
+        };
+&nbsp;
+        vm.switchCoords = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            if (!CONFIG.OPTIONS.UTM32Enabled) {</span>
+<span class="cstat-no" title="statement not covered" >                return;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            vm.useUTM32 = !vm.useUTM32;</span>
+        }
+&nbsp;
+        vm.openExternalMap = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            var coordinates = $rootScope.detailCoordinates;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (coordinates) {</span>
+<span class="cstat-no" title="statement not covered" >                if (Utils.isBrowser()) {</span>
+<span class="cstat-no" title="statement not covered" >                    window.open('http://maps.google.com/?q=' + coordinates[1] + ',' + coordinates[0] + '', '_blank');</span>
+                } else {
+<span class="cstat-no" title="statement not covered" >                    launchnavigator.navigate([coordinates[1], coordinates[0]]);</span>
+                }
+            }
+        };
+&nbsp;
+        var navigationIntervalFunction = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            GeolocationService.getStats()</span>
+                .then(<span class="fstat-no" title="function not covered" >function (stats) {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.navigation.stats = stats;</span>
+<span class="cstat-no" title="statement not covered" >                    Utils.forceDigest();</span>
+                });
+        };
+&nbsp;
+        vm.startNavigation = function (record) {
+            vm.navigation.resetStats();
+            var startRecording = function () {
+                GeolocationService.startRecording(vm.stopNavigationUrlParams ? vm.stopNavigationUrlParams : <span class="branch-1 cbranch-no" title="branch not covered" >false,</span> record ? true : <span class="branch-1 cbranch-no" title="branch not covered" >false)</span>;
+                GeolocationService.switchState({
+                    isRotating: true,
+                    isFollowing: true
+                });
+            };
+&nbsp;
+            vm.showRightMenu = false;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!record) {
+<span class="cstat-no" title="statement not covered" >                vm.stopNavigationUrlParams.parentId = $rootScope.currentParams.parentId;</span>
+<span class="cstat-no" title="statement not covered" >                vm.stopNavigationUrlParams.id = $rootScope.currentParams.id;</span>
+            } else {
+                vm.stopNavigationUrlParams.parentId = null;
+                vm.stopNavigationUrlParams.id = null;
+            }
+&nbsp;
+            vm.navigationInterval = setInterval(navigationIntervalFunction, 999);
+&nbsp;
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (GeolocationService.isActive()) {
+                startRecording();
+            } else {
+<span class="cstat-no" title="statement not covered" >                GeolocationService.enable()</span>
+                    .then(startRecording);
+            }
+&nbsp;
+            window.plugins.insomnia.keepAwake();
+&nbsp;
+            Utils.goTo('/');
+        };
+&nbsp;
+        vm.pauseNavigation = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            GeolocationService.pauseRecording();</span>
+<span class="cstat-no" title="statement not covered" >            GeolocationService.switchState({</span>
+                isFollowing: false,
+                isRotating: false
+            });
+<span class="cstat-no" title="statement not covered" >            clearInterval(vm.navigationInterval);</span>
+<span class="cstat-no" title="statement not covered" >            window.plugins.insomnia.allowSleepAgain();</span>
+        };
+&nbsp;
+        vm.resumeNavigation = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            GeolocationService.resumeRecording();</span>
+<span class="cstat-no" title="statement not covered" >            GeolocationService.switchState({</span>
+                isFollowing: true,
+                isRotating: true
+            });
+<span class="cstat-no" title="statement not covered" >            vm.navigationInterval = setInterval(navigationIntervalFunction, 1000);</span>
+<span class="cstat-no" title="statement not covered" >            window.plugins.insomnia.keepAwake();</span>
+        };
+&nbsp;
+        vm.stopNavigation = function () {
+            GeolocationService.stopRecording();
+            clearInterval(vm.navigationInterval);
+            MapService.adjust();
+            vm.isNavigating = false;
+            window.plugins.insomnia.allowSleepAgain();
+        };
+&nbsp;
+        vm.toggleSpeedText = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            switch (vm.speedTextType) {</span>
+                case 'current':
+<span class="cstat-no" title="statement not covered" >                    vm.speedTextType = 'average';</span>
+<span class="cstat-no" title="statement not covered" >                    break;</span>
+                case 'average':
+                default:
+<span class="cstat-no" title="statement not covered" >                    vm.speedTextType = 'current';</span>
+<span class="cstat-no" title="statement not covered" >                    break;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            Utils.forceDigest();</span>
+        };
+&nbsp;
+        vm.formatTime = <span class="fstat-no" title="function not covered" >function (time) {</span>
+<span class="cstat-no" title="statement not covered" >            if (!time) {</span>
+<span class="cstat-no" title="statement not covered" >                return "0:00";</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var hours = 0,</span>
+                minutes = 0,
+                seconds = 0;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            time = (time - (time % 1000)) / 1000;</span>
+<span class="cstat-no" title="statement not covered" >            seconds = time % 60;</span>
+<span class="cstat-no" title="statement not covered" >            minutes = ((time - seconds) / 60) % 60;</span>
+<span class="cstat-no" title="statement not covered" >            hours = ((time - seconds - minutes * 60) / 3600) % 24;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (hours &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                return ("0" + hours).slice(-2) + ':' + ("0" + minutes).slice(-2) + ':' + ("0" + seconds).slice(-2);</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                return ("0" + minutes).slice(-2) + ':' + ("0" + seconds).slice(-2);</span>
+            }
+        };
+&nbsp;
+        vm.formatDistance = <span class="fstat-no" title="function not covered" >function (distance) {</span>
+<span class="cstat-no" title="statement not covered" >            return distance ? ((distance / 1000).toFixed(1).replace(".", ",") + 'km') : '0km';</span>
+        };
+&nbsp;
+        vm.formatSpeed = <span class="fstat-no" title="function not covered" >function (speed) {</span>
+<span class="cstat-no" title="statement not covered" >            return speed ? (speed.toFixed(0) + "km/h") : '0km/h';</span>
+        };
+&nbsp;
+        registeredEvents.push(
+            $scope.$on('$stateChangeStart', function (e, dest) {
+                vm.showRightMenu = false;
+                MapService.toggleElevationControl(false);
+            })
+        );
+&nbsp;
+        registeredEvents.push(
+            $scope.$on('$stateChangeSuccess', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                var currentState = $rootScope.currentState.name,</span>
+                    realState;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                vm.layerState = false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (currentState !== 'app.main.detaillayer') {</span>
+<span class="cstat-no" title="statement not covered" >                    if ($rootScope.track) {</span>
+<span class="cstat-no" title="statement not covered" >                        delete $rootScope.track;</span>
+                    }
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (!$rootScope.stateCounter) {</span>
+<span class="cstat-no" title="statement not covered" >                    $rootScope.stateCounter = 1;</span>
+                } else {
+<span class="cstat-no" title="statement not covered" >                    $rootScope.stateCounter++;</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                vm.isWelcomePage = currentState === 'app.main.welcome';</span>
+<span class="cstat-no" title="statement not covered" >                vm.isSearchPage = currentState === 'app.main.search';</span>
+<span class="cstat-no" title="statement not covered" >                vm.isMapPage = currentState === 'app.main.map';</span>
+<span class="cstat-no" title="statement not covered" >                vm.isInMap = currentState === 'app.main.map';</span>
+<span class="cstat-no" title="statement not covered" >                vm.isMapModeInSearch = false;</span>
+<span class="cstat-no" title="statement not covered" >                vm.hasShadow = false;</span>
+<span class="cstat-no" title="statement not covered" >                vm.extendShadow = false;</span>
+<span class="cstat-no" title="statement not covered" >                vm.detail = false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (vm.isInMap) {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.hideDeactiveCentralPointer = CONFIG.OPTIONS.hideDeactiveCentralPointer;</span>
+                }
+                else {
+<span class="cstat-no" title="statement not covered" >                    vm.hideDeactiveCentralPointer = true;</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (!$rootScope.first) {</span>
+<span class="cstat-no" title="statement not covered" >                    $rootScope.first = true;</span>
+                } else {
+<span class="cstat-no" title="statement not covered" >                    if (!$rootScope.backAllowed) {</span>
+<span class="cstat-no" title="statement not covered" >                        $rootScope.backAllowed = true;</span>
+                    }
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                MapService.resetLoading();</span>
+<span class="cstat-no" title="statement not covered" >                MapService.closePopup();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                vm.hideMap = false;</span>
+<span class="cstat-no" title="statement not covered" >                vm.mapView = false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (currentState === 'app.main.map') {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.mapView = true;</span>
+<span class="cstat-no" title="statement not covered" >                    vm.hideExpander = true;</span>
+<span class="cstat-no" title="statement not covered" >                    setTimeout(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                        if (vm.stopNavigationUrlParams.parentId &amp;&amp; vm.stopNavigationUrlParams.id &amp;&amp; MapService.getUserPolyline() === null) {</span>
+<span class="cstat-no" title="statement not covered" >                            MapService.showPathAndRelated(vm.stopNavigationUrlParams);</span>
+                        }
+                    }, 50);
+                } else <span class="cstat-no" title="statement not covered" >if (currentState === 'app.main.popup') {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.mapView = true;</span>
+<span class="cstat-no" title="statement not covered" >                    vm.hideExpander = true;</span>
+                } else <span class="cstat-no" title="statement not covered" >if (currentState === 'app.main.events') {</span>
+<span class="cstat-no" title="statement not covered" >                    MapService.showEventsLayer();</span>
+<span class="cstat-no" title="statement not covered" >                    vm.hasShadow = true;</span>
+                } else <span class="cstat-no" title="statement not covered" >if (currentState === 'app.main.welcome') {</span>
+                    // TODO: show nothing on the map
+                } else <span class="cstat-no" title="statement not covered" >if (currentState === 'app.main.layer') {</span>
+<span class="cstat-no" title="statement not covered" >                    realState = $rootScope.currentParams.id.replace(/_/g, ' ');</span>
+<span class="cstat-no" title="statement not covered" >                    vm.layerState = true;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (typeof overlayMap[realState] !== 'undefined' ||</span>
+                        typeof overlaysGroupMap[realState] !== 'undefined') {
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        setTimeout(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                            if (vm.layerState) {</span>
+<span class="cstat-no" title="statement not covered" >                                MapService.activateLayer(realState, false, false);</span>
+                            }
+                        }, 50);
+                    }
+                } else <span class="cstat-no" title="statement not covered" >if (currentState === 'app.main.detaillayer') {</span>
+<span class="cstat-no" title="statement not covered" >                    if (MapService.isAPOILayer($rootScope.currentParams.parentId.replace(/_/g, ' '))) {</span>
+<span class="cstat-no" title="statement not covered" >                        vm.detail = true;</span>
+                    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    vm.hideExpander = hideExpanderInDetails;</span>
+                } else <span class="cstat-no" title="statement not covered" >if (currentState === 'app.main.detailtaxonomy') {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.hideExpander = true;</span>
+<span class="cstat-no" title="statement not covered" >                    vm.detail = true;</span>
+<span class="cstat-no" title="statement not covered" >                    vm.hasShadow = true;</span>
+<span class="cstat-no" title="statement not covered" >                    vm.extendShadow = true;</span>
+                } else <span class="cstat-no" title="statement not covered" >if (currentState === 'app.main.detailevent') {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.hasShadow = true;</span>
+                } else <span class="cstat-no" title="statement not covered" >if (currentState === 'app.main.detailulayer') {</span>
+<span class="cstat-no" title="statement not covered" >                    MapService.resetUtfGridLayers();</span>
+<span class="cstat-no" title="statement not covered" >                    vm.hideExpander = true;</span>
+                } else <span class="cstat-no" title="statement not covered" >if (currentState === 'app.main.coupons' ||</span>
+                    currentState === 'app.main.packages' ||
+                    currentState === 'app.main.route' ||
+                    currentState === 'app.main.taxonomy' ||
+                    currentState === 'app.main.languages' ||
+                    currentState === 'app.main.webmappInternal' ||
+                    currentState === 'app.main.attributionInternal') {
+<span class="cstat-no" title="statement not covered" >                    vm.hideMap = true;</span>
+<span class="cstat-no" title="statement not covered" >                    vm.hasShadow = true;</span>
+<span class="cstat-no" title="statement not covered" >                    vm.extendShadow = true;</span>
+                } else <span class="cstat-no" title="statement not covered" >if (currentState === 'app.main.offline' ||</span>
+                    currentState === 'app.main.search' ||
+                    Model.isAPage(currentState)) {
+<span class="cstat-no" title="statement not covered" >                    vm.hideMap = true;</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                setTimeout(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                    $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop();</span>
+<span class="cstat-no" title="statement not covered" >                    $ionicScrollDelegate.$getByHandle('mainScroll').resize();</span>
+                });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                MapService.initialize();</span>
+            })
+        );
+&nbsp;
+        registeredEvents.push(
+            $rootScope.$on('$ionicView.afterEnter', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                MapService.adjust();</span>
+            })
+        );
+&nbsp;
+&nbsp;
+        registeredEvents.push(
+            $rootScope.$on('map-click', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                vm.showRightMenu = false;</span>
+            })
+        );
+&nbsp;
+        registeredEvents.push(
+            $rootScope.$on('map-dragstart', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                vm.showRightMenu = false;</span>
+            })
+        );
+&nbsp;
+        registeredEvents.push(
+            $rootScope.$on('map-zoomstart', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                vm.showRightMenu = false;</span>
+            })
+        );
+&nbsp;
+        registeredEvents.push(
+            $rootScope.$on('rightMenuClick', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                vm.showRightMenu = !vm.showRightMenu;</span>
+            })
+        );
+&nbsp;
+        registeredEvents.push(
+            $rootScope.$on('toggle-map-in-search', <span class="fstat-no" title="function not covered" >function (e, value) {</span>
+<span class="cstat-no" title="statement not covered" >                vm.isMapModeInSearch = value;</span>
+<span class="cstat-no" title="statement not covered" >                setTimeout(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                    MapService.adjust();</span>
+                }, 350);
+            })
+        );
+&nbsp;
+        registeredEvents.push(
+            $rootScope.$on('toggle-map-from-detail', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                vm.toggleMap();</span>
+            })
+        );
+&nbsp;
+        registeredEvents.push(
+            $rootScope.$on('toggle-list', <span class="fstat-no" title="function not covered" >function (e, value) {</span>
+<span class="cstat-no" title="statement not covered" >                vm.hideMap = value;</span>
+<span class="cstat-no" title="statement not covered" >                setTimeout(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                    MapService.adjust();</span>
+<span class="cstat-no" title="statement not covered" >                    angular.element(window).triggerHandler('resize');</span>
+                }, 350);
+            })
+        );
+&nbsp;
+        registeredEvents.push(
+            $rootScope.$on('item-navigable', <span class="fstat-no" title="function not covered" >function (e, value) {</span>
+<span class="cstat-no" title="statement not covered" >                vm.isNavigable = value;</span>
+<span class="cstat-no" title="statement not covered" >                Utils.forceDigest();</span>
+            })
+        );
+&nbsp;
+        registeredEvents.push(
+            $rootScope.$on('geolocationState-changed', function (e, value) {
+                vm.geolocationState = value;
+                Utils.forceDigest();
+            })
+        );
+&nbsp;
+        registeredEvents.push(
+            $rootScope.$on('heading-changed', <span class="fstat-no" title="function not covered" >function (e, value) {</span>
+<span class="cstat-no" title="statement not covered" >                vm.heading = value;</span>
+<span class="cstat-no" title="statement not covered" >                Utils.forceDigest();</span>
+            })
+        );
+&nbsp;
+        registeredEvents.push(
+            $rootScope.$on('recordingState-changed', function (e, value) {
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (value.currentTrack) {
+<span class="cstat-no" title="statement not covered" >                    vm.stopNavigationUrlParams = {</span>
+                        id: value.currentTrack.id,
+                        parentId: value.currentTrack.parentId
+                    };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    vm.navigationInterval = setInterval(navigationIntervalFunction, 999);</span>
+<span class="cstat-no" title="statement not covered" >                    window.plugins.insomnia.keepAwake();</span>
+                }
+                else <span class="missing-if-branch" title="if path not taken" >I</span>if (value.recordingTrack) {
+<span class="cstat-no" title="statement not covered" >                    vm.stopNavigationUrlParams = {</span>
+                        id: null,
+                        parentId: null
+                    };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    vm.navigationInterval = setInterval(navigationIntervalFunction, 999);</span>
+<span class="cstat-no" title="statement not covered" >                    window.plugins.insomnia.keepAwake();</span>
+                }
+&nbsp;
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (vm.navigation.state.isActive !== value.isActive) {
+                    vm.navigation.state.isActive = value.isActive;
+                    $rootScope.$emit('is-navigating', vm.navigation.state.isActive);
+                    $rootScope.isNavigating = vm.navigation.state.isActive;
+                    if (vm.navigation.state.isActive) {
+                        vm.isNavigable = false;
+                    } else {
+                        <span class="missing-if-branch" title="if path not taken" >I</span>if (vm.stopNavigationUrlParams.parentId &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >vm.stopNavigationUrlParams.id)</span> {
+<span class="cstat-no" title="statement not covered" >                            vm.isNavigable = true;</span>
+<span class="cstat-no" title="statement not covered" >                            var url = 'layer/' + vm.stopNavigationUrlParams.parentId + '/' + vm.stopNavigationUrlParams.id;</span>
+<span class="cstat-no" title="statement not covered" >                            vm.stopNavigationUrlParams = {</span>
+                                parentId: null,
+                                id: null
+                            };
+<span class="cstat-no" title="statement not covered" >                            Utils.goTo(url);</span>
+                        }
+                    }
+                }
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (vm.navigation.state.isPaused !== value.isPaused) {
+<span class="cstat-no" title="statement not covered" >                    vm.navigation.state.isPaused = value.isPaused;</span>
+                }
+            })
+        );
+&nbsp;
+        registeredEvents.push(
+            $scope.$on('$destroy', function () {
+                for (var i in registeredEvents) {
+                    registeredEvents[i]();
+                }
+                delete registeredEvents;
+&nbsp;
+                shareModal &amp;&amp; shareModal.remove();
+            })
+        );
+&nbsp;
+        $ionicPlatform.ready(function () {
+            vm.userData = Auth.getUserData();
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (CONFIG.MAIN || !CONFIG.MULTIMAP) {
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (vm.showLocate) {
+                    <span class="missing-if-branch" title="else path not taken" >E</span>if (!GeolocationService.isActive()) {
+                        GeolocationService.enable();
+                    }
+                }
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (window !== top) {
+                    MapService.disableWheelZoom();
+                }
+            }
+&nbsp;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (CONFIG.OPTIONS.mapLogoUrl) {
+<span class="cstat-no" title="statement not covered" >                vm.mapLogoUrl = CONFIG.OPTIONS.mapLogoUrl;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                var updateLogo = <span class="fstat-no" title="function not covered" >function (url) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    Communication.get(url + "?ts=" + Date.now()).then(<span class="fstat-no" title="function not covered" >function (response) {</span></span>
+<span class="cstat-no" title="statement not covered" >                        var urlCreator = window.URL || window.webkitURL;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        vm.mapLogoUrl = urlCreator.createObjectURL(response);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        var reader = new FileReader();</span>
+<span class="cstat-no" title="statement not covered" >                        reader.readAsDataURL(response);</span>
+<span class="cstat-no" title="statement not covered" >                        reader.onloadend = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                            vm.mapLogoUrl = reader.result;</span>
+<span class="cstat-no" title="statement not covered" >                            MapService.setItemInLocalStorage("$wm_mapLogo", JSON.stringify(</span>
+                                {
+                                    url: url,
+                                    base64: vm.mapLogoUrl
+                                }
+                            ));
+                        }
+                    }, <span class="fstat-no" title="function not covered" >function () {</span>
+                    });
+                };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                MapService.getItemFromLocalStorage("$wm_mapLogo").then(<span class="fstat-no" title="function not covered" >function (saved) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    var data = JSON.parse(saved.data);</span>
+<span class="cstat-no" title="statement not covered" >                    vm.mapLogoUrl = data.base64;</span>
+<span class="cstat-no" title="statement not covered" >                    updateLogo(CONFIG.OPTIONS.mapLogoUrl);</span>
+                }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    updateLogo(CONFIG.OPTIONS.mapLogoUrl);</span>
+                });
+            }
+&nbsp;
+            // Note: route's first argument can take any kind of object as its data,
+            // and will send along the matching object if the route matches the deeplink
+&nbsp;
+            //ionic cordova plugin add ionic-plugin-deeplinks --variable URL_SCHEME=test --variable DEEPLINK_SCHEME=https --variable DEEPLINK_HOST=api.webmapp.it --variable ANDROID_PATH_PREFIX=/
+            $cordovaDeeplinks.route({
+                // '/languages': { target: 'languages' },
+                // '/home': { target: 'home' },
+                // '/packages': { target: 'packages' },
+                '/routeDownload/:id': {
+                    target: 'route/',
+                    parent: 'packages'
+                },
+                '/route/:id': {
+                    target: 'route/',
+                    parent: 'packages'
+                }
+            }).subscribe(<span class="fstat-no" title="function not covered" >function (match) {</span>
+<span class="cstat-no" title="statement not covered" >                setTimeout(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                    if (match.$route.parent) {</span>
+<span class="cstat-no" title="statement not covered" >                        Utils.goTo(match.$route.parent);</span>
+<span class="cstat-no" title="statement not covered" >                        setTimeout(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                            if (match.$link.path === '/routeDownload/' + match.$args.id) {</span>
+<span class="cstat-no" title="statement not covered" >                                $rootScope.routeDownload = true;</span>
+                            }
+<span class="cstat-no" title="statement not covered" >                            Utils.goTo(match.$route.target + match.$args.id);</span>
+                        }, 10);
+                    } else {
+<span class="cstat-no" title="statement not covered" >                        Utils.goTo(match.$route.target);</span>
+                    }
+                }, 20);
+            }, function (nomatch) {
+                console.warn('No match', nomatch);
+            });
+        });
+&nbsp;
+        return vm;
+    });
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 09:34:49 GMT+0100 (CET)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

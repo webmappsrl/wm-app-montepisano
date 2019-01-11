@@ -96,7 +96,7 @@ module.exports = function (config) {
         // configuration for coverage reporter
         coverageReporter: {
             type: 'html',
-            dir: 'coverage/'
+            dir: 'test/coverage/'
         },
 
 
