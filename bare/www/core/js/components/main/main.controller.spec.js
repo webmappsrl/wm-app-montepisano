@@ -66,8 +66,8 @@ describe('MainController', function () {
                         // console.log("MOCK isLocationEnabled");
                         callback(this.locationEnableParam);
                     },
-                    switchToSettings: function () {},
-                    switchToLocationSettings: function () {}
+                    switchToSettings: function () { },
+                    switchToLocationSettings: function () { }
                 }
             },
             platformId: 'android'
@@ -75,20 +75,21 @@ describe('MainController', function () {
 
         window.plugins = {
             insomnia: {
-                allowSleepAgain: function () {},
-                keepAwake: function () {}
+                allowSleepAgain: function () { },
+                keepAwake: function () { }
             }
-        }
+        };
+
         BackgroundGeolocation = {
-            start: function () {},
-            stop: function () {},
-            removeAllListeners: function () {},
+            start: function () { },
+            stop: function () { },
+            removeAllListeners: function () { },
             events: [],
             startTask: function (callback) {
                 callback();
             },
-            endTask: function () {},
-            configure: function (params) {},
+            endTask: function () { },
+            configure: function (params) { },
             on: function (event, callback) {
                 if (event === 'location') {
                     this.callbackFun = callback;
@@ -99,7 +100,6 @@ describe('MainController', function () {
             },
             callbackFun: null
         };
-
     });
 
     beforeEach(inject(function ($controller, _GeolocationService_, _$cordovaGeolocation_, _$cordovaDeviceOrientation_, _$ionicModal_, _$ionicPopup_, _$q_, _$translate_, _$rootScope_, _MapService_, _$httpBackend_, _Utils_) {
@@ -119,17 +119,17 @@ describe('MainController', function () {
         spyOn($ionicModal, 'fromTemplateUrl').and.callFake(function () {
             var deferred = $q.defer();
             deferred.resolve({
-                show: function () {},
-                hide: function () {}
+                show: function () { },
+                hide: function () { }
             });
             return deferred.promise;
         });
         spyOn(Utils, 'createModal').and.callFake(function () {
             var deferred = $q.defer();
             deferred.resolve({
-                show: function () {},
-                hide: function () {},
-                remove: function () {}
+                show: function () { },
+                hide: function () { },
+                remove: function () { }
             });
             return deferred.promise;
         })
@@ -184,7 +184,6 @@ describe('MainController', function () {
             defer.resolve(true);
             return defer.promise;
         });
-
         spyOn(MapService, 'createUserPolyline').and.callFake(function (value) {
             if (userPoly == null) {
                 userPoly = {
@@ -204,17 +203,11 @@ describe('MainController', function () {
         spyOn(MapService, 'removeUserPolyline').and.callFake(function () {
             userPoly = null;
         });
-
-
-    })
-
+    });
 
     describe('recordingTrack', function () {
-
         it('submbitData', function () {
-
             GeolocationService.enable().then(function () {
-
                 MainController.startNavigation(true);
 
                 BackgroundGeolocation.callbackFun({
@@ -231,27 +224,15 @@ describe('MainController', function () {
                     accuracy: 10
                 });
 
-
-
                 MainController.stopNavigation();
-
-
             })
 
-
             $httpBackend.flush();
-
-        })
+        });
 
         afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
-
-    })
-
-
-
-
-
+    });
 });

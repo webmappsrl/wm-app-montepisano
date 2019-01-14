@@ -87,7 +87,7 @@ angular.module('webmapp')
 
         $ionicPlatform.registerBackButtonAction(function (e) {
             e.preventDefault();
-            if ($state.current.name === 'app.main.map' && sessionStorage.$wm_doBack) {
+            if ($state.current.name === 'app.main.map' && CONFIG.MAIN) {
                 if ($rootScope.backButtonPressed) {
                     Offline.resetCurrentMapAndGoBack();
                 }
@@ -108,7 +108,7 @@ angular.module('webmapp')
                 }
                 else {
                     $rootScope.backButtonPressed = true;
-                    Utils.showToast($translate.instant("Premi di nuovo per chiudere l'applicazione"), 'bottom');
+                    Utils.showToast($translate.instant("Premi di nuovo per uscire dall'applicazione"), 'bottom');
 
                     $rootScope.backButtonPressedTimeout = setTimeout(function () {
                         $rootScope.backButtonPressed = false;

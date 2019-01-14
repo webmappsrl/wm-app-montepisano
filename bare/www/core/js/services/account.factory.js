@@ -89,6 +89,7 @@ angular.module('webmapp')
             return defer.promise;
         };
 
+        /* istanbul ignore next */
         account.socialLogin = function (socialType) {
             var defer = $q.defer(),
                 secondArgument;

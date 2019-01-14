@@ -44,7 +44,8 @@ angular.module('webmapp')
             }
         };
 
-        var key = CONFIG.OFFLINE.pagesUrl + currentPageType;
+        var key = (CONFIG.OFFLINE && CONFIG.OFFLINE.pagesUrl) ? CONFIG.OFFLINE.pagesUrl : (CONFIG.COMMUNICATION.baseUrl.substring(-1) === '/') ? CONFIG.COMMUNICATION.baseUrl + 'pages/' : CONFIG.COMMUNICATION.baseUrl + '/pages/';
+        key += currentPageType;
 
         if (currentLang !== defaultLang) {
             key = key + "_" + currentLang;

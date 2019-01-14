@@ -29,7 +29,6 @@ angular.module('webmapp')
         modalScope.vm = {};
         modalScope.parent = vm;
 
-        vm.avoidModal = CONFIG.OPTIONS.avoidModalInDetails;
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.imageUrl = CONFIG.OFFLINE.imagesUrl;
         vm.goBack = Utils.goBack;

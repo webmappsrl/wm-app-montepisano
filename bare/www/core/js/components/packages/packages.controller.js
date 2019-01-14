@@ -50,12 +50,15 @@ angular.module('webmapp')
         vm.firstLoading = true;
         vm.isLoggedIn = Auth.isLoggedIn();
         vm.isBrowser = Utils.isBrowser();
-        vm.isAndroid = !window.cordova || window.cordova.platformId === 'ios' ? false : true;
+        vm.isAndroid = window.cordova && window.cordova.platformId === 'android' ? true : false;
         vm.openInAppBrowser = Utils.openInAppBrowser;
         vm.pageConf = Model.getPage('Pacchetti');
         vm.search = "";
         vm.filters = {};
-        vm.currentPosition = {};
+        vm.sortPackage = {
+            type: 'alpha',
+            loading: false
+        }; //Available: 'alpha', 'distanca'
 
         vm.isMultilanguage = false;
 
@@ -167,6 +170,25 @@ angular.module('webmapp')
             modalFilters.show();
         };
 
+        vm.toggleSort = function () {
+            switch (vm.sortPackage.type) {
+                case 'alpha':
+                    vm.sortPackage.type = 'distance';
+                    if (!vm.sortPackage.position || !vm.sortPackage.position.lat || !vm.sortPackage.position.long) {
+                        vm.sortPackage.loading = true;
+                    }
+                    else {
+                        vm.sortPackage.loading = false;
+                    }
+                    break;
+                case 'distance':
+                default:
+                    vm.sortPackage.type = 'alpha';
+                    vm.sortPackage.loading = false;
+                    break;
+            }
+        };
+
         vm.truncateTitle = function (title) {
             var ret = title;
             var maxLength = 44;
@@ -175,7 +197,7 @@ angular.module('webmapp')
             }
 
             return ret;
-        }
+        };
 
         vm.downloadPackage = function (pack) {
             PackageService.downloadPackage(pack.id)
@@ -279,7 +301,11 @@ angular.module('webmapp')
         registeredEvents.push(
             $scope.$on('$destroy', function () {
                 for (var i in registeredEvents) {
-                    registeredEvents[i]();
+                    try {
+                        registeredEvents[i]();
+                    }
+                    catch (e) { }
+
                 }
                 delete registeredEvents;
 
@@ -297,25 +323,29 @@ angular.module('webmapp')
             }
             PackageService.getTaxonomy('activity');
             PackageService.getRoutes();
+
+            var positionIntervalFunction = function () {
+                var position = GeolocationService.getCurrentPosition();
+                if (position.lat && position.long) {
+                    vm.sortPackage.position = position;
+                    if (vm.sortPackage.type === 'distance') {
+                        if (!vm.sortPackage.position || !vm.sortPackage.position.lat || !vm.sortPackage.position.long) {
+                            vm.sortPackage.loading = true;
+                        }
+                        else {
+                            vm.sortPackage.loading = false;
+                        }
+                    }
+                    Utils.forceDigest();
+                }
+            };
             if (!GeolocationService.isActive()) {
                 GeolocationService.enable().then(function () {
-                    watchPosition = setInterval(function () {
-                        var position = GeolocationService.getCurrentPosition();
-                        if (position.lat && position.long) {
-                            vm.currentPosition = position;
-                            Utils.forceDigest();
-                        }
-                    }, 5000);
+                    watchPosition = setInterval(positionIntervalFunction, 20000);
                 });
             }
             else {
-                watchPosition = setInterval(function () {
-                    var position = GeolocationService.getCurrentPosition();
-                    if (position.lat && position.long) {
-                        vm.currentPosition = position;
-                        Utils.forceDigest();
-                    }
-                }, 5000);
+                watchPosition = setInterval(positionIntervalFunction, 20000);
             }
         });
 

@@ -1,0 +1,109 @@
+{
+  "_from": "opening_hours",
+  "_id": "opening_hours@3.5.0",
+  "_inBundle": false,
+  "_integrity": "sha1-1mpjKceRiNyEVEOT/HMsx7gm5y4=",
+  "_location": "/opening_hours",
+  "_phantomChildren": {
+    "center-align": "0.1.3",
+    "decamelize": "1.2.0",
+    "right-align": "0.1.3",
+    "uglify-to-browserify": "1.0.2",
+    "window-size": "0.1.0"
+  },
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "opening_hours",
+    "name": "opening_hours",
+    "escapedName": "opening_hours",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/opening_hours/-/opening_hours-3.5.0.tgz",
+  "_shasum": "d66a6329c79188dc84544393fc732cc7b826e72e",
+  "_spec": "opening_hours",
+  "_where": "/Users/webmapps.r.l./Documents/webmapp-generator/bare",
+  "author": {
+    "name": "Dmitry Marakasov",
+    "email": "amdmi3@amdmi3.ru"
+  },
+  "bugs": {
+    "url": "https://github.com/opening-hours/opening_hours.js/issues?state=open"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "suncalc": "^1.8.0",
+    "uglify-js": "^2.7.5"
+  },
+  "deprecated": false,
+  "description": "Library to parse and process opening_hours tag from OpenStreetMap data",
+  "devDependencies": {
+    "assert": "^1.3.0",
+    "bower": "^1.8.0",
+    "browserify": "^14.0.0",
+    "colors": "^0.6.2",
+    "https": "^1.0.0",
+    "line-reader": "^0.4.0",
+    "optimist": "^0.6.1",
+    "package-json-validator": "^0.6.0",
+    "sprintf-js": "^1.0.3",
+    "timekeeper": "^1.0.0",
+    "uglify-js": "^2.6.0"
+  },
+  "directories": {
+    "doc": "./docs/",
+    "example": "/examples/",
+    "locales": "./locales/"
+  },
+  "engines": {
+    "node": ">=0.12.3"
+  },
+  "files": [
+    "Makefile",
+    "CHANGELOG.rst",
+    "COPYING.LGPL-3.0",
+    "licenses/",
+    "opening_hours.js",
+    "js/",
+    "locales/core.js"
+  ],
+  "homepage": "https://github.com/opening-hours/opening_hours.js",
+  "keywords": [
+    "openstreetmap",
+    "OSM",
+    "opening_hours"
+  ],
+  "license": "LGPL-3.0",
+  "main": "opening_hours.js",
+  "maintainers": [
+    {
+      "name": "Robin Schneider",
+      "email": "ypid@riseup.net"
+    }
+  ],
+  "name": "opening_hours",
+  "peerDependencies": {
+    "i18next-client": "^1.11.1",
+    "moment": "^2.10.6",
+    "country-language": "^0.1.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opening-hours/opening_hours.js.git"
+  },
+  "scripts": {
+    "benchmark": "make benchmark",
+    "build": "make build",
+    "interactive_testing": "make run-interactive_testing",
+    "osm-tag-data-check": "make osm-tag-data-check",
+    "regex_search": "make run-regex_search",
+    "test": "make check-full"
+  },
+  "version": "3.5.0"
+}

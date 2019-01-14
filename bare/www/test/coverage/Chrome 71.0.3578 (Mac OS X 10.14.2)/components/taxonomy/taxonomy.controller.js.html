@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for components/taxonomy/taxonomy.controller.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">components/taxonomy/</a> taxonomy.controller.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">3.33% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>1/30</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/10</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/6</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">3.33% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>1/30</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">angular.module('webmapp')
+&nbsp;
+    .controller('TaxonomyController', <span class="fstat-no" title="function not covered" >function TaxonomyController(</span>
+        $rootScope,
+        $scope,
+        $state,
+        $translate,
+        CONFIG,
+        PackageService,
+        Utils
+    ) {
+<span class="cstat-no" title="statement not covered" >        var vm = {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var registeredEvents = [];</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.title = CONFIG.OPTIONS.title;</span>
+<span class="cstat-no" title="statement not covered" >        vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";</span>
+<span class="cstat-no" title="statement not covered" >        vm.defaultLang = CONFIG.LANGUAGES &amp;&amp; CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';</span>
+<span class="cstat-no" title="statement not covered" >        vm.taxonomy = {};</span>
+<span class="cstat-no" title="statement not covered" >        vm.loading = true;</span>
+<span class="cstat-no" title="statement not covered" >        vm.firstLoading = true;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.goTo = <span class="fstat-no" title="function not covered" >function (id) {</span></span>
+<span class="cstat-no" title="statement not covered" >            Utils.goTo('taxonomy/' + $state.params.id + '/' + id);</span>
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.doRefresh = <span class="fstat-no" title="function not covered" >function (refresher) {</span></span>
+<span class="cstat-no" title="statement not covered" >            vm.firstLoading = false;</span>
+<span class="cstat-no" title="statement not covered" >            vm.loading = true;</span>
+<span class="cstat-no" title="statement not covered" >            PackageService.getTaxonomy($state.params.id, true);</span>
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        registeredEvents.push(</span>
+            $rootScope.$on('taxonomy-' + $state.params.id + '-updated', <span class="fstat-no" title="function not covered" >function (e, value) {</span>
+<span class="cstat-no" title="statement not covered" >                vm.taxonomy = value.taxonomy;</span>
+<span class="cstat-no" title="statement not covered" >                if (vm.loading !== value.loading) {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.loading = value.loading;</span>
+                }
+<span class="cstat-no" title="statement not covered" >                if (!vm.loading) {</span>
+<span class="cstat-no" title="statement not covered" >                    $scope.$broadcast('scroll.refreshComplete');</span>
+<span class="cstat-no" title="statement not covered" >                    vm.firstLoading = false;</span>
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                Utils.forceDigest();</span>
+            })
+        );
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        registeredEvents.push(</span>
+            $scope.$on('$ionicView.enter', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                PackageService.getTaxonomy($state.params.id);</span>
+            })
+        );
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        registeredEvents.push(</span>
+            $scope.$on('$ionicView.beforeLeave', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                for (var i in registeredEvents) {</span>
+<span class="cstat-no" title="statement not covered" >                    registeredEvents[i]();</span>
+                }
+<span class="cstat-no" title="statement not covered" >                delete registeredEvents;</span>
+            })
+        );
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return vm;</span>
+    });</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 12:35:52 GMT+0100 (CET)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

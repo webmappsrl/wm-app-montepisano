@@ -87,7 +87,7 @@
         </div>
 
         <!-- Arrow to expand coordinates -->
-        <div class="coords-expander">
+        <div class="coords-expander" ng-if="vm.centerCoords">
             <a href="" ng-click="vm.expandCoords()">
                 <i ng-if="!vm.isCoordsBlockExpanded" class="wm-icon-ios7-arrow-back"></i>
                 <i ng-if="vm.isCoordsBlockExpanded" class="wm-icon-ios7-arrow-forward"></i>
@@ -113,7 +113,7 @@
         </div>
 
         <!-- Report -->
-        <div class="report-control" ng-if="vm.useReport && vm.isInMap">
+        <div class="report-control" ng-if="vm.useReport && vm.isInMap && vm.showLocate">
             <a href="" ng-click="vm.reportCurrentPosition($event)">
                 <i class="icon wm-icon-alert-circled">
                 </i>
@@ -121,7 +121,7 @@
         </div>
 
         <!-- Start navigation -->
-        <div class="start-navigation" ng-if="vm.navigationAvailable">
+        <div class="start-navigation" ng-if="vm.navigationAvailable && vm.showLocate">
             <a href="" ng-click="vm.startNavigation()">
                 <i class="wm-icon-navigate"></i>
                 {{"Inizia" | translate}}
@@ -135,7 +135,7 @@
         </div>
 
         <!-- Navigation interface -->
-        <div class="navigator-div-controller" ng-if="vm.navigation.state.isActive">
+        <div class="navigator-div-controller" ng-if="vm.navigation.state.isActive && vm.showLocate">
             <div class="content-div" ng-if="!vm.navigation.state.isPaused">
                 <div class="pause-button" ng-style="{
                         'background': vm.colors.mainBar.background,

@@ -327,14 +327,10 @@ angular.module('webmapp')
         utils.expandDOMElement = function (element) {
             var sectionHeight = element.scrollHeight;
 
-            requestAnimationFrame(() => {
+            requestAnimationFrame(function () {
                 element.style.height = sectionHeight + 'px';
                 elementTransition = element.style.transition;
                 element.style.transition = '';
-                // requestAnimationFrame(() => {
-                //     element.style.height = null;
-                //     element.style.transition = elementTransition;
-                // });
             });
         };
 
@@ -343,10 +339,10 @@ angular.module('webmapp')
                 elementTransition = element.style.transition;
             element.style.transition = '';
 
-            requestAnimationFrame(() => {
+            requestAnimationFrame(function () {
                 element.style.height = sectionHeight + 'px';
                 element.style.transition = elementTransition;
-                requestAnimationFrame(() => {
+                requestAnimationFrame(function () {
                     element.style.height = finalHeight + 'px';
                 });
             });

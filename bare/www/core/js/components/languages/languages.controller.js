@@ -8,7 +8,7 @@ angular.module('webmapp')
         $window,
         Auth,
         CONFIG,
-        md5,
+        MapService,
         PackageService,
         Utils
     ) {
@@ -51,7 +51,7 @@ angular.module('webmapp')
             $window.localStorage.language = JSON.stringify(lang.substring(0, 2));
             vm.currentLang = lang.substring(0, 2);
             updatePrivacyUrl();
-            $rootScope.$emit('changed-language', lang.substring(0, 2));
+            $rootScope.$emit('language-changed', lang.substring(0, 2));
             Utils.forceDigest();
         };
 

@@ -158,7 +158,6 @@ angular.module('webmapp')
         vm.heading = 0;
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
-        vm.useExandMapInDetails = CONFIG.OPTIONS.useExandMapInDetails;
         vm.showLocate = !CONFIG.MAP.hideLocationControl && !Utils.isBrowser() ||
             Utils.isBrowser() && !CONFIG.MAP.hideLocationControl && window.location.protocol === "https:";
 
@@ -674,12 +673,7 @@ angular.module('webmapp')
         registeredEvents.push(
             $scope.$on('$stateChangeStart', function (e, dest) {
                 vm.showRightMenu = false;
-                // if ((dest.name === 'app.main.detaillayer' ||
-                //     dest.name === 'app.main.detailevent' ||
-                //     dest.name === 'app.main.detailulayer') &&
-                //     previousBounds === null) {
-                //     previousBounds = MapService.getBounds();
-                // }
+                MapService.toggleElevationControl(false);
             })
         );
 
@@ -690,18 +684,10 @@ angular.module('webmapp')
 
                 vm.layerState = false;
 
-                // if (currentState !== 'app.main.detaillayer' &&
-                //     currentState !== 'app.main.detailevent' &&
-                //     currentState !== 'app.main.detailulayer' &&
-                //     previousBounds) {
-                //     setTimeout(function () {
-                //         // MapService.fitBounds(previousBounds);
-                //         previousBounds = null;
-                //     }, 1250);
-                // }
-
-                if (currentState !== 'app.main.detaillayer' && $rootScope.track) {
-                    delete $rootScope.track;
+                if (currentState !== 'app.main.detaillayer') {
+                    if ($rootScope.track) {
+                        delete $rootScope.track;
+                    }
                 }
 
                 if (!$rootScope.stateCounter) {
@@ -946,8 +932,10 @@ angular.module('webmapp')
         $ionicPlatform.ready(function () {
             vm.userData = Auth.getUserData();
             if (CONFIG.MAIN || !CONFIG.MULTIMAP) {
-                if (!GeolocationService.isActive()) {
-                    GeolocationService.enable();
+                if (vm.showLocate) {
+                    if (!GeolocationService.isActive()) {
+                        GeolocationService.enable();
+                    }
                 }
                 if (window !== top) {
                     MapService.disableWheelZoom();

@@ -1,0 +1,73 @@
+{
+  "_from": "i18next-client",
+  "_id": "i18next-client@1.11.4",
+  "_inBundle": false,
+  "_integrity": "sha1-BILrG2Q+z3qEBPe1kuujKOXwmuc=",
+  "_location": "/i18next-client",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "i18next-client",
+    "name": "i18next-client",
+    "escapedName": "i18next-client",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/i18next-client/-/i18next-client-1.11.4.tgz",
+  "_shasum": "0482eb1b643ecf7a8404f7b592eba328e5f09ae7",
+  "_spec": "i18next-client",
+  "_where": "/Users/webmapps.r.l./Documents/webmapp-generator/bare",
+  "author": {
+    "name": "jamuhl"
+  },
+  "browser": "i18next.js",
+  "bugs": {
+    "url": "https://github.com/i18next/i18next/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {},
+  "deprecated": "you can use npm install i18next from version 2.0.0",
+  "description": "With v2 of i18next it's no longer needed to separate the node.js version. So there is no more i18next-client needed.",
+  "devDependencies": {
+    "async": ">= 0.1.18",
+    "express": ">= 0.0.1",
+    "grunt": "~0.4.1",
+    "grunt-contrib": ">=0.1.0",
+    "grunt-rigger": "~0.5.0",
+    "grunt-shell": ">=0.1.0",
+    "gruntacular": ">=0.1.0",
+    "lodash": ">= 0.5.x",
+    "phantomjs": "^1.9.16",
+    "underscore": ">=0.2.1",
+    "zipstream": ">=0.2.1"
+  },
+  "engines": {
+    "node": ">=0.4.12"
+  },
+  "homepage": "https://github.com/i18next/i18next#readme",
+  "keywords": [
+    "i18n",
+    "internationalization",
+    "translation",
+    "globalization",
+    "gettext"
+  ],
+  "license": "MIT",
+  "main": "i18next.js",
+  "name": "i18next-client",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i18next/i18next.git"
+  },
+  "scripts": {
+    "test": "grunt && grunt testacular:ci"
+  },
+  "version": "1.11.4"
+}

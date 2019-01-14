@@ -17,7 +17,7 @@ div.detailRoute-footer {
   border-top: 1px solid $color-brown;
   padding: 12px;
   button.login-button.button {
-    height: 54px;
+    min-height: 54px;
     width: auto;
     max-width: initial;
     font-size: 20px;

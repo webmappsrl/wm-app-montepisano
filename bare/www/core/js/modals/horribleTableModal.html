@@ -6,9 +6,7 @@
         'background': COLORS.global.background
     }">
         <div class="modal-content">
-            <span 
-                class="modal-title" 
-                ng-style="{
+            <span class="modal-title" ng-style="{
                     'color': COLORS.details.color
                 }">
                 {{"Dettagli" | translate}}
@@ -16,11 +14,9 @@
             <div class="modal-inner-content">
                 <div class="modal-full-content">
                     <table class="table-details horrible-table">
-                        <tr 
-                            ng-repeat="(key, value) in parent.detailTable"
-                            ng-if="parent.featureDetails[key] && parent.featureDetails[key] !== ''">
+                        <tr ng-repeat="(key, value) in parent.detailTable" ng-if="parent.featureDetails[key] && parent.featureDetails[key] !== ''">
                             <td class="table-row-desc {{value}}">
-                              {{parent.featureDetails[key]}}
+                                {{parent.featureDetails[key]}}
                             </td>
                         </tr>
                     </table>
@@ -29,8 +25,8 @@
                     <br />
 
                     <!-- <div style="width: 100%; text-align: center;">
-                        <a 
-                            href="" 
+                        <a
+                            href=""
                             download
                             ng-click="parent.openInExternalBrowser('http://api.webmapp.it/elba/media/Legenda_Elba.pdf')">
                             Scarica la legenda completa in formato PDF

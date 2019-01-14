@@ -14,10 +14,13 @@
   font-size: 14px;
 }
 
+.details-contacts__list {
+  min-height: 40px;
+}
+
 .subnav-list__element,
 .contacts-list__element {
   display: inline-block;
-  width: 32%;
   margin: 0;
   padding: 0;
   text-align: left;
@@ -25,6 +28,34 @@
   &.center {
     text-align: center;
   }
+  .single-contact & {
+    width: 100%;
+  }
+  .double-contact & {
+    width: 49%;
+  }
+  .triple-contact & {
+    width: 32%;
+  }
+  .single-contact.contact-include-edit & {
+    width: 85%;
+  }
+  .double-contact.contact-include-edit & {
+    width: 42%;
+  }
+  .triple-contact.contact-include-edit & {
+    width: 28%;
+  }
+  .contact-include-edit & {
+    &.wp-edit-link {
+      float: right;
+      width: 13%;
+      a {
+        text-overflow: unset;
+      }
+    }
+  }
+
   a {
     border: 0;
     border-image-width: 0;
@@ -121,6 +152,15 @@
   position: relative;
   color: inherit;
   @include clearfix;
+}
+
+.elevation-control-container {
+  width: 100%;
+  padding: 5px 7px 0 7px;
+  display: block;
+  margin: 0 auto;
+  // height: 22%;
+  overflow: hidden;
 }
 
 .details-howtoreach {
@@ -299,7 +339,7 @@
     margin-bottom: 78px;
   }
   .opening-hours {
-    padding: 10px 0;
+    padding: 0 0 10px;
     .icon {
       margin-right: 5px;
       font-size: 20px;

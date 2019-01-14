@@ -11,30 +11,29 @@ angular.module('webmapp')
         var userData = {},
             isLoggedIn = false;
 
-        var init = function () {
-            if (localStorage.user) {
-                userData = JSON.parse(localStorage.user);
-                isLoggedIn = true;
-                MapService.setItemInLocalStorage("$wm_userData", JSON.stringify(userData));
-                delete localStorage.user;
-            }
+        /* istanbul ignore next */
+        if (localStorage.user) {
+            userData = JSON.parse(localStorage.user);
+            isLoggedIn = true;
+            MapService.setItemInLocalStorage("$wm_userData", JSON.stringify(userData));
+            delete localStorage.user;
+        }
 
-            MapService.getItemFromLocalStorage("$wm_userData")
-                .then(function (data) {
-                    if (data.data && typeof data.data === 'string') {
-                        userData = JSON.parse(data.data);
-                        isLoggedIn = true;
-                        $rootScope.$emit('logged-in');
-                    }
-                    else {
-                        isLoggedIn = false;
-                    }
-                })
-                .catch(function (err) {
-                    console.warn("$wm_userData: " + err.message);
+        MapService.getItemFromLocalStorage("$wm_userData")
+            .then(function (data) {
+                if (data.data && typeof data.data === 'string') {
+                    userData = JSON.parse(data.data);
+                    isLoggedIn = true;
+                    $rootScope.$emit('logged-in');
+                }
+                else {
                     isLoggedIn = false;
-                });
-        };
+                }
+            })
+            .catch(function (err) {
+                // console.warn("$wm_userData: " + err.message);
+                isLoggedIn = false;
+            });
 
         auth.setUserData = function (value) {
             userData = value;
@@ -54,8 +53,6 @@ angular.module('webmapp')
         auth.isLoggedIn = function () {
             return isLoggedIn;
         };
-
-        init();
 
         return auth;
     });
