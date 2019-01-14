@@ -348,10 +348,11 @@ angular.module('webmapp')
                                 });
                         } else if (format.substring(0, 7) === 'mbtiles') {
                             if ((offline.options.blocks && format === "mbtiles_0000") ||
-                                (!offline.options.blocks && filename === offline.options.urlMbtiles)) {
+                                (!offline.options.blocks && filename === offline.options.urlMbtiles.split('/').pop())) {
                                 _offlineUrl = destDirectory + filename;
                                 localStorage.setItem('offlineUrl', _offlineUrl);
                             }
+
                             updateOfflineState(item, map.downloadArray[filename].size);
                             currentDefer.resolve();
                         }
