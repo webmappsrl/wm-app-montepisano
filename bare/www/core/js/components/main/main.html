@@ -16,6 +16,7 @@
         <ion-nav-view name="inception-top"></ion-nav-view>
 
     </ion-content>
+
     <!--3 POINTS MENU-->
     <div class="map-menu" ng-if="vm.showRightMenu">
         <div class="list" ng-style="{
@@ -25,8 +26,14 @@
             <a class="item item-icon-left" ng-click="vm.openFilters()">
                 <i class="icon {{vm.filterIcon}}"></i> {{"seleziona categorie" | translate}}
             </a>
-            <a class="item item-icon-left" ng-click="vm.startNavigation('true')">
+            <a class="item item-icon-left" ng-click="vm.startNavigation('true')" ng-if="vm.trackRecordingEnabled">
                 <i class="icon wm-icon-plus"></i> {{'registra percorso' | translate }}
+            </a>
+            <a class="item item-icon-left" ng-class="{
+                'item-icon-right': vm.reportQueue.length > 0
+            }" ng-click="vm.goToReport()" ng-if="vm.useReport">
+                <i class="icon wm-icon-alert"></i> {{'segnala' | translate }}
+                <span ng-if="vm.reportQueue.length > 0" class="report-queue-length">{{vm.reportQueue.length}}</span>
             </a>
         </div>
     </div>
@@ -87,7 +94,7 @@
         </div>
 
         <!-- Arrow to expand coordinates -->
-        <div class="coords-expander">
+        <div class="coords-expander" ng-if="vm.centerCoords">
             <a href="" ng-click="vm.expandCoords()">
                 <i ng-if="!vm.isCoordsBlockExpanded" class="wm-icon-ios7-arrow-back"></i>
                 <i ng-if="vm.isCoordsBlockExpanded" class="wm-icon-ios7-arrow-forward"></i>
@@ -113,15 +120,15 @@
         </div>
 
         <!-- Report -->
-        <div class="report-control" ng-if="vm.useReport && vm.isInMap" ng-click="vm.goToReport()">
-
-            <i class="icon wm-icon-alert-circled">
-            </i>
-            <span ng-if="vm.reportQueue.length > 0" class="report-queue-length">{{vm.reportQueue.length}}</span>
+        <div class="report-control" ng-if="vm.useHelp && vm.isInMap && vm.showLocate" ng-click="vm.reportCurrentPosition($event)">
+            <a href="">
+                <i class="icon wm-icon-alert-circled">
+                </i>
+            </a>
         </div>
 
         <!-- Start navigation -->
-        <div class="start-navigation" ng-if="vm.navigationAvailable">
+        <div class="start-navigation" ng-if="vm.navigationAvailable && vm.showLocate">
             <a href="" ng-click="vm.startNavigation()">
                 <i class="wm-icon-navigate"></i>
                 {{"Inizia" | translate}}
@@ -135,7 +142,7 @@
         </div>
 
         <!-- Navigation interface -->
-        <div class="navigator-div-controller" ng-if="vm.navigation.state.isActive">
+        <div class="navigator-div-controller" ng-if="vm.navigation.state.isActive && vm.showLocate">
             <div class="content-div" ng-if="!vm.navigation.state.isPaused">
                 <div class="pause-button" ng-style="{
                         'background': vm.colors.mainBar.background,

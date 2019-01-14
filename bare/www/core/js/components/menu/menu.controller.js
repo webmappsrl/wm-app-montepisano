@@ -607,7 +607,7 @@ angular.module('webmapp')
                 location.href = url;
             } else if (type === 'closeMap') {
                 if (GeolocationService.isActive()) {
-                    GeolocationService.disable();
+                    GeolocationService.disable()
                 }
                 Offline.resetCurrentMapAndGoBack();
             } else {

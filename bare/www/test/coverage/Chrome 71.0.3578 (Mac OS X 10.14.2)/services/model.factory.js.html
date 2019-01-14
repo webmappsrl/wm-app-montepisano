@@ -1,0 +1,965 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for services/model.factory.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">services/</a> model.factory.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">76.39% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>110/144</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">66% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>66/100</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">46.43% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>13/28</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">76.39% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>110/144</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">720×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">720×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">1225×</span>
+<span class="cline-any cline-yes">1225×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">1203×</span>
+<span class="cline-any cline-yes">1203×</span>
+<span class="cline-any cline-yes">312×</span>
+<span class="cline-any cline-yes">312×</span>
+<span class="cline-any cline-yes">1158×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1203×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/*global angular*/
+&nbsp;
+angular.module('webmapp')
+&nbsp;
+    .factory('Model', function Model(
+        CONFIG,
+        Search,
+        Utils
+    ) {
+        var model = {};
+&nbsp;
+        var overlaysMap = {},
+            overlaysGroupMap = {},
+            overlaysChildMap = {},
+            pagesMap = {},
+            pagesMapByType = {},
+            pagesGroupMap = {},
+            pagesChildMap = {},
+            genericItemsMap = {},
+            confMainMenuMap = {};
+&nbsp;
+        var mainMenuItems = CONFIG.MENU,
+            confPages = CONFIG.PAGES,
+            confOverlays = CONFIG.OVERLAY_LAYERS,
+            colorsConfig = CONFIG.STYLE;
+&nbsp;
+        var trackRecordingEnabled = !Utils.isBrowser() &amp;&amp; CONFIG.NAVIGATION &amp;&amp; CONFIG.NAVIGATION.enableTrackRecording;
+&nbsp;
+        for (var p in confPages) {
+            pagesMap[confPages[p].label] = angular.extend({
+                items: []
+            }, confPages[p]);
+            pagesMapByType[confPages[p].type] = confPages[p];
+        }
+&nbsp;
+        for (var n in confOverlays) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (!confOverlays[n].skipRedering) {
+                overlaysMap[confOverlays[n].label] = angular.extend({
+                    items: []
+                }, confOverlays[n]);
+            }
+        }
+&nbsp;
+        for (var i in mainMenuItems) {
+            confMainMenuMap[mainMenuItems[i].label] = mainMenuItems[i];
+            if (mainMenuItems[i].type === 'layerGroup') {
+                overlaysGroupMap[mainMenuItems[i].label] = mainMenuItems[i];
+                for (var c in mainMenuItems[i].items) {
+                    overlaysChildMap[mainMenuItems[i].items[c]] = overlaysMap[mainMenuItems[i].items[c]];
+                }
+            }
+            if (mainMenuItems[i].type === 'pageGroup') {
+                pagesGroupMap[mainMenuItems[i].label] = mainMenuItems[i];
+                for (var c in mainMenuItems[i].items) {
+                    pagesChildMap[mainMenuItems[i].items[c]] = pagesMap[mainMenuItems[i].items[c]];
+                }
+            }
+        }
+&nbsp;
+        model.isLayerInMenu = function (label) {
+            return confMainMenuMap[label] || overlaysChildMap[label];
+        };
+&nbsp;
+        model.getItemType = function (label) {
+            if (typeof overlaysGroupMap[label] !== 'undefined') {
+                return 'layerGroup';
+            }
+            if (typeof overlaysMap[label] !== 'undefined') {
+                return 'layer';
+            }
+            if (typeof pagesGroupMap[label] !== 'undefined') {
+                return 'pageGroup';
+            }
+            if (typeof pagesMap[label] !== 'undefined') {
+                return 'page';
+            }
+        };
+&nbsp;
+        model.buildItemUrl = function (item) {
+            var realUrl = item.label ? item.label.replace(/ /g, '_') : "";
+            realType = item.type,
+                separator = '/';
+&nbsp;
+            if (!realType) {
+                realType = model.getItemType(realUrl);
+                realType = typeof realType !== "undefined" ? realType : "";
+            }
+&nbsp;
+            if (realType === 'layerGroup') {
+                realType = 'layer';
+            } else if (realType === 'pageGroup') {
+                realType = 'pages';
+            } else if (realType === 'internalLink') {
+                realUrl = item.url;
+                realType = separator = '';
+            } else if (realType === 'closeMap') {
+                realType = realUrl = separator = '';
+            } else if (realType === 'page') {
+                realUrl = pagesMap[item.label].type;
+                realType = separator = '';
+            }
+&nbsp;
+            if (realType === "packages") {
+                realUrl = "";
+            }
+&nbsp;
+            return realType + separator + realUrl;
+        };
+&nbsp;
+        model.getOverlayParent = function (name) {
+            for (var parent in overlaysGroupMap) {
+                for (var child in overlaysGroupMap[parent].items) {
+                    if (overlaysMap[overlaysGroupMap[parent].items[child]] &amp;&amp; overlaysMap[overlaysGroupMap[parent].items[child]].label === name) {
+                        return overlaysGroupMap[parent];
+                    }
+                }
+            }
+        };
+&nbsp;
+        model.getPageParent = function (name) {
+            for (var parent in pagesGroupMap) {
+                for (var child in pagesGroupMap[parent].items) {
+                    <span class="missing-if-branch" title="else path not taken" >E</span>if (pagesMap[pagesGroupMap[parent].items[child]].label === name) {
+                        return pagesGroupMap[parent];
+                    }
+                }
+            }
+        };
+&nbsp;
+        model.reloadLayers = <span class="fstat-no" title="function not covered" >function () {</span>
+            // console.log(confOverlays, overlaysMap);
+<span class="cstat-no" title="statement not covered" >            overlaysMap = {};</span>
+<span class="cstat-no" title="statement not covered" >            for (var n in confOverlays) {</span>
+<span class="cstat-no" title="statement not covered" >                if (!confOverlays[n].skipRedering) {</span>
+<span class="cstat-no" title="statement not covered" >                    overlaysMap[confOverlays[n].label] = angular.extend({</span>
+                        items: []
+                    }, confOverlays[n]);
+                }
+            }
+        };
+&nbsp;
+        model.getLayersMap = function () {
+            return overlaysMap;
+        };
+&nbsp;
+        model.getPagesMap = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            return pagesMap;</span>
+        };
+&nbsp;
+        model.isAChild = function (name) {
+            return overlaysChildMap[name];
+        };
+&nbsp;
+        model.isAPageChild = function (name) {
+            return pagesChildMap[name];
+        };
+&nbsp;
+        model.isAnOverlayGroup = function (name) {
+            return overlaysGroupMap[name];
+        };
+&nbsp;
+        model.isAPageGroup = function (name) {
+            return pagesGroupMap[name];
+        };
+&nbsp;
+        model.isAPage = <span class="fstat-no" title="function not covered" >function (name) {</span>
+<span class="cstat-no" title="statement not covered" >            if (name.indexOf('.') !== -1) {</span>
+<span class="cstat-no" title="statement not covered" >                name = name.split('.')[name.split('.').length - 1];</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return name === 'pages' || pagesMap[name] || pagesMapByType[name];</span>
+        };
+&nbsp;
+        // To prevent memory overload, get only overlay metadata
+        model.getOverlayMeta = <span class="fstat-no" title="function not covered" >function (name) {</span>
+<span class="cstat-no" title="statement not covered" >            return overlaysMap[name] ? {</span>
+                alert: overlaysMap[name].alert,
+                color: overlaysMap[name].color,
+                geojsonUrl: overlaysMap[name].geojsonUrl,
+                icon: overlaysMap[name].icon,
+                id: overlaysMap[name].id,
+                label: overlaysMap[name].label,
+                showByDefault: overlaysMap[name].showByDefault,
+                type: overlaysMap[name].type
+            } : undefined;
+        };
+&nbsp;
+        model.getOverlay = <span class="fstat-no" title="function not covered" >function (name) {</span>
+<span class="cstat-no" title="statement not covered" >            return overlaysMap[name];</span>
+        };
+&nbsp;
+        model.getPage = <span class="fstat-no" title="function not covered" >function (name) {</span>
+<span class="cstat-no" title="statement not covered" >            return pagesMap[name];</span>
+        };
+&nbsp;
+        model.getPageByType = <span class="fstat-no" title="function not covered" >function (type) {</span>
+<span class="cstat-no" title="statement not covered" >            return pagesMapByType[type];</span>
+        };
+&nbsp;
+        model.getOverlaysGroupMap = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            return overlaysGroupMap;</span>
+        };
+&nbsp;
+        model.getOverlaysMap = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            return overlaysMap;</span>
+        };
+&nbsp;
+        model.getItemsByContaier = <span class="fstat-no" title="function not covered" >function (containerName) {</span>
+<span class="cstat-no" title="statement not covered" >            return genericItemsMap[containerName];</span>
+        };
+&nbsp;
+        model.getItemsByContaierAndId = <span class="fstat-no" title="function not covered" >function (itemId, containerName) {</span>
+<span class="cstat-no" title="statement not covered" >            if (typeof genericItemsMap[containerName] !== 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                return genericItemsMap[containerName][itemId];</span>
+            }
+        };
+&nbsp;
+        model.addItemToContainer = <span class="fstat-no" title="function not covered" >function (item, containerName) {</span>
+<span class="cstat-no" title="statement not covered" >            if (typeof genericItemsMap[containerName] === 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                genericItemsMap[containerName] = {};</span>
+            }
+<span class="cstat-no" title="statement not covered" >            genericItemsMap[containerName][item.id || Utils.generateUID()] = item;</span>
+        };
+&nbsp;
+        model.addItemToLayer = function (item, layer) {
+            if (typeof item.properties !== 'undefined' &amp;&amp;
+                typeof overlaysMap[layer.label] !== 'undefined') {
+                var found = false;
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof item.properties.name === 'undefined') {
+<span class="cstat-no" title="statement not covered" >                    item.properties.name = item.properties.ref;</span>
+                }
+&nbsp;
+                if (CONFIG.SEARCH &amp;&amp; CONFIG.SEARCH.active &amp;&amp; !layer.skipSearch) {
+                    Search.addToIndex(item, layer.label);
+                }
+&nbsp;
+                for (var i in overlaysMap[layer.label].items) {
+<span class="cstat-no" title="statement not covered" >                    if (overlaysMap[layer.label].items[i].properties.id.toString() === item.properties.id.toString()) {</span>
+<span class="cstat-no" title="statement not covered" >                        found = true;</span>
+                        //Update existing overlay
+<span class="cstat-no" title="statement not covered" >                        overlaysMap[layer.label].items[i] = item;</span>
+                    }
+                }
+&nbsp;
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (!found) {
+                    overlaysMap[layer.label].items.push(item);
+                }
+            }
+        };
+&nbsp;
+        model.removeLayerItems = <span class="fstat-no" title="function not covered" >function (layer) {</span>
+<span class="cstat-no" title="statement not covered" >            if (typeof overlaysMap[layer.label] !== 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                if (CONFIG.SEARCH &amp;&amp; CONFIG.SEARCH.active &amp;&amp; !layer.skipSearch) {</span>
+<span class="cstat-no" title="statement not covered" >                    Search.clearEngine(layer.label);</span>
+                }
+<span class="cstat-no" title="statement not covered" >                overlaysMap[layer.label].items = [];</span>
+            }
+        };
+&nbsp;
+        model.getMenuMap = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            return confMainMenuMap;</span>
+        };
+&nbsp;
+        model.getMenuColor = <span class="fstat-no" title="function not covered" >function (name) {</span>
+<span class="cstat-no" title="statement not covered" >            if (typeof confMainMenuMap[name] !== 'undefined') {</span>
+<span class="cstat-no" title="statement not covered" >                return confMainMenuMap[name].color;</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                if (model.isAChild(name)) {</span>
+<span class="cstat-no" title="statement not covered" >                    return overlaysChildMap[name].color ||</span>
+                        model.getOverlayParent(name).color;
+                }
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return colorsConfig.mainBar.color;</span>
+        };
+&nbsp;
+        model.getListColor = function (name) {
+            if (typeof confMainMenuMap[name] !== 'undefined') {
+                if (confMainMenuMap[name].color) {
+                    return confMainMenuMap[name].color;
+                }
+                if (CONFIG.MAIN) {
+                    return CONFIG.MAIN.STYLE.menu.color;
+                }
+                return CONFIG.STYLE.menu.color;
+            } else {
+                if (model.isAChild(name)) {
+                    return overlaysChildMap[name].color ||
+                        model.getOverlayParent(name).color;
+                } else if (model.isAPageChild(name)) {
+                    return pagesChildMap[name].color ||
+                        model.getPageParent(name).color;
+                }
+            }
+&nbsp;
+            return colorsConfig.global.color;
+        };
+&nbsp;
+        return model;
+    });
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jan 14 2019 12:29:14 GMT+0100 (CET)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

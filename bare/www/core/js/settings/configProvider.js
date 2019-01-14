@@ -29,7 +29,7 @@ angular.module('webmapp')
                 }
             };
             xobj.send(null);
-        }
+        };
 
         function getSyncJSON(url) {
             var retValue;
@@ -116,17 +116,57 @@ angular.module('webmapp')
             });
         }
 
-        // config.MENU.push({
-        //     label: "Impostazioni",
-        //     type: "page"
-        // });
+        var addPage = function (type, label, isCustom) {
+            var found = false;
+            for (var i in config.PAGES) {
+                if (config.PAGES[i].type === type) {
+                    found = true;
+                    break;
+                }
+            }
 
-        // config.PAGES.push({
-        //     label: "Impostazioni",
-        //     type: "languages"
-        // });
+            if (!found) {
+                config.PAGES.push({
+                    type: type,
+                    label: label,
+                    isCustom: isCustom
+                });
+            }
+        };
 
-        // console.log(config)
+        for (var i in config.MENU) {
+            switch (config.MENU[i].type) {
+                case 'page':
+                    switch (config.MENU[i].label.toLowerCase()) {
+                        case 'cambia lingua':
+                        case 'impostazioni':
+                            addPage('languages', config.MENU[i].label, false);
+                            break;
+                        case 'mappa offline':
+                        case 'offline':
+                        case 'download mappa':
+                        case 'download mappa offline':
+                            addPage('settings', config.MENU[i].label, false);
+                            break;
+                        default:
+                            addPage(config.MENU[i].label.toLowerCase().replace(/ /g, '-'), config.MENU[i].label, true);
+                            break;
+                    }
+                    break;
+                case 'home':
+                case 'help':
+                case 'languages':
+                case 'packages':
+                case 'taxonomy':
+                    addPage(config.MENU[i].type, config.MENU[i].label, false);
+                    break;
+                case 'layer':
+                case 'layerGroup':
+                case 'map':
+                default:
+                    break;
+            }
+        }
 
         this.$get = function (
             $ionicPopup,

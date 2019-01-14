@@ -49,7 +49,7 @@ describe('Communication.Factory', function () {
                 done();
             }).catch(function (error) {
                 done(new Error("it should resolve promise"));
-            })
+            });
 
             $httpBackend.flush();
         });
@@ -63,11 +63,11 @@ describe('Communication.Factory', function () {
             var promise = communicationService.post(url, data);
 
             promise.then(function (response) {
-                done(new Error("it should reject promise"))
+                done.fail("it should reject promise")
             }).catch(function (error) {
                 expect(error).toEqual(expectedResponse);
                 done();
-            })
+            });
 
             $httpBackend.flush();
         });
@@ -159,7 +159,7 @@ describe('Communication.Factory', function () {
                 done();
             }).catch(function (error) {
                 done(new Error("it should resolve promise"))
-            })
+            });
 
             $httpBackend.flush();
         });
@@ -181,7 +181,7 @@ describe('Communication.Factory', function () {
             }).catch(function (error) {
                 expect(error).toEqual(expectedResponse);
                 done();
-            })
+            });
 
             $httpBackend.flush();
         });
@@ -216,13 +216,12 @@ describe('Communication.Factory', function () {
                 done();
             }).catch(function (error) {
                 done(new Error("it should resolve promise"))
-            })
+            });
 
             $httpBackend.flush();
         });
 
         it('it should not execute GET successfully', function (done) {
-
             var url = "testurl.com";
             var expectedResponse = "GET bad response!";
             var data;
@@ -262,6 +261,7 @@ describe('Communication.Factory', function () {
             var url = "testurl.com";
             var expectedResponse = "getJSON response ok!";
             var data;
+
             spyOn($, 'getJSON').and.callFake(function (url) {
                 return {
                     success: function (callback) {
@@ -278,14 +278,13 @@ describe('Communication.Factory', function () {
                 }
             });
 
-            var promise = communicationService.getJSON(url);
-            promise.then(function (response) {
+            communicationService.getJSON(url).then(function (response) {
                 expect($.getJSON).toHaveBeenCalled();
                 expect(response).toEqual(expectedResponse);
                 done();
             }).catch(function (error) {
                 done(new Error("it should resolve promise"))
-            })
+            });
 
             $httpBackend.flush();
         });
@@ -294,8 +293,8 @@ describe('Communication.Factory', function () {
             var url = "testurl.com";
             var expectedResponse = "getJSON bad  response!";
             var data;
-            spyOn($, 'getJSON').and.callFake(function (url) {
 
+            spyOn($, 'getJSON').and.callFake(function (url) {
                 return {
                     success: function (callback) {
                         return {
@@ -317,7 +316,7 @@ describe('Communication.Factory', function () {
                 expect($.getJSON).toHaveBeenCalled();
                 expect(error).toEqual(expectedResponse);
                 done();
-            })
+            });
 
             $httpBackend.flush();
         });
@@ -381,10 +380,8 @@ describe('Communication.Factory', function () {
                 expect(MapService.setItemInLocalStorage).toHaveBeenCalled();
                 expect(window.setInterval).toHaveBeenCalled();
                 done();
-            }, function () {
-                fail(new Error("it should resolve false"));
-            }).catch(function (error) {
-                fail(new Error("it should resolve false"));
+            }).catch(function () {
+                done.fail(new Error("it should resolve false"));
             });
 
             $httpBackend.flush();
@@ -437,10 +434,63 @@ describe('Communication.Factory', function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
-    });
 
-    afterEach(function () {
-        $httpBackend.verifyNoOutstandingExpectation();
-        $httpBackend.verifyNoOutstandingRequest();
+        describe('getLocalFile', function () {
+            it('should reject as resolveLocalFileSystemURL fail', function (done) {
+                var error = 'FILE NOT FOUND';
+                window.resolveLocalFileSystemURL = function (url, file, failFunction) {
+                    failFunction(error);
+                };
+
+                communicationService.getLocalFile('ciao').then(function () {
+                    fail('it should not resolve');
+                }, function (err) {
+                    expect(err).toEqual(error);
+                    done();
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('should reject as resolveLocalFileSystemURL resolve invalid file', function (done) {
+                var result = 'INVALID FILE';
+                window.resolveLocalFileSystemURL = function (url, file, failFunction) {
+                    file(result);
+                };
+
+                communicationService.getLocalFile('ciao').then(function () {
+                    fail('it should not resolve');
+                }, function (err) {
+                    expect(err).toEqual(false);
+                    done();
+                });
+
+                $httpBackend.flush();
+            });
+
+            it('should resolve correctly for existing file', function () {
+                var fileEntry = {
+                    file: function (fun) {
+                        fun(new Blob(['test content']));
+                    }
+                };
+                window.resolveLocalFileSystemURL = function (url, fileFunction, failFunction) {
+                    fileFunction(fileEntry);
+                };
+
+                communicationService.getLocalFile('ciao').then(function (result) {
+                    expect(result).toEqual('test content');
+                }, function (err) {
+                    fail('it should not resolve');
+                });
+
+                $httpBackend.flush();
+            });
+        });
+
+        afterEach(function () {
+            $httpBackend.verifyNoOutstandingExpectation();
+            $httpBackend.verifyNoOutstandingRequest();
+        });
     });
 });

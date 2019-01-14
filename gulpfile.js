@@ -291,7 +291,12 @@ gulp.task('update-instance', function () {
         instance_name = argv.instance;
     }
 
-    var dir = 'instances/' + instance_name + '/www';
+    var dir = 'instances/' + instance_name;
+
+    sh.exec('rm ' + dir + '/config.xml');
+    sh.exec('cp bare/config.xml ' + dir + '/config.xml');
+
+    dir += '/www';
 
     return gulp.copy('bare/www', dir);
 });

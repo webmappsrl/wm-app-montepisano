@@ -28,7 +28,6 @@ angular.module('webmapp')
             };
 
         var modalScope = $rootScope.$new(),
-            modal = {},
             modalImage = {},
             modalText = {},
             modalEvent = {},
@@ -48,6 +47,7 @@ angular.module('webmapp')
         modalScope.vm = {};
         modalScope.parent = vm;
 
+        vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
         vm.avoidModal = CONFIG.OPTIONS.avoidModalInDetails;
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.imageUrl = CONFIG.OFFLINE.imagesUrl;
@@ -132,13 +132,6 @@ angular.module('webmapp')
             modalCoupons = modalObj;
         });
 
-        $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/detailModal.html', {
-            scope: modalScope,
-            animation: 'slide-in-up'
-        }).then(function (modalObj) {
-            modal = modalObj;
-        });
-
         $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/accessibilityModal.html', {
             scope: modalScope,
             animation: 'slide-in-up'
@@ -147,9 +140,26 @@ angular.module('webmapp')
         });
 
         function fitDataInView(data) {
-            setTimeout(function () {
+            var node = document.getElementsByClassName("elevation-control-container");
+            node = node[node.length - 1];
+            if (node) {
                 MapService.centerOnFeature(data);
-            }, 2000);
+                MapService.toggleElevationControl(data, node);
+                vm.fitRefresh = 0;
+                var refresh = function () {
+                    MapService.centerOnFeature(data);
+                    if (vm.fitRefresh <= 15) {
+                        vm.fitRefresh++;
+                        setTimeout(refresh, 100);
+                    }
+                };
+                refresh();
+            }
+            else {
+                setTimeout(function () {
+                    fitDataInView(data);
+                }, 100);
+            }
         };
 
         if (trackRecordingEnabled) {
@@ -482,7 +492,13 @@ angular.module('webmapp')
                     content += '</div>';
                     content += '</div>';
 
-                    feature.description = content + feature.description;
+                    if (feature.description) {
+                        feature.description = content + feature.description;
+                    }
+                    else {
+                        feature.description = content;
+                    }
+
                 }
 
                 if (feature.description) {
@@ -491,11 +507,29 @@ angular.module('webmapp')
                         expandable = true;
                     }
                     feature.description = feature.description.replace(new RegExp(/src="\//g), 'src="' + CONFIG.COMMUNICATION.baseUrl);
-                    // feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), '');
-                    // feature.description = feature.description.replace(new RegExp(/href="\//g), 'href="' + CONFIG.COMMUNICATION.baseUrl);
-                    feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'onclick="window.open(\'$1\', \'_system\', \'\')"');
-                    // feature.description = feature.description.replace(new RegExp(/window.open\(\'#\', \'_system\', \'\'\)/g), '');
 
+                    if (!Utils.isBrowser()) {
+                        feature.description = feature.description.replace(new RegExp(/href="([^\'\"]+)"/g), 'onclick="window.open(\'$1\', \'_system\', \'\')"');
+                    }
+                    else {
+                        feature.description = feature.description.replace(new RegExp(/href="http(s)?:\/\/([^\'\"]+)"/g), function (val, g0, g1) {
+                            var re = /\.(gpx|kml|geojson)"/;
+                            if (!g0) {
+                                g0 = '';
+                            }
+                            if (re.test(val)) {
+                                return 'href="https://api.webmapp.it/services/downloadResource.php?url=' + g1 + '" target="_self"';
+                            }
+                            else {
+                                return 'onclick="window.open(\'http' + g0 + '://' + g1 + '\', \'_system\', \'\')"';
+                            }
+                        });
+                    }
+
+
+                    if (expandable) {
+                        feature.description += '<br><br>';
+                    }
                     vm.mainDescription = Utils.trimHtml(feature.description, {
                         limit: 120
                     });
@@ -601,13 +635,49 @@ angular.module('webmapp')
                     return url;
                 };
 
-                vm.relatedUrlLeftValue = 11;
-
-                if (vm.feature.phone) {
-                    vm.relatedUrlLeftValue = vm.relatedUrlLeftValue + 32;
-                }
+                vm.contactCount = 0;
                 if (vm.feature.email) {
-                    vm.relatedUrlLeftValue = vm.relatedUrlLeftValue + 32;
+                    vm.contactCount++;
+                }
+                if (vm.feature.phone) {
+                    vm.contactCount++;
+                }
+
+                if (!CONFIG.OPTIONS.activateEditLink) {
+                    vm.feature.wp_edit = "";
+                }
+
+                if (vm.feature.related_url) {
+                    vm.contactCount++;
+
+                    switch (vm.contactCount) {
+                        case 1:
+                            if (vm.feature.wp_edit) {
+                                vm.relatedUrlLeftValue = 37;
+                            }
+                            else {
+                                vm.relatedUrlLeftValue = 45;
+                            }
+                            break;
+                        case 2:
+                            if (vm.feature.wp_edit) {
+                                vm.relatedUrlLeftValue = 58;
+                            }
+                            else {
+                                vm.relatedUrlLeftValue = 69;
+                            }
+                            break;
+                        case 3:
+                            if (vm.feature.wp_edit) {
+                                vm.relatedUrlLeftValue = 67;
+                            }
+                            else {
+                                vm.relatedUrlLeftValue = 77;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
                 if (CONFIG.routeID && feature.routeID && CONFIG.routeID !== feature.routeID) {
@@ -668,6 +738,42 @@ angular.module('webmapp')
                 }
             }
 
+
+            if (vm.featureDetails.opening_hours) {
+                var openingHours = function () {
+                    try {
+                        var oh = new opening_hours(vm.featureDetails.opening_hours);
+                        vm.featureDetails['opening_hours:string'] = oh.prettifyValue({
+                            conf: {
+                                locale: vm.currentLang,
+                                rule_sep_string: '<br>',
+                                print_semicolon: false,
+                                leave_off_closed: false
+                            }
+                        });
+                        vm.featureDetails['opening_hours:state'] = oh.getState() ? 'aperto' : 'chiuso';
+                    }
+                    catch (e) {
+                        vm.featureDetails['opening_hours:string'] = vm.featureDetails.opening_hours;
+                        vm.featureDetails['opening_hours:state'] = 'Orari di Apertura';
+                    }
+                }
+
+                if (i18n.isInitialized()) {
+                    openingHours();
+                }
+                else {
+                    i18n.init({
+                        fallbackLng: 'en',
+                        resStore: {},
+                        getAsync: true,
+                        useCookie: false,
+                        debug: false,
+                        format: 'dd'
+                    }, openingHours);
+                }
+            }
+
             // console.log(feature, vm)
         };
 
@@ -694,7 +800,6 @@ angular.module('webmapp')
         };
 
         modalScope.vm.hide = function () {
-            modal && modal.hide();
             modalImage && modalImage.hide();
             modalText && modalText.hide();
             modalEvent && modalEvent.hide();
@@ -828,8 +933,13 @@ angular.module('webmapp')
         };
 
         vm.openRelatedUrlPopup = function () {
-            vm.relatedUrlPopupOpened = !vm.relatedUrlPopupOpened;
-            Utils.forceDigest();
+            if (typeof vm.feature.related_url === 'string') {
+                vm.openLink(vm.feature.related_url);
+            }
+            else {
+                vm.relatedUrlPopupOpened = !vm.relatedUrlPopupOpened;
+                Utils.forceDigest();
+            }
         };
 
         vm.openRelated = function (item) {
@@ -980,7 +1090,6 @@ angular.module('webmapp')
 
         registeredEvents.push(
             $scope.$on('$destroy', function () {
-                modal && modal.remove();
                 modalImage && modalImage.remove();
                 modalText && modalText.remove();
                 modalEvent && modalEvent.remove();

@@ -9,62 +9,34 @@
     </ion-nav-buttons>
 
     <ion-content id="help-content">
-        <div class="tab">
-            <p ng-bind-html="'help.0.html' | translate">
+        <div class="tab" ng-repeat="(pos, value) in vm.tabCount" ng-class="{
+                'right-out': vm.currentTab < pos,
+                'left-out': vm.currentTab > pos,
+                'middle-in': vm.currentTab === pos,
+                'final-tab': pos === vm.tabCount.length - 1
+            }">
+            <p ng-if="pos !== vm.tabCount.length - 1" ng-bind-html="'help.' + pos + '.html' | translate">
             </p>
-            <div class="help-img">
-                <img ng-src="core/images/help_0_{{vm.currentLang}}.png" alt="help_0" />
+            <div ng-if="pos !== vm.tabCount.length - 1" class="help-img">
+                <img ng-src="core/images/help_{{pos}}_{{vm.currentLang}}.png" alt="help_{{pos}}" />
             </div>
-        </div>
-        <div class="tab">
-            <p ng-bind-html="'help.1.html' | translate">
-            </p>
-            <div class="help-img">
-                <img ng-src="core/images/help_1_{{vm.currentLang}}.png" alt="help_1" />
-            </div>
-        </div>
-        <div class="tab">
-            <p class="large" ng-bind-html="'help.2.html' | translate">
-            </p>
-            <div class="help-img">
-                <img ng-src="core/images/help_2_{{vm.currentLang}}.png" alt="help_2" />
-            </div>
-        </div>
-        <div class="tab">
-            <p ng-bind-html="'help.3.html' | translate">
-            </p>
-            <div class="help-img">
-                <img ng-src="core/images/help_3_{{vm.currentLang}}.png" alt="help_3" />
-            </div>
-        </div>
-        <div class="tab">
-            <p ng-bind-html="'help.4.html' | translate">
-            </p>
-            <div class="help-img">
-                <img ng-src="core/images/help_4_{{vm.currentLang}}.png" alt="help_4" />
-            </div>
-        </div>
-        <div class="tab">
-            <p class="large" ng-bind-html="'help.5.html' | translate">
-            </p>
-            <div class="help-img">
-                <img ng-src="core/images/help_5_{{vm.currentLang}}.png" alt="help_5" />
-            </div>
-        </div>
-        <div class="tab final-tab">
-            <div class="home-button" ng-click="vm.goToMainPage()">
-                {{'help.6.title' | translate}}
+            <div ng-if="pos === vm.tabCount.length - 1" class="home-button" ng-click="vm.goToMainPage()">
+                {{'help.' + pos + '.title' | translate}}
             </div>
         </div>
 
+        <div ng-if="vm.currentTab > 0" class="help__previous" ng-click="vm.switchTab('right')">
+            <i class="wm-icon-android-arrow-back"></i>
+        </div>
         <div class="step-counter">
-            <span class="step"></span>
-            <span class="step"></span>
-            <span class="step"></span>
-            <span class="step"></span>
-            <span class="step"></span>
-            <span class="step"></span>
-            <span class="step"></span>
+            <span class="step" ng-repeat="pos in vm.tabCount" ng-class="{
+                    'active': pos === vm.currentTab,
+                    'inactive': pos !== vm.currentTab,
+                }">
+            </span>
+        </div>
+        <div ng-if="vm.currentTab < vm.tabCount.length - 1" class="help__next" ng-click="vm.switchTab('left')">
+            <i class="wm-icon-android-arrow-forward"></i>
         </div>
     </ion-content>
 </ion-view>

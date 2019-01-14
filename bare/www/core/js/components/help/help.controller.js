@@ -1,16 +1,17 @@
 angular.module('webmapp')
 
     .controller('HelpController', function HelpController(
-        Utils,
+        $translate,
         CONFIG,
-        $translate
+        Utils
     ) {
         var vm = {};
 
         vm.title = "Help";
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+        vm.tabCount = [0, 1, 2, 3, 4, 5, 6];
 
-        vm.goToMainPage = function() {
+        vm.goToMainPage = function () {
             if (CONFIG.OPTIONS.startUrl.indexOf('packages') !== -1) {
                 Utils.goTo('packages');
             }
@@ -22,62 +23,29 @@ angular.module('webmapp')
             }
         };
 
-        function showTab(n) {
-            var x = document.getElementsByClassName("tab");
-            if (dir == "left") {
-                if (currentTab + 1 === x.length) {
-                    x[currentTab].className = "tab final-tab animate-leftin";
-                }
-                else {
-                    x[currentTab].className = "tab animate-leftin";
-                }
-            } else if (dir == "right") {
-                if (currentTab + 1 === x.length) {
-                    x[currentTab].className = "tab final-tab animate-rightin";
-                }
-                else {
-                    x[currentTab].className = "tab animate-rightin";
-                }
+        vm.switchTab = function (dir) {
+            switch (dir) {
+                case 'left':
+                    if (vm.currentTab < vm.tabCount.length - 1) {
+                        vm.previousTab = vm.currentTab;
+                        vm.currentTab++;
+                        Utils.forceDigest();
+                    }
+                    break;
+                case 'right':
+                    if (vm.currentTab > 0) {
+                        vm.previousTab = vm.currentTab;
+                        vm.currentTab--;
+                        Utils.forceDigest();
+                    }
+                    break;
+                default:
+                    break;
             }
-            x[currentTab].style.display = "block";
-            vm.title = "help." + currentTab + ".title";
-            dir = "";
-            fixStepIndicator(n)
-        }
-
-        function nextPrev(n) {
-            // This function will figure out which tab to display
-            var x = document.getElementsByClassName("tab");
-
-            if (currentTab + n >= 0 && currentTab + n < x.length) {
-                if (n > 0) {
-                    x[currentTab].className = "tab animate-leftout";
-                    dir = "right";
-                } else {
-                    x[currentTab].className = "tab animate-rightout";
-                    dir = "left";
-                }
-                x[currentTab].style.display = "none";
-                currentTab = currentTab + n;
-                showTab(currentTab);
-            }
-        }
-
-        function fixStepIndicator(n) {
-            // This function removes the "active" class of all steps...
-            var i, x = document.getElementsByClassName("step");
-            for (i = 0; i < x.length; i++) {
-                x[i].className = x[i].className.replace(" active", "");
-            }
-            //... and adds the "active" class on the current step:
-            x[n].className += " active";
-
-            Utils.forceDigest();
         }
 
         // credit: http://www.javascriptkit.com/javatutors/touchevents2.shtml
         function swipedetect(el, callback) {
-
             var touchsurface = el,
                 swipedir,
                 startX,
@@ -89,7 +57,7 @@ angular.module('webmapp')
                 allowedTime = 500, // maximum time allowed to travel that distance
                 elapsedTime,
                 startTime,
-                handleswipe = callback || function (swipedir) {}
+                handleswipe = callback || function (swipedir) { }
 
             touchsurface.addEventListener('touchstart', function (e) {
                 var touchobj = e.changedTouches[0]
@@ -123,22 +91,10 @@ angular.module('webmapp')
         }
 
         var el = document.getElementById('help-content');
-        swipedetect(el, function (swipedir) {
-            switch (swipedir) {
-                case 'left':
-                    nextPrev(1);
-                    break;
-                case 'right':
-                    nextPrev(-1);
-                    break;
-                default:
-                    break;
-            }
-        });
+        swipedetect(el, vm.switchTab);
 
-        var currentTab = 0;
-        var dir = "";
-        showTab(currentTab);
-        
+        vm.currentTab = 0;
+        vm.previousTab = -2;
+
         return vm;
     });

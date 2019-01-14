@@ -132,7 +132,7 @@ angular.module('webmapp')
             function gotFile(fileEntry) {
 
                 if (typeof fileEntry.file !== 'function') {
-                    defer.reject();
+                    defer.reject(false);
                     return;
                 }
 

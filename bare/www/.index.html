@@ -24,6 +24,7 @@
 
     <link href="core/css/font-awesome.min.css" rel="stylesheet">
     <link href="core/lib/leaflet/leaflet.css" rel="stylesheet">
+    <link href="core/lib/leaflet_plugin/leaflet.elevation-custom/dist/Leaflet.Elevation-0.0.2.css" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="core/css/fonts.css" media="none" onload="document.addEventListener('DOMContentLoaded', function() {setTimeout(function() {document.body.className+=' fontsloaded';}, 1000);}); this.media='all';">
     <link rel="stylesheet" type="text/css" href="core/css/style.min.css" media="none" onload="this.media='all';">
@@ -46,6 +47,11 @@
     <script src="core/lib/igTruncate/igTruncate.js"></script>
     <script src="core/lib/JsBarcode/dist/JsBarcode.all.min.js"></script>
     <script src="core/lib/angular-md5/angular-md5.js"></script>
+    <script src="core/lib/d3/d3.min.js"></script>
+    <script src="core/lib/moment/moment.js"></script>
+    <script src="core/lib/moment/min/locales.js"></script>
+    <script src="core/lib/i18next-client/i18next.js"></script>
+    <script src="core/lib/opening_hours/opening_hours.js"></script>
 
     <script src="core/lib/angular-translate/angular-translate.min.js"></script>
     <script src="core/lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
@@ -62,6 +68,7 @@
     <script src="core/lib/leaflet_plugin/L.UTFGrid-min.js"></script>
     <script src="core/lib/leaflet_plugin/leaflet-polylinedecorator/dist/leaflet.polylineDecorator.js"></script>
     <script src="core/lib/leaflet_plugin/leaflet-knn/leaflet-knn.js"></script>
+    <script src="core/lib/leaflet_plugin/leaflet.elevation-custom/dist/Leaflet.Elevation-0.0.2.src.js"></script>
 
     <script src="core/lib/leaflet_plugin/sql.js"></script>
     <script src="core/lib/leaflet_plugin/Leaflet.TileLayer.MBTiles.js"></script>
@@ -82,17 +89,18 @@
     <script src="core/js/settings/filters.js"></script>
     <script src="core/js/settings/compile.js"></script>
 
-    <script src="core/js/services/communication.factory.js"></script>
     <script src="core/js/services/auth.factory.js"></script>
     <script src="core/js/services/account.factory.js"></script>
+    <script src="core/js/services/communication.factory.js"></script>
     <script src="core/js/services/geolocation.factory.js"></script>
-    <script src="core/js/services/search.factory.js"></script>
-    <script src="core/js/services/model.factory.js"></script>
-    <script src="core/js/services/utils.factory.js"></script>
-    <script src="core/js/services/offline.factory.js"></script>
-    <script src="core/js/services/map.factory.js"></script>
     <script src="core/js/services/languages.factory.js"></script>
+    <script src="core/js/services/map.factory.js"></script>
+    <script src="core/js/services/mbtiles.factory.js"></script>
+    <script src="core/js/services/model.factory.js"></script>
+    <script src="core/js/services/offline.factory.js"></script>
     <script src="core/js/services/package.factory.js"></script>
+    <script src="core/js/services/search.factory.js"></script>
+    <script src="core/js/services/utils.factory.js"></script>
 
     <script src="core/js/components/attribution/attribution.controller.js"></script>
     <script src="core/js/components/card/card.controller.js"></script>

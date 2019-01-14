@@ -2,8 +2,7 @@
 <ion-view cache-view="false" ng-controller="DetailController as vm" class="layer-details" ng-style="{
         'background': vm.colors.details.background,
         'color': vm.colors.details.color
-    }"
-    ng-class="{
+    }" ng-class="{
         'event-details': vm.isEventDetail
     }">
 
@@ -37,8 +36,7 @@
             <div class="details-subnav details-subnav-single" ng-style="{
                     'color': vm.colors.subnav.color,
                     'background': vm.colors.subnav.background
-                }"
-                ng-if="!vm.isEventDetail && !vm.isAreaDetail && vm.isParentInMenu && !vm.hideSubMenu">
+                }" ng-if="!vm.isEventDetail && !vm.isAreaDetail && vm.isParentInMenu && !vm.hideSubMenu">
                 <ul class="details-subnav__list">
                     <li class="subnav-list__element">
                         <a href="" ng-click="vm.goBackToCategory(vm.mainCategory)">
@@ -50,7 +48,12 @@
                 <!-- <li class="subnav-list__element"><a href=""><i class="icon ion-ios-arrow-left"></i>  Prodotti tipici</a></li> -->
             </div>
             <!-- TODO: for single back to category element add details-contact-single - for two elements add details-contact-rows -->
-            <div class="details-contacts details-contact-rows" ng-if="vm.feature.email || vm.feature.phone || vm.feature.address || vm.feature.related_url">
+            <div class="details-contacts details-contact-rows" ng-if="vm.feature.email || vm.feature.phone || vm.feature.address || vm.feature.related_url || vm.feature.wp_edit" ng-class="{
+                'single-contact': vm.contactCount === 1,
+                'double-contact': vm.contactCount === 2,
+                'triple-contact': vm.contactCount === 3,
+                'contact-include-edit': vm.feature.wp_edit
+            }">
                 <ul class="details-contacts__list">
                     <li class="contacts-list__element center" ng-if="vm.feature.phone">
                         <a href="" style="cursor: default" ng-if="!vm.availablePhoneNumber">
@@ -58,8 +61,7 @@
                             <!-- {{vm.feature.phone}} -->
                             {{"Telefono" | translate}}
                         </a>
-                        <a href="tel://{{vm.availablePhoneNumber}}" ng-click="vm.chiama(vm.feature.phone)" style="cursor: default"
-                            ng-if="vm.availablePhoneNumber">
+                        <a href="tel://{{vm.availablePhoneNumber}}" ng-click="vm.chiama(vm.feature.phone)" style="cursor: default" ng-if="vm.availablePhoneNumber">
                             <i class="icon ion-ios-telephone-outline"></i>
                             <!-- {{vm.feature.phone}} -->
                             {{"Telefono" | translate}}
@@ -74,6 +76,11 @@
                     <li class="contacts-list__element center" ng-if="vm.feature.related_url">
                         <a href="" ng-click="vm.openRelatedUrlPopup()">
                             <i class="icon wm-icon-ios7-world-outline"></i> {{"web" | translate}}
+                        </a>
+                    </li>
+                    <li class="contacts-list__element center wp-edit-link" ng-if="vm.feature.wp_edit">
+                        <a href="" ng-click="vm.openLink(vm.feature.wp_edit)">
+                            <i class="icon wm-icon-edit"></i>
                         </a>
                     </li>
                     <div ng-if="(vm.feature.related_url) && vm.relatedUrlPopupOpened" class="related-url-div">
@@ -101,7 +108,7 @@
             <div class="edit-user-track" ng-if="vm.feature.isEditable && !vm.isNavigating">
                 <div class="list" ng-style="{
                         'background': vm.colors.menu.background,
-                        'color': vm.colors.menu.color, 
+                        'color': vm.colors.menu.color,
                     }">
                     <a class="item item-icon-left" ng-click="vm.deleteTrack()" ng-if="vm.isEditable">
                         <i class="icon wm-icon-trash-b"></i> {{'cancella' | translate }}
@@ -123,8 +130,7 @@
                 <!--    one columns layout -->
                 <div class="details-rows" ng-if="vm.feature.image">
                     <div class="details-image">
-                        <span class="image-expand" ng-if="!vm.isAreaDetail && (vm.imageGallery.length > 1 || (vm.imageGallery.length === 1 && vm.imageGallery[0].caption && vm.imageGallery[0].caption !== ''))"
-                            ng-click="vm.openImageModal()">
+                        <span class="image-expand" ng-if="!vm.isAreaDetail && (vm.imageGallery.length > 1 || (vm.imageGallery.length === 1 && vm.imageGallery[0].caption && vm.imageGallery[0].caption !== ''))" ng-click="vm.openImageModal()">
                             <i class="icon wm-icon-ios7-more"></i>
                         </span>
                         <img ng-if="!vm.isAreaDetail" ng-click="vm.openImageModal()" ng-src="{{vm.feature.image}}">
@@ -132,8 +138,7 @@
                     </div>
 
                     <ul class="details-related">
-                        <li class="details-related-element related-itinerari" ng-if="vm.relatedItinerary.length > 0"
-                            ng-click="vm.openItineraryRelatedFeatures()">
+                        <li class="details-related-element related-itinerari" ng-if="vm.relatedItinerary.length > 0" ng-click="vm.openItineraryRelatedFeatures()">
                             <a href="">
                                 {{vm.relatedItinerary.length}} {{vm.relatedItinerary.length === 1 ? "itinerario":
                                 "itinerari" | translate}} {{vm.relatedItinerary.length
@@ -171,6 +176,8 @@
                     </ul>
                 </div>
 
+                <div class="elevation-control-container"></div>
+
                 <div class="accessibility-buttons-container" ng-if="vm.showAccessibilityButtons">
                     <a href="" ng-click="vm.openAccessibilityModal('mobility')">
                         <i class="icon wm-icon-wheelchair-15" ng-style="{'background': vm.feature.accessibility.mobility.check ? vm.colors.mainBar.background : '#cccccc'}"></i>
@@ -193,8 +200,8 @@
 
                     <div class="opening-hours" ng-if="vm.featureDetails.opening_hours">
                         <i class="icon ion-clock"></i>
-                        <span class="label">{{"Orari di Apertura" | translate}}</span>
-                        {{vm.featureDetails.opening_hours}}
+                        <span class="label">{{vm.featureDetails['opening_hours:state'] | translate}}</span><br>
+                        <span ng-bind-html="vm.featureDetails['opening_hours:string']"></span>
                     </div>
 
                     <p ng-bind-html="vm.mainDescription.html || vm.feature.title" ng-click="vm.openTextModal()"></p>
@@ -214,8 +221,8 @@
                 <div class="details-description details-rows" ng-if="vm.avoidModal">
                     <div class="opening-hours" ng-if="vm.featureDetails.opening_hours">
                         <i class="icon ion-clock"></i>
-                        <span class="label">{{"Orari di Apertura:" | translate}}</span>
-                        {{vm.featureDetails.opening_hours}}
+                        <span class="label">{{vm.featureDetails['opening_hours:state'] | translate}}</span><br>
+                        <span ng-bind-html="vm.featureDetails['opening_hours:string']"></span>
                     </div>
                     <div class="details-description-expandable" ng-class="{'show-full': vm.fullDescription}" ng-if="vm.feature.description && vm.feature.description.expandable">
                         <p ng-bind-html="vm.feature.description || vm.feature.title"></p>
@@ -226,8 +233,7 @@
                                 'background': '-webkit-linear-gradient(top, ' + vm.colors.details.background + '01 0%, ' + vm.colors.details.background + ' 75%, ' + vm.colors.details.background + ' 100%)'
                             } : {
                                 'background': 'transparent'
-                            }"
-                            ng-click="vm.toggleDescription()">
+                            }" ng-click="vm.toggleDescription()">
                             <span>
                                 {{vm.fullDescription ? "nascondi" : "leggi tutto" | translate}}
                             </span>
@@ -267,8 +273,7 @@
 
                 <div ng-if="!vm.feature.image">
                     <ul class="details-related">
-                        <li class="details-related-element related-itinerari" ng-if="vm.relatedItinerary.length > 0"
-                            ng-click="vm.openItineraryRelatedFeatures()">
+                        <li class="details-related-element related-itinerari" ng-if="vm.relatedItinerary.length > 0" ng-click="vm.openItineraryRelatedFeatures()">
                             <a href="">
                                 {{vm.relatedItinerary.length}} {{vm.relatedItinerary.length === 1 ? "itinerario":
                                 "itinerari" | translate}} {{vm.relatedItinerary.length

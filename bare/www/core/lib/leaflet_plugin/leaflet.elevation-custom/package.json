@@ -1,0 +1,68 @@
+{
+  "_from": "leaflet.elevation",
+  "_id": "leaflet.elevation@0.0.3",
+  "_inBundle": false,
+  "_integrity": "sha1-EE1NkDzZUEpyn7HwMaIc8oGp+tQ=",
+  "_location": "/leaflet.elevation",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "leaflet.elevation",
+    "name": "leaflet.elevation",
+    "escapedName": "leaflet.elevation",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/leaflet.elevation/-/leaflet.elevation-0.0.3.tgz",
+  "_shasum": "104d4d903cd9504a729fb1f031a21cf281a9fad4",
+  "_spec": "leaflet.elevation",
+  "_where": "/Users/webmapps.r.l./Documents/webmapp-generator/bare",
+  "author": {
+    "name": "Felix Bache"
+  },
+  "browserDependencies": {
+    "leaflet": "~0.7",
+    "d3": "~3.1"
+  },
+  "bugs": {
+    "url": "https://github.com/MrMufflon/Leaflet.Elevation/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "A Leaflet plugin to view GeoJSON- and GPX height profiles",
+  "devDependencies": {
+    "grunt": "~0.4",
+    "grunt-contrib-clean": "~0.5",
+    "grunt-contrib-concat": "~0.3",
+    "grunt-contrib-connect": "~0.7",
+    "grunt-contrib-cssmin": "~0.8",
+    "grunt-contrib-jasmine": "~0.6",
+    "grunt-contrib-jshint": "~0.8",
+    "grunt-contrib-less": "~0.9",
+    "grunt-contrib-uglify": "~0.3",
+    "grunt-svg2png": "~0.2",
+    "jasmine": "https://github.com/jasmine/jasmine/archive/v2.0.0.tar.gz"
+  },
+  "homepage": "http://mrmufflon.github.io/Leaflet.Elevation/",
+  "keywords": [
+    "gis",
+    "heightprofile",
+    "elevation",
+    "leaflet",
+    "map",
+    "sdi"
+  ],
+  "license": "MIT",
+  "name": "leaflet.elevation",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrMufflon/Leaflet.Elevation.git"
+  },
+  "version": "0.0.3"
+}

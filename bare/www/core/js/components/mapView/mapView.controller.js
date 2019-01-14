@@ -508,7 +508,26 @@ angular.module('webmapp')
         });
 
         vm.clickRightMenu = function () {
-            if (trackRecordingEnabled) {
+            var menuItems = 0;
+
+            var locationEnabled = !CONFIG.MAP.hideLocationControl && !Utils.isBrowser() ||
+                Utils.isBrowser() && !CONFIG.MAP.hideLocationControl && window.location.protocol === "https:";
+
+            if (!CONFIG.OPTIONS.hideFiltersInMap) {
+                menuItems++;
+            }
+            if (locationEnabled) {
+                if (trackRecordingEnabled) {
+                    menuItems++;
+                }
+                if (CONFIG.USER_COMMUNICATION && CONFIG.USER_COMMUNICATION.REPORT && CONFIG.USER_COMMUNICATION.REPORT.items.length > 0) {
+                    menuItems++;
+                }
+            }
+
+            console.log(menuItems);
+
+            if (menuItems > 1) {
                 $rootScope.$emit("rightMenuClick");
             } else {
                 openFilters();

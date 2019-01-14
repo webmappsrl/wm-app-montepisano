@@ -12,6 +12,7 @@ angular.module('webmapp')
         CONFIG,
         Model,
         Offline,
+        Search,
         Utils
     ) {
         var mapService = {};
@@ -19,6 +20,7 @@ angular.module('webmapp')
         var map = null,
             baseView = {},
             layerControl = null,
+            mainConf = CONFIG.MAIN ? CONFIG.MAIN : {},
             mapConf = CONFIG.MAP,
             menuConf = CONFIG.MENU,
             generalConf = CONFIG.OPTIONS,
@@ -104,6 +106,8 @@ angular.module('webmapp')
             iconSize: [40, 40],
             iconAnchor: [20, 20],
         });
+
+        var elevationControl = null;
 
         var db = new PouchDB('webmapp');
 
@@ -258,7 +262,8 @@ angular.module('webmapp')
                     return {
                         color: feature.properties.color || overlayConf.color || styleConf.line.default.color,
                         weight: feature.properties.weight || overlayConf.weight || styleConf.line.default.weight,
-                        opacity: feature.properties.opacity || overlayConf.opacity || styleConf.line.default.opacity
+                        opacity: feature.properties.opacity || overlayConf.opacity || styleConf.line.default.opacity,
+                        dashArray: feature.properties.dashArray || overlayConf.dashArray || styleConf.line.default.dashArray || []
                     };
                 }
             }
@@ -705,7 +710,7 @@ angular.module('webmapp')
             pointsLayer.addData(poiCollection);
             linesLayer.addData(linesCollection);
 
-            if (generalConf.showArrows || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.showArrows)) {
+            if (generalConf.showArrows || (mainConf && mainConf.OPTIONS && mainConf.OPTIONS.showArrows)) {
                 var featureIds = [];
                 for (var pos in linesCollection.features) {
                     featureIds = featureIds.concat([{
@@ -827,7 +832,7 @@ angular.module('webmapp')
                 if (item.isCustom) {
                     if (CONFIG.LANGUAGES && CONFIG.LANGUAGES.available) {
                         for (var pos in CONFIG.LANGUAGES.available) {
-                            var url = (CONFIG.OFFLINE && CONFIG.OFFLINE.pagesUrl) ? CONFIG.OFFLINE.pagesUrl : (CONFIG.COMMUNICATION.baseUrl.substring(-1) === '/') ? CONFIG.COMMUNICATION.baseUrl + 'pages/' : CONFIG.COMMUNICATION.baseUrl + '/pages/';
+                            var url = (CONFIG.OFFLINE && CONFIG.OFFLINE.pagesUrl) ? CONFIG.OFFLINE.pagesUrl : (CONFIG.COMMUNICATION.baseUrl[CONFIG.COMMUNICATION.baseUrl.length - 1] === '/') ? CONFIG.COMMUNICATION.baseUrl + 'pages/' : CONFIG.COMMUNICATION.baseUrl + '/pages/';
                             url += item.type;
 
                             if (CONFIG.LANGUAGES.available[pos].substring(0, 2) !== CONFIG.LANGUAGES.actual.substring(0, 2)) {
@@ -1029,10 +1034,15 @@ angular.module('webmapp')
                     defer.resolve();
                 };
 
-            var baseUrl = offlineConf.resourceBaseUrl || communicationConf.resourceBaseUrl || '';
-            if (baseUrl.substring(-1) !== '/') {
-                baseUrl += '/';
+            var baseUrl = '';
+            if (currentOverlay.geojsonUrl.substring(0, 4) !== 'file') {
+                baseUrl = offlineConf.resourceBaseUrl || communicationConf.resourceBaseUrl || '';
+
+                if (baseUrl.substring(-1) !== '/') {
+                    baseUrl += '/';
+                }
             }
+
             if (Offline.isActive()) {
                 overlayLayersQueueByLabel[currentOverlay.label] = getItemFromLocalStorage(baseUrl + currentOverlay.geojsonUrl)
                     .then(function (localContent) {
@@ -1054,7 +1064,7 @@ angular.module('webmapp')
                 url = currentOverlay.geojsonUrl;
                 if (available && routeDefaultLang !== currentLang) {
                     var split = currentOverlay.geojsonUrl.split('/');
-                    url = "/languages/" + currentLang + "/" + split.pop();
+                    url = "languages/" + currentLang + "/" + split.pop();
                     url = split.join('/') + url;
                 }
                 url = baseUrl + url;
@@ -1063,7 +1073,7 @@ angular.module('webmapp')
                         url = currentOverlay.geojsonUrl;
                         if (defaultLang !== routeDefaultLang) {
                             var split = currentOverlay.geojsonUrl.split('/');
-                            url = "/languages/" + defaultLang + "/" + split.pop();
+                            url = "languages/" + defaultLang + "/" + split.pop();
                             url = split.join('/') + url;
                         }
                         url = baseUrl + url;
@@ -1215,7 +1225,7 @@ angular.module('webmapp')
                             utfgridCallback(data, currentOverlay, tileLayer);
                         }
                         delete overlayLayersQueueByLabel[currentOverlay.label];
-                    }).fail(function () {
+                    }).catch(function () {
                         defer.resolve();
                     });
             } else {
@@ -1512,7 +1522,7 @@ angular.module('webmapp')
                 rotate: true
             });
 
-            if (CONFIG.OPTIONS.activateZoomControl || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.activateZoomControl)) {
+            if (generalConf.activateZoomControl || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.activateZoomControl)) {
                 L.control.zoom({
                     position: 'topright'
                 }).addTo(map);
@@ -1533,7 +1543,12 @@ angular.module('webmapp')
             });
 
             map.on('zoomstart', function () {
+                mapService.closePopup();
                 $rootScope.$emit('map-zoomstart');
+                try {
+                    elevationControl._hidePositionMarker();
+                }
+                catch (e) { }
             });
 
             map.on('resize', function () {
@@ -1566,10 +1581,6 @@ angular.module('webmapp')
                 Utils.forceDigest();
             });
 
-            map.on('zoomstart', function () {
-                mapService.closePopup();
-            });
-
             map.on('zoomend', function () {
                 var zoom = map.getZoom();
                 if (zoom === +CONFIG.MAP.maxZoom) {
@@ -1596,14 +1607,13 @@ angular.module('webmapp')
             }
 
             markerClusters = new L.MarkerClusterGroup({
-                spiderfyOnMaxZoom: mapConf.markerClustersOptions.spiderfyOnMaxZoom,
-                showCoverageOnHover: mapConf.markerClustersOptions.showCoverageOnHover,
+                spiderfyOnMaxZoom: (mainConf.MAP && mainConf.MAP.markerClustersOptions && mainConf.MAP.markerClustersOptions.spiderifyOnMaxZoom) ? mainConf.MAP.markerClustersOptions.spiderifyOnMaxZoom : mapConf.markerClustersOptions.spiderfyOnMaxZoom,
+                showCoverageOnHover: (mainConf.MAP && mainConf.MAP.markerClustersOptions && mainConf.MAP.markerClustersOptions.showCoverageOnHover) ? mainConf.MAP.markerClustersOptions.showCoverageOnHover : mapConf.markerClustersOptions.showCoverageOnHover,
                 zoomToBoundsOnClick: false, // used markerClusters.on clusterclick instead
                 maxClusterRadius: function (zoom) {
-                    // return (zoom < +mapConf.maxZoom) ? mapConf.markerClustersOptions.maxClusterRadius : 1;
-                    return mapConf.markerClustersOptions.maxClusterRadius
+                    var disableAtZoom = (mainConf.MAP && mainConf.MAP.markerClustersOptions && mainConf.MAP.markerClustersOptions.disableClusteringAtZoom) ? mainConf.MAP.markerClustersOptions.disableClusteringAtZoom : mapConf.markerClustersOptions.disableClusteringAtZoom;
+                    return (zoom < +disableAtZoom) ? ((mainConf.MAP && mainConf.MAP.markerClustersOptions && mainConf.MAP.markerClustersOptions.maxClusterRadius) ? mainConf.MAP.markerClustersOptions.maxClusterRadius : mapConf.markerClustersOptions.maxClusterRadius) : 1;
                 }
-                // disableClusteringAtZoom: mapConf.markerClustersOptions.disableClusteringAtZoom // Create problems with spiderify
             });
 
             markerClusters.addTo(map);
@@ -1623,6 +1633,37 @@ angular.module('webmapp')
                     });
                 }
             });
+
+            if ((mainConf && mainConf.OPTIONS && mainConf.OPTIONS.activateElevationControl) || generalConf.activateElevationControl) {
+                var width = +window.innerWidth,
+                    height;
+
+                if (width > 1024) {
+                    width = width / 2;
+                }
+
+                width = ((width * 96 / 100) - 14);
+                height = width / 3.5;
+
+                elevationControl = L.control.elevation({
+                    position: "bottomleft",
+                    theme: "steelblue-theme", //default: lime-theme
+                    width: width,
+                    height: height,
+                    margins: {
+                        top: 30,
+                        right: 35,
+                        bottom: 30,
+                        left: 50
+                    },
+                    hoverNumber: {
+                        decimalsX: 2, //decimals on distance (always in km)
+                        decimalsY: 0, //deciamls on height (always in m)
+                        formatter: undefined //custom formatter function may be injected
+                    },
+                    collapsed: false  //collapsed mode, show chart on click or mouseover
+                });
+            }
 
             var baseLayersPromises = [];
             for (var i = 0; i < mapConf.layers.length; i++) {
@@ -1660,6 +1701,22 @@ angular.module('webmapp')
             }
 
             resetLayers();
+
+            utfGridBaseLayerByLabel = {};
+            utfGridOverlayLayersByLabel = {};
+            overlayLayersByLabel = {};
+            overlayLayersById = {};
+            extraLayersByLabel = {};
+            featureMapById = {};
+            featuresIdByLayersMap = {};
+
+            overlayLayersQueueByLabel = {};
+            queueLayerToActivate = null;
+
+            polylineDecoratorLayers = {};
+
+            Search.clearEngine();
+            Model.reloadLayers();
             initializeLayers();
         };
 
@@ -2008,6 +2065,42 @@ angular.module('webmapp')
             }
         };
 
+        mapService.toggleElevationControl = function (data, node) {
+            if (mainConf && mainConf.OPTIONS && mainConf.OPTIONS.activateElevationControl || generalConf.activateElevationControl) {
+                try {
+                    elevationControl.clear();
+                }
+                catch (e) { }
+
+                if (data && data.geometry.type === 'LineString' && data.geometry.coordinates[0][2]) {
+                    L.geoJson(data, {
+                        onEachFeature: elevationControl.addData.bind(elevationControl)
+                    });
+                    elevationControl.addTo(map);
+
+                    if (node) {
+                        var htmlObject = elevationControl.getContainer();
+
+                        function setParent(el, newParent) {
+                            newParent.appendChild(el);
+                        }
+                        setParent(htmlObject, node);
+                    }
+                }
+                else {
+                    try {
+                        elevationControl._hidePositionMarker();
+                    }
+                    catch (e) { }
+
+                    try {
+                        map.removeControl(elevationControl);
+                    }
+                    catch (e) { }
+                }
+            }
+        };
+
         mapService.isInBoundingBox = function (lat, long) {
             // If !Multimap
             if (map) {
@@ -2056,13 +2149,8 @@ angular.module('webmapp')
         };
 
         mapService.hasMap = function () {
-            if (map) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
+            return map ? true : false;
+        };
 
         mapService.initialize = function () {
             if (Utils.isBrowser()) {
@@ -2586,10 +2674,12 @@ angular.module('webmapp')
         };
 
         mapService.createUserPolyline = function (coordsArray) {
-            if (userTrackPolyline) {
-                map.removeLayer(userTrackPolyline);
+            if (mapService.hasMap()) {
+                if (userTrackPolyline) {
+                    map.removeLayer(userTrackPolyline);
+                }
+                userTrackPolyline = L.polyline(coordsArray).addTo(map);
             }
-            userTrackPolyline = L.polyline(coordsArray).addTo(map);
         };
 
         mapService.updateUserPolyline = function (latLng) {

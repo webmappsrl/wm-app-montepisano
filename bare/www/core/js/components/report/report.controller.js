@@ -18,7 +18,7 @@ angular.module('webmapp')
             report = {},
             userData = {};
 
-        vm.title = "Segnala";
+        vm.title = $translate.instant("Segnala");
         vm.colors = CONFIG.STYLE;
         vm.isAndroid = window.cordova && window.cordova.platformId === "android" ? true : false;
 
@@ -30,7 +30,7 @@ angular.module('webmapp')
         vm.goBack = function () {
             if (vm.selectedReport !== -1 && vm.reports.length !== 1) {
                 vm.selectedReport = -1;
-                vm.title = "Segnala";
+                vm.title = $translate.instant("Segnala");
             }
             else {
                 Utils.goBack();

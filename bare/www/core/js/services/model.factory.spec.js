@@ -24,29 +24,18 @@ describe('Model.Factory', function () {
 
     beforeEach(function () {
         CONFIG = angular.copy(MOCK_CONFIG);
+
         CONFIG.OPTIONS = {
-            "title": "CONFIGTEST",
-            "startUrl": "/",
-            "useLocalStorageCaching": false,
-            "advancedDebug": false,
-            "hideHowToReach": true,
-            "hideMenuButton": false,
-            "hideExpanderInDetails": false,
-            "hideFiltersInMap": false,
-            "hideDeactiveCentralPointer": false,
-            "hideShowInMapFromSearch": true,
-            "avoidModalInDetails": true,
-            "useAlmostOver": false,
-            "filterIcon": "wm-icon-layers",
             "activateZoomControl": true,
             "mainMenuHideWebmappPage": true,
             "mainMenuHideAttributionPage": true,
             "showAccessibilityButtons": true
         };
+
         CONFIG.OVERLAY_LAYERS = [
             {
                 "id": 1,
-                "geojsonUrl": "pois_1.geojson",
+                "geojsonUrl": "pois_0.geojson",
                 "label": poiLayerLabel,
                 "color": poiColor,
                 "icon": "wm-icon-siti-interesse",
@@ -83,8 +72,21 @@ describe('Model.Factory', function () {
                     "it": trackLayerLabel,
                     "en": trackLayerLabel
                 }
-            }
-        ];
+            }];
+
+        CONFIG.SEARCH = {
+            "active": true,
+            "indexFields": [
+                "name",
+                "address"
+            ],
+            "showAllByDefault": true,
+            "stemming": true,
+            "removeStopWords": true,
+            "indexStrategy": "AllSubstringsIndexStrategy",
+            "TFIDFRanking": true
+        };
+
         CONFIG.MENU = [
             {
                 "label": menuMapLabel,
@@ -120,8 +122,8 @@ describe('Model.Factory', function () {
                 "items": [
                     pageLabel
                 ]
-            }
-        ];
+            }];
+
         CONFIG.PAGES = [{
             "label": pageLabel,
             "type": pageLabelType,
@@ -131,8 +133,6 @@ describe('Model.Factory', function () {
         module(function ($provide) {
             $provide.value('CONFIG', CONFIG);
         });
-
-        // console.log(CONFIG);
     });
 
     beforeEach(inject(function (Model, _$httpBackend_, _$rootScope_, _Search_, _Utils_) {
@@ -162,10 +162,12 @@ describe('Model.Factory', function () {
             expect(modelService.isLayerInMenu(menuLayerGroupLabel)).toBeDefined();
             $httpBackend.flush();
         });
+
         it('it should not be defined', function () {
             expect(modelService.isLayerInMenu("test123")).not.toBeDefined();
             $httpBackend.flush();
         });
+
         afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
@@ -188,11 +190,11 @@ describe('Model.Factory', function () {
             expect(modelService.getItemType("wrongLabel")).not.toBeDefined();
             $httpBackend.flush();
         });
+
         afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
-
     });
 
     describe('buildItemUrl', function () {
@@ -312,7 +314,6 @@ describe('Model.Factory', function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
-
     });
 
     describe('isAPageChild', function () {
@@ -362,17 +363,13 @@ describe('Model.Factory', function () {
             expect(modelService.getListColor(menuPageLabel)).toEqual("someColor");
             delete CONFIG.MAIN;
 
-            CONFIG.STYLE.menu = {
-                color: "anotherColor"
-            };
+            CONFIG.STYLE.menu.color = "anotherColor";
             expect(modelService.getListColor(menuLayerGroupLabel)).toEqual("anotherColor");
 
             expect(modelService.getListColor(poiLayerLabel)).toEqual(poiColor);
             expect(modelService.getListColor(poiLayerLabel1)).toEqual(menuLayerGroupColor);
 
-            CONFIG.STYLE.global = {
-                color: "globalColor"
-            };
+            CONFIG.STYLE.global.color = "globalColor";
             expect(modelService.getListColor("unknown")).toEqual("globalColor");
 
             expect(modelService.getListColor(pageLabel)).toEqual(menuPageGroupColor);

@@ -77,7 +77,8 @@ xdescribe('MainController', function () {
                 allowSleepAgain: function () { },
                 keepAwake: function () { }
             }
-        }
+        };
+
         BackgroundGeolocation = {
             start: function () { },
             stop: function () { },
@@ -98,7 +99,6 @@ xdescribe('MainController', function () {
             },
             callbackFun: null
         };
-
     });
 
     beforeEach(inject(function ($controller, _GeolocationService_, _$cordovaGeolocation_, _$cordovaDeviceOrientation_, _$ionicModal_, _$ionicPopup_, _$q_, _$translate_, _$rootScope_, _MapService_, _$httpBackend_, _Utils_) {

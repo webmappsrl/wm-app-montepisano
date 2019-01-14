@@ -1,15 +1,26 @@
 describe('Map.Factory', function () {
-    beforeEach(module('webmapp'));
-
     var mapService;
     var $httpBackend;
     var $q;
-    var $rootScope;
-    beforeEach(inject(function (MapService, _$httpBackend_, _$q_, _$rootScope_) {
+    var $ionicLoading;
+    var CONFIG;
+    var spy = {};
+
+    beforeEach(module('webmapp'));
+
+    beforeEach(function () {
+        CONFIG = angular.copy(MOCK_CONFIG);
+
+        module(function ($provide) {
+            $provide.value('CONFIG', CONFIG);
+        });
+    });
+
+    beforeEach(inject(function (MapService, _$httpBackend_, _$q_, _$ionicLoading_) {
         mapService = MapService;
         $httpBackend = _$httpBackend_;
-        $rootScope = _$rootScope_;
         $q = _$q_;
+        $ionicLoading = _$ionicLoading_;
 
         $httpBackend.whenGET().respond(404);
         $httpBackend.flush();
@@ -20,8 +31,13 @@ describe('Map.Factory', function () {
         spyOn(L.control, 'groupedLayers').and.callFake(function () {
             return { addTo: function () { } };
         });
-
         spyOn(L.control, 'locate').and.callFake(function () {
+            return { addTo: function () { } };
+        });
+        spyOn(L.control, 'zoom').and.callFake(function () {
+            return { addTo: function () { } };
+        });
+        spyOn(L.control, 'elevation').and.callFake(function ({ options }) {
             return { addTo: function () { } };
         });
         spyOn(L, 'MarkerClusterGroup').and.callFake(function () {
@@ -35,7 +51,7 @@ describe('Map.Factory', function () {
                 redraw: function () { }
             };
         });
-        spyOn(L, 'map').and.callFake(function () {
+        spy['map'] = spyOn(L, 'map').and.callFake(function () {
             return {
                 on: function () { },
                 whenReady: function () { },
@@ -46,108 +62,163 @@ describe('Map.Factory', function () {
                 tmp: []
             };
         });
-
-        mapService.initialize();
     }));
 
-    xit('it should create a polyline', function () {
-        var cord = [
-            [43.718, 10.4],
-            [43.718, 10.41]
-        ];
+    describe('initialize', function () {
+        xit('should not initialize twice', function () {
+            var calls = spy['map'].calls.count();
+            mapService.initialize();
+            expect(spy['map']).toHaveBeenCalledTimes(calls);
+        });
 
-        mapService.createUserPolyline([
-            cord
-        ]);
-        var tmp = mapService.getUserPolyline();
+        xit('should call $.getGeoJSON at least once for every geojson', function () {
+            CONFIG.OVERLAY_LAYERS = [
+                {
+                    "id": 30,
+                    "geojsonUrl": "pois_30.geojson",
+                    "label": "Bar",
+                    "color": "#00ff00",
+                    "icon": "wm-icon-siti-interesse",
+                    "showByDefault": true,
+                    "type": "poi_geojson",
+                    "alert": false,
+                    "languages": {
+                        "it": "Bar",
+                        "en": "bar"
+                    }
+                },
+                {
+                    "id": 12,
+                    "geojsonUrl": "tracks_12.geojson",
+                    "label": "Cicloescursionismo",
+                    "color": "#FF3812",
+                    "icon": "wm-icon-generic",
+                    "showByDefault": true,
+                    "type": "line_geojson",
+                    "alert": false,
+                    "languages": {
+                        "it": "Cicloescursionismo",
+                        "en": "Mountain bike"
+                    }
+                }];
+            CONFIG.LANGUAGES = {};
 
-        expect(L.polyline).toHaveBeenCalled();
-        expect(tmp.coords).toEqual([cord]);
+            var geojsonSpy = spyOn($, 'getJSON');
+            expect(geojsonSpy).toHaveBeenCalledWith([true])
+        });
+
+        describe('with no map layers', function () {
+            beforeEach(function () {
+                CONFIG.MAP.layers = [];
+            });
+            it('should not initialize if no map layers are set', function () {
+                expect(mapService.hasMap()).toBeFalsy();
+            });
+        });
     });
 
-    xit('it should create a polyline and remove previous one ', function () {
-        var cord = [
-            [43.718, 10.4],
-            [43.718, 10.41]
-        ];
-        var cord1 = [
-            [43.718, 10.5],
-            [43.718, 10.51]
-        ];
+    describe('userPolyline', function () {
+        beforeEach(function () {
+            spyOn(mapService, 'hasMap').and.callFake(function () {
+                return true;
+            });
+        });
 
-        mapService.createUserPolyline([
-            cord
-        ]);
-        var tmp = mapService.getUserPolyline();
+        it('it should create a polyline', function () {
+            var coord = [
+                [43.718, 10.4],
+                [43.718, 10.41]
+            ];
 
-        mapService.createUserPolyline([
-            cord1
-        ]);
-        var tmp1 = mapService.getUserPolyline();
+            mapService.createUserPolyline([
+                coord
+            ]);
+            var tmp = mapService.getUserPolyline();
 
-        expect(L.polyline).toHaveBeenCalled();
-        expect(tmp.coords).not.toEqual(tmp1.coords);
-        expect(tmp1.coords).toEqual([cord1]);
-    });
+            expect(L.polyline).toHaveBeenCalled();
+            expect(tmp.coords).toEqual([coord]);
+        });
 
-    xit('it should create a polyline and remove previous one ', function () {
-        var cord = [
-            [43.718, 10.4],
-            [43.718, 10.41]
-        ];
-        var cord1 = [
-            [43.718, 10.5],
-            [43.718, 10.51]
-        ];
+        it('it should create a polyline and remove previous one', function () {
+            var mapReady = function () {
+                if (mapService.isReady()) {
+                    var coord = [
+                        [43.718, 10.4],
+                        [43.718, 10.41]
+                    ];
+                    var coord1 = [
+                        [43.718, 10.5],
+                        [43.718, 10.51]
+                    ];
 
-        mapService.createUserPolyline([
-            cord
-        ]);
-        var tmp = mapService.getUserPolyline();
+                    mapService.createUserPolyline([
+                        coord
+                    ]);
+                    var tmp = mapService.getUserPolyline();
 
-        mapService.createUserPolyline([
-            cord1
-        ]);
-        var tmp1 = mapService.getUserPolyline();
+                    expect(L.polyline).toHaveBeenCalled();
+                    expect(tmp.coords).toEqual([coord]);
 
-        expect(L.polyline).toHaveBeenCalled();
-        expect(tmp.coords).not.toEqual(tmp1.coords);
-        expect(tmp1.coords).toEqual([cord1]);
-    });
+                    mapService.createUserPolyline([
+                        coord1
+                    ]);
+                    var tmp1 = mapService.getUserPolyline();
 
-    xit('it should update the current polyline', function () {
-        var cord = [
-            [43.718, 10.5],
-            [43.718, 10.51]
-        ];
+                    expect(L.polyline).toHaveBeenCalled();
+                    expect(tmp.coords).not.toEqual(tmp1.coords);
+                    expect(tmp1.coords).toEqual([coord1]);
+                }
+                else {
+                    setTimeout(mapReady, 100);
+                }
+            };
 
-        mapService.createUserPolyline([
-            cord
-        ]);
+            mapReady();
+        });
 
-        var updateCord = [43.718, 10.44];
-        mapService.updateUserPolyline([
-            updateCord
-        ]);
+        it('it should update the current polyline', function () {
+            var coord = [
+                [43.718, 10.5],
+                [43.718, 10.51]
+            ];
 
-        var tmp = mapService.getUserPolyline();
-        expect(tmp.coords[tmp.coords.length - 1]).toEqual(updateCord);
-    });
+            mapService.createUserPolyline([
+                coord
+            ]);
 
-    xit('it should remove  the current polyline', function () {
-        var cord = [
-            [43.718, 10.5],
-            [43.718, 10.51]
-        ];
+            var updateCoord = [43.718, 10.44];
+            mapService.updateUserPolyline([
+                updateCoord
+            ]);
 
-        mapService.createUserPolyline([
-            cord
-        ]);
+            var tmp = mapService.getUserPolyline();
+            expect(tmp.coords[tmp.coords.length - 1]).toEqual(updateCoord);
+        });
 
-        mapService.removeUserPolyline();
+        it('it should remove the current polyline', function () {
+            var mapReady = function () {
+                if (mapService.isReady()) {
+                    var coord = [
+                        [43.718, 10.5],
+                        [43.718, 10.51]
+                    ];
 
-        var tmp = mapService.getUserPolyline();
-        expect(tmp).toEqual(null);
+                    mapService.createUserPolyline([
+                        coord
+                    ]);
+
+                    mapService.removeUserPolyline();
+
+                    var tmp = mapService.getUserPolyline();
+                    expect(tmp).toEqual(null);
+                }
+                else {
+                    setTimeout(mapReady, 100);
+                }
+            };
+
+            mapReady();
+        });
     });
 
     afterEach(function () {

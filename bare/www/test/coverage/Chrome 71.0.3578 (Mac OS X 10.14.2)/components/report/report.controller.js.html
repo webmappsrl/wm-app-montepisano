@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for components/report/report.controller.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">components/report/</a> report.controller.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0.81% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>1/124</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/74</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/17</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0.81% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>1/124</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">angular.module('webmapp')
+&nbsp;
+    .controller('ReportController', <span class="fstat-no" title="function not covered" >function ReportController(</span>
+        $ionicPopup,
+        $scope,
+        $translate,
+        Auth,
+        Communication,
+        CONFIG,
+        GeolocationService,
+        Utils
+    ) {
+<span class="cstat-no" title="statement not covered" >        var vm = {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        var toastTimeout = null,</span>
+            position = [],
+            registeredEvents = [],
+            report = {},
+            userData = {};
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.title = "Segnala";</span>
+<span class="cstat-no" title="statement not covered" >        vm.colors = CONFIG.STYLE;</span>
+<span class="cstat-no" title="statement not covered" >        vm.isAndroid = window.cordova &amp;&amp; window.cordova.platformId === "android" ? true : false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.reports = (CONFIG.USER_COMMUNICATION &amp;&amp; CONFIG.USER_COMMUNICATION.REPORT &amp;&amp; CONFIG.USER_COMMUNICATION.REPORT.items) ? angular.copy(CONFIG.USER_COMMUNICATION.REPORT.items) : [];</span>
+<span class="cstat-no" title="statement not covered" >        vm.selectedReport = vm.reports.length === 1 ? 0 : -1;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.isLoading = false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.goBack = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            if (vm.selectedReport !== -1 &amp;&amp; vm.reports.length !== 1) {</span>
+<span class="cstat-no" title="statement not covered" >                vm.selectedReport = -1;</span>
+<span class="cstat-no" title="statement not covered" >                vm.title = "Segnala";</span>
+            }
+            else {
+<span class="cstat-no" title="statement not covered" >                Utils.goBack();</span>
+            }
+<span class="cstat-no" title="statement not covered" >            Utils.forceDigest();</span>
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.selectReport = <span class="fstat-no" title="function not covered" >function (key) {</span></span>
+<span class="cstat-no" title="statement not covered" >            vm.selectedReport = key;</span>
+<span class="cstat-no" title="statement not covered" >            vm.title = vm.reports[key].title;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            for (var i in vm.reports[key].fields) {</span>
+<span class="cstat-no" title="statement not covered" >                if (vm.reports[key].fields[i].type === 'checkbox') {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.reports[key].fields[i].value = [];</span>
+                }
+                else <span class="cstat-no" title="statement not covered" >if (vm.reports[key].fields[i].type !== 'hidden') {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.reports[key].fields[i].value = "";</span>
+                }
+&nbsp;
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            vm.validateForm();</span>
+<span class="cstat-no" title="statement not covered" >            Utils.forceDigest();</span>
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.showHelp = <span class="fstat-no" title="function not covered" >function (key) {</span></span>
+<span class="cstat-no" title="statement not covered" >            try {</span>
+<span class="cstat-no" title="statement not covered" >                clearTimeout(toastTimeout);</span>
+            }
+            catch (e) { }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            Utils.showToast(vm.reports[vm.selectedReport].fields[key].help, 'bottom');</span>
+<span class="cstat-no" title="statement not covered" >            toastTimeout = setTimeout(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                toastTimeout = null;</span>
+<span class="cstat-no" title="statement not covered" >                Utils.hideToast();</span>
+            }, 5000);
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.getPicture = <span class="fstat-no" title="function not covered" >function (sourceType, key) {</span></span>
+<span class="cstat-no" title="statement not covered" >            if (navigator.camera) {</span>
+<span class="cstat-no" title="statement not covered" >                var options = {</span>
+                    quality: 10,
+                    destinationType: navigator.camera.DestinationType.DATA_URL,
+                    sourceType: sourceType ? navigator.camera.PictureSourceType.CAMERA : navigator.camera.PictureSourceType.PHOTOLIBRARY,
+                    saveToPhotoAlbum: true
+                };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                navigator.camera.getPicture(<span class="fstat-no" title="function not covered" >function (data) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    vm.reports[vm.selectedReport].fields[key].value = data;</span>
+<span class="cstat-no" title="statement not covered" >                    $(window).trigger('resize');</span>
+<span class="cstat-no" title="statement not covered" >                    vm.validateForm();</span>
+<span class="cstat-no" title="statement not covered" >                    Utils.forceDigest();</span>
+                }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    console.warn(err);</span>
+                }, options);
+            }
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.resetPicture = <span class="fstat-no" title="function not covered" >function (key) {</span></span>
+<span class="cstat-no" title="statement not covered" >            vm.reports[vm.selectedReport].fields[key].value = '';</span>
+<span class="cstat-no" title="statement not covered" >            vm.validateForm();</span>
+<span class="cstat-no" title="statement not covered" >            Utils.forceDigest();</span>
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.toggleOption = <span class="fstat-no" title="function not covered" >function (fieldKey, optionKey) {</span></span>
+<span class="cstat-no" title="statement not covered" >            if (vm.reports[vm.selectedReport].fields[fieldKey].type === 'checkbox') {</span>
+<span class="cstat-no" title="statement not covered" >                var found = false;</span>
+<span class="cstat-no" title="statement not covered" >                for (var i in vm.reports[vm.selectedReport].fields[fieldKey].value) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (vm.reports[vm.selectedReport].fields[fieldKey].value[i] === optionKey) {</span>
+<span class="cstat-no" title="statement not covered" >                        vm.reports[vm.selectedReport].fields[fieldKey].value.splice(i, 1);</span>
+<span class="cstat-no" title="statement not covered" >                        found = true;</span>
+<span class="cstat-no" title="statement not covered" >                        break;</span>
+                    }
+                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                if (!found) {</span>
+<span class="cstat-no" title="statement not covered" >                    vm.reports[vm.selectedReport].fields[fieldKey].value.push(optionKey);</span>
+                }
+            }
+            else <span class="cstat-no" title="statement not covered" >if (vm.reports[vm.selectedReport].fields[fieldKey].type === 'radio') {</span>
+<span class="cstat-no" title="statement not covered" >                vm.reports[vm.selectedReport].fields[fieldKey].value = optionKey;</span>
+            }
+<span class="cstat-no" title="statement not covered" >            Utils.forceDigest();</span>
+<span class="cstat-no" title="statement not covered" >            vm.validateForm();</span>
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.isSelected = <span class="fstat-no" title="function not covered" >function (fieldKey, optionKey) {</span></span>
+<span class="cstat-no" title="statement not covered" >            if (vm.reports[vm.selectedReport].fields[fieldKey].type === 'checkbox') {</span>
+<span class="cstat-no" title="statement not covered" >                for (var i in vm.reports[vm.selectedReport].fields[fieldKey].value) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (vm.reports[vm.selectedReport].fields[fieldKey].value[i] === optionKey) {</span>
+<span class="cstat-no" title="statement not covered" >                        return true;</span>
+                    }
+                }
+<span class="cstat-no" title="statement not covered" >                return false;</span>
+            }
+            else <span class="cstat-no" title="statement not covered" >if (vm.reports[vm.selectedReport].fields[fieldKey].type === 'radio') {</span>
+<span class="cstat-no" title="statement not covered" >                if (vm.reports[vm.selectedReport].fields[fieldKey].value === optionKey) {</span>
+<span class="cstat-no" title="statement not covered" >                    return true;</span>
+                }
+<span class="cstat-no" title="statement not covered" >                return false;</span>
+            }
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.validateForm = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            var valid = true;</span>
+<span class="cstat-no" title="statement not covered" >            var fields = vm.reports[vm.selectedReport].fields;</span>
+<span class="cstat-no" title="statement not covered" >            for (var i in fields) {</span>
+<span class="cstat-no" title="statement not covered" >                if (fields[i].mandatory) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (fields[i].type === 'checkbox' &amp;&amp; fields[i].value.length === 0) {</span>
+<span class="cstat-no" title="statement not covered" >                        valid = false;</span>
+<span class="cstat-no" title="statement not covered" >                        break;</span>
+                    }
+                    else <span class="cstat-no" title="statement not covered" >if (vm.reports[vm.selectedReport].fields[i].value === "" &amp;&amp; vm.reports[vm.selectedReport].fields[i].mandatory) {</span>
+<span class="cstat-no" title="statement not covered" >                        valid = false;</span>
+<span class="cstat-no" title="statement not covered" >                        break;</span>
+                    }
+                }
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            vm.isValid = valid;</span>
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        vm.sendReport = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >            report.features[0].properties.type = vm.reports[vm.selectedReport].type;</span>
+<span class="cstat-no" title="statement not covered" >            report.features[0].properties.form_data = {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            vm.isLoading = true;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            for (var i in vm.reports[vm.selectedReport].fields) {</span>
+<span class="cstat-no" title="statement not covered" >                report.features[0].properties.form_data[vm.reports[vm.selectedReport].fields[i].name] = vm.reports[vm.selectedReport].fields[i].value;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var url = CONFIG.USER_COMMUNICATION.apiUrl ? CONFIG.USER_COMMUNICATION.apiUrl : "https://api.webmapp.it/services/share.php";</span>
+<span class="cstat-no" title="statement not covered" >            Communication.queuedPost(url, report, true).then(<span class="fstat-no" title="function not covered" >function (res) {</span></span>
+<span class="cstat-no" title="statement not covered" >                vm.isLoading = false;</span>
+<span class="cstat-no" title="statement not covered" >                if (res) {</span>
+<span class="cstat-no" title="statement not covered" >                    $ionicPopup.alert({</span>
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("La tua segnalazione è stata inviata con successo")
+                    });
+                }
+                else {
+<span class="cstat-no" title="statement not covered" >                    $ionicPopup.alert({</span>
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Connessione assente: la tua segnalazione è pronta per essere presa in carico e sarà inviata appena possibile")
+                    });
+                }
+<span class="cstat-no" title="statement not covered" >                Utils.goTo('/');</span>
+            }, <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                vm.isLoading = false;</span>
+<span class="cstat-no" title="statement not covered" >                $ionicPopup.alert({</span>
+                    title: $translate.instant("ATTENZIONE"),
+                    template: $translate.instant("Si è verificato un errore, riprova")
+                });
+            });
+        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        registeredEvents.push(</span>
+            $scope.$on('$ionicView.afterEnter', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                if (GeolocationService.isActive()) {</span>
+<span class="cstat-no" title="statement not covered" >                    position = GeolocationService.getCurrentPosition();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (position === ERRORS.OUTSIDE_BOUNDING_BOX) {</span>
+<span class="cstat-no" title="statement not covered" >                        $ionicPopup.alert({</span>
+                            title: $translate.instant("ATTENZIONE"),
+                            template: $translate.instant("Sembra che tu sia fuori dai limiti della mappa: la richiesta di aiuto non è disponibile.")
+                        });
+<span class="cstat-no" title="statement not covered" >                        geolocationError();</span>
+                    } else <span class="cstat-no" title="statement not covered" >if (!position || !position.lat || !position.long) {</span>
+<span class="cstat-no" title="statement not covered" >                        $ionicPopup.alert({</span>
+                            title: $translate.instant("ATTENZIONE"),
+                            template: $translate.instant("Devi essere localizzato per segnalare la tua posizione")
+                        });
+<span class="cstat-no" title="statement not covered" >                        Utils.goBack();</span>
+                    }
+                    else {
+<span class="cstat-no" title="statement not covered" >                        report = {</span>
+                            type: "FeatureCollection",
+                            features: [{
+                                type: "Feature",
+                                geometry: {
+                                    type: "Point"
+                                },
+                                properties: {
+                                }
+                            }]
+                        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        report.features[0].properties.app = {</span>
+                            id: CONFIG.appId,
+                            routeId: CONFIG.routeID ? CONFIG.routeID : null,
+                            name: CONFIG.MAIN ? CONFIG.MAIN.OPTIONS.title : CONFIG.OPTIONS.title,
+                            route: CONFIG.MAIN ? CONFIG.OPTIONS.title : null
+                        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        var device = ionic.Platform.device();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        report.features[0].properties.device = {</span>
+                            os: device.platform,
+                            version: device.version
+                        };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        userData = Auth.getUserData();</span>
+<span class="cstat-no" title="statement not covered" >                        if (userData &amp;&amp; userData.ID) {</span>
+<span class="cstat-no" title="statement not covered" >                            report.features[0].properties.user = {</span>
+                                id: userData.ID,
+                                email: userData.user_email,
+                                first_name: userData.first_name,
+                                last_name: userData.last_name
+                            };
+                        }
+                        else {
+<span class="cstat-no" title="statement not covered" >                            report.features[0].properties.user = {};</span>
+                        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        report.features[0].properties.timestamp = Date.now();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                        if (position.altitude) {</span>
+<span class="cstat-no" title="statement not covered" >                            report.features[0].geometry.coordinates = [position.long, position.lat, position.altitude];</span>
+                        }
+                        else {
+<span class="cstat-no" title="statement not covered" >                            report.features[0].geometry.coordinates = [position.long, position.lat];</span>
+                        }
+                    }
+                }
+                else {
+<span class="cstat-no" title="statement not covered" >                    $ionicPopup.alert({</span>
+                        title: $translate.instant("ATTENZIONE"),
+                        template: $translate.instant("Devi essere localizzato per segnalare la tua posizione")
+                    });
+<span class="cstat-no" title="statement not covered" >                    Utils.goBack();</span>
+                }
+            })
+        );
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        registeredEvents.push(</span>
+            $scope.$on('$destroy', <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >                for (var i in registeredEvents) {</span>
+<span class="cstat-no" title="statement not covered" >                    registeredEvents[i]();</span>
+                }
+<span class="cstat-no" title="statement not covered" >                delete registeredEvents;</span>
+            })
+        );
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        return vm;</span>
+    });
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jan 14 2019 12:29:14 GMT+0100 (CET)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

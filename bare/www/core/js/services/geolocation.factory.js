@@ -213,20 +213,20 @@ angular.module('webmapp')
                     $ionicPopup.confirm({
                         title: $translate.instant("ATTENZIONE"),
                         template: $translate.instant("Sembra che tu abbia il GPS disattivato. Per accedere a tutte le funzionalità dell'app occorre attivarlo. Vuoi farlo ora?")
-                    })
-                        .then(function (res) {
-                            if (res) {
-                                if (window.cordova.platformId === "ios") {
-                                    cordova.plugins.diagnostic.switchToSettings();
-                                } else {
-                                    cordova.plugins.diagnostic.switchToLocationSettings();
-                                }
+                    }).then(function (res) {
+                        if (res) {
+                            if (window.cordova.platformId === "ios") {
+                                cordova.plugins.diagnostic.switchToSettings();
+                            } else {
+                                cordova.plugins.diagnostic.switchToLocationSettings();
                             }
-                        });
+                        }
+                    });
                     defer.reject(ERRORS.GPS_DISABLED);
                 }
             };
 
+            /* istanbul ignore next */
             var onError = function (e) {
                 console.error(e);
                 defer.reject(ERRORS.GENERIC_GPS);
@@ -312,8 +312,8 @@ angular.module('webmapp')
          * @param {*} GPSState
          */
         function GPSSettingsSwitched(GPSState) {
-            if ((device.platform === "Android" && GPSState !== cordova.plugins.diagnostic.locationMode.LOCATION_OFF) ||
-                (device.platform === "iOS" && (GPSState === cordova.plugins.diagnostic.permissionStatus.GRANTED ||
+            if ((window.cordova.platformId === "android" && GPSState !== cordova.plugins.diagnostic.locationMode.LOCATION_OFF) ||
+                (window.cordova.platformId === "ios" && (GPSState === cordova.plugins.diagnostic.permissionStatus.GRANTED ||
                     GPSState === cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE))
             ) {
                 geolocationService.enable();
@@ -369,7 +369,6 @@ angular.module('webmapp')
         };
 
         function geolocationErrorCallback(error) {
-            console.log("Restarting geolocation");
             try {
                 watchInterval.clearWatch();
             } catch (e) { }
@@ -382,20 +381,14 @@ angular.module('webmapp')
              * error.code === 1 => position denied
              * error.code === 2 => position unavailable
              * error.code === 3 => position timed out
+             * default          => try to reboot BackgroundGeolocation
              */
-            console.error(error);
             switch (+error.code) {
                 case 1:
                     geolocationService.disable();
                     geolocationService.enable();
                     break;
-                case 3:
-                    console.warn("Geolocation timed out");
-                    BackgroundGeolocation.stop();
-                    BackgroundGeolocation.start();
-                    break;
                 case 2:
-                    console.warn("Geolocation unavailable");
                     $ionicPopup.alert({
                         title: $translate.instant("ATTENZIONE"),
                         template: $translate.instant("Si è verificato un errore durante la geolocalizzazione") + '<br>code: ' + error.code + '<br>message: ' + error.message
@@ -406,7 +399,10 @@ angular.module('webmapp')
                     }
                     geolocationService.disable();
                     break;
+                case 3:
                 default:
+                    BackgroundGeolocation.stop();
+                    BackgroundGeolocation.start();
                     break;
             }
         };
@@ -454,7 +450,7 @@ angular.module('webmapp')
                     state.lastHeading = 0;
                     MapService.animateBearing(0, 800);
                     $rootScope.$emit("heading-changed", state.lastHeading);
-                    console.error(error);
+                    console.warn(error);
                 },
                 rotationCallback
             );
@@ -607,13 +603,6 @@ angular.module('webmapp')
             // console.log(position);
 
             if (!geolocationState.isActive) {
-                return;
-            }
-
-            if (state.isOutsideBoundingBox) {
-                if (geolocationService.isActive()) {
-                    geolocationService.disable();
-                }
                 return;
             }
 
@@ -815,6 +804,7 @@ angular.module('webmapp')
          * after been active in background
          *
          */
+        /* istanbul ignore next */
         function saveRecordingState() {
             var polyline = MapService.getUserPolyline();
             polyline = polyline ? polyline.getLatLngs() : null;
@@ -842,6 +832,7 @@ angular.module('webmapp')
          * Delete the saved recording state after application load it
          *
          */
+        /* istanbul ignore next */
         function deleteRecordingState() {
             delete localStorage.$wm_lastRecordingState;
         };
@@ -851,6 +842,7 @@ angular.module('webmapp')
          * Restore the recording state
          *
          */
+        /* istanbul ignore next */
         function restoreRecordingState() {
             var lastState = localStorage.$wm_lastRecordingState ? JSON.parse(localStorage.$wm_lastRecordingState) : false;
 
@@ -900,7 +892,8 @@ angular.module('webmapp')
             state.isOutsideBoundingBox = false;
 
             if (window.cordova) {
-                return checkStatus().then(function (isRunningInBackground) {
+                checkStatus().then(function (isRunningInBackground) {
+                    /* istanbul ignore if */
                     if (isRunningInBackground) {
                         var restored = restoreRecordingState();
 
@@ -930,11 +923,12 @@ angular.module('webmapp')
                                 var lastLocation = {
                                     latitude: state.lastPosition.lat,
                                     longitude: state.lastPosition.long,
-                                    accuracy: 10
+                                    accuracy: state.lastPosition.accuracy ? state.lastPosition.accuracy : 10
                                 };
 
                                 // Some position have been retrieved while app shut down
                                 if (id !== -1) {
+                                    console.log("mmm")
                                     while (locations[id].time > state.lastPosition.timestamp) {
                                         updateNavigationValues(locations[id].latitude, locations[id].longitude);
 
@@ -970,7 +964,8 @@ angular.module('webmapp')
                                     geolocationService.switchState({
                                         isFollowing: true,
                                         isRotating: true
-                                    }).then(function () {
+                                    }).then(function (qwe) {
+                                        console.log("Stato", qwe);
                                         $rootScope.$emit('recordingState-changed', {
                                             isActive: recordingState.isActive,
                                             isPaused: recordingState.isPaused,
@@ -980,17 +975,18 @@ angular.module('webmapp')
                                             } : null,
                                             recordingTrack: recordingState.isRecordingPolyline
                                         });
-                                        return geolocationState;
+                                        console.log(geolocationState)
+                                        defer.resolve(geolocationState);
                                     });
                                 });
                             });
                         } else {
                             BackgroundGeolocation.stop();
-                            return geolocationService.enable();
+                            defer.resolve(geolocationService.enable());
                         }
                     } else {
                         if (geolocationState.isActive) {
-                            return geolocationState;
+                            defer.resolve(geolocationState);
                         } else if (gpsActive) {
                             geolocationState.isActive = true;
                             geolocationState.isLoading = true;
@@ -1013,13 +1009,15 @@ angular.module('webmapp')
                                     console.warn("CordovaGeolocation.getCurrentPosition has been rejected: ", err);
                                 });
 
-                            return geolocationState;
+                            defer.resolve(geolocationState);
                         } else {
-                            return checkGPS().then(geolocationService.enable);
+                            defer.resolve(checkGPS().then(geolocationService.enable));
                         }
                     }
                 });
             } else {
+                // TODO: find a way to mock window.location.protocol in karma
+                /* istanbul ignore if */
                 if (Utils.isBrowser() && window.location.protocol === "https:") {
                     geolocationState.isActive = true;
                     geolocationState.isLoading = true;
@@ -1085,6 +1083,8 @@ angular.module('webmapp')
          *      true if all correct, false otherwise
          */
         geolocationService.disable = function () {
+            // TODO: find a way to mock window.location.protocol in karma
+            /* istanbul ignore else */
             if (window.cordova) {
                 BackgroundGeolocation.events.forEach(function (event) {
                     return BackgroundGeolocation.removeAllListeners(event);

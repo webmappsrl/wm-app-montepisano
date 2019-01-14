@@ -16,6 +16,14 @@
 
     <div id="search-fixed">
         <input type="search" placeholder="{{'Cerca' | translate}}" ng-model="vm.search" />
+        <div class="packages__sort" ng-click="vm.toggleSort()">
+            <i ng-class="{
+                'wm-icon-distance': vm.sortPackage.type === 'distance',
+                'wm-icon-alpha-sort': vm.sortPackage.type === 'alpha',
+                'semitransparent': vm.sortPackage.loading
+            }"></i>
+            <ion-spinner ng-if="vm.sortPackage.loading"></ion-spinner>
+        </div>
     </div>
 
     <ion-content class="withSearchBar" ng-style="{
@@ -36,52 +44,7 @@
         <div class="static-content card-content search-bar-content" ng-class="{
             'search-bar-margin-fix': !vm.isBrowser && !vm.isAndroid
         }">
-            <div class="modal-inner-content modal-two-columns coupons-list" ng-if="(vm.isLoggedIn || !vm.useLogin) && vm.type !== 'reduced'" ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search | orderPackagesFilter : vm.currentPosition">
-                <div class="packages-title" ng-bind-html="item.title.rendered">
-                </div>
-                <div class="details-image">
-                    <img class="modal-image" ng-src="{{item.n7webmap_route_media_gallery[0].sizes.medium_large}}">
-                </div>
-                <div class="details-description" ng-bind-html="item.excerpt.rendered">
-                </div>
-
-                <div>
-                    <button class="button-download button button-block button-half" ng-style="{
-                        'background': COLORS.global.buttonsBackground,
-                        'color': COLORS.global.buttonsColor
-                    }" ng-if="vm.userDownloadedPackages[item.id]" ng-click="vm.openPackage(item)">
-                        {{"Apri" | translate}}
-                    </button>
-                    <button class="button-download button button-block button-half" ng-style="{
-                        'background': COLORS.global.buttonsBackground,
-                        'color': COLORS.global.buttonsColor
-                    }" ng-if="vm.userDownloadedPackages[item.id]" ng-click="vm.removePack(item)">
-                        {{"Rimuovi" | translate}}
-                    </button>
-                    <button class="button-download button button-block button-half" ng-style="{
-                        'background': COLORS.global.buttonsBackground,
-                        'color': COLORS.global.buttonsColor
-                    }" ng-if="(vm.userPackagesId[item.id] || item.wm_route_public) && !vm.userDownloadedPackages[item.id]" ng-click="vm.downloadPackage(item)">
-                        {{"Scarica" | translate}}
-                    </button>
-                    <button class="button-block button button-download button-half" ng-style="{
-                        'background': COLORS.global.buttonsBackground,
-                        'color': COLORS.global.buttonsColor
-                    }" ng-if="!item.wm_route_public && !vm.userDownloadedPackages[item.id] && !vm.userPackagesId[item.id]" ng-disabled="vm.userPackagesIdRquested[item.id]" ng-click="vm.requestPack(item)">
-                        <!-- TODO: pulsante con scritto "Richiesta effettuata" senza che vada su due righe -->
-                        {{ !vm.userPackagesIdRquested[item.id] ? "Richiedi" : "Richiesto" | translate}}
-                    </button>
-                    <button class="button-block button button-half" ng-style="{
-                        'background': COLORS.global.buttonsBackground,
-                        'color': COLORS.global.buttonsColor
-                    }" ng-click="vm.openDetailsRoute(item.id);">
-                        {{"Dettagli" | translate}}
-                    </button>
-                </div>
-
-            </div>
-
-            <div class="modal-inner-content modal-two-columns coupons-list reduced-list" ng-if="vm.type === 'reduced'" ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search | orderPackagesFilter : vm.currentPosition" ng-click="vm.openDetailsRoute(item.id)">
+            <div class="modal-inner-content modal-two-columns coupons-list reduced-list" ng-repeat="item in vm.packages | categoryFilter : vm.filters | packagesSearchFilter : vm.search | packagesSortFilter : vm.sortPackage" ng-click="vm.openDetailsRoute(item.id)">
                 <div class="details-image-reduced">
                     <img class="modal-image" ng-if="!item.localImageUrl" ng-src="{{item.imgUrl}}">
                     <img class="modal-image" ng-if="item.localImageUrl" ng-src="{{item.localImageUrl}}">

@@ -276,8 +276,26 @@
   position: relative;
   top: 42px;
   z-index: 999;
+  width: 75%;
+  float: right;
+
   a {
-    text-transform: capitalize
+    text-transform: capitalize;
+
+    &.item-icon-right span {
+      position: absolute;
+      top: 0;
+      right: 11px;
+      min-width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      color: #fff;
+      background: #f00;
+      font-weight: bold;
+      padding: 5px;
+      margin: 12px 0;
+      text-align: center;
+    }
   }
 }
 

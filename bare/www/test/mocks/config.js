@@ -1,22 +1,24 @@
 var MOCK_CONFIG = {
-    "VERSION": "0.1.1714", "appId": "it.webmapp.testpisa",
+    "VERSION": "0.1.1714",
+    "appId": "it.webmapp.testpisa",
     "OPTIONS": {
-        "title": "PISATEST",
+        "title": "CONFIGTEST",
         "startUrl": "/",
         "useLocalStorageCaching": false,
         "advancedDebug": false,
-        "hideHowToReach": true,
+        "hideHowToReach": false,
         "hideMenuButton": false,
         "hideExpanderInDetails": false,
         "hideFiltersInMap": false,
         "hideDeactiveCentralPointer": false,
         "hideShowInMapFromSearch": true,
         "avoidModalInDetails": true,
-        "useAlmostOver": false,
+        "useAlmostOver": true,
         "filterIcon": "wm-icon-layers",
         "activateZoomControl": true,
-        "mainMenuHideWebmappPage": true,
-        "mainMenuHideAttributionPage": true,
+        "activateElevationControl": true,
+        "mainMenuHideWebmappPage": false,
+        "mainMenuHideAttributionPage": false,
         "showAccessibilityButtons": true,
         "allowCoordsShare": true
     },
@@ -71,18 +73,7 @@ var MOCK_CONFIG = {
         "resourceBaseUrl": "http://pisatest.j.webmapp.it/geojson"
     },
     "SEARCH": {
-        "active": true,
-        "indexFields": [
-            "name",
-            "description",
-            "email",
-            "address"
-        ],
-        "showAllByDefault": true,
-        "stemming": true,
-        "removeStopWords": true,
-        "indexStrategy": "AllSubstringsIndexStrategy",
-        "TFIDFRanking": true
+        "active": false
     },
     "MENU": [
         {

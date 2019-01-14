@@ -726,10 +726,12 @@ div.detailRoute-footer {
   margin-top: -1px;
   font-size: 14px; }
 
+.details-contacts__list {
+  min-height: 40px; }
+
 .subnav-list__element,
 .contacts-list__element {
   display: inline-block;
-  width: 32%;
   margin: 0;
   padding: 0;
   text-align: left;
@@ -737,6 +739,31 @@ div.detailRoute-footer {
   .subnav-list__element.center,
   .contacts-list__element.center {
     text-align: center; }
+  .single-contact .subnav-list__element, .single-contact
+  .contacts-list__element {
+    width: 100%; }
+  .double-contact .subnav-list__element, .double-contact
+  .contacts-list__element {
+    width: 49%; }
+  .triple-contact .subnav-list__element, .triple-contact
+  .contacts-list__element {
+    width: 32%; }
+  .single-contact.contact-include-edit .subnav-list__element, .single-contact.contact-include-edit
+  .contacts-list__element {
+    width: 85%; }
+  .double-contact.contact-include-edit .subnav-list__element, .double-contact.contact-include-edit
+  .contacts-list__element {
+    width: 42%; }
+  .triple-contact.contact-include-edit .subnav-list__element, .triple-contact.contact-include-edit
+  .contacts-list__element {
+    width: 28%; }
+  .contact-include-edit .subnav-list__element.wp-edit-link, .contact-include-edit
+  .contacts-list__element.wp-edit-link {
+    float: right;
+    width: 13%; }
+    .contact-include-edit .subnav-list__element.wp-edit-link a, .contact-include-edit
+    .contacts-list__element.wp-edit-link a {
+      text-overflow: unset; }
   .subnav-list__element a,
   .contacts-list__element a {
     border: 0;
@@ -824,6 +851,13 @@ div.detailRoute-footer {
     content: '';
     display: table;
     clear: both; }
+
+.elevation-control-container {
+  width: 100%;
+  padding: 5px 7px 0 7px;
+  display: block;
+  margin: 0 auto;
+  overflow: hidden; }
 
 .details-howtoreach {
   display: none;
@@ -965,7 +999,7 @@ div.detailRoute-footer {
   .detail-route .details-description {
     margin-bottom: 78px; }
   .details-description .opening-hours {
-    padding: 10px 0; }
+    padding: 0 0 10px; }
     .details-description .opening-hours .icon {
       margin-right: 5px;
       font-size: 20px;
@@ -1257,11 +1291,30 @@ div.detailRoute-footer {
     border: none;
     border-radius: 50%;
     display: inline-block;
-    opacity: 0.4; }
+    transition-duration: 0.6s;
+    transition-timing-function: ease-in-out;
+    transition-property: opacity; }
     .help-page.pane .step.active {
       opacity: 1; }
+    .help-page.pane .step.inactive {
+      opacity: 0.4; }
+  .help-page.pane .help__previous,
+  .help-page.pane .help__next {
+    position: fixed;
+    bottom: 0;
+    font-size: 2em;
+    padding: 15px;
+    z-index: 100; }
+  .help-page.pane .help__previous {
+    left: 0; }
+  .help-page.pane .help__next {
+    right: 0; }
   .help-page.pane div.tab {
-    display: none; }
+    display: block;
+    position: absolute;
+    width: 100%;
+    transition-duration: 0.4s;
+    transition-timing-function: ease-in-out; }
     .help-page.pane div.tab p {
       width: 100%;
       padding: 5% 5%;
@@ -1274,7 +1327,7 @@ div.detailRoute-footer {
     .help-page.pane div.tab div.help-img {
       width: 100%;
       position: fixed;
-      max-height: 60vh;
+      height: 60vh;
       bottom: 50px;
       padding: 0 5%; }
       .help-page.pane div.tab div.help-img > img {
@@ -1315,36 +1368,23 @@ div.detailRoute-footer {
     float: right; }
   .help-page.pane .left {
     float: left; }
-  .help-page.pane .animate-leftin {
-    position: relative;
-    animation: animateleftin 0.4s; }
-  .help-page.pane .animate-rightin {
-    position: relative;
-    animation: animaterightin 0.4s; }
-
-@keyframes animateleftin {
-  from {
-    left: -300px;
-    opacity: 0; }
-  to {
-    left: 0;
-    opacity: 1; } }
-
-@keyframes animaterightin {
-  from {
-    right: -300px;
-    opacity: 0; }
-  to {
-    right: 0;
-    opacity: 1; } }
+  .help-page.pane .right-out {
+    opacity: 0;
+    left: 100vw; }
+  .help-page.pane .left-out {
+    opacity: 0;
+    left: -100vw; }
+  .help-page.pane .middle-in {
+    opacity: 1;
+    left: 0vw; }
   @media screen and (max-height: 600px) {
-    .help-page.pane p {
+    .help-page.pane div.tab p {
       font-size: 2.1em; } }
   @media screen and (min-height: 700px) {
-    .help-page.pane p {
+    .help-page.pane div.tab p {
       font-size: 2.5em; }
-    .help-page.pane p,
-    .help-page.pane p.large {
+    .help-page.pane div.tab p,
+    .help-page.pane div.tab p.large {
       padding: 9% 5%; } }
 
 /**
@@ -2144,9 +2184,24 @@ button.login-button {
 .map-menu {
   position: relative;
   top: 42px;
-  z-index: 999; }
+  z-index: 999;
+  width: 75%;
+  float: right; }
   .map-menu a {
     text-transform: capitalize; }
+    .map-menu a.item-icon-right span {
+      position: absolute;
+      top: 0;
+      right: 11px;
+      min-width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      color: #fff;
+      background: #f00;
+      font-weight: bold;
+      padding: 5px;
+      margin: 12px 0;
+      text-align: center; }
 
 /* ------------------------------------ *\
    #TOAST
@@ -2430,14 +2485,6 @@ a.item {
     top: 7px;
     left: 11px;
     color: #fff; }
-  .report-control span {
-    color: #fff;
-    background: #f00;
-    font-weight: bold;
-    padding: 0 6px;
-    position: relative;
-    left: -10px;
-    border-radius: 50%; }
 
 .report-control:active {
   background-color: #605846; }
@@ -3476,6 +3523,10 @@ ion-modal-view.modal-download {
     height: 20em;
     margin-top: -8em; }
 
+.offline-progress-bar {
+  width: 100%;
+  height: 5px; }
+
 /* LOADER in MODAL DONWLOAD*/
 .loader {
   border: 16px solid #f8faf3;
@@ -3571,14 +3622,33 @@ button.no-animate.button.button-icon.icon.wm-icon-funnel-wm {
   margin: 10px 5%;
   height: 30px;
   position: fixed;
-  z-index: 2;
-  box-shadow: 0 2px 5px #aaaaaa; }
-  #search-fixed input {
+  z-index: 2; }
+  #search-fixed input,
+  #search-fixed .packages__sort {
     position: fixed;
-    width: calc(90% - 30px);
     height: inherit;
-    padding: 0 15px;
+    box-shadow: 0 2px 5px #aaaaaa;
     background-color: #FCFDF7; }
+  #search-fixed input {
+    width: calc(90% - 70px);
+    padding: 0 15px; }
+  #search-fixed .packages__sort {
+    z-index: 100;
+    width: 30px;
+    margin-left: 10px;
+    right: 5%;
+    height: inherit;
+    font-size: 24px;
+    padding: 3px;
+    color: #000;
+    text-align: center; }
+    #search-fixed .packages__sort .semitransparent {
+      opacity: 0.3; }
+    #search-fixed .packages__sort ion-spinner {
+      position: absolute;
+      left: 0;
+      top: 0;
+      padding: 1px; }
 
 .bottom-whitespace {
   height: 35px;
