@@ -14,7 +14,7 @@ angular.module('webmapp')
     ) {
         var utils = {},
             modals = {},
-            isAndroid = cordova.platformId === 'android';
+            isAndroid = window.cordova && window.cordova.platformId === 'android';
 
         utils.createModal = function (path, options, scope) {
             var defer = $q.defer();

@@ -6,7 +6,7 @@ angular.module('webmapp')
         $q
     ) {
         var mbtiles = {},
-            isAndroid = cordova.platformId === 'android';
+            isAndroid = window.cordova && window.cordova.platformId === 'android';
 
         var openCordovaDB = function (dbPath) {
             var basename, pathParts, additionalMapPath;

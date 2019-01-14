@@ -1,0 +1,7 @@
+WARN - 'No compass on Device' - warn - Chrome 71.0.3578 (Mac OS X 10.14.2)
+WARN - 'No compass on Device' - warn - Chrome 71.0.3578 (Mac OS X 10.14.2)
+WARN - 'Native: deviceready did not fire within 5000ms. This can happen when plugins are in an inconsistent state. Try removing plugins from plugins/ and reinstalling them.' - warn - Chrome 71.0.3578 (Mac OS X 10.14.2)
+WARN - '$wm_userDownloadedPackages: missing' - warn - Chrome 71.0.3578 (Mac OS X 10.14.2)
+WARN - 'Native: tried calling Deeplinks.route, but the Deeplinks plugin is not installed.' - warn - Chrome 71.0.3578 (Mac OS X 10.14.2)
+WARN - 'Install the Deeplinks plugin: 'ionic plugin add ionic-plugin-deeplinks'' - warn - Chrome 71.0.3578 (Mac OS X 10.14.2)
+WARN - 'No match', 'plugin_not_installed' - warn - Chrome 71.0.3578 (Mac OS X 10.14.2)

@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for services/mbtiles.factory.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">services/</a> mbtiles.factory.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">4.76% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>6/126</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">5.88% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>2/34</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">2.38% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>1/42</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">4.76% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>6/126</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">154×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">154×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">154×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">154×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">154×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/*global angular*/
+&nbsp;
+angular.module('webmapp')
+&nbsp;
+    .factory('MBTiles', function MBTiles(
+        $q
+    ) {
+        var mbtiles = {},
+            isAndroid = window.cordova &amp;&amp; window.cordova.platformId === 'android';
+&nbsp;
+        var openCordovaDB = <span class="fstat-no" title="function not covered" >function (dbPath) {</span>
+<span class="cstat-no" title="statement not covered" >            var basename, pathParts, additionalMapPath;</span>
+<span class="cstat-no" title="statement not covered" >            if (isAndroid) {</span>
+<span class="cstat-no" title="statement not covered" >                basename = dbPath;</span>
+            } else {
+<span class="cstat-no" title="statement not covered" >                pathParts = dbPath.split('/');</span>
+<span class="cstat-no" title="statement not covered" >                additionalMapPath = !!localStorage.$wm_mhildId ? 'map_' + localStorage.$wm_mhildId + '/' : 'map/';</span>
+                // TODO: instead of .pop(), check the base path and preserve subfolder
+<span class="cstat-no" title="statement not covered" >                basename = 'NoCloud/' + additionalMapPath + pathParts.pop();</span>
+            }
+<span class="cstat-no" title="statement not covered" >            return sqlitePlugin.openDatabase({</span>
+                name: basename,
+                iosDatabaseLocation: 'Library'
+            });
+        };
+&nbsp;
+        mbtiles.join = <span class="fstat-no" title="function not covered" >function (baseMbtiles, importMbtiles, progressFunction) {</span>
+<span class="cstat-no" title="statement not covered" >            var defer = $q.defer();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var db = {};</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var attachStmt = "ATTACH DATABASE ? AS importDb;",</span>
+                detachStmt = "DETACH DATABASE importDb;",
+                mapCountStmt = "SELECT COUNT(*) AS count FROM map;",
+                mapInsertStmt = "INSERT OR IGNORE INTO map (tile_id, zoom_level, tile_column, tile_row) SELECT tile_id, zoom_level, tile_column, tile_row FROM importDb.map;",
+                imagesCountStmt = "SELECT COUNT(*) AS count FROM images;",
+                imagesInsertStmt = "INSERT OR IGNORE INTO images (tile_id, tile_data) SELECT tile_id, tile_data FROM importDb.images;",
+                metaStmt = "SELECT value FROM metadata WHERE name = ?;",
+                metaUpdateStmt = "UPDATE metadata SET value = ? WHERE name = ?;";
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var progress = {</span>
+                loaded: 0,
+                total: 0,
+                ref: importMbtiles
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var mergeMeta = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                var updateValue = <span class="fstat-no" title="function not covered" >function (key, value) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    db[baseMbtiles].executeSql(metaUpdateStmt, [value, key], <span class="fstat-no" title="function not covered" >function () {</span></span>
+                    }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                        console.error(err);</span>
+                    });
+                };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                db[baseMbtiles].executeSql(metaStmt, ['minzoom'], <span class="fstat-no" title="function not covered" >function (baseRes) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    db[importMbtiles].executeSql(metaStmt, ['minzoom'], <span class="fstat-no" title="function not covered" >function (importRes) {</span></span>
+<span class="cstat-no" title="statement not covered" >                        if (importRes.rows.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                            var importValue = importRes.rows.item(0).value;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                            if (baseRes.rows.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                var baseValue = baseRes.rows.item(0).value;</span>
+<span class="cstat-no" title="statement not covered" >                                if (+baseValue &gt; +importValue) {</span>
+<span class="cstat-no" title="statement not covered" >                                    updateValue('minzoom', importValue);</span>
+                                }
+                            }
+                            else {
+<span class="cstat-no" title="statement not covered" >                                updateValue('minzoom', importValue);</span>
+                            }
+                        }
+                    }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                        console.error(err);</span>
+                    });
+                }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    console.error(err);</span>
+                });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                db[baseMbtiles].executeSql(metaStmt, ['maxzoom'], <span class="fstat-no" title="function not covered" >function (baseRes) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    db[importMbtiles].executeSql(metaStmt, ['maxzoom'], <span class="fstat-no" title="function not covered" >function (importRes) {</span></span>
+<span class="cstat-no" title="statement not covered" >                        if (importRes.rows.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                            var importValue = importRes.rows.item(0).value;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                            if (baseRes.rows.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                var baseValue = baseRes.rows.item(0).value;</span>
+<span class="cstat-no" title="statement not covered" >                                if (+baseValue &lt; +importValue) {</span>
+<span class="cstat-no" title="statement not covered" >                                    updateValue('maxzoom', importValue);</span>
+                                }
+                            }
+                            else {
+<span class="cstat-no" title="statement not covered" >                                updateValue('maxzoom', importValue);</span>
+                            }
+                        }
+                    }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                        console.error(err);</span>
+                    });
+                }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    console.error(err);</span>
+                });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                db[baseMbtiles].executeSql(metaStmt, ['bounds'], <span class="fstat-no" title="function not covered" >function (baseRes) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    db[importMbtiles].executeSql(metaStmt, ['bounds'], <span class="fstat-no" title="function not covered" >function (importRes) {</span></span>
+<span class="cstat-no" title="statement not covered" >                        if (importRes.rows.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                            var importValue = importRes.rows.item(0).value;</span>
+<span class="cstat-no" title="statement not covered" >                            if (baseRes.rows.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                                var baseValue = baseRes.rows.item(0).value;</span>
+<span class="cstat-no" title="statement not covered" >                                baseValue = baseValue.split(',');</span>
+<span class="cstat-no" title="statement not covered" >                                importValue = importValue.split(',');</span>
+<span class="cstat-no" title="statement not covered" >                                var changed = false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                if (baseValue[0] &gt; importValue[0]) {</span>
+<span class="cstat-no" title="statement not covered" >                                    baseValue[0] = importValue[0];</span>
+<span class="cstat-no" title="statement not covered" >                                    changed = true;</span>
+                                }
+<span class="cstat-no" title="statement not covered" >                                if (baseValue[1] &gt; importValue[1]) {</span>
+<span class="cstat-no" title="statement not covered" >                                    baseValue[1] = importValue[1];</span>
+<span class="cstat-no" title="statement not covered" >                                    changed = true;</span>
+                                }
+<span class="cstat-no" title="statement not covered" >                                if (baseValue[2] &lt; importValue[2]) {</span>
+<span class="cstat-no" title="statement not covered" >                                    baseValue[2] = importValue[2];</span>
+<span class="cstat-no" title="statement not covered" >                                    changed = true;</span>
+                                }
+<span class="cstat-no" title="statement not covered" >                                if (baseValue[3] &lt; importValue[3]) {</span>
+<span class="cstat-no" title="statement not covered" >                                    baseValue[3] = importValue[3];</span>
+<span class="cstat-no" title="statement not covered" >                                    changed = true;</span>
+                                }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                                if (changed) {</span>
+<span class="cstat-no" title="statement not covered" >                                    baseValue = baseValue.join(',');</span>
+<span class="cstat-no" title="statement not covered" >                                    updateValue('bounds', baseValue);</span>
+                                }
+                            }
+                            else {
+<span class="cstat-no" title="statement not covered" >                                updateValue('bounds', importValue);</span>
+                            }
+                        }
+                    }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                        console.error(err);</span>
+                    });
+                }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    console.error(err);</span>
+                });
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var transferDb = <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                var transferDefer = $q.defer();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                mergeMeta();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                db[baseMbtiles].executeSql(attachStmt, [importMbtiles], <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                    db[baseMbtiles].executeSql(imagesInsertStmt, [], <span class="fstat-no" title="function not covered" >function (imagesRes) {</span></span>
+<span class="cstat-no" title="statement not covered" >                        progress.loaded = imagesRes.rowsAffected;</span>
+<span class="cstat-no" title="statement not covered" >                        progressFunction(progress);</span>
+<span class="cstat-no" title="statement not covered" >                        db[baseMbtiles].executeSql(mapInsertStmt, [], <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                            db[baseMbtiles].executeSql(detachStmt, [], <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                                progress.loaded = progress.total;</span>
+<span class="cstat-no" title="statement not covered" >                                progressFunction(progress);</span>
+<span class="cstat-no" title="statement not covered" >                                transferDefer.resolve();</span>
+                            }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                                transferDefer.reject(err);</span>
+                            });
+                        }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                            transferDefer.reject(err);</span>
+                        });
+                    }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                        transferDefer.reject(err);</span>
+                    });
+                }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    transferDefer.reject(err);</span>
+                });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                return transferDefer.promise;</span>
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            baseMbtiles = baseMbtiles.substr(7);</span>
+<span class="cstat-no" title="statement not covered" >            importMbtiles = importMbtiles.substr(7);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            db[baseMbtiles] = openCordovaDB(baseMbtiles);</span>
+<span class="cstat-no" title="statement not covered" >            db[importMbtiles] = openCordovaDB(importMbtiles);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            db[importMbtiles].executeSql(mapCountStmt, [], <span class="fstat-no" title="function not covered" >function (mapCount) {</span></span>
+<span class="cstat-no" title="statement not covered" >                progress.total += mapCount.rows.item(0).count;</span>
+<span class="cstat-no" title="statement not covered" >                db[importMbtiles].executeSql(imagesCountStmt, [], <span class="fstat-no" title="function not covered" >function (imagesCount) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    progress.total += imagesCount.rows.item(0).count;</span>
+<span class="cstat-no" title="statement not covered" >                    transferDb().then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                        defer.resolve();</span>
+                    }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                        defer.reject(err);</span>
+                    });
+                }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    defer.reject(err);</span>
+                });
+            }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                defer.reject(err);</span>
+            });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return defer.promise;</span>
+        };
+&nbsp;
+        mbtiles.getTotalRecords = <span class="fstat-no" title="function not covered" >function (arrayLink) {</span>
+            /* it counts the sum of all mbtiles map and images table records
+             */
+<span class="cstat-no" title="statement not covered" >            var defer = $q.defer(),</span>
+                mapStmt = "SELECT COUNT(*) AS count FROM map;",
+                imagesStmt = "SELECT COUNT(*) AS count FROM images;",
+                total = 0,
+                promises = [],
+                db = [];
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var calculateDbTotal = <span class="fstat-no" title="function not covered" >function (link) {</span></span>
+<span class="cstat-no" title="statement not covered" >                var calcDefer = $q.defer();</span>
+<span class="cstat-no" title="statement not covered" >                var currentDb = openCordovaDB(link);</span>
+<span class="cstat-no" title="statement not covered" >                db[link] = currentDb;</span>
+<span class="cstat-no" title="statement not covered" >                currentDb.executeSql(imagesStmt, [], <span class="fstat-no" title="function not covered" >function (images) {</span></span>
+<span class="cstat-no" title="statement not covered" >                    total += images.rows.item(0).count;</span>
+<span class="cstat-no" title="statement not covered" >                    currentDb.executeSql(mapStmt, [], <span class="fstat-no" title="function not covered" >function (map) {</span></span>
+<span class="cstat-no" title="statement not covered" >                        total += map.rows.item(0).count;</span>
+<span class="cstat-no" title="statement not covered" >                        calcDefer.resolve();</span>
+                    }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                        console.error(err);</span>
+<span class="cstat-no" title="statement not covered" >                        calcDefer.resolve();</span>
+                    });
+                }, <span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                    console.error(err);</span>
+<span class="cstat-no" title="statement not covered" >                    defer.resolve();</span>
+                });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                return calcDefer.promise;</span>
+            };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            var start = 0;</span>
+<span class="cstat-no" title="statement not covered" >            if (!isAndroid) {</span>
+<span class="cstat-no" title="statement not covered" >                start = 1;</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            for (var i = start; i &lt; arrayLink.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >                promises.push(calculateDbTotal(arrayLink[i].substring(7)));</span>
+            }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            $q.all(promises).then(<span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >                defer.resolve(total);</span>
+            }).catch(<span class="fstat-no" title="function not covered" >function (err) {</span>
+<span class="cstat-no" title="statement not covered" >                console.error(err);</span>
+<span class="cstat-no" title="statement not covered" >                defer.reject(err);</span>
+            });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return defer.promise;</span>
+        };
+&nbsp;
+        return mbtiles;
+    });
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jan 14 2019 11:43:00 GMT+0100 (CET)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
