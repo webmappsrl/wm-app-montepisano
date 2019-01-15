@@ -337,6 +337,10 @@ gulp.task('sass', function () {
     });
 });
 
+gulp.task('test', function () {
+    sh.exec('npm test');
+});
+
 gulp.copy = function (src, dest) {
     gulp.start('node_modules_link');
 
