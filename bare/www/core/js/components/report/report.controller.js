@@ -21,6 +21,9 @@ angular.module('webmapp')
         vm.title = $translate.instant("Segnala");
         vm.colors = CONFIG.STYLE;
         vm.isAndroid = window.cordova && window.cordova.platformId === "android" ? true : false;
+        vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+        vm.defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
+            ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
 
         vm.reports = (CONFIG.USER_COMMUNICATION && CONFIG.USER_COMMUNICATION.REPORT && CONFIG.USER_COMMUNICATION.REPORT.items) ? angular.copy(CONFIG.USER_COMMUNICATION.REPORT.items) : [];
         vm.selectedReport = vm.reports.length === 1 ? 0 : -1;

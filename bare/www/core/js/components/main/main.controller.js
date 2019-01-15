@@ -33,7 +33,6 @@ angular.module('webmapp')
 
         var registeredEvents = [];
 
-
         vm.geolocationState = {
             isActive: false,
             isLoading: false,
@@ -67,7 +66,6 @@ angular.module('webmapp')
             length: 0,
             interval: null
         };
-
 
         if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.defaultSpeedType && CONFIG.MAIN.NAVIGATION.defaultSpeedType === 'current') {
             vm.speedTextType = 'current';

@@ -525,8 +525,6 @@ angular.module('webmapp')
                 }
             }
 
-            console.log(menuItems);
-
             if (menuItems > 1) {
                 $rootScope.$emit("rightMenuClick");
             } else {
