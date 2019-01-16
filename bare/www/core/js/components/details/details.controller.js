@@ -145,10 +145,12 @@ angular.module('webmapp')
             if (node) {
                 MapService.centerOnFeature(data);
                 MapService.toggleElevationControl(data, node);
+
                 var backgroundNode = node.childNodes[0].childNodes[0],
                     colorNode = backgroundNode.childNodes[0].childNodes[0];
                 backgroundNode.style.background = vm.colors.details.background;
                 colorNode.style.fill = vm.colors.mainBar.background;
+
                 vm.fitRefresh = 0;
                 var refresh = function () {
                     MapService.centerOnFeature(data);
