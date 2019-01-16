@@ -28,9 +28,6 @@ angular.module('webmapp')
 
         var hideExpanderInDetails = CONFIG.OPTIONS.hideExpanderInDetails;
 
-        var shareScope = $rootScope.$new(),
-            shareModal;
-
         var registeredEvents = [];
 
         vm.geolocationState = {
@@ -75,62 +72,6 @@ angular.module('webmapp')
         } else {
             vm.speedTextType = 'average';
         }
-
-        Utils.createModal('core/js/modals/shareModal.html', {
-            backdropClickToClose: true,
-            hardwareBackButtonClose: true
-        }, shareScope).then(function (modal) {
-            shareModal = modal;
-        });
-
-        shareScope.vm = {};
-        shareScope.vm.textblock = '';
-        shareScope.vm.emailblock = '';
-
-        shareScope.vm.hide = function () {
-            if (!shareScope.shareInProgress) {
-                shareModal.hide();
-            }
-        };
-
-        shareScope.vm.sendText = function () {
-            var currentRequest;
-            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (shareScope.vm.emailblock === '' || !re.test(shareScope.vm.emailblock)) {
-                $ionicPopup.alert({
-                    title: $translate.instant("ATTENZIONE"),
-                    template: $translate.instant("Inserisci un'email valida per continuare")
-                });
-            } else {
-                shareScope.vm.sendInProgress = true;
-                currentRequest = Communication.post(CONFIG.REPORT.apiUrl, {
-                    email: shareScope.vm.emailblock,
-                    to: CONFIG.REPORT.defaultEmail,
-                    content: shareScope.vm.textblock,
-                    lat: vm.centerCoords.lat,
-                    lng: vm.centerCoords.lng,
-                    phone: shareScope.vm.phoneNumber,
-                    type: 'email'
-                });
-
-                currentRequest
-                    .then(function () {
-                        shareScope.vm.sendInProgress = false;
-                        shareScope.vm.sendSuccess = true;
-
-                        setTimeout(function () {
-                            shareModal.hide();
-                        }, 1000);
-                    },
-                        function (error) {
-                            $ionicPopup.alert({
-                                title: $translate.instant("ATTENZIONE"),
-                                template: $translate.instant("Si è verificato un errore di connessione, riprova più tardi")
-                            });
-                            shareScope.vm.sendInProgress = false;
-                        });
-            }
-        };
 
         var reportQueueLengthFunction = function () {
             var url = CONFIG.USER_COMMUNICATION.REPORT.apiUrl ? CONFIG.USER_COMMUNICATION.REPORT.apiUrl : "https://api.webmapp.it/services/share.php";
@@ -218,12 +159,12 @@ angular.module('webmapp')
         vm.useUTM32 = false;
         vm.useShare = Utils.isBrowser() ? false : (CONFIG.OPTIONS.allowCoordsShare || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.allowCoordsShare));
         vm.useHelp =
-            (CONFIG.REPORT && (
-                (CONFIG.REPORT.email && CONFIG.REPORT.email.apiUrl && CONFIG.REPORT.email.default) ||
-                (CONFIG.REPORT.sms && CONFIG.REPORT.sms.default))) ||
-            (CONFIG.MAIN && CONFIG.MAIN.REPORT && (
-                (CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl && CONFIG.MAIN.REPORT.email.default) ||
-                (CONFIG.MAIN.REPORT.sms && CONFIG.MAIN.REPORT.sms.default)));
+            (CONFIG.USER_COMMUNICATION && CONFIG.USER_COMMUNICATION.HELP && (
+                (CONFIG.USER_COMMUNICATION.HELP.email && CONFIG.USER_COMMUNICATION.HELP.email.apiUrl && CONFIG.USER_COMMUNICATION.HELP.email.default) ||
+                (CONFIG.USER_COMMUNICATION.HELP.sms && CONFIG.USER_COMMUNICATION.HELP.sms.default))) ||
+            (CONFIG.MAIN && CONFIG.USER_COMMUNICATION && CONFIG.MAIN.USER_COMMUNICATION.HELP && (
+                (CONFIG.MAIN.USER_COMMUNICATION.HELP.email && CONFIG.MAIN.USER_COMMUNICATION.HELP.email.apiUrl && CONFIG.MAIN.USER_COMMUNICATION.HELP.email.default) ||
+                (CONFIG.MAIN.USER_COMMUNICATION.HELP.sms && CONFIG.MAIN.USER_COMMUNICATION.HELP.sms.default)));
 
         vm.useReport = vm.showLocate && CONFIG.USER_COMMUNICATION && CONFIG.USER_COMMUNICATION.REPORT && CONFIG.USER_COMMUNICATION.REPORT.items.length > 0;
 
@@ -418,13 +359,13 @@ angular.module('webmapp')
         };
 
         var sendSMS = function (text) {
-            if (CONFIG.REPORT.sms || (CONFIG.MAIN && CONFIG.MAIN.REPORT.sms)) {
+            if ((CONFIG.USER_COMMUNICATION && CONFIG.USER_COMMUNICATION.HELP.sms) || (CONFIG.MAIN && CONFIG.MAIN.USER_COMMUNICATION && CONFIG.MAIN.USER_COMMUNICATION.HELP.sms)) {
                 var smsTo = '';
 
-                if (CONFIG.REPORT && CONFIG.REPORT.sms && CONFIG.REPORT.sms.default) {
-                    smsTo = CONFIG.REPORT.sms.default;
-                } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.sms && CONFIG.MAIN.REPORT.sms.default) {
-                    smsTo = CONFIG.MAIN.REPORT.sms.default;
+                if (CONFIG.USER_COMMUNICATION && CONFIG.USER_COMMUNICATION.HELP && CONFIG.USER_COMMUNICATION.HELP.sms && CONFIG.USER_COMMUNICATION.HELP.sms.default) {
+                    smsTo = CONFIG.USER_COMMUNICATION.HELP.sms.default;
+                } else if (CONFIG.MAIN && CONFIG.MAIN.USER_COMMUNICATION && CONFIG.MAIN.USER_COMMUNICATION.HELP && CONFIG.MAIN.USER_COMMUNICATION.HELP.sms && CONFIG.MAIN.USER_COMMUNICATION.HELP.sms.default) {
+                    smsTo = CONFIG.MAIN.USER_COMMUNICATION.HELP.sms.default;
                 }
 
                 if (smsTo !== '') {
@@ -449,7 +390,7 @@ angular.module('webmapp')
                         position.lat + ',' +
                         position.long;
 
-                    if (CONFIG.REPORT.email || (CONFIG.MAIN && CONFIG.MAIN.REPORT.email)) {
+                    if ((CONFIG.USER_COMMUNICATION && CONFIG.USER_COMMUNICATION.HELP.email) || (CONFIG.MAIN && CONFIG.USER_COMMUNICATION && CONFIG.MAIN.USER_COMMUNICATION.HELP.email)) {
                         $ionicPopup.confirm({
                             title: $translate.instant("ATTENZIONE"),
                             template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
@@ -459,14 +400,14 @@ angular.module('webmapp')
                                     var emailTo = '',
                                         url = '';
 
-                                    if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.default) {
-                                        emailTo = CONFIG.REPORT.email.default;
+                                    if (CONFIG.USER_COMMUNICATION && CONFIG.USER_COMMUNICATION.HELP && CONFIG.USER_COMMUNICATION.HELP.email && CONFIG.USER_COMMUNICATION.HELP.email.default) {
+                                        emailTo = CONFIG.USER_COMMUNICATION.HELP.email.default;
                                     } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.default) {
                                         emailTo = CONFIG.MAIN.REPORT.email.default;
                                     }
 
-                                    if (CONFIG.REPORT && CONFIG.REPORT.email && CONFIG.REPORT.email.apiUrl) {
-                                        url = CONFIG.REPORT.email.apiUrl;
+                                    if (CONFIG.USER_COMMUNICATION && CONFIG.USER_COMMUNICATION.HELP && CONFIG.USER_COMMUNICATION.HELP.email && CONFIG.USER_COMMUNICATION.HELP.email.apiUrl) {
+                                        url = CONFIG.USER_COMMUNICATION.HELP.email.apiUrl;
                                     } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl) {
                                         url = CONFIG.MAIN.REPORT.email.apiUrl;
                                     }
@@ -1013,8 +954,6 @@ angular.module('webmapp')
                     registeredEvents[i]();
                 }
                 delete registeredEvents;
-
-                shareModal && shareModal.remove();
             })
         );
 
