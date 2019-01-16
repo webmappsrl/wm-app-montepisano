@@ -30,8 +30,6 @@
     <link rel="stylesheet" type="text/css" href="core/css/style.min.css" media="none" onload="this.media='all';">
     <link rel="stylesheet" type="text/css" href="resources/css/custom-style.css" media="none" onload="this.media='all';">
 
-    <!-- JS -->
-
     <!-- LIB -->
     <script src="core/lib/proj4js/proj4.js"></script>
     <script src="core/lib/LPF.js"></script>
@@ -78,6 +76,7 @@
     <script src="core/lib/turf/outTurf.js"></script>
     <script src="core/lib/ionic-toast/dist/ionic-toast.bundle.min.js"></script>
 
+    <!-- APP -->
     <script src="core/js/settings/globalVariables.js"></script>
     <script src="core/js/app.js"></script>
 
@@ -127,12 +126,6 @@
 </head>
 
 <body ng-app="webmapp">
-    <!-- <h1 style="
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        ">LOADING ...</h1> -->
     <div style="
                 border-top: 16px solid #3D3D3B;
                 position: absolute;
@@ -144,7 +137,6 @@
             " class="loader">
     </div>
     <ion-nav-view></ion-nav-view>
-    <!-- <ion-nav-view style="top: 15px"></ion-nav-view> -->
 </body>
 
 </html>
