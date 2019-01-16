@@ -378,7 +378,7 @@ gulp.updateConfigXML = function (config) {
     gulp.start('generate-index');
 
     gulp.src(configJson_file)
-        .pipe(replace(/"VERSION":""/, edit_version))
+        .pipe(replace(/"VERSION":[ ]*""/, edit_version))
         .pipe(gulp.dest(dir + '/www/config/'));
 
     return gulp.src(config_file)
