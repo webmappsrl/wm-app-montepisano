@@ -2203,11 +2203,11 @@
         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        var reportQueueLengthFunction = <span class="fstat-no" title="function not covered" >function () {</span></span>
-<span class="cstat-no" title="statement not covered" >            var url = CONFIG.USER_COMMUNICATION.REPORT.apiUrl ? CONFIG.USER_COMMUNICATION.REPORT.apiUrl : "https://api.webmapp.it/services/share.php";</span>
+<span class="cstat-no" title="statement not covered" >            var url = CONFIG.WMTP.REPORT.apiUrl ? CONFIG.WMTP.REPORT.apiUrl : "https://api.webmapp.it/services/share.php";</span>
 <span class="cstat-no" title="statement not covered" >            var types = [];</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            for (var i in CONFIG.USER_COMMUNICATION.REPORT.items) {</span>
-<span class="cstat-no" title="statement not covered" >                var type = CONFIG.USER_COMMUNICATION.REPORT.items[i].type,</span>
+<span class="cstat-no" title="statement not covered" >            for (var i in CONFIG.WMTP.REPORT.items) {</span>
+<span class="cstat-no" title="statement not covered" >                var type = CONFIG.WMTP.REPORT.items[i].type,</span>
                     found = false;
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                for (var j in types) {</span>
@@ -2288,14 +2288,14 @@
 <span class="cstat-no" title="statement not covered" >        vm.useUTM32 = false;</span>
 <span class="cstat-no" title="statement not covered" >        vm.useShare = Utils.isBrowser() ? false : (CONFIG.OPTIONS.allowCoordsShare || (CONFIG.MAIN &amp;&amp; CONFIG.MAIN.OPTIONS.allowCoordsShare));</span>
 <span class="cstat-no" title="statement not covered" >        vm.useHelp =</span>
-            (CONFIG.USER_COMMUNICATION &amp;&amp; CONFIG.USER_COMMUNICATION.HELP &amp;&amp; (
-                (CONFIG.USER_COMMUNICATION.HELP.email &amp;&amp; CONFIG.USER_COMMUNICATION.HELP.email.apiUrl &amp;&amp; CONFIG.USER_COMMUNICATION.HELP.email.default) ||
-                (CONFIG.USER_COMMUNICATION.HELP.sms &amp;&amp; CONFIG.USER_COMMUNICATION.HELP.sms.default))) ||
-            (CONFIG.MAIN &amp;&amp; CONFIG.USER_COMMUNICATION &amp;&amp; CONFIG.MAIN.USER_COMMUNICATION.HELP &amp;&amp; (
-                (CONFIG.MAIN.USER_COMMUNICATION.HELP.email &amp;&amp; CONFIG.MAIN.USER_COMMUNICATION.HELP.email.apiUrl &amp;&amp; CONFIG.MAIN.USER_COMMUNICATION.HELP.email.default) ||
-                (CONFIG.MAIN.USER_COMMUNICATION.HELP.sms &amp;&amp; CONFIG.MAIN.USER_COMMUNICATION.HELP.sms.default)));
+            (CONFIG.WMTP &amp;&amp; CONFIG.WMTP.HELP &amp;&amp; (
+                (CONFIG.WMTP.HELP.email &amp;&amp; CONFIG.WMTP.HELP.email.apiUrl &amp;&amp; CONFIG.WMTP.HELP.email.default) ||
+                (CONFIG.WMTP.HELP.sms &amp;&amp; CONFIG.WMTP.HELP.sms.default))) ||
+            (CONFIG.MAIN &amp;&amp; CONFIG.WMTP &amp;&amp; CONFIG.MAIN.WMTP.HELP &amp;&amp; (
+                (CONFIG.MAIN.WMTP.HELP.email &amp;&amp; CONFIG.MAIN.WMTP.HELP.email.apiUrl &amp;&amp; CONFIG.MAIN.WMTP.HELP.email.default) ||
+                (CONFIG.MAIN.WMTP.HELP.sms &amp;&amp; CONFIG.MAIN.WMTP.HELP.sms.default)));
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        vm.useReport = vm.showLocate &amp;&amp; CONFIG.USER_COMMUNICATION &amp;&amp; CONFIG.USER_COMMUNICATION.REPORT &amp;&amp; CONFIG.USER_COMMUNICATION.REPORT.items.length &gt; 0;</span>
+<span class="cstat-no" title="statement not covered" >        vm.useReport = vm.showLocate &amp;&amp; CONFIG.WMTP &amp;&amp; CONFIG.WMTP.REPORT &amp;&amp; CONFIG.WMTP.REPORT.items.length &gt; 0;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        vm.showRightMenu = false;</span>
 <span class="cstat-no" title="statement not covered" >        vm.filterIcon = CONFIG.OPTIONS.filterIcon;</span>
@@ -2488,13 +2488,13 @@
         };
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        var sendSMS = <span class="fstat-no" title="function not covered" >function (text) {</span></span>
-<span class="cstat-no" title="statement not covered" >            if ((CONFIG.USER_COMMUNICATION &amp;&amp; CONFIG.USER_COMMUNICATION.HELP.sms) || (CONFIG.MAIN &amp;&amp; CONFIG.MAIN.USER_COMMUNICATION &amp;&amp; CONFIG.MAIN.USER_COMMUNICATION.HELP.sms)) {</span>
+<span class="cstat-no" title="statement not covered" >            if ((CONFIG.WMTP &amp;&amp; CONFIG.WMTP.HELP.sms) || (CONFIG.MAIN &amp;&amp; CONFIG.MAIN.WMTP &amp;&amp; CONFIG.MAIN.WMTP.HELP.sms)) {</span>
 <span class="cstat-no" title="statement not covered" >                var smsTo = '';</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                if (CONFIG.USER_COMMUNICATION &amp;&amp; CONFIG.USER_COMMUNICATION.HELP &amp;&amp; CONFIG.USER_COMMUNICATION.HELP.sms &amp;&amp; CONFIG.USER_COMMUNICATION.HELP.sms.default) {</span>
-<span class="cstat-no" title="statement not covered" >                    smsTo = CONFIG.USER_COMMUNICATION.HELP.sms.default;</span>
-                } else <span class="cstat-no" title="statement not covered" >if (CONFIG.MAIN &amp;&amp; CONFIG.MAIN.USER_COMMUNICATION &amp;&amp; CONFIG.MAIN.USER_COMMUNICATION.HELP &amp;&amp; CONFIG.MAIN.USER_COMMUNICATION.HELP.sms &amp;&amp; CONFIG.MAIN.USER_COMMUNICATION.HELP.sms.default) {</span>
-<span class="cstat-no" title="statement not covered" >                    smsTo = CONFIG.MAIN.USER_COMMUNICATION.HELP.sms.default;</span>
+<span class="cstat-no" title="statement not covered" >                if (CONFIG.WMTP &amp;&amp; CONFIG.WMTP.HELP &amp;&amp; CONFIG.WMTP.HELP.sms &amp;&amp; CONFIG.WMTP.HELP.sms.default) {</span>
+<span class="cstat-no" title="statement not covered" >                    smsTo = CONFIG.WMTP.HELP.sms.default;</span>
+                } else <span class="cstat-no" title="statement not covered" >if (CONFIG.MAIN &amp;&amp; CONFIG.MAIN.WMTP &amp;&amp; CONFIG.MAIN.WMTP.HELP &amp;&amp; CONFIG.MAIN.WMTP.HELP.sms &amp;&amp; CONFIG.MAIN.WMTP.HELP.sms.default) {</span>
+<span class="cstat-no" title="statement not covered" >                    smsTo = CONFIG.MAIN.WMTP.HELP.sms.default;</span>
                 }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                if (smsTo !== '') {</span>
@@ -2519,7 +2519,7 @@
                         position.lat + ',' +
                         position.long;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                    if ((CONFIG.USER_COMMUNICATION &amp;&amp; CONFIG.USER_COMMUNICATION.HELP.email) || (CONFIG.MAIN &amp;&amp; CONFIG.USER_COMMUNICATION &amp;&amp; CONFIG.MAIN.USER_COMMUNICATION.HELP.email)) {</span>
+<span class="cstat-no" title="statement not covered" >                    if ((CONFIG.WMTP &amp;&amp; CONFIG.WMTP.HELP.email) || (CONFIG.MAIN &amp;&amp; CONFIG.WMTP &amp;&amp; CONFIG.MAIN.WMTP.HELP.email)) {</span>
 <span class="cstat-no" title="statement not covered" >                        $ionicPopup.confirm({</span>
                             title: $translate.instant("ATTENZIONE"),
                             template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
@@ -2529,14 +2529,14 @@
 <span class="cstat-no" title="statement not covered" >                                    var emailTo = '',</span>
                                         url = '';
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                                    if (CONFIG.USER_COMMUNICATION &amp;&amp; CONFIG.USER_COMMUNICATION.HELP &amp;&amp; CONFIG.USER_COMMUNICATION.HELP.email &amp;&amp; CONFIG.USER_COMMUNICATION.HELP.email.default) {</span>
-<span class="cstat-no" title="statement not covered" >                                        emailTo = CONFIG.USER_COMMUNICATION.HELP.email.default;</span>
+<span class="cstat-no" title="statement not covered" >                                    if (CONFIG.WMTP &amp;&amp; CONFIG.WMTP.HELP &amp;&amp; CONFIG.WMTP.HELP.email &amp;&amp; CONFIG.WMTP.HELP.email.default) {</span>
+<span class="cstat-no" title="statement not covered" >                                        emailTo = CONFIG.WMTP.HELP.email.default;</span>
                                     } else <span class="cstat-no" title="statement not covered" >if (CONFIG.MAIN &amp;&amp; CONFIG.MAIN.REPORT &amp;&amp; CONFIG.MAIN.REPORT.email &amp;&amp; CONFIG.MAIN.REPORT.email.default) {</span>
 <span class="cstat-no" title="statement not covered" >                                        emailTo = CONFIG.MAIN.REPORT.email.default;</span>
                                     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                                    if (CONFIG.USER_COMMUNICATION &amp;&amp; CONFIG.USER_COMMUNICATION.HELP &amp;&amp; CONFIG.USER_COMMUNICATION.HELP.email &amp;&amp; CONFIG.USER_COMMUNICATION.HELP.email.apiUrl) {</span>
-<span class="cstat-no" title="statement not covered" >                                        url = CONFIG.USER_COMMUNICATION.HELP.email.apiUrl;</span>
+<span class="cstat-no" title="statement not covered" >                                    if (CONFIG.WMTP &amp;&amp; CONFIG.WMTP.HELP &amp;&amp; CONFIG.WMTP.HELP.email &amp;&amp; CONFIG.WMTP.HELP.email.apiUrl) {</span>
+<span class="cstat-no" title="statement not covered" >                                        url = CONFIG.WMTP.HELP.email.apiUrl;</span>
                                     } else <span class="cstat-no" title="statement not covered" >if (CONFIG.MAIN &amp;&amp; CONFIG.MAIN.REPORT &amp;&amp; CONFIG.MAIN.REPORT.email &amp;&amp; CONFIG.MAIN.REPORT.email.apiUrl) {</span>
 <span class="cstat-no" title="statement not covered" >                                        url = CONFIG.MAIN.REPORT.email.apiUrl;</span>
                                     }
@@ -3043,12 +3043,12 @@
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        registeredEvents.push(</span>
             $scope.$on('$ionicView.afterEnter', <span class="fstat-no" title="function not covered" >function () {</span>
-<span class="cstat-no" title="statement not covered" >                if (CONFIG.USER_COMMUNICATION &amp;&amp; CONFIG.USER_COMMUNICATION.REPORT) {</span>
-<span class="cstat-no" title="statement not covered" >                    var url = CONFIG.USER_COMMUNICATION.REPORT.apiUrl ? CONFIG.USER_COMMUNICATION.REPORT.apiUrl : "https://api.webmapp.it/services/share.php";</span>
+<span class="cstat-no" title="statement not covered" >                if (CONFIG.WMTP &amp;&amp; CONFIG.WMTP.REPORT) {</span>
+<span class="cstat-no" title="statement not covered" >                    var url = CONFIG.WMTP.REPORT.apiUrl ? CONFIG.WMTP.REPORT.apiUrl : "https://api.webmapp.it/services/share.php";</span>
 <span class="cstat-no" title="statement not covered" >                    var types = [];</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                    for (var i in CONFIG.USER_COMMUNICATION.REPORT.items) {</span>
-<span class="cstat-no" title="statement not covered" >                        var type = CONFIG.USER_COMMUNICATION.REPORT.items[i].type,</span>
+<span class="cstat-no" title="statement not covered" >                    for (var i in CONFIG.WMTP.REPORT.items) {</span>
+<span class="cstat-no" title="statement not covered" >                        var type = CONFIG.WMTP.REPORT.items[i].type,</span>
                             found = false;
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                        for (var j in types) {</span>
@@ -3175,7 +3175,7 @@
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Jan 16 2019 10:25:40 GMT+0100 (CET)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Jan 17 2019 10:49:47 GMT+0100 (CET)
 </div>
 </div>
 <script src="../../prettify.js"></script>

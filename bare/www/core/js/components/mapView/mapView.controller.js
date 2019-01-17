@@ -520,7 +520,7 @@ angular.module('webmapp')
                 if (trackRecordingEnabled) {
                     menuItems++;
                 }
-                if (CONFIG.USER_COMMUNICATION && CONFIG.USER_COMMUNICATION.REPORT && CONFIG.USER_COMMUNICATION.REPORT.items.length > 0) {
+                if (CONFIG.WMTP && CONFIG.WMTP.REPORT && CONFIG.WMTP.REPORT.items.length > 0) {
                     menuItems++;
                 }
             }

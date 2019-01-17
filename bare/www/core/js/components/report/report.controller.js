@@ -25,7 +25,7 @@ angular.module('webmapp')
         vm.defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
             ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
 
-        vm.reports = (CONFIG.USER_COMMUNICATION && CONFIG.USER_COMMUNICATION.REPORT && CONFIG.USER_COMMUNICATION.REPORT.items) ? angular.copy(CONFIG.USER_COMMUNICATION.REPORT.items) : [];
+        vm.reports = (CONFIG.WMTP && CONFIG.WMTP.REPORT && CONFIG.WMTP.REPORT.items) ? angular.copy(CONFIG.WMTP.REPORT.items) : [];
         vm.selectedReport = vm.reports.length === 1 ? 0 : -1;
 
         vm.isLoading = false;
@@ -166,7 +166,7 @@ angular.module('webmapp')
                 report.features[0].properties.form_data[vm.reports[vm.selectedReport].fields[i].name] = vm.reports[vm.selectedReport].fields[i].value;
             }
 
-            var url = CONFIG.USER_COMMUNICATION.apiUrl ? CONFIG.USER_COMMUNICATION.apiUrl : "https://api.webmapp.it/services/share.php";
+            var url = CONFIG.WMTP.apiUrl ? CONFIG.WMTP.apiUrl : "https://api.webmapp.it/services/share.php";
             Communication.queuedPost(url, report, true).then(function (res) {
                 vm.isLoading = false;
                 if (res) {

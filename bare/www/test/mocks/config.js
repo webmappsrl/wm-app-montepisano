@@ -363,7 +363,7 @@ var MOCK_CONFIG = {
     "INCLUDE": {
         "url": "/config.json"
     },
-    "USER_COMMUNICATION": {
+    "WMTP": {
         "REPORT": {
             "items": [
                 {
