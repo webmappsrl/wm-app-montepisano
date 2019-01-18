@@ -74,11 +74,11 @@ angular.module('webmapp')
         }
 
         var reportQueueLengthFunction = function () {
-            var url = CONFIG.WMTP.REPORT.apiUrl ? CONFIG.WMTP.REPORT.apiUrl : "https://api.webmapp.it/services/share.php";
+            var url = CONFIG.WMTP.report.apiUrl ? CONFIG.WMTP.report.apiUrl : "https://api.webmapp.it/services/share.php";
             var types = [];
 
-            for (var i in CONFIG.WMTP.REPORT.items) {
-                var type = CONFIG.WMTP.REPORT.items[i].type,
+            for (var i in CONFIG.WMTP.report.items) {
+                var type = CONFIG.WMTP.report.items[i].type,
                     found = false;
 
                 for (var j in types) {
@@ -158,15 +158,11 @@ angular.module('webmapp')
         vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
         vm.useUTM32 = false;
         vm.useShare = Utils.isBrowser() ? false : (CONFIG.OPTIONS.allowCoordsShare || (CONFIG.MAIN && CONFIG.MAIN.OPTIONS.allowCoordsShare));
-        vm.useHelp =
-            (CONFIG.WMTP && CONFIG.WMTP.HELP && (
-                (CONFIG.WMTP.HELP.email && CONFIG.WMTP.HELP.email.apiUrl && CONFIG.WMTP.HELP.email.default) ||
-                (CONFIG.WMTP.HELP.sms && CONFIG.WMTP.HELP.sms.default))) ||
-            (CONFIG.MAIN && CONFIG.WMTP && CONFIG.MAIN.WMTP.HELP && (
-                (CONFIG.MAIN.WMTP.HELP.email && CONFIG.MAIN.WMTP.HELP.email.apiUrl && CONFIG.MAIN.WMTP.HELP.email.default) ||
-                (CONFIG.MAIN.WMTP.HELP.sms && CONFIG.MAIN.WMTP.HELP.sms.default)));
+        vm.useHelp = CONFIG.WMTP && CONFIG.WMTP.help && (
+            (CONFIG.WMTP.help.email && CONFIG.WMTP.help.email.apiUrl && CONFIG.WMTP.help.email.default) ||
+            (CONFIG.WMTP.help.sms && CONFIG.WMTP.help.sms.default));
 
-        vm.useReport = vm.showLocate && CONFIG.WMTP && CONFIG.WMTP.REPORT && CONFIG.WMTP.REPORT.items.length > 0;
+        vm.useReport = vm.showLocate && CONFIG.WMTP && CONFIG.WMTP.report && CONFIG.WMTP.report.items.length > 0;
 
         vm.showRightMenu = false;
         vm.filterIcon = CONFIG.OPTIONS.filterIcon;
@@ -359,13 +355,11 @@ angular.module('webmapp')
         };
 
         var sendSMS = function (text) {
-            if ((CONFIG.WMTP && CONFIG.WMTP.HELP.sms) || (CONFIG.MAIN && CONFIG.MAIN.WMTP && CONFIG.MAIN.WMTP.HELP.sms)) {
+            if (CONFIG.WMTP && CONFIG.WMTP.help.sms) {
                 var smsTo = '';
 
-                if (CONFIG.WMTP && CONFIG.WMTP.HELP && CONFIG.WMTP.HELP.sms && CONFIG.WMTP.HELP.sms.default) {
-                    smsTo = CONFIG.WMTP.HELP.sms.default;
-                } else if (CONFIG.MAIN && CONFIG.MAIN.WMTP && CONFIG.MAIN.WMTP.HELP && CONFIG.MAIN.WMTP.HELP.sms && CONFIG.MAIN.WMTP.HELP.sms.default) {
-                    smsTo = CONFIG.MAIN.WMTP.HELP.sms.default;
+                if (CONFIG.WMTP && CONFIG.WMTP.help && CONFIG.WMTP.help.sms && CONFIG.WMTP.help.sms.default) {
+                    smsTo = CONFIG.WMTP.help.sms.default;
                 }
 
                 if (smsTo !== '') {
@@ -390,7 +384,7 @@ angular.module('webmapp')
                         position.lat + ',' +
                         position.long;
 
-                    if ((CONFIG.WMTP && CONFIG.WMTP.HELP.email) || (CONFIG.MAIN && CONFIG.WMTP && CONFIG.MAIN.WMTP.HELP.email)) {
+                    if (CONFIG.WMTP && CONFIG.WMTP.help.email) {
                         $ionicPopup.confirm({
                             title: $translate.instant("ATTENZIONE"),
                             template: $translate.instant("Cliccando su OK invii una richiesta di aiuto al numero di assistenza.")
@@ -400,14 +394,14 @@ angular.module('webmapp')
                                     var emailTo = '',
                                         url = '';
 
-                                    if (CONFIG.WMTP && CONFIG.WMTP.HELP && CONFIG.WMTP.HELP.email && CONFIG.WMTP.HELP.email.default) {
-                                        emailTo = CONFIG.WMTP.HELP.email.default;
+                                    if (CONFIG.WMTP && CONFIG.WMTP.help && CONFIG.WMTP.help.email && CONFIG.WMTP.help.email.default) {
+                                        emailTo = CONFIG.WMTP.help.email.default;
                                     } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.default) {
                                         emailTo = CONFIG.MAIN.REPORT.email.default;
                                     }
 
-                                    if (CONFIG.WMTP && CONFIG.WMTP.HELP && CONFIG.WMTP.HELP.email && CONFIG.WMTP.HELP.email.apiUrl) {
-                                        url = CONFIG.WMTP.HELP.email.apiUrl;
+                                    if (CONFIG.WMTP && CONFIG.WMTP.help && CONFIG.WMTP.help.email && CONFIG.WMTP.help.email.apiUrl) {
+                                        url = CONFIG.WMTP.help.email.apiUrl;
                                     } else if (CONFIG.MAIN && CONFIG.MAIN.REPORT && CONFIG.MAIN.REPORT.email && CONFIG.MAIN.REPORT.email.apiUrl) {
                                         url = CONFIG.MAIN.REPORT.email.apiUrl;
                                     }
@@ -914,12 +908,12 @@ angular.module('webmapp')
 
         registeredEvents.push(
             $scope.$on('$ionicView.afterEnter', function () {
-                if (CONFIG.WMTP && CONFIG.WMTP.REPORT) {
-                    var url = CONFIG.WMTP.REPORT.apiUrl ? CONFIG.WMTP.REPORT.apiUrl : "https://api.webmapp.it/services/share.php";
+                if (CONFIG.WMTP && CONFIG.WMTP.report) {
+                    var url = CONFIG.WMTP.report.apiUrl ? CONFIG.WMTP.report.apiUrl : "https://api.webmapp.it/services/share.php";
                     var types = [];
 
-                    for (var i in CONFIG.WMTP.REPORT.items) {
-                        var type = CONFIG.WMTP.REPORT.items[i].type,
+                    for (var i in CONFIG.WMTP.report.items) {
+                        var type = CONFIG.WMTP.report.items[i].type,
                             found = false;
 
                         for (var j in types) {

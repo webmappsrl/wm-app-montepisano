@@ -25,7 +25,7 @@ angular.module('webmapp')
         vm.defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
             ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
 
-        vm.reports = (CONFIG.WMTP && CONFIG.WMTP.REPORT && CONFIG.WMTP.REPORT.items) ? angular.copy(CONFIG.WMTP.REPORT.items) : [];
+        vm.reports = (CONFIG.WMTP && CONFIG.WMTP.report && CONFIG.WMTP.report.items) ? angular.copy(CONFIG.WMTP.report.items) : [];
         vm.selectedReport = vm.reports.length === 1 ? 0 : -1;
 
         vm.isLoading = false;

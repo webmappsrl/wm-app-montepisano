@@ -1364,9 +1364,12 @@ angular.module('webmapp')
                 if (baseMap.type === 'maptile') {
                     options = {
                         minZoom: mapConf.minZoom,
-                        maxZoom: mapConf.maxZoom,
-                        // bounds: maxBounds
+                        maxZoom: mapConf.maxZoom
                     };
+
+                    if (baseMap.maxNativeZoom) {
+                        options.maxNativeZoom = baseMap.maxNativeZoom;
+                    }
 
                     if (typeof baseMap.tms !== undefined && baseMap.tms) {
                         baseTms = options.tms = true;
@@ -1607,8 +1610,8 @@ angular.module('webmapp')
             }
 
             markerClusters = new L.MarkerClusterGroup({
-                spiderfyOnMaxZoom: (mainConf.MAP && mainConf.MAP.markerClustersOptions && mainConf.MAP.markerClustersOptions.spiderifyOnMaxZoom) ? mainConf.MAP.markerClustersOptions.spiderifyOnMaxZoom : mapConf.markerClustersOptions.spiderfyOnMaxZoom,
-                showCoverageOnHover: (mainConf.MAP && mainConf.MAP.markerClustersOptions && mainConf.MAP.markerClustersOptions.showCoverageOnHover) ? mainConf.MAP.markerClustersOptions.showCoverageOnHover : mapConf.markerClustersOptions.showCoverageOnHover,
+                spiderfyOnMaxZoom: true,
+                showCoverageOnHover: false,
                 zoomToBoundsOnClick: false, // used markerClusters.on clusterclick instead
                 maxClusterRadius: function (zoom) {
                     var disableAtZoom = (mainConf.MAP && mainConf.MAP.markerClustersOptions && mainConf.MAP.markerClustersOptions.disableClusteringAtZoom) ? mainConf.MAP.markerClustersOptions.disableClusteringAtZoom : mapConf.markerClustersOptions.disableClusteringAtZoom;

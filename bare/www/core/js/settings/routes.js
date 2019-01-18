@@ -110,7 +110,7 @@ angular.module('webmapp')
                 }
             });
 
-        if (config.WMTP && config.WMTP.REPORT && config.WMTP.REPORT.items && config.WMTP.REPORT.items.length > 0) {
+        if (config.WMTP && config.WMTP.report && config.WMTP.report.items && config.WMTP.report.items.length > 0) {
             $stateProvider
                 .state('app.main.report', {
                     url: '/report',
