@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">68.42% </span>
+        <span class="strong">82.76% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>13/19</span>
+        <span class='fraction'>24/29</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">16.13% </span>
+        <span class="strong">53.06% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>5/31</span>
+        <span class='fraction'>26/49</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">33.33% </span>
+        <span class="strong">64.29% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>3/9</span>
+        <span class='fraction'>9/14</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">68.42% </span>
+        <span class="strong">82.76% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>13/19</span>
+        <span class='fraction'>24/29</span>
       </div>
     </div>
   </div>
-  <div class='status-line medium'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -93,7 +93,28 @@
 48
 49
 50
-51</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -104,7 +125,7 @@
 <span class="cline-any cline-yes">156×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">156×</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">576×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -116,13 +137,34 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">156×</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">240×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">156×</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">336×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">84×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">84×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">84×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">156×</span>
@@ -153,11 +195,11 @@ angular.module('webmapp')
     ) {
         var configurationService = {};
 &nbsp;
-        configurationService.isGeolocationAvailable = <span class="fstat-no" title="function not covered" >function () {</span>
-<span class="cstat-no" title="statement not covered" >            return (!Utils.isBrowser() &amp;&amp;</span>
+        configurationService.isGeolocationAvailable = function () {
+            return (!Utils.isBrowser() &amp;&amp;
                 CONFIG.GEOLOCATION &amp;&amp; CONFIG.GEOLOCATION.enable)
                 || (Utils.isBrowser() &amp;&amp;
-                    CONFIG.GEOLOCATION &amp;&amp; CONFIG.GEOLOCATION.enable &amp;&amp; CONFIG.GEOLOCATION.enableOverHttps);
+                    CONFIG.GEOLOCATION &amp;&amp; <span class="branch-5 cbranch-no" title="branch not covered" >CONFIG.GEOLOCATION.enable </span>&amp;&amp; <span class="branch-6 cbranch-no" title="branch not covered" >CONFIG.GEOLOCATION.enableOverHttps)</span>;
         };
 &nbsp;
         configurationService.isNavigationAvailable = <span class="fstat-no" title="function not covered" >function () {</span>
@@ -165,18 +207,39 @@ angular.module('webmapp')
                 &amp;&amp; (!Utils.isBrowser() &amp;&amp; CONFIG.GEOLOCATION &amp;&amp; CONFIG.GEOLOCATION.navigation &amp;&amp; CONFIG.GEOLOCATION.navigation.enable);
         };
 &nbsp;
-        configurationService.isRecordAvailable = <span class="fstat-no" title="function not covered" >function () {</span>
-<span class="cstat-no" title="statement not covered" >            return configurationService.isGeolocationAvailable()</span>
+        configurationService.isRecordAvailable = function () {
+            return configurationService.isGeolocationAvailable()
                 &amp;&amp; (!Utils.isBrowser() &amp;&amp; CONFIG.GEOLOCATION &amp;&amp; CONFIG.GEOLOCATION.record &amp;&amp; CONFIG.GEOLOCATION.record.enable);
         };
 &nbsp;
-        configurationService.isRemoteTrackAvailable = <span class="fstat-no" title="function not covered" >function () {</span>
-<span class="cstat-no" title="statement not covered" >            return configurationService.isGeolocationAvailable()</span>
-                &amp;&amp; (!Utils.isBrowser() &amp;&amp; CONFIG.GEOLOCATION &amp;&amp; CONFIG.GEOLOCATION.remoteTrack &amp;&amp; CONFIG.GEOLOCATION.remoteTrack.enable);
+        configurationService.isExportTrackAvailable = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            return configurationService.isRecordAvailable()</span>
+                &amp;&amp; CONFIG.GEOLOCATION.record.enableExport;
+        };
+&nbsp;
+        configurationService.isRemoteTrackAvailable = function () {
+            return configurationService.isGeolocationAvailable()
+                &amp;&amp; (!Utils.isBrowser() &amp;&amp; CONFIG.GEOLOCATION &amp;&amp; CONFIG.GEOLOCATION.remoteTrack &amp;&amp; <span class="branch-4 cbranch-no" title="branch not covered" >CONFIG.GEOLOCATION.remoteTrack.enable)</span>;
         };
 &nbsp;
         configurationService.getTrackBoundsDistance = function () {
-            return CONFIG.GEOLOCATION &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >CONFIG.GEOLOCATION.NAVIGATION </span>&amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >CONFIG.GEOLOCATION.NAVIGATION.trackBoundsDistance </span>? <span class="branch-0 cbranch-no" title="branch not covered" >CONFIG.GEOLOCATION.NAVIGATION.trackBoundsDistance </span>: 200;
+            return CONFIG.GEOLOCATION &amp;&amp; CONFIG.GEOLOCATION.NAVIGATION &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >CONFIG.GEOLOCATION.NAVIGATION.trackBoundsDistance </span>? <span class="branch-0 cbranch-no" title="branch not covered" >CONFIG.GEOLOCATION.NAVIGATION.trackBoundsDistance </span>: 200;
+        };
+&nbsp;
+        configurationService.getDefaultSpeedType = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            return configurationService.isGeolocationAvailable() &amp;&amp; CONFIG.GEOLOCATION.defaultSpeedType ? CONFIG.GEOLOCATION.defaultSpeedType : 'average';</span>
+        };
+&nbsp;
+        configurationService.getRemoteTrackUrl = function () {
+            return configurationService.isRemoteTrackAvailable() &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >CONFIG.GEOLOCATION.remoteTrack.apiUrl </span>? <span class="branch-0 cbranch-no" title="branch not covered" >CONFIG.GEOLOCATION.remoteTrack.apiUrl </span>: 'https://api.webmapp.it/services/share.php';
+        };
+&nbsp;
+        configurationService.getPositionsClusterSize = function () {
+            return configurationService.isRemoteTrackAvailable() &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >CONFIG.GEOLOCATION.remoteTrack.minPositionsToSend </span>? <span class="branch-0 cbranch-no" title="branch not covered" >CONFIG.GEOLOCATION.remoteTrack.minPositionsToSend </span>: 1;
+        };
+&nbsp;
+        configurationService.getPositionsDistanceInterval = function () {
+            return configurationService.isRemoteTrackAvailable() &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >CONFIG.GEOLOCATION.remoteTrack.minDistanceBetweenPosition </span>? <span class="branch-0 cbranch-no" title="branch not covered" >CONFIG.GEOLOCATION.remoteTrack.minDistanceBetweenPosition </span>: 6;
         };
 &nbsp;
         configurationService.getStyle = <span class="fstat-no" title="function not covered" >function () {</span>
@@ -199,7 +262,7 @@ angular.module('webmapp')
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jan 21 2019 14:04:01 GMT+0100 (CET)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jan 21 2019 15:59:56 GMT+0100 (CET)
 </div>
 </div>
 <script src="../prettify.js"></script>

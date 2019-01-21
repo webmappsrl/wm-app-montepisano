@@ -19,13 +19,14 @@ xdescribe('MainController', function () {
 
     beforeEach(inject(function (_CONFIG_) {
         CONFIG = _CONFIG_;
-        if (CONFIG.NAVIGATION) {
-            CONFIG.NAVIGATION.enableTrackRecording = true;
-        } else {
-            CONFIG.NAVIGATION = {
-                enableTrackRecording: true
+
+        CONFIG.GEOLOCATION = {
+            enable: true,
+            record: {
+                enable: true
             }
-        }
+        };
+
         currentLat = CONFIG.MAP.bounds.northEast[0] + (CONFIG.MAP.bounds.southWest[0] - CONFIG.MAP.bounds.northEast[0]) / 2;
         currentLong = CONFIG.MAP.bounds.northEast[1] + (CONFIG.MAP.bounds.southWest[1] - CONFIG.MAP.bounds.northEast[1]) / 2;
     }));

@@ -356,10 +356,6 @@ var MOCK_CONFIG = {
             "default": "+39 328 5360803"
         }
     },
-    "NAVIGATION": {
-        "enableTrackRecording": true,
-        "enableExportRecordedTrack": true
-    },
     "INCLUDE": {
         "url": "/config.json"
     },

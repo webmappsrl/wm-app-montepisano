@@ -22,12 +22,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0.21% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>1/477</span>
+        <span class='fraction'>1/471</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/313</span>
+        <span class='fraction'>0/288</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">0.21% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>1/477</span>
+        <span class='fraction'>1/471</span>
       </div>
     </div>
   </div>
@@ -1069,17 +1069,8 @@
 1024
 1025
 1026
-1027
-1028
-1029
-1030
-1031
-1032
-1033
-1034
-1035
-1036
-1037</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+1027</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1140,19 +1131,11 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1225,14 +1208,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2132,6 +2112,7 @@
         Auth,
         Communication,
         CONFIG,
+        ConfigurationService,
         GeolocationService,
         MapService,
         Model,
@@ -2175,20 +2156,12 @@
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        vm.userData = {};</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        vm.speedTextType = 'average';</span>
 <span class="cstat-no" title="statement not covered" >        vm.reportQueue = {</span>
             length: 0,
             interval: null
         };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (CONFIG.MAIN &amp;&amp; CONFIG.MAIN.NAVIGATION &amp;&amp; CONFIG.MAIN.NAVIGATION.defaultSpeedType &amp;&amp; CONFIG.MAIN.NAVIGATION.defaultSpeedType === 'current') {</span>
-<span class="cstat-no" title="statement not covered" >            vm.speedTextType = 'current';</span>
-        }
-<span class="cstat-no" title="statement not covered" >        if (CONFIG.NAVIGATION &amp;&amp; CONFIG.NAVIGATION.defaultSpeedType &amp;&amp; CONFIG.NAVIGATION.defaultSpeedType === 'current') {</span>
-<span class="cstat-no" title="statement not covered" >            vm.speedTextType = 'current';</span>
-        } else {
-<span class="cstat-no" title="statement not covered" >            vm.speedTextType = 'average';</span>
-        }
+<span class="cstat-no" title="statement not covered" >        vm.speedTextType = ConfigurationService.getDefaultSpeedType();</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        var reportQueueLengthFunction = <span class="fstat-no" title="function not covered" >function () {</span></span>
 <span class="cstat-no" title="statement not covered" >            var url = CONFIG.WMTP.report.apiUrl ? CONFIG.WMTP.report.apiUrl : "https://api.webmapp.it/services/share.php";</span>
@@ -2260,16 +2233,13 @@
             };
         }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (CONFIG.NAVIGATION &amp;&amp; CONFIG.NAVIGATION.activate &amp;&amp; !Utils.isBrowser()) {</span>
-<span class="cstat-no" title="statement not covered" >            vm.navigationAvailable = true;</span>
-        }
+<span class="cstat-no" title="statement not covered" >        vm.navigationAvailable = ConfigurationService.isNavigationAvailable();</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        vm.heading = 0;</span>
 <span class="cstat-no" title="statement not covered" >        vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;</span>
 <span class="cstat-no" title="statement not covered" >        vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;</span>
-<span class="cstat-no" title="statement not covered" >        vm.showLocate = !CONFIG.MAP.hideLocationControl &amp;&amp; !Utils.isBrowser() ||</span>
-            Utils.isBrowser() &amp;&amp; !CONFIG.MAP.hideLocationControl &amp;&amp; window.location.protocol === "https:";
-<span class="cstat-no" title="statement not covered" >        vm.trackRecordingEnabled = vm.showLocate &amp;&amp; !Utils.isBrowser() &amp;&amp; CONFIG.NAVIGATION &amp;&amp; CONFIG.NAVIGATION.enableTrackRecording;</span>
+<span class="cstat-no" title="statement not covered" >        vm.showLocate = ConfigurationService.isGeolocationAvailable();</span>
+<span class="cstat-no" title="statement not covered" >        vm.trackRecordingEnabled = ConfigurationService.isRecordAvailable();</span>
 <span class="cstat-no" title="statement not covered" >        vm.viewTitle = $translate.instant("MAPPA");</span>
 <span class="cstat-no" title="statement not covered" >        vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;</span>
 <span class="cstat-no" title="statement not covered" >        vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;</span>
@@ -3157,7 +3127,7 @@
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jan 21 2019 14:04:01 GMT+0100 (CET)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jan 21 2019 15:59:56 GMT+0100 (CET)
 </div>
 </div>
 <script src="../../prettify.js"></script>

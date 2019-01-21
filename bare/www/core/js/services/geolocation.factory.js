@@ -124,8 +124,7 @@ angular.module('webmapp')
 
         //Contains realTimeTracking configuration
         var realTimeTracking = {
-            enabled: (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.TRACKING.enableRealTimeTracking) ||
-                (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.TRACKING.enableRealTimeTracking),
+            enabled: ConfigurationService.isRemoteTrackAvailable(),
             url: "https://api.webmapp.it/services/share.php",
             positionsToSend: [],
             minPositionsToSend: 1,
@@ -150,28 +149,11 @@ angular.module('webmapp')
             }
         };
 
-        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.realTimeTrackingUrl) {
-            realTimeTracking.url = CONFIG.NAVIGATION.TRACKING.realTimeTrackingUrl;
-        }
-        else if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.realTimeTrackingUrl) {
-            realTimeTracking.url = CONFIG.MAIN.NAVIGATION.TRACKING.realTimeTrackingUrl;
-        }
+        realTimeTracking.url = ConfigurationService.getRemoteTrackUrl();
+        realTimeTracking.minPositionsToSend = ConfigurationService.getPositionsClusterSize();
+        realTimeTracking.minDistanceBetweenPosition = ConfigurationService.getPositionsDistanceInterval();
 
-        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.TRACKING.minPositionsToSend) {
-            realTimeTracking.minPositionsToSend = CONFIG.NAVIGATION.TRACKING.minPositionsToSend;
-        }
-        else if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.TRACKING.minPositionsToSend) {
-            realTimeTracking.minPositionsToSend = CONFIG.MAIN.NAVIGATION.TRACKING.minPositionsToSend;
-        }
-
-        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.TRACKING && CONFIG.NAVIGATION.TRACKING.minDistanceBetweenPosition) {
-            realTimeTracking.minDistanceBetweenPosition = CONFIG.NAVIGATION.TRACKING.minDistanceBetweenPosition;
-        }
-        else if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.TRACKING && CONFIG.MAIN.NAVIGATION.TRACKING.minDistanceBetweenPosition) {
-            realTimeTracking.minDistanceBetweenPosition = CONFIG.MAIN.NAVIGATION.TRACKING.minDistanceBetweenPosition;
-        }
-
-        var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+        var trackRecordingEnabled = ConfigurationService.isRecordAvailable();
 
         /**
          * @description

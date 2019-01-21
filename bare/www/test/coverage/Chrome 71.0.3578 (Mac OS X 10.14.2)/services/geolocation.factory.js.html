@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">87.36% </span>
+        <span class="strong">88.15% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>546/625</span>
+        <span class='fraction'>543/616</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">70.76% </span>
+        <span class="strong">73.35% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>288/407</span>
+        <span class='fraction'>267/364</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">88.24% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>60/68</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">87.36% </span>
+        <span class="strong">88.15% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>546/625</span>
+        <span class='fraction'>543/616</span>
       </div>
       <div class='fl pad1y'>
         <span class="strong">90 statements, 10 functions, 34 branches</span>
@@ -1592,25 +1592,7 @@
 1543
 1544
 1545
-1546
-1547
-1548
-1549
-1550
-1551
-1552
-1553
-1554
-1555
-1556
-1557
-1558
-1559
-1560
-1561
-1562
-1563
-1564</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+1546</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1736,7 +1718,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">84×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1763,25 +1744,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">84×</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">84×</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">84×</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">84×</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">84×</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">84×</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">84×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -3299,8 +3263,7 @@
 &nbsp;
         //Contains realTimeTracking configuration
         var realTimeTracking = {
-            enabled: (CONFIG.NAVIGATION &amp;&amp; CONFIG.NAVIGATION.TRACKING &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >CONFIG.NAVIGATION.TRACKING.enableRealTimeTracking)</span> ||
-                (CONFIG.MAIN &amp;&amp; <span class="branch-4 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION </span>&amp;&amp; <span class="branch-5 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION.TRACKING </span>&amp;&amp; <span class="branch-6 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION.TRACKING.enableRealTimeTracking)</span>,
+            enabled: ConfigurationService.isRemoteTrackAvailable(),
             url: "https://api.webmapp.it/services/share.php",
             positionsToSend: [],
             minPositionsToSend: 1,
@@ -3325,28 +3288,11 @@
             }
         };
 &nbsp;
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (CONFIG.NAVIGATION &amp;&amp; CONFIG.NAVIGATION.TRACKING &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >CONFIG.NAVIGATION.realTimeTrackingUrl)</span> {
-<span class="cstat-no" title="statement not covered" >            realTimeTracking.url = CONFIG.NAVIGATION.TRACKING.realTimeTrackingUrl;</span>
-        }
-        else <span class="missing-if-branch" title="if path not taken" >I</span>if (CONFIG.MAIN &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION </span>&amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION.TRACKING </span>&amp;&amp; <span class="branch-3 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION.realTimeTrackingUrl)</span> {
-<span class="cstat-no" title="statement not covered" >            realTimeTracking.url = CONFIG.MAIN.NAVIGATION.TRACKING.realTimeTrackingUrl;</span>
-        }
+        realTimeTracking.url = ConfigurationService.getRemoteTrackUrl();
+        realTimeTracking.minPositionsToSend = ConfigurationService.getPositionsClusterSize();
+        realTimeTracking.minDistanceBetweenPosition = ConfigurationService.getPositionsDistanceInterval();
 &nbsp;
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (CONFIG.NAVIGATION &amp;&amp; CONFIG.NAVIGATION.TRACKING &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >CONFIG.NAVIGATION.TRACKING.minPositionsToSend)</span> {
-<span class="cstat-no" title="statement not covered" >            realTimeTracking.minPositionsToSend = CONFIG.NAVIGATION.TRACKING.minPositionsToSend;</span>
-        }
-        else <span class="missing-if-branch" title="if path not taken" >I</span>if (CONFIG.MAIN &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION </span>&amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION.TRACKING </span>&amp;&amp; <span class="branch-3 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION.TRACKING.minPositionsToSend)</span> {
-<span class="cstat-no" title="statement not covered" >            realTimeTracking.minPositionsToSend = CONFIG.MAIN.NAVIGATION.TRACKING.minPositionsToSend;</span>
-        }
-&nbsp;
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (CONFIG.NAVIGATION &amp;&amp; CONFIG.NAVIGATION.TRACKING &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >CONFIG.NAVIGATION.TRACKING.minDistanceBetweenPosition)</span> {
-<span class="cstat-no" title="statement not covered" >            realTimeTracking.minDistanceBetweenPosition = CONFIG.NAVIGATION.TRACKING.minDistanceBetweenPosition;</span>
-        }
-        else <span class="missing-if-branch" title="if path not taken" >I</span>if (CONFIG.MAIN &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION </span>&amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION.TRACKING </span>&amp;&amp; <span class="branch-3 cbranch-no" title="branch not covered" >CONFIG.MAIN.NAVIGATION.TRACKING.minDistanceBetweenPosition)</span> {
-<span class="cstat-no" title="statement not covered" >            realTimeTracking.minDistanceBetweenPosition = CONFIG.MAIN.NAVIGATION.TRACKING.minDistanceBetweenPosition;</span>
-        }
-&nbsp;
-        var trackRecordingEnabled = !Utils.isBrowser() &amp;&amp; CONFIG.NAVIGATION &amp;&amp; CONFIG.NAVIGATION.enableTrackRecording;
+        var trackRecordingEnabled = ConfigurationService.isRecordAvailable();
 &nbsp;
         /**
          * @description
@@ -4742,7 +4688,7 @@
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jan 21 2019 14:04:01 GMT+0100 (CET)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jan 21 2019 15:59:56 GMT+0100 (CET)
 </div>
 </div>
 <script src="../prettify.js"></script>

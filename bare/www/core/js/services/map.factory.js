@@ -33,7 +33,7 @@ angular.module('webmapp')
             defaultLang = ConfigurationService.getDefaultLang(),
             routeDefaultLang = (CONFIG.MAIN && CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual : 'it';
 
-        var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+        var trackRecordingEnabled = ConfigurationService.isRecordAvailable();
 
         if (!Utils.isBrowser()) {
             generalConf.useAlmostOver = true;

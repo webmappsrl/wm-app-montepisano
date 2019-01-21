@@ -12,8 +12,9 @@ angular.module('webmapp')
         $state,
         $translate,
         Auth,
-        CONFIG,
         Communication,
+        CONFIG,
+        ConfigurationService,
         MapService,
         Model,
         Offline,
@@ -42,7 +43,7 @@ angular.module('webmapp')
 
         var extras = [];
 
-        var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+        var trackRecordingEnabled = ConfigurationService.isRecordAvailable();
 
         modalScope.vm = {};
         modalScope.parent = vm;
@@ -692,7 +693,7 @@ angular.module('webmapp')
                 else {
                     vm.isEditable = true;
                 }
-                if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableExportRecordedTrack) {
+                if (ConfigurationService.isExportTrackAvailable()) {
                     vm.isExportable = true;
                 }
                 else {

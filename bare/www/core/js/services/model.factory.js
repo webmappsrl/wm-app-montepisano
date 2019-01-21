@@ -24,8 +24,6 @@ angular.module('webmapp')
             confOverlays = CONFIG.OVERLAY_LAYERS,
             colorsConfig = CONFIG.STYLE;
 
-        var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
-
         for (var p in confPages) {
             pagesMap[confPages[p].label] = angular.extend({
                 items: []

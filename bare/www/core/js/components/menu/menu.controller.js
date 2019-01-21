@@ -27,7 +27,7 @@ angular.module('webmapp')
         var postLoginModal = loginConf.postLoginModal,
             login = {};
 
-        var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+        var trackRecordingEnabled = ConfigurationService.isRecordAvailable();
 
         var mainMenuItems = CONFIG.MENU,
             itemInGroupMap = {},

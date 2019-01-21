@@ -15,6 +15,7 @@ angular.module('webmapp')
         Auth,
         Communication,
         CONFIG,
+        ConfigurationService,
         GeolocationService,
         MapService,
         Model,
@@ -58,20 +59,12 @@ angular.module('webmapp')
 
         vm.userData = {};
 
-        vm.speedTextType = 'average';
         vm.reportQueue = {
             length: 0,
             interval: null
         };
 
-        if (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.defaultSpeedType && CONFIG.MAIN.NAVIGATION.defaultSpeedType === 'current') {
-            vm.speedTextType = 'current';
-        }
-        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.defaultSpeedType && CONFIG.NAVIGATION.defaultSpeedType === 'current') {
-            vm.speedTextType = 'current';
-        } else {
-            vm.speedTextType = 'average';
-        }
+        vm.speedTextType = ConfigurationService.getDefaultSpeedType();
 
         var reportQueueLengthFunction = function () {
             var url = CONFIG.WMTP.report.apiUrl ? CONFIG.WMTP.report.apiUrl : "https://api.webmapp.it/services/share.php";
@@ -143,16 +136,13 @@ angular.module('webmapp')
             };
         }
 
-        if (CONFIG.NAVIGATION && CONFIG.NAVIGATION.activate && !Utils.isBrowser()) {
-            vm.navigationAvailable = true;
-        }
+        vm.navigationAvailable = ConfigurationService.isNavigationAvailable();
 
         vm.heading = 0;
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
-        vm.showLocate = !CONFIG.MAP.hideLocationControl && !Utils.isBrowser() ||
-            Utils.isBrowser() && !CONFIG.MAP.hideLocationControl && window.location.protocol === "https:";
-        vm.trackRecordingEnabled = vm.showLocate && !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+        vm.geolocationEnabled = ConfigurationService.isGeolocationAvailable();
+        vm.trackRecordingEnabled = ConfigurationService.isRecordAvailable();
         vm.viewTitle = $translate.instant("MAPPA");
         vm.centerCoords = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsReference() : null;
         vm.centerCoordsUTM32 = CONFIG.MAP.showCoordinatesInMap ? MapService.getCenterCoordsUTM32Reference() : null;
@@ -162,7 +152,7 @@ angular.module('webmapp')
             (CONFIG.WMTP.help.email && CONFIG.WMTP.help.email.apiUrl && CONFIG.WMTP.help.email.default) ||
             (CONFIG.WMTP.help.sms && CONFIG.WMTP.help.sms.default));
 
-        vm.useReport = vm.showLocate && CONFIG.WMTP && CONFIG.WMTP.report && CONFIG.WMTP.report.items.length > 0;
+        vm.useReport = vm.geolocationEnabled && CONFIG.WMTP && CONFIG.WMTP.report && CONFIG.WMTP.report.items.length > 0;
 
         vm.showRightMenu = false;
         vm.filterIcon = CONFIG.OPTIONS.filterIcon;
@@ -954,7 +944,7 @@ angular.module('webmapp')
         $ionicPlatform.ready(function () {
             vm.userData = Auth.getUserData();
             if (CONFIG.MAIN || !CONFIG.MULTIMAP) {
-                if (vm.showLocate) {
+                if (vm.geolocationEnabled) {
                     if (!GeolocationService.isActive()) {
                         GeolocationService.enable();
                     }

@@ -6,6 +6,7 @@ angular.module('webmapp')
         $scope,
         $translate,
         CONFIG,
+        ConfigurationService,
         MapService,
         Utils
     ) {
@@ -17,7 +18,7 @@ angular.module('webmapp')
         var currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
             defaultLang = ConfigurationService.getDefaultLang();
 
-        var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
+        var trackRecordingEnabled = ConfigurationService.isRecordAvailable();
 
         var areAllActive = function (filtersMap) {
             var allActive = true;

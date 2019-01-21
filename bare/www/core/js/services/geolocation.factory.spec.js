@@ -33,18 +33,17 @@ describe('Geolocation.Factory', function () {
     beforeEach(function () {
         CONFIG = angular.copy(MOCK_CONFIG);
 
-        if (!CONFIG.NAVIGATION) {
-            CONFIG.NAVIGATION = {}
+        CONFIG.GEOLOCATION = {
+            enable: true,
+            navigation: {
+                trackBoundsDistance: 200
+            },
+            record: {
+                enable: true
+            }
+        };
 
-        }
-        CONFIG.NAVIGATION.enableTrackRecording = true;
-
-        constants.outOfTrackDistance = (CONFIG.NAVIGATION && CONFIG.NAVIGATION.trackBoundsDistance) ?
-            CONFIG.NAVIGATION.trackBoundsDistance : (
-                (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) ?
-                    CONFIG.MAIN.NAVIGATION.trackBoundsDistance :
-                    200
-            );
+        constants.outOfTrackDistance = 200;
 
         currentLat = CONFIG.MAP.bounds.northEast[0] + (CONFIG.MAP.bounds.southWest[0] - CONFIG.MAP.bounds.northEast[0]) / 2;
         currentLong = CONFIG.MAP.bounds.northEast[1] + (CONFIG.MAP.bounds.southWest[1] - CONFIG.MAP.bounds.northEast[1]) / 2;

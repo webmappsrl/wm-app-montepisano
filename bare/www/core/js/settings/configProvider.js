@@ -105,7 +105,7 @@ angular.module('webmapp')
             config.VERSION = version;
         }
 
-        if (window.cordova && (config.NAVIGATION && config.NAVIGATION.enableTrackRecording) || (config.MAIN && config.MAIN.NAVIGATION && config.MAIN.NAVIGATION.enableTrackRecording)) {
+        if (window.cordova && config.GEOLOCATION && config.GEOLOCATION.enable && config.GEOLOCATION.record && config.GEOLOCATION.record.enable) {
             config.OVERLAY_LAYERS.push({
                 id: "userTracks",
                 label: "I miei percorsi",
