@@ -20,14 +20,15 @@ angular.module('webmapp')
 
     .factory('PackageService', function PackageService(
         $http,
-        $rootScope,
         $ionicLoading,
         $ionicModal,
         $ionicPopup,
+        $rootScope,
         $translate,
-        CONFIG,
         Auth,
         Communication,
+        CONFIG,
+        ConfigurationService,
         GeolocationService,
         MapService,
         Offline,
@@ -37,8 +38,7 @@ angular.module('webmapp')
 
         var communicationConf = CONFIG.COMMUNICATION,
             // currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : 'it',
-            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
-                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
+            defaultLang = ConfigurationService.getDefaultLang();
 
         var packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : null,
             userPackagesId = localStorage.$wm_userPackagesId ? JSON.parse(localStorage.$wm_userPackagesId) : null,

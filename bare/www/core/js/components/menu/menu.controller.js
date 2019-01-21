@@ -1,7 +1,6 @@
 angular.module('webmapp')
 
     .controller('MenuController', function MenuController(
-        // $cordovaKeyboard,
         $ionicModal,
         $ionicPopup,
         $ionicSideMenuDelegate,
@@ -12,6 +11,7 @@ angular.module('webmapp')
         Account,
         Auth,
         CONFIG,
+        ConfigurationService,
         GeolocationService,
         Model,
         Offline,
@@ -42,7 +42,7 @@ angular.module('webmapp')
         vm.hideMenuButton = CONFIG.OPTIONS.hideMenuButton;
         vm.isNavigating = false;
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
-        vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : "it";
+        vm.defaultLang = ConfigurationService.getDefaultLang();
 
         vm.isBrowser = Utils.isBrowser();
 

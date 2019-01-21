@@ -12,6 +12,7 @@ angular.module('webmapp')
         $translate,
         Auth,
         CONFIG,
+        ConfigurationService,
         md5,
         PackageService,
         Utils
@@ -29,12 +30,11 @@ angular.module('webmapp')
         modalScope.vm = {};
         modalScope.parent = vm;
 
-        vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
+        vm.colors = ConfigurationService.getStyle();
         vm.imageUrl = CONFIG.OFFLINE.imagesUrl;
         vm.goBack = Utils.goBack;
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
-        vm.defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
-            ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
+        vm.defaultLang = ConfigurationService.getDefaultLang();
         vm.packages = {};
         vm.userPackagesId = {};
         vm.userDownloadedPackages = {};

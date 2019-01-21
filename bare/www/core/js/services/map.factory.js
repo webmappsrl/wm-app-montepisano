@@ -10,6 +10,7 @@ angular.module('webmapp')
         $timeout,
         $translate,
         CONFIG,
+        ConfigurationService,
         Model,
         Offline,
         Search,
@@ -29,8 +30,7 @@ angular.module('webmapp')
             offlineConf = CONFIG.OFFLINE,
             communicationConf = CONFIG.COMMUNICATION,
             currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
-            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
-                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it'),
+            defaultLang = ConfigurationService.getDefaultLang(),
             routeDefaultLang = (CONFIG.MAIN && CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual : 'it';
 
         var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;

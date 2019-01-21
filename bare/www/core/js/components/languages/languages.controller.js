@@ -8,7 +8,7 @@ angular.module('webmapp')
         $window,
         Auth,
         CONFIG,
-        MapService,
+        ConfigurationService,
         PackageService,
         Utils
     ) {
@@ -18,7 +18,7 @@ angular.module('webmapp')
 
         vm.languages = CONFIG.LANGUAGES.available ? CONFIG.LANGUAGES.available : "";
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
-        vm.defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : "it";
+        vm.defaultLang = ConfigurationService.getDefaultLang();
         vm.version = CONFIG.VERSION;
         vm.privacyUrl = 'http://www.webmapp.it/privacy/';
         vm.purchaseAvailable = true;

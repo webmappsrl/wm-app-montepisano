@@ -1,14 +1,14 @@
 angular.module('webmapp')
 
     .controller('AttributionController', function AttributionController(
-        Utils,
-        CONFIG
+        ConfigurationService,
+        Utils
     ) {
         var vm = {};
 
-        vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
+        vm.colors = ConfigurationService.getStyle();
         vm.openInAppBrowser = Utils.openInAppBrowser;
-        vm.title = CONFIG.OPTIONS.title;
+        vm.title = ConfigurationService.getTitle();
 
         return vm;
     });

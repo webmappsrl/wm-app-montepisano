@@ -1,13 +1,14 @@
 angular.module('webmapp')
 
     .controller('DetailTaxonomyController', function DetailTaxonomyController(
-        Communication,
-        CONFIG,
         $ionicLoading,
         $rootScope,
         $scope,
         $state,
         $translate,
+        Communication,
+        ConfigurationService,
+        CONFIG,
         MapService,
         PackageService,
         Utils
@@ -21,7 +22,7 @@ angular.module('webmapp')
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.title = CONFIG.OPTIONS.title;
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
-        vm.defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';
+        vm.defaultLang = ConfigurationService.getDefaultLang();
         vm.taxonomy = {};
         vm.item = {};
         vm.routes = {};

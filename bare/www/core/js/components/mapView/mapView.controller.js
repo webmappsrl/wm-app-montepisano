@@ -15,8 +15,7 @@ angular.module('webmapp')
             modal = {};
 
         var currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
-            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
-                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
+            defaultLang = ConfigurationService.getDefaultLang();
 
         var trackRecordingEnabled = !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
 
@@ -113,8 +112,8 @@ angular.module('webmapp')
         var openFilters = function () {
             var filt = MapService.getActiveFilters();
             if (modalScope.vm.isNewModal) {
-                modalScope.vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";;
-                modalScope.vm.defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';;
+                modalScope.vm.currentLang = currentLang;
+                modalScope.vm.defaultLang = defaultLang;
                 for (var layerId in modalScope.layers) {
                     if (filt[layerId]) {
                         modalScope.layers[layerId].checked = filt[layerId];

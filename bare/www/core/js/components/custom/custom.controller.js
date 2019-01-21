@@ -7,6 +7,7 @@ angular.module('webmapp')
         $translate,
         Auth,
         CONFIG,
+        ConfigurationService,
         MapService,
         Model,
         Utils
@@ -14,8 +15,7 @@ angular.module('webmapp')
         var vm = {},
             currentPageType = $state.current.name.split('.').pop(),
             currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
-            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
-                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
+            defaultLang = ConfigurationService.getDefaultLang();
 
         vm.currentPage = Model.getPageByType(currentPageType);
         vm.isAPageChild = Model.isAPageChild(vm.currentPage.label);

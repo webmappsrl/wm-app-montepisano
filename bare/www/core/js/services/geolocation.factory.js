@@ -9,6 +9,7 @@ angular.module('webmapp')
         $translate,
         Auth,
         Communication,
+        ConfigurationService,
         CONFIG,
         MapService,
         Utils
@@ -44,12 +45,7 @@ angular.module('webmapp')
             geolocationTimeoutTime: 60000,
             minSpeedForGpsBearing: 2, // Speed in km/h needed to switch from compass to gps bearing
             outOfTrackToastDelay: 10000,
-            outOfTrackDistance: (CONFIG.NAVIGATION && CONFIG.NAVIGATION.trackBoundsDistance) ?
-                CONFIG.NAVIGATION.trackBoundsDistance : (
-                    (CONFIG.MAIN && CONFIG.MAIN.NAVIGATION && CONFIG.MAIN.NAVIGATION.trackBoundsDistance) ?
-                        CONFIG.MAIN.NAVIGATION.trackBoundsDistance :
-                        200
-                )
+            outOfTrackDistance: ConfigurationService.getTrackBoundsDistance()
         };
 
         //Contains all the global variables

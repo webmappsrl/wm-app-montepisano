@@ -6,6 +6,7 @@ angular.module('webmapp')
         $state,
         $translate,
         CONFIG,
+        ConfigurationService,
         PackageService,
         Utils
     ) {
@@ -15,7 +16,7 @@ angular.module('webmapp')
 
         vm.title = CONFIG.OPTIONS.title;
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
-        vm.defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';
+        vm.defaultLang = ConfigurationService.getDefaultLang();
         vm.taxonomy = {};
         vm.loading = true;
         vm.firstLoading = true;

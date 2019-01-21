@@ -9,6 +9,7 @@ angular.module('webmapp')
         $scope,
         $translate,
         CONFIG,
+        ConfigurationService,
         MapService,
         Search,
         Utils
@@ -21,8 +22,7 @@ angular.module('webmapp')
 
         var options = CONFIG.OPTIONS,
             currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
-            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
-                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
+            defaultLang = ConfigurationService.getDefaultLang();
 
         modalScope.vm = {};
 
@@ -205,8 +205,8 @@ angular.module('webmapp')
             if (modalScope.vm.isNewModal) {
                 var featuresIdByLayersMap = MapService.getFeaturesIdByLayersMap();
                 Search.setFeaturesIdByLayerMap(featuresIdByLayersMap);
-                modalScope.vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";;
-                modalScope.vm.defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';;
+                modalScope.vm.currentLang = currentLang;
+                modalScope.vm.defaultLang = defaulLang;
                 for (var layerId in modalScope.layers) {
                     if (filt[layerId]) {
                         modalScope.layers[layerId].checked = filt[layerId].state;

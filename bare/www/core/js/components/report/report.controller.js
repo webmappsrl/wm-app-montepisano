@@ -7,6 +7,7 @@ angular.module('webmapp')
         Auth,
         Communication,
         CONFIG,
+        ConfigurationService,
         GeolocationService,
         Utils
     ) {
@@ -22,8 +23,7 @@ angular.module('webmapp')
         vm.colors = CONFIG.STYLE;
         vm.isAndroid = window.cordova && window.cordova.platformId === "android" ? true : false;
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
-        vm.defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
-            ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
+        vm.defaultLang = ConfigurationService.getDefaultLang();
 
         vm.reports = (CONFIG.WMTP && CONFIG.WMTP.report && CONFIG.WMTP.report.items) ? angular.copy(CONFIG.WMTP.report.items) : [];
         vm.selectedReport = vm.reports.length === 1 ? 0 : -1;

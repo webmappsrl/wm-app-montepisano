@@ -9,6 +9,7 @@ angular.module('webmapp')
         $translate,
         Auth,
         CONFIG,
+        ConfigurationService,
         GeolocationService,
         Model,
         PackageService,
@@ -36,8 +37,7 @@ angular.module('webmapp')
         }
 
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
-        vm.defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
-            ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
+        vm.defaultLang = ConfigurationService.getDefaultLang();
 
         vm.userDownloadedPackages = PackageService.getDownloadedPackages();
         vm.packages = null;

@@ -60,13 +60,13 @@ angular.module('webmapp')
 angular.module('webmapp')
     .filter('packagesSearchFilter', function (
         $translate,
-        CONFIG
+        ConfigurationService
     ) {
         return function (input, search) {
             var results = [],
                 pattern = new RegExp(search.toLowerCase()),
                 currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
-                defaultLang = (CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it';
+                defaultLang = ConfigurationService.getDefaultLang();
 
             if (search === "") {
                 return input;
@@ -92,7 +92,7 @@ angular.module('webmapp')
 angular.module('webmapp')
     .filter('packagesSortFilter', function (
         $translate,
-        CONFIG,
+        ConfigurationService,
         Utils
     ) {
         return function (input, search) {
@@ -131,8 +131,7 @@ angular.module('webmapp')
                     case 'alpha':
                     default:
                         var currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it",
-                            defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :
-                                ((CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual) ? CONFIG.LANGUAGES.actual.substring(0, 2) : 'it');
+                            defaultLang = ConfigurationService.getDefaultLang();
                         array.sort(function (a, b) {
                             var titleA = a.packageTitle[currentLang] || a.packageTitle[defaultLang] || a.packageTitle['it'] || a.title.rendered,
                                 titleB = b.packageTitle[currentLang] || b.packageTitle[defaultLang] || b.packageTitle['it'] || b.title.rendered;
