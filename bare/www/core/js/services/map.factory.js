@@ -1064,7 +1064,7 @@ angular.module('webmapp')
                 url = currentOverlay.geojsonUrl;
                 if (available && routeDefaultLang !== currentLang) {
                     var split = currentOverlay.geojsonUrl.split('/');
-                    url = "languages/" + currentLang + "/" + split.pop();
+                    url = "/languages/" + currentLang + "/" + split.pop();
                     url = split.join('/') + url;
                 }
                 url = baseUrl + url;
@@ -1073,7 +1073,7 @@ angular.module('webmapp')
                         url = currentOverlay.geojsonUrl;
                         if (defaultLang !== routeDefaultLang) {
                             var split = currentOverlay.geojsonUrl.split('/');
-                            url = "languages/" + defaultLang + "/" + split.pop();
+                            url = "/languages/" + defaultLang + "/" + split.pop();
                             url = split.join('/') + url;
                         }
                         url = baseUrl + url;
