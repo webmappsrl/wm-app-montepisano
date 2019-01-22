@@ -693,12 +693,8 @@ angular.module('webmapp')
                 else {
                     vm.isEditable = true;
                 }
-                if (ConfigurationService.isExportTrackAvailable()) {
-                    vm.isExportable = true;
-                }
-                else {
-                    vm.isExportable = false;
-                }
+
+                vm.isExportable = ConfigurationService.isExportTrackAvailable();
             }
 
             var objData = {
