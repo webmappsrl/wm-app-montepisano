@@ -16,4 +16,14 @@
         -webkit-filter: grayscale(25%);
         filter: grayscale(25%);
     }
+
+    &.opacity-80 img {
+        opacity: 0.8!important;
+    }
+    &.opacity-60 img {
+        opacity: 0.6!important;
+    }
+    &.opacity-40 img {
+        opacity: 0.4!important;
+    }
 }

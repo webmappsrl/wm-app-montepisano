@@ -4401,3 +4401,12 @@ ion-content div.static-content.card-content {
 #map.grayscale-25 img {
   -webkit-filter: grayscale(25%);
   filter: grayscale(25%); }
+
+#map.opacity-80 img {
+  opacity: 0.8 !important; }
+
+#map.opacity-60 img {
+  opacity: 0.6 !important; }
+
+#map.opacity-40 img {
+  opacity: 0.4 !important; }

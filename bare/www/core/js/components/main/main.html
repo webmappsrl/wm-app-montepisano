@@ -71,10 +71,13 @@
 
         <!-- Map -->
         <div id="map" ng-class="{
-            'grayscale-100': vm.isGrayscale === 100,
-            'grayscale-75': vm.isGrayscale === 75,
-            'grayscale-50': vm.isGrayscale === 50,
-            'grayscale-25': vm.isGrayscale === 25
+            'grayscale-100': vm.mapGrayscale === 100,
+            'grayscale-75': vm.mapGrayscale === 75,
+            'grayscale-50': vm.mapGrayscale === 50,
+            'grayscale-25': vm.mapGrayscale === 25,
+            'opacity-80': vm.mapOpacity === 80,
+            'opacity-60': vm.mapOpacity === 60,
+            'opacity-40': vm.mapOpacity === 40
         }" class="advanced-layout advanced-map"></div>
 
         <!-- Control locate -->

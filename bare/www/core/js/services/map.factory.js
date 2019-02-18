@@ -1390,7 +1390,10 @@ angular.module('webmapp')
                             address = baseMap.tilesUrl + '{z}/{x}/{y}.png';
                         }
 
-                        $rootScope.$emit('grayscale-basemap', baseMap.grayscale);
+                        $rootScope.$emit('basemap-style', {
+                            grayscale: baseMap.grayscale,
+                            opacity: baseMap.opacity
+                        });
                         setBaseLayer(baseMap, baseTms, L.tileLayer(address, options));
                         resolve();
                     }
