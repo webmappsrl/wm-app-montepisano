@@ -1389,7 +1389,13 @@ angular.module('webmapp')
                         } else {
                             address = baseMap.tilesUrl + '{z}/{x}/{y}.png';
                         }
-                        setBaseLayer(baseMap, baseTms, L.tileLayer(address, options));
+                        if (baseMap.grayscale) {
+                            address = 'http://api.webmapp.it/tiles/{z}/{x}/{y}.png';
+                            setBaseLayer(baseMap, baseTms, L.tileLayer.grayscale(address, options));
+                        }
+                        else {
+                            setBaseLayer(baseMap, baseTms, L.tileLayer(address, options));
+                        }
                         resolve();
                     }
 
