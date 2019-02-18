@@ -1,1 +1,19 @@
 /* custom style goes here */
+#map {
+    &.grayscale-100 img {
+        -webkit-filter: grayscale(100%);
+        filter: grayscale(100%);
+    }
+    &.grayscale-75 img {
+        -webkit-filter: grayscale(75%);
+        filter: grayscale(75%);
+    }
+    &.grayscale-50 img {
+        -webkit-filter: grayscale(50%);
+        filter: grayscale(50%);
+    }
+    &.grayscale-25 img {
+        -webkit-filter: grayscale(25%);
+        filter: grayscale(25%);
+    }
+}

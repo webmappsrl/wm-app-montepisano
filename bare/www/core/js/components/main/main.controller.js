@@ -211,6 +211,7 @@ angular.module('webmapp')
         vm.heading = 0;
         vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
         vm.hideHowToReach = CONFIG.OPTIONS.hideHowToReach;
+        vm.isGrayscale = false;
         vm.showLocate = !CONFIG.MAP.hideLocationControl && !Utils.isBrowser() ||
             Utils.isBrowser() && !CONFIG.MAP.hideLocationControl && window.location.protocol === "https:";
         vm.trackRecordingEnabled = vm.showLocate && !Utils.isBrowser() && CONFIG.NAVIGATION && CONFIG.NAVIGATION.enableTrackRecording;
@@ -910,6 +911,13 @@ angular.module('webmapp')
         registeredEvents.push(
             $rootScope.$on('item-navigable', function (e, value) {
                 vm.isNavigable = value;
+                Utils.forceDigest();
+            })
+        );
+
+        registeredEvents.push(
+            $rootScope.$on('grayscale-basemap', function (e, value) {
+                vm.isGrayscale = value;
                 Utils.forceDigest();
             })
         );

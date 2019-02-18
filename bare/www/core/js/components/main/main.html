@@ -70,7 +70,12 @@
             }"></i>
 
         <!-- Map -->
-        <div id="map" class="advanced-layout advanced-map"></div>
+        <div id="map" ng-class="{
+            'grayscale-100': vm.isGrayscale === 100,
+            'grayscale-75': vm.isGrayscale === 75,
+            'grayscale-50': vm.isGrayscale === 50,
+            'grayscale-25': vm.isGrayscale === 25
+        }" class="advanced-layout advanced-map"></div>
 
         <!-- Control locate -->
         <div class="locate-custom-control" ng-if="vm.showLocate">
