@@ -162,7 +162,7 @@ gulp.task('update', ['create'], function () {
                         gulp.updateConfigXML(config_xml);
                     });
 
-                gulp.setFont('Abel');
+                gulp.setFont('Libre Franklin');
 
                 gulp.getUrlFile('icon.png', resources + 'icon.png', dir + '/resources/');
                 gulp.getUrlFile('splash.png', resources + 'splash.png', dir + '/resources/');

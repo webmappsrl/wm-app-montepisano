@@ -188,6 +188,13 @@
  */
 
 @font-face {
+  font-family: 'Abel';
+  src: url('../fonts/Abel/Abel-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
   font-family: 'Josefin Sans';
   src: url('../fonts/Josefin Sans/JosefinSans-Light.ttf');
   font-weight: normal;
@@ -195,8 +202,8 @@
 }
 
 @font-face {
-  font-family: 'Abel';
-  src: url('../fonts/Abel/Abel-Regular.ttf');
+  font-family: 'Libre Franklin';
+  src: url('../fonts/Libre Franklin/LibreFranklin-Regular.ttf');
   font-weight: normal;
   font-style: normal;
 }
