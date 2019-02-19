@@ -11,7 +11,7 @@
 .details-subnav__list {
   //padding: 5px;
   margin-top: -1px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .details-contacts__list {
@@ -68,7 +68,7 @@
     vertical-align: top;
     .icon {
       margin-right: 5px;
-      font-size: 25px;
+      font-size: 27px;
       vertical-align: middle;
     }
     &:last-child {
@@ -176,7 +176,7 @@
   left: 0;
   z-index: 100;
   line-height: 45px;
-  font-size: 20px;
+  font-size: 22px;
   text-decoration: none;
   text-align: center;
   text-transform: lowercase;
@@ -184,7 +184,7 @@
   @include box-shadow(0 -4px 14px -4px rgba(18, 16, 11, 0.5));
   .icon {
     margin-right: 5px;
-    font-size: 25px;
+    font-size: 27px;
     vertical-align: middle;
   }
   .has-howtoreach & {
@@ -201,7 +201,7 @@
   left: 0;
   z-index: 100;
   line-height: 45px;
-  font-size: 20px;
+  font-size: 22px;
   text-decoration: none;
   text-align: center;
   text-transform: lowercase;
@@ -255,11 +255,11 @@
     display: block;
     padding: 0.75em 0;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: $font-weight-bold;
     .icon {
       margin-left: 3px;
-      font-size: 18px;
+      font-size: 20px;
       vertical-align: middle;
     }
   }
@@ -291,7 +291,7 @@
   .details-title {
     margin: 10px 5%;
     line-height: 1em;
-    font-size: 2em;
+    font-size: calc(2em + 2px);
     font-weight: 700;
     text-align: center;
   }
@@ -326,7 +326,7 @@
     text-transform: uppercase;
     color: #D90101;
     text-align: right;
-    font-size: 12px;
+    font-size: 14px;
     span {
       padding: 0 0 0 5px;
     }
@@ -346,7 +346,7 @@
     padding: 0 0 10px;
     .icon {
       margin-right: 5px;
-      font-size: 20px;
+      font-size: 22px;
       vertical-align: text-top;
     }
     .label {
@@ -358,7 +358,7 @@
     padding: 0;
     text-align: justify;
     line-height: 1.3;
-    font-size: 16px;
+    font-size: 18px;
   }
   p.link-more {
     display: none;
@@ -380,13 +380,13 @@
   text-transform: uppercase;
   text-align: center;
   font-weight: $font-weight-bold;
-  font-size: 16px;
-  line-height: 30px;
+  font-size: 18px;
+  line-height: 32px;
   .icon {
-    font-size: 18px;
+    font-size: 20px;
     margin-left: 3px;
     &::before {
-      font-size: 30px;
+      font-size: 32px;
       vertical-align: middle;
     }
   }
@@ -401,7 +401,7 @@
   left: 50%;
   background: transparentize($color-brown, .3);
   .icon {
-    font-size: 34px;
+    font-size: 36px;
     color: $color-light-03;
     position: absolute;
     top: -5px;
@@ -423,7 +423,7 @@
     top: 10px;
     i {
       color: $color-light-03;
-      font-size: 40px;
+      font-size: 42px;
       padding: 10px;
     }
   }
@@ -433,7 +433,7 @@
 
 .table-details {
   width: 100%;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.2;
   th,
   td {
@@ -448,7 +448,7 @@
       border-bottom: none;
       &.it {
         font-weight: $font-weight-bold;
-        font-size: 20px;
+        font-size: 22px;
       }
       &.en {
         font-style: italic;
@@ -481,7 +481,7 @@
     padding: 8px;
     color: $color-brown;
     background: $color-light-01;
-    font-size: 18px;
+    font-size: 20px;
     text-align: center;
   }
   .itinerario-tappe-list {
@@ -513,12 +513,12 @@
 
 .tappa-name {
   text-transform: uppercase;
-  font-size: 18px;
+  font-size: 20px;
   @include text-ellipsis;
 }
 
 .tappa-poi {
-  font-size: 16px;
+  font-size: 18px;
   em {
     font-weight: $font-weight-bold;
     color: $color-green;
@@ -536,7 +536,7 @@
     padding: 8px;
     color: $color-brown;
     background: $color-light-01;
-    font-size: 18px;
+    font-size: 20px;
     text-align: center;
   }
   .route-related-list {
@@ -566,7 +566,7 @@
         }
         i {
           left: calc(50% - 25px);
-          font-size: 50px;
+          font-size: 52px;
         }
       }
       .route-related-name {
@@ -624,7 +624,7 @@
     clear: both;
   }
   .details_stat {
-    font-size: 130%;
+    font-size: calc(130% + 2px);
     display: inline-block;
     text-align: center;
     width: calc(100% / 3);
@@ -645,7 +645,7 @@
     height: 50px;
     a {
       i {
-        font-size: 30px;
+        font-size: 32px;
         padding: 5px;
       }
     }
@@ -654,7 +654,7 @@
 
 @media only screen and (max-height: 567px) and (max-width: 768px) {
   .details-description p {
-    font-size: 2rem;
+    font-size: calc(2rem + 2px);
   }
 }
 

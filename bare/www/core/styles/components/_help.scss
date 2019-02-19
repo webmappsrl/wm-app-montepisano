@@ -10,7 +10,7 @@
 
 .help-page.pane {
   background-color: #91c068;
-  font-size: 10px;
+  font-size: 12px;
   .step-counter {
     text-align: center;
     padding: 15px 0;
@@ -42,7 +42,7 @@
   .help__next {
     position: fixed;
     bottom: 0;
-    font-size: 2em;
+    font-size: calc(2em + 2px);
     padding: 15px;
     z-index: 100;
   }
@@ -63,7 +63,7 @@
       width: 100%;
       padding: 5% 5%;
       text-align: center;
-      font-size: 2.2em;
+      font-size: calc(2.2em + 2px);
       line-height: 1.2em;
       &.large {
         width: 100%;
@@ -94,7 +94,7 @@
         height: 300px;
         border-radius: 50%;
         // border: 1px solid #ffffff;
-        font-size: 50px;
+        font-size: 52px;
         line-height: 300px;
         text-align: center;
         position: relative;
@@ -139,12 +139,12 @@
   }
   @media screen and (max-height: 600px) {
     div.tab p {
-      font-size: 2.1em;
+      font-size: calc(2.1em + 2px);
     }
   }
   @media screen and (min-height: 700px) {
     div.tab p {
-      font-size: 2.5em;
+      font-size: calc(2.5em + 2px);
     }
     div.tab p,
     div.tab p.large {

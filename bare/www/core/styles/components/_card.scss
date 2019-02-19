@@ -29,7 +29,7 @@
   color: $color-brown;
   font-weight: 700;
   padding: 12px;
-  font-size: 1.1em;
+  font-size: calc(1.1em + 2px);
   text-align: center;
 
   .icon {
@@ -60,7 +60,7 @@
 
   p {
     color: $color-brown;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1;
   }
 }
@@ -68,7 +68,7 @@
 .card-text-title {
   margin-bottom: 5px;
   color: $color-dark-red;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .card-title {
@@ -94,7 +94,7 @@
   padding: 10px;
   // background: $color-login-bg;
   position: relative;
-  font-size: 16px;
+  font-size: 18px;
   z-index: 10;
 }
 
@@ -127,7 +127,7 @@
     margin: 30px 0;
 
     p {
-      font-size: 16px;
+      font-size: 18px;
     }
   }
 

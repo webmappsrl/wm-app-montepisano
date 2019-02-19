@@ -62,10 +62,10 @@
 .bar {
   .title {
     font-weight: 700;
-    font-size: 1.1em;
+    font-size: calc(1.1em + 2px);
   }
   .title-center {
-    font-size: 22px !important
+    font-size: 24px !important
   }
   &.bar-assertive.bar-footer {
     /* There's 2px pixel bottom overflowing - why?*/
@@ -153,7 +153,7 @@
   .title-right {
     width: 95%;
     @include text-ellipsis;
-    font-size: 20px;
+    font-size: 22px;
   }
   &.has-date {
     line-height: 1;
@@ -166,7 +166,7 @@
       padding-right: 10px;
       text-align: right;
       vertical-align: top;
-      font-size: 15px;
+      font-size: 17px;
       [class^="event-title"] {
         display: block;
       }
@@ -320,7 +320,7 @@
       display: none;
       i {
           color: #ff1500;
-          font-size: 40px;
+          font-size: 42px;
           float: left;
           padding: 15px 15px;
       }
@@ -331,7 +331,7 @@
       width: 100%;
       .toast-message {
           font-weight: 700;
-          font-size: 20px;
+          font-size: 22px;
           height: 45px;
       }
       .toast-buttons {
@@ -406,14 +406,14 @@
     &.has-date {
       line-height: 32px;
       .title-left {
-        font-size: 16px;
+        font-size: 18px;
         [class^="event-title"] {
           display: inline-block;
           margin-right: 10px;
         }
       }
       .title-right {
-        font-size: 16px;
+        font-size: 18px;
       }
     }
   }

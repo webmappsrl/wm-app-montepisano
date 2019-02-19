@@ -22,7 +22,7 @@
 a.item {
   background: inherit;
   //color: $color-green;
-  font-size: 22px;
+  font-size: 24px;
 }
 
 .item {
@@ -31,7 +31,7 @@ a.item {
   border-right: none;
   border-left: none;
   //color: $color-green;
-  font-size: 22px;
+  font-size: 24px;
 
   &.back-item {
     // background: $color-green;
@@ -70,7 +70,7 @@ a.item {
   .item {
     padding: 20px;
     border: none;
-    font-size: 30px;
+    font-size: 32px;
     color: $color-brown;
     margin: 0;
 

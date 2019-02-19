@@ -20,7 +20,7 @@ div.detailRoute-footer {
     min-height: 54px;
     width: auto;
     max-width: initial;
-    font-size: 20px;
+    font-size: 22px;
     &.left {
       float: left;
     }
@@ -37,14 +37,14 @@ div.detailRoute-footer {
     position: absolute;
     bottom: 22px;
     left: 14px;
-    font-size: 38px;
+    font-size: 40px;
   }
 }
 
 @media only screen and (max-width: 350px) {
   div.detailRoute-footer {
     button.login-button.button {
-      font-size: 14px;
+      font-size: 16px;
     }
   }
 }
@@ -52,7 +52,7 @@ div.detailRoute-footer {
 @media only screen and (min-width: 350px) and (max-width: 400px) {
   div.detailRoute-footer {
     button.login-button.button {
-      font-size: 17px;
+      font-size: 19px;
     }
   }
 }

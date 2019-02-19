@@ -51,7 +51,7 @@
 .modal-close-header {
   color: $color-white;
   padding: 7px;
-  font-size: 20px;
+  font-size: 22px;
   cursor: pointer;
 }
 
@@ -66,7 +66,7 @@
   top: 0;
   right: 0;
   z-index: 20;
-  font-size: 25px;
+  font-size: 27px;
   text-align: center;
   color: $color-white;
 }
@@ -81,11 +81,11 @@
 .modal-title {
   display: block;
   width: 80%;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: $font-weight-bold;
   color: $color-light-02;
   i {
-    font-size: 50px;
+    font-size: 52px;
     color: $color-light-03;
     padding: 5px;
   }
@@ -94,7 +94,7 @@
 .modal-content {
   div {
     .modal-subtitle {
-      font-size: 30px;
+      font-size: 32px;
       position: relative;
       top: 20px;
     }
@@ -159,7 +159,7 @@
               text-align: center;
               @include text-ellipsis;
               text-transform: uppercase;
-              font-size: 25px;
+              font-size: 27px;
               padding: 3px 0;
               &.selected {
                   color: #349912;
@@ -177,7 +177,7 @@
               .filters-sublayer {
                   border-bottom: 1px solid $color-brown;
                   padding: 5px 10px 5px 0;
-                  font-size: 20px;
+                  font-size: 22px;
                   line-height: 25px;
                   text-transform: uppercase;
                   text-align: center;
@@ -228,7 +228,7 @@
 /* Details modal */
 .modal-details {
   .modal-title {
-    font-size: 22px;
+    font-size: 24px;
     color: $color-dark-red;
     font-family: $title-font-family;
   }
@@ -258,7 +258,7 @@
 
 .modal-column-right {
   p h3, p h4 {
-    font-size: 14px;
+    font-size: 16px;
     color: $color-brown;
   }
   a {
@@ -268,7 +268,7 @@
 
 .modal-content-title {
   margin: 10px 0;
-  font-size: 18px;
+  font-size: 20px;
   font-family: $title-font-family;
   line-height: 1.2;
 
@@ -279,7 +279,7 @@
 
 .modal-column-left,
 .modal-column-right {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .modal-two-columns {
@@ -389,7 +389,7 @@
         border-radius: 50%;
         line-height: 40px;
 
-        font-size: 20px;
+        font-size: 22px;
         color: #000000;
         text-align: center;
 
@@ -439,7 +439,7 @@
     margin-top: 10px;
     .poi-list-item, .event-list-item {
       cursor: pointer;
-      font-size: 18px;
+      font-size: 20px;
       &.item-icon-left {
         padding-left: 30px;
 
@@ -454,7 +454,7 @@
 
       .icon {
         &::before {
-          font-size: 15px;
+          font-size: 17px;
         }
       }
     }

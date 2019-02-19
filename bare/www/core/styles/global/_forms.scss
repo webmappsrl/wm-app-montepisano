@@ -81,20 +81,20 @@
 div.popup {
   .popup-head {
     h3 {
-      font-size: 1.7em!important;
+      font-size: calc(1.7em + 2px)!important;
     }
 
     h5.popup-sub-title {
-      font-size: 1.2em;
+      font-size: calc(1.2em + 2px);
     }
   }
   .popup-body {
     input {
       padding: 3px 15px;
-      font-size: 1.2em;
+      font-size: calc(1.2em + 2px);
     }
     span {
-      font-size: 1.2em;
+      font-size: calc(1.2em + 2px);
     }
   }
 }

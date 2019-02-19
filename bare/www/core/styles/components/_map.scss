@@ -82,7 +82,7 @@
     margin-top: 0;
     border-radius: 50%;
     // font-family: $main-font-family;
-    font-size: 20px;
+    font-size: 22px;
     color: $color-white !important;
   }
 
@@ -459,7 +459,7 @@ div.leaflet-top.leaflet-right {
   right: 37px;
   bottom: 24px;
   z-index: 799;
-  font-size: 20px;
+  font-size: 22px;
   text-align: center;
   > span {
     display: inline-block;
@@ -509,7 +509,7 @@ div.leaflet-top.leaflet-right {
   left: 10px;
   background: transparentize($color-brown, .2);
   z-index: 800;
-  font-size: 26px;
+  font-size: 28px;
   padding: 8px 18px 8px 9px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -561,7 +561,7 @@ div.leaflet-top.leaflet-right {
   width: 100%;
   z-index: 800;
   background-color: #fff;
-  font-size: 25px;
+  font-size: 27px;
   text-align: center;
   height: 75px;
   div.content-div {
@@ -570,7 +570,7 @@ div.leaflet-top.leaflet-right {
     div.pause-button {
       width: calc(100% - 27% * 3);
       float: left;
-      font-size: 50px;
+      font-size: 52px;
       height: inherit;
       a {
         color: #fff;
@@ -585,10 +585,10 @@ div.leaflet-top.leaflet-right {
         margin: 2px 0;
       }
       span.navigation-value {
-        font-size: 22px;
+        font-size: 24px;
       }
       span.navigation-text {
-        font-size: 16px;
+        font-size: 18px;
       }
       span {
         display: block;
@@ -703,7 +703,7 @@ ion-side-menus.navigation-interface {
           // border-radius: 10px;
           padding:20px;
           i {
-            font-size: 53px;
+            font-size: 55px;
             // opacity: 0.6;
           }
         }
@@ -733,7 +733,7 @@ ion-side-menus.navigation-interface {
         }
 
         .popup-title {
-          font-size: 23px;
+          font-size: 25px;
           line-height: 27px;
           max-height: 81px;
           overflow: hidden;
@@ -754,7 +754,7 @@ ion-side-menus.navigation-interface {
           height: 14px;
           line-height: 14px;
           width: 164px;
-          font-size: 14px;
+          font-size: 16px;
           margin: 3px 0;
           color: #E2E2E2;
           white-space: nowrap;
@@ -763,7 +763,7 @@ ion-side-menus.navigation-interface {
         }
 
         .popup-description {
-          font-size: 15px;
+          font-size: 17px;
         }
       }
 
@@ -801,7 +801,7 @@ button.popup-button {
 
   .icon {
     &::before {
-      font-size: 30px;
+      font-size: 32px;
       vertical-align: middle;
     }
   }
@@ -820,7 +820,7 @@ button.popup-close {
 
   .icon {
     &::before {
-      font-size: 20px;
+      font-size: 22px;
       vertical-align: middle;
     }
   }
@@ -878,7 +878,7 @@ button.popup-close {
   left: 50%;
   z-index: -10;
   color: $color-white;
-  font-size: 45px;
+  font-size: 47px;
   line-height: 46px;
   -webkit-animation: spin 0.95s infinite linear;
   -o-animation: spin 0.95s infinite linear;

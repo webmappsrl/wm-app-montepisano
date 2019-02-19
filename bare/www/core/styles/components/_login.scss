@@ -11,7 +11,7 @@
 
 button.login-button {
   border: 2px solid;
-  font-size: 20px;
+  font-size: 22px;
   border-radius: 0;
   line-height: 42px;
   vertical-align: middle;
@@ -24,7 +24,7 @@ button.login-button {
   }
   i {
     line-height: 42px;
-    font-size: 21px;
+    font-size: 23px;
     position: absolute;
     right: 20px;
   }
@@ -43,7 +43,7 @@ button.login-button {
   color: $color-brown;
   font-weight: 700;
   padding: 12px;
-  font-size: 1.1em;
+  font-size: calc(1.1em + 2px);
   text-align: center;
   @include box-shadow(0 0 1px transparentize($color-box-shadow,0.5));
 
@@ -83,7 +83,7 @@ button.login-button {
 
       .choice-label {
 
-        font-size: 20px;
+        font-size: 22px;
       }
 
       .radio-container {
@@ -94,7 +94,7 @@ button.login-button {
         }
 
         .item-content {
-          font-size: 20px;
+          font-size: 22px;
           background-color: #F8FAF3 !important;
         }
       }
@@ -115,7 +115,7 @@ button.login-button {
       padding: 0;
       border-bottom: 1px solid transparentize($color-light-02,0.3);
       // font-family: $main-font-family !important;
-      font-size: 20px;
+      font-size: 22px;
       background: none !important;
       line-height: 2.2em;
       text-align: center;
@@ -130,7 +130,7 @@ button.login-button {
   .privacy {
     width: 100%;
     margin: 15px auto;
-    font-size: 20px;
+    font-size: 22px;
     margin-left: 20px;
     i {
       margin-left: -20px;
@@ -163,7 +163,7 @@ button.login-button {
         margin: 0;
         padding: 13px 20% 14px 20%;
         width: 100%;
-        font-size: 20px;
+        font-size: 22px;
       }
     }
   }
@@ -174,7 +174,7 @@ button.login-button {
   label {
     display: inline-block;
     width: 72%;
-    font-size: 11px;
+    font-size: 13px;
   }
 }
 
@@ -196,7 +196,7 @@ button.login-button {
 .skip-link {
   text-align: right;
   padding: 8px 0 !important;
-  font-size: 14px;
+  font-size: 16px;
   text-transform: lowercase;
   font-style: italic;
 
@@ -206,7 +206,7 @@ button.login-button {
 
   .icon {
     margin-left: 5px;
-    font-size: 20px;
+    font-size: 22px;
     vertical-align: middle;
   }
 }
@@ -262,7 +262,7 @@ button.login-button {
   padding: 10px;
   background: $color-login-bg;
   position: relative;
-  font-size: 18px;
+  font-size: 20px;
   z-index: 10;
 }
 
@@ -278,7 +278,7 @@ button.login-button {
   margin: 10px auto;
   .omb_loginOr {
     position: relative;
-    font-size: 1.5em;
+    font-size: calc(1.5em + 2px);
     color: #aaa;
     margin-top: 1em;
     margin-bottom: 1em;
@@ -322,7 +322,7 @@ button.login-button {
     padding-bottom: 10px;
     color: $color-light-02;
     font-family: $main-font-family !important;
-    font-size: 0.7em;
+    font-size: calc(0.7em + 2px);
 
     .icon {
       display: block;
@@ -350,12 +350,12 @@ button.login-button {
 
 
     span {
-      font-size: 15px;
+      font-size: calc(15px + 2px);
       text-transform: lowercase;
     }
 
     .icon {
-      font-size: 40px;
+      font-size: 42px;
     }
   }
 
@@ -422,7 +422,7 @@ button.login-button {
     display: inline-block;
     width: 100%;
     text-align: center;
-    font-size: 40px;
+    font-size: 42px;
   }
 }
 
@@ -432,7 +432,7 @@ button.login-button {
 
 @media screen and (max-width: 320px) {
   .social-login-title {
-    font-size: 16px;
+    font-size: 18px;
   }
 }
 
