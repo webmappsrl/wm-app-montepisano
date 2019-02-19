@@ -143,6 +143,10 @@
       @include text-ellipsis;
     }
   }
+
+  a {
+    @include text-ellipsis;
+  }
 }
 
 .details-content {
