@@ -16,8 +16,8 @@
     "cordova-android-support-gradle-release": "^1.4.2",
     "cordova-ios": "4.5.4",
     "cordova-plugin-actionsheet": "^2.3.3",
-    "cordova-plugin-camera": "^4.0.3",
     "cordova-plugin-appminimize": "^1.0.0",
+    "cordova-plugin-camera": "^4.0.3",
     "cordova-plugin-compat": "~1.0.0",
     "cordova-plugin-device": "^1.1.7",
     "cordova-plugin-device-orientation": "^2.0.1",
@@ -51,7 +51,6 @@
     "leaflet.elevation": "0.0.3",
     "moment": "^2.10.6",
     "opening_hours": "^3.5.0",
-    "phonegap-plugin-barcodescanner": "~6.0.1",
     "uk.co.workingedge.phonegap.plugin.launchnavigator": "~3.2.1"
   },
   "devDependencies": {
@@ -87,7 +86,6 @@
       "cordova-plugin-zip": {},
       "ionic-plugin-keyboard": {},
       "cordova-sqlite-storage-custom": {},
-      "phonegap-plugin-barcodescanner": {},
       "uk.co.workingedge.phonegap.plugin.launchnavigator": {},
       "cordova-plugin-x-socialsharing": {},
       "cordova.plugins.diagnostic": {},

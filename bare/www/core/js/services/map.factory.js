@@ -1709,8 +1709,6 @@ angular.module('webmapp')
 
             utfGridBaseLayerByLabel = {};
             utfGridOverlayLayersByLabel = {};
-            overlayLayersByLabel = {};
-            overlayLayersById = {};
             extraLayersByLabel = {};
             featureMapById = {};
             featuresIdByLayersMap = {};

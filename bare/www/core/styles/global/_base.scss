@@ -4,7 +4,7 @@
  * Basic style for tag and general classes
  */
 
-body.fontsloaded { 
+body.fontsloaded {
   font-family: $main-font-family !important;
 }
 
@@ -91,5 +91,34 @@ button{
 @media screen and (min-width: 1025px) {
   html {
     font-size: 1.5em;
+  }
+}
+
+#map {
+  &.grayscale-100 .leaflet-pane.leaflet-rotate-pane img {
+      -webkit-filter: grayscale(100%);
+      filter: grayscale(100%);
+  }
+  &.grayscale-75 .leaflet-pane.leaflet-rotate-pane img {
+      -webkit-filter: grayscale(75%);
+      filter: grayscale(75%);
+  }
+  &.grayscale-50 .leaflet-pane.leaflet-rotate-pane img {
+      -webkit-filter: grayscale(50%);
+      filter: grayscale(50%);
+  }
+  &.grayscale-25 .leaflet-pane.leaflet-rotate-pane img {
+      -webkit-filter: grayscale(25%);
+      filter: grayscale(25%);
+  }
+
+  &.opacity-80 .leaflet-pane.leaflet-rotate-pane img {
+      opacity: 0.8!important;
+  }
+  &.opacity-60 .leaflet-pane.leaflet-rotate-pane img {
+      opacity: 0.6!important;
+  }
+  &.opacity-40 .leaflet-pane.leaflet-rotate-pane img {
+      opacity: 0.4!important;
   }
 }

@@ -604,7 +604,7 @@ angular.module('webmapp')
         }
 
         vm.openExternalMap = function () {
-            var coordinates = $rootScope.detailCoordinates;
+            var coordinates = vm.feature.startPoi;
 
             if (coordinates) {
                 if (Utils.isBrowser()) {

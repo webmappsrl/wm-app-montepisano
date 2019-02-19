@@ -126,6 +126,31 @@ button {
   html {
     font-size: 1.5em; } }
 
+#map.grayscale-100 .leaflet-pane.leaflet-rotate-pane img {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%); }
+
+#map.grayscale-75 .leaflet-pane.leaflet-rotate-pane img {
+  -webkit-filter: grayscale(75%);
+  filter: grayscale(75%); }
+
+#map.grayscale-50 .leaflet-pane.leaflet-rotate-pane img {
+  -webkit-filter: grayscale(50%);
+  filter: grayscale(50%); }
+
+#map.grayscale-25 .leaflet-pane.leaflet-rotate-pane img {
+  -webkit-filter: grayscale(25%);
+  filter: grayscale(25%); }
+
+#map.opacity-80 .leaflet-pane.leaflet-rotate-pane img {
+  opacity: 0.8 !important; }
+
+#map.opacity-60 .leaflet-pane.leaflet-rotate-pane img {
+  opacity: 0.6 !important; }
+
+#map.opacity-40 .leaflet-pane.leaflet-rotate-pane img {
+  opacity: 0.4 !important; }
+
 /**
  * BUTTONS
  *
@@ -4386,27 +4411,3 @@ ion-content div.static-content.card-content {
       height: 2.2em; } }
 
 /* custom style goes here */
-#map.grayscale-100 img {
-  -webkit-filter: grayscale(100%);
-  filter: grayscale(100%); }
-
-#map.grayscale-75 img {
-  -webkit-filter: grayscale(75%);
-  filter: grayscale(75%); }
-
-#map.grayscale-50 img {
-  -webkit-filter: grayscale(50%);
-  filter: grayscale(50%); }
-
-#map.grayscale-25 img {
-  -webkit-filter: grayscale(25%);
-  filter: grayscale(25%); }
-
-#map.opacity-80 img {
-  opacity: 0.8 !important; }
-
-#map.opacity-60 img {
-  opacity: 0.6 !important; }
-
-#map.opacity-40 img {
-  opacity: 0.4 !important; }

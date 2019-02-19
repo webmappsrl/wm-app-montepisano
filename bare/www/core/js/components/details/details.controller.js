@@ -550,6 +550,10 @@ angular.module('webmapp')
                     }
                 }
 
+                if (data.geometry.type === 'LineString' && CONFIG.OPTIONS.showHowToReachTrack) {
+                    feature.startPoi = data.geometry.coordinates[0];
+                }
+
                 vm.chiama = function (number) {
                     window.plugins.CallNumber.callNumber(function () {
                         console.log('successo');
@@ -886,6 +890,18 @@ angular.module('webmapp')
                 vm.openInAppBrowser(link);
             } else {
                 vm.openInExternalBrowser(link);
+            }
+        };
+
+        vm.navigateToTrack = function () {
+            var coordinates = vm.feature.startPoi;
+
+            if (coordinates) {
+                if (Utils.isBrowser()) {
+                    window.open('https://maps.google.com/maps?daddr=' + coordinates[1] + ',' + coordinates[0] + '&navigate=yes', '_blank');
+                } else {
+                    launchnavigator.navigate([coordinates[1], coordinates[0]]);
+                }
             }
         };
 

@@ -196,6 +196,12 @@
                     </a>
                 </div>
 
+                <div class="contacts-list__element" style="width: 100%" ng-if="vm.feature.startPoi">
+                    <a href="" style="cursor: default" ng-click="vm.navigateToTrack()">
+                        <i class="icon wm-icon-navigate"></i> {{"Come raggiungere punto di partenza" | translate}}
+                    </a>
+                </div>
+
                 <div class="details-description details-rows" ng-if="!vm.onlyTable && !vm.avoidModal">
 
                     <div class="opening-hours" ng-if="vm.featureDetails.opening_hours">

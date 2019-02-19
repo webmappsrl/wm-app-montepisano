@@ -312,19 +312,25 @@ angular.module('webmapp')
                         modalScope.filters[tabIndex].label = "Luoghi";
                         modalScope.filters[tabIndex].languages = {
                             it: "Luoghi",
-                            en: "Places"
+                            en: "Places",
+                            fr: "Endroits",
+                            de: "Orte"
                         };
                     } else if (tabIndex === 'tracks') {
                         modalScope.filters[tabIndex].label = "Tracciati";
                         modalScope.filters[tabIndex].languages = {
                             it: "Tracciati",
-                            en: "Routes"
+                            en: "Routes",
+                            fr: "Suivi",
+                            de: "Verfolgt"
                         };
                     } else {
                         modalScope.filters[tabIndex].label = "Mappe";
                         modalScope.filters[tabIndex].languages = {
                             it: "Mappe",
-                            en: "Maps"
+                            en: "Maps",
+                            fr: "Carte",
+                            de: "Karte"
                         };
                     }
                     var subTabs = modalScope.filters[tabIndex].sublayers;
