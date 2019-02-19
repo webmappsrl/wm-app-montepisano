@@ -143,9 +143,42 @@
       @include text-ellipsis;
     }
   }
+}
+
+.navigate-to-start {
+  width: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  text-transform: uppercase;
 
   a {
-    @include text-ellipsis;
+    display: block;
+    color: $color-brown;
+    border: 0;
+    border-image-width: 0;
+    width: 100%;
+    height: 50px;
+    padding: 0 0 0 15px;
+    text-decoration: none;
+    .icon {
+      line-height: 40px;
+      margin-right: 5px;
+      font-size: 25px;
+      vertical-align: middle;
+      float: left;
+    }
+    &:last-child {
+      padding: 0 15px;
+    }
+    span {
+      display: block;
+      float: left;
+      line-height: 22px;
+      width: calc(100% - 40px);
+      padding: 6px 0;
+    }
   }
 }
 
