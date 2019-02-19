@@ -866,6 +866,11 @@ div.detailRoute-footer {
   text-overflow: ellipsis;
   white-space: nowrap; }
 
+.contacts-list__element a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; }
+
 .details-content {
   height: 100%;
   padding: 2%;
