@@ -3,16 +3,22 @@
         'color': vm.colors.mainBar.color
     }">
     <ion-nav-title>
-        <span ng-bind-html="vm.mapTitle">
+        <span ng-if="!vm.titleLogo" ng-bind-html="vm.mapTitle">
             {{ vm.mapTitle }}
+        </span>
+        <span ng-if="vm.titleLogo" class="title-logo">
+            <img ng-src="{{vm.titleLogo}}">
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">
-        <button ng-if="!vm.isNavigable" class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
-        <button ng-if="vm.isNavigable" class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left" ng-click="vm.goBack()"></button>
+        <button ng-if="!vm.isNavigable" class="no-animate button button-icon icon ion-navicon"
+            menu-toggle="left"></button>
+        <button ng-if="vm.isNavigable" class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left"
+            ng-click="vm.goBack()"></button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
-        <button class="no-animate button button-icon {{vm.filterIcon}}" ng-if="vm.showFilers" ng-click="vm.clickRightMenu()"></button>
+        <button class="no-animate button button-icon {{vm.filterIcon}}" ng-if="vm.showFilers"
+            ng-click="vm.clickRightMenu()"></button>
     </ion-nav-buttons>
 
     <ion-content>

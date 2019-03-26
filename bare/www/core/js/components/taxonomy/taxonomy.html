@@ -1,7 +1,10 @@
 <ion-view class="taxonomy-page" cache-view="false" ng-controller="TaxonomyController as vm">
     <ion-nav-title>
-        <span>
+        <span ng-if="!vm.titleLogo">
             {{vm.title}}
+        </span>
+        <span ng-if="vm.titleLogo" class="title-logo">
+            <img ng-src="{{vm.titleLogo}}">
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">
@@ -12,7 +15,8 @@
         'background': COLORS.global.background
     }">
         <ion-refresher on-refresh="vm.doRefresh(event)">
-            <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+            <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh"
+                refreshingSpinner="circles" refreshingText="Refreshing...">
             </ion-refresher-content>
         </ion-refresher>
 

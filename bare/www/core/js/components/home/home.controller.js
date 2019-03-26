@@ -18,6 +18,7 @@ angular.module('webmapp')
         vm.rows = 1;
         vm.title = "Cosa vuoi fare?";
         vm.appTitle = CONFIG.OPTIONS.title;
+        vm.titleLogo = CONFIG.OPTIONS.titleLogo ? CONFIG.OPTIONS.titleLogo : false;
 
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
         vm.defaultLang = CONFIG.MAIN ? (CONFIG.MAIN.LANGUAGES && CONFIG.MAIN.LANGUAGES.actual ? CONFIG.MAIN.LANGUAGES.actual.substring(0, 2) : "it") :

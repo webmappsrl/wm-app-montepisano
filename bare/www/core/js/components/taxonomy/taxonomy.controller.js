@@ -14,6 +14,7 @@ angular.module('webmapp')
         var registeredEvents = [];
 
         vm.title = CONFIG.OPTIONS.title;
+        vm.titleLogo = CONFIG.OPTIONS.titleLogo ? CONFIG.OPTIONS.titleLogo : false;
         vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
         vm.defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';
         vm.taxonomy = {};

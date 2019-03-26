@@ -1,7 +1,10 @@
 <ion-view cache-view="false" ng-controller="AttributionController as vm">
     <ion-nav-title>
-        <span>
+        <span ng-if="!vm.titleLogo">
             {{vm.title}}
+        </span>
+        <span ng-if="vm.titleLogo" class="title-logo">
+            <img ng-src="{{vm.titleLogo}}">
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">

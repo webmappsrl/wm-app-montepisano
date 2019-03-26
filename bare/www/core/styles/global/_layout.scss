@@ -1,13 +1,24 @@
 .loading-spinner {
-    text-align: center;
-    width: 100%;
-    &.small-margin {
-        margin-top: 10%;
-    }
+  text-align: center;
+  width: 100%;
+  &.small-margin {
+    margin-top: 10%;
+  }
 }
 
 .search-spinner {
-    position: relative;
-    top: 55px;
-    padding-bottom: 10px;
+  position: relative;
+  top: 55px;
+  padding-bottom: 10px;
+}
+
+.title-logo {
+  padding: 12px 0 8px;
+  img {
+    max-height: 24px;
+    max-width: 100%;
+    height: auto;
+    left: 0;
+    @include vertical-centering();
+  }
 }

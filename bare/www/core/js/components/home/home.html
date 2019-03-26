@@ -1,7 +1,10 @@
 <ion-view class="home-page" cache-view="false" ng-controller="HomeController as vm">
     <ion-nav-title>
-        <span>
+        <span ng-if="!vm.titleLogo">
             {{vm.appTitle}}
+        </span>
+        <span ng-if="vm.titleLogo" class="title-logo">
+            <img ng-src="{{vm.titleLogo}}">
         </span>
     </ion-nav-title>
     <ion-nav-buttons side="left">
@@ -18,7 +21,8 @@
             </div>
         </div>
         <div class="home-content">
-            <div ng-repeat="(key, item) in vm.activities" class="home-button width-{{vm.columns}} height-{{vm.rows}}" ng-click="vm.goTo(key)">
+            <div ng-repeat="(key, item) in vm.activities" class="home-button width-{{vm.columns}} height-{{vm.rows}}"
+                ng-click="vm.goTo(key)">
                 <div class="home-button-content">
                     <div class="home-icon">
                         <i class="icon {{item.icon}}"></i>
@@ -30,10 +34,12 @@
                         <span ng-if="item.name[vm.defaultLang] && !item.name[vm.currentLang]">
                             {{item.name[vm.defaultLang]}}
                         </span>
-                        <span ng-if="item.name[Object.keys(item.name)[0]] && !item.name[vm.defaultLang] && !item.name[vm.currentLang]">
+                        <span
+                            ng-if="item.name[Object.keys(item.name)[0]] && !item.name[vm.defaultLang] && !item.name[vm.currentLang]">
                             {{item.name[Object.keys(item.name)[0]]}}
                         </span>
-                        <span ng-if="item.name && !item.name[vm.currentLang] && !item.name[Object.keys(item.name)[0]] && !item.name[vm.defaultLang] && !item.name[vm.currentLang]">
+                        <span
+                            ng-if="item.name && !item.name[vm.currentLang] && !item.name[Object.keys(item.name)[0]] && !item.name[vm.defaultLang] && !item.name[vm.currentLang]">
                             {{item.title}}
                         </span>
                     </div>

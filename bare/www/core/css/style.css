@@ -483,6 +483,17 @@ ion-slide.slider-slide {
   top: 55px;
   padding-bottom: 10px; }
 
+.title-logo {
+  padding: 12px 0 8px; }
+  .title-logo img {
+    max-height: 24px;
+    max-width: 100%;
+    height: auto;
+    left: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); }
+
 /*
  * ATTRIBUTION PAGE
  *
