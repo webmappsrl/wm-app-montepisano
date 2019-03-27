@@ -44,6 +44,15 @@ angular.module('webmapp')
         vm.id = params.id;
         vm.openInAppBrowser = Utils.openInAppBrowser;
         vm.openInExternalBrowser = Utils.openInExternalBrowser;
+        vm.clientName = CONFIG.OPTIONS.title;
+
+        vm.voucherText = '';
+        if (vm.isAndroid) {
+            vm.voucherText = $translate.instant("Codice Viaggio");
+        }
+        else {
+            vm.voucherText = $translate.instant("Cliente Verde Natura", { client: vm.clientName });
+        }
 
         vm.voucherAvailable = false;
         vm.purchaseAvailable = false;
@@ -143,13 +152,13 @@ angular.module('webmapp')
         };
 
         vm.goToInfo = function () {
-            if (vm.isLoggedIn) {
+            if (vm.isLoggedIn && CONFIG.MULTIMAP.voucherUrl) {
                 var md5Hash = privateKey.voucher + '-' + vm.id + '-' + userData.ID;
                 md5Hash = md5.createHash(md5Hash);
 
                 var data = '?routeId=' + vm.id + '&userId=' + userData.ID + '&lang=' + vm.currentLang + '&hash=' + md5Hash;
 
-                Utils.openInExternalBrowser("https://api.webmapp.it/services/merinfo/vn/info.php" + data);
+                Utils.openInExternalBrowser(CONFIG.MULTIMAP.voucherUrl + data);
             } else {
                 notLoggedIn();
             }

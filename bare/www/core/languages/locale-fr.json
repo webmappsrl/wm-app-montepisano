@@ -30,7 +30,7 @@
     "Ciao. Sto usando l'app": "Salut. J'utilise l'application",
     "Città": "Ville",
     "Cliccando su OK invii una richiesta di aiuto al numero di assistenza.": "En cliquant sur OK vous enverrez une demande d'aide au numéro d'assistance.",
-    "Cliente Verde Natura": "Client Verde Natura",
+    "Cliente Verde Natura": "Client {{client}}",
     "Codice": "Code",
     "Codice Viaggio": "Code de voyage",
     "cognome": "nom de famille",

@@ -32,16 +32,21 @@
                         </span>
                         <span class="difficulty" ng-if="vm.difficulty !== 0">
                             <strong>{{"Difficoltà" | translate}}</strong>:
-                            <i class="fa" aria-hidden="true" ng-repeat="n in [].constructor(vm.maxDifficulty) track by $index" ng-class="{ 'fa-star-half-o' : (vm.difficulty - $index) == 0.5 , 'fa-star' : vm.difficulty > $index, 'fa-star-o': vm.difficulty <= $index  }"></i>
+                            <i class="fa" aria-hidden="true"
+                                ng-repeat="n in [].constructor(vm.maxDifficulty) track by $index"
+                                ng-class="{ 'fa-star-half-o' : (vm.difficulty - $index) == 0.5 , 'fa-star' : vm.difficulty > $index, 'fa-star-o': vm.difficulty <= $index  }"></i>
                         </span>
                     </div>
 
                     <div class="details-image-route">
-                        <span class="image-expand" ng-if="!vm.isAreaDetail && (vm.imageGallery.length > 1 || (vm.imageGallery.length === 1 && vm.imageGallery[0].caption && vm.imageGallery[0].caption !== ''))" ng-click="vm.openImageModal()">
+                        <span class="image-expand"
+                            ng-if="!vm.isAreaDetail && (vm.imageGallery.length > 1 || (vm.imageGallery.length === 1 && vm.imageGallery[0].caption && vm.imageGallery[0].caption !== ''))"
+                            ng-click="vm.openImageModal()">
                             <i class="icon wm-icon-ios7-more"></i>
                         </span>
                         <img ng-if="!vm.isAreaDetail" ng-click="vm.openImageModal()" ng-src="{{vm.featureImage}}">
-                        <img ng-if="vm.isAreaDetail" style="max-height: 125px; margin-left: 20%;" ng-src="{{vm.featureImage}}">
+                        <img ng-if="vm.isAreaDetail" style="max-height: 125px; margin-left: 20%;"
+                            ng-src="{{vm.featureImage}}">
                     </div>
 
                     <div class="details-description details-rows" ng-bind-html="vm.description">
@@ -66,7 +71,7 @@
                 }" class="login-button button left" ng-class="{
                     'full': !(vm.purchaseAvailable && vm.voucherAvailable)
                 }" ng-click="vm.applyVoucherFunction()">
-                {{vm.isAndroid ? "Codice Viaggio" : "Cliente Verde Natura" | translate}}
+                <span ng-bind-html="vm.voucherText"></span>
             </button>
             <button ng-if="vm.purchaseAvailable" ng-style="{
                     'background': COLORS.global.buttonsBackground,
