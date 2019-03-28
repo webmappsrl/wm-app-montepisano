@@ -29,7 +29,6 @@ angular.module('webmapp')
     ) {
         return function (input, filters) {
             var results = [],
-                order = 'asc',
                 applyFilter = false;
 
             for (var k in filters) {
@@ -45,8 +44,8 @@ angular.module('webmapp')
 
             for (var package in input) {
                 for (var key in input[package].activity) {
-                    if (filters[input[package].activity[key]] &&
-                        filters[input[package].activity[key]].value) {
+                    if (filters[input[package].activity[key].term_id] &&
+                        filters[input[package].activity[key].term_id].value) {
                         results.push(input[package]);
                         break;
                     }
