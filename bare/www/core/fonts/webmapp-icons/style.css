@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src:  url('fonts/webmapp.eot?v9szf3');
-  src:  url('fonts/webmapp.eot?v9szf3#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?v9szf3') format('truetype'),
-    url('fonts/webmapp.woff?v9szf3') format('woff'),
-    url('fonts/webmapp.svg?v9szf3#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?nyfv6z');
+  src:  url('fonts/webmapp.eot?nyfv6z#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?nyfv6z') format('truetype'),
+    url('fonts/webmapp.woff?nyfv6z') format('woff'),
+    url('fonts/webmapp.svg?nyfv6z#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.wm-icon-parcopan:before {
+  content: "\ea41";
+}
 .wm-icon-alpha-sort:before {
   content: "\ea40";
 }
