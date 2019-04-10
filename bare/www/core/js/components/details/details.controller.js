@@ -429,7 +429,6 @@ angular.module('webmapp')
                 vm.imageGallery = [];
 
                 for (var g in feature.imageGallery) {
-                    //vm.imageGallery.push(feature.imageGallery[g].src);
                     vm.imageGallery.push({
                         src: Offline.getRealImageUrl(feature.imageGallery[g].src),
                         caption: feature.imageGallery[g].caption ? feature.imageGallery[g].caption : ""
@@ -793,6 +792,7 @@ angular.module('webmapp')
             if ($ionicSlideBoxDelegate._instances &&
                 $ionicSlideBoxDelegate._instances.length > 0) {
                 $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].next();
+
             }
         };
 
@@ -1045,8 +1045,6 @@ angular.module('webmapp')
 
         vm.toggleMap = function () {
             $rootScope.$emit('toggle-map-from-detail');
-            // vm.isNavigable = false;
-            // $rootScope.$emit('item-navigable', vm.isNavigable);
         };
 
         vm.renderDate = function (date) {
@@ -1115,7 +1113,7 @@ angular.module('webmapp')
 
                 if ($ionicSlideBoxDelegate._instances &&
                     $ionicSlideBoxDelegate._instances.length > 0) {
-                    $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
+                    // $ionicSlideBoxDelegate._instances[$ionicSlideBoxDelegate._instances.length - 1].kill();
                     $ionicSlideBoxDelegate.update();
                 }
 
