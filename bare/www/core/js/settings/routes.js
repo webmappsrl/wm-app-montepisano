@@ -138,63 +138,77 @@ angular.module('webmapp')
             for (var i = 0; i < config.PAGES.length; i++) {
                 if (!config.PAGES[i].isCustom) {
                     if (config.PAGES[i].type === "packages") {
-                        $stateProvider
-                            .state('app.main.packages', {
-                                url: '/page/packages/:id',
-                                views: {
-                                    'inception-top': {
-                                        templateUrl: basePath + 'js/components/packages/packages.html'
+                        try {
+                            $stateProvider
+                                .state('app.main.packages', {
+                                    url: '/page/packages/:id',
+                                    views: {
+                                        'inception-top': {
+                                            templateUrl: basePath + 'js/components/packages/packages.html'
+                                        }
                                     }
-                                }
-                            })
-                            .state('app.main.route', {
-                                url: '/route/:id',
-                                views: {
-                                    'inception-top': {
-                                        templateUrl: basePath + 'js/components/detailRoute/detailRoute.html'
+                                })
+                                .state('app.main.route', {
+                                    url: '/route/:id',
+                                    views: {
+                                        'inception-top': {
+                                            templateUrl: basePath + 'js/components/detailRoute/detailRoute.html'
+                                        }
                                     }
-                                }
-                            });
+                                });
+                        }
+                        catch (e) { }
                     } else if (config.PAGES[i].type === "taxonomy") {
-                        $stateProvider
-                            .state('app.main.taxonomy', {
-                                url: '/taxonomy/:id',
-                                views: {
-                                    'inception-top': {
-                                        templateUrl: basePath + 'js/components/taxonomy/taxonomy.html'
+                        try {
+                            $stateProvider
+                                .state('app.main.taxonomy', {
+                                    url: '/taxonomy/:id',
+                                    views: {
+                                        'inception-top': {
+                                            templateUrl: basePath + 'js/components/taxonomy/taxonomy.html'
+                                        }
                                     }
-                                }
-                            })
-                            .state('app.main.detailtaxonomy', {
-                                url: '/taxonomy/:parentId/:id',
-                                views: {
-                                    'inception-top': {
-                                        templateUrl: basePath + 'js/components/detailTaxonomy/detailTaxonomy.html'
+                                })
+                                .state('app.main.detailtaxonomy', {
+                                    url: '/taxonomy/:parentId/:id',
+                                    views: {
+                                        'inception-top': {
+                                            templateUrl: basePath + 'js/components/detailTaxonomy/detailTaxonomy.html'
+                                        }
                                     }
-                                }
-                            });
+                                });
+                        }
+                        catch (e) { }
+                    } else if (config.PAGES[i].type === "attributionInternal" ||
+                        config.PAGES[i].type === "webmappInternal") {
                     } else {
+                        try {
+                            $stateProvider
+                                .state('app.main.' + config.PAGES[i].type, {
+                                    url: '/page/' + config.PAGES[i].type,
+                                    views: {
+                                        'inception-top': {
+                                            templateUrl: basePath + 'js/components/' + config.PAGES[i].type + '/' + config.PAGES[i].type + '.html'
+
+                                        }
+                                    }
+                                });
+                        }
+                        catch (e) { }
+                    }
+                } else {
+                    try {
                         $stateProvider
                             .state('app.main.' + config.PAGES[i].type, {
                                 url: '/page/' + config.PAGES[i].type,
                                 views: {
                                     'inception-top': {
-                                        templateUrl: basePath + 'js/components/' + config.PAGES[i].type + '/' + config.PAGES[i].type + '.html'
-
+                                        templateUrl: basePath + 'js/components/' + 'custom' + '/' + 'custom' + '.html'
                                     }
                                 }
                             });
                     }
-                } else {
-                    $stateProvider
-                        .state('app.main.' + config.PAGES[i].type, {
-                            url: '/page/' + config.PAGES[i].type,
-                            views: {
-                                'inception-top': {
-                                    templateUrl: basePath + 'js/components/' + 'custom' + '/' + 'custom' + '.html'
-                                }
-                            }
-                        });
+                    catch (e) { }
                 }
             }
         }
