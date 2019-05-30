@@ -1039,8 +1039,10 @@ angular.module('webmapp')
         };
 
         vm.openAccessibilityModal = function (type) {
-            modalScope.vm.accessibility = vm.feature.accessibility[type];
-            modalAccessibility.show();
+            if (vm.feature.accessibility[type].check) {
+                modalScope.vm.accessibility = vm.feature.accessibility[type];
+                modalAccessibility.show();
+            }
         };
 
         vm.toggleMap = function () {
