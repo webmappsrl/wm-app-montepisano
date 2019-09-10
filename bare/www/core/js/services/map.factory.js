@@ -475,7 +475,7 @@ angular.module('webmapp')
                 var interaction = !e.layer.feature.properties.noInteraction;
 
                 if (interaction) {
-                    var content = '<div class="popup-div" onclick="goToDetail(\'' + e.layer.feature.properties.id + '\', \'' + e.layer.feature.parent.label + '\', \'' + isPOI + '\', \'' + goToDetails + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">';
+                    var content = '<div class="popup-div" onclick="goToDetail(\'' + e.layer.feature.properties.id + '\', \'' + e.layer.feature.parent.label.replace("'", "\\'") + '\', \'' + isPOI + '\', \'' + goToDetails + '\', \'' + e.latlng.lat + '\', \'' + e.latlng.lng + '\')">';
 
                     if (e.layer.feature.properties.image) {
                         content = content +
@@ -1431,11 +1431,11 @@ angular.module('webmapp')
                         areaMapById[e.data.id] = angular.extend({}, {
                             properties: e.data
                         }, {
-                                parent: {
-                                    label: this.baseMapLabel,
-                                    mapping: this.baseMapMapping
-                                }
-                            });
+                            parent: {
+                                label: this.baseMapLabel,
+                                mapping: this.baseMapMapping
+                            }
+                        });
                         activatePopup(angular.extend(e, {
                             parent: {
                                 label: this.baseMapLabel,
@@ -1443,9 +1443,9 @@ angular.module('webmapp')
                             }
                         }));
                     }, {
-                            baseMapLabel: baseMap.label,
-                            baseMapMapping: baseMap.mapping
-                        }));
+                        baseMapLabel: baseMap.label,
+                        baseMapMapping: baseMap.mapping
+                    }));
                     setBaseLayer(baseMap, baseTms, L.tileLayer(address, options));
                     resolve();
                 } else if (baseMap.type === 'mbtiles') {
@@ -2125,8 +2125,8 @@ angular.module('webmapp')
                 $.getJSON(overlayLayersConf[overlay].url, $.proxy(function (data) {
                     setItemInLocalStorage(overlayLayersConf[this.overlay].url, data);
                 }, {
-                        overlay: overlay
-                    }));
+                    overlay: overlay
+                }));
             }
         };
 
