@@ -44,3 +44,5 @@ This will install the full toolchain to develop, build and deploy the applicatio
 # KNOWN PROBLEMS
 
 > `duplicate symbol '_CMEmptyAddress'`? then reinstall `uk.co.workingedge.phonegap.plugin.launchnavigator`and reinstall platform ios
+> use ios@5 and android@7
+> for android remove phonegap-plugin-barcodescanner and cordova-plugin-compat

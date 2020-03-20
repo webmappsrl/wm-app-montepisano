@@ -8,3 +8,5 @@ bare/.idea
 node_modules
 plugins
 .idea
+builds
+builds/*
