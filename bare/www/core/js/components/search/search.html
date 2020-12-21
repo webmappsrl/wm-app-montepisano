@@ -1,117 +1,163 @@
 <ion-view cache-view="true" ng-controller="SearchController as vm">
-    <ion-nav-title>
-        <span>
-            {{"Ricerca" | translate}}
-            <span ng-if="vm.searchReady">({{vm.results.realLength}})</span>
-        </span>
-    </ion-nav-title>
-    <ion-nav-buttons side="left" class="no-animate">
-        <button ng-click="vm.goBack()" class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left"></button>
-    </ion-nav-buttons>
+  <ion-nav-title>
+    <span>
+      {{"Ricerca" | translate}}
+      <span ng-if="vm.searchReady">({{vm.results.realLength}})</span>
+    </span>
+  </ion-nav-title>
+  <ion-nav-buttons side="left" class="no-animate">
+    <button
+      ng-click="vm.goBack()"
+      class="no-animate button button-icon icon wm-icon-ios7-arrow-thin-left"
+    ></button>
+  </ion-nav-buttons>
 
-    <form class="item item-search-form" ng-style="{
+  <form
+    class="item item-search-form"
+    ng-style="{
             'background': vm.colors.global.background
-        }" ng-submit="vm.closeKeyboard()">
+        }"
+    ng-submit="vm.closeKeyboard()"
+  >
+    <div class="search-input-box">
+      <label class="label-input-wrapper">
+        <input
+          type="text"
+          id="search"
+          class="input search-input"
+          name="search"
+          placeholder="{{'Cerca' | translate}}..."
+          autocorrect="off"
+          autocomplete="off"
+          spellcheck="false"
+          ng-model="vm.currentQuery"
+          ng-model-options="{debounce: 200}"
+          ng-change="vm.updateSearch(vm.currentQuery)"
+        />
+      </label>
 
-        <div class="search-input-box">
-            <label class="label-input-wrapper">
-                <input type="text" id="search" class="input search-input" name="search" placeholder="{{'Cerca' | translate}}..."
-                    autocorrect="off" autocomplete="off" spellcheck="false" ng-model="vm.currentQuery"  ng-model-options="{debounce: 200}"
-                    ng-change="vm.updateSearch(vm.currentQuery)" />
-            </label>
-
-            <button class="button icon-left ion-search button-small" ng-style="{
+      <button
+        class="button icon-left ion-search button-small"
+        ng-style="{
                     'color': vm.colors.search.color
-                }">
-                {{"Cerca" | translate}}
-            </button>
+                }"
+      >
+        {{"Cerca" | translate}}
+      </button>
+    </div>
+  </form>
 
-        </div>
-
-    </form>
-
-    <div class="item item-search-filter">
-        <div class="search-button-container" ng-style="{
+  <div class="item item-search-filter">
+    <div
+      class="search-button-container"
+      ng-style="{
                 'background': vm.colors.global.background
-            }">
-            <button ng-click="vm.toggleMap()" class="search-button" ng-style="{
+            }"
+    >
+      <button
+        ng-click="vm.toggleMap()"
+        class="search-button"
+        ng-style="{
                     'background': vm.colors.mainBar.background,
-                    'color': vm.colors.mainBar.color,
-                    'border': '2px solid ' + vm.colors.mainBar.color
-                }">
-                <span class="search-button-label">
-                    {{vm.isMapView ? "risultati" : "Mappa" | translate}}
-                </span>
-                <i class="icon wm-icon-map" ng-if="!vm.isMapView"></i>
-            </button>
-            <button class="search-button" ng-click="vm.openFilters()" ng-style="{
+                    'color': vm.disableMapButton ? '#cccccc' : vm.colors.mainBar.color,
+                    'border': '2px solid ' + (vm.disableMapButton ? '#cccccc' : vm.colors.mainBar.color)
+                }"
+      >
+        <span class="search-button-label">
+          {{vm.isMapView ? "risultati" : "Mappa" | translate}}
+        </span>
+        <i class="icon wm-icon-map" ng-if="!vm.isMapView"></i>
+      </button>
+      <button
+        class="search-button"
+        ng-click="vm.openFilters()"
+        ng-style="{
                     'background': vm.colors.mainBar.color,
                     'color': vm.colors.mainBar.background,
                     'border': '2px solid ' + vm.colors.mainBar.color
-                }">
-                <span class="search-button-label">
-                    {{"filtra" | translate}}
-                </span>
-                <i class="icon wm-icon-filter"></i>
-                <!-- {{vm.activeLayers.length}} -->
-            </button>
-        </div>
+                }"
+      >
+        <span class="search-button-label"> {{"filtra" | translate}} </span>
+        <i class="icon wm-icon-filter"></i>
+        <!-- {{vm.activeLayers.length}} -->
+      </button>
     </div>
+  </div>
 
-    <!-- TODO: add class for search list with filters -->
-    <ion-content class="has-search-filters" ng-style="{
+  <!-- TODO: add class for search list with filters -->
+  <ion-content
+    class="has-search-filters"
+    ng-style="{
             'top': '122px'
-        }" ng-style="{
+        }"
+    ng-style="{
             'background': vm.colors.global.background
-        }">
-        <div ng-style="{
+        }"
+  >
+    <div
+      ng-style="{
                 'color': vm.colors.search.color
-            }">
-            <ion-list ng-if="vm.searchReady">
-                <!-- TODO: add class has-subtitle when item has subtitle and remove comment -->
-                <ion-item class="item"
-                    ng-class="{'is-divider': item.divider, 'item-image-left': !item.divider}"
-                    ng-click="vm.goTo('layer/' + item.parent.label + '/' + item.properties.id, item.divider)"
-                    collection-repeat="item in vm.results"
-                    item-height="item.divider ? '62px' : '94px'"
-                    item-width="vm.width + 'px'"
-                    ng-attr-id="{{item.divider ? 'alpha-scroll-' + item.label : ''}}">
-                    <div ng-if="!item.properties.image" class="list-info-image">
-                        <i class="icon {{item.properties.icon}}" ng-style="{color: item.properties.color}"></i>
-                    </div>
-                    <div ng-if="item.properties.image" class="list-info-image">
-                        <img ng-src="{{item.properties.image}}">
-                    </div>
-                    <span class="list-info-title" ng-bind-html="item.properties.name || item.label" ng-class="{
+            }"
+    >
+      <ion-list ng-if="vm.searchReady">
+        <!-- TODO: add class has-subtitle when item has subtitle and remove comment -->
+        <ion-item
+          class="item"
+          ng-class="{'is-divider': item.divider, 'item-image-left': !item.divider}"
+          ng-click="vm.goTo('layer/' + item.parent.label + '/' + item.properties.id, item.divider)"
+          collection-repeat="item in vm.results"
+          item-height="item.divider ? '62px' : '94px'"
+          item-width="vm.width + 'px'"
+          ng-attr-id="{{item.divider ? 'alpha-scroll-' + item.label : ''}}"
+        >
+          <div ng-if="!item.properties.image" class="list-info-image">
+            <i
+              class="icon {{item.properties.icon}}"
+              ng-style="{color: item.properties.color}"
+            ></i>
+          </div>
+          <div ng-if="item.properties.image" class="list-info-image">
+            <img ng-src="{{item.properties.image}}" />
+          </div>
+          <span
+            class="list-info-title"
+            ng-bind-html="item.properties.name || item.label"
+            ng-class="{
                         'two-lines-ellipsis': false && !item.divider && ((item.properties.name && item.properties.name.length > 30) || item.label.length > 25),
                         'one-line-title': !item.divider
-                    }">
-                    </span>
-                    <span 
-                        class="list-info-subtitle"
-                        ng-if="!item.divider"
-                        ng-style="{'color': vm.colors.global.color}">
-                        {{item.properties.address}}
-                    </span>
-                    <span 
-                        class="list-info-subtitle"
-                        ng-if="!item.divider && item.properties && item.properties.taxonomy && item.properties.taxonomy.specialita"
-                        ng-style="{'color': vm.colors.global.color}">
-                        {{vm.getSpecialities(item)}}
-                    </span>
-                </ion-item>
-                <ion-item ng-if="vm.results.length === 0" class="is-divider">
-                    <span class="list-info-title" style="text-align: center">
-                        {{"Nessun risultato trovato" | translate}}
-                    </span>
-                </ion-item>
-            </ion-list>
-        </div>
-    </ion-content>
-    <div class="alpha-scroll has-header">
-        <span class="alpha-scroll__letter" ng-repeat="(key, item) in vm.lettersPosition"
-            ng-click="vm.scrollToDivider(key)">
-            {{key}}
-        </span>
+                    }"
+          >
+          </span>
+          <span
+            class="list-info-subtitle"
+            ng-if="!item.divider"
+            ng-style="{'color': vm.colors.global.color}"
+          >
+            {{item.properties.address}}
+          </span>
+          <span
+            class="list-info-subtitle"
+            ng-if="!item.divider && item.properties && item.properties.taxonomy && item.properties.taxonomy.specialita"
+            ng-style="{'color': vm.colors.global.color}"
+          >
+            {{vm.getSpecialities(item)}}
+          </span>
+        </ion-item>
+        <ion-item ng-if="vm.results.length === 0" class="is-divider">
+          <span class="list-info-title" style="text-align: center">
+            {{"Nessun risultato trovato" | translate}}
+          </span>
+        </ion-item>
+      </ion-list>
     </div>
+  </ion-content>
+  <div class="alpha-scroll has-header">
+    <span
+      class="alpha-scroll__letter"
+      ng-repeat="(key, item) in vm.lettersPosition"
+      ng-click="vm.scrollToDivider(key)"
+    >
+      {{key}}
+    </span>
+  </div>
 </ion-view>

@@ -121,7 +121,7 @@ div.contacts-list__element {
 
 .details-contacts__tags {
   width: 100%;
-  padding: 0 15px;
+  padding: 5px 15px 0;
   .details-contacts__tag {
     text-transform: uppercase;
     white-space: nowrap;
@@ -300,7 +300,7 @@ div.contacts-list__element {
     margin: 0;
     padding: 25px 20px 0;
     text-transform: uppercase;
-    color: #D90101;
+    color: #d90101;
     text-align: right;
     font-size: 12px;
 
@@ -378,7 +378,7 @@ div.contacts-list__element {
   position: absolute;
   bottom: 16px;
   left: 50%;
-  background: transparentize($color-brown, .3);
+  background: transparentize($color-brown, 0.3);
   .icon {
     font-size: 34px;
     color: $color-light-03;
@@ -445,7 +445,7 @@ div.contacts-list__element {
     padding-bottom: 5px;
   }
   &::after {
-    content: '';
+    content: "";
     display: block;
     clear: both;
   }
@@ -489,7 +489,7 @@ div.contacts-list__element {
       }
     }
     tr {
-      &:nth-child(2n+2) {
+      &:nth-child(2n + 2) {
         td {
           padding-bottom: 15px;
         }
@@ -596,7 +596,7 @@ div.contacts-list__element {
           bottom: -9999px;
           left: -9999px;
           right: -9999px;
-          margin: auto
+          margin: auto;
         }
         i {
           left: calc(50% - 25px);

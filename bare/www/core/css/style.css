@@ -819,7 +819,7 @@ div.contacts-list__element a:last-child {
 
 .details-contacts__tags {
   width: 100%;
-  padding: 0 15px; }
+  padding: 5px 15px 0; }
   .details-contacts__tags .details-contacts__tag {
     text-transform: uppercase;
     white-space: nowrap;
@@ -966,7 +966,7 @@ div.contacts-list__element a:last-child {
     margin: 0;
     padding: 25px 20px 0;
     text-transform: uppercase;
-    color: #D90101;
+    color: #d90101;
     text-align: right;
     font-size: 12px; }
     .details-description-expandable .details-no-modal-read-more span {
@@ -1080,7 +1080,7 @@ div.contacts-list__element a:last-child {
     padding-top: 5px;
     padding-bottom: 5px; }
   .details-tabs::after {
-    content: '';
+    content: "";
     display: block;
     clear: both; }
 
@@ -1111,7 +1111,7 @@ div.contacts-list__element a:last-child {
       font-size: 20px; }
     .table-details.horrible-table td.en {
       font-style: italic; }
-  .table-details.horrible-table tr:nth-child(2n+2) td {
+  .table-details.horrible-table tr:nth-child(2n + 2) td {
     padding-bottom: 15px; }
 
 .table-row-header {
