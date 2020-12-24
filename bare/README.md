@@ -43,6 +43,8 @@ This will install the full toolchain to develop, build and deploy the applicatio
 
 # KNOWN PROBLEMS
 
+> Use npm v10+ to build resources
 > `duplicate symbol '_CMEmptyAddress'`? then reinstall `uk.co.workingedge.phonegap.plugin.launchnavigator`and reinstall platform ios
+> before installing android platform remove plugin cordova-android-support-gradle-release and reinstall it after platform installation
 > use ios@5 and android@7
 > for android remove phonegap-plugin-barcodescanner and cordova-plugin-compat
