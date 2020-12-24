@@ -301,23 +301,44 @@ angular
         $rootScope.$emit("toggle-map-in-search", vm.isMapView);
       };
 
-      vm.getSpecialities = function (item) {
-        var specialities = "";
+      vm.getTags = function (item) {
+        var tags = "";
         if (
           item.properties &&
           item.properties.taxonomy &&
-          item.properties.taxonomy.specialita
+          item.properties.taxonomy.tipo &&
+          item.properties.taxonomy.tipo[0] &&
+          item.properties.taxonomy.tipo[0] === "posts" &&
+          item.properties.taxonomy.tags
         ) {
-          for (var i in item.properties.taxonomy.specialita) {
-            if (specialities !== "") {
-              specialities += ", ";
-            }
-            specialities += MapService.getLayerLabelById(
-              item.properties.taxonomy.specialita[i]
+          for (var i in item.properties.taxonomy.tags) {
+            if (tags !== "") tags += ", ";
+            tags += MapService.getLayerLabelById(
+              item.properties.taxonomy.tags[i]
             );
           }
         }
-        return specialities;
+        return tags;
+      };
+
+      vm.getRecipes = function (item) {
+        var recipes = "";
+        if (
+          item.properties &&
+          item.properties.taxonomy &&
+          item.properties.taxonomy.tipo &&
+          item.properties.taxonomy.tipo[0] &&
+          item.properties.taxonomy.tipo[0] === "ricette" &&
+          item.properties.taxonomy["categorie-ricette"]
+        ) {
+          for (var i in item.properties.taxonomy["categorie-ricette"]) {
+            if (recipes !== "") recipes += ", ";
+            recipes += MapService.getLayerLabelById(
+              item.properties.taxonomy["categorie-ricette"][i]
+            );
+          }
+        }
+        return recipes;
       };
 
       vm.scrollToDivider = function (id) {
@@ -333,9 +354,8 @@ angular
           }
         }
 
-        height = dividers * 62 + (vm.lettersPosition[id] - dividers) * 94;
-        // console.log(height)
-        // $location.hash('alpha-scroll-' + id);
+        height = dividers * 61 + (vm.lettersPosition[id] - dividers) * 103;
+        height -= (height * 8) / 50000;
 
         $ionicScrollDelegate.scrollTo(0, height, 0);
       };

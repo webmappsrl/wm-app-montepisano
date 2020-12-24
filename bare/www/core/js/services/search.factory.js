@@ -31,9 +31,9 @@ angular
     }, {});
 
     if (CONFIG.MAP.filters) {
-      var currentFilterMap = angular.copy(CONFIG.MAP.filters);
-      var macroCategoryMap = {};
-      var categoryMap = {};
+      var currentFilterMap = angular.copy(CONFIG.MAP.filters),
+        macroCategoryMap = {},
+        categoryMap = {};
       for (var superCategoryId in currentFilterMap) {
         if (
           superCategoryId !== "base_maps" &&
@@ -52,9 +52,9 @@ angular
                 var label = confLayersMapById[layers[layerId]].label;
                 if (activeLayersMap[label]) {
                   if (
-                    label === "Aziende" ||
-                    label === "Ricette" ||
-                    label === "Post"
+                    label === "Dove mangiare" ||
+                    label === "Le ricette" ||
+                    label === "Magazine"
                   )
                     activeLayersMap[label].state = true;
 
@@ -471,9 +471,15 @@ angular
         additionalFilter.wordsToRemove = [];
 
         var dictionary = {
-          Aziende: ["aziende", "azienda"],
-          Post: ["post", "posts"],
-          Ricette: ["ricetta", "ricette"],
+          "Dove mangiare": [
+            "aziende",
+            "azienda",
+            "dove mangiare",
+            "dove",
+            "mangiare",
+          ],
+          Magazine: ["post", "posts", "magazine", "giornale"],
+          "Le ricette": ["ricetta", "ricette"],
           Arezzo: ["arezzo"],
           Firenze: ["firenze"],
           Grosseto: ["grosseto"],
@@ -496,16 +502,6 @@ angular
           var macroCatLabel = categoryMap[filter].macroCategory,
             categories = macroCategoryMap[macroCatLabel];
 
-          // var check = false;
-          // for (var categoryLabel in categories) {
-
-          //     if (categoryLabel !== filter && categories[categoryLabel] && categories[ca) {
-          //         check = true;
-          //         break;
-          //     }
-          // }
-
-          // if (!check) {
           var words = dictionary[filter];
           for (let i = 0; i < words.length; i++) {
             var word = words[i];
@@ -516,7 +512,6 @@ angular
               }
             }
           }
-          // }
         }
 
         return additionalFilter;

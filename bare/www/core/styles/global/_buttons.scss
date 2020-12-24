@@ -8,7 +8,6 @@
    #BUTTONS
 \* ------------------------------------ */
 
-
 button {
   .modal.static-modal & {
     max-width: 80%;
@@ -23,7 +22,7 @@ button {
   }
 
   &.button-reset {
-    color: #4C676A;
+    color: #4c676a;
     font-size: 1.1em;
   }
 
@@ -46,11 +45,11 @@ button {
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
-    border: 1px solid rgba(0,0,0,0.3);
+    border: 1px solid rgba(0, 0, 0, 0.3);
     border-bottom-width: 3px;
-    margin: 0px auto 10px!important;
-    @include linear-gradient(rgba(119,113,97,1), rgba(98,90,71,1));
-    -webkit-tap-highlight-color: rgba(0,0,0,0.5);
+    margin: 0px auto 10px !important;
+    @include linear-gradient(rgba(119, 113, 97, 1), rgba(98, 90, 71, 1));
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.5);
 
     .icon {
       vertical-align: baseline;
@@ -66,17 +65,16 @@ button {
       border-color: rgba(0,0,0,0.5);
       color: #444!important;
     }*/
-
   }
 
   &.sign-in,
   &.button-enable-disable {
-    @include linear-gradient(rgba(180,178,161,1), $color-light-02);
+    @include linear-gradient(rgba(180, 178, 161, 1), $color-light-02);
     text-shadow: none;
   }
 
   &.button-reset {
-    background: transparentize($color-blue-grey,0.6);
+    background: transparentize($color-blue-grey, 0.6);
     text-shadow: 0 0 1px transparentize($color-button-text-shadow, 0.6);
   }
 
@@ -93,7 +91,7 @@ button {
 .button {
   text-transform: uppercase !important;
   font-weight: bold !important;
-  
+
   &.button-full {
     margin-top: 0;
     margin-bottom: 0;
@@ -135,7 +133,7 @@ button {
   height: 45px;
   margin-top: -22px;
   margin-left: -22px;
-  background: #dd281f;
+  background: #235966;
   top: 50%;
   left: 50%;
   z-index: 1000;
@@ -168,9 +166,8 @@ button {
     top: 0;
     right: 0;
     left: initial;
-
   }
-  
+
   &.map-shrink {
     display: none;
     .icon {
@@ -182,7 +179,6 @@ button {
       display: block;
     }
   }
-
 }
 
 /* Search buttons */
@@ -255,24 +251,19 @@ button {
       display: none;
     }
 
-
     &.map-shrink {
       display: none;
 
       .map-search & {
-        display: block
+        display: block;
       }
       .hide-map &,
       .map-page &,
-      .map-search &{
-        display: block
+      .map-search & {
+        display: block;
       }
     }
-
-
   }
-
-
 }
 
 @media only screen and (max-width: 380px) {

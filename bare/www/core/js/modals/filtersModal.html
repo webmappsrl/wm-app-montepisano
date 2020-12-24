@@ -1,116 +1,206 @@
 <ion-modal-view class="modal-mappalo modal-filters">
-    <ion-content ng-style="{
+  <ion-content
+    ng-style="{
         'background': vm.COLORS.details.background
-    }">
-        <div class="modal-content accordion-filters-modal">
-            <div ng-click="vm.hide()"
-                class="filter-modal-close"
-                ng-style="{
-                    'background': vm.COLORS.mainBar.color,
-                    'color': vm.COLORS.mainBar.background,
-                    'border': '2px solid ' + vm.COLORS.mainBar.color
-                }">
-                <i class="icon wm-icon-android-checkmark"></i>{{"Applica" | translate}}
-            </div>
-            <ion-list ng-if="!vm.isNewModal">
-                <label class="item item-checkbox ng-not-empty" ng-repeat="(key, obj) in vm.filters" ng-init="currentFilter = obj.value" ng-model="obj.value" ng-class="{
+    }"
+  >
+    <div class="modal-content accordion-filters-modal">
+      <div
+        ng-click="vm.hide()"
+        class="filter-modal-close"
+        ng-style="{
+            'background': vm.COLORS.global.icons ? vm.COLORS.global.icons : vm.COLORS.mainBar.color,
+            'color': vm.COLORS.mainBar.background,
+            'border': '2px solid ' + (vm.COLORS.global.icons ? vm.COLORS.global.icons : vm.COLORS.mainBar.color)
+        }"
+      >
+        <i class="icon wm-icon-android-checkmark"></i>{{"Applica" | translate}}
+      </div>
+      <ion-list ng-if="!vm.isNewModal">
+        <label
+          class="item item-checkbox ng-not-empty"
+          ng-repeat="(key, obj) in vm.filters"
+          ng-init="currentFilter = obj.value"
+          ng-model="obj.value"
+          ng-class="{
                         'is-selected': obj.value,
                         'is-not-selected': !obj.value
-                    }">
-                    <div class="checkbox checkbox-input-hidden disable-pointer-events checkbox-circle">
-                        <input type="checkbox" ng-model="obj.value" ng-change="vm.updateFilter(key, obj.value)" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-not-empty">
-                        <i class="ion-android-checkbox-outline" ng-class="{
+                    }"
+        >
+          <div
+            class="checkbox checkbox-input-hidden disable-pointer-events checkbox-circle"
+          >
+            <input
+              type="checkbox"
+              ng-model="obj.value"
+              ng-change="vm.updateFilter(key, obj.value)"
+              class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-not-empty"
+            />
+            <i
+              class="ion-android-checkbox-outline"
+              ng-class="{
                                 'ion-android-checkbox-outline': obj.value,
                                 'ion-android-checkbox-outline-blank': !obj.value
-                            }"></i>
-                    </div>
-                    <div class="item-content disable-pointer-events">
-                        <span ng-if="key !== 'Tutte'">{{obj.name}}</span>
-                        <strong ng-if="key === 'Tutte'">{{obj.name}}</strong>
-                        <span ng-if="obj.icon !== 'wm-icon-generic'" class="icon {{obj.icon}}" style="float: right" ng-style="{ 'color': obj.color }"></span>
-                    </div>
-                </label>
-            </ion-list>
+                            }"
+            ></i>
+          </div>
+          <div class="item-content disable-pointer-events">
+            <span ng-if="key !== 'Tutte'">{{obj.name}}</span>
+            <strong ng-if="key === 'Tutte'">{{obj.name}}</strong>
+            <span
+              ng-if="obj.icon !== 'wm-icon-generic'"
+              class="icon {{obj.icon}}"
+              style="float: right"
+              ng-style="{ 'color': obj.color }"
+            ></span>
+          </div>
+        </label>
+      </ion-list>
 
-            <span ng-if="!vm.isNewModal && vm.isMap" class="modal-title">{{"CAMBIA MAPPA DI BASE" | translate}}</span>
+      <span ng-if="!vm.isNewModal && vm.isMap" class="modal-title"
+        >{{"CAMBIA MAPPA DI BASE" | translate}}</span
+      >
 
-            <ion-list class="round-list" ng-if="!vm.isNewModal && vm.isMap">
-                <label class="item item-checkbox ng-not-empty is-not-selected" ng-repeat="(key, value) in vm.baseLayers">
-                    <div class="checkbox checkbox-input-hidden disable-pointer-events checkbox-circle">
-                        <input type="checkbox" ng-model="currentFilter" ng-change="vm.updateBaseMap(key)" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-not-empty">
-                        <i class="wm-icon-ion-android-checkmark-circle-empty" ng-class="{
+      <ion-list class="round-list" ng-if="!vm.isNewModal && vm.isMap">
+        <label
+          class="item item-checkbox ng-not-empty is-not-selected"
+          ng-repeat="(key, value) in vm.baseLayers"
+        >
+          <div
+            class="checkbox checkbox-input-hidden disable-pointer-events checkbox-circle"
+          >
+            <input
+              type="checkbox"
+              ng-model="currentFilter"
+              ng-change="vm.updateBaseMap(key)"
+              class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-not-empty"
+            />
+            <i
+              class="wm-icon-ion-android-checkmark-circle-empty"
+              ng-class="{
                                     'wm-icon-ion-android-checkmark-circle': vm.currentMapLayer == key,
                                     'wm-icon-ion-android-checkmark-circle-empty': vm.currentMapLayer != key
-                                }"></i>
-                    </div>
-                    <div class="item-content disable-pointer-events">
-                        <span>{{key}}</span>
-                    </div>
-                </label>
-            </ion-list>
+                                }"
+            ></i>
+          </div>
+          <div class="item-content disable-pointer-events">
+            <span>{{key}}</span>
+          </div>
+        </label>
+      </ion-list>
 
-            <div class="accordion-filters" ng-if="vm.isNewModal">
-                <div class="filters-tab-title-container">
-                    <div ng-repeat="(key, item) in filters" ng-click="switchTab(key)" class="filters-tab-title cols-{{tabNum}}" ng-class="{
+      <div class="accordion-filters" ng-if="vm.isNewModal">
+        <div class="filters-tab-title-container">
+          <div
+            ng-repeat="(key, item) in filters"
+            ng-click="switchTab(key)"
+            class="filters-tab-title cols-{{tabNum}}"
+            ng-class="{
                             'selected': currentTab === key
-                        }">
-                        {{item.label}}
-                    </div>
-                </div>
-                <div class="filters-tab-content-container">
-                    <div ng-repeat="(key, item) in filters" class="filters-tab-content" ng-class="{
+                        }"
+          >
+            {{item.label}}
+          </div>
+        </div>
+        <div class="filters-tab-content-container">
+          <div
+            ng-repeat="(key, item) in filters"
+            class="filters-tab-content"
+            ng-class="{
                         'selected': currentTab === key
-                    }">
-                        <div ng-repeat="(sublayerId, sublayer) in item.sublayers" class="filters-sublayer" ng-if="key !== 'base_maps'">
-                            <div class="sublayer-title">
-                                <i class="left-icon" ng-class="{
+                    }"
+          >
+            <div
+              ng-repeat="(sublayerId, sublayer) in item.sublayers"
+              class="filters-sublayer"
+              ng-if="key !== 'base_maps'"
+            >
+              <div class="sublayer-title">
+                <i
+                  class="left-icon"
+                  ng-class="{
                                     'ion-android-checkbox-outline':  sublayer.checked,
                                     'ion-android-checkbox-outline-blank': !sublayer.checked
-                                }" ng-click="toggleSubTabCheckBox(sublayerId,key)"></i>
-                                <div ng-click="toggleSubTab(sublayerId, key)">
+                                }"
+                  ng-click="toggleSubTabCheckBox(sublayerId,key)"
+                ></i>
+                <div ng-click="toggleSubTab(sublayerId, key)">
+                  <span
+                    ng-if="sublayer.label[vm.currentLang]"
+                    ng-bind-html="sublayer.label[vm.currentLang]"
+                  >
+                  </span>
+                  <span
+                    ng-if="!sublayer.label[vm.currentLang]"
+                    ng-bind-html="sublayer.label[vm.defaultLang]"
+                  >
+                  </span>
+                  <i
+                    ng-if="item.selectedTab !== sublayerId"
+                    class="icon wm-icon-ios7-arrow-forward right-icon"
+                  ></i>
+                  <i
+                    ng-if="item.selectedTab === sublayerId"
+                    class="icon wm-icon-ios7-arrow-down right-icon"
+                  ></i>
+                </div>
+              </div>
 
-                                    <span ng-if="sublayer.label[vm.currentLang]" ng-bind-html="sublayer.label[vm.currentLang]">
-                                    </span>
-                                    <span ng-if="!sublayer.label[vm.currentLang]" ng-bind-html="sublayer.label[vm.defaultLang]">
-                                    </span>
-                                    <i ng-if="item.selectedTab !== sublayerId" class="icon wm-icon-ios7-arrow-forward right-icon"></i>
-                                    <i ng-if="item.selectedTab === sublayerId" class="icon wm-icon-ios7-arrow-down right-icon"></i>
-                                </div>
-                            </div>
-
-                            <div class="filters-layer" ng-repeat="(layerId, layer) in sublayer.items" ng-class="{
+              <div
+                class="filters-layer"
+                ng-repeat="(layerId, layer) in sublayer.items"
+                ng-class="{
                                     'animate-show': item.selectedTab === sublayerId,
                                     'animate-hide': item.selectedTab !== sublayerId
-                                }" ng-style="{
+                                }"
+                ng-style="{
                                     'background': vm.COLORS.details.background,
                                     'color': layer.checked ? vm.COLORS.search.color : (layer.clickable ? 'inherit': '#BBBBBB')
-                                }" ng-click="toggleLayer(layer.label,sublayerId,key)">
-                                <i class="left-icon" ng-if="item.selectedTab === sublayerId" ng-class="{
+                                }"
+                ng-click="toggleLayer(layer.label,sublayerId,key)"
+              >
+                <i
+                  class="left-icon"
+                  ng-if="item.selectedTab === sublayerId"
+                  ng-class="{
                                     'ion-android-checkbox-outline': layer.checked, 
                                     'ion-android-checkbox-outline-blank': !layer.checked
-                                }"></i>
-                                <span ng-if="layer.languages[vm.currentLang]" ng-bind-html="layer.languages[vm.currentLang]">
-                                </span>
-                                <span ng-if="!layer.languages[vm.currentLang]" ng-bind-html="layer.languages[vm.defaultLang]">
-                                </span>
-                            </div>
-                        </div>
-                        <div ng-repeat="(mapId, mapItem) in item.items" class="filters-sublayer" ng-if="key === 'base_maps'">
-                            <div>
-                                <i class="left-icon" ng-class="{
+                                }"
+                ></i>
+                <span
+                  ng-if="layer.languages[vm.currentLang]"
+                  ng-bind-html="layer.languages[vm.currentLang]"
+                >
+                </span>
+                <span
+                  ng-if="!layer.languages[vm.currentLang]"
+                  ng-bind-html="layer.languages[vm.defaultLang]"
+                >
+                </span>
+              </div>
+            </div>
+            <div
+              ng-repeat="(mapId, mapItem) in item.items"
+              class="filters-sublayer"
+              ng-if="key === 'base_maps'"
+            >
+              <div>
+                <i
+                  class="left-icon"
+                  ng-class="{
                                     'wm-icon-ion-android-checkmark-circle': vm.currentMapLayer == mapItem.label,
                                     'wm-icon-ion-android-checkmark-circle-empty': vm.currentMapLayer != mapItem.label
-                                }" ng-click="vm.updateBaseMap(mapItem.label)"></i>
-                                <div ng-click="vm.updateBaseMap(mapItem.label)">
-                                    {{mapItem.label}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                }"
+                  ng-click="vm.updateBaseMap(mapItem.label)"
+                ></i>
+                <div ng-click="vm.updateBaseMap(mapItem.label)">
+                  {{mapItem.label}}
                 </div>
-
-
+              </div>
             </div>
+          </div>
         </div>
-    </ion-content>
+      </div>
+    </div>
+  </ion-content>
 </ion-modal-view>

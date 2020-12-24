@@ -32,7 +32,6 @@
 
 /* Hide/show elements on mobile or desktop */
 
-
 .desktop-visible {
   display: none;
 }
@@ -66,13 +65,16 @@
     font-size: 1.1em;
   }
 
-  .title-center{
-    font-size: 22px!important
+  .title-center {
+    font-size: 22px !important;
+    .home-title {
+      font-size: 16px !important;
+    }
   }
 
   &.bar-assertive.bar-footer {
     /* There's 2px pixel bottom overflowing - why?*/
-    @include calc(height, '(100% - 43px) - 60%');
+    @include calc(height, "(100% - 43px) - 60%");
     padding: 0;
     background-image: none;
     border: none;
@@ -88,13 +90,13 @@
     }
 
     .map-search & {
-      @include calc(height, '100% - 168px');
+      @include calc(height, "100% - 168px");
       //@include calc(height, '100% - 214px'); for selected category
       z-index: 200;
     }
 
     .map-page & {
-      @include calc(height, '100% - 44px');
+      @include calc(height, "100% - 44px");
       //top: 44px;
       z-index: 200;
     }
@@ -110,12 +112,12 @@
     padding-right: 2%;
     padding-left: 2%;
     //background: $color-white;
-    @include box-shadow(0 0 1px transparentize($color-box-shadow,0.5));
+    @include box-shadow(0 0 1px transparentize($color-box-shadow, 0.5));
     text-transform: uppercase;
 
     .title {
-      right: 50px!important;
-      left: 50px!important;
+      right: 50px !important;
+      left: 50px !important;
     }
 
     .button {
@@ -123,8 +125,8 @@
     }
   }
 
-  &.welcome-nav{
-    .bar.bar-positive  {
+  &.welcome-nav {
+    .bar.bar-positive {
       .title {
         padding-right: 2%;
         padding-left: 2%;
@@ -132,8 +134,6 @@
     }
   }
 }
-
-
 
 /* Long title and date */
 
@@ -144,7 +144,7 @@
       font-size: $title-size;
       height: 100%;
       margin: 0;
-      right: 15px!important; /* TODO: Temporary - fix in js for this case */
+      right: 15px !important; /* TODO: Temporary - fix in js for this case */
       left: 50px !important; /* TODO: Temporary - fix in js for this case */
       line-height: 1.1;
       white-space: normal;
@@ -200,8 +200,6 @@
       text-align: left;
       @include text-ellipsis;
     }
-
-
   }
 }
 /*
@@ -224,7 +222,6 @@
 \* ------------------------------------ */
 
 .view-container {
-
   .welcome-page & {
     background-color: transparent;
   }
@@ -261,11 +258,11 @@
   .hide-map &,
   .login-page &,
   .menu-left & {
-    @include calc(height, '100% - 42px'); /* 2 pixel? */
+    @include calc(height, "100% - 42px"); /* 2 pixel? */
   }
 
   .welcome-page & {
-   // z-index: 10;
+    // z-index: 10;
   }
 
   .map-page & {
@@ -278,7 +275,6 @@
   }
 
   .details-page & {
-
     &::before {
       // TODO: solve android bug
       // content: '';
@@ -292,7 +288,6 @@
       // left: 0;
       // z-index: 10;
       // opacity: 0.8;
-
     }
   }
 }
@@ -310,15 +305,13 @@
 }
 
 .scroll-content {
-
-  &.has-back-btn  {
+  &.has-back-btn {
     top: 52px; /* Back button height */
   }
 
   &.has-search-filters {
     top: 140px;
     //174px if selected more than one category
-
   }
 
   &.has-show-more {
@@ -340,20 +333,23 @@
 
 /* TODO: for Raffa, testare su mobile */
 
-.platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) > * {
+.platform-ios.platform-cordova:not(.fullscreen)
+  .bar-header:not(.bar-subheader)
+  > * {
   margin-top: 0;
 }
 
-.platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) {
+.platform-ios.platform-cordova:not(.fullscreen)
+  .bar-header:not(.bar-subheader) {
   height: 43px;
 }
 
-.platform-ios.platform-cordova:not(.fullscreen) .has-header, .platform-ios.platform-cordova:not(.fullscreen) .bar-subheader {
+.platform-ios.platform-cordova:not(.fullscreen) .has-header,
+.platform-ios.platform-cordova:not(.fullscreen) .bar-subheader {
   top: 43px;
 }
 
 /* testare su mobile END */
-
 
 /* ------------------------------------ *\
    #MEDIA QUERIES
@@ -363,7 +359,6 @@
 
 @media only screen and (max-height: 666px) and (max-width: 768px) {
   .welcome-page {
-
     .content-pane {
       height: 65%;
     }
@@ -374,9 +369,7 @@
   }
 }
 
-
 @media only screen and (min-width: 768px) {
-
   .details-page {
     .bar.bar-header {
       .title {
@@ -396,7 +389,6 @@
       line-height: 32px;
 
       .title-left {
-
         font-size: 16px;
         [class^="event-title"] {
           display: inline-block;
@@ -406,13 +398,11 @@
 
       .title-right {
         font-size: 16px;
-
       }
     }
   }
 
   .nav-title-slide-ios7 {
-
     .bar.bar-header {
       padding-right: 10px;
       padding-left: 10px;
@@ -444,7 +434,6 @@
         bottom: 0;
       }
 
-
       .bar-assertive.bar.bar-footer {
         width: 100%;
         height: 50%;
@@ -458,13 +447,12 @@
 }
 
 @media only screen and (min-width: 1025px) {
-
   .content-pane.has-footer {
-    @include calc(height, '100% - 43px');
+    @include calc(height, "100% - 43px");
   }
 
   .bar-assertive.bar.bar-footer {
-    @include calc(height, '100% - 44px');
+    @include calc(height, "100% - 44px");
   }
 
   .desktop-half-map {
@@ -488,9 +476,9 @@
     }
   }
 
-  .map-search  {
+  .map-search {
     .bar-assertive.bar.bar-footer {
-      @include calc(height, '100% - 187px');
+      @include calc(height, "100% - 187px");
       z-index: 200;
       width: 100%;
       //top: 197px; /* for header */
@@ -502,7 +490,7 @@
 
   .desktop-full-map {
     .content-pane.has-footer {
-      @include calc(height, '100% - 45px');
+      @include calc(height, "100% - 45px");
       z-index: 0;
       top: 45px;
       right: 50%;
@@ -516,7 +504,7 @@
 
     .bar-assertive.bar.bar-footer {
       width: 100%;
-      @include calc(height, '100% - 45px');
+      @include calc(height, "100% - 45px");
       //top: 45px; /* for header */
       left: 0;
       right: 0;

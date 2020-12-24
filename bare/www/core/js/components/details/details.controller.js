@@ -51,7 +51,6 @@ angular
       vm.fullDescription = false;
       vm.selectedTab = "panoramica";
       vm.showAccessibilityButtons = CONFIG.OPTIONS.showAccessibilityButtons;
-      vm.isListExpanded = true;
 
       vm.hideSubMenu = true;
 
@@ -199,6 +198,14 @@ angular
         vm.onlyTable = vm.hasTable && !feature.description && !feature.image;
 
         if (feature && parent) {
+          if (
+            feature.taxonomy &&
+            feature.taxonomy.tipo &&
+            feature.taxonomy.tipo[0] &&
+            ["ricette", "posts"].indexOf(feature.taxonomy.tipo[0]) !== -1
+          )
+            vm.showSimpleView = true;
+
           vm.mainTitle = feature.title || feature.name;
           vm.mainCategory = parent.label;
           vm.isParentInMenu = Model.isLayerInMenu(vm.mainCategory);
@@ -337,10 +344,17 @@ angular
             ? data.geometry.coordinates.toString()
             : undefined;
 
-          if (!!vm.geometry && vm.geometry.type === "LineString") {
-            vm.isNavigable = true;
-            $rootScope.isNavigable = true;
-            $rootScope.$emit("item-navigable", vm.isNavigable);
+          if (!!vm.geometry) {
+            if (vm.geometry.type === "LineString") {
+              vm.isNavigable = true;
+              $rootScope.isNavigable = true;
+              $rootScope.$emit("item-navigable", vm.isNavigable);
+            }
+            vm.toggleList(false);
+            vm.hideListExpander = false;
+          } else {
+            vm.toggleList(true);
+            vm.hideListExpander = true;
           }
 
           vm.printUrl = function (url) {
@@ -350,12 +364,10 @@ angular
 
           vm.relatedUrlLeftValue = 11;
 
-          if (vm.feature.phone) {
+          if (vm.feature.phone)
             vm.relatedUrlLeftValue = vm.relatedUrlLeftValue + 32;
-          }
-          if (vm.feature.email) {
+          if (vm.feature.email)
             vm.relatedUrlLeftValue = vm.relatedUrlLeftValue + 32;
-          }
         }
 
         setTimeout(function () {
@@ -424,13 +436,26 @@ angular
         vm.selectedTab = "panoramica";
 
         vm.hasTags =
-          vm.feature.taxonomy.tags && vm.feature.taxonomy.tags.length > 0;
+          vm.feature.taxonomy &&
+          vm.feature.taxonomy.tipo &&
+          vm.feature.taxonomy.tipo[0] === "posts" &&
+          vm.feature.taxonomy.tags &&
+          vm.feature.taxonomy.tags.length > 0;
         vm.hasRecipes =
+          vm.feature.taxonomy &&
+          vm.feature.taxonomy.tipo &&
+          vm.feature.taxonomy.tipo[0] === "ricette" &&
           vm.feature.taxonomy["categorie-ricette"] &&
           vm.feature.taxonomy["categorie-ricette"].length > 0;
 
+        vm.hasCompanyTypes =
+          vm.feature.taxonomy &&
+          vm.feature.taxonomy.tipo &&
+          vm.feature.taxonomy.tipo[0] === "aziende" &&
+          vm.feature["tipologie-azienda"] &&
+          vm.feature["tipologie-azienda"].length > 0;
+
         // console.log(feature, vm)
-        console.log(vm.feature);
       };
 
       vm.selectTab = function (tabType) {
@@ -855,8 +880,9 @@ angular
         false
       );
 
-      vm.toggleList = function () {
-        vm.isListExpanded = !vm.isListExpanded;
+      vm.toggleList = function (value) {
+        if (typeof value === "boolean") vm.isListExpanded = value;
+        else vm.isListExpanded = !vm.isListExpanded;
         $rootScope.$emit("toggle-list", vm.isListExpanded);
       };
 

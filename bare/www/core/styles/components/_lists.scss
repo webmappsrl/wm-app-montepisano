@@ -27,14 +27,14 @@
 }
 
 .list {
-
   .item {
     color: inherit;
 
     &.item-content-preview {
       height: 54px;
       .icon {
-        opacity: 0.5;font-size: 25px;
+        opacity: 0.5;
+        font-size: 25px;
       }
 
       .item-content-placeholder {
@@ -43,9 +43,21 @@
         height: 15px;
         opacity: 0.5;
         /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#4a6e23+0,7db9e8+100&1+0,0+100 */
-        background: -moz-linear-gradient(left, rgba(74,110,35,1) 0%, rgba(125,185,232,0) 100%); /* FF3.6-15 */
-        background: -webkit-linear-gradient(left, rgba(74,110,35,1) 0%,rgba(125,185,232,0) 100%); /* Chrome10-25,Safari5.1-6 */
-        background: linear-gradient(to right, rgba(74,110,35,1) 0%,rgba(125,185,232,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        background: -moz-linear-gradient(
+          left,
+          rgba(74, 110, 35, 1) 0%,
+          rgba(125, 185, 232, 0) 100%
+        ); /* FF3.6-15 */
+        background: -webkit-linear-gradient(
+          left,
+          rgba(74, 110, 35, 1) 0%,
+          rgba(125, 185, 232, 0) 100%
+        ); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(
+          to right,
+          rgba(74, 110, 35, 1) 0%,
+          rgba(125, 185, 232, 0) 100%
+        ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4a6e23', endColorstr='#007db9e8',GradientType=1 ); /* IE6-9 */
       }
 
@@ -61,11 +73,113 @@
     }
   }
 
+  .list-item {
+    padding: 10px 28px 0 10px;
+    border: none;
+    overflow: visible;
+    &.is-divider {
+      padding: 20px 20px 0;
+    }
+    .list-item-container {
+      display: flex;
+      height: 93px;
+      border: 1px solid #cccccc;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      border-top-right-radius: 5px;
+      overflow: hidden;
+      box-shadow: 2px 2px 7px -3px #aaaaaa;
+      .list-item-image-container {
+        width: 25%;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        i {
+          font-size: 35px;
+        }
+      }
+
+      .list-item-content-container {
+        width: 75%;
+        display: inline-block;
+        padding: 17px 10px;
+        .list-item-info-title {
+          font-size: 20px;
+        }
+        .list-item-info-subtitle {
+          font-size: 16px;
+        }
+        .list-item-info-title,
+        .list-item-info-subtitle {
+          text-overflow: ellipsis;
+          overflow: hidden;
+          width: 100%;
+          display: block;
+          line-height: 1.1em;
+        }
+      }
+    }
+  }
+
+  .list-item-expanded {
+    padding: 10px 30px 0;
+    border: none;
+    overflow: visible;
+    .list-item-expanded-container {
+      height: 225px;
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 2px 2px 7px -3px #aaaaaa;
+      .list-item-expanded-image-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 138px;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        i {
+          font-size: 100px;
+        }
+      }
+
+      .list-item-expanded-content-container {
+        height: 87px;
+        display: block;
+        padding: 17px 10px;
+        .list-item-expanded-info-title {
+          font-size: 20px;
+          font-family: $main-font-family;
+        }
+        .list-item-expanded-info-subtitle {
+          font-size: 14px;
+          font-style: italic;
+          font-weight: bold;
+        }
+        .list-item-expanded-info-title,
+        .list-item-expanded-info-subtitle {
+          text-overflow: ellipsis;
+          overflow: hidden;
+          width: 100%;
+          display: block;
+          line-height: 1.1em;
+        }
+      }
+    }
+  }
+
   .advanced-menu-content &,
   .modal-filters & {
     .item {
       &.activated {
-        border-color:transparent;
+        border-color: transparent;
         background: transparent;
       }
     }
@@ -115,8 +229,7 @@
 .list-infos {
   display: inline-block;
   [class^="list-event"],
-  [class^="list-info"]
-  {
+  [class^="list-info"] {
     display: block;
   }
 }
@@ -161,8 +274,8 @@
   margin: 5px;
 
   img {
-      @include center-image;
-      max-height: 30vw;
+    @include center-image;
+    max-height: 30vw;
   }
   i {
     font-size: 40px;

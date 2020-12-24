@@ -99,49 +99,62 @@
                 'color': vm.colors.search.color
             }"
     >
-      <ion-list ng-if="vm.searchReady">
+      <ion-list ng-if="vm.searchReady" class="list-with-alpha">
         <!-- TODO: add class has-subtitle when item has subtitle and remove comment -->
         <ion-item
-          class="item"
-          ng-class="{'is-divider': item.divider, 'item-image-left': !item.divider}"
+          class="list-item"
+          ng-class="{'is-divider': item.divider, 'list-item-image-left': !item.divider}"
           ng-click="vm.goTo('layer/' + item.parent.label + '/' + item.properties.id, item.divider)"
           collection-repeat="item in vm.results"
-          item-height="item.divider ? '62px' : '94px'"
-          item-width="vm.width + 'px'"
+          item-height="item.divider ? '60px' : '103px'"
           ng-attr-id="{{item.divider ? 'alpha-scroll-' + item.label : ''}}"
         >
-          <div ng-if="!item.properties.image" class="list-info-image">
-            <i
-              class="icon {{item.properties.icon}}"
-              ng-style="{color: item.properties.color}"
-            ></i>
+          <div class="list-item-divider" ng-if="item.divider">
+            <span class="list-item-info-title" ng-bind-html="item.label">
+            </span>
           </div>
-          <div ng-if="item.properties.image" class="list-info-image">
-            <img ng-src="{{item.properties.image}}" />
+          <div class="list-item-container" ng-if="!item.divider">
+            <div
+              class="list-item-image-container"
+              ng-style="{
+                'background-image': item.properties.image ? 'url(' + item.properties.image + ')' : ''
+              }"
+            >
+              <i
+                class="icon {{item.properties.icon}}"
+                ng-style="{color: item.properties.color}"
+                ng-if="!item.properties.image"
+              ></i>
+            </div>
+            <div class="list-item-content-container">
+              <span
+                class="list-item-info-title"
+                ng-bind-html="item.properties.name"
+              >
+              </span>
+              <span
+                class="list-item-info-subtitle"
+                ng-if="item.properties.address"
+                ng-style="{'color': vm.colors.global.color}"
+              >
+                {{item.properties.address}}
+              </span>
+              <span
+                class="list-item-info-subtitle"
+                ng-if="vm.getTags(item)"
+                ng-style="{'color': vm.colors.global.color}"
+              >
+                <i class="wm-icon-pricetag"></i> {{vm.getTags(item)}}
+              </span>
+              <span
+                class="list-item-info-subtitle"
+                ng-if="vm.getRecipes(item)"
+                ng-style="{'color': vm.colors.global.color}"
+              >
+                <i class="wm-icon-pricetag"></i> {{vm.getRecipes(item)}}
+              </span>
+            </div>
           </div>
-          <span
-            class="list-info-title"
-            ng-bind-html="item.properties.name || item.label"
-            ng-class="{
-                        'two-lines-ellipsis': false && !item.divider && ((item.properties.name && item.properties.name.length > 30) || item.label.length > 25),
-                        'one-line-title': !item.divider
-                    }"
-          >
-          </span>
-          <span
-            class="list-info-subtitle"
-            ng-if="!item.divider"
-            ng-style="{'color': vm.colors.global.color}"
-          >
-            {{item.properties.address}}
-          </span>
-          <span
-            class="list-info-subtitle"
-            ng-if="!item.divider && item.properties && item.properties.taxonomy && item.properties.taxonomy.specialita"
-            ng-style="{'color': vm.colors.global.color}"
-          >
-            {{vm.getSpecialities(item)}}
-          </span>
         </ion-item>
         <ion-item ng-if="vm.results.length === 0" class="is-divider">
           <span class="list-info-title" style="text-align: center">

@@ -5,10 +5,18 @@
  */
 
 /* ------------------------------------ *\
+   #TOOLBAR
+\* ------------------------------------ */
+// .home-page {
+//   ion-nav-title {
+//     font-size: 17px;
+//   }
+// }
+/* ------------------------------------ *\
    #GENERAL
 \* ------------------------------------ */
 ion-content {
-  div.home-search {
+  .home-search {
     position: absolute;
     top: 0;
     left: 0;
@@ -18,15 +26,28 @@ ion-content {
     border-bottom-left-radius: 50% 10%;
     border-bottom-right-radius: 50% 10%;
     overflow: hidden;
+    height: calc(100vh - 325px);
+    max-height: 50%;
+    background-image: url("/core/images/img-home.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     .searchbar {
       width: 80%;
-      margin: 10px auto;
+      margin: 35px auto 0;
       max-width: 500px;
       position: relative;
       input {
-        border: 1px solid #aaaaaa;
+        border: 0px solid #aaaaaa;
         width: 100%;
-        padding: 5px 35px 5px 15px;
+        padding: 20px 35px 20px 15px;
+        border-radius: 20px;
+        font-size: 18px;
+        line-height: 20px;
+        &::placeholder {
+          font-size: 14px;
+          color: #777;
+        }
       }
       i {
         position: absolute;
@@ -45,79 +66,43 @@ ion-content {
       max-width: 40%;
     }
   }
-  div.home-content {
+  .home-content {
     z-index: 5;
     width: 100%;
-    padding: 40% 10% 10px;
+    padding: 50vh 10% 35px;
     position: absolute;
     text-transform: uppercase;
     font-weight: 700;
-    div.width-1 {
-      width: 100%;
-    }
-    div.width-2 {
-      width: 50%;
-      float: left;
-    }
-    div.width-3 {
-      width: calc(100% / 3);
-      float: left;
-    }
-    div.height-1 {
-      height: 100%;
-    }
-    div.height-2 {
-      height: 50%;
-    }
-    div.height-3 {
-      height: calc(100% / 3);
-    }
-    div.height-4 {
-      height: 25%;
-    }
-  
-    div.home-button {
-      position: relative;
-      font-size: 20px;
-      text-align: center;
-      margin: 0 auto;
-      border-radius: 5%;
-      div.home-icon {
-        padding: 3% 0 3% 0;
-        .icon:before {
-          font-size: 40px;
-        }
+    bottom: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "a b" "c c";
+    .home-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      .home-icon {
+        font-size: 60px;
+        padding: 10px;
       }
-      &.activated {
-        color: #ffb3b3;
+      .home-name {
+        font-family: $title-font-family;
+        font-size: 16px;
+        line-height: 18px;
+        text-align: center;
+        height: 36px;
+        font-weight: bold;
       }
-    }
-  
-    div.home-button.height-1 {
-      div.home-icon {
-        .icon:before {
-          font-size: 80px;
-        }
+      &:nth-child(1) {
+        grid-area: a;
       }
-    }
-    div.home-button.height-2 {
-      div.home-icon {
-        .icon:before {
-          font-size: 70px;
-        }
+      &:nth-child(2) {
+        grid-area: b;
       }
-    }
-    div.home-button.height-3 {
-      div.home-icon {
-        .icon:before {
-          font-size: 60px;
-        }
+      &:nth-child(3) {
+        grid-area: c;
       }
-    }
-
-    div.home-button-content {
-      position: relative;
-      top: calc(50% - 75px);
     }
   }
 }

@@ -1,55 +1,76 @@
-<ion-view class="home-page" cache-view="false" ng-controller="HomeController as vm">
-    <ion-nav-title>
-        <span>
-            {{vm.appTitle}}
-        </span>
-    </ion-nav-title>
-    <ion-nav-buttons side="left">
-        <button class="no-animate button button-icon icon ion-navicon" menu-toggle="left"></button>
-    </ion-nav-buttons>
+<ion-view
+  class="home-page"
+  cache-view="false"
+  ng-controller="HomeController as vm"
+>
+  <ion-nav-title>
+    <span class="home-title"> {{vm.appTitle}} </span>
+  </ion-nav-title>
+  <ion-nav-buttons side="left">
+    <button
+      class="no-animate button button-icon icon ion-navicon"
+      menu-toggle="left"
+    ></button>
+  </ion-nav-buttons>
 
-    <ion-content style="color: black;" ng-style="{
-        'background': COLORS.global.background
-    }">
-        <div class="home-search" ng-style="{
-                'background': vm.colors.mainBar.background,
-                'height': ((vm.height - 44) * 45 / 100) + 'px'
-            }">
-            <div class="searchbar">
-                <form ng-submit="vm.goToSearchByString()">
-                    <input type="text" placeholder="{{'Cerca' | translate}}..." ng-model="vm.searchString">
-                    <i class="icon wm-icon-ios7-search-strong" ng-click="vm.goToSearchByString()"></i>
-                </form>
-            </div>
-            <img src="core/images/logo-vt.png">
-        </div>
-        <div class="home-content" ng-style="{
-                'color': vm.colors.mainBar.background,
-                'background': vm.colors.mainBar.color,
-                'height': ((vm.height - 44) * 70 / 100) + 'px',
-                'top': ((vm.height - 44) * 30 / 100) + 'px'
-            }">
-            <div ng-repeat="(key, item) in vm.types" class="home-button width-{{vm.columns}} height-{{vm.rows}}" ng-click="vm.goToSearchByCategory(item.label)">
-                <div class="home-button-content">
-                    <div class="home-icon">
-                        <i class="icon {{item.icon}}"></i>
-                    </div>
-                    <div class="home-name">
-                        <span ng-if="item.name[vm.currentLang]">
-                            {{item.name[vm.currentLang]}}
-                        </span>
-                        <span ng-if="item.name[vm.defaultLang] && !item.name[vm.currentLang]">
-                            {{item.name[vm.defaultLang]}}
-                        </span>
-                        <span ng-if="item.name[Object.keys(item.name)[0]] && !item.name[vm.defaultLang] && !item.name[vm.currentLang]">
-                            {{item.name[Object.keys(item.name)[0]]}}
-                        </span>
-                        <span ng-if="item.name && !item.name[vm.currentLang] && !item.name[Object.keys(item.name)[0]] && !item.name[vm.defaultLang] && !item.name[vm.currentLang]">
-                            {{item.title}}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </ion-content>
+  <div
+    class="home-search"
+    ng-style="{
+      'background-color': vm.colors.mainBar.background
+    }"
+  >
+    <div class="searchbar">
+      <form ng-submit="vm.goToSearchByString()">
+        <input
+          type="text"
+          placeholder="{{'Cerca un locale, un ristorante...' | translate}}"
+          ng-model="vm.searchString"
+        />
+        <i
+          class="icon wm-icon-ios7-search-strong"
+          ng-click="vm.goToSearchByString()"
+        ></i>
+      </form>
+    </div>
+  </div>
+  <div
+    class="home-content"
+    ng-style="{
+        'background': vm.colors.mainBar.background,
+        'color': vm.colors.mainBar.color
+      }"
+  >
+    <div
+      ng-repeat="(key, item) in vm.types"
+      class="home-button"
+      ng-click="vm.goToSearchByCategory(item.label)"
+    >
+      <div
+        class="home-icon"
+        ng-style="{
+            'color': vm.colors.global.icons ? vm.colors.global.icons : vm.colors.mainBar.color
+          }"
+      >
+        <i class="icon {{item.icon}}"></i>
+      </div>
+      <div class="home-name">
+        <span ng-if="item.name[vm.currentLang]">
+          {{item.name[vm.currentLang]}}
+        </span>
+        <span ng-if="item.name[vm.defaultLang] && !item.name[vm.currentLang]">
+          {{item.name[vm.defaultLang]}}
+        </span>
+        <span
+          ng-if="item.name[Object.keys(item.name)[0]] && !item.name[vm.defaultLang] && !item.name[vm.currentLang]"
+        >
+          {{item.name[Object.keys(item.name)[0]]}}
+        </span>
+        <span
+          ng-if="item.name && !item.name[vm.currentLang] && !item.name[Object.keys(item.name)[0]] && !item.name[vm.defaultLang] && !item.name[vm.currentLang]"
+        >
+          {{item.title}}
+        </span>
+      </div>
+    </div>
+  </div>
 </ion-view>

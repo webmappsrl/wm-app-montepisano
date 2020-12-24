@@ -4,7 +4,6 @@
  * Definition of typographic styles
  */
 
-
 /* ------------------------------------ *\
    #FONTS
 \* ------------------------------------ */
@@ -99,7 +98,6 @@
 //   font-style: normal;
 // }
 
-
 /* ------------------------------------ *\
    #HEADINGS
 \* ------------------------------------ */
@@ -164,8 +162,6 @@
 //     }
 // }
 
-
-
 /*
 !* For fluid typography: setting a minimum font size for smaller screens *!
 
@@ -188,36 +184,50 @@
  */
 
 @font-face {
-  font-family: 'Josefin Sans';
-  src: url('../fonts/Josefin Sans/JosefinSans-Light.ttf');
+  font-family: "Josefin Sans";
+  src: url("../fonts/Josefin Sans/JosefinSans-Light.ttf");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Abel';
-  src: url('../fonts/Abel/Abel-Regular.ttf');
+  font-family: "Abel";
+  src: url("../fonts/Abel/Abel-Regular.ttf");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Montserrrat';
-  src: url('../fonts/Montserrat/Montserrat-SemiBold.ttf');
+  font-family: "Montserrrat";
+  src: url("../fonts/Montserrat/Montserrat-SemiBold.ttf");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/Roboto/Roboto-Regular.ttf');
+  font-family: "Roboto";
+  src: url("../fonts/Roboto/Roboto-Regular.ttf");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Lora';
-  src: url('../fonts/Lora/Lora-Regular.ttf');
+  font-family: "Lora";
+  src: url("../fonts/Lora/Lora-Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: url("../fonts/Rubik/static/Rubik-Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Rubik Bold";
+  src: url("../fonts/Rubik/static/Rubik-Bold.ttf");
   font-weight: normal;
   font-style: normal;
 }

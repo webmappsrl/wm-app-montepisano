@@ -30,7 +30,7 @@
       <span
         class="title-right event-title"
         ng-click="vm.openTextModal()"
-        ng-bind-html="vm.mainTitle"
+        ng-bind-html="vm.showSimpleView ? vm.mainCategory : vm.mainTitle"
       >
       </span>
     </span>
@@ -71,8 +71,7 @@
       </div>
       <div
         class="details-contacts details-contact-rows"
-        ng-if="vm.feature.email || vm.feature.phone || vm.feature.address || vm.feature.related_url
-            || vm.hasTags || vm.hasRecipes"
+        ng-if="vm.feature.email || vm.feature.phone || vm.feature.address || vm.feature.related_url || vm.hasCompanyTypes"
       >
         <ul
           class="details-contacts__list"
@@ -84,7 +83,10 @@
               ng-click="vm.chiama(vm.feature.phone)"
               style="cursor: default"
             >
-              <i class="icon ion-ios-telephone-outline"></i>
+              <i
+                class="icon ion-ios-telephone-outline"
+                ng-style="{'color': vm.colors.global.icons}"
+              ></i>
               <!-- {{vm.feature.phone}} -->
               {{"Telefono" | translate}}
             </a>
@@ -92,7 +94,11 @@
           <!-- Hidden for event detail -->
           <li class="contacts-list__element center" ng-if="vm.feature.email">
             <a href="mailto:{{vm.feature.email}}?subject=informazioni">
-              <i class="icon ion-ios-email-outline"></i> {{"email" | translate}}
+              <i
+                class="icon ion-ios-email-outline"
+                ng-style="{'color': vm.colors.global.icons}"
+              ></i>
+              {{"email" | translate}}
             </a>
           </li>
           <li
@@ -103,10 +109,11 @@
               <i
                 class="icon"
                 ng-class="{
-                                    'wm-icon-ios7-world-outline': vm.feature.web,
-                                    'wm-icon-social-facebook': !vm.feature.web && vm.feature.facebook,
-                                    'facebook-icon': !vm.feature.web && vm.feature.facebook
-                                }"
+                    'wm-icon-ios7-world-outline': vm.feature.web,
+                    'wm-icon-social-facebook': !vm.feature.web && vm.feature.facebook,
+                    'facebook-icon': !vm.feature.web && vm.feature.facebook
+                }"
+                ng-style="{'color': vm.colors.global.icons}"
               ></i>
               {{"web" | translate}}
             </a>
@@ -119,8 +126,8 @@
               <span
                 class="related-url-arrow"
                 ng-style="{
-                                'left': vm.relatedUrlLeftValue + 'vw'
-                            }"
+                    'left': vm.relatedUrlLeftValue + 'vw'
+                }"
               ></span>
               <a
                 href=""
@@ -128,7 +135,10 @@
                 ng-repeat="link in vm.feature.web"
                 ng-click="vm.openLink(link)"
               >
-                <i class="icon wm-icon-ios7-world-outline"></i>
+                <i
+                  class="icon wm-icon-ios7-world-outline"
+                  ng-style="{'color': vm.colors.global.icons}"
+                ></i>
                 {{vm.printUrl(link)}}
               </a>
               <a
@@ -137,7 +147,10 @@
                 ng-repeat="link in vm.feature.facebook"
                 ng-click="vm.openLink(link)"
               >
-                <i class="icon wm-icon-social-facebook"></i>
+                <i
+                  class="icon wm-icon-social-facebook"
+                  ng-style="{'color': vm.colors.global.icons}"
+                ></i>
                 {{vm.printUrl(link)}}
               </a>
             </div>
@@ -153,33 +166,11 @@
             style="cursor: default"
             ng-click="vm.openExternalMap()"
           >
-            <i class="icon ion-location"></i> {{vm.feature.address}}
-          </a>
-        </div>
-        <div class="details-contacts__tags" ng-if="vm.hasTags || vm.hasRecipes">
-          <a
-            ng-if="vm.hasTags"
-            ng-repeat="item in vm.feature.taxonomy.tags"
-            class="details-contacts__tag"
-            ng-style="{
-                'border-bottom': '1px solid ' + vm.colors.mainBar.color,
-                'color': vm.colors.details.color
-            }"
-            ng-click="vm.goToTaxonomy(item)"
-          >
-            {{vm.getTaxonomyName(item)}}
-          </a>
-          <a
-            ng-if="vm.hasRecipes"
-            ng-repeat="item in vm.feature.taxonomy['categorie-ricette']"
-            class="details-contacts__tag"
-            ng-style="{
-                'border-bottom': '1px solid ' + vm.colors.mainBar.color,
-                'color': vm.colors.details.color
-            }"
-            ng-click="vm.goToTaxonomy(item)"
-          >
-            {{vm.getTaxonomyName(item)}}
+            <i
+              class="icon ion-location"
+              ng-style="{'color': vm.colors.global.icons}"
+            ></i>
+            {{vm.feature.address}}
           </a>
         </div>
         <div
@@ -198,6 +189,21 @@
             {{"Il" | translate}} {{vm.renderEventDate(vm.feature.date_start)}}
           </span>
         </div>
+        <div class="details-contacts__tags" ng-if="vm.hasCompanyTypes">
+          <i
+            class="icon wm-icon-square-15"
+            ng-style="{'color': vm.colors.global.icons }"
+          ></i>
+          <span
+            ng-repeat="item in vm.feature['tipologie-azienda']"
+            class="details-contacts__tag"
+            ng-style="{
+                'color': vm.colors.global.lightColor
+            }"
+          >
+            {{item}}
+          </span>
+        </div>
       </div>
 
       <!-- details-columns -->
@@ -206,13 +212,23 @@
       <div
         class="details-content"
         ng-class="{
-                    'details-columns': vm.feature.image,
-                    'details-row': !vm.feature.image
-                }"
+          'details-columns': vm.feature.image,
+          'details-row': !vm.feature.image,
+          'details-simple-view': vm.showSimpleView
+        }"
       >
         <!--    one columns layout -->
         <div class="details-rows" ng-if="vm.feature.image">
-          <div class="details-image">
+          <div
+            class="details-image"
+            ng-class="{
+              'with-bg-image': vm.feature.image
+            }"
+            ng-style="{
+              'background-image': vm.feature.image ? 'url(' + vm.feature.image + ')' : ''
+            }"
+            ng-click="vm.openImageModal()"
+          >
             <span
               class="image-expand"
               ng-if="!vm.isAreaDetail && (vm.imageGallery.length > 1 || (vm.imageGallery.length === 1 && vm.imageGallery[0].caption && vm.imageGallery[0].caption !== ''))"
@@ -220,16 +236,16 @@
             >
               <i class="icon wm-icon-ios7-more"></i>
             </span>
-            <img
+            <!-- <img
               ng-if="!vm.isAreaDetail"
               ng-click="vm.openImageModal()"
               ng-src="{{vm.feature.image}}"
-            />
-            <img
+            /> -->
+            <!-- <img
               ng-if="vm.isAreaDetail"
               style="max-height: 125px; margin-left: 20%"
               ng-src="{{vm.feature.image}}"
-            />
+            /> -->
           </div>
 
           <ul class="details-related">
@@ -266,7 +282,7 @@
               <a href="">
                 <i class="icon wm-icon-lodging"></i>
                 {{vm.relatedCoupons.length}} {{vm.relatedCoupons.length === 1 ?
-                "offerta": "offerte" | translate}
+                "offerta": "offerte" | translate}}
                 <i class="icon wm-icon-ios7-arrow-thin-right"></i>
               </a>
             </li>
@@ -285,6 +301,44 @@
               </a>
             </li>
           </ul>
+        </div>
+
+        <div
+          class="details-contacts details-contact-rows"
+          ng-if="vm.hasTags || vm.hasRecipes"
+        >
+          <div class="details-contacts__tags" ng-if="vm.hasTags">
+            <i
+              class="icon wm-icon-pricetag"
+              ng-style="{'color': vm.colors.mainBar.color }"
+            ></i>
+            <a
+              ng-repeat="item in vm.feature.taxonomy.tags"
+              class="details-contacts__tag"
+              ng-style="{
+                'color': vm.colors.details.color
+            }"
+              ng-click="vm.goToTaxonomy(item)"
+            >
+              {{vm.getTaxonomyName(item)}}
+            </a>
+          </div>
+          <div class="details-contacts__tags" ng-if="vm.hasRecipes">
+            <i
+              class="icon wm-icon-pricetag"
+              ng-style="{'color': vm.colors.mainBar.color }"
+            ></i>
+            <a
+              ng-repeat="item in vm.feature.taxonomy['categorie-ricette']"
+              class="details-contacts__tag"
+              ng-style="{
+                'color': vm.colors.details.color
+            }"
+              ng-click="vm.goToTaxonomy(item)"
+            >
+              {{vm.getTaxonomyName(item)}}
+            </a>
+          </div>
         </div>
 
         <div
@@ -321,6 +375,16 @@
               ng-style="{'background': vm.feature.accessibility.food.check ? vm.colors.mainBar.background : '#cccccc'}"
             ></i>
           </a>
+        </div>
+
+        <div
+          class="details-simple-view-title details-rows"
+          ng-if="vm.showSimpleView"
+          ng-style="{
+            'color': vm.colors.global.lightColor,
+          }"
+        >
+          {{vm.mainTitle}}
         </div>
 
         <div
@@ -518,13 +582,6 @@
 
           <br />
           <br />
-
-          <!-- <div style="width: 100%; text-align: center;">
-                        <a
-                            href=""
-                            download
-                            ng-click="vm.openInExternalBrowser('http://api.webmapp.it/elba/media/Legenda_Elba.pdf')">Scarica la legenda dei simboli</a>
-                    </div> -->
         </div>
 
         <div ng-if="!vm.feature.image">
@@ -608,8 +665,8 @@
             <i class="icon wm-icon-flag"></i>
             <span class="tappa-name">{{item.title}}</span>
             <span ng-if="item.pois.length > 0" class="tappa-poi">
-              <em>{{item.pois.length}}</em> {{item.pois.length === 1? "punto di
-              interesse": "punti di interesse" | translate}}
+              <em> {{item.pois.length}} </em> {{"punti di interesse" |
+              translate}}
             </span>
             <i
               class="icon icon-arrow wm-icon-ios7-arrow-forward"
@@ -652,6 +709,7 @@
           'background': vm.colors.details.background
         }"
     ng-click="vm.toggleList()"
+    ng-if="!vm.hideListExpander"
   >
     <i
       class="icon"

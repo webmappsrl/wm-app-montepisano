@@ -121,11 +121,19 @@ div.contacts-list__element {
 
 .details-contacts__tags {
   width: 100%;
-  padding: 5px 15px 0;
+  padding: 15px 15px 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
   .details-contacts__tag {
-    text-transform: uppercase;
+    cursor: pointer;
+    text-transform: capitalize;
     white-space: nowrap;
-    margin: 0 2px;
+    padding-left: 7px;
+    font-family: $main-font-family;
+    font-weight: bold;
+    font-style: italic;
   }
 }
 
@@ -136,11 +144,14 @@ div.contacts-list__element {
 
 .details-content {
   height: 100%;
-  padding: 2%;
+  padding: 10px;
   background: inherit;
   position: relative;
   color: inherit;
   @include clearfix;
+  &.details-simple-view {
+    padding: 0;
+  }
 }
 
 .details-howtoreach {
@@ -219,6 +230,13 @@ div.contacts-list__element {
     display: block;
     margin: 0 auto;
   }
+  &.with-bg-image {
+    padding: 0;
+    height: 25vh;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
 }
 
 .details-related-element {
@@ -285,6 +303,13 @@ div.contacts-list__element {
       display: none;
     }
   }
+  &.details-simple-view-title {
+    padding: 20px;
+    font-size: 24px;
+    font-family: $main-font-family;
+    font-weight: bold;
+    line-height: 1.1em;
+  }
 }
 
 .details-description-expandable {
@@ -316,7 +341,9 @@ div.contacts-list__element {
 
 .details-description {
   padding: 10px;
-
+  .details-simple-view & {
+    padding: 10px 45px;
+  }
   .detail-route & {
     margin-bottom: 78px;
   }
@@ -335,7 +362,7 @@ div.contacts-list__element {
   p {
     margin: 0 0 6px 0;
     padding: 0;
-    text-align: justify;
+    // text-align: justify;
     line-height: 1.3;
     font-size: 16px;
   }

@@ -1,269 +1,357 @@
-angular.module('webmapp')
+angular
+  .module("webmapp")
 
-    .controller('ListController', function ListController(
-        $rootScope,
-        $state,
-        $ionicLoading,
-        $ionicScrollDelegate,
-        $window,
-        Utils,
-        MapService,
-        Model,
-        Search,
-        CONFIG
+  .controller(
+    "ListController",
+    function ListController(
+      $rootScope,
+      $state,
+      $ionicLoading,
+      $ionicScrollDelegate,
+      $window,
+      Utils,
+      MapService,
+      Model,
+      Search,
+      CONFIG
     ) {
-        var vm = {};
+      var vm = {};
 
-        var overlaysGroupMap = Model.getOverlaysGroupMap(),
-            overlayMap = Model.getOverlaysMap();
+      var overlaysGroupMap = Model.getOverlaysGroupMap(),
+        overlayMap = Model.getOverlaysMap();
 
-        var isAnOverlayGroup = false,
-            realState = '';
+      var isAnOverlayGroup = false,
+        realState = "";
 
-        vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
-        vm.isListExpanded = false,
-        vm.layersMap = Model.getLayersMap();
-        vm.goTo = Utils.goTo;
-        vm.id = $state.params.id ? $state.params.id.replace(/_/g, ' ') : null;
-        vm.width = $window.screen.availWidth - 30;
+      vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
+      (vm.isListExpanded = false), (vm.layersMap = Model.getLayersMap());
+      vm.goTo = Utils.goTo;
+      vm.id = $state.params.id ? $state.params.id.replace(/_/g, " ") : null;
+      vm.width = $window.screen.availWidth - 30;
 
-        MapService.activateUtfGrid();
+      MapService.activateUtfGrid();
 
-        var getMenuByState = function (state) {
-            var group = Model.isAnOverlayGroup(state),
-                currentOverlay,
-                res = [];
+      var getMenuByState = function (state) {
+        var group = Model.isAnOverlayGroup(state),
+          currentOverlay,
+          res = [];
 
-            if (group) {
-                for (var i in group.items) {
-                    currentOverlay = Model.getOverlay(group.items[i]);
-                    if (currentOverlay) {
-                        currentOverlay.url = currentOverlay.label.replace(/ /g, '_');
-                        res.push(currentOverlay);
-                    }
-                }
+        if (group) {
+          for (var i in group.items) {
+            currentOverlay = Model.getOverlay(group.items[i]);
+            if (currentOverlay) {
+              currentOverlay.url = currentOverlay.label.replace(/ /g, "_");
+              res.push(currentOverlay);
             }
+          }
+        }
 
-            return res;
-        };
+        return res;
+      };
 
-        var getPagesByState = function (state) {
-            var group = Model.isAPageGroup(state),
-                currentPage,
-                res = [];
+      var getPagesByState = function (state) {
+        var group = Model.isAPageGroup(state),
+          currentPage,
+          res = [];
 
-            if (group) {
-                for (var i in group.items) {
-                    currentPage = Model.getPage(group.items[i]);
-                    if (currentPage) {
-                        currentPage.url = currentPage.label.replace(/ /g, '_');
-                        res.push(currentPage);
-                    }
-                }
+        if (group) {
+          for (var i in group.items) {
+            currentPage = Model.getPage(group.items[i]);
+            if (currentPage) {
+              currentPage.url = currentPage.label.replace(/ /g, "_");
+              res.push(currentPage);
             }
+          }
+        }
 
-            return res;
-        };
+        return res;
+      };
 
-        var compareTitles = function (a, b) {
-            if (a.properties.name.toUpperCase() < b.properties.name.toUpperCase()) {
-                return -1;
-            }
-            if (a.properties.name.toUpperCase() > b.properties.name.toUpperCase()) {
-                return 1;
-            }
-            return 0;
-        };
+      var compareTitles = function (a, b) {
+        if (a.properties.name.toUpperCase() < b.properties.name.toUpperCase()) {
+          return -1;
+        }
+        if (a.properties.name.toUpperCase() > b.properties.name.toUpperCase()) {
+          return 1;
+        }
+        return 0;
+      };
 
-        var reinit = function () {
-            if (MapService.isReady()) {
-                vm.toggleList();
-                init();
-            }
-            else {
-                setTimeout(reinit, 250);
-            }
-        };
+      var reinit = function () {
+        if (MapService.isReady()) {
+          vm.toggleList();
+          init();
+        } else {
+          setTimeout(reinit, 250);
+        }
+      };
 
-        var init = function () {
-            $ionicLoading.show({
-                template: '<ion-spinner></ion-spinner>'
-            });
-            var currentState = $rootScope.currentState.name,
-                parentState = {},
-                layersReferences,
-                layerConfMap = {},
-                currentName = '';
-
-            vm.subMenuLabel = null;
-            vm.subGroupMenu = null;
-            vm.subMenu = null;
-            vm.showCategoryBack = null;
-            vm.eventsList = null;
-            vm.backItem = null;
-
-            if ($state && $state.params &&
-                $state.params.id) {
-                currentName = $state.params.id.replace(/_/g, ' ');
-            }
-
-            if (currentState === 'app.main.events') {
-                vm.eventsList = MapService.getEventsList();
-            } else if (currentState === 'app.main.layer') {
-                vm.color = Model.getListColor(currentName);
-
-                layersReferences = MapService.getOverlayLayers();
-                layerConfMap = MapService.overlayLayersConfMap();
-                realState = $rootScope.currentParams.id.replace(/_/g, ' ');
-                isAnOverlayGroup = Model.isAnOverlayGroup(realState);
-
-                if (!isAnOverlayGroup && typeof layerConfMap[realState] === 'undefined') {
-                    Utils.goTo('map/');
-                    return;
-                }
-
-                if (!isAnOverlayGroup && typeof layersReferences[realState] === 'undefined') {
-                    $ionicLoading.show({
-                        template: '<ion-spinner></ion-spinner>'
-                    });
-                }
-
-                vm.currentCategory = $rootScope.currentParams.id;
-                vm.viewTitle = realState;
-                vm.showCount = !isAnOverlayGroup;
-                vm.showCategoryBack = Model.isAChild(realState);
-
-                if (typeof overlayMap[realState] !== 'undefined' ||
-                    typeof overlaysGroupMap[realState] !== 'undefined') {
-
-                    if (Model.isAnOverlayGroup(realState)) {
-                        vm.subGroupMenu = getMenuByState(realState);
-                    } else {
-                        if (MapService.isReady()) {
-                            $ionicLoading.show({
-                                template: '<ion-spinner></ion-spinner>'
-                            });
-                            vm.layersMap[realState].items.sort(compareTitles);
-                            vm.subMenuLabel = realState;
-
-                            if (realState !== 'Eventi') {
-                                vm.lettersPosition = {};
-                                var lastLetter = '',
-                                    isLetter = function (l) {
-                                        if (l === 'A' || l === 'B' || l == 'C' || l === 'D' || l == 'E' ||
-                                            l === 'F' || l === 'G' || l == 'H' || l === 'I' || l == 'J' ||
-                                            l === 'K' || l === 'L' || l == 'M' || l === 'N' || l == 'O' ||
-                                            l === 'P' || l === 'Q' || l == 'R' || l === 'S' || l == 'T' ||
-                                            l === 'U' || l === 'V' || l == 'W' || l === 'X' || l == 'Y' || l === 'Z') {
-                                            return true
-                                        }
-                                        else {
-                                            return false;
-                                        }
-                                    };
-
-                                for (var i in vm.layersMap[realState].items) {
-                                    var letter = vm.layersMap[realState].items[i].properties.name[0].toUpperCase();
-                                    if (letter !== lastLetter) {
-                                        if (lastLetter === '') {
-                                            if (isLetter(letter)) {
-                                                vm.lettersPosition[letter] = +i;
-                                            }
-                                            else {
-                                                vm.lettersPosition['*'] = +i;
-                                            }
-                                            
-                                            lastLetter = letter;
-                                        }
-                                        else if (isLetter(letter)) {
-                                            vm.lettersPosition[letter] = +i;
-                                            lastLetter = letter;
-                                        }
-                                    }
-                                }
-                            }
-
-                            $ionicLoading.hide();
-                        } else {
-                            reinit();
-                            return;
-                        }
-
-                        parentState = Model.getOverlayParent(realState);
-
-                        if (parentState) {
-                            vm.backItem = {
-                                label: parentState.label,
-                                url: parentState.label.replace(/ /g, '_')
-                            };
-                        }
-
-                    }
-                }
-            } else if (Model.isAPageGroup(currentName)) {
-                vm.color = Model.getListColor(currentName);
-                realState = $rootScope.currentParams.id.replace(/_/g, ' ');
-                vm.viewTitle = realState;
-                vm.subGroupMenu = getPagesByState(currentName);
-            }
-            // console.log(vm)
-        };
-
-        vm.scrollToDivider = function (key) {
-            var height = vm.lettersPosition[key] * 94;
-            $ionicScrollDelegate.scrollTo(0, height, 0);
-        };
-
-        vm.renderDate = function (date) {
-            var parsedDate,
-                month, year;
-
-            if (date) {
-                parsedDate = new Date(Number(date) * 1000);
-                year = String(parsedDate.getFullYear()).substr(2);
-                month = parsedDate.getMonth() + 1;
-                month = String(month).length === 1 ? '0' + month : month;
-            }
-
-            return month + '.' + year;
-        };
-
-        vm.renderEventDate = function (date) {
-            return date.substring(6, 8) + '/' + date.substring(4, 6) + '/' + date.substring(0, 4);
-        };
-
-        vm.toggleList = function () {
-            vm.isListExpanded = !vm.isListExpanded;
-            $rootScope.$emit('toggle-list', vm.isListExpanded);
-        };
-
-        vm.goToSearch = function () {
-            if (isAnOverlayGroup) {
-                Search.setActiveAllLayers();
-            } else {
-                Search.setActiveLayers(realState);
-            }
-
-            vm.goTo('search');
-        };
-
-        vm.getSpecialities = function (item) {
-            var specialities = "";
-            if (item.properties && item.properties.taxonomy && item.properties.taxonomy.specialita) {
-                for (var i in item.properties.taxonomy.specialita) {
-                    if (specialities !== "") {
-                        specialities += ", ";
-                    }
-                    specialities += MapService.getLayerLabelById(item.properties.taxonomy.specialita[i]);
-                }
-            }
-            return specialities;
-        };
-
+      var init = function () {
         $ionicLoading.show({
-            template: '<ion-spinner></ion-spinner>'
+          template: "<ion-spinner></ion-spinner>",
         });
-        setTimeout(reinit, 250);        
+        var currentState = $rootScope.currentState.name,
+          parentState = {},
+          layersReferences,
+          layerConfMap = {},
+          currentName = "";
 
-        return vm;
-    });
+        vm.subMenuLabel = null;
+        vm.subGroupMenu = null;
+        vm.subMenu = null;
+        vm.showCategoryBack = null;
+        vm.eventsList = null;
+        vm.backItem = null;
+
+        if ($state && $state.params && $state.params.id) {
+          currentName = $state.params.id.replace(/_/g, " ");
+        }
+
+        if (currentState === "app.main.events") {
+          vm.eventsList = MapService.getEventsList();
+        } else if (currentState === "app.main.layer") {
+          vm.color = Model.getListColor(currentName);
+
+          layersReferences = MapService.getOverlayLayers();
+          layerConfMap = MapService.overlayLayersConfMap();
+          realState = $rootScope.currentParams.id.replace(/_/g, " ");
+          isAnOverlayGroup = Model.isAnOverlayGroup(realState);
+
+          if (
+            !isAnOverlayGroup &&
+            typeof layerConfMap[realState] === "undefined"
+          ) {
+            Utils.goTo("map/");
+            return;
+          }
+
+          if (
+            !isAnOverlayGroup &&
+            typeof layersReferences[realState] === "undefined"
+          ) {
+            $ionicLoading.show({
+              template: "<ion-spinner></ion-spinner>",
+            });
+          }
+
+          vm.currentCategory = $rootScope.currentParams.id;
+          vm.viewTitle = realState;
+          vm.showCount = !isAnOverlayGroup;
+          vm.showCategoryBack = Model.isAChild(realState);
+
+          if (
+            typeof overlayMap[realState] !== "undefined" ||
+            typeof overlaysGroupMap[realState] !== "undefined"
+          ) {
+            if (Model.isAnOverlayGroup(realState)) {
+              vm.subGroupMenu = getMenuByState(realState);
+            } else {
+              if (MapService.isReady()) {
+                $ionicLoading.show({
+                  template: "<ion-spinner></ion-spinner>",
+                });
+                vm.layersMap[realState].items.sort(compareTitles);
+                vm.subMenuLabel = realState;
+                vm.showExpandedSubMenu = false;
+                var layer = Model.getOverlaysMap()[vm.subMenuLabel];
+                if (
+                  layer &&
+                  layer.id &&
+                  ["posts", "ricette"].indexOf(layer.id + "") !== -1
+                )
+                  vm.showExpandedSubMenu = true;
+
+                if (realState !== "Eventi") {
+                  vm.lettersPosition = {};
+                  var lastLetter = "",
+                    isLetter = function (l) {
+                      if (
+                        l === "A" ||
+                        l === "B" ||
+                        l == "C" ||
+                        l === "D" ||
+                        l == "E" ||
+                        l === "F" ||
+                        l === "G" ||
+                        l == "H" ||
+                        l === "I" ||
+                        l == "J" ||
+                        l === "K" ||
+                        l === "L" ||
+                        l == "M" ||
+                        l === "N" ||
+                        l == "O" ||
+                        l === "P" ||
+                        l === "Q" ||
+                        l == "R" ||
+                        l === "S" ||
+                        l == "T" ||
+                        l === "U" ||
+                        l === "V" ||
+                        l == "W" ||
+                        l === "X" ||
+                        l == "Y" ||
+                        l === "Z"
+                      ) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    };
+
+                  for (var i in vm.layersMap[realState].items) {
+                    var letter = vm.layersMap[realState].items[
+                      i
+                    ].properties.name[0].toUpperCase();
+                    if (letter !== lastLetter) {
+                      if (lastLetter === "") {
+                        if (isLetter(letter)) {
+                          vm.lettersPosition[letter] = +i;
+                        } else {
+                          vm.lettersPosition["*"] = +i;
+                        }
+
+                        lastLetter = letter;
+                      } else if (isLetter(letter)) {
+                        vm.lettersPosition[letter] = +i;
+                        lastLetter = letter;
+                      }
+                    }
+                  }
+                }
+
+                $ionicLoading.hide();
+              } else {
+                reinit();
+                return;
+              }
+
+              parentState = Model.getOverlayParent(realState);
+
+              if (parentState) {
+                vm.backItem = {
+                  label: parentState.label,
+                  url: parentState.label.replace(/ /g, "_"),
+                };
+              }
+            }
+          }
+        } else if (Model.isAPageGroup(currentName)) {
+          vm.color = Model.getListColor(currentName);
+          realState = $rootScope.currentParams.id.replace(/_/g, " ");
+          vm.viewTitle = realState;
+          vm.subGroupMenu = getPagesByState(currentName);
+        }
+        // console.log(vm)
+      };
+
+      vm.scrollToDivider = function (key) {
+        var height = vm.lettersPosition[key] * 103;
+        $ionicScrollDelegate.scrollTo(0, height, 0);
+      };
+
+      vm.renderDate = function (date) {
+        var parsedDate, month, year;
+
+        if (date) {
+          parsedDate = new Date(Number(date) * 1000);
+          year = String(parsedDate.getFullYear()).substr(2);
+          month = parsedDate.getMonth() + 1;
+          month = String(month).length === 1 ? "0" + month : month;
+        }
+
+        return month + "." + year;
+      };
+
+      vm.renderEventDate = function (date) {
+        return (
+          date.substring(6, 8) +
+          "/" +
+          date.substring(4, 6) +
+          "/" +
+          date.substring(0, 4)
+        );
+      };
+
+      vm.toggleList = function () {
+        vm.isListExpanded = !vm.isListExpanded;
+        $rootScope.$emit("toggle-list", vm.isListExpanded);
+      };
+
+      vm.goToSearch = function () {
+        if (isAnOverlayGroup) {
+          Search.setActiveAllLayers();
+        } else {
+          Search.setActiveLayers(realState);
+        }
+
+        vm.goTo("search");
+      };
+
+      vm.getSpecialities = function (item) {
+        var specialities = "";
+        if (
+          item.properties &&
+          item.properties.taxonomy &&
+          item.properties.taxonomy.specialita
+        ) {
+          for (var i in item.properties.taxonomy.specialita) {
+            if (specialities !== "") {
+              specialities += ", ";
+            }
+            specialities += MapService.getLayerLabelById(
+              item.properties.taxonomy.specialita[i]
+            );
+          }
+        }
+        return specialities;
+      };
+
+      vm.getTags = function (item) {
+        var tags = "";
+        if (
+          item.properties &&
+          item.properties.taxonomy &&
+          item.properties.taxonomy.tipo &&
+          item.properties.taxonomy.tipo[0] &&
+          item.properties.taxonomy.tipo[0] === "posts" &&
+          item.properties.taxonomy.tags
+        ) {
+          for (var i in item.properties.taxonomy.tags) {
+            if (tags !== "") tags += ", ";
+            tags += MapService.getLayerLabelById(
+              item.properties.taxonomy.tags[i]
+            );
+          }
+        }
+        return tags;
+      };
+
+      vm.getRecipes = function (item) {
+        var recipes = "";
+        if (
+          item.properties &&
+          item.properties.taxonomy &&
+          item.properties.taxonomy.tipo &&
+          item.properties.taxonomy.tipo[0] &&
+          item.properties.taxonomy.tipo[0] === "ricette" &&
+          item.properties.taxonomy["categorie-ricette"]
+        ) {
+          for (var i in item.properties.taxonomy["categorie-ricette"]) {
+            if (recipes !== "") recipes += ", ";
+            recipes += MapService.getLayerLabelById(
+              item.properties.taxonomy["categorie-ricette"][i]
+            );
+          }
+        }
+        return recipes;
+      };
+
+      $ionicLoading.show({
+        template: "<ion-spinner></ion-spinner>",
+      });
+      setTimeout(reinit, 250);
+
+      return vm;
+    }
+  );
