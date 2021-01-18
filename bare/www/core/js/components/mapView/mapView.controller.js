@@ -1,385 +1,385 @@
-angular.module('webmapp')
+angular
+  .module("webmapp")
+  .controller(
+    "MapController",
+    function MapController(
+      $ionicModal,
+      $rootScope,
+      $scope,
+      $translate,
+      CONFIG,
+      MapService,
+      Utils
+    ) {
+      var vm = {};
 
-.controller('MapController', function MapController(
-    $ionicModal,
-    $rootScope,
-    $scope,
-    $translate,
-    CONFIG,
-    MapService,
-    Utils
-) {
-    var vm = {};
-
-    var modalScope = $rootScope.$new(),
+      var modalScope = $rootScope.$new(),
         modal = {};
 
-    var areAllActive = function(filtersMap) {
+      var areAllActive = function (filtersMap) {
         var allActive = true;
 
         for (var i in filtersMap) {
-            if (i !== $translate.instant("Tutte")) {
-                if (!filtersMap[i].value) {
-                    allActive = false;
-                    break;
-                }
+          if (i !== $translate.instant("Tutte")) {
+            if (!filtersMap[i].value) {
+              allActive = false;
+              break;
             }
+          }
         }
 
         return allActive;
-    };
+      };
 
-    MapService.showAllLayers();
-    MapService.activateUtfGrid();
-    modalScope.vm = {};
-    modalScope.vm.isNewModal = CONFIG.MAP.filters;
+      MapService.showAllLayers();
+      MapService.activateUtfGrid();
+      modalScope.vm = {};
+      modalScope.vm.isNewModal = CONFIG.MAP.filters;
 
-    vm.mapTitle = CONFIG.OPTIONS.title;
-    vm.filterIcon = CONFIG.OPTIONS.filterIcon;
-    vm.showFilers = !CONFIG.OPTIONS.hideFiltersInMap;
-    vm.isNavigable = $rootScope.isNavigable ? $rootScope.isNavigable : false;
-    vm.goBack = Utils.goBack;
-    vm.canGoBack = $rootScope.backToDetails ? true : false;
-    console.log(vm.canGoBack)
+      vm.mapTitle = CONFIG.OPTIONS.title;
+      vm.filterIcon = CONFIG.OPTIONS.filterIcon;
+      vm.showFilers = !CONFIG.OPTIONS.hideFiltersInMap;
+      vm.isNavigable = $rootScope.isNavigable ? $rootScope.isNavigable : false;
+      vm.goBack = Utils.goBack;
+      vm.canGoBack = $rootScope.backToDetails ? true : false;
+      console.log(vm.canGoBack);
 
-    $rootScope.backToDetails = false;
+      $rootScope.backToDetails = false;
 
-    vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
+      vm.colors = CONFIG.MAIN ? CONFIG.MAIN.STYLE : CONFIG.STYLE;
 
-    vm.packages = localStorage.$wm_packages ? JSON.parse(localStorage.$wm_packages) : null;
-    vm.id = CONFIG.routeID;
-    var currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";
+      vm.packages = localStorage.$wm_packages
+        ? JSON.parse(localStorage.$wm_packages)
+        : null;
+      vm.id = CONFIG.routeID;
+      var currentLang = $translate.preferredLanguage()
+        ? $translate.preferredLanguage()
+        : "it";
 
-    if (vm.packages && vm.id) {
+      if (vm.packages && vm.id) {
         for (var i in vm.packages) {
-            if (vm.packages[i].id === vm.id) {
-                if (vm.packages[i].wpml_translations) {
-                    for (var pos in vm.packages[i].wpml_translations) {
-                        if (vm.packages[i].wpml_translations[pos].locale.substring(0, 2) === currentLang) {
-                            vm.mapTitle = vm.packages[i].wpml_translations[pos].post_title;
-                            break;
-                        }
-                    }
+          if (vm.packages[i].id === vm.id) {
+            if (vm.packages[i].wpml_translations) {
+              for (var pos in vm.packages[i].wpml_translations) {
+                if (
+                  vm.packages[i].wpml_translations[pos].locale.substring(
+                    0,
+                    2
+                  ) === currentLang
+                ) {
+                  vm.mapTitle =
+                    vm.packages[i].wpml_translations[pos].post_title;
+                  break;
                 }
-                break;
+              }
             }
+            break;
+          }
         }
-    }
+      }
 
-    vm.mapLayers = CONFIG.MAP.layers;
+      vm.mapLayers = CONFIG.MAP.layers;
 
-    if (vm.mapLayers.length > 1) {
+      if (vm.mapLayers.length > 1) {
         modalScope.vm.isMap = true;
-    } else {
+      } else {
         modalScope.vm.isMap = false;
-    }
+      }
 
-    modalScope.vm.baseLayers = MapService.getBaseLayers();
-    modalScope.vm.COLORS = vm.colors;
+      modalScope.vm.baseLayers = MapService.getBaseLayers();
+      modalScope.vm.COLORS = vm.colors;
 
-    $ionicModal.fromTemplateUrl(templateBasePath + 'js/modals/filtersModal.html', {
-        scope: modalScope,
-        animation: 'slide-in-up'
-    }).then(function(modalObj) {
-        modal = modalObj;
-    });
+      $ionicModal
+        .fromTemplateUrl(templateBasePath + "js/modals/filtersModal.html", {
+          scope: modalScope,
+          animation: "slide-in-up",
+        })
+        .then(function (modalObj) {
+          modal = modalObj;
+        });
 
-    modalScope.vm.hide = function() {
+      modalScope.vm.hide = function () {
         modal.hide();
-    };
+      };
 
-
-
-    modalScope.vm.updateFilter = function(filterName, value) {
-
+      modalScope.vm.updateFilter = function (filterName, value) {
         if (modalScope.vm.isNewModal) {
-
-            MapService.setFilter(filterName, value);
-            var features = getDisplayedFeatures();
-            MapService.addFeaturesToFilteredLayer(features);
-
+          MapService.setFilter(filterName, value);
+          var features = getDisplayedFeatures();
+          MapService.addFeaturesToFilteredLayer(features);
         } else {
-            if (filterName === "Tutte") {
-                for (var i in modalScope.vm.filters) {
-                    modalScope.vm.filters[i].value = value;
-                    MapService.setFilter(i, value);
-                }
-            } else {
-                MapService.setFilter(filterName, value);
-                modalScope.vm.filters[filterName].value = value;
-                modalScope.vm.filters["Tutte"].value = areAllActive(modalScope.vm.filters);
+          if (filterName === "Tutte") {
+            for (var i in modalScope.vm.filters) {
+              modalScope.vm.filters[i].value = value;
+              MapService.setFilter(i, value);
             }
+          } else {
+            MapService.setFilter(filterName, value);
+            modalScope.vm.filters[filterName].value = value;
+            modalScope.vm.filters["Tutte"].value = areAllActive(
+              modalScope.vm.filters
+            );
+          }
         }
+      };
 
-
-    };
-
-    modalScope.vm.updateBaseMap = function(name) {
+      modalScope.vm.updateBaseMap = function (name) {
         if (modalScope.vm.currentMapLayer === name) {
-            return;
+          return;
         }
         MapService.activateMapLayer(name);
         modalScope.vm.currentMapLayer = name;
-    };
+      };
 
-    vm.openFilters = function() {
-
+      vm.openFilters = function () {
         var filt = MapService.getActiveFilters();
 
         if (modalScope.vm.isNewModal) {
-            modalScope.vm.currentLang = $translate.preferredLanguage() ? $translate.preferredLanguage() : "it";;
-            modalScope.vm.defaultLang = CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual ? CONFIG.LANGUAGES.actual : 'it';;
-            for (var layerId in modalScope.layers) {
-                if (filt[layerId]) {
-                    modalScope.layers[layerId].checked = filt[layerId];
-                } else {
-                    modalScope.layers[layerId].checked = false;
-                }
+          modalScope.vm.currentLang = $translate.preferredLanguage()
+            ? $translate.preferredLanguage()
+            : "it";
+          modalScope.vm.defaultLang =
+            CONFIG.LANGUAGES && CONFIG.LANGUAGES.actual
+              ? CONFIG.LANGUAGES.actual
+              : "it";
+          for (var layerId in modalScope.layers) {
+            if (filt[layerId]) {
+              modalScope.layers[layerId].checked = filt[layerId];
+            } else {
+              modalScope.layers[layerId].checked = false;
             }
-            checkAllTabsState();
+          }
+          checkAllTabsState();
         } else {
-            lang = $translate.preferredLanguage(),
-                tmp = {},
-                allActive = false,
-                activeFilters = {};
+          (lang = $translate.preferredLanguage()),
+            (tmp = {}),
+            (allActive = false),
+            (activeFilters = {});
 
-            tmp["Tutte"] = {
-                name: $translate.instant("Tutte"),
-                value: true
-            };
+          tmp["Tutte"] = {
+            name: $translate.instant("Tutte"),
+            value: true,
+          };
 
-            for (var i in CONFIG.OVERLAY_LAYERS) {
-                var nameTranslated = CONFIG.OVERLAY_LAYERS[i].label;
+          for (var i in CONFIG.OVERLAY_LAYERS) {
+            var nameTranslated = CONFIG.OVERLAY_LAYERS[i].label;
 
-                if (nameTranslated.toLowerCase() === 'tappe' || nameTranslated.toLowerCase() === 'stages') {
-                    nameTranslated = $translate.instant('Tappe');
-                } else if (CONFIG.OVERLAY_LAYERS[i].languages && CONFIG.OVERLAY_LAYERS[i].languages[lang]) {
-                    nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[lang];
-                }
-
-                activeFilters[CONFIG.OVERLAY_LAYERS[i].label] = {
-                    name: nameTranslated,
-                    value: filt[CONFIG.OVERLAY_LAYERS[i].label],
-                    icon: CONFIG.OVERLAY_LAYERS[i].icon,
-                    color: CONFIG.OVERLAY_LAYERS[i].color
-                };
+            if (
+              nameTranslated.toLowerCase() === "tappe" ||
+              nameTranslated.toLowerCase() === "stages"
+            ) {
+              nameTranslated = $translate.instant("Tappe");
+            } else if (
+              CONFIG.OVERLAY_LAYERS[i].languages &&
+              CONFIG.OVERLAY_LAYERS[i].languages[lang]
+            ) {
+              nameTranslated = CONFIG.OVERLAY_LAYERS[i].languages[lang];
             }
 
-            activeFilters = angular.extend(tmp, activeFilters);
-            allActive = areAllActive(activeFilters);
+            activeFilters[CONFIG.OVERLAY_LAYERS[i].label] = {
+              name: nameTranslated,
+              value: filt[CONFIG.OVERLAY_LAYERS[i].label],
+              icon: CONFIG.OVERLAY_LAYERS[i].icon,
+              color: CONFIG.OVERLAY_LAYERS[i].color,
+            };
+          }
 
-            activeFilters["Tutte"].value = allActive;
-            modalScope.vm.filters = activeFilters;
-            modalScope.vm.currentMapLayer = MapService.getCurrentMapLayerName();
+          activeFilters = angular.extend(tmp, activeFilters);
+          allActive = areAllActive(activeFilters);
 
+          activeFilters["Tutte"].value = allActive;
+          modalScope.vm.filters = activeFilters;
+          modalScope.vm.currentMapLayer = MapService.getCurrentMapLayerName();
         }
 
         modal.show();
-    };
+      };
 
-    $scope.$on('$destroy', function() {
+      $scope.$on("$destroy", function () {
         modal.hide();
-    });
+      });
 
-    $rootScope.$on('item-navigable', function(e, value) {
+      $rootScope.$on("item-navigable", function (e, value) {
         vm.isNavigable = value;
         Utils.forceDigest();
-    });
+      });
 
-    if (modalScope.vm.isNewModal) {
+      if (modalScope.vm.isNewModal) {
         modalScope.filters = angular.copy(CONFIG.MAP.filters);
 
         modalScope.layers = {};
         modalScope.tabNum = 0;
         for (var tabIndex in modalScope.filters) {
-
-            if (!modalScope.filters[tabIndex].sublayers) {
-                delete modalScope.filters[tabIndex];
+          if (!modalScope.filters[tabIndex].sublayers) {
+            delete modalScope.filters[tabIndex];
+          } else {
+            modalScope.tabNum += 1;
+            if (tabIndex === "pois") {
+              modalScope.filters[tabIndex].label = "Punti";
+            } else if (tabIndex === "tracks") {
+              modalScope.filters[tabIndex].label = "Traccie";
             } else {
-                modalScope.tabNum += 1;
-                if (tabIndex === 'pois') {
-                    modalScope.filters[tabIndex].label = "Punti";
-                } else if (tabIndex === 'tracks') {
-                    modalScope.filters[tabIndex].label = "Traccie";
-                } else {
-                    modalScope.filters[tabIndex].label = "Mappe";
-                }
-                var subTabs = modalScope.filters[tabIndex].sublayers;
-                modalScope.filters[tabIndex].selectedTab = -1;
-                for (var subTabIndex in subTabs) {
-                    var subTab = subTabs[subTabIndex];
-                    subTab.checked = false;
-                    if (subTab.label === "custom") {
-                        subTab.label = "altri";
-                    }
-                    var tmp = [];
-                    for (var index in subTab.items) {
-                        var layerId = subTab.items[index];
-                        var layer = MapService.getOverlayLayerById(layerId);
-                        if (layer) {
-                            var translatedLabel = layer.languages;
-                            var info = { id: layerId, label: layer.label, checked: false, languages: translatedLabel };
-                            info.clickable = true;
-                            tmp.push(info);
-                            modalScope.layers[layer.label] = info;
-                        }
-                    }
-                    subTab.items = tmp;
-                }
+              modalScope.filters[tabIndex].label = "Mappe";
             }
+            var subTabs = modalScope.filters[tabIndex].sublayers;
+            modalScope.filters[tabIndex].selectedTab = -1;
+            for (var subTabIndex in subTabs) {
+              var subTab = subTabs[subTabIndex];
+              subTab.checked = false;
+              if (subTab.label === "custom") {
+                subTab.label = "altri";
+              }
+              var tmp = [];
+              for (var index in subTab.items) {
+                var layerId = subTab.items[index];
+                var layer = MapService.getOverlayLayerById(layerId);
+                if (layer) {
+                  var translatedLabel = layer.languages;
+                  var info = {
+                    id: layerId,
+                    label: layer.label,
+                    checked: false,
+                    languages: translatedLabel,
+                  };
+                  info.clickable = true;
+                  tmp.push(info);
+                  modalScope.layers[layer.label] = info;
+                }
+              }
+              subTab.items = tmp;
+            }
+          }
         }
-
-
-
 
         modalScope.currentTab = Object.keys(modalScope.filters)[0];
 
-        modalScope.switchTab = function(id) {
-            if (modalScope.filters[id])
-                modalScope.currentTab = id;
-            else {
-                modalScope.currentTab = Object.keys(modalScope.filters)[0];
-            }
+        modalScope.switchTab = function (id) {
+          if (modalScope.filters[id]) modalScope.currentTab = id;
+          else {
+            modalScope.currentTab = Object.keys(modalScope.filters)[0];
+          }
         };
 
-        modalScope.toggleSubTab = function(id, tabId) {
-
-            if (modalScope.filters[tabId].selectedTab !== id) {
-                modalScope.filters[tabId].selectedTab = id;
-            } else {
-                modalScope.filters[tabId].selectedTab = null;
-            }
+        modalScope.toggleSubTab = function (id, tabId) {
+          if (modalScope.filters[tabId].selectedTab !== id) {
+            modalScope.filters[tabId].selectedTab = id;
+          } else {
+            modalScope.filters[tabId].selectedTab = null;
+          }
         };
 
-        modalScope.toggleSubTabCheckBox = function(id, tabId) {
-
-            if (modalScope.filters[tabId] && modalScope.filters[tabId].sublayers[id]) {
-                if (modalScope.filters[tabId].sublayers[id].checked) {
-
-                    var items = modalScope.filters[tabId].sublayers[id].items;
-                    for (var index in items) {
-                        if (items[index].checked) {
-                            items[index].checked = !items[index].checked;
-                            modalScope.vm.updateFilter(items[index].label, false);
-
-                        }
-                    }
-                } else {
-                    var items = modalScope.filters[tabId].sublayers[id].items;
-                    for (var index in items) {
-                        if (!items[index].checked) {
-                            items[index].checked = !items[index].checked;
-                            modalScope.vm.updateFilter(items[index].label, true);
-
-                        }
-                    }
+        modalScope.toggleSubTabCheckBox = function (id, tabId) {
+          if (
+            modalScope.filters[tabId] &&
+            modalScope.filters[tabId].sublayers[id]
+          ) {
+            if (modalScope.filters[tabId].sublayers[id].checked) {
+              var items = modalScope.filters[tabId].sublayers[id].items;
+              for (var index in items) {
+                if (items[index].checked) {
+                  items[index].checked = !items[index].checked;
+                  modalScope.vm.updateFilter(items[index].label, false);
                 }
-                modalScope.filters[tabId].sublayers[id].checked = !modalScope.filters[tabId].sublayers[id].checked;
+              }
+            } else {
+              var items = modalScope.filters[tabId].sublayers[id].items;
+              for (var index in items) {
+                if (!items[index].checked) {
+                  items[index].checked = !items[index].checked;
+                  modalScope.vm.updateFilter(items[index].label, true);
+                }
+              }
             }
-        }
+            modalScope.filters[tabId].sublayers[id].checked = !modalScope
+              .filters[tabId].sublayers[id].checked;
+          }
+        };
 
         modalScope.lastToggledLayer = "";
-        modalScope.toggleLayer = function(layerLabel, sublayerId, tabId) {
-
-            if (modalScope.lastToggledLayer !== layerLabel) {
-                modalScope.lastToggledLayer = layerLabel;
-                modalScope.layers[layerLabel].checked = !modalScope.layers[layerLabel].checked;
-                modalScope.vm.updateFilter(layerLabel, modalScope.layers[layerLabel].checked);
-                checkTabState(sublayerId, tabId);
-                setTimeout(function() { modalScope.lastToggledLayer = "" }, 200);
-            }
-
-
+        modalScope.toggleLayer = function (layerLabel, sublayerId, tabId) {
+          if (modalScope.lastToggledLayer !== layerLabel) {
+            modalScope.lastToggledLayer = layerLabel;
+            modalScope.layers[layerLabel].checked = !modalScope.layers[
+              layerLabel
+            ].checked;
+            modalScope.vm.updateFilter(
+              layerLabel,
+              modalScope.layers[layerLabel].checked
+            );
+            checkTabState(sublayerId, tabId);
+            setTimeout(function () {
+              modalScope.lastToggledLayer = "";
+            }, 200);
+          }
         };
 
-        var checkTabState = function(sublayerId, tabId) {
-
-            var state = true;
-            var sublayer = modalScope.filters[tabId].sublayers[sublayerId];
-            for (var index in sublayer.items) {
-                var layerChecked = sublayer.items[index].checked;
-                if (!layerChecked) {
-                    state = false;
-                    break;
-                }
+        var checkTabState = function (sublayerId, tabId) {
+          var state = true;
+          var sublayer = modalScope.filters[tabId].sublayers[sublayerId];
+          for (var index in sublayer.items) {
+            var layerChecked = sublayer.items[index].checked;
+            if (!layerChecked) {
+              state = false;
+              break;
             }
-            sublayer.checked = state;
-        }
+          }
+          sublayer.checked = state;
+        };
 
-        var checkAllTabsState = function() {
-
-            for (var tabId in modalScope.filters) {
-                var tab = modalScope.filters[tabId];
-                for (var sublayerId in tab.sublayers) {
-                    checkTabState(sublayerId, tabId);
-                }
+        var checkAllTabsState = function () {
+          for (var tabId in modalScope.filters) {
+            var tab = modalScope.filters[tabId];
+            for (var sublayerId in tab.sublayers) {
+              checkTabState(sublayerId, tabId);
             }
-        }
+          }
+        };
 
+        var getDisplayedFeatures = function () {
+          var filt = MapService.getActiveFilters();
+          var result = {};
+          if (MapService.isReady()) {
+            var ids = [];
+            var idsMap = MapService.getFeaturesIdByLayersMap();
+            var featureMap = MapService.getFeatureIdMap();
 
-        var getDisplayedFeatures = function() {
-
-            var filt = MapService.getActiveFilters();
-            var result = {};
-            if (MapService.isReady()) {
-
-                var ids = [];
-                var idsMap = MapService.getFeaturesIdByLayersMap();
-                var featureMap = MapService.getFeatureIdMap();
-
-                for (label in filt) {
-                    if (filt[label]) {
-                        ids = ids.concat(idsMap[label]);
-                    }
-                }
-                var tmp = ids.filter(function(item, pos) {
-                    return ids.indexOf(item) == pos;
-                })
-                ids = tmp;
-
-                result["Ristoranti"] = [];
-                result["Botteghe"] = [];
-                result["Eventi"] = [];
-                result["Produttori"] = [];
-
-                for (let i = 0; i < ids.length; i++) {
-                    var feature = featureMap[ids[i]];
-                    if (feature && feature.properties && feature.properties.taxonomy && feature.properties.taxonomy.tipo) {
-                        var tipo = feature.properties.taxonomy.tipo[0];
-                        if (tipo === "restaurant" || tipo === "4") {
-                            if (tipo === "restaurant") {
-                                tipo = "4";
-                            }
-                            result["Ristoranti"].push(feature);
-                        } else if (tipo === "producer" || tipo === "3") {
-                            if (tipo === "producer") {
-                                tipo = "3";
-                            }
-                            result["Produttori"].push(feature);
-                        } else if (tipo === "event" || tipo === "2") {
-                            if (tipo === "event") {
-                                tipo = "2";
-                            }
-                            result["Eventi"].push(feature);
-                        } else if (tipo === "shop" || tipo === "1") {
-                            if (tipo === "shop") {
-                                tipo = "1";
-                            }
-                            result["Botteghe"].push(feature);
-                        }
-                    }
-                }
-
+            for (label in filt) {
+              if (filt[label]) {
+                ids = ids.concat(idsMap[label]);
+              }
             }
+            var tmp = ids.filter(function (item, pos) {
+              return ids.indexOf(item) == pos;
+            });
+            ids = tmp;
 
-            return result;
-        }
+            result["aziende"] = [];
+            result["posts"] = [];
+            result["ricette"] = [];
 
-        setTimeout(function() {
-            var features = getDisplayedFeatures();
-            MapService.addFeaturesToFilteredLayer(features);
+            for (let i = 0; i < ids.length; i++) {
+              var feature = featureMap[ids[i]];
+              if (
+                feature &&
+                feature.properties &&
+                feature.properties.taxonomy &&
+                feature.properties.taxonomy.tipo
+              ) {
+                var tipo = feature.properties.taxonomy.tipo[0];
+                result[tipo].push(feature);
+              }
+            }
+          }
+
+          return result;
+        };
+
+        setTimeout(function () {
+          var features = getDisplayedFeatures();
+          MapService.addFeaturesToFilteredLayer(features);
         }, 100);
-    }
+      }
 
-    return vm;
-});
+      return vm;
+    }
+  );
