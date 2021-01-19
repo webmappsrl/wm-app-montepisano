@@ -210,17 +210,16 @@ angular
         modalScope.layers = {};
         modalScope.tabNum = 0;
         for (var tabIndex in modalScope.filters) {
-          if (!modalScope.filters[tabIndex].sublayers) {
+          if (!modalScope.filters[tabIndex].sublayers)
             delete modalScope.filters[tabIndex];
-          } else {
+          else {
             modalScope.tabNum += 1;
-            if (tabIndex === "pois") {
+            if (tabIndex === "pois")
               modalScope.filters[tabIndex].label = "Punti";
-            } else if (tabIndex === "tracks") {
+            else if (tabIndex === "tracks")
               modalScope.filters[tabIndex].label = "Traccie";
-            } else {
-              modalScope.filters[tabIndex].label = "Mappe";
-            }
+            else modalScope.filters[tabIndex].label = "Mappe";
+
             var subTabs = modalScope.filters[tabIndex].sublayers;
             modalScope.filters[tabIndex].selectedTab = -1;
             for (var subTabIndex in subTabs) {
@@ -377,6 +376,53 @@ angular
         setTimeout(function () {
           var features = getDisplayedFeatures();
           MapService.addFeaturesToFilteredLayer(features);
+
+          if (modalScope.filters && modalScope.filters.pois) {
+            console.log(modalScope.filters.pois);
+            if (modalScope.filters.pois.sublayers) {
+              for (let sublayer in modalScope.filters.pois.sublayers) {
+                console.log(modalScope.filters.pois.sublayers[sublayer].id);
+                if (
+                  modalScope.filters.pois.sublayers[sublayer].id ===
+                    "content_types" &&
+                  modalScope.filters.pois.sublayers[sublayer].items
+                ) {
+                  for (let i in modalScope.filters.pois.sublayers[sublayer]
+                    .items) {
+                    if (
+                      modalScope.filters.pois.sublayers[sublayer].items[i].label
+                    )
+                      MapService.setFilter(
+                        modalScope.filters.pois.sublayers[sublayer].items[i]
+                          .label,
+                        true
+                      );
+                  }
+                  break;
+                }
+              }
+
+              // let i = 0;
+              // while (i < modalScope.filters.pois.sublayers.length) {
+              //   if (modalScope.filters.pois.sublayers[i].id !== "places")
+              //     modalScope.filters.pois.sublayers.splice(i, 1);
+              //   else {
+              //     if (modalScope.filters.pois.sublayers[i].items) {
+              //       for (let j in modalScope.filters.pois.sublayers[i].items) {
+              //         if (modalScope.filters.pois.sublayers[i].items[j].label)
+              //           MapService.setFilter(
+              //             modalScope.filters.pois.sublayers[i].items[j].label,
+              //             true
+              //           );
+              //       }
+              //     }
+              //     i++;
+              //   }
+              // }
+
+              modalScope.filters.pois.selectedTab = 0;
+            }
+          }
         }, 100);
       }
 
