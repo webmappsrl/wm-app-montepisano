@@ -383,9 +383,8 @@
           ng-style="{
             'color': vm.colors.global.lightColor,
           }"
-        >
-          {{vm.mainTitle}}
-        </div>
+          ng-bind-html="vm.mainTitle"
+        ></div>
 
         <div
           class="details-description details-rows"
@@ -678,6 +677,7 @@
 
       <!-- RELATED OBJECTS -->
       <div class="route-related-details" ng-if="vm.related">
+        <h2 class="route-related-title">{{"Ricette" | translate}}</h2>
         <ul class="list route-related-list">
           <li
             class="item item-icon-left route-related-item"

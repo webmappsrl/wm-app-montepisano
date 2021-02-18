@@ -599,7 +599,11 @@ angular
                       }
 
                       for (var layerId in categoriesContainerMap) {
-                        if (typeArray.indexOf(layerId) > -1) {
+                        if (
+                          typeArray &&
+                          typeArray.indexOf &&
+                          typeArray.indexOf(layerId) > -1
+                        ) {
                           categoriesContainerMap[layerId] = true;
                         }
                       }

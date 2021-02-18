@@ -339,7 +339,10 @@ angular
             }
 
             for (let i of arrayTaxonomy) {
-              if (feature.properties.taxonomy[i].length) {
+              if (
+                feature.properties.taxonomy[i] &&
+                feature.properties.taxonomy[i].length
+              ) {
                 for (let j in feature.properties.taxonomy[i]) {
                   var categoryId = feature.properties.taxonomy[i][j];
                   var category = overlayLayersById[categoryId];

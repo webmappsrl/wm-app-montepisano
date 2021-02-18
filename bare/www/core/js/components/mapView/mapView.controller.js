@@ -42,7 +42,6 @@ angular
       vm.isNavigable = $rootScope.isNavigable ? $rootScope.isNavigable : false;
       vm.goBack = Utils.goBack;
       vm.canGoBack = $rootScope.backToDetails ? true : false;
-      console.log(vm.canGoBack);
 
       $rootScope.backToDetails = false;
 
