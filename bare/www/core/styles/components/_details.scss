@@ -348,6 +348,16 @@ div.contacts-list__element {
     margin-bottom: 78px;
   }
 
+  h1 {
+    font-size: 1.3em !important;
+  }
+  h2 {
+    font-size: 1.2em !important;
+  }
+  h3 {
+    font-size: 1.1em !important;
+  }
+
   .opening-hours {
     padding: 10px 0;
     .icon {
@@ -595,9 +605,9 @@ div.contacts-list__element {
     font-family: $title-font-family;
     margin: 0;
     padding: 8px;
-    color: $color-brown;
+    color: #000;
     // background: $color-light-01;
-    font-size: 18px;
+    font-size: 26px !important;
     text-align: center;
   }
   .route-related-list {
@@ -606,7 +616,7 @@ div.contacts-list__element {
       display: block;
       padding: 4px 34px 4px 20px;
       cursor: pointer;
-      color: $color-brown;
+      color: #000;
       &:first-child {
         border-top: none;
       }

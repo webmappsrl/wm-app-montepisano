@@ -1016,6 +1016,12 @@ div.contacts-list__element a:last-child {
     padding: 10px 45px; }
   .detail-route .details-description {
     margin-bottom: 78px; }
+  .details-description h1 {
+    font-size: 1.3em !important; }
+  .details-description h2 {
+    font-size: 1.2em !important; }
+  .details-description h3 {
+    font-size: 1.1em !important; }
   .details-description .opening-hours {
     padding: 10px 0; }
     .details-description .opening-hours .icon {
@@ -1206,15 +1212,15 @@ div.contacts-list__element a:last-child {
     font-family: "Rubik Bold", sans-serif;
     margin: 0;
     padding: 8px;
-    color: #9b968c;
-    font-size: 18px;
+    color: #000;
+    font-size: 26px !important;
     text-align: center; }
   .route-related-details .route-related-list .route-related-item {
     position: relative;
     display: block;
     padding: 4px 34px 4px 20px;
     cursor: pointer;
-    color: #9b968c; }
+    color: #000; }
     .route-related-details .route-related-list .route-related-item:first-child {
       border-top: none; }
     .route-related-details .route-related-list .route-related-item .route-related-image {
