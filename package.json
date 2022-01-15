@@ -25,7 +25,7 @@
         "replace": "^0.3.0",
         "request": "^2.81.0",
         "require": "^2.4.20",
-        "shelljs": "^0.7.8",
+        "shelljs": "^0.8.5",
         "vinyl-source-stream": "^1.1.0",
         "yargs": "^8.0.2"
     },
