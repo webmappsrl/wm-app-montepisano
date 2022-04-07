@@ -15,8 +15,6 @@ var paths = {
     cssDest: './www/core/css/'
 };
 
-gulp.task('serve:before', ['sass', 'watch']);
-
 gulp.task('sass', function(done) {
     gulp.src(paths.sassRoot)
         // .pipe(sourcemaps.init())
@@ -38,12 +36,6 @@ gulp.task('watch', function() {
     gulp.watch(paths.sass, ['sass']);
 });
 
-gulp.task('install', ['git-check'], function() {
-    return bower.commands.install()
-        .on('log', function(data) {
-            gutil.log('bower', gutil.colors.cyan(data.id), data.message);
-        });
-});
 
 gulp.task('test-prepare', function() {
     sh.exec("npm install -g protractor");
@@ -63,3 +55,12 @@ gulp.task('git-check', function(done) {
     }
     done();
 });
+
+gulp.task('install', gulp.series('git-check', function() {
+    return bower.commands.install()
+        .on('log', function(data) {
+            gutil.log('bower', gutil.colors.cyan(data.id), data.message);
+        });
+}));
+
+gulp.task('serve:before', gulp.series('sass', 'watch'));
