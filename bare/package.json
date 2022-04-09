@@ -49,7 +49,7 @@
     "ionic-plugin-keyboard": "~1.0.8",
     "leaflet-knn": "^0.1.0",
     "leaflet.elevation": "0.0.3",
-    "moment": "^2.10.6",
+    "moment": "^2.29.2",
     "opening_hours": "^3.5.0",
     "uk.co.workingedge.phonegap.plugin.launchnavigator": "~3.2.1"
   },
